@@ -6,6 +6,7 @@ import { backgroundColorButton } from './backgroundColorButton';
 import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
+import { changeImageButton } from './changeImageButton';
 import { clearFormatButton } from './clearFormatButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
@@ -13,6 +14,10 @@ import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
+import { imageBorderColorButton } from './imageBorderColorButton';
+import { imageBorderStyleButton } from './imageBorderStyleButton';
+import { imageBorderWidthButton } from './imageBorderWidthButton';
+import { imageBoxShadowButton } from './imageBoxShadowButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
@@ -86,6 +91,11 @@ const buttons = [
     tableSplitButton,
     tableAlignCellButton,
     tableAlignTableButton,
+    imageBorderColorButton,
+    imageBorderWidthButton,
+    imageBorderStyleButton,
+    changeImageButton,
+    imageBoxShadowButton,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

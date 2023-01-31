@@ -69,7 +69,7 @@ describe('borderFormatHandler.parse', () => {
     });
 
     it('Has border width none value only', () => {
-        div.style.borderStyle = 'none';
+        div.style.borderStyle = '';
 
         borderFormatHandler.parse(format, div, context, {});
 
