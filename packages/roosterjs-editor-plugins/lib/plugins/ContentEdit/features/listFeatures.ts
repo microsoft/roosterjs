@@ -75,6 +75,7 @@ const shouldHandleIndentationEvent = (indenting: boolean) => (
 ) => {
     const { keyCode, altKey, shiftKey, ctrlKey, metaKey } = event.rawEvent;
     return (
+        !Browser.isMac &&
         !ctrlKey &&
         !metaKey &&
         (keyCode === Keys.TAB
