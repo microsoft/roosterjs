@@ -2,6 +2,8 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { createBr } from '../creators/createBr';
 import { isBlockEmpty, isSegmentEmpty } from './isEmpty';
+import { getObjectKeys } from '../../../../roosterjs-editor-dom/lib';
+import { ContentModelBlockFormat, ContentModelSegmentFormat } from '../..';
 
 /**
  * @internal
@@ -18,6 +20,7 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
                 removeEmptySegments(block);
 
                 normalizeParagraph(block);
+                simplifySegmentBlockFormat(block);
                 break;
             case 'Table':
                 for (let r = 0; r < block.cells.length; r++) {
@@ -58,4 +61,31 @@ function normalizeParagraph(block: ContentModelParagraph) {
             segments.pop();
         }
     }
+}
+
+type SharedBlockSegmentFormatKeys = keyof ContentModelBlockFormat & keyof ContentModelSegmentFormat;
+
+const formatsToSimplify: SharedBlockSegmentFormatKeys[] = ['lineHeight']; //?
+
+function simplifySegmentBlockFormat(block: ContentModelParagraph) {
+    const formats: { [key in SharedBlockSegmentFormatKeys]?: ContentModelBlockFormat[key] } = {};
+    block.segments.forEach((segment, i) => {
+        formatsToSimplify.forEach(key => {
+            if (i === 0 && segment.format[key]) {
+                return (formats[key] = segment.format[key]);
+            }
+            if (formats[key] !== segment.format[key]) {
+                delete formats[key];
+            }
+        });
+    });
+
+    Object.assign(block.format, formats);
+    const keysToSimplify = getObjectKeys(formats);
+
+    keysToSimplify.forEach(key => {
+        block.segments.forEach(segment => {
+            delete segment.format[key];
+        });
+    });
 }

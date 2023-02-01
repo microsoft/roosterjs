@@ -117,6 +117,42 @@ describe('normalizeContentModel', () => {
         });
     });
 
+    it('Normalize paragraph segments with simplifyable props', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const text = createText('test', { lineHeight: '123' });
+        const text2 = createText('test2', { lineHeight: '123' });
+
+        para1.segments.push(text, text2);
+        model.blocks.push(para1);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        lineHeight: '123',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test2',
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Do not normalize implicit paragraph', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(true /*isImplicit*/);

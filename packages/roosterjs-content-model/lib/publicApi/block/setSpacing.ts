@@ -7,5 +7,10 @@ export default function setSpacing(
 ) {
     formatParagraphWithContentModel(editor, 'setSpacing', paragraph => {
         paragraph.format.lineHeight = spacing.toString();
+        paragraph.segments.forEach(segment => {
+            if (segment.format.lineHeight) {
+                delete segment.format.lineHeight;
+            }
+        });
     });
 }
