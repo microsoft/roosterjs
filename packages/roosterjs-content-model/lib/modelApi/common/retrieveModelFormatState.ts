@@ -82,7 +82,7 @@ function retrieveFormatStateInternal(
     result.fontSize = format.fontSize;
     result.backgroundColor = format.backgroundColor;
     result.textColor = format.textColor;
-    result.lineHeight = paragraph.format.lineHeight;
+    result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
 
     result.isBold = isBold(format.fontWeight);
     result.isItalic = format.italic;

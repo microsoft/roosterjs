@@ -28,28 +28,6 @@ describe('lineHeightFormatHandler.parse', () => {
             lineHeight: '50px',
         });
     });
-
-    it('Line height: child span', () => {
-        const childSpan = document.createElement('span');
-        childSpan.style.setProperty('line-height', '1.5');
-        div.appendChild(childSpan);
-        lineHeightFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({
-            lineHeight: '1.5',
-        });
-    });
-    it('Line height: two children span with same line-height', () => {
-        const childSpan1 = document.createElement('span');
-        const childSpan2 = document.createElement('span');
-        childSpan1.style.setProperty('line-height', '1.5');
-        childSpan2.style.setProperty('line-height', '1.5');
-        div.appendChild(childSpan1);
-        div.appendChild(childSpan2);
-        lineHeightFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({
-            lineHeight: '1.5',
-        });
-    });
 });
 
 describe('lineHeightFormatHandler.apply', () => {
