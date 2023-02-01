@@ -294,7 +294,7 @@ describe('changeFontSize', () => {
         div.style.fontSize = '20pt';
 
         const editor = ({
-            createContentModel: (startNode: any, option: any) =>
+            createContentModel: (option: any) =>
                 domToContentModel(div, null!, {
                     selectionRange: {
                         type: SelectionRangeTypes.Normal,

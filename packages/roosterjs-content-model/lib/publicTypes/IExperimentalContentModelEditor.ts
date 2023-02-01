@@ -1,6 +1,5 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
-import { EditorContext } from './context/EditorContext';
 import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
@@ -62,23 +61,6 @@ export interface DomToModelOption {
  */
 export interface ModelToDomOption {
     /**
-     * A callback to specify how to merge DOM tree generated from Content Model in to existing container
-     * @param source Source document fragment that is generated from Content Model
-     * @param target Target container, usually to be editor root container
-     * @param entities An array of entity wrapper - placeholder pairs, used for reuse existing DOM structure for entity
-     */
-    mergingCallback?: (
-        source: DocumentFragment,
-        target: HTMLElement,
-        entities: Record<string, HTMLElement>
-    ) => void;
-
-    /**
-     * When set to true, directly put entity DOM nodes into the result DOM tree when doing Content Model to DOM conversion and do not use placeholder
-     */
-    doNotReuseEntityDom?: boolean;
-
-    /**
      * Overrides default format appliers
      */
     formatApplierOverride?: Partial<FormatAppliers>;
@@ -106,17 +88,12 @@ export interface ModelToDomOption {
  */
 export interface IExperimentalContentModelEditor extends IEditor {
     /**
-     * Create a EditorContext object used by ContentModel API
-     */
-    createEditorContext(): EditorContext;
-
-    /**
      * Create Content Model from DOM tree in this editor
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
      * @param option The options to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(rootNode?: HTMLElement, option?: DomToModelOption): ContentModelDocument;
+    createContentModel(option?: DomToModelOption): ContentModelDocument;
 
     /**
      * Set content with content model

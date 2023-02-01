@@ -35,6 +35,7 @@ export function getElementBasedFormatState(
     const headerTag = getTagOfNode(
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
     );
+
     const table = editor.queryElements('table', QueryScope.OnSelection)[0];
     const tableFormat = table ? getTableFormatInfo(table) : undefined;
     const hasHeader = table?.rows[0]
