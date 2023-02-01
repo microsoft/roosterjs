@@ -8,6 +8,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { isBlockGroupOfType } from '..//common/isBlockGroupOfType';
+
 import {
     iterateSelections,
     IterateSelectionsOption,

@@ -30,6 +30,9 @@ export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
 export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
+export { default as setImageBorder } from './publicApi/image/setImageBorder';
+export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
+export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
 export { default as getSegmentFormat } from './publicApi/format/getSegmentFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
@@ -41,7 +44,7 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
-export { combineBorderValue, extractBorderValues, Border } from './domUtils/borderValues';
+export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 
 export { ContentModelBlockGroupType } from './publicTypes/enum/BlockGroupType';
 export { ContentModelBlockType } from './publicTypes/enum/BlockType';
@@ -167,6 +170,8 @@ export {
 export { ModelToDomEntityContext } from './publicTypes/context/ModelToDomEntityContext';
 export { ElementProcessor } from './publicTypes/context/ElementProcessor';
 export { ContentModelHandler } from './publicTypes/context/ContentModelHandler';
+
+export { Border } from './publicTypes/interface/Border';
 
 export {
     IExperimentalContentModelEditor,
