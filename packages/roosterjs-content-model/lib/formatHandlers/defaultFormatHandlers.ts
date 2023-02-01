@@ -2,6 +2,7 @@ import { backgroundColorFormatHandler } from './common/backgroundColorFormatHand
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
+import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
@@ -51,6 +52,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
@@ -127,7 +129,7 @@ const defaultFormatKeysPerCategory: {
         'display',
         'direction',
     ],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox'],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
     link: ['link'],
     dataset: ['dataset'],
     divider: [...blockFormatHandlers, 'display', 'size'],

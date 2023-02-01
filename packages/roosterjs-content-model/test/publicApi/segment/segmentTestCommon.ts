@@ -27,6 +27,7 @@ export function segmentTestCommon(
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
+        isDisposed: () => false,
     } as any) as IExperimentalContentModelEditor;
 
     executionCallback(editor);
