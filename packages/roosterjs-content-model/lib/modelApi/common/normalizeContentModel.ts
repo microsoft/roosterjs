@@ -2,8 +2,9 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { createBr } from '../creators/createBr';
 import { isBlockEmpty, isSegmentEmpty } from './isEmpty';
-import { getObjectKeys } from '../../../../roosterjs-editor-dom/lib';
-import { ContentModelBlockFormat, ContentModelSegmentFormat } from '../..';
+import { getObjectKeys } from 'roosterjs-editor-dom';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 
 /**
  * @internal
