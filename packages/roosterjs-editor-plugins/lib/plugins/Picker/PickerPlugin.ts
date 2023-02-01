@@ -104,12 +104,18 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                         this.editor.insertNode(htmlNode);
                     }
                     this.setIsSuggesting(false);
+
+                    return {
+                        wordToReplace,
+                        htmlNode,
+                    };
                 };
 
                 this.editor.addUndoSnapshot(
                     insertNode,
                     this.pickerOptions.changeSource,
-                    this.pickerOptions.handleAutoComplete
+                    this.pickerOptions.handleAutoComplete,
+                    {}
                 );
             },
             (isSuggesting: boolean) => {
