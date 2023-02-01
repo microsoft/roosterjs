@@ -114,8 +114,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 this.editor.addUndoSnapshot(
                     insertNode,
                     this.pickerOptions.changeSource,
-                    this.pickerOptions.handleAutoComplete,
-                    {}
+                    this.pickerOptions.handleAutoComplete
                 );
             },
             (isSuggesting: boolean) => {
