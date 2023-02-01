@@ -1,13 +1,13 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedParagraphs } from '../../modelApi/selection/collectSelections';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal
  */
 export function formatParagraphWithContentModel(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     apiName: string,
     setStyleCallback: (paragraph: ContentModelParagraph) => void
 ) {

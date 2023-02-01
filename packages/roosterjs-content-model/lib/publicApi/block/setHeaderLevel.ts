@@ -3,7 +3,7 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 type HeaderLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
@@ -13,7 +13,7 @@ type HeaderLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
  * @param headerLevel Level of header, from 1 to 6. Set to 0 means set it back to a regular paragraph
  */
 export default function setHeaderLevel(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     headerLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
     formatParagraphWithContentModel(editor, 'setHeaderLevel', para => {

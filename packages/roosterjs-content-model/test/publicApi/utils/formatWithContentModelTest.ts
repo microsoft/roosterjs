@@ -1,10 +1,10 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('formatWithContentModel', () => {
-    let editor: IExperimentalContentModelEditor;
+    let editor: IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -26,7 +26,7 @@ describe('formatWithContentModel', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
     });
 
     it('Callback return false', () => {

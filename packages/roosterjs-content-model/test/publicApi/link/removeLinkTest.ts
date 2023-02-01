@@ -6,12 +6,12 @@ import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('removeLink', () => {
-    let editor: IExperimentalContentModelEditor;
-    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
+    let editor: IContentModelEditor;
+    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
+    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
@@ -22,7 +22,7 @@ describe('removeLink', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
     });
 
     function runTest(model: ContentModelDocument, expectedModel: ContentModelDocument | null) {

@@ -174,7 +174,7 @@ export { ContentModelHandler } from './publicTypes/context/ContentModelHandler';
 export { Border } from './publicTypes/interface/Border';
 
 export {
-    IExperimentalContentModelEditor,
+    IContentModelEditor,
     DomToModelOption,
     ModelToDomOption,
-} from './publicTypes/IExperimentalContentModelEditor';
+} from './publicTypes/IContentModelEditor';

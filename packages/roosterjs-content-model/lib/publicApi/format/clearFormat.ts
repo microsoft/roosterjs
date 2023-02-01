@@ -5,7 +5,7 @@ import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegme
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 
 /**
@@ -13,7 +13,7 @@ import { normalizeContentModel } from '../../modelApi/common/normalizeContentMod
  * @param editor The editor to clear format from
  */
 export default function clearFormat(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     defaultSegmentFormat?: ContentModelSegmentFormat
 ) {
     formatWithContentModel(editor, 'clearFormat', model => {

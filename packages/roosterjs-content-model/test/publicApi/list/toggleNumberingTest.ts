@@ -1,10 +1,10 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('toggleNumbering', () => {
-    let editor = ({} as any) as IExperimentalContentModelEditor;
+    let editor = ({} as any) as IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -24,7 +24,7 @@ describe('toggleNumbering', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
     });

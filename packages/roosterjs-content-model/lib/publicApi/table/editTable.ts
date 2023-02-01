@@ -7,7 +7,7 @@ import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
 import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
@@ -23,10 +23,7 @@ import { TableOperation } from 'roosterjs-editor-types';
  * @param editor The editor instance
  * @param operation The table operation to apply
  */
-export default function editTable(
-    editor: IExperimentalContentModelEditor,
-    operation: TableOperation
-) {
+export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
     formatWithContentModel(editor, 'editTable', model => {
         const tableModel = getFirstSelectedTable(model);
 

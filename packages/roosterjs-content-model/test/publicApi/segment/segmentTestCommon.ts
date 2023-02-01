@@ -1,10 +1,10 @@
 import * as pendingFormat from '../../../lib/publicApi/format/pendingFormat';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 export function segmentTestCommon(
     apiName: string,
-    executionCallback: (editor: IExperimentalContentModelEditor) => void,
+    executionCallback: (editor: IContentModelEditor) => void,
     model: ContentModelDocument,
     result: ContentModelDocument,
     calledTimes: number
@@ -28,7 +28,7 @@ export function segmentTestCommon(
         focus: jasmine.createSpy(),
         setContentModel,
         isDisposed: () => false,
-    } as any) as IExperimentalContentModelEditor;
+    } as any) as IContentModelEditor;
 
     executionCallback(editor);
 

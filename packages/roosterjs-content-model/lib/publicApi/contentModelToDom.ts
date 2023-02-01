@@ -5,7 +5,7 @@ import { EditorContext } from '../publicTypes/context/EditorContext';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
-import { ModelToDomOption } from '../publicTypes/IExperimentalContentModelEditor';
+import { ModelToDomOption } from '../publicTypes/IContentModelEditor';
 import { optimize } from '../modelToDom/optimizers/optimize';
 import {
     NodePosition,

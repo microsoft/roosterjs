@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set background color
@@ -7,7 +7,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  * @param backgroundColor The color to set. Pass null to remove existing color.
  */
 export default function setBackgroundColor(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     backgroundColor: string | null
 ) {
     formatSegmentWithContentModel(

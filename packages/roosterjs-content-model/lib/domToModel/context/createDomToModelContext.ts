@@ -2,7 +2,7 @@ import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/def
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { DomToModelOption } from '../../publicTypes/IExperimentalContentModelEditor';
+import { DomToModelOption } from '../../publicTypes/IContentModelEditor';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 

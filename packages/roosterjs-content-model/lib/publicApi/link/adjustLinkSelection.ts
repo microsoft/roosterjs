@@ -3,16 +3,14 @@ import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelectio
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setSelection } from '../../modelApi/selection/setSelection';
 
 /**
  * Adjust selection to make sure select a hyperlink if any, or a word if original selection is collapsed
  * @return A combination of existing link display text and url if any. If there is no existing link, return selected text and null
  */
-export default function adjustLinkSelection(
-    editor: IExperimentalContentModelEditor
-): [string, string | null] {
+export default function adjustLinkSelection(editor: IContentModelEditor): [string, string | null] {
     let text = '';
     let url: string | null = null;
 
