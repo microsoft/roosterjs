@@ -450,18 +450,16 @@ export default class ImageEdit implements EditorPlugin {
             const cropBottomPx = originalHeight * bottomPercent;
 
             // Update size and margin of the wrapper
-            wrapper.style.width = getPx(visibleWidth);
-            wrapper.style.height = getPx(visibleHeight);
             wrapper.style.margin = `${marginVertical}px ${marginHorizontal}px`;
             wrapper.style.transform = `rotate(${angleRad}rad)`;
-            this.wrapper.style.width = getPx(visibleWidth);
-            this.wrapper.style.height = getPx(visibleHeight);
+            setWrapperSizeDimensions(wrapper, this.image, visibleWidth, visibleHeight);
 
             // Update the text-alignment to avoid the image to overflow if the parent element have align center or right
             // or if the direction is Right To Left
-            wrapper.style.textAlign = isRtl(wrapper.parentNode) ? 'right' : 'left';
+            wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
+
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
@@ -572,6 +570,23 @@ function setSize(
     element.style.bottom = getPx(bottom);
     element.style.width = getPx(width);
     element.style.height = getPx(height);
+}
+
+function setWrapperSizeDimensions(
+    wrapper: HTMLElement,
+    image: HTMLImageElement,
+    width: number,
+    height: number
+) {
+    const hasBorder = image.style.borderStyle;
+    if (hasBorder) {
+        const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
+        wrapper.style.width = getPx(width + borderWidth);
+        wrapper.style.height = getPx(height + borderWidth);
+        return;
+    }
+    wrapper.style.width = getPx(width);
+    wrapper.style.height = getPx(height);
 }
 
 function getPx(value: number): string {

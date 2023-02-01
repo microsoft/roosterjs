@@ -537,7 +537,9 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Divider',
                     tagName: 'div',
-                    format: { borderBottom: '1px solid black' },
+                    format: {
+                        borderBottom: '1px solid black',
+                    },
                 },
                 {
                     blockType: 'Paragraph',
