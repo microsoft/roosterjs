@@ -48,6 +48,7 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from './tableEditButtons';
+import { spacingButton } from './spacingButton';
 
 const buttons = [
     formatPainterButton,
@@ -96,6 +97,7 @@ const buttons = [
     imageBorderStyleButton,
     changeImageButton,
     imageBoxShadowButton,
+    spacingButton,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

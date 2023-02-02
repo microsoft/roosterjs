@@ -106,6 +106,7 @@ const defaultFormatKeysPerCategory: {
         'bold',
         'textColor',
         'backgroundColor',
+        'lineHeight',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
