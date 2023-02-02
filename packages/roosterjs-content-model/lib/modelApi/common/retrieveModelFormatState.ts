@@ -82,6 +82,7 @@ function retrieveFormatStateInternal(
     result.fontSize = format.fontSize;
     result.backgroundColor = format.backgroundColor;
     result.textColor = format.textColor;
+    //TODO: handle block owning segments with different line-heights
     result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
 
     result.isBold = isBold(format.fontWeight);
