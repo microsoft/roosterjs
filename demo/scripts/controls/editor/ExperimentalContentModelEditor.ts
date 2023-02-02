@@ -3,7 +3,6 @@ import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Position, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import {
     ContentModelDocument,
-    ContentModelSegmentFormat,
     contentModelToDom,
     domToContentModel,
     DomToModelOption,
@@ -20,7 +19,6 @@ import {
 export default class ExperimentalContentModelEditor extends Editor
     implements IExperimentalContentModelEditor {
     private getDarkColor: ((lightColor: string) => string) | undefined;
-    private pendingFormat: ContentModelSegmentFormat | null = null;
 
     /**
      * Creates an instance of ExperimentalContentModelEditor
@@ -79,21 +77,5 @@ export default class ExperimentalContentModelEditor extends Editor
             restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);
             this.select(range);
         }
-    }
-
-    /**
-     * Get current pending format if any. A pending format is a format that user set when selection is collapsed,
-     * it will be applied when next time user input something
-     */
-    getPendingFormat(): ContentModelSegmentFormat | null {
-        return this.pendingFormat;
-    }
-
-    /**
-     * Set current pending format if any. A pending format is a format that user set when selection is collapsed,
-     * it will be applied when next time user input something
-     */
-    setPendingFormat(format: ContentModelSegmentFormat | null) {
-        this.pendingFormat = format;
     }
 }
