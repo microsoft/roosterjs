@@ -80,7 +80,10 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
-    const selections = collectSelections(model, { includeListFormatHolder: 'never' });
+    const selections = collectSelections(model, {
+        includeListFormatHolder: 'never',
+        ignoreContentUnderSelectedTableCell: true,
+    });
 
     removeUnmeaningfulSelections(selections);
 

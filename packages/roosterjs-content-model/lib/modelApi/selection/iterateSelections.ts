@@ -96,7 +96,10 @@ export function iterateSelections(
                                 return true;
                             }
 
-                            if (!cell.isSelected || !option?.ignoreContentUnderSelectedTableCell) {
+                            if (
+                                !isWholeTableSelected ||
+                                !option?.ignoreContentUnderSelectedTableCell
+                            ) {
                                 const newPath = [cell, ...path];
                                 const isSelected = treatAllAsSelect || cell.isSelected;
 
