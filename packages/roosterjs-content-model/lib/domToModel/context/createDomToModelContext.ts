@@ -16,13 +16,12 @@ export function createDomToModelContext(
     const context: DomToModelContext = {
         ...(editorContext || {
             isDarkMode: false,
-            zoomScale: 1,
-            isRightToLeft: false,
             getDarkColor: undefined,
         }),
 
         blockFormat: {},
         segmentFormat: {},
+        zoomScaleFormat: {},
         isInSelection: false,
 
         listFormat: {
@@ -52,10 +51,6 @@ export function createDomToModelContext(
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
     };
-
-    if (editorContext?.isRightToLeft) {
-        context.blockFormat.direction = 'rtl';
-    }
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;
