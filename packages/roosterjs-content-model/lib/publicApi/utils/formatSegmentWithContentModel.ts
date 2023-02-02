@@ -2,6 +2,7 @@ import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelectio
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
+import { getPendingFormat, setPendingFormat } from '../format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import {
     DomToModelOption,
@@ -30,7 +31,7 @@ export function formatSegmentWithContentModel(
         apiName,
         model => {
             let segments = getSelectedSegments(model, !!includingFormatHolder);
-            const pendingFormat = editor.getPendingFormat();
+            const pendingFormat = getPendingFormat(editor);
             let isCollapsedSelection =
                 segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
@@ -59,7 +60,7 @@ export function formatSegmentWithContentModel(
             );
 
             if (!pendingFormat && isCollapsedSelection) {
-                editor.setPendingFormat(segments[0].format);
+                setPendingFormat(editor, segments[0].format);
             }
 
             if (isCollapsedSelection) {
