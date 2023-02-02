@@ -1,5 +1,6 @@
 import { FormatState } from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getPendingFormat } from './pendingFormat';
 import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
@@ -20,7 +21,7 @@ export default function getFormatState(editor: IExperimentalContentModelEditor):
         editor,
         'getFormatState',
         model => {
-            const pendingFormat = editor.getPendingFormat();
+            const pendingFormat = getPendingFormat(editor);
 
             retrieveModelFormatState(model, pendingFormat, result);
 
