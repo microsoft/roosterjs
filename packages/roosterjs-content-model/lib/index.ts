@@ -122,6 +122,7 @@ export {
 export { DatasetFormat } from './publicTypes/format/formatParts/DatasetFormat';
 export { WhiteSpaceFormat } from './publicTypes/format/formatParts/WhiteSpaceFormat';
 export { WordBreakFormat } from './publicTypes/format/formatParts/WordBreakFormat';
+export { ZoomScaleFormat } from './publicTypes/format/formatParts/ZoomScaleFormat';
 
 export { ContentModelFormatMap } from './publicTypes/format/ContentModelFormatMap';
 

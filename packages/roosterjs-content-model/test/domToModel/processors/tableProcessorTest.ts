@@ -318,7 +318,7 @@ describe('tableProcessor with format', () => {
         } as any) as HTMLTableElement;
 
         const doc = createContentModelDocument();
-        context.zoomScale = 2;
+        context.zoomScaleFormat.zoomScale = 2;
 
         tableProcessor(doc, mockedTable, context);
 

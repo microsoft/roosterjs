@@ -87,7 +87,7 @@ describe('directionFormatHandler.parse', () => {
     });
 
     it('RTL', () => {
-        context.isRightToLeft = true;
+        context.blockFormat.direction = 'rtl';
 
         runTest('left', null, 'rtl', null, 'end', 'rtl', undefined);
         runTest('center', null, 'rtl', null, 'center', 'rtl', undefined);

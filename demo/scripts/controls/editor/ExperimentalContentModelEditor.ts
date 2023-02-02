@@ -1,5 +1,6 @@
 import { Editor } from 'roosterjs-editor-core';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { Position, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -10,11 +11,6 @@ import {
     IExperimentalContentModelEditor,
     ModelToDomOption,
 } from 'roosterjs-content-model';
-import {
-    getComputedStyles,
-    Position,
-    restoreContentWithEntityPlaceholder,
-} from 'roosterjs-editor-dom';
 
 /**
  * !!! This is a temporary interface and will be removed in the future !!!
@@ -42,8 +38,6 @@ export default class ExperimentalContentModelEditor extends Editor
     private createEditorContext(): EditorContext {
         return {
             isDarkMode: this.isDarkMode(),
-            zoomScale: this.getZoomScale(),
-            isRightToLeft: getComputedStyles(this.contentDiv, 'direction')[0] == 'rtl',
             getDarkColor: this.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
         };
