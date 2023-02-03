@@ -1,5 +1,5 @@
 import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
-import insertImage from '../../../lib/publicApi/insert/insertImage';
+import insertImage from '../../../lib/publicApi/image/insertImage';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';

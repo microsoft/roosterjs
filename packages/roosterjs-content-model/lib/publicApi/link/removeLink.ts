@@ -2,7 +2,7 @@ import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSe
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
+import { HyperLinkColorPlaceholder } from '../../domUtils/constant';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**

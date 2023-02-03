@@ -1,10 +1,10 @@
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../domToModel/context/createDomToModelContext';
+import { createDomToModelContext } from './context/createDomToModelContext';
 import { DomToModelOption } from '../publicTypes/IContentModelEditor';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import { parseFormat } from '../domToModel/utils/parseFormat';
+import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 

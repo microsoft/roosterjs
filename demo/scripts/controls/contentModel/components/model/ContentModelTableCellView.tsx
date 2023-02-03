@@ -11,7 +11,7 @@ import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
-import { updateTableCellMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
 import { WordBreakFormatRenderer } from '../format/formatPart/WordBreakFormatRenderer';

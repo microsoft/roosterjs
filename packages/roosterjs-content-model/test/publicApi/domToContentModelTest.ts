@@ -1,6 +1,6 @@
 import * as createDomToModelContext from '../../lib/domToModel/context/createDomToModelContext';
 import * as normalizeContentModel from '../../lib/modelApi/common/normalizeContentModel';
-import domToContentModel from '../../lib/publicApi/domToContentModel';
+import domToContentModel from '../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { DomToModelContext } from '../../lib/publicTypes/context/DomToModelContext';
 

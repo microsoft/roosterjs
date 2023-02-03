@@ -1,6 +1,6 @@
 import { ContentModelWithDataset } from '../../../lib/publicTypes/format/ContentModelWithDataset';
 import { ListMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ListMetadataFormat';
-import { updateListMetadata } from '../../../lib/modelApi/metadata/updateListMetadata';
+import { updateListMetadata } from '../../../lib/domUtils/metadata/updateListMetadata';
 
 describe('updateListMetadata', () => {
     it('No value', () => {

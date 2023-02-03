@@ -6,7 +6,7 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
+import { HyperLinkColorPlaceholder } from '../../../lib/domUtils/constant';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('insertLink', () => {
