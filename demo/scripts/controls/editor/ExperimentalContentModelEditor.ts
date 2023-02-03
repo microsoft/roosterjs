@@ -7,7 +7,7 @@ import {
     domToContentModel,
     DomToModelOption,
     EditorContext,
-    IExperimentalContentModelEditor,
+    IContentModelEditor,
     ModelToDomOption,
 } from 'roosterjs-content-model';
 
@@ -16,8 +16,7 @@ import {
  *
  * Experimental editor to support Content Model
  */
-export default class ExperimentalContentModelEditor extends Editor
-    implements IExperimentalContentModelEditor {
+export default class ExperimentalContentModelEditor extends Editor implements IContentModelEditor {
     private getDarkColor: ((lightColor: string) => string) | undefined;
 
     /**

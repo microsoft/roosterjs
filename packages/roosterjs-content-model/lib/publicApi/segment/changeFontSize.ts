@@ -3,7 +3,7 @@ import { FontSizeFormat } from '../../publicTypes/format/formatParts/FontSizeFor
 import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { getComputedStyle } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -20,7 +20,7 @@ const MAX_FONT_SIZE = 1000;
  * @param fontSizes A sorted font size array, in pt. Default value is FONT_SIZES
  */
 export default function changeFontSize(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     change: 'increase' | 'decrease'
 ) {
     formatSegmentWithContentModel(

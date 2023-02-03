@@ -1,12 +1,12 @@
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { formatSegmentWithContentModel } from './formatSegmentWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal
  */
 export default function formatImageWithContentModel(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     apiName: string,
     callback: (segment: ContentModelImage) => void
 ) {

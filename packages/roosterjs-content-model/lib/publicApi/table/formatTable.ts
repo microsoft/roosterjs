@@ -1,7 +1,7 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
 
 /**
@@ -11,7 +11,7 @@ import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableM
  * @param keepCellShade Whether keep existing shade color when apply format if there is a manually set shade color
  */
 export default function formatTable(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     format: TableMetadataFormat,
     keepCellShade?: boolean
 ) {

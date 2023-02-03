@@ -1,7 +1,7 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from './pendingFormat';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 
@@ -10,7 +10,7 @@ import { reducedModelChildProcessor } from '../../domToModel/processors/reducedM
  * @param editor The editor to get format from
  */
 export default function getSegmentFormat(
-    editor: IExperimentalContentModelEditor
+    editor: IContentModelEditor
 ): ContentModelSegmentFormat | null {
     let result = getPendingFormat(editor);
 

@@ -2,7 +2,7 @@ import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSeg
 import { createText } from '../modelApi/creators/createText';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../publicApi/format/pendingFormat';
-import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../modelApi/selection/iterateSelections';
 
 /**
@@ -11,7 +11,7 @@ import { iterateSelections } from '../modelApi/selection/iterateSelections';
  * 1. Handle pending format changes when selection is collapsed
  */
 export default class ContentModelPlugin implements EditorPlugin {
-    private editor: IExperimentalContentModelEditor | null = null;
+    private editor: IContentModelEditor | null = null;
 
     /**
      * Get name of this plugin
@@ -28,7 +28,7 @@ export default class ContentModelPlugin implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IExperimentalContentModelEditor;
+        this.editor = editor as IContentModelEditor;
     }
 
     /**
@@ -76,7 +76,7 @@ export default class ContentModelPlugin implements EditorPlugin {
 }
 
 function applyPendingFormat(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     data: string,
     format: ContentModelSegmentFormat
 ) {

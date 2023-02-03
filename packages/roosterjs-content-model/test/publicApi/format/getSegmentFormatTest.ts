@@ -9,8 +9,8 @@ import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 import {
     DomToModelOption,
-    IExperimentalContentModelEditor,
-} from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+    IContentModelEditor,
+} from '../../../lib/publicTypes/IContentModelEditor';
 
 const selectedNodeId = 'Selected';
 
@@ -64,7 +64,7 @@ describe('getSegmentFormat', () => {
 
                 return model;
             },
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const result = getSegmentFormat(editor);
 
         expect(result).toEqual(expectedFormat);

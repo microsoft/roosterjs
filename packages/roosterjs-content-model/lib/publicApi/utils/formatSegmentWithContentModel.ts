@@ -1,18 +1,15 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { DomToModelOption, IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import {
-    DomToModelOption,
-    IExperimentalContentModelEditor,
-} from '../../publicTypes/IExperimentalContentModelEditor';
 /**
  * @internal
  */
 export function formatSegmentWithContentModel(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     apiName: string,
     toggleStyleCallback: (
         format: ContentModelSegmentFormat,
