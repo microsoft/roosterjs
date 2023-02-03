@@ -40,6 +40,7 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
+        lineHeight: undefined,
     };
 
     it('Empty model', () => {
@@ -329,6 +330,7 @@ describe('retrieveModelFormatState', () => {
             isSubscript: false,
             canUnlink: false,
             canAddImageAltText: false,
+            lineHeight: undefined,
         });
     });
 
@@ -440,6 +442,7 @@ describe('retrieveModelFormatState', () => {
             isItalic: undefined,
             isUnderline: undefined,
             isStrikeThrough: undefined,
+            lineHeight: undefined,
         });
     });
 });
