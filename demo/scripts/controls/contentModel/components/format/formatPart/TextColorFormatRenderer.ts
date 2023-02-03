@@ -1,7 +1,7 @@
 import * as Color from 'color';
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { HyperLinkColorPlaceholder } from 'roosterjs-content-model/lib/formatHandlers/utils/defaultStyles';
+import { HyperLinkColorPlaceholder } from 'roosterjs-content-model';
 import { TextColorFormat } from 'roosterjs-content-model';
 
 export const TextColorFormatRenderer: FormatRenderer<TextColorFormat> = createColorFormatRenderer<

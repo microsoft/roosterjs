@@ -1,5 +1,5 @@
-import * as contentModelToDom from '../../lib/publicApi/contentModelToDom';
-import * as domToContentModel from '../../lib/publicApi/domToContentModel';
+import * as contentModelToDom from '../../lib/modelToDom/contentModelToDom';
+import * as domToContentModel from '../../lib/domToModel/domToContentModel';
 import * as entityPlaceholderUtils from 'roosterjs-editor-dom/lib/entity/entityPlaceholderUtils';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';

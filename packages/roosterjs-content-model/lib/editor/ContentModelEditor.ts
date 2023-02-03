@@ -1,5 +1,5 @@
-import contentModelToDom from '../publicApi/contentModelToDom';
-import domToContentModel from '../publicApi/domToContentModel';
+import contentModelToDom from '../modelToDom/contentModelToDom';
+import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';

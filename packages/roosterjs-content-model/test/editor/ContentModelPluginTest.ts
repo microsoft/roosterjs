@@ -1,5 +1,5 @@
 import * as pendingFormat from '../../lib/publicApi/format/pendingFormat';
-import ContentModelPlugin from '../../lib/publicPlugin/ContentModelPlugin';
+import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
 import { addSegment } from '../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';

@@ -6,7 +6,7 @@ import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { hasMetadata } from '../../modelApi/metadata/updateMetadata';
+import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';

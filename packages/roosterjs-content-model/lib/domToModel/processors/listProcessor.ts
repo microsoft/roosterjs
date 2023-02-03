@@ -4,7 +4,7 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import { updateListMetadata } from '../../modelApi/metadata/updateListMetadata';
+import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 
 /**
  * @internal

@@ -2,7 +2,7 @@ import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
+import { HyperLinkColorPlaceholder } from '../../../lib/domUtils/constant';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
