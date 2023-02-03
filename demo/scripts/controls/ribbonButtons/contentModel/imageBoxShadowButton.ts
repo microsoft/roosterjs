@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { RibbonButton } from 'roosterjs-react';
 import { setImageBoxShadow } from 'roosterjs-content-model';
 

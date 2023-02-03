@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { RibbonButton, SuperscriptButtonStringKey } from 'roosterjs-react';
 import { toggleSuperscript } from 'roosterjs-content-model';
 

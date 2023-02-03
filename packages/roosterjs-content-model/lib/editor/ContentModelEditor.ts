@@ -1,23 +1,21 @@
+import contentModelToDom from '../publicApi/contentModelToDom';
+import domToContentModel from '../publicApi/domToContentModel';
+import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { Editor } from 'roosterjs-editor-core';
+import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Position, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
 import {
-    ContentModelDocument,
-    contentModelToDom,
-    domToContentModel,
     DomToModelOption,
-    EditorContext,
-    IExperimentalContentModelEditor,
+    IContentModelEditor,
     ModelToDomOption,
-} from 'roosterjs-content-model';
+} from '../publicTypes/IContentModelEditor';
 
 /**
- * !!! This is a temporary interface and will be removed in the future !!!
- *
- * Experimental editor to support Content Model
+ * Editor for Content Model.
+ * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ExperimentalContentModelEditor extends Editor
-    implements IExperimentalContentModelEditor {
+export default class ContentModelEditor extends Editor implements IContentModelEditor {
     private getDarkColor: ((lightColor: string) => string) | undefined;
 
     /**
@@ -28,17 +26,6 @@ export default class ExperimentalContentModelEditor extends Editor
     constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
         super(contentDiv, options);
         this.getDarkColor = options?.getDarkColor;
-    }
-
-    /**
-     * Create a EditorContext object used by ContentModel API
-     */
-    private createEditorContext(): EditorContext {
-        return {
-            isDarkMode: this.isDarkMode(),
-            getDarkColor: this.getDarkColor,
-            darkColorHandler: this.getDarkColorHandler(),
-        };
     }
 
     /**
@@ -77,5 +64,16 @@ export default class ExperimentalContentModelEditor extends Editor
             restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);
             this.select(range);
         }
+    }
+
+    /**
+     * Create a EditorContext object used by ContentModel API
+     */
+    private createEditorContext(): EditorContext {
+        return {
+            isDarkMode: this.isDarkMode(),
+            getDarkColor: this.getDarkColor,
+            darkColorHandler: this.getDarkColorHandler(),
+        };
     }
 }

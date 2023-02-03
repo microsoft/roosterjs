@@ -3,10 +3,10 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('formatParagraphWithContentModel', () => {
-    let editor: IExperimentalContentModelEditor;
+    let editor: IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
@@ -24,7 +24,7 @@ describe('formatParagraphWithContentModel', () => {
             addUndoSnapshot,
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
     });
 
     it('empty doc', () => {

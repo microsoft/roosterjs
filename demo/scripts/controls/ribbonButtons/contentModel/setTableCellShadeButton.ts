@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { setTableCellShade } from 'roosterjs-content-model';
 import {
     BackgroundColorKeys,

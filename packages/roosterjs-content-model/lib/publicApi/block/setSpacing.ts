@@ -1,10 +1,7 @@
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
-export default function setSpacing(
-    editor: IExperimentalContentModelEditor,
-    spacing: number | string
-) {
+export default function setSpacing(editor: IContentModelEditor, spacing: number | string) {
     formatParagraphWithContentModel(editor, 'setSpacing', paragraph => {
         paragraph.format.lineHeight = spacing.toString();
         paragraph.segments.forEach(segment => {

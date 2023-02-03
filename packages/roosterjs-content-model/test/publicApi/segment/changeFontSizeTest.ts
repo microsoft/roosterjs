@@ -4,7 +4,7 @@ import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import domToContentModel from '../../../lib/publicApi/domToContentModel';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createRange } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -356,7 +356,7 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
 
         spyOn(getComputedStyles, 'getComputedStyle').and.callFake(
             (node: HTMLElement, style: string) => {

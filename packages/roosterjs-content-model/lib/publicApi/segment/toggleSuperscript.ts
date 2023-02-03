@@ -1,11 +1,11 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggle superscript style
  * @param editor The editor to operate on
  */
-export default function toggleSuperscript(editor: IExperimentalContentModelEditor) {
+export default function toggleSuperscript(editor: IContentModelEditor) {
     formatSegmentWithContentModel(
         editor,
         'toggleSuperscript',

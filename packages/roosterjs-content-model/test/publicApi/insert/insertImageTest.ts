@@ -4,14 +4,14 @@ import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('insertImage', () => {
     const testUrl = 'http://test.com/test';
 
     function runTest(
         apiName: string,
-        executionCallback: (editor: IExperimentalContentModelEditor) => void,
+        executionCallback: (editor: IContentModelEditor) => void,
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number
@@ -35,7 +35,7 @@ describe('insertImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
 
         executionCallback(editor);
 

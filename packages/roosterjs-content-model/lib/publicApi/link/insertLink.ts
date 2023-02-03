@@ -8,7 +8,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 
 // Regex matching Uri scheme
@@ -32,7 +32,7 @@ const FTP_REGEX = /^ftp\./i;
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
 export default function insertLink(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     link: string,
     anchorTitle?: string,
     displayText?: string,
