@@ -43,6 +43,9 @@ export { default as adjustLinkSelection } from './publicApi/link/adjustLinkSelec
 export { default as setImageAltText } from './publicApi/image/setImageAltText';
 export { default as adjustImageSelection } from './publicApi/image/adjustImageSelection';
 
+export { default as ContentModelEditor } from './editor/ContentModelEditor';
+export { default as isContentModelEditor } from './editor/isContentModelEditor';
+
 export { default as ContentModelPlugin } from './publicPlugin/ContentModelPlugin';
 
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
