@@ -8,7 +8,7 @@ import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
+import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 /**
  * @internal

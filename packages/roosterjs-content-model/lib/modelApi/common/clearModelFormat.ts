@@ -12,8 +12,8 @@ import { createQuote } from '../creators/createQuote';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
 import { Selectable } from '../../publicTypes/selection/Selectable';
-import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 /**
  * @internal

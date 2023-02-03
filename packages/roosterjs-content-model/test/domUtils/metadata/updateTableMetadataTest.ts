@@ -1,7 +1,7 @@
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
-import { updateTableMetadata } from '../../../lib/modelApi/metadata/updateTableMetadata';
+import { updateTableMetadata } from '../../../lib/domUtils/metadata/updateTableMetadata';
 
 describe('updateTableMetadata', () => {
     it('No value', () => {

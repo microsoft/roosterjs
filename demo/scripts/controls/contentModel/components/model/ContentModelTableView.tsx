@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { applyTableFormat } from 'roosterjs-content-model/lib/modelApi/table/applyTableFormat';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
@@ -13,7 +12,7 @@ import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer'
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
-import { updateTableMetadata } from 'roosterjs-content-model/lib/modelApi/metadata/updateTableMetadata';
+import { updateTableMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelTable,
@@ -61,26 +60,17 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
         );
     }, [table]);
 
-    const onApplyTableFormat = React.useCallback(() => {
-        applyTableFormat(table, undefined, true);
-    }, [table]);
-
     const getFormat = React.useCallback(() => {
         return <FormatView format={table.format} renderers={TableFormatRenderers} />;
     }, [table.format]);
 
     const getMetadata = React.useCallback(() => {
         return (
-            <>
-                <MetadataView
-                    model={table}
-                    renderers={TableMetadataFormatRenders}
-                    updater={updateTableMetadata}
-                />
-                <div>
-                    <button onClick={onApplyTableFormat}>Apply table format</button>
-                </div>
-            </>
+            <MetadataView
+                model={table}
+                renderers={TableMetadataFormatRenders}
+                updater={updateTableMetadata}
+            />
         );
     }, [table]);
 

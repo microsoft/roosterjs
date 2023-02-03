@@ -7,7 +7,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
-import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
+import { HyperLinkColorPlaceholder } from '../../domUtils/constant';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 

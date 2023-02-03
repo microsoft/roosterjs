@@ -1,6 +1,6 @@
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { ImageMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ImageMetadataFormat';
-import { updateImageMetadata } from '../../../lib/modelApi/metadata/updateImageMetadata';
+import { updateImageMetadata } from '../../../lib/domUtils/metadata/updateImageMetadata';
 
 describe('updateImageMetadataTest', () => {
     it('No value', () => {
