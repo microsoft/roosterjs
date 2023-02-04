@@ -4,6 +4,7 @@ import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentMod
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleImage } from '../../../lib/modelToDom/handlers/handleImage';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleSegment', () => {
@@ -85,7 +86,7 @@ describe('handleSegment', () => {
         runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
     });
 
-    it('image segment with size', () => {
+    itChromeOnly('image segment with size', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
