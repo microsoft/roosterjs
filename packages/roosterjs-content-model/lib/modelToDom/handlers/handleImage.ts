@@ -2,7 +2,7 @@ import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { parseValueWithUnit } from 'roosterjs-content-model/lib/formatHandlers/utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
