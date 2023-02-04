@@ -85,6 +85,22 @@ describe('handleSegment', () => {
         runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
     });
 
+    it('image segment with size', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true, width: '100px', height: '200px' },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(
+            segment,
+            '<a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a>',
+            0
+        );
+    });
+
     it('image segment with dataset', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
