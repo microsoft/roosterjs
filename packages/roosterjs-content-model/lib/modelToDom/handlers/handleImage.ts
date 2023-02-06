@@ -57,7 +57,7 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
 
         const { width, height } = imageModel.format;
         const widthNum = width ? parseValueWithUnit(width) : 0;
-        const heightNum = height ? parseFloat(height) : 0;
+        const heightNum = height ? parseValueWithUnit(height) : 0;
 
         if (widthNum > 0) {
             img.width = widthNum;
