@@ -16,11 +16,11 @@ export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, elemen
         stackFormat(
             context,
             {
-                paragraph: 'empty',
+                paragraph: 'shallowCopyInherit',
                 segment: 'shallowCloneForBlock',
             },
             () => {
-                const quoteFormat: ContentModelBlockFormat = {};
+                const quoteFormat: ContentModelBlockFormat = { ...context.blockFormat };
                 const segmentFormat: ContentModelSegmentFormat = {};
 
                 parseFormat(element, context.formatParsers.block, quoteFormat, context);
