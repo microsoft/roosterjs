@@ -77,7 +77,7 @@ export function deleteSelection(model: ContentModelDocument): InsertPosition | n
             }
         },
         {
-            ignoreContentUnderSelectedTableCell: true,
+            contentUnderSelectedTableCell: 'ignoreForTableOrCell', // When a table cell is selected, we replace all content for this cell, so no need to go into its content
             includeListFormatHolder: 'never',
         }
     );
