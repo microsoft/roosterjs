@@ -545,4 +545,45 @@ describe('tableProcessor', () => {
             ],
         });
     });
+
+    it('Check inherited format from context', () => {
+        const group = createContentModelDocument();
+        const mockedTable = ({
+            tagName: 'table',
+            rows: [],
+            style: {},
+            dataset: {},
+            getAttribute: () => '',
+        } as any) as HTMLTableElement;
+
+        context.blockFormat.backgroundColor = 'red';
+        context.blockFormat.textAlign = 'center';
+        context.blockFormat.isTextAlignFromAttr = true;
+        context.blockFormat.lineHeight = '2';
+        context.blockFormat.whiteSpace = 'pre';
+        context.blockFormat.direction = 'rtl';
+
+        tableProcessor(group, mockedTable, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    format: {
+                        backgroundColor: 'red',
+                        textAlign: 'center',
+                        isTextAlignFromAttr: true,
+                        lineHeight: '2',
+                        whiteSpace: 'pre',
+                        direction: 'rtl',
+                    },
+                    dataset: {},
+                    widths: [],
+                    heights: [],
+                    cells: [],
+                },
+            ],
+        });
+    });
 });

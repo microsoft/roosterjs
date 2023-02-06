@@ -26,118 +26,126 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     tableElement,
     context
 ) => {
-    const table = createTable(tableElement.rows.length);
-    const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
-    const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
+    stackFormat(
+        context,
+        { segment: 'shallowCloneForBlock', paragraph: 'shallowCopyInherit' },
+        () => {
+            const table = createTable(tableElement.rows.length, context.blockFormat);
+            const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
+            const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-    stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'empty' }, () => {
-        parseFormat(tableElement, context.formatParsers.table, table.format, context);
-        parseFormat(
-            tableElement,
-            context.formatParsers.segmentOnBlock,
-            context.segmentFormat,
-            context
-        );
-        parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
-        addBlock(group, table);
+            parseFormat(tableElement, context.formatParsers.table, table.format, context);
+            parseFormat(
+                tableElement,
+                context.formatParsers.segmentOnBlock,
+                context.segmentFormat,
+                context
+            );
+            parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
+            addBlock(group, table);
 
-        const columnPositions: number[] = [0];
-        const rowPositions: number[] = [0];
-        const zoomScale = context.zoomScaleFormat.zoomScale || 1;
+            const columnPositions: number[] = [0];
+            const rowPositions: number[] = [0];
+            const zoomScale = context.zoomScaleFormat.zoomScale || 1;
 
-        for (let row = 0; row < tableElement.rows.length; row++) {
-            const tr = tableElement.rows[row];
-            for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                for (; table.cells[row][targetCol]; targetCol++) {}
+            for (let row = 0; row < tableElement.rows.length; row++) {
+                const tr = tableElement.rows[row];
+                for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
+                    for (; table.cells[row][targetCol]; targetCol++) {}
 
-                const td = tr.cells[sourceCol];
-                const hasSelectionBeforeCell = context.isInSelection;
-                const colEnd = targetCol + td.colSpan;
-                const rowEnd = row + td.rowSpan;
-                const needCalcWidth = columnPositions[colEnd] === undefined;
-                const needCalcHeight = rowPositions[rowEnd] === undefined;
+                    const td = tr.cells[sourceCol];
+                    const hasSelectionBeforeCell = context.isInSelection;
+                    const colEnd = targetCol + td.colSpan;
+                    const rowEnd = row + td.rowSpan;
+                    const needCalcWidth = columnPositions[colEnd] === undefined;
+                    const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                if (needCalcWidth || needCalcHeight) {
-                    const rect = getBoundingClientRect(td);
+                    if (needCalcWidth || needCalcHeight) {
+                        const rect = getBoundingClientRect(td);
 
-                    if (rect.width > 0 || rect.height > 0) {
-                        if (needCalcWidth) {
-                            columnPositions[colEnd] =
-                                columnPositions[targetCol] + rect.width / zoomScale;
-                        }
+                        if (rect.width > 0 || rect.height > 0) {
+                            if (needCalcWidth) {
+                                columnPositions[colEnd] =
+                                    columnPositions[targetCol] + rect.width / zoomScale;
+                            }
 
-                        if (needCalcHeight) {
-                            rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
+                            if (needCalcHeight) {
+                                rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
+                            }
                         }
                     }
-                }
 
-                for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
-                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
-                        const hasTd = colSpan == 1 && rowSpan == 1;
-                        const cell = createTableCell(colSpan > 1, rowSpan > 1, td.tagName == 'TH');
+                    for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
+                        for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                            const hasTd = colSpan == 1 && rowSpan == 1;
+                            const cell = createTableCell(
+                                colSpan > 1,
+                                rowSpan > 1,
+                                td.tagName == 'TH'
+                            );
 
-                        table.cells[row + rowSpan - 1][targetCol] = cell;
+                            table.cells[row + rowSpan - 1][targetCol] = cell;
 
-                        if (hasTd) {
-                            stackFormat(context, { segment: 'shallowClone' }, () => {
-                                parseFormat(
-                                    td,
-                                    context.formatParsers.tableCell,
-                                    cell.format,
-                                    context
-                                );
-                                parseFormat(
-                                    td,
-                                    context.formatParsers.segmentOnTableCell,
-                                    context.segmentFormat,
-                                    context
-                                );
-                                parseFormat(
-                                    td,
-                                    context.formatParsers.dataset,
-                                    cell.dataset,
-                                    context
-                                );
+                            if (hasTd) {
+                                stackFormat(context, { segment: 'shallowClone' }, () => {
+                                    parseFormat(
+                                        td,
+                                        context.formatParsers.tableCell,
+                                        cell.format,
+                                        context
+                                    );
+                                    parseFormat(
+                                        td,
+                                        context.formatParsers.segmentOnTableCell,
+                                        context.segmentFormat,
+                                        context
+                                    );
+                                    parseFormat(
+                                        td,
+                                        context.formatParsers.dataset,
+                                        cell.dataset,
+                                        context
+                                    );
 
-                                const { listParent, levels } = context.listFormat;
+                                    const { listParent, levels } = context.listFormat;
 
-                                context.listFormat.listParent = undefined;
-                                context.listFormat.levels = [];
+                                    context.listFormat.listParent = undefined;
+                                    context.listFormat.levels = [];
 
-                                try {
-                                    context.elementProcessors.child(cell, td, context);
-                                } finally {
-                                    context.listFormat.listParent = listParent;
-                                    context.listFormat.levels = levels;
-                                }
-                            });
-                        }
+                                    try {
+                                        context.elementProcessors.child(cell, td, context);
+                                    } finally {
+                                        context.listFormat.listParent = listParent;
+                                        context.listFormat.levels = levels;
+                                    }
+                                });
+                            }
 
-                        const hasSelectionAfterCell = context.isInSelection;
+                            const hasSelectionAfterCell = context.isInSelection;
 
-                        if (
-                            (hasSelectionBeforeCell && hasSelectionAfterCell) ||
-                            (hasTableSelection &&
-                                row >= firstCell.y &&
-                                row <= lastCell.y &&
-                                targetCol >= firstCell.x &&
-                                targetCol <= lastCell.x)
-                        ) {
-                            cell.isSelected = true;
+                            if (
+                                (hasSelectionBeforeCell && hasSelectionAfterCell) ||
+                                (hasTableSelection &&
+                                    row >= firstCell.y &&
+                                    row <= lastCell.y &&
+                                    targetCol >= firstCell.x &&
+                                    targetCol <= lastCell.x)
+                            ) {
+                                cell.isSelected = true;
+                            }
                         }
                     }
                 }
             }
-        }
 
-        table.widths = calcSizes(columnPositions);
-        table.heights = calcSizes(rowPositions);
+            table.widths = calcSizes(columnPositions);
+            table.heights = calcSizes(rowPositions);
 
-        if (context.alwaysNormalizeTable) {
-            normalizeTable(table);
+            if (context.alwaysNormalizeTable) {
+                normalizeTable(table);
+            }
         }
-    });
+    );
 };
 
 function calcSizes(positions: number[]): number[] {
