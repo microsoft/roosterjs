@@ -4,6 +4,7 @@ import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentMod
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleImage } from '../../../lib/modelToDom/handlers/handleImage';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('handleSegment', () => {
@@ -83,6 +84,22 @@ describe('handleSegment', () => {
         };
 
         runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+    });
+
+    itChromeOnly('image segment with size', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { underline: true, width: '100px', height: '200px' },
+            link: { format: { href: '/test' }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(
+            segment,
+            '<a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a>',
+            0
+        );
     });
 
     it('image segment with dataset', () => {

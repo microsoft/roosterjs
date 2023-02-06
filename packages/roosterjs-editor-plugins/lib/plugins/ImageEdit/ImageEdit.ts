@@ -168,7 +168,7 @@ export default class ImageEdit implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
-            blur: () => this.onBlur,
+            blur: () => this.onBlur(),
             dragstart: e => {
                 if (this.image) {
                     e.preventDefault();
