@@ -2,6 +2,7 @@ import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -53,6 +54,18 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         applyFormat(img, context.formatAppliers.image, imageModel.format, context);
         applyFormat(segmentElement, context.formatAppliers.segment, imageModel.format, context);
         applyFormat(img, context.formatAppliers.dataset, imageModel.dataset, context);
+
+        const { width, height } = imageModel.format;
+        const widthNum = width ? parseValueWithUnit(width) : 0;
+        const heightNum = height ? parseValueWithUnit(height) : 0;
+
+        if (widthNum > 0) {
+            img.width = widthNum;
+        }
+
+        if (heightNum > 0) {
+            img.height = heightNum;
+        }
     });
 
     context.regularSelection.current.segment = img;
