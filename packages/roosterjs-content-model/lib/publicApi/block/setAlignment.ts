@@ -1,6 +1,8 @@
+import { ContentModelTable } from '../../publicTypes';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
+import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-
 const ResultMap: Record<
     'left' | 'center' | 'right',
     Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>
@@ -19,6 +21,22 @@ const ResultMap: Record<
     },
 };
 
+function alignTable(table: ContentModelTable, alignment: 'left' | 'center' | 'right') {
+    switch (alignment) {
+        case 'center':
+            table.format.marginLeft = 'auto';
+            table.format.marginRight = 'auto';
+            break;
+        case 'right':
+            table.format.marginLeft = 'auto';
+            table.format.marginRight = '';
+            break;
+        default:
+            table.format.marginLeft = '';
+            table.format.marginRight = 'auto';
+    }
+}
+
 /**
  * Set text alignment of selected paragraphs
  * @param editor The editor to set alignment
@@ -31,5 +49,17 @@ export default function setAlignment(
     formatParagraphWithContentModel(editor, 'setAlignment', para => {
         para.format.textAlign =
             ResultMap[alignment][para.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+    });
+
+    formatWithContentModel(editor, 'toggleNumbering', model => {
+        const tableModel = getFirstSelectedTable(model);
+        const isWholeTableSelected = tableModel?.cells.every(row =>
+            row.every(cell => cell.isSelected)
+        );
+        if (isWholeTableSelected) {
+            alignTable(tableModel, alignment);
+        }
+
+        return !!tableModel;
     });
 }

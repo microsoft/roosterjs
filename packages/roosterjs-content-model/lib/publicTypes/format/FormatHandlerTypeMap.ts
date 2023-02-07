@@ -13,6 +13,7 @@ import { ItalicFormat } from './formatParts/ItalicFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
+import { ListPositionTypeFormat } from './formatParts/ListPositionTypeFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -180,6 +181,11 @@ export interface FormatHandlerTypeMap {
      * Format for WordBreakFormat
      */
     wordBreak: WordBreakFormat;
+
+    /**
+     * Format for ListPositionTypeFormat
+     */
+    listPositionType: ListPositionTypeFormat;
 }
 
 /**

@@ -20,6 +20,7 @@ import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHand
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
+import { listPositionTypeFormatHandler } from './list/listItemPositionTypeFormatHandler';
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
@@ -78,6 +79,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
     wordBreak: wordBreakFormatHandler,
+    listPositionType: listPositionTypeFormatHandler,
 };
 
 const blockFormatHandlers: (keyof FormatHandlerTypeMap)[] = [
