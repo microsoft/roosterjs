@@ -41,8 +41,8 @@ describe('retrieveModelFormatState', () => {
         canUnlink: false,
         canAddImageAltText: false,
         lineHeight: undefined,
-        marginTop: '2px',
-        marginBottom: '3px',
+        marginTop: undefined,
+        marginBottom: undefined,
     };
 
     it('Empty model', () => {
