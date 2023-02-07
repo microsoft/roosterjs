@@ -5,37 +5,18 @@ import { IEditor } from 'roosterjs-editor-types';
 /**
  * Insert an image to editor at current selection
  * @param editor The editor instance
- * @param imageFile The image file. There are at least 3 ways to obtain the file object:
- * From local file, from clipboard data, from drag-and-drop
+ * @param imageFileOrSrc Either the image file blob or source string of the image.
  * @param attributes Optional image element attributes
  */
 export default function insertImage(
     editor: IEditor,
-    imageFile: File,
-    attributes?: Record<string, string>
-): void;
-
-/**
- * Insert an image to editor at current selection
- * @param editor The editor instance
- * @param url The image link
- * @param attributes Optional image element attributes
- */
-export default function insertImage(
-    editor: IEditor,
-    url: string,
-    attributes?: Record<string, string>
-): void;
-
-export default function insertImage(
-    editor: IEditor,
-    imageFile: File | string,
+    imageFileOrSrc: File | string,
     attributes?: Record<string, string>
 ): void {
-    if (typeof imageFile == 'string') {
-        insertImageWithSrc(editor, imageFile, attributes);
+    if (typeof imageFileOrSrc == 'string') {
+        insertImageWithSrc(editor, imageFileOrSrc, attributes);
     } else {
-        readFile(imageFile, dataUrl => {
+        readFile(imageFileOrSrc, dataUrl => {
             if (dataUrl && !editor.isDisposed()) {
                 insertImageWithSrc(editor, dataUrl, attributes);
             }
