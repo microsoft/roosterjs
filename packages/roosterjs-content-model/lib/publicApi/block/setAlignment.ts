@@ -1,4 +1,4 @@
-import { ContentModelTable } from '../../publicTypes';
+import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
@@ -53,10 +53,9 @@ export default function setAlignment(
 
     formatWithContentModel(editor, 'toggleNumbering', model => {
         const tableModel = getFirstSelectedTable(model);
-        const isWholeTableSelected = tableModel?.cells.every(row =>
-            row.every(cell => cell.isSelected)
-        );
-        if (isWholeTableSelected) {
+        const isWholeTableSelected =
+            tableModel && tableModel.cells.every(row => row.every(cell => cell.isSelected));
+        if (tableModel && isWholeTableSelected) {
             alignTable(tableModel, alignment);
         }
 

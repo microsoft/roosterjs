@@ -1,5 +1,9 @@
+import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import setAlignment from '../../../lib/publicApi/block/setAlignment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { paragraphTestCommon } from './paragraphTestCommon';
 
 describe('setAlignment', () => {
@@ -399,6 +403,425 @@ describe('setAlignment', () => {
                 ],
             },
             1
+        );
+    });
+});
+
+describe('setAlignment in table', () => {
+    let editor: IContentModelEditor;
+    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
+    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+
+    beforeEach(() => {
+        setContentModel = jasmine.createSpy('setContentModel');
+        createContentModel = jasmine.createSpy('createContentModel');
+
+        spyOn(normalizeTable, 'normalizeTable');
+
+        editor = ({
+            focus: () => {},
+            addUndoSnapshot: (callback: Function) => callback(),
+            setContentModel,
+            createContentModel,
+        } as any) as IContentModelEditor;
+    });
+
+    function runTest(
+        table: ContentModelTable,
+        alignment: 'left' | 'right' | 'center',
+        expectedTable: ContentModelTable | null
+    ) {
+        const model = createContentModelDocument();
+        model.blocks.push(table);
+
+        createContentModel.and.returnValue(model);
+
+        setAlignment(editor, alignment);
+
+        if (expectedTable) {
+            expect(setContentModel).toHaveBeenCalledTimes(1);
+            expect(setContentModel).toHaveBeenCalledWith({
+                blockGroupType: 'Document',
+                blocks: [expectedTable],
+            });
+        } else {
+            expect(setContentModel).not.toHaveBeenCalled();
+        }
+    }
+
+    it('Empty table', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'center',
+            null
+        );
+    });
+
+    it('Table without selection', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'center',
+            null
+        );
+    });
+
+    it('Table with table  only some cell selected', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'center',
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            }
+        );
+    });
+
+    it('Table with whole table selected - apply center', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'center',
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {
+                    marginLeft: 'auto',
+                    marginRight: 'auto',
+                },
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            }
+        );
+    });
+
+    it('Table with whole table selected - apply right', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'right',
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {
+                    marginLeft: 'auto',
+                    marginRight: '',
+                },
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            }
+        );
+    });
+
+    it('Table with whole table selected - apply left', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            'left',
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            dataset: {},
+                            isSelected: true,
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {},
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                ],
+                format: {
+                    marginLeft: '',
+                    marginRight: 'auto',
+                },
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            }
         );
     });
 });
