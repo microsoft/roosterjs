@@ -42,6 +42,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
               'color',
               'background-color',
               'line-height',
+              'margin-top',
+              'margin-bottom',
           ])
         : [];
     const {
@@ -95,6 +97,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                   }
                 : undefined,
             lineHeight: styles[4],
+            marginTop: styles[5],
+            marginBottom: styles[6],
         };
     } else {
         const ogTextColorNode =

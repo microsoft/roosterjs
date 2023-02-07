@@ -41,6 +41,8 @@ describe('retrieveModelFormatState', () => {
         canUnlink: false,
         canAddImageAltText: false,
         lineHeight: undefined,
+        marginTop: '2px',
+        marginBottom: '3px',
     };
 
     it('Empty model', () => {
@@ -331,6 +333,8 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: false,
             lineHeight: undefined,
+            marginTop: undefined,
+            marginBottom: undefined,
         });
     });
 
@@ -443,6 +447,8 @@ describe('retrieveModelFormatState', () => {
             isUnderline: undefined,
             isStrikeThrough: undefined,
             lineHeight: undefined,
+            marginTop: undefined,
+            marginBottom: undefined,
         });
     });
 });
