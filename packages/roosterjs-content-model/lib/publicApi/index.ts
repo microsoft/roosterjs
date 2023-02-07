@@ -40,3 +40,4 @@ export { default as removeLink } from './link/removeLink';
 export { default as adjustLinkSelection } from './link/adjustLinkSelection';
 export { default as setImageAltText } from './image/setImageAltText';
 export { default as adjustImageSelection } from './image/adjustImageSelection';
+export { default as setMargins } from './block/setMargins';
