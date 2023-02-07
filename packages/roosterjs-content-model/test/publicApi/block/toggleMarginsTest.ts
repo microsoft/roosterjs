@@ -108,6 +108,10 @@ describe('setMargins', () => {
                         format: {
                             marginTop: '8px',
                         },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -156,6 +160,10 @@ describe('setMargins', () => {
                         blockType: 'Paragraph',
                         format: {
                             marginTop: '8px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
                         },
                         segments: [
                             {
@@ -206,6 +214,10 @@ describe('setMargins', () => {
                         blockType: 'Paragraph',
                         format: {
                             marginRight: '12px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
                         },
                         segments: [
                             {

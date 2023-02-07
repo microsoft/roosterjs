@@ -1,4 +1,5 @@
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
@@ -11,6 +12,9 @@ import { formatParagraphWithContentModel } from '../utils/formatParagraphWithCon
  */
 export default function toggleMargins(editor: IContentModelEditor, marginFormat: MarginFormat) {
     formatParagraphWithContentModel(editor, 'toggleMargins', para => {
+        if (!para.decorator || para.decorator.tagName !== 'p') {
+            para.decorator = createParagraphDecorator('p');
+        }
         getObjectKeys(marginFormat).forEach(key => {
             if (para.format[key] === marginFormat[key]) {
                 delete para.format[key];
