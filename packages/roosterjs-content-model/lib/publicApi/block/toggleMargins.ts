@@ -16,7 +16,10 @@ export default function toggleMargins(editor: IContentModelEditor, marginFormat:
             para.decorator = createParagraphDecorator('p');
         }
         getObjectKeys(marginFormat).forEach(key => {
-            if (para.format[key] === marginFormat[key]) {
+            if (
+                para.format[key] &&
+                (para.format[key] === marginFormat[key] || parseInt(para.format[key]!) > 0)
+            ) {
                 delete para.format[key];
             } else {
                 para.format[key] = marginFormat[key];
