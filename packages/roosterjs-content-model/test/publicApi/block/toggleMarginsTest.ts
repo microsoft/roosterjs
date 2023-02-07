@@ -1,6 +1,6 @@
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { paragraphTestCommon } from './paragraphTestCommon';
-import setMargins from '../../../lib/publicApi/block/setMargins';
+import toggleMargins from '../../../lib/publicApi/block/toggleMargins';
 import { MarginFormat } from '../../../lib/publicTypes/format/formatParts/MarginFormat';
 
 describe('setMargins', () => {
@@ -11,8 +11,8 @@ describe('setMargins', () => {
         calledTimes: number = 1
     ) {
         paragraphTestCommon(
-            'setMargins',
-            editor => setMargins(editor, marginFormat),
+            'toggleMargins',
+            editor => toggleMargins(editor, marginFormat),
             model,
             result,
             calledTimes
@@ -173,32 +173,8 @@ describe('setMargins', () => {
         );
     });
 
-    it('Replaces and ignores properties correctly', () => {
+    it('Replaces properties correctly', () => {
         runTest(
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {
-                            marginLeft: '9px',
-                            marginRight: '12px',
-                        },
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
-                                format: {},
-                            },
-                            {
-                                segmentType: 'SelectionMarker',
-                                format: {},
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            },
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -223,7 +199,30 @@ describe('setMargins', () => {
                     },
                 ],
             },
-            { marginTop: '8px', marginLeft: undefined },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginRight: '12px',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            { marginTop: '8px' },
             1
         );
     });
