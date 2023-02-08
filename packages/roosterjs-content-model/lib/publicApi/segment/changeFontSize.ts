@@ -1,7 +1,7 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { parseValueWithUnit } from 'roosterjs-content-model/lib/formatHandlers/utils/parseValueWithUnit';
+import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -35,8 +35,7 @@ function changeFontSizeInternal(
     change: 'increase' | 'decrease'
 ) {
     if (format.fontSize) {
-        let sizeInPx = parseValueWithUnit(format.fontSize);
-        let sizeInPt = sizeInPx > 0 ? pxToPt(sizeInPx) : 0;
+        let sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
 
         if (sizeInPt > 0) {
             const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
@@ -71,8 +70,4 @@ function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): nu
         }
     }
     return pt;
-}
-
-function pxToPt(px: number) {
-    return Math.round((px * 3000) / 4) / 1000;
 }

@@ -25,10 +25,10 @@ describe('computedSegmentFormatHandler.parse', () => {
         expect(format.fontWeight).toBeUndefined();
         expect(format.fontFamily).toBeDefined();
         expect(format.fontSize).toBeDefined();
-        expect(format.textColor).toBeDefined();
-        expect(format.italic).toBeFalse();
-        expect(format.strikethrough).toBeFalse();
-        expect(format.underline).toBeFalse();
+        expect(format.textColor).toBeUndefined();
+        expect(format.italic).toBeUndefined();
+        expect(format.strikethrough).toBeUndefined();
+        expect(format.underline).toBeUndefined();
         expect(format.backgroundColor).toBeUndefined();
     });
 
@@ -45,13 +45,8 @@ describe('computedSegmentFormatHandler.parse', () => {
         computedSegmentFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({
-            fontWeight: '700',
             fontFamily: 'Arial',
-            fontSize: '26.6667px',
-            textColor: 'rgb(255, 0, 0)',
-            italic: true,
-            strikethrough: false,
-            underline: true,
+            fontSize: '20pt',
         });
     });
 });
