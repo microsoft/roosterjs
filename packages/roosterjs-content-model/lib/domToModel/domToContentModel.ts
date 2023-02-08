@@ -1,3 +1,4 @@
+import { computedSegmentFormatHandler } from '../formatHandlers/segment/computedSegmentFormatHandler';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
@@ -23,7 +24,13 @@ export default function domToContentModel(
     const model = createContentModelDocument();
     const context = createDomToModelContext(editorContext, option);
 
+    // For root element, use computed style as initial value of segment formats
+    parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+
+    // Need to calculate direction (ltr or rtl), use it as initial value
     parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
+
+    // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
     parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
 
     const processor = option.includeRoot

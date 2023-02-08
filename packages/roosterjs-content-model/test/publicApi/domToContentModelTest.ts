@@ -15,6 +15,7 @@ describe('domToContentModel', () => {
             },
             defaultStyles: {},
             zoomScaleFormat: {},
+            segmentFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
@@ -54,6 +55,7 @@ describe('domToContentModel', () => {
             },
             defaultStyles: {},
             zoomScaleFormat: {},
+            segmentFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
