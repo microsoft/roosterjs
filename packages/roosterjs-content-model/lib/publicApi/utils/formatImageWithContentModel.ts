@@ -19,9 +19,6 @@ export default function formatImageWithContentModel(
             }
         },
         undefined /** segmentHasStyleCallback **/,
-        undefined /** includingFormatHolder */,
-        {
-            includeRoot: true,
-        }
+        undefined /** includingFormatHolder */
     );
 }

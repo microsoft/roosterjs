@@ -5,7 +5,11 @@ const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 /**
  * @internal
  */
-export function parseValueWithUnit(value: string = '', element?: HTMLElement): number {
+export function parseValueWithUnit(
+    value: string = '',
+    element?: HTMLElement,
+    resultUnit: 'px' | 'pt' = 'px'
+): number {
     const match = MarginValueRegex.exec(value);
     let result = 0;
 
@@ -35,6 +39,10 @@ export function parseValueWithUnit(value: string = '', element?: HTMLElement): n
         }
     }
 
+    if (result > 0 && resultUnit == 'pt') {
+        result = pxToPt(result);
+    }
+
     return result;
 }
 
@@ -48,4 +56,8 @@ function getFontSize(element: HTMLElement) {
 
 function ptToPx(pt: number): number {
     return Math.round((pt * 4000) / 3) / 1000;
+}
+
+function pxToPt(px: number) {
+    return Math.round((px * 3000) / 4) / 1000;
 }
