@@ -1,9 +1,7 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { FontSizeFormat } from '../../publicTypes/format/formatParts/FontSizeFormat';
-import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { getComputedStyle } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { parseValueWithUnit } from 'roosterjs-content-model/lib/formatHandlers/utils/parseValueWithUnit';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -28,32 +26,20 @@ export default function changeFontSize(
         'changeFontSize',
         format => changeFontSizeInternal(format, change),
         undefined /* segmentHasStyleCallback*/,
-        true /*includingFormatHandler*/,
-        {
-            formatParserOverride: {
-                fontSize: fontSizeHandler,
-            },
-        }
+        true /*includingFormatHandler*/
     );
 }
-
-const fontSizeHandler: FormatParser<FontSizeFormat> = (format, element, context, defaultStyle) => {
-    // Superscript and subscript will have "smaller" font size,
-    // we should keep using its parent element's font size since SUB/SUP tag will auto make font smaller
-    if (!format.fontSize || defaultStyle.fontSize != 'smaller') {
-        format.fontSize = getComputedStyle(element, 'font-size');
-    }
-};
 
 function changeFontSizeInternal(
     format: ContentModelSegmentFormat,
     change: 'increase' | 'decrease'
 ) {
     if (format.fontSize) {
-        let sizeNumber = parseFloat(format.fontSize);
+        let sizeInPx = parseValueWithUnit(format.fontSize);
+        let sizeInPt = sizeInPx > 0 ? pxToPt(sizeInPx) : 0;
 
-        if (sizeNumber > 0) {
-            const newSize = getNewFontSize(sizeNumber, change == 'increase' ? 1 : -1, FONT_SIZES);
+        if (sizeInPt > 0) {
+            const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
 
             format.fontSize = newSize + 'pt';
         }
@@ -85,4 +71,8 @@ function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): nu
         }
     }
     return pt;
+}
+
+function pxToPt(px: number) {
+    return Math.round((px * 3000) / 4) / 1000;
 }
