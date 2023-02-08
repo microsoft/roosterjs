@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/36</span>
+                <span class='fraction'>33/33</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.59% </span>
+                <span class="strong">91.3% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/27</span>
+                <span class='fraction'>21/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/34</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
@@ -130,27 +130,10 @@
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a>
-<a name='L86'></a><a href='#L86'>86</a>
-<a name='L87'></a><a href='#L87'>87</a>
-<a name='L88'></a><a href='#L88'>88</a>
-<a name='L89'></a><a href='#L89'>89</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -176,19 +159,6 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,11 +204,9 @@
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { FontSizeFormat } from '../../publicTypes/format/formatParts/FontSizeFormat';
-import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { getComputedStyle } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 &nbsp;
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -263,32 +231,19 @@ export default function changeFontSize(
         'changeFontSize',
         format =&gt; changeFontSizeInternal(format, change),
         undefined /* segmentHasStyleCallback*/,
-        true /*includingFormatHandler*/,
-        {
-            formatParserOverride: {
-                fontSize: fontSizeHandler,
-            },
-        }
+        true /*includingFormatHandler*/
     );
 }
-&nbsp;
-const fontSizeHandler: FormatParser&lt;FontSizeFormat&gt; = (format, element, context, defaultStyle) =&gt; {
-    // Superscript and subscript will have "smaller" font size,
-    // we should keep using its parent element's font size since SUB/SUP tag will auto make font smaller
-    if (!format.fontSize || defaultStyle.fontSize != 'smaller') {
-        format.fontSize = getComputedStyle(element, 'font-size');
-    }
-};
 &nbsp;
 function changeFontSizeInternal(
     format: ContentModelSegmentFormat,
     change: 'increase' | 'decrease'
 ) {
     <span class="missing-if-branch" title="else path not taken" >E</span>if (format.fontSize) {
-        let sizeNumber = parseFloat(format.fontSize);
+        let sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (sizeNumber &gt; 0) {
-            const newSize = getNewFontSize(sizeNumber, change == 'increase' ? 1 : -1, FONT_SIZES);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (sizeInPt &gt; 0) {
+            const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
 &nbsp;
             format.fontSize = newSize + 'pt';
         }
@@ -328,7 +283,7 @@ function getNewFontSize(pt: number, changeBase: 1 | -1, fontSizes: number[]): nu
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Feb 08 2023 19:28:15 GMT+0000 (Coordinated Universal Time)
+                at Wed Feb 08 2023 19:37:46 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
