@@ -108,4 +108,44 @@ describe('insertImage', () => {
             1
         );
     });
+
+    it('Insert image with src', () => {
+        const model = createContentModelDocument();
+        const marker = createSelectionMarker();
+
+        addSegment(model, marker);
+
+        runTest(
+            'insertImage',
+            editor => {
+                insertImage(editor, testUrl);
+            },
+            model,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Image',
+                                src: testUrl,
+                                format: {},
+                                dataset: {},
+                                isSelectedAsImageSelection: false,
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
 });
