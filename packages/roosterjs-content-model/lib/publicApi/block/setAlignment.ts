@@ -46,19 +46,20 @@ export default function setAlignment(
     editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
-    formatParagraphWithContentModel(editor, 'setAlignment', para => {
-        para.format.textAlign =
-            ResultMap[alignment][para.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-    });
-
-    formatWithContentModel(editor, 'toggleNumbering', model => {
+    let isWholeTableSelected = undefined;
+    formatWithContentModel(editor, 'setAlignment', model => {
         const tableModel = getFirstSelectedTable(model);
-        const isWholeTableSelected =
-            tableModel && tableModel.cells.every(row => row.every(cell => cell.isSelected));
+        isWholeTableSelected = tableModel?.cells.every(row => row.every(cell => cell.isSelected));
         if (tableModel && isWholeTableSelected) {
             alignTable(tableModel, alignment);
         }
-
-        return !!tableModel;
+        return !!isWholeTableSelected;
     });
+
+    if (!isWholeTableSelected) {
+        formatParagraphWithContentModel(editor, 'setAlignment', para => {
+            para.format.textAlign =
+                ResultMap[alignment][para.format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        });
+    }
 }

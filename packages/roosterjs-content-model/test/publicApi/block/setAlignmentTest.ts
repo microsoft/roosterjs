@@ -530,43 +530,7 @@ describe('setAlignment in table', () => {
                 dataset: {},
             },
             'center',
-            {
-                blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                            isSelected: true,
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                            isSelected: true,
-                        },
-                    ],
-                ],
-                format: {},
-                widths: [0],
-                heights: [0],
-                dataset: {},
-            }
+            null
         );
     });
 

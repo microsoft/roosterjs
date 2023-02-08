@@ -1,6 +1,5 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
-import { DirectionFormat } from './formatParts/DirectionFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
@@ -22,5 +21,4 @@ export type ContentModelSegmentFormat = TextColorFormat &
     UnderlineFormat &
     StrikeFormat &
     SuperOrSubScriptFormat &
-    LineHeightFormat &
-    DirectionFormat;
+    LineHeightFormat;
