@@ -1,4 +1,4 @@
-import * as pendingFormat from '../../../lib/publicApi/format/pendingFormat';
+import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import domToContentModel from '../../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';

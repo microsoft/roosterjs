@@ -1,6 +1,6 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from './pendingFormat';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
