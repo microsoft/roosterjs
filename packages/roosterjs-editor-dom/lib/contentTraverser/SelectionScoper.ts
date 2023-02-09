@@ -5,6 +5,8 @@ import TraversingScoper from './TraversingScoper';
 import { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
 
+const ZERO_WIDTH_SPACE = '\u200B';
+
 /**
  * @internal
  * This is selection scoper that provide a start inline as the start of the selection
@@ -94,6 +96,10 @@ export default class SelectionScoper implements TraversingScoper {
         // Temp code. Will be changed to using InlineElement.getStart/EndPosition() soon
         let start = inline.getStartPosition();
         let end = inline.getEndPosition();
+
+        if (this.start.node.textContent == ZERO_WIDTH_SPACE) {
+            return inline;
+        }
 
         if (start.isAfter(this.end) || this.start.isAfter(end)) {
             return null;

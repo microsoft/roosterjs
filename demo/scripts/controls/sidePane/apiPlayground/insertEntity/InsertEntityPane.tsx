@@ -34,11 +34,18 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     Type: <input type="input" ref={this.entityType} />
                 </div>
                 <div>
-                    HTML: <textarea className={styles.textarea} ref={this.html}></textarea>
+                    HTML:{' '}
+                    <textarea
+                        className={styles.textarea}
+                        ref={this.html}
+                        value="<a>Read</a>"></textarea>
                 </div>
                 <div>
                     Hydrated HTML:
-                    <textarea className={styles.textarea} ref={this.hydratedHtml}></textarea>
+                    <textarea
+                        className={styles.textarea}
+                        ref={this.hydratedHtml}
+                        value="<a>Read</a>"></textarea>
                 </div>
                 <div>
                     Style:
@@ -53,7 +60,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     <label htmlFor="styleBlock">Block</label>
                 </div>
                 <div>
-                    Readonly: <input type="checkbox" ref={this.isReadonly} />
+                    Readonly: <input type="checkbox" ref={this.isReadonly} value="true" />
                 </div>
                 <div>
                     Force insert at root of region:{' '}

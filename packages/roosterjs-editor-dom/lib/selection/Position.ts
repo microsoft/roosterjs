@@ -3,6 +3,8 @@ import isNodeAfter from '../utils/isNodeAfter';
 import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
 import type { CompatiblePositionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
+const ZERO_WIDTH_SPACE = '\u200B';
+
 /**
  * Represent a position in DOM tree by the node and its offset index
  */
@@ -129,9 +131,15 @@ export default class Position implements NodePosition {
      * Checks if this position is after the given position
      */
     isAfter(position: NodePosition): boolean {
-        return this.node == position.node
-            ? (this.isAtEnd && !position.isAtEnd) || this.offset > position.offset
-            : isNodeAfter(this.node, position.node);
+        const isZwsNode =
+            position.node.textContent?.length == 1 && position.node.textContent == ZERO_WIDTH_SPACE;
+        if (!isZwsNode) {
+            return this.node == position.node
+                ? (this.isAtEnd && !position.isAtEnd) || this.offset > position.offset
+                : isNodeAfter(this.node, position.node);
+        } else {
+            return false;
+        }
     }
 
     /**

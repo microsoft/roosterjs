@@ -21,6 +21,7 @@ import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { InlineEntityPlugin } from 'roosterjs-editor-plugins';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
@@ -126,6 +127,7 @@ class MainPane extends MainPaneBase {
     private contentModelRibbonPlugin: RibbonPlugin;
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
+    private inlineEntity: EditorPlugin;
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private contentModelPlugin: ContentModelPlugin;
@@ -160,6 +162,7 @@ class MainPane extends MainPaneBase {
             exportContent,
             popout,
         ]);
+        this.inlineEntity = new InlineEntityPlugin();
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {
             showSidePane: window.location.hash != '',
@@ -441,6 +444,7 @@ class MainPane extends MainPaneBase {
             this.emojiPlugin,
             this.contentModelPlugin,
             this.formatPainterPlugin,
+            this.inlineEntity,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {
