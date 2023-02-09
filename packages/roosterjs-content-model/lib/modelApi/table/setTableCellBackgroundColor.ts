@@ -10,15 +10,6 @@ const White = '#ffffff';
 const Black = '#000000';
 const RGBA_REGEX = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;
 
-// Using the HSL (hue, saturation and lightness) representation for RGB color values.
-// If the value of the lightness is less than 20, the color is dark.
-// If the value of the lightness is more than 80, the color is bright
-const DARK_COLORS_LIGHTNESS = 20;
-const BRIGHT_COLORS_LIGHTNESS = 80;
-const White = '#ffffff';
-const Black = '#000000';
-const RGBA_REGEX = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;
-
 /**
  * @internal
  */

@@ -2,7 +2,6 @@ import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
 import insertImage from '../../../lib/publicApi/image/insertImage';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';

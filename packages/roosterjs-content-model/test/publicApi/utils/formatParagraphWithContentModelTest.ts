@@ -1,5 +1,4 @@
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';

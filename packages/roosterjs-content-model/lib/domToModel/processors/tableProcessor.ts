@@ -134,19 +134,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 cell.isSelected = true;
                             }
                         }
-
-                        const hasSelectionAfterCell = context.isInSelection;
-
-                        if (
-                            (hasSelectionBeforeCell && hasSelectionAfterCell) ||
-                            (hasTableSelection &&
-                                row >= firstCell.y &&
-                                row <= lastCell.y &&
-                                targetCol >= firstCell.x &&
-                                targetCol <= lastCell.x)
-                        ) {
-                            cell.isSelected = true;
-                        }
                     }
                 }
             }
