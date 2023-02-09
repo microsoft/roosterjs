@@ -34,6 +34,7 @@ export { default as setImageBoxShadow } from './image/setImageBoxShadow';
 export { default as changeImage } from './image/changeImage';
 export { default as getFormatState } from './format/getFormatState';
 export { default as getSegmentFormat } from './format/getSegmentFormat';
+export { default as applyPendingFormat } from './format/applyPendingFormat';
 export { default as clearFormat } from './format/clearFormat';
 export { default as insertLink } from './link/insertLink';
 export { default as removeLink } from './link/removeLink';
