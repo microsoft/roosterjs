@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">21.05% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/38</span>
+                <span class='fraction'>8/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/14</span>
+                <span class='fraction'>0/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">22.22% </span>
+                <span class="strong">21.05% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/36</span>
+                <span class='fraction'>8/38</span>
             </div>
         
             
@@ -178,7 +178,10 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -234,6 +237,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -244,6 +249,7 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -352,19 +358,22 @@ export function <span class="fstat-no" title="function not covered" >updateRotat
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement
 ) {
-    const top = <span class="cstat-no" title="statement not covered" >rotateHandle.getBoundingClientRect()?.top - editorRect?.top;</span>
-    const { angleRad, heightPx } = <span class="cstat-no" title="statement not covered" >editInfo;</span>
-    const cosAngle = <span class="cstat-no" title="statement not covered" >Math.cos(angleRad);</span>
-    const adjustedDistance =
-<span class="cstat-no" title="statement not covered" >        cosAngle &lt;= 0</span>
-            ? Number.MAX_SAFE_INTEGER
-            : (top + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
+    const rotateHandleRect = <span class="cstat-no" title="statement not covered" >rotateHandle.getBoundingClientRect();</span>
+<span class="cstat-no" title="statement not covered" >    if (rotateHandleRect) {</span>
+        const top = <span class="cstat-no" title="statement not covered" >rotateHandleRect.top - editorRect?.top;</span>
+        const { angleRad, heightPx } = <span class="cstat-no" title="statement not covered" >editInfo;</span>
+        const cosAngle = <span class="cstat-no" title="statement not covered" >Math.cos(angleRad);</span>
+        const adjustedDistance =
+<span class="cstat-no" title="statement not covered" >            cosAngle &lt;= 0</span>
+                ? Number.MAX_SAFE_INTEGER
+                : (top + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
 &nbsp;
-    const rotateGap = <span class="cstat-no" title="statement not covered" >Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);</span>
-    const rotateTop = <span class="cstat-no" title="statement not covered" >Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);</span>
-<span class="cstat-no" title="statement not covered" >    rotateCenter.style.top = -rotateGap + 'px';</span>
-<span class="cstat-no" title="statement not covered" >    rotateCenter.style.height = rotateGap + 'px';</span>
-<span class="cstat-no" title="statement not covered" >    rotateHandle.style.top = -rotateTop + 'px';</span>
+        const rotateGap = <span class="cstat-no" title="statement not covered" >Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);</span>
+        const rotateTop = <span class="cstat-no" title="statement not covered" >Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);</span>
+<span class="cstat-no" title="statement not covered" >        rotateCenter.style.top = -rotateGap + 'px';</span>
+<span class="cstat-no" title="statement not covered" >        rotateCenter.style.height = rotateGap + 'px';</span>
+<span class="cstat-no" title="statement not covered" >        rotateHandle.style.top = -rotateTop + 'px';</span>
+    }
 }
 &nbsp;
 /**
@@ -427,7 +436,7 @@ function <span class="fstat-no" title="function not covered" >getRotateIconHTML(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Feb 08 2023 19:51:46 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 09 2023 17:54:10 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
