@@ -1,5 +1,5 @@
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 const ResultMap: Record<
     'left' | 'center' | 'right',
@@ -25,7 +25,7 @@ const ResultMap: Record<
  * @param alignment Alignment value: left, center or right
  */
 export default function setAlignment(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
     formatParagraphWithContentModel(editor, 'setAlignment', para => {

@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { NumberingListType } from 'roosterjs-editor-types';
 import { RibbonButton } from 'roosterjs-react';
 import { setListStyle } from 'roosterjs-content-model';

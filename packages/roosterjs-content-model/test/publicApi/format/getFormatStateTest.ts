@@ -10,8 +10,8 @@ import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeCon
 
 import {
     DomToModelOption,
-    IExperimentalContentModelEditor,
-} from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+    IContentModelEditor,
+} from '../../../lib/publicTypes/IContentModelEditor';
 
 const selectedNodeId = 'Selected';
 
@@ -54,7 +54,7 @@ describe('getFormatState', () => {
 
                 return model;
             },
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
 
         spyOn(getPendingFormat, 'getPendingFormat').and.returnValue(pendingFormat);
 

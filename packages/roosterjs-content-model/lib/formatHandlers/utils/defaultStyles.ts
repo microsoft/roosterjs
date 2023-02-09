@@ -1,11 +1,10 @@
 import { DefaultImplicitFormatMap } from '../../publicTypes/context/ModelToDomSettings';
 import { DefaultStyleMap } from '../../publicTypes/context/DomToModelSettings';
+import { HyperLinkColorPlaceholder } from '../../domUtils/constant';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
 };
-
-export const HyperLinkColorPlaceholder = '__hyperLinkColor';
 
 /**
  * @internal

@@ -168,7 +168,7 @@ export default class ImageEdit implements EditorPlugin {
     initialize(editor: IEditor) {
         this.editor = editor;
         this.disposer = editor.addDomEventHandler({
-            blur: () => this.onBlur,
+            blur: () => this.onBlur(),
             dragstart: e => {
                 if (this.image) {
                     e.preventDefault();
@@ -499,13 +499,16 @@ export default class ImageEdit implements EditorPlugin {
                     this.updateWrapper();
                 }
 
-                updateRotateHandlePosition(
-                    this.editInfo,
-                    this.editor.getVisibleViewport(),
-                    marginVertical,
-                    rotateCenter,
-                    rotateHandle
-                );
+                const viewport = this.editor.getVisibleViewport();
+                if (rotateHandle && rotateCenter && viewport) {
+                    updateRotateHandlePosition(
+                        this.editInfo,
+                        this.editor.getVisibleViewport(),
+                        marginVertical,
+                        rotateCenter,
+                        rotateHandle
+                    );
+                }
 
                 updateHandleCursor(resizeHandles, angleRad);
             }

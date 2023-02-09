@@ -81,11 +81,10 @@ export interface ModelToDomOption {
 }
 
 /**
- * !!! This is a temporary interface and will be removed in the future !!!
- *
- * An interface of editor with Content Model support (in experiment)
+ * An interface of editor with Content Model support.
+ * (This interface is still under development, and may still be changed in the future with some breaking changes)
  */
-export interface IExperimentalContentModelEditor extends IEditor {
+export interface IContentModelEditor extends IEditor {
     /**
      * Create Content Model from DOM tree in this editor
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),

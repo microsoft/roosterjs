@@ -2,7 +2,7 @@ import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat'
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { Border } from '../../publicTypes/interface/Border';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set image border style for all selected images at selection.
@@ -12,7 +12,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  * @param borderRadius the border radius value, if undefined, the border radius will keep the actual value
  */
 export default function setImageBorder(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     border: Border,
     borderRadius?: string
 ) {

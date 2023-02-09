@@ -13,6 +13,7 @@ import {
     UnderlineFormatRenderer,
     SuperOrSubScriptFormatRenderer,
 } from './formatPart/BasicFormatRenderers';
+import { LineHeightFormatRenderer } from './formatPart/LineHeightFormatRenderer';
 
 const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,
@@ -24,6 +25,7 @@ const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     UnderlineFormatRenderer,
     StrikeFormatRenderer,
     SuperOrSubScriptFormatRenderer,
+    LineHeightFormatRenderer,
 ];
 
 export function SegmentFormatView(props: { format: ContentModelSegmentFormat }) {

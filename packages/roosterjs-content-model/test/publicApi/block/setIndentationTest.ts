@@ -1,16 +1,16 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as setModelIndentation from '../../../lib/modelApi/block/setModelIndentation';
 import setIndentation from '../../../lib/publicApi/block/setIndentation';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('setIndentation', () => {
     const fakeModel: any = { a: 'b' };
-    let editor: IExperimentalContentModelEditor;
+    let editor: IContentModelEditor;
 
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
     });
 
     it('indent', () => {

@@ -1,10 +1,10 @@
 import * as pendingFormat from '../../lib/publicApi/format/pendingFormat';
-import ContentModelPlugin from '../../lib/publicPlugin/ContentModelPlugin';
+import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
 import { addSegment } from '../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../lib/modelApi/creators/createText';
-import { IExperimentalContentModelEditor } from '../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('ContentModelPlugin', () => {
@@ -12,7 +12,7 @@ describe('ContentModelPlugin', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
-        const editor = ({} as any) as IExperimentalContentModelEditor;
+        const editor = ({} as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -39,7 +39,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
         const model = createContentModelDocument();
 
@@ -71,7 +71,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -101,7 +101,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -134,7 +134,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -193,7 +193,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -247,7 +247,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -273,7 +273,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -300,7 +300,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);

@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { ItalicButtonStringKey, RibbonButton } from 'roosterjs-react';
 import { toggleItalic } from 'roosterjs-content-model';
 

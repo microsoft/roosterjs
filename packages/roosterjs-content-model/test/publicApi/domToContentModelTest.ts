@@ -1,6 +1,6 @@
 import * as createDomToModelContext from '../../lib/domToModel/context/createDomToModelContext';
 import * as normalizeContentModel from '../../lib/modelApi/common/normalizeContentModel';
-import domToContentModel from '../../lib/publicApi/domToContentModel';
+import domToContentModel from '../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { DomToModelContext } from '../../lib/publicTypes/context/DomToModelContext';
 
@@ -15,6 +15,7 @@ describe('domToContentModel', () => {
             },
             defaultStyles: {},
             zoomScaleFormat: {},
+            segmentFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);
@@ -54,6 +55,7 @@ describe('domToContentModel', () => {
             },
             defaultStyles: {},
             zoomScaleFormat: {},
+            segmentFormat: {},
         } as any) as DomToModelContext;
 
         spyOn(createDomToModelContext, 'createDomToModelContext').and.returnValue(mockContext);

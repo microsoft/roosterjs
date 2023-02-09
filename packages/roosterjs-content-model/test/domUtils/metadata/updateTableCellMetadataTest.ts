@@ -1,6 +1,6 @@
 import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
-import { updateTableCellMetadata } from '../../../lib/modelApi/metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from '../../../lib/domUtils/metadata/updateTableCellMetadata';
 
 describe('updateTableCellMetadata', () => {
     it('No value', () => {

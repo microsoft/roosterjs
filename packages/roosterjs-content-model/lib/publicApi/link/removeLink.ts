@@ -2,8 +2,8 @@ import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSe
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { HyperLinkColorPlaceholder } from '../../domUtils/constant';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Remove link at selection. If no links at selection, do nothing.
@@ -11,7 +11,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  * If only part of a link is selected, the whole link style will be removed.
  * @param editor The editor instance
  */
-export default function removeLink(editor: IExperimentalContentModelEditor) {
+export default function removeLink(editor: IContentModelEditor) {
     formatWithContentModel(editor, 'removeLink', model => {
         adjustSegmentSelection(
             model,

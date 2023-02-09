@@ -1,10 +1,9 @@
-import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
 import * as pendingFormat from '../../../lib/publicApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import domToContentModel from '../../../lib/publicApi/domToContentModel';
+import domToContentModel from '../../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createRange } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -356,13 +355,7 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
-
-        spyOn(getComputedStyles, 'getComputedStyle').and.callFake(
-            (node: HTMLElement, style: string) => {
-                return node.style.fontSize;
-            }
-        );
+        } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');
 
@@ -386,8 +379,5 @@ describe('changeFontSize', () => {
                 },
             ],
         });
-
-        expect(getComputedStyles.getComputedStyle).toHaveBeenCalledTimes(1);
-        expect(getComputedStyles.getComputedStyle).toHaveBeenCalledWith(div, 'font-size');
     });
 });

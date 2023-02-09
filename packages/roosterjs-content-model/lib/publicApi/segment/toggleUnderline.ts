@@ -1,11 +1,11 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggle underline style
  * @param editor The editor to operate on
  */
-export default function toggleUnderline(editor: IExperimentalContentModelEditor) {
+export default function toggleUnderline(editor: IContentModelEditor) {
     formatSegmentWithContentModel(
         editor,
         'toggleUnderline',

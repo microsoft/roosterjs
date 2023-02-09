@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Change the capitalization of text in the selection
@@ -10,7 +10,7 @@ import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimental
  * Default is the host environment’s current locale.
  */
 export default function changeCapitalization(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     capitalization: 'sentence' | 'lowerCase' | 'upperCase' | 'capitalize',
     language?: string
 ) {

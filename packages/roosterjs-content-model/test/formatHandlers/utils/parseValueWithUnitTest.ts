@@ -52,4 +52,16 @@ describe('parseValueWithUnit', () => {
     it('%', () => {
         runTest('% ', [0, 10, 11, -11]);
     });
+
+    it('px to pt', () => {
+        const result = parseValueWithUnit('16px', undefined, 'pt');
+
+        expect(result).toBe(12);
+    });
+
+    it('pt to pt', () => {
+        const result = parseValueWithUnit('16pt', undefined, 'pt');
+
+        expect(result).toBe(16);
+    });
 });

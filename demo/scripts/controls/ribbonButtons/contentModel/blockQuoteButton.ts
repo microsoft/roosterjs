@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { QuoteButtonStringKey, RibbonButton } from 'roosterjs-react';
 import { toggleBlockQuote } from 'roosterjs-content-model';
 

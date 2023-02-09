@@ -1,7 +1,7 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
 import { changeImage } from 'roosterjs-content-model';
 import { createElement } from 'roosterjs-editor-dom';
 import { CreateElementData } from 'roosterjs-editor-types';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { RibbonButton } from 'roosterjs-react';
 
 const FileInput: CreateElementData = {

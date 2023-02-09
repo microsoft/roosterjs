@@ -1,5 +1,5 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
 import { IncreaseIndentButtonStringKey, RibbonButton } from 'roosterjs-react';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { setIndentation } from 'roosterjs-content-model';
 
 /**

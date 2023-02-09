@@ -1,7 +1,7 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 
 const DefaultQuoteFormat: ContentModelBlockFormat = {
@@ -27,7 +27,7 @@ const BuildInQuoteFormat: ContentModelBlockFormat = {
  * @param segmentFormat @optional Segment format for the content of model
  */
 export default function toggleBlockQuote(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat,
     segmentFormat: ContentModelSegmentFormat = DefaultSegmentFormat
 ) {
