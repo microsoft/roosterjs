@@ -2,7 +2,6 @@ import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -228,11 +227,8 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
-                            link: { format: { href: '/test' }, dataset: {} },
+                            format: {},
+                            link: { format: { href: '/test', underline: true }, dataset: {} },
                             text: 'test',
                         },
                     ],
@@ -264,12 +260,9 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
+                            format: {},
                             link: {
-                                format: { href: '/test' },
+                                format: { href: '/test', underline: true },
                                 dataset: {
                                     a: 'b',
                                     c: 'd',
@@ -537,7 +530,9 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Divider',
                     tagName: 'div',
-                    format: { borderBottom: '1px solid black' },
+                    format: {
+                        borderBottom: '1px solid black',
+                    },
                 },
                 {
                     blockType: 'Paragraph',

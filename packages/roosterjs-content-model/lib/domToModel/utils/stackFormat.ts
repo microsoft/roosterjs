@@ -1,24 +1,17 @@
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-
-/**
- * @internal
- */
-export type ObjectStackType = 'empty';
-
-/**
- * @internal
- */
-export type ShallowObjectStackType = 'shallowClone' | 'shallowCloneForBlock' | ObjectStackType;
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal
  */
 export interface StackFormatOptions {
-    segment?: ShallowObjectStackType;
-    paragraph?: ShallowObjectStackType;
-    link?: ObjectStackType;
+    segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
+    paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
+    link?: 'linkDefault' | 'empty';
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -29,6 +22,15 @@ export interface StackFormatOptions {
 //   <div>line 2</div>  <---------------------- not in red here
 // </span>
 const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
+
+const CopiedStylesForBlockInherit: (keyof ContentModelBlockFormat)[] = [
+    'backgroundColor',
+    'direction',
+    'textAlign',
+    'isTextAlignFromAttr',
+    'lineHeight',
+    'whiteSpace',
+];
 
 /**
  * @internal
@@ -44,13 +46,7 @@ export function stackFormat(
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.link =
-            link == 'empty'
-                ? {
-                      format: {},
-                      dataset: {},
-                  }
-                : linkFormat;
+        context.link = stackLinkInternal(linkFormat, link);
 
         callback();
     } finally {
@@ -60,22 +56,54 @@ export function stackFormat(
     }
 }
 
+function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
+    switch (link) {
+        case 'linkDefault':
+            return {
+                format: {
+                    underline: true,
+                },
+                dataset: {},
+            };
+
+        case 'empty':
+            return {
+                format: {},
+                dataset: {},
+            };
+
+        default:
+            return linkFormat;
+    }
+}
+
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType: ShallowObjectStackType | undefined
+    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCopyInherit' | 'empty'
 ): T | {} {
-    const result =
-        processType == 'empty'
-            ? {}
-            : processType == 'shallowClone' || processType == 'shallowCloneForBlock'
-            ? { ...format }
-            : format;
+    switch (processType) {
+        case 'empty':
+            return {};
 
-    if (processType == 'shallowCloneForBlock') {
-        SkippedStylesForBlock.forEach(key => {
-            delete (result as ContentModelSegmentFormat)[key];
-        });
+        case undefined:
+            return format;
+
+        default:
+            const result = { ...format };
+
+            getObjectKeys(format).forEach(key => {
+                if (
+                    (processType == 'shallowCloneForBlock' &&
+                        SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
+                            0) ||
+                    (processType == 'shallowCopyInherit' &&
+                        CopiedStylesForBlockInherit.indexOf(key as keyof ContentModelBlockFormat) <
+                            0)
+                ) {
+                    delete result[key];
+                }
+            });
+
+            return result;
     }
-
-    return result;
 }

@@ -2,6 +2,7 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import { DatasetFormat } from './formatParts/DatasetFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
@@ -49,6 +50,11 @@ export interface FormatHandlerTypeMap {
      * Format for BorderBoxFormat
      */
     borderBox: BorderBoxFormat;
+
+    /**
+     * Format for BoxShadowFormat
+     */
+    boxShadow: BoxShadowFormat;
 
     /**
      * Format for DatasetFormat

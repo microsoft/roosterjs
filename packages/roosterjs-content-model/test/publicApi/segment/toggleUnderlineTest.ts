@@ -312,4 +312,102 @@ describe('toggleUnderline', () => {
             1
         );
     });
+
+    it('Turn on underline with link', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                link: {
+                                    format: {},
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { underline: true },
+                                link: {
+                                    format: { underline: true },
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
+
+    it('Turn off underline with link', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    underline: true,
+                                },
+                                link: {
+                                    format: { underline: true },
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { underline: false },
+                                link: {
+                                    format: { underline: false },
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
 });

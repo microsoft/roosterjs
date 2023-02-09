@@ -26,7 +26,6 @@ describe('stackFormat', () => {
         const callback = jasmine.createSpy().and.callFake(() => {
             expect(context.implicitFormat).toEqual({
                 underline: true,
-                textColor: '__hyperLinkColor',
             });
             context.implicitFormat.fontSize = '10px';
         });
@@ -42,7 +41,6 @@ describe('stackFormat', () => {
         const callback = jasmine.createSpy().and.callFake(() => {
             expect(context.implicitFormat).toEqual({
                 underline: true,
-                textColor: '__hyperLinkColor',
             });
             context.implicitFormat.fontSize = '10px';
             throw new Error('test');

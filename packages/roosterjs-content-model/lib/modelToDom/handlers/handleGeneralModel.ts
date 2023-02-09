@@ -5,7 +5,6 @@ import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandl
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
-import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
@@ -16,46 +15,23 @@ export const handleGeneralModel: ContentModelHandler<ContentModelGeneralBlock> =
     group: ContentModelGeneralBlock,
     context: ModelToDomContext
 ) => {
-    const newParent = group.element.cloneNode();
+    const element = group.element.cloneNode();
 
-    if (isGeneralSegment(group) && isNodeOfType(newParent, NodeType.Element)) {
+    parent.appendChild(element);
+
+    if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
         if (!group.element.firstChild) {
-            context.regularSelection.current.segment = newParent;
+            context.regularSelection.current.segment = element;
         }
 
-        stackFormat(context, group.link ? 'a' : null, () => {
-            let segmentElement: HTMLElement;
+        applyFormat(element, context.formatAppliers.segment, group.format, context);
 
-            if (group.link) {
-                segmentElement = doc.createElement('a');
-
-                parent.appendChild(segmentElement);
-                segmentElement.appendChild(newParent);
-
-                applyFormat(
-                    segmentElement,
-                    context.formatAppliers.link,
-                    group.link.format,
-                    context
-                );
-                applyFormat(
-                    segmentElement,
-                    context.formatAppliers.dataset,
-                    group.link.dataset,
-                    context
-                );
-            } else {
-                segmentElement = newParent;
-                parent.appendChild(newParent);
-            }
-
-            applyFormat(segmentElement, context.formatAppliers.segment, group.format, context);
-        });
-    } else {
-        parent.appendChild(newParent);
+        if (group.link) {
+            context.modelHandlers.link(doc, element, group.link, context);
+        }
     }
 
-    context.modelHandlers.blockGroupChildren(doc, newParent, group, context);
+    context.modelHandlers.blockGroupChildren(doc, element, group, context);
 };
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {

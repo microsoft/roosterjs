@@ -1,4 +1,4 @@
-import domToContentModel from '../../publicApi/domToContentModel';
+import domToContentModel from '../../domToModel/domToContentModel';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { safeInstanceOf, wrap } from 'roosterjs-editor-dom';
@@ -21,8 +21,6 @@ export function insertContent(
             htmlContent,
             {
                 isDarkMode: !!isFromDarkMode,
-                zoomScale: 1,
-                isRightToLeft: false,
             },
             {
                 includeRoot: true,

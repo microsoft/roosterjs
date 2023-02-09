@@ -1,17 +1,15 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { DomToModelOption, IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { formatWithContentModel } from './formatWithContentModel';
+import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import {
-    DomToModelOption,
-    IExperimentalContentModelEditor,
-} from '../../publicTypes/IExperimentalContentModelEditor';
 /**
  * @internal
  */
 export function formatSegmentWithContentModel(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     apiName: string,
     toggleStyleCallback: (
         format: ContentModelSegmentFormat,
@@ -30,7 +28,7 @@ export function formatSegmentWithContentModel(
         apiName,
         model => {
             let segments = getSelectedSegments(model, !!includingFormatHolder);
-            const pendingFormat = editor.getPendingFormat();
+            const pendingFormat = getPendingFormat(editor);
             let isCollapsedSelection =
                 segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 
@@ -59,7 +57,11 @@ export function formatSegmentWithContentModel(
             );
 
             if (!pendingFormat && isCollapsedSelection) {
-                editor.setPendingFormat(segments[0].format);
+                const pos = editor.getFocusedPosition();
+
+                if (pos) {
+                    setPendingFormat(editor, segments[0].format, pos);
+                }
             }
 
             if (isCollapsedSelection) {

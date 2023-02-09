@@ -87,10 +87,7 @@ describe('Default styles', () => {
         parseFormat(element, defaultContext.formatParsers.segment, segmentFormat, defaultContext);
         parseFormat(element, defaultContext.formatParsers.link, linkFormat, defaultContext);
 
-        expect(segmentFormat).toEqual({
-            underline: true,
-            textColor: '__hyperLinkColor',
-        });
+        expect(segmentFormat).toEqual({});
         expect(linkFormat).toEqual({
             href: 'http://test.com',
         });

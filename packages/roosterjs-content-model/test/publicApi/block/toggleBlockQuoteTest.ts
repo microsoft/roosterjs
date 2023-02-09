@@ -1,19 +1,16 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as toggleModelBlockQuote from '../../../lib/modelApi/block/toggleModelBlockQuote';
 import toggleBlockQuote from '../../../lib/publicApi/block/toggleBlockQuote';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('toggleBlockQuote', () => {
     const fakeModel: any = { a: 'b' };
-    let editor: IExperimentalContentModelEditor;
+    let editor: IContentModelEditor;
 
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
-            getPendingFormat: (): ContentModelSegmentFormat | null => null,
-            setPendingFormat: () => {},
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
     });
 
     it('toggleBlockQuote', () => {
