@@ -1,18 +1,18 @@
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { paragraphTestCommon } from './paragraphTestCommon';
-import toggleMargins from '../../../lib/publicApi/block/toggleMargins';
-import { MarginFormat } from '../../../lib/publicTypes/format/formatParts/MarginFormat';
+import setParagraphMargin from '../../../lib/publicApi/block/setParagraphMargin';
 
-describe('setMargins', () => {
+describe('setParagraphMargin', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
-        marginFormat: MarginFormat,
+        marginTop?: string | null,
+        marginBottom?: string | null,
         calledTimes: number = 1
     ) {
         paragraphTestCommon(
             'toggleMargins',
-            editor => toggleMargins(editor, marginFormat),
+            editor => setParagraphMargin(editor, marginTop, marginBottom),
             model,
             result,
             calledTimes
@@ -29,9 +29,8 @@ describe('setMargins', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            {
-                marginTop: '8px',
-            },
+            '8px' /*marginTop */,
+            undefined /**marginBottom */,
             0
         );
     });
@@ -70,9 +69,8 @@ describe('setMargins', () => {
                     },
                 ],
             },
-            {
-                marginTop: '8px',
-            },
+            '8px' /*marginTop */,
+            undefined /**marginBottom */,
             0
         );
     });
@@ -127,9 +125,8 @@ describe('setMargins', () => {
                     },
                 ],
             },
-            {
-                marginTop: '8px',
-            },
+            '8px' /*marginTop */,
+            undefined /**marginBottom */,
             1
         );
     });
@@ -176,12 +173,13 @@ describe('setMargins', () => {
                     },
                 ],
             },
-            { marginTop: '8px' },
+            '8px' /*marginTop */,
+            undefined /**marginBottom */,
             1
         );
     });
 
-    it('Replaces properties correctly', () => {
+    it('Deletes and ignores properties correctly', () => {
         runTest(
             {
                 blockGroupType: 'Document',
@@ -189,8 +187,9 @@ describe('setMargins', () => {
                     {
                         blockType: 'Paragraph',
                         format: {
-                            marginTop: '8px',
-                            marginRight: '12px',
+                            marginTop: '2px',
+                            marginRight: '3px',
+                            marginBottom: '8pt',
                         },
                         segments: [
                             {
@@ -213,7 +212,8 @@ describe('setMargins', () => {
                     {
                         blockType: 'Paragraph',
                         format: {
-                            marginRight: '12px',
+                            marginRight: '3px',
+                            marginBottom: '8pt',
                         },
                         decorator: {
                             tagName: 'p',
@@ -234,7 +234,8 @@ describe('setMargins', () => {
                     },
                 ],
             },
-            { marginTop: '8px' },
+            null /*marginTop */,
+            undefined /**marginBottom */,
             1
         );
     });
