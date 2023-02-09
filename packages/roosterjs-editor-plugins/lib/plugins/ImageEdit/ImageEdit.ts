@@ -499,13 +499,16 @@ export default class ImageEdit implements EditorPlugin {
                     this.updateWrapper();
                 }
 
-                updateRotateHandlePosition(
-                    this.editInfo,
-                    this.editor.getVisibleViewport(),
-                    marginVertical,
-                    rotateCenter,
-                    rotateHandle
-                );
+                const viewport = this.editor.getVisibleViewport();
+                if (rotateHandle && rotateCenter && viewport) {
+                    updateRotateHandlePosition(
+                        this.editInfo,
+                        this.editor.getVisibleViewport(),
+                        marginVertical,
+                        rotateCenter,
+                        rotateHandle
+                    );
+                }
 
                 updateHandleCursor(resizeHandles, angleRad);
             }
