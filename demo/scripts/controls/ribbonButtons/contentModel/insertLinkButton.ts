@@ -49,7 +49,6 @@ export const insertLinkButton: RibbonButton<InsertLinkButtonStringKey> = {
 
                 if (
                     result &&
-                    result.displayText &&
                     result.url &&
                     (result.displayText != displayText || result.url != url)
                 ) {

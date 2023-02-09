@@ -7,6 +7,7 @@ import { handleDivider } from '../handlers/handleDivider';
 import { handleEntity } from '../handlers/handleEntity';
 import { handleGeneralModel } from '../handlers/handleGeneralModel';
 import { handleImage } from '../handlers/handleImage';
+import { handleLink } from '../handlers/handleLink';
 import { handleList } from '../handlers/handleList';
 import { handleListItem } from '../handlers/handleListItem';
 import { handleParagraph } from '../handlers/handleParagraph';
@@ -27,6 +28,7 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     general: handleGeneralModel,
     divider: handleDivider,
     image: handleImage,
+    link: handleLink,
     list: handleList,
     listItem: handleListItem,
     paragraph: handleParagraph,
