@@ -1156,7 +1156,7 @@ export default class Editor implements IEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    private getCore(): EditorCore {
+    protected getCore(): EditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }

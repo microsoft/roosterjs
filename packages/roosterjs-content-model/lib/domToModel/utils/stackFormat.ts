@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getObjectKeys } from 'roosterjs-editor-dom';
@@ -10,7 +11,7 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
 export interface StackFormatOptions {
     segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
     paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
-    link?: 'empty';
+    link?: 'linkDefault' | 'empty';
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -45,19 +46,34 @@ export function stackFormat(
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.link =
-            link == 'empty'
-                ? {
-                      format: {},
-                      dataset: {},
-                  }
-                : linkFormat;
+        context.link = stackLinkInternal(linkFormat, link);
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
         context.link = linkFormat;
+    }
+}
+
+function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
+    switch (link) {
+        case 'linkDefault':
+            return {
+                format: {
+                    underline: true,
+                },
+                dataset: {},
+            };
+
+        case 'empty':
+            return {
+                format: {},
+                dataset: {},
+            };
+
+        default:
+            return linkFormat;
     }
 }
 

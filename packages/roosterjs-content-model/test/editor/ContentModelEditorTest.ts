@@ -2,7 +2,8 @@ import * as contentModelToDom from '../../lib/modelToDom/contentModelToDom';
 import * as domToContentModel from '../../lib/domToModel/domToContentModel';
 import * as entityPlaceholderUtils from 'roosterjs-editor-dom/lib/entity/entityPlaceholderUtils';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
+import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('ContentModelEditor', () => {
     it('domToContentModel', () => {
@@ -21,7 +22,7 @@ describe('ContentModelEditor', () => {
             div,
             {
                 isDarkMode: false,
-                getDarkColor: undefined,
+                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
             },
             {
@@ -59,7 +60,7 @@ describe('ContentModelEditor', () => {
             mockedModel,
             {
                 isDarkMode: false,
-                getDarkColor: undefined,
+                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
             },
             undefined
@@ -96,7 +97,7 @@ describe('ContentModelEditor', () => {
             mockedModel,
             {
                 isDarkMode: false,
-                getDarkColor: undefined,
+                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
             },
             undefined
@@ -107,5 +108,35 @@ describe('ContentModelEditor', () => {
             div,
             mockedPairs
         );
+    });
+
+    it('createContentModel in EditorReady event', () => {
+        let model: ContentModelDocument | undefined;
+        let pluginEditor: any;
+
+        const div = document.createElement('div');
+        const plugin: EditorPlugin = {
+            getName: () => '',
+            initialize: e => {
+                pluginEditor = e;
+            },
+            dispose: () => {
+                pluginEditor = undefined;
+            },
+            onPluginEvent: event => {
+                if (event.eventType == PluginEventType.EditorReady) {
+                    model = pluginEditor.createContentModel();
+                }
+            },
+        };
+        const editor = new ContentModelEditor(div, {
+            plugins: [plugin],
+        });
+        editor.dispose();
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+        });
     });
 });

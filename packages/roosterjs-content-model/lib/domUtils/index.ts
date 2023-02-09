@@ -4,4 +4,3 @@ export { updateListMetadata } from './metadata/updateListMetadata';
 export { updateMetadata } from './metadata/updateMetadata';
 export { updateTableCellMetadata } from './metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './metadata/updateTableMetadata';
-export { HyperLinkColorPlaceholder } from './constant';

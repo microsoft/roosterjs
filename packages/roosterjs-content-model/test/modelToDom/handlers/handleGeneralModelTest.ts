@@ -116,11 +116,12 @@ describe('handleBlockGroup', () => {
             cloneNode: () => clonedChild,
             firstChild: true,
         } as any) as HTMLElement;
-        const group = createGeneralSegment(childMock, { underline: true });
+        const group = createGeneralSegment(childMock);
 
         group.link = {
             format: {
                 href: '/test',
+                underline: true,
             },
             dataset: {},
         };

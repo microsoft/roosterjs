@@ -131,7 +131,7 @@ const defaultFormatKeysPerCategory: {
         'direction',
     ],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
-    link: ['link'],
+    link: ['link', 'textColor', 'underline'],
     dataset: ['dataset'],
     divider: [...blockFormatHandlers, 'display', 'size'],
 };
