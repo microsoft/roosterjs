@@ -30,16 +30,16 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.57% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/14</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
@@ -130,19 +130,14 @@
 <a name='L71'></a><a href='#L71'>71</a>
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -158,20 +153,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -190,6 +175,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -208,7 +194,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -220,8 +208,9 @@ import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';
-import { EditorOptions, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { Position, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+&nbsp;
 import {
     DomToModelOption,
     IContentModelEditor,
@@ -233,24 +222,14 @@ import {
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export default class ContentModelEditor extends Editor implements IContentModelEditor {
-    private getDarkColor: ((lightColor: string) =&gt; string) | undefined;
-&nbsp;
-    /**
-     * Creates an instance of ExperimentalContentModelEditor
-     * @param contentDiv The DIV HTML element which will be the container element of editor
-     * @param options An optional options object to customize the editor
-     */
-    constructor(private contentDiv: HTMLDivElement, options?: EditorOptions) {
-        super(contentDiv, options);
-        this.getDarkColor = <span class="branch-1 cbranch-no" title="branch not covered" >options?.getDarkColor;</span>
-    }
-&nbsp;
     /**
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(option?: DomToModelOption): ContentModelDocument {
-        return domToContentModel(this.contentDiv, this.createEditorContext(), {
+        const core = this.getCore();
+&nbsp;
+        return domToContentModel(core.contentDiv, this.createEditorContext(), {
             selectionRange: this.getSelectionRangeEx(),
             alwaysNormalizeTable: true,
             ...(option || {}),
@@ -269,16 +248,17 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             this.createEditorContext(),
             option
         );
+        const core = this.getCore();
 &nbsp;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (range<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype == SelectionRangeTypes.Normal) {
             // Need to get start and end from range position before merge because range can be changed during merging
             const start = Position.getStart(range.ranges[0]);
             const end = Position.getEnd(range.ranges[0]);
 &nbsp;
-            restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);
+            restoreContentWithEntityPlaceholder(fragment, core.contentDiv, entityPairs);
             this.select(start, end);
         } else {
-<span class="cstat-no" title="statement not covered" >            restoreContentWithEntityPlaceholder(fragment, this.contentDiv, entityPairs);</span>
+<span class="cstat-no" title="statement not covered" >            restoreContentWithEntityPlaceholder(fragment, core.contentDiv, entityPairs);</span>
 <span class="cstat-no" title="statement not covered" >            this.select(range);</span>
         }
     }
@@ -287,9 +267,11 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      * Create a EditorContext object used by ContentModel API
      */
     private createEditorContext(): EditorContext {
+        const core = this.getCore();
+&nbsp;
         return {
             isDarkMode: this.isDarkMode(),
-            getDarkColor: this.getDarkColor,
+            getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
         };
     }
@@ -301,7 +283,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Feb 09 2023 23:37:18 GMT+0000 (Coordinated Universal Time)
+                at Thu Feb 09 2023 23:46:53 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
