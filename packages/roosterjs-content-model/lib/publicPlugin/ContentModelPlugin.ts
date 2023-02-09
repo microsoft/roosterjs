@@ -1,6 +1,7 @@
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createText } from '../modelApi/creators/createText';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { getPendingFormat, setPendingFormat } from '../publicApi/format/pendingFormat';
 import { IExperimentalContentModelEditor } from '../publicTypes/IExperimentalContentModelEditor';
 import { iterateSelections } from '../modelApi/selection/iterateSelections';
 
@@ -55,10 +56,10 @@ export default class ContentModelPlugin implements EditorPlugin {
                     !this.editor.isInIME()) || // In Safari, isComposing will be undfined but isInIME() works
                     event.eventType == PluginEventType.CompositionEnd) &&
                 event.rawEvent.data &&
-                (format = this.editor.getPendingFormat())
+                (format = getPendingFormat(this.editor))
             ) {
                 applyPendingFormat(this.editor, event.rawEvent.data, format);
-                this.editor.setPendingFormat(null);
+                setPendingFormat(this.editor, null);
             }
 
             if (
@@ -68,7 +69,7 @@ export default class ContentModelPlugin implements EditorPlugin {
                 event.eventType == PluginEventType.MouseDown ||
                 event.eventType == PluginEventType.ContentChanged
             ) {
-                this.editor.setPendingFormat(null);
+                setPendingFormat(this.editor, null);
             }
         }
     }

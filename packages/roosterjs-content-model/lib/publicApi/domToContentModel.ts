@@ -4,6 +4,9 @@ import { createDomToModelContext } from '../domToModel/context/createDomToModelC
 import { DomToModelOption } from '../publicTypes/IExperimentalContentModelEditor';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
+import { parseFormat } from '../domToModel/utils/parseFormat';
+import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
+import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -18,11 +21,16 @@ export default function domToContentModel(
     option: DomToModelOption
 ): ContentModelDocument {
     const model = createContentModelDocument();
-    const domToModelContext = createDomToModelContext(editorContext, option);
-    const { element, child } = domToModelContext.elementProcessors;
-    const processor = option.includeRoot ? element : child;
+    const context = createDomToModelContext(editorContext, option);
 
-    processor(model, root, domToModelContext);
+    parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
+    parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
+
+    const processor = option.includeRoot
+        ? context.elementProcessors.element
+        : context.elementProcessors.child;
+
+    processor(model, root, context);
 
     normalizeContentModel(model);
 

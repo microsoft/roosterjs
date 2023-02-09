@@ -1,3 +1,4 @@
+import * as getPendingFormat from '../../../lib/publicApi/format/pendingFormat';
 import getSegmentFormat from '../../../lib/publicApi/format/getSegmentFormat';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -19,6 +20,8 @@ describe('getSegmentFormat', () => {
         pendingFormat: ContentModelSegmentFormat | null,
         expectedFormat: ContentModelSegmentFormat | null
     ) {
+        spyOn(getPendingFormat, 'getPendingFormat').and.returnValue(pendingFormat);
+
         const editor = ({
             getUndoState: () => ({
                 canUndo: false,
@@ -26,7 +29,6 @@ describe('getSegmentFormat', () => {
             }),
             isDarkMode: () => false,
             getZoomScale: () => 1,
-            getPendingFormat: () => pendingFormat,
             createContentModel: (options: DomToModelOption) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
