@@ -1,4 +1,4 @@
-import * as getPendingFormat from '../../../lib/publicApi/format/pendingFormat';
+import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import getFormatState from '../../../lib/publicApi/format/getFormatState';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';

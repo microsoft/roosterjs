@@ -1,9 +1,7 @@
-import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { createText } from '../modelApi/creators/createText';
+import applyPendingFormat from '../publicApi/format/applyPendingFormat';
+import { canApplyPendingFormat, clearPendingFormat } from '../modelApi/format/pendingFormat';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getPendingFormat, setPendingFormat } from '../publicApi/format/pendingFormat';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
-import { iterateSelections } from '../modelApi/selection/iterateSelections';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -47,71 +45,42 @@ export default class ContentModelPlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor) {
-            let format: ContentModelSegmentFormat | null;
+        if (!this.editor) {
+            return;
+        }
 
-            if (
-                ((event.eventType == PluginEventType.Input &&
-                    !event.rawEvent.isComposing &&
-                    !this.editor.isInIME()) || // In Safari, isComposing will be undfined but isInIME() works
-                    event.eventType == PluginEventType.CompositionEnd) &&
-                event.rawEvent.data &&
-                (format = getPendingFormat(this.editor))
-            ) {
-                applyPendingFormat(this.editor, event.rawEvent.data, format);
-                setPendingFormat(this.editor, null);
-            }
+        switch (event.eventType) {
+            case PluginEventType.Input:
+                // In Safari, isComposing will be undefined but isInIME() works
+                if (!event.rawEvent.isComposing && !this.editor.isInIME()) {
+                    this.checkAndApplyPendingFormat(event.rawEvent.data);
+                }
 
-            if (
-                (event.eventType == PluginEventType.KeyDown &&
-                    event.rawEvent.which >= Keys.PAGEUP &&
-                    event.rawEvent.which <= Keys.DOWN) ||
-                event.eventType == PluginEventType.MouseDown ||
-                event.eventType == PluginEventType.ContentChanged
-            ) {
-                setPendingFormat(this.editor, null);
-            }
+                break;
+
+            case PluginEventType.CompositionEnd:
+                this.checkAndApplyPendingFormat(event.rawEvent.data);
+                break;
+
+            case PluginEventType.KeyDown:
+                if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
+                    clearPendingFormat(this.editor);
+                }
+                break;
+
+            case PluginEventType.MouseUp:
+            case PluginEventType.ContentChanged:
+                if (!canApplyPendingFormat(this.editor)) {
+                    clearPendingFormat(this.editor);
+                }
+                break;
         }
     }
-}
 
-function applyPendingFormat(
-    editor: IContentModelEditor,
-    data: string,
-    format: ContentModelSegmentFormat
-) {
-    const model = editor.createContentModel();
-    let isChanged = false;
-
-    iterateSelections([model], (_, __, block, segments) => {
-        if (
-            block?.blockType == 'Paragraph' &&
-            segments?.length == 1 &&
-            segments[0].segmentType == 'SelectionMarker'
-        ) {
-            const index = block.segments.indexOf(segments[0]);
-            const previousSegment = block.segments[index - 1];
-
-            if (previousSegment?.segmentType == 'Text') {
-                const text = previousSegment.text;
-
-                if (text.substr(-data.length, data.length) == data) {
-                    previousSegment.text = text.substring(0, text.length - data.length);
-
-                    const newText = createText(data, {
-                        ...previousSegment.format,
-                        ...format,
-                    });
-
-                    block.segments.splice(index, 0, newText);
-                    isChanged = true;
-                }
-            }
+    private checkAndApplyPendingFormat(data: string | null) {
+        if (this.editor && data) {
+            applyPendingFormat(this.editor, data);
+            clearPendingFormat(this.editor);
         }
-        return true;
-    });
-
-    if (isChanged) {
-        editor.setContentModel(model);
     }
 }
