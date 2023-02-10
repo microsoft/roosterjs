@@ -1,8 +1,6 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
-import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
-import { HyperLinkColorPlaceholder } from '../../domUtils/constant';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
@@ -18,7 +16,7 @@ export default function removeLink(editor: IContentModelEditor) {
             target => !!target.isSelected && !!target.link,
             (target, ref) =>
                 target.isSelected || // Expand the selection to any link that is involved. So we can remove multiple links together
-                (!!target.link && areSameFormats(target.link.format, ref.link!.format))
+                (!!target.link && target.link.format.href == ref.link!.format.href)
         );
 
         const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
@@ -28,11 +26,6 @@ export default function removeLink(editor: IContentModelEditor) {
             if (segment.link) {
                 isChanged = true;
 
-                if (segment.format.textColor == HyperLinkColorPlaceholder) {
-                    delete segment.format.textColor;
-                }
-
-                segment.format.underline = false;
                 delete segment.link;
             }
         });

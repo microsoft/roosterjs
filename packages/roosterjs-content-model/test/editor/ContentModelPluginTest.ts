@@ -1,4 +1,4 @@
-import * as pendingFormat from '../../lib/publicApi/format/pendingFormat';
+import * as pendingFormat from '../../lib/modelApi/format/pendingFormat';
 import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
 import { addSegment } from '../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
@@ -9,7 +9,7 @@ import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('ContentModelPlugin', () => {
     it('no pending format, trigger key down event', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
         const editor = ({} as any) as IContentModelEditor;
@@ -24,12 +24,12 @@ describe('ContentModelPlugin', () => {
 
         plugin.dispose();
 
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('no selection, trigger input event', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -53,12 +53,12 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger input event with isComposing = true', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -82,11 +82,11 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
     });
 
     it('with pending format and selection, no correct text before, trigger input event', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -112,11 +112,12 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger input event', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
@@ -134,6 +135,10 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
+            focus: () => {},
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -172,12 +177,12 @@ describe('ContentModelPlugin', () => {
                 },
             ],
         });
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger CompositionEnd event', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -193,6 +198,10 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            focus: () => {},
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -231,12 +240,12 @@ describe('ContentModelPlugin', () => {
                 },
             ],
         });
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('Non-input and cursor moving key down should not trigger pending format change', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -258,10 +267,12 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
     });
 
     it('Content changed event', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
@@ -273,6 +284,9 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -284,12 +298,14 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 
-    it('Mouse down event', () => {
-        spyOn(pendingFormat, 'setPendingFormat');
+    it('Mouse up event', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
@@ -305,13 +321,42 @@ describe('ContentModelPlugin', () => {
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: PluginEventType.MouseUp,
             rawEvent: ({} as any) as MouseEvent,
         });
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(editor, null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+    });
+
+    it('Mouse up event and pending format can still be applied', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(true);
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+
+        const editor = ({
+            createContentModel: () => model,
+            setContentModel,
+        } as any) as IContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseUp,
+            rawEvent: ({} as any) as MouseEvent,
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).not.toHaveBeenCalled();
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 });

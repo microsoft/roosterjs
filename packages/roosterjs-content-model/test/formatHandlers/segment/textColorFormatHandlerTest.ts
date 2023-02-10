@@ -1,7 +1,6 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { HyperLinkColorPlaceholder } from '../../../lib/domUtils/constant';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 import { TextColorFormat } from '../../../lib/publicTypes/format/formatParts/TextColorFormat';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
@@ -94,11 +93,9 @@ describe('textColorFormatHandler.parse', () => {
     });
 
     it('Color from hyperlink', () => {
-        textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+        textColorFormatHandler.parse(format, div, context, {});
 
-        expect(format).toEqual({
-            textColor: HyperLinkColorPlaceholder,
-        });
+        expect(format).toEqual({});
     });
 
     it('Color from hyperlink with override', () => {

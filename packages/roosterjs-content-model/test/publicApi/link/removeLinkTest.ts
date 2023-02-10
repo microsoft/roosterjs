@@ -78,7 +78,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                     ],
@@ -124,7 +124,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test1',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                         {
@@ -137,7 +137,7 @@ describe('removeLink', () => {
                             segmentType: 'Image',
                             src: 'test',
                             dataset: {},
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                             isSelectedAsImageSelection: false,
                         },
@@ -191,25 +191,25 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test1',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test2',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test3',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                         {
                             segmentType: 'Text',
                             text: 'test4',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                     ],
@@ -258,7 +258,7 @@ describe('removeLink', () => {
                         {
                             segmentType: 'Text',
                             text: 'test2',
-                            format: { underline: false },
+                            format: {},
                             isSelected: true,
                         },
                         {

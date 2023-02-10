@@ -11,11 +11,19 @@ export default function setTextColor(editor: IContentModelEditor, textColor: str
         editor,
         'setTextColor',
         textColor === null
-            ? format => {
+            ? (format, _, segment) => {
                   delete format.textColor;
+
+                  if (segment?.link) {
+                      delete segment.link.format.textColor;
+                  }
               }
-            : format => {
+            : (format, _, segment) => {
                   format.textColor = textColor;
+
+                  if (segment?.link) {
+                      segment.link.format.textColor = textColor;
+                  }
               },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/

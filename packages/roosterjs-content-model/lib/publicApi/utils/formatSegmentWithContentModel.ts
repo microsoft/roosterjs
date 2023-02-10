@@ -3,7 +3,7 @@ import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegme
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelOption, IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getPendingFormat, setPendingFormat } from '../format/pendingFormat';
+import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 /**
  * @internal
@@ -57,7 +57,11 @@ export function formatSegmentWithContentModel(
             );
 
             if (!pendingFormat && isCollapsedSelection) {
-                setPendingFormat(editor, segments[0].format);
+                const pos = editor.getFocusedPosition();
+
+                if (pos) {
+                    setPendingFormat(editor, segments[0].format, pos);
+                }
             }
 
             if (isCollapsedSelection) {
