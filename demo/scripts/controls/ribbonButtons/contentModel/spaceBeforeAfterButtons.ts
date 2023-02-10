@@ -1,5 +1,5 @@
 import { RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, setParagraphMargin } from 'roosterjs-content-model';
+import { isContentModelEditor, toggleMargins } from 'roosterjs-content-model';
 
 const spaceAfterButtonKey = 'buttonNameSpaceAfter';
 const spaceBeforeButtonKey = 'buttonNameSpaceBefore';
@@ -13,13 +13,11 @@ export const spaceAfterButton: RibbonButton<typeof spaceAfterButtonKey> = {
     unlocalizedText: 'Remove space after',
     iconName: 'CaretDown8',
     isChecked: formatState => !formatState.marginBottom || parseInt(formatState.marginBottom) <= 0,
-    onClick: (editor, _, _1, _2, { marginBottom }) => {
+    onClick: editor => {
         if (isContentModelEditor(editor)) {
-            setParagraphMargin(
-                editor,
-                undefined /* marginTop */,
-                parseInt(marginBottom) ? null : '8pt'
-            );
+            toggleMargins(editor, {
+                marginBottom: '8pt',
+            });
         }
         return true;
     },
@@ -34,13 +32,11 @@ export const spaceBeforeButton: RibbonButton<typeof spaceBeforeButtonKey> = {
     unlocalizedText: 'Add space before',
     iconName: 'CaretUp8',
     isChecked: formatState => parseInt(formatState.marginTop) > 0,
-    onClick: (editor, _, _1, _2, { marginTop }) => {
+    onClick: editor => {
         if (isContentModelEditor(editor)) {
-            setParagraphMargin(
-                editor,
-                parseInt(marginTop) ? null : '12pt',
-                undefined /* marginBottom */
-            );
+            toggleMargins(editor, {
+                marginTop: '12pt',
+            });
         }
         return true;
     },
