@@ -11,7 +11,7 @@ describe('setParagraphMargin', () => {
         calledTimes: number = 1
     ) {
         paragraphTestCommon(
-            'toggleMargins',
+            'setParagraphMargin',
             editor => setParagraphMargin(editor, marginTop, marginBottom),
             model,
             result,
