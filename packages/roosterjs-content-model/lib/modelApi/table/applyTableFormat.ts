@@ -6,8 +6,8 @@ import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTable
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
-import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     topBorderColor: '#ABABAB',

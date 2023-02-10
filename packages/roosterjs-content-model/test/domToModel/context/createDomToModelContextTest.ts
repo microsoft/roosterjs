@@ -12,8 +12,6 @@ import {
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
-        zoomScale: 1,
-        isRightToLeft: false,
         getDarkColor: undefined,
     };
     const listFormat: DomToModelListFormat = {
@@ -34,6 +32,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -47,8 +46,6 @@ describe('createDomToModelContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
-            zoomScale: 2,
-            isRightToLeft: true,
             getDarkColor: () => '',
         };
 
@@ -57,9 +54,8 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             ...editorContext,
             segmentFormat: {},
-            blockFormat: {
-                direction: 'rtl',
-            },
+            blockFormat: {},
+            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -92,6 +88,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            zoomScaleFormat: {},
             isInSelection: false,
             regularSelection: {
                 startContainer: 'DIV 1' as any,
@@ -129,6 +126,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            zoomScaleFormat: {},
             isInSelection: false,
             tableSelection: {
                 table: mockTable,
@@ -160,6 +158,7 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
+            zoomScaleFormat: {},
             link: {
                 format: {},
                 dataset: {},
@@ -180,8 +179,6 @@ describe('createDomToModelContext', () => {
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
                 getDarkColor,
             },
             {
@@ -195,13 +192,10 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            zoomScale: 2,
-            isRightToLeft: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
-            blockFormat: {
-                direction: 'rtl',
-            },
+            blockFormat: {},
+            zoomScaleFormat: {},
             segmentFormat: {},
             listFormat,
             link: {
@@ -218,8 +212,6 @@ describe('createDomToModelContext', () => {
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                zoomScale: 2,
-                isRightToLeft: true,
                 getDarkColor,
             },
             {
@@ -235,13 +227,10 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            zoomScale: 2,
-            isRightToLeft: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
-            blockFormat: {
-                direction: 'rtl',
-            },
+            blockFormat: {},
+            zoomScaleFormat: {},
             segmentFormat: {},
             link: {
                 format: {},

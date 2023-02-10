@@ -103,6 +103,7 @@ const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
+    defaultDisabled: Browser.isMac,
 };
 
 /**
@@ -113,6 +114,7 @@ const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
+    defaultDisabled: Browser.isMac,
 };
 
 /**
@@ -479,7 +481,7 @@ function shouldTriggerList(
     const traverser = editor.getBlockTraverser();
     const text =
         traverser && traverser.currentBlockElement
-            ? traverser.currentBlockElement.getTextContent()
+            ? traverser.currentBlockElement.getTextContent().slice(0, textBeforeCursor.length)
             : null;
     const isATheBeginning = text && text === textBeforeCursor;
     const listChains = getListChains(editor);

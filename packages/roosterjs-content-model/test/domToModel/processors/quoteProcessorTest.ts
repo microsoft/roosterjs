@@ -241,7 +241,9 @@ describe('quoteProcessor', () => {
         const childProcessor = jasmine
             .createSpy('childProcessor')
             .and.callFake((group, element, context) => {
-                expect(context.blockFormat).toEqual({});
+                expect(context.blockFormat).toEqual({
+                    backgroundColor: 'red',
+                });
                 expect(context.segmentFormat).toEqual({
                     fontSize: '20px',
                 });
@@ -269,10 +271,57 @@ describe('quoteProcessor', () => {
                         marginBottom: '1em',
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
+                        backgroundColor: 'red',
                     },
                     quoteSegmentFormat: {
                         textColor: 'blue',
                     },
+                },
+            ],
+        });
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('Verify inherited formats from context are correctly handled', () => {
+        const group = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+        const childProcessor = jasmine.createSpy('childProcessor');
+
+        quote.style.borderLeft = 'solid 1px black';
+
+        context.blockFormat.backgroundColor = 'red';
+        context.blockFormat.textAlign = 'center';
+        context.blockFormat.isTextAlignFromAttr = true;
+        context.blockFormat.lineHeight = '2';
+        context.blockFormat.whiteSpace = 'pre';
+        context.blockFormat.direction = 'rtl';
+
+        context.elementProcessors.child = childProcessor;
+
+        quoteProcessor(group, quote, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'Quote',
+                    blocks: [],
+                    format: {
+                        marginTop: '1em',
+                        marginRight: '40px',
+                        marginBottom: '1em',
+                        marginLeft: '40px',
+                        borderLeft: '1px solid black',
+                        backgroundColor: 'red',
+                        textAlign: 'center',
+                        isTextAlignFromAttr: true,
+                        lineHeight: '2',
+                        whiteSpace: 'pre',
+                        direction: 'rtl',
+                    },
+                    quoteSegmentFormat: {},
                 },
             ],
         });

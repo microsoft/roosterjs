@@ -105,7 +105,7 @@ function mergeTable(
                 const newCell = newTable.cells[i][j];
 
                 if (i == 0 && colIndex + j >= table.cells[0].length) {
-                    for (let k = 0; k < rowIndex; k++) {
+                    for (let k = 0; k < table.cells.length; k++) {
                         const leftCell = table.cells[k]?.[colIndex + j - 1];
                         table.cells[k][colIndex + j] = createTableCell(
                             false /*spanLeft*/,
@@ -121,7 +121,7 @@ function mergeTable(
                         table.cells[rowIndex + i] = [];
                     }
 
-                    for (let k = 0; k < colIndex; k++) {
+                    for (let k = 0; k < table.cells[rowIndex].length; k++) {
                         const aboveCell = table.cells[rowIndex + i - 1]?.[k];
                         table.cells[rowIndex + i][k] = createTableCell(
                             false /*spanLeft*/,

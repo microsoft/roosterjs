@@ -21,4 +21,9 @@ export type BorderFormat = {
      * Left border in format 'width style color'
      */
     borderLeft?: string;
+
+    /**
+     * Radius to be applied in all borders corners
+     */
+    borderRadius?: string;
 };

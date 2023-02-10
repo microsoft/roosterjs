@@ -138,6 +138,21 @@ export interface StyleBasedFormatState {
      * Mode independent background color for dark mode
      */
     textColors?: ModeIndependentColor;
+
+    /**
+     * Line height
+     */
+    lineHeight?: string;
+
+    /**
+     * Margin Top
+     */
+    marginTop?: string;
+
+    /**
+     * Margin Bottom
+     */
+    marginBottom?: string;
 }
 
 /**

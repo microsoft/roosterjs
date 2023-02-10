@@ -3,8 +3,9 @@
     "description": "Content Model for roosterjs (Under development)",
     "dependencies": {
         "roosterjs-editor-types": "",
-        "roosterjs-editor-dom": ""
+        "roosterjs-editor-dom": "",
+        "roosterjs-editor-core": ""
     },
     "main": "./lib/index.ts",
-    "version": "0.0.15"
+    "version": "0.1.0"
 }

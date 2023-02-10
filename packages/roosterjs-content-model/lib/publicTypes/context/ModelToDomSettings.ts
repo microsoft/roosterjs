@@ -9,6 +9,7 @@ import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelHandler } from './ContentModelHandler';
 import { ContentModelImage } from '../segment/ContentModelImage';
+import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelQuote } from '../group/ContentModelQuote';
@@ -96,6 +97,11 @@ export interface ContentModelHandlerTypeMap {
      * Content Model type for ContentModelImage
      */
     image: ContentModelImage;
+
+    /**
+     * Content Model type for ContentModelLink
+     */
+    link: ContentModelLink;
 
     /**
      * Content Model type for list group of ContentModelListItem
