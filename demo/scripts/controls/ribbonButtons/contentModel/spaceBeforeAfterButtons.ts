@@ -1,5 +1,5 @@
 import { RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor, toggleMargins } from 'roosterjs-content-model';
+import { getFormatState, isContentModelEditor, setParagraphMargin } from 'roosterjs-content-model';
 
 const spaceAfterButtonKey = 'buttonNameSpaceAfter';
 const spaceBeforeButtonKey = 'buttonNameSpaceBefore';
@@ -15,9 +15,12 @@ export const spaceAfterButton: RibbonButton<typeof spaceAfterButtonKey> = {
     isChecked: formatState => !formatState.marginBottom || parseInt(formatState.marginBottom) <= 0,
     onClick: editor => {
         if (isContentModelEditor(editor)) {
-            toggleMargins(editor, {
-                marginBottom: '8pt',
-            });
+            const marginBottom = getFormatState(editor).marginBottom;
+            setParagraphMargin(
+                editor,
+                undefined /* marginTop */,
+                parseInt(marginBottom) ? null : '8pt'
+            );
         }
         return true;
     },
@@ -34,9 +37,12 @@ export const spaceBeforeButton: RibbonButton<typeof spaceBeforeButtonKey> = {
     isChecked: formatState => parseInt(formatState.marginTop) > 0,
     onClick: editor => {
         if (isContentModelEditor(editor)) {
-            toggleMargins(editor, {
-                marginTop: '12pt',
-            });
+            const marginTop = getFormatState(editor).marginTop;
+            setParagraphMargin(
+                editor,
+                parseInt(marginTop) ? null : '12pt',
+                undefined /* marginBottom */
+            );
         }
         return true;
     },
