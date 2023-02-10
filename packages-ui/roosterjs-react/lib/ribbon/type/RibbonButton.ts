@@ -38,7 +38,8 @@ export default interface RibbonButton<T extends string> {
         editor: IEditor,
         key: T,
         strings: LocalizedStrings<T> | undefined,
-        uiUtilities: UIUtilities
+        uiUtilities: UIUtilities,
+        formatState: FormatState
     ) => void;
 
     /**

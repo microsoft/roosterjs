@@ -92,10 +92,10 @@ class RibbonPluginImpl implements RibbonPlugin {
         key: T,
         strings?: LocalizedStrings<T>
     ) {
-        if (this.editor && this.uiUtilities) {
+        if (this.editor && this.uiUtilities && this.formatState) {
             this.editor.stopShadowEdit();
 
-            button.onClick(this.editor, key, strings, this.uiUtilities);
+            button.onClick(this.editor, key, strings, this.uiUtilities, this.formatState);
 
             if (button.isChecked || button.isDisabled || button.dropDownMenu?.getSelectedItemKey) {
                 this.updateFormat();
@@ -114,7 +114,7 @@ class RibbonPluginImpl implements RibbonPlugin {
         key: T,
         strings?: LocalizedStrings<T>
     ) {
-        if (this.editor && this.uiUtilities) {
+        if (this.editor && this.uiUtilities && this.formatState) {
             const isInShadowEdit = this.editor.isInShadowEdit();
 
             // If editor is already in shadow edit, no need to check again.
@@ -123,7 +123,7 @@ class RibbonPluginImpl implements RibbonPlugin {
 
             if (isInShadowEdit || (range && !range.areAllCollapsed)) {
                 this.editor.startShadowEdit();
-                button.onClick(this.editor, key, strings, this.uiUtilities);
+                button.onClick(this.editor, key, strings, this.uiUtilities, this.formatState);
             }
         }
     }

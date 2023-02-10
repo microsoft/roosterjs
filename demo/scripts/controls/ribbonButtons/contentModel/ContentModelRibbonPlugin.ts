@@ -90,7 +90,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
         if (this.editor && this.uiUtilities) {
             this.editor.stopShadowEdit();
 
-            button.onClick(this.editor, key, strings, this.uiUtilities);
+            button.onClick(this.editor, key, strings, this.uiUtilities, this.formatState);
 
             if (button.isChecked || button.isDisabled || button.dropDownMenu?.getSelectedItemKey) {
                 this.updateFormat();
@@ -118,7 +118,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
 
             if (isInShadowEdit || (range && !range.areAllCollapsed)) {
                 this.editor.startShadowEdit();
-                button.onClick(this.editor, key, strings, this.uiUtilities);
+                button.onClick(this.editor, key, strings, this.uiUtilities, this.formatState);
             }
         }
     }
