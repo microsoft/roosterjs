@@ -33,6 +33,15 @@ const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = [
     'paddingRight',
 ];
 
+const CopiedStylesForBlockInherit: (keyof ContentModelBlockFormat)[] = [
+    'backgroundColor',
+    'direction',
+    'textAlign',
+    'isTextAlignFromAttr',
+    'lineHeight',
+    'whiteSpace',
+];
+
 /**
  * @internal
  */
@@ -124,6 +133,27 @@ function stackDecoratorInternal(
             };
         default:
             return format;
+    }
+}
+
+function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
+    switch (link) {
+        case 'linkDefault':
+            return {
+                format: {
+                    underline: true,
+                },
+                dataset: {},
+            };
+
+        case 'empty':
+            return {
+                format: {},
+                dataset: {},
+            };
+
+        default:
+            return linkFormat;
     }
 }
 

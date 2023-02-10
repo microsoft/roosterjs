@@ -1014,34 +1014,40 @@ describe('mergeModel', () => {
         });
     });
 
-    it('table to table, merge table', () => {
+    it('table to table, merge table 1', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
 
         const para1 = createParagraph();
         const text1 = createText('test1');
-        const cell11 = createTableCell();
-        const cell12 = createTableCell();
-        const cell21 = createTableCell();
-        const cell22 = createTableCell();
-        const table1 = createTable(2);
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const cell31 = createTableCell(false, false, false, { backgroundColor: '31' });
+        const cell32 = createTableCell(false, false, false, { backgroundColor: '32' });
+        const table1 = createTable(4);
 
         para1.segments.push(text1);
         text1.isSelected = true;
-        cell22.blocks.push(para1);
+        cell12.blocks.push(para1);
         table1.cells = [
+            [cell01, cell02],
             [cell11, cell12],
             [cell21, cell22],
+            [cell31, cell32],
         ];
 
         majorModel.blocks.push(table1);
 
         const newPara1 = createParagraph();
         const newText1 = createText('newText1');
-        const newCell11 = createTableCell();
-        const newCell12 = createTableCell();
-        const newCell21 = createTableCell();
-        const newCell22 = createTableCell();
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
         const newTable1 = createTable(2);
 
         newPara1.segments.push(newText1);

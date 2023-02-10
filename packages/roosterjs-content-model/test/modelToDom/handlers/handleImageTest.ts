@@ -178,40 +178,60 @@ describe('handleSegment', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
-            format: { underline: true },
-            link: { format: { href: '/test' }, dataset: {} },
+            format: {},
+            link: { format: { href: '/test', underline: true }, dataset: {} },
             dataset: {},
         };
 
-        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+        runTest(segment, '<span><a href="/test"><img src="http://test.com/test"></a></span>', 0);
+    });
+
+    itChromeOnly('image segment with size', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { width: '100px', height: '200px' },
+            link: { format: { href: '/test', underline: true }, dataset: {} },
+            dataset: {},
+        };
+
+        runTest(
+            segment,
+            '<span><a href="/test"><img src="http://test.com/test" width="100" height="200" style="width: 100px; height: 200px;"></a></span>',
+            0
+        );
     });
 
     it('image segment with dataset', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
-            format: { underline: true },
-            link: { format: { href: '/test' }, dataset: {} },
+            format: {},
+            link: { format: { href: '/test', underline: true }, dataset: {} },
             dataset: {
                 a: 'b',
             },
         };
 
-        runTest(segment, '<a href="/test"><img src="http://test.com/test" data-a="b"></a>', 0);
+        runTest(
+            segment,
+            '<span><a href="/test"><img src="http://test.com/test" data-a="b"></a></span>',
+            0
+        );
     });
 
     it('call stackFormat', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
-            format: { underline: true },
-            link: { format: { href: '/test' }, dataset: {} },
+            format: {},
+            link: { format: { href: '/test', underline: true }, dataset: {} },
             dataset: {},
         };
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        runTest(segment, '<a href="/test"><img src="http://test.com/test"></a>', 0);
+        runTest(segment, '<span><a href="/test"><img src="http://test.com/test"></a></span>', 0);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');

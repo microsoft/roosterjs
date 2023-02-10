@@ -1,18 +1,18 @@
-import ContentModelPlugin from '../../lib/publicPlugin/ContentModelPlugin';
+import * as pendingFormat from '../../lib/modelApi/format/pendingFormat';
+import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
 import { addSegment } from '../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../lib/modelApi/creators/createText';
-import { FormatState, PluginEventType } from 'roosterjs-editor-types';
-import { IExperimentalContentModelEditor } from '../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../lib/publicTypes/IContentModelEditor';
+import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('ContentModelPlugin', () => {
     it('no pending format, trigger key down event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
-        const editor = ({
-            getPendingFormat: (): FormatState | null => null,
-            setPendingFormat,
-        } as any) as IExperimentalContentModelEditor;
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
+
+        const editor = ({} as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -24,22 +24,22 @@ describe('ContentModelPlugin', () => {
 
         plugin.dispose();
 
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('no selection, trigger input event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
         const model = createContentModelDocument();
 
@@ -53,12 +53,15 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger input event with isComposing = true', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
         const marker = createSelectionMarker();
@@ -66,13 +69,9 @@ describe('ContentModelPlugin', () => {
         addSegment(model, marker);
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -83,11 +82,15 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
     });
 
     it('with pending format and selection, no correct text before, trigger input event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
         const marker = createSelectionMarker();
@@ -95,14 +98,10 @@ describe('ContentModelPlugin', () => {
         addSegment(model, marker);
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -113,12 +112,17 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger input event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
         const text = createText('a');
@@ -128,14 +132,14 @@ describe('ContentModelPlugin', () => {
         addSegment(model, marker);
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
             isInIME: () => false,
-        } as any) as IExperimentalContentModelEditor;
+            focus: () => {},
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -173,12 +177,16 @@ describe('ContentModelPlugin', () => {
                 },
             ],
         });
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('with pending format and selection, has correct text before, trigger CompositionEnd event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
         const text = createText('test a test', { fontFamily: 'Arial' });
@@ -188,13 +196,13 @@ describe('ContentModelPlugin', () => {
         addSegment(model, marker);
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+            focus: () => {},
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -232,23 +240,23 @@ describe('ContentModelPlugin', () => {
                 },
             ],
         });
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
 
     it('Non-input and cursor moving key down should not trigger pending format change', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -259,22 +267,27 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(0);
     });
 
     it('Content changed event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
+        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+            addUndoSnapshot: (callback: () => void) => {
+                callback();
+            },
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -285,34 +298,65 @@ describe('ContentModelPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 
-    it('Mouse down event', () => {
-        const setPendingFormat = jasmine.createSpy('setPendingFormat');
+    it('Mouse up event', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(false);
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
         const setContentModel = jasmine.createSpy('setContentModel');
         const model = createContentModelDocument();
 
         const editor = ({
-            getPendingFormat: (): FormatState | null => ({
-                fontSize: '10px',
-            }),
             createContentModel: () => model,
-            setPendingFormat,
             setContentModel,
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
-            eventType: PluginEventType.MouseDown,
+            eventType: PluginEventType.MouseUp,
             rawEvent: ({} as any) as MouseEvent,
         });
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(0);
-        expect(setPendingFormat).toHaveBeenCalledTimes(1);
-        expect(setPendingFormat).toHaveBeenCalledWith(null);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+    });
+
+    it('Mouse up event and pending format can still be applied', () => {
+        spyOn(pendingFormat, 'clearPendingFormat');
+        spyOn(pendingFormat, 'canApplyPendingFormat').and.returnValue(true);
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+
+        const setContentModel = jasmine.createSpy('setContentModel');
+        const model = createContentModelDocument();
+
+        const editor = ({
+            createContentModel: () => model,
+            setContentModel,
+        } as any) as IContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.MouseUp,
+            rawEvent: ({} as any) as MouseEvent,
+        });
+        plugin.dispose();
+
+        expect(setContentModel).toHaveBeenCalledTimes(0);
+        expect(pendingFormat.clearPendingFormat).not.toHaveBeenCalled();
+        expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
     });
 });

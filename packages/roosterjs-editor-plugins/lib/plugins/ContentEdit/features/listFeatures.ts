@@ -115,6 +115,7 @@ const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
+    defaultDisabled: Browser.isMac,
 };
 
 /**

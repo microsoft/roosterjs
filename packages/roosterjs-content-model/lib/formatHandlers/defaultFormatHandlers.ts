@@ -196,6 +196,7 @@ const defaultFormatKeysPerCategory: {
         'bold',
         'textColor',
         'backgroundColor',
+        'lineHeight',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     tableCell: ['border', 'borderBox', 'backgroundColor', 'padding', 'direction', 'verticalAlign'],

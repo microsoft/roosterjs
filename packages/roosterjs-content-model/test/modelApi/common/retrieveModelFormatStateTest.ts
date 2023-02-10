@@ -42,6 +42,9 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
+        lineHeight: undefined,
+        marginTop: undefined,
+        marginBottom: undefined,
     };
 
     it('Empty model', () => {
@@ -182,6 +185,29 @@ describe('retrieveModelFormatState', () => {
             ...paraFormat,
             isCodeInline: false,
             isBlockQuote: false,
+        });
+    });
+
+    it('Single selection with margin format', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const paraFormat = {
+            marginTop: '2px',
+            marginBottom: '5px',
+        };
+        const para = createParagraph(false, paraFormat);
+        const marker = createSelectionMarker(segmentFormat);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [marker]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            ...baseFormatResult,
+            ...paraFormat,
         });
     });
 
@@ -844,6 +870,9 @@ describe('retrieveModelFormatState', () => {
             isItalic: undefined,
             isUnderline: undefined,
             isStrikeThrough: undefined,
+            lineHeight: undefined,
+            marginTop: undefined,
+            marginBottom: undefined,
         });
     });
 });

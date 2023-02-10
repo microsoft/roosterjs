@@ -11,6 +11,7 @@ import { ContentModelFormatContainer } from '../group/ContentModelFormatContaine
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelImage } from '../segment/ContentModelImage';
+import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -104,6 +105,11 @@ export type ContentModelHandlerMap = {
      * Content Model type for ContentModelImage
      */
     image: ContentModelHandler<ContentModelImage>;
+
+    /**
+     * Content Model type for ContentModelLink
+     */
+    link: ContentModelLink;
 
     /**
      * Content Model type for list group of ContentModelListItem

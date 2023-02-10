@@ -12,7 +12,7 @@ import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelPlugin } from 'roosterjs-content-model';
+import { ContentModelEditor, ContentModelPlugin } from 'roosterjs-content-model';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { Editor } from 'roosterjs-editor-core';

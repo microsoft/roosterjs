@@ -416,7 +416,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
     });
 

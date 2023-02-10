@@ -59,10 +59,6 @@ export function createDomToModelContext(
         allowCacheElement: !options?.disableCacheElement,
     };
 
-    if (editorContext?.isRightToLeft) {
-        context.blockFormat.direction = 'rtl';
-    }
-
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;
     }

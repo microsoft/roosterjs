@@ -385,6 +385,62 @@ describe('iterateSelections', () => {
         );
     });
 
+    it('Group with table selection and ignore selected table content', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        cell1.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+
+        cell1.blocks.push(para1);
+        cell1.blocks.push(para2);
+        table.cells = [[cell1, cell2]];
+
+        group.blocks.push(table);
+
+        iterateSelections([group], callback, {
+            contentUnderSelectedTableCell: 'ignoreForTable',
+        });
+
+        expect(callback).toHaveBeenCalledTimes(3);
+        expect(callback).toHaveBeenCalledWith([group], {
+            table: table,
+            colIndex: 0,
+            rowIndex: 0,
+            isWholeTableSelected: false,
+        });
+        expect(callback).toHaveBeenCalledWith(
+            [cell1, group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            para1,
+            [text1]
+        );
+        expect(callback).toHaveBeenCalledWith(
+            [cell1, group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            para2,
+            [text2]
+        );
+    });
+
     it('Group with whole table selection and ignore selected table cell content', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
@@ -1513,7 +1569,9 @@ describe('iterateSelections', () => {
                 return block == table;
             });
 
-        iterateSelections([group], newCallback, { ignoreContentUnderSelectedTableCell: true });
+        iterateSelections([group], newCallback, {
+            contentUnderSelectedTableCell: 'ignoreForTable',
+        });
 
         expect(newCallback).toHaveBeenCalledTimes(1);
         expect(newCallback).toHaveBeenCalledWith([group], undefined, table);
