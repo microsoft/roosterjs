@@ -88,6 +88,7 @@ const blockFormatHandlers: (keyof FormatHandlerTypeMap)[] = [
     'lineHeight',
     'whiteSpace',
     'border',
+    'display',
 ];
 
 const defaultFormatKeysPerCategory: {
@@ -95,7 +96,7 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: blockFormatHandlers,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'display'],
     segment: [
         'superOrSubScript',
         'strike',
@@ -107,6 +108,7 @@ const defaultFormatKeysPerCategory: {
         'textColor',
         'backgroundColor',
         'lineHeight',
+        'direction',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],

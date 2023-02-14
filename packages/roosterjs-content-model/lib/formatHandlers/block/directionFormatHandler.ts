@@ -1,18 +1,26 @@
 import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionFormat';
 import { FormatHandler } from '../FormatHandler';
 
-const ResultMap = {
+const ResultMap: Record<string, Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>> = {
     start: {
-        ltr: 'left',
-        rtl: 'right',
+        ltr: 'start',
+        rtl: 'end',
     },
     center: {
         ltr: 'center',
         rtl: 'center',
     },
     end: {
-        ltr: 'right',
-        rtl: 'left',
+        ltr: 'end',
+        rtl: 'start',
+    },
+    left: {
+        ltr: 'start',
+        rtl: 'end',
+    },
+    right: {
+        ltr: 'end',
+        rtl: 'start',
     },
 };
 
@@ -24,32 +32,22 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         const dir = element.style.direction || element.dir || defaultStyle.direction;
         const alignFromAttr = element.getAttribute('align');
         const align = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
+        const alignSelf = element.style.alignSelf;
 
         if (dir) {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
         }
 
-        switch (align) {
-            case 'center':
-                format.textAlign = 'center';
-                break;
-
-            case 'left':
-                format.textAlign = dir == 'rtl' ? 'end' : 'start';
-                break;
-
-            case 'right':
-                format.textAlign = dir == 'rtl' ? 'start' : 'end';
-                break;
-
-            case 'start':
-            case 'end':
-                format.textAlign = align;
-                break;
+        if (align) {
+            format.textAlign = ResultMap[align][format.direction == 'rtl' ? 'rtl' : 'ltr'];
         }
 
         if (alignFromAttr && !element.style.textAlign) {
             format.isTextAlignFromAttr = true;
+        }
+
+        if (alignSelf) {
+            format.alignSelf = ResultMap[alignSelf][format.direction == 'rtl' ? 'rtl' : 'ltr'];
         }
     },
     apply: (format, element) => {
@@ -65,6 +63,11 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             } else {
                 element.style.textAlign = value;
             }
+        }
+
+        if (format.alignSelf) {
+            const value = ResultMap[format.alignSelf][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+            element.style.alignSelf = value;
         }
     },
 };

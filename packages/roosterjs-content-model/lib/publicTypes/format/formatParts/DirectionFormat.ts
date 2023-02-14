@@ -16,4 +16,9 @@ export type DirectionFormat = {
      * Whether the text align value comes from attribute rather than CSS
      */
     isTextAlignFromAttr?: boolean;
+
+    /**
+     * Horizontal alignment of an element
+     */
+    alignSelf?: 'start' | 'center' | 'end';
 };
