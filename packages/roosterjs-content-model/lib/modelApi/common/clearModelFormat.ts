@@ -54,10 +54,8 @@ export function clearModelFormat(
     ) {
         segmentsToClear.splice(0, segmentsToClear.length, ...adjustWordSelection(model, marker));
         clearListFormat(blocksToClear[0][0]);
-    }
-
-    // 2. If a full block or multiple blocks are selected, clear block format
-    else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
+    } else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
+        // 2. If a full block or multiple blocks are selected, clear block format
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
