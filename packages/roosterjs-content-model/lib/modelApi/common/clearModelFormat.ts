@@ -61,7 +61,7 @@ export function clearModelFormat(
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
-            clearBlockFormat(path, block, segmentsToClear);
+            clearBlockFormat(path, block);
             clearListFormat(path);
             clearQuoteFormat(path, block);
         }
@@ -153,11 +153,7 @@ function clearListFormat(path: ContentModelBlockGroup[]) {
     }
 }
 
-function clearBlockFormat(
-    path: ContentModelBlockGroup[],
-    block: ContentModelBlock,
-    segmentsToClear: ContentModelSegment[]
-) {
+function clearBlockFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
     if (block.blockType == 'Divider') {
         const index = path[0].blocks.indexOf(block);
 
@@ -165,11 +161,6 @@ function clearBlockFormat(
             path[0].blocks.splice(index, 1);
         }
     } else if (block.blockType == 'Paragraph') {
-        block.segments.forEach(segment => {
-            if (segmentsToClear.indexOf(segment) < 0) {
-                segmentsToClear.push(segment);
-            }
-        });
         block.format = {};
         delete block.decorator;
     }
