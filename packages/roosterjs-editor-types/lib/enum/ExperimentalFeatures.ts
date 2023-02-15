@@ -133,4 +133,9 @@ export const enum ExperimentalFeatures {
      * if you need them work for dark mode
      */
     VariableBasedDarkColor = 'VariableBasedDarkColor',
+
+    /**
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
 }

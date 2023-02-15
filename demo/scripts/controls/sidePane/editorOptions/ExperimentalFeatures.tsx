@@ -19,6 +19,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.DefaultFormatInSpan]:
         'When apply default format when initialize or user type, apply the format on a SPAN element.',
     [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
+    [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
+        'Add read entities around read only entities to handle browser edge cases.',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
