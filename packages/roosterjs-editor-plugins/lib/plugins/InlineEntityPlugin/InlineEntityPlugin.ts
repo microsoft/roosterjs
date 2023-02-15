@@ -11,7 +11,6 @@ import {
     safeInstanceOf,
     splitParentNode,
     splitTextNode,
-    toArray,
     unwrap,
 } from 'roosterjs-editor-dom/lib';
 import {
@@ -47,8 +46,6 @@ enum DelimiterType {
  */
 export default class InlineEntityPlugin implements EditorPlugin {
     private editor: IEditor | null = null;
-    private delimitersBefore: Map<string, HTMLElement> = new Map<string, HTMLElement>();
-    private delimitersAfter: Map<string, HTMLElement> = new Map<string, HTMLElement>();
     private id: number = 0;
 
     /**
@@ -81,9 +78,13 @@ export default class InlineEntityPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (event.eventType == PluginEventType.EntityOperation) {
             if (event.operation == EntityOperation.NewEntity) {
-                const { wrapper, id, type } = event.entity;
+                const { wrapper, type } = event.entity;
                 if (isReadOnly(event.entity)) {
                     const element = wrapper as HTMLElement;
+
+                    if (isBetweenDelimiter(element)) {
+                        return;
+                    }
 
                     const elementBefore = this.insertNode(
                         `${ZERO_WIDTH_SPACE}`,
@@ -95,9 +96,6 @@ export default class InlineEntityPlugin implements EditorPlugin {
                         element,
                         'afterend'
                     );
-                    const selector = getEntitySelector(id, type);
-                    this.delimitersBefore.set(selector, elementBefore);
-                    this.delimitersAfter.set(selector, elementAfter);
 
                     this.id++;
 
@@ -105,38 +103,28 @@ export default class InlineEntityPlugin implements EditorPlugin {
                         this.editor,
                         this.id + DELIMITER_BEFORE,
                         elementBefore,
-                        false,
-                        false,
-                        Position.getStart(createRange(elementBefore)),
-                        false
+                        false /* isBlock */,
+                        false /* isReadOnly */,
+                        Position.getStart(createRange(elementBefore))
                     );
 
                     insertEntity(
                         this.editor,
                         this.id + DELIMITER_AFTER,
                         elementAfter,
-                        false,
-                        false,
-                        Position.getStart(createRange(elementAfter)),
-                        false
+                        false /* isBlock */,
+                        false /* isReadOnly */,
+                        Position.getStart(createRange(elementAfter))
                     );
 
                     unwrap(elementAfter);
                     unwrap(elementBefore);
-                    // console.log(asd.nextSibling);
-                    // // const selection = this.editor.getDocument().getSelection();
-                    // const childNodes: Node[] = toArray(asd.parentElement.childNodes);
-
-                    // console.log(childNodes);
-                    // console.log(childNodes.indexOf(asd));
-
-                    // this.editor.select(createRange(entityAfter.wrapper, 1));
                 } else {
                     if (type.indexOf(DELIMITER_AFTER) >= 0) {
-                        const elementAfter = this.insertNode(NBSP, wrapper, 'afterend');
-                        const selection = this.editor.getDocument().getSelection();
                         this.editor.runAsync(() => {
-                            selection.setPosition(elementAfter, 0);
+                            this.editor.select(
+                                new Position(new Position(wrapper, PositionType.After))
+                            );
                         });
                     }
                 }
@@ -154,45 +142,32 @@ export default class InlineEntityPlugin implements EditorPlugin {
                 if (delimiter) {
                     const [delimiterType, entity] = delimiter;
 
-                    if (
-                        entity.wrapper.textContent.length == 1 &&
-                        entity.wrapper.textContent == ZERO_WIDTH_SPACE
-                    ) {
-                        if (delimiterType == DelimiterType.After) {
-                            const idBefore = id.substring(0, id.indexOf('_')) + DELIMITER_BEFORE;
-                            const elBefore = this.editor.queryElements(
-                                getEntitySelector(idBefore)
-                            )[0];
+                    if (delimiterType == DelimiterType.After) {
+                        const idBefore = id.substring(0, id.indexOf('_')) + DELIMITER_BEFORE;
+                        const elBefore = this.editor.queryElements(getEntitySelector(idBefore))[0];
 
-                            if (elBefore) {
-                                this.editor.select(
-                                    createRange(
-                                        new Position(elBefore, 0),
-                                        new Position(entity.wrapper, PositionType.After)
-                                    )
-                                );
+                        if (elBefore) {
+                            this.editor.select(
+                                createRange(
+                                    new Position(elBefore, 0),
+                                    new Position(entity.wrapper, PositionType.After)
+                                )
+                            );
 
-                                this.triggerEntityEvent(entity, event);
-                            }
-                        } else if (delimiterType == DelimiterType.Before) {
-                            const idAfter = id.substring(0, id.indexOf('_')) + DELIMITER_AFTER;
-                            const elAfter = this.editor.queryElements(
-                                getEntitySelector(idAfter)
-                            )[0];
+                            this.triggerEntityEvent(entity, event);
+                        }
+                    } else if (delimiterType == DelimiterType.Before) {
+                        const idAfter = id.substring(0, id.indexOf('_')) + DELIMITER_AFTER;
+                        const elAfter = this.editor.queryElements(getEntitySelector(idAfter))[0];
 
-                            if (elAfter) {
-                                this.editor.select(
-                                    createRange(
-                                        new Position(entity.wrapper, PositionType.Before),
-                                        new Position(elAfter, 0)
-                                    )
-                                );
-                                this.triggerEntityEvent(
-                                    entity,
-                                    event,
-                                    true /* deletedFromBefore */
-                                );
-                            }
+                        if (elAfter) {
+                            this.editor.select(
+                                createRange(
+                                    new Position(entity.wrapper, PositionType.Before),
+                                    new Position(elAfter, 0)
+                                )
+                            );
+                            this.triggerEntityEvent(entity, event, true /* deletedFromBefore */);
                         }
                     }
                 }
@@ -253,11 +228,9 @@ export default class InlineEntityPlugin implements EditorPlugin {
                         );
                         console.log(index);
                         console.log(text);
-                        // this.editor.runAsync(() => {
                         splitParentNode(text, true);
                         this.editor.getElementAtCursor('span', text)?.removeAttribute('class');
                         this.editor.getDocument().getSelection().setPosition(text, 1);
-                        // });
                     }
                 } else if (delimiterType == DelimiterType.Before) {
                     entity.wrapper.normalize();
@@ -272,11 +245,7 @@ export default class InlineEntityPlugin implements EditorPlugin {
                                 index,
                                 true /* returnFirstPart */
                             );
-                            // const newParent = splitParentNode(text, false);
                             entity.wrapper.parentElement.insertBefore(text, entity.wrapper);
-                            // this.editor
-                            //     .getElementAtCursor('span', newParent)
-                            //     ?.removeAttribute('class');
                         });
                     }
                 }
@@ -317,33 +286,18 @@ export default class InlineEntityPlugin implements EditorPlugin {
             shouldHandleEvent(event: PluginKeyDownEvent, editor: IEditor) {
                 const position = editor.getFocusedPosition();
 
-                if (position.offset == 1 && position.node.previousSibling) {
-                    const elAtCursor = editor.getElementAtCursor(
-                        getEntitySelector(),
-                        position.node.previousSibling
-                    );
+                const entityAtCursor = editor.getElementAtCursor(
+                    getEntitySelector(),
+                    position.element
+                );
+                let delimiter: [DelimiterType, Entity];
 
-                    const delimiter = isDelimiter(elAtCursor)?.[1];
-                    if (!!cacheDelimiter(event, delimiter)) {
-                        return true;
-                    }
-                }
-
-                if (position.offset == 0) {
-                    const entityAtCursor = editor.getElementAtCursor(
-                        getEntitySelector(),
-                        position.element
-                    );
-                    const delimiter = isDelimiter(entityAtCursor);
-
-                    return (
-                        delimiter &&
-                        delimiter[0] == DelimiterType.After &&
-                        cacheDelimiter(event, delimiter[1])
-                    );
-                }
-
-                return false;
+                return (
+                    entityAtCursor &&
+                    (delimiter = isDelimiter(entityAtCursor)) &&
+                    delimiter[0] == DelimiterType.After &&
+                    cacheDelimiter(event, delimiter[1])
+                );
             },
             handleEvent(event: PluginKeyDownEvent, editor: IEditor) {
                 const entity = cacheDelimiter(event);
@@ -354,13 +308,15 @@ export default class InlineEntityPlugin implements EditorPlugin {
                 if (elBefore) {
                     const selection = elBefore.ownerDocument.getSelection();
 
-                    if (event.rawEvent.shiftKey) {
-                        selection.extend(elBefore, 0);
-                        event.rawEvent.preventDefault();
-                    } else {
-                        selection.setPosition(elBefore, 0);
-                        event.rawEvent.preventDefault();
-                    }
+                    editor.runAsync(() => {
+                        if (event.rawEvent.shiftKey) {
+                            selection.extend(elBefore, 0);
+                            event.rawEvent.preventDefault();
+                        } else {
+                            selection.setPosition(elBefore, 0);
+                            event.rawEvent.preventDefault();
+                        }
+                    });
                 }
             },
         };
@@ -372,25 +328,29 @@ export default class InlineEntityPlugin implements EditorPlugin {
             keys: [Keys.RIGHT],
             shouldHandleEvent(event: PluginKeyDownEvent, editor: IEditor) {
                 const position = editor.getFocusedPosition();
-
+                let delimiter: [DelimiterType, Entity];
+                position.element.normalize();
                 if (position.isAtEnd && position.node.nextSibling) {
                     const elAtCursor = editor.getElementAtCursor(
                         getEntitySelector(),
                         position.node.nextSibling
                     );
 
-                    const delimiter = isDelimiter(elAtCursor)?.[1];
-                    return !!cacheDelimiter(event, delimiter);
+                    return (
+                        elAtCursor &&
+                        (delimiter = isDelimiter(elAtCursor))?.[0] == DelimiterType.Before &&
+                        !!cacheDelimiter(event, delimiter[1])
+                    );
                 }
 
                 const entityAtCursor = editor.getElementAtCursor(
                     getEntitySelector(),
                     position.element
                 );
-                const delimiter = isDelimiter(entityAtCursor);
 
                 return (
-                    delimiter &&
+                    entityAtCursor &&
+                    (delimiter = isDelimiter(entityAtCursor)) &&
                     delimiter[0] == DelimiterType.Before &&
                     cacheDelimiter(event, delimiter[1])
                 );
@@ -403,30 +363,16 @@ export default class InlineEntityPlugin implements EditorPlugin {
                 const elAfter = editor.queryElements(getEntitySelector(idAfter))[0];
 
                 if (elAfter) {
-                    if (event.rawEvent.shiftKey) {
-                        const selection = elAfter.ownerDocument.getSelection();
-                        selection.extend(elAfter, 1);
-                        event.rawEvent.preventDefault();
-                    } else {
-                        const arr = toArray(elAfter.parentElement.childNodes);
-                        const indexOfDelimiter = arr.indexOf(elAfter);
-
-                        const selection = elAfter.ownerDocument.getSelection();
-                        selection.extend(elAfter.parentElement, indexOfDelimiter + 1);
-
-                        // let wasHandledByChildNodes = false;
-                        // elAfter.childNodes.forEach(node => {
-                        //     if (node.nodeValue == ZERO_WIDTH_SPACE) {
-                        //         const selection = elAfter.ownerDocument.getSelection();
-                        //         selection.extend(node, 1);
-                        //         wasHandledByChildNodes = true;
-                        //     }
-                        // });
-                        // if (!wasHandledByChildNodes) {
-                        //     const selection = elAfter.ownerDocument.getSelection();
-                        //     selection.extend(elAfter, 1);
-                        // }
-                    }
+                    editor.runAsync(() => {
+                        if (event.rawEvent.shiftKey) {
+                            const selection = elAfter.ownerDocument.getSelection();
+                            selection.extend(elAfter, 1);
+                            event.rawEvent.preventDefault();
+                        } else {
+                            editor.select(new Position(elAfter, PositionType.After));
+                            event.rawEvent.preventDefault();
+                        }
+                    });
                 }
             },
         };
@@ -497,16 +443,12 @@ function getDelimitersFromReadOnlyEntity(entity: Entity): [Entity | undefined, E
     ];
 }
 
-// function getEndOffset(node: Node): number {
-//     if (node.nodeType == NodeType.Text) {
-//         return node.nodeValue?.length || 0;
-//     } else if (node.nodeType == NodeType.Element || node.nodeType == NodeType.DocumentFragment) {
-//         return node.childNodes.length;
-//     } else {
-//         return 1;
-//     }
-// }
-
 function cacheDelimiter(event: PluginEvent, delimiter?: Entity) {
     return cacheGetEventData(event, 'delimiter_cache_key', () => delimiter);
+}
+
+function isBetweenDelimiter(element: HTMLElement): boolean {
+    return !!(
+        isDelimiter(element.nextElementSibling) && isDelimiter(element.previousElementSibling)
+    );
 }
