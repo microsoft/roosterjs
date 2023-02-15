@@ -1,3 +1,4 @@
+import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
@@ -39,27 +40,40 @@ export function clearModelFormat(
             }
         },
         {
-            includeListFormatHolder: 'anySegment',
+            includeListFormatHolder: 'never', // No need to include list format holder since the whole list need to be cleared
         }
     );
 
-    // If a full block or multiple blocks are selected, clear block format first
+    const marker = segmentsToClear[0];
+
+    // 1. Clear block format no matter what selection it is
+    blocksToClear.forEach(([path]) => {
+        clearListFormat(path);
+    });
+
+    // 2. If selection is collapsed, add selection to whole word to clear if any
     if (
-        (blocksToClear.length == 1 && isOnlySelectionMarkerSelected(blocksToClear[0][1])) ||
-        blocksToClear.length > 1 ||
-        blocksToClear.some(x => isWholeBlockSelected(x[1]))
+        segmentsToClear.length == 1 &&
+        marker.segmentType == 'SelectionMarker' &&
+        blocksToClear.length == 1
     ) {
+        segmentsToClear.splice(0, segmentsToClear.length, ...adjustWordSelection(model, marker));
+    }
+
+    // 3. If a full block or multiple blocks are selected, clear block format
+    else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
             clearBlockFormat(path, block, segmentsToClear);
-            clearListFormat(path);
             clearQuoteFormat(path, block);
         }
     }
 
-    // Then clear segments format and table format if any
+    // 4. Finally clear format for segments
     clearSegmentsFormat(segmentsToClear, defaultSegmentFormat);
+
+    // 5. Clear format for table if any
     createTablesFormat(tablesToClear);
 }
 
@@ -84,7 +98,10 @@ function clearSegmentsFormat(
 ) {
     segmentsToClear.forEach(x => {
         x.format = { ...(defaultSegmentFormat || {}) };
-        delete x.link;
+
+        if (x.link) {
+            delete x.link.format.textColor;
+        }
     });
 }
 
@@ -151,16 +168,14 @@ function clearBlockFormat(
             path[0].blocks.splice(index, 1);
         }
     } else if (block.blockType == 'Paragraph') {
-        arrayPush(segmentsToClear, block.segments);
+        block.segments.forEach(segment => {
+            if (segmentsToClear.indexOf(segment) < 0) {
+                segmentsToClear.push(segment);
+            }
+        });
         block.format = {};
         delete block.decorator;
     }
-}
-
-function isOnlySelectionMarkerSelected(block: ContentModelBlock) {
-    const segments = block.blockType == 'Paragraph' ? block.segments.filter(x => x.isSelected) : [];
-
-    return segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 }
 
 function isWholeBlockSelected(block: ContentModelBlock) {

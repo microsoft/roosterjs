@@ -104,6 +104,57 @@ describe('clearModelFormat', () => {
         expect(tables).toEqual([]);
     });
 
+    it('Model with link', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false);
+        const text1 = createText('test1');
+
+        text1.link = {
+            dataset: {},
+            format: {
+                href: 'test',
+                textColor: 'red',
+            },
+        };
+        text1.isSelected = true;
+
+        para.segments.push(text1);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'test',
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([text1]);
+        expect(tables).toEqual([]);
+    });
+
     it('Model with text selection in whole paragraph', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });
@@ -146,7 +197,7 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[model], para]]);
-        expect(segments).toEqual([text1, text2, text1, text2]);
+        expect(segments).toEqual([text1, text2]);
         expect(tables).toEqual([]);
     });
 
@@ -171,16 +222,16 @@ describe('clearModelFormat', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
+                    format: { lineHeight: '10px' },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'red' },
                             text: 'test1',
                         },
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'green' },
                             text: 'test2',
                         },
                         {
@@ -193,7 +244,135 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[model], para]]);
-        expect(segments).toEqual([marker, text1, text2, marker]);
+        expect(segments).toEqual([marker]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with collapsed selection inside word', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const text1 = createText('test1', { textColor: 'red' });
+        const text2 = createText(' test2', { textColor: 'green' });
+        const marker = createSelectionMarker();
+        const text3 = createText('test3', { textColor: 'blue' });
+
+        para.segments.push(text1, text2, marker, text3);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {
+                                textColor: 'red',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' ',
+                            format: {
+                                textColor: 'green',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test3',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        lineHeight: '10px',
+                    },
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([
+            {
+                segmentType: 'Text',
+                text: 'test2',
+                format: {},
+            },
+            marker,
+            text3,
+        ]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with collapsed selection under list', () => {
+        const model = createContentModelDocument();
+        const list = createListItem([
+            {
+                listType: 'OL',
+            },
+        ]);
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        list.blocks.push(para);
+        model.blocks.push(list);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                lineHeight: '10px',
+                            },
+                        },
+                    ],
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[list, model], para]]);
+        expect(segments).toEqual([marker]);
         expect(tables).toEqual([]);
     });
 
@@ -264,7 +443,9 @@ describe('clearModelFormat', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        format: {},
+                        format: {
+                            fontSize: '20px',
+                        },
                         isSelected: true,
                     },
                     format: {},
@@ -286,15 +467,7 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[list, model], para]]);
-        expect(segments).toEqual([
-            text,
-            {
-                segmentType: 'SelectionMarker',
-                format: {},
-                isSelected: true,
-            },
-            text,
-        ]);
+        expect(segments).toEqual([text]);
         expect(tables).toEqual([]);
     });
 
@@ -402,7 +575,7 @@ describe('clearModelFormat', () => {
             [[quote, model], para3],
             [[quote, model], para4],
         ]);
-        expect(segments).toEqual([text3, text4, text4, text3]);
+        expect(segments).toEqual([text3, text4]);
         expect(tables).toEqual([]);
     });
 
