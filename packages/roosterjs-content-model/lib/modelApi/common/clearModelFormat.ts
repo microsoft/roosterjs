@@ -40,40 +40,37 @@ export function clearModelFormat(
             }
         },
         {
-            includeListFormatHolder: 'never', // No need to include list format holder since the whole list need to be cleared
+            includeListFormatHolder: 'anySegment',
         }
     );
 
     const marker = segmentsToClear[0];
 
-    // 1. Clear block format no matter what selection it is
-    blocksToClear.forEach(([path]) => {
-        clearListFormat(path);
-    });
-
     // 2. If selection is collapsed, add selection to whole word to clear if any
     if (
-        segmentsToClear.length == 1 &&
-        marker.segmentType == 'SelectionMarker' &&
+        blocksToClear.length == 1 &&
+        isOnlySelectionMarkerSelected(blocksToClear[0][1]) &&
         blocksToClear.length == 1
     ) {
         segmentsToClear.splice(0, segmentsToClear.length, ...adjustWordSelection(model, marker));
+        clearListFormat(blocksToClear[0][0]);
     }
 
-    // 3. If a full block or multiple blocks are selected, clear block format
+    // 2. If a full block or multiple blocks are selected, clear block format
     else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
             clearBlockFormat(path, block, segmentsToClear);
+            clearListFormat(path);
             clearQuoteFormat(path, block);
         }
     }
 
-    // 4. Finally clear format for segments
+    // 3. Finally clear format for segments
     clearSegmentsFormat(segmentsToClear, defaultSegmentFormat);
 
-    // 5. Clear format for table if any
+    // 4. Clear format for table if any
     createTablesFormat(tablesToClear);
 }
 
@@ -176,6 +173,12 @@ function clearBlockFormat(
         block.format = {};
         delete block.decorator;
     }
+}
+
+function isOnlySelectionMarkerSelected(block: ContentModelBlock) {
+    const segments = block.blockType == 'Paragraph' ? block.segments.filter(x => x.isSelected) : [];
+
+    return segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
 }
 
 function isWholeBlockSelected(block: ContentModelBlock) {

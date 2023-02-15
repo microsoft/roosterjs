@@ -443,9 +443,7 @@ describe('clearModelFormat', () => {
                     levels: [],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
-                        format: {
-                            fontSize: '20px',
-                        },
+                        format: {},
                         isSelected: true,
                     },
                     format: {},
@@ -467,7 +465,14 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[list, model], para]]);
-        expect(segments).toEqual([text]);
+        expect(segments).toEqual([
+            text,
+            {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+        ]);
         expect(tables).toEqual([]);
     });
 
