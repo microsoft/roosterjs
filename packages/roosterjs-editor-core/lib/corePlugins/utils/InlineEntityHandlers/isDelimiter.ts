@@ -1,6 +1,6 @@
 import { DELIMITER_AFTER, DELIMITER_BEFORE, DelimiterType } from './constants';
 import { Entity } from 'roosterjs-editor-types';
-import { getEntityFromElement } from 'roosterjs-editor-dom/lib';
+import { getEntityFromElement } from 'roosterjs-editor-dom';
 
 export function isDelimiter(
     ent: Element | Entity | null | undefined

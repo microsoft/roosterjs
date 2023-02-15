@@ -110,15 +110,10 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     const range = editor.getSelectionRange();
                     // If the Entity is ReadOnly inline is clicked modify the selection to be the delimiter after. So we can see the cursor.
                     if (isReadOnly(event.entity) && range?.collapsed) {
-                        const [_delimiterBefore, delimiterAfter] = getDelimitersFromReadOnlyEntity(
-                            event.entity
-                        );
+                        const [_, delimiterAfter] = getDelimitersFromReadOnlyEntity(event.entity);
 
                         if (delimiterAfter) {
-                            let nodeToSelect = delimiterAfter.wrapper.nextSibling;
-                            if (nodeToSelect) {
-                                editor.select(createRange(nodeToSelect, 1));
-                            }
+                            editor.select(createRange(delimiterAfter.wrapper, 1));
                         }
                     }
                     break;
