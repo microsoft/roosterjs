@@ -28,6 +28,14 @@ describe('displayFormatHandler.parse', () => {
             display: 'block',
         });
     });
+
+    it('Flex direction: column', () => {
+        div.style.flexDirection = 'column';
+        displayFormatHandler.parse(format, div, context, {});
+        expect(format).toEqual({
+            flexDirection: 'column',
+        });
+    });
 });
 
 describe('displayFormatHandler.apply', () => {
@@ -50,5 +58,11 @@ describe('displayFormatHandler.apply', () => {
         format.display = 'block';
         displayFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="display: block;"></div>');
+    });
+
+    it('Flex direction: Column', () => {
+        format.flexDirection = 'column';
+        displayFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="flex-direction: column;"></div>');
     });
 });

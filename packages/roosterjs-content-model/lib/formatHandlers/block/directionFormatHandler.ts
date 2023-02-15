@@ -1,26 +1,18 @@
 import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionFormat';
 import { FormatHandler } from '../FormatHandler';
 
-const ResultMap: Record<string, Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>> = {
+const ResultMap = {
     start: {
-        ltr: 'start',
-        rtl: 'end',
+        ltr: 'left',
+        rtl: 'right',
     },
     center: {
         ltr: 'center',
         rtl: 'center',
     },
     end: {
-        ltr: 'end',
-        rtl: 'start',
-    },
-    left: {
-        ltr: 'start',
-        rtl: 'end',
-    },
-    right: {
-        ltr: 'end',
-        rtl: 'start',
+        ltr: 'right',
+        rtl: 'left',
     },
 };
 
@@ -38,8 +30,23 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
         }
 
-        if (align) {
-            format.textAlign = ResultMap[align][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        switch (align) {
+            case 'center':
+                format.textAlign = 'center';
+                break;
+
+            case 'left':
+                format.textAlign = dir == 'rtl' ? 'end' : 'start';
+                break;
+
+            case 'right':
+                format.textAlign = dir == 'rtl' ? 'start' : 'end';
+                break;
+
+            case 'start':
+            case 'end':
+                format.textAlign = align;
+                break;
         }
 
         if (alignFromAttr && !element.style.textAlign) {
@@ -47,7 +54,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         }
 
         if (alignSelf) {
-            format.alignSelf = ResultMap[alignSelf][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+            format.alignSelf = alignSelf;
         }
     },
     apply: (format, element) => {
@@ -66,8 +73,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         }
 
         if (format.alignSelf) {
-            const value = ResultMap[format.alignSelf][format.direction == 'rtl' ? 'rtl' : 'ltr'];
-            element.style.alignSelf = value;
+            element.style.alignSelf = format.alignSelf;
         }
     },
 };

@@ -49,6 +49,17 @@ describe('directionFormatHandler.parse', () => {
         expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
     }
 
+    function runTestAlignSelf(
+        alignSelf: string | undefined,
+        expectedAlignSelfValue: 'start' | 'center' | 'end' | undefined
+    ) {
+        if (alignSelf) {
+            div.style.alignSelf = alignSelf;
+        }
+        directionFormatHandler.parse(format, div, context, {});
+        expect(format.alignSelf).toBe(expectedAlignSelfValue);
+    }
+
     it('No alignment, no direction', () => {
         directionFormatHandler.parse(format, div, context, {});
         expect(format).toEqual({});
@@ -105,6 +116,13 @@ describe('directionFormatHandler.parse', () => {
         expect(format).toEqual({
             textAlign: 'center',
         });
+    });
+
+    it('AlignSelf', () => {
+        runTestAlignSelf(undefined, undefined);
+        runTestAlignSelf('start', 'start');
+        runTestAlignSelf('end', 'end');
+        runTestAlignSelf('center', 'center');
     });
 });
 
@@ -169,5 +187,26 @@ describe('directionFormatHandler.apply', () => {
         format.isTextAlignFromAttr = true;
         directionFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div align="right"></div>');
+    });
+
+    it(' Align Self start', () => {
+        format.alignSelf = 'start';
+        format.direction = 'ltr';
+        directionFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: start;"></div>');
+    });
+
+    it(' Align Self center', () => {
+        format.alignSelf = 'center';
+        format.direction = 'ltr';
+        directionFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: center;"></div>');
+    });
+
+    it(' Align Self end', () => {
+        format.alignSelf = 'end';
+        format.direction = 'ltr';
+        directionFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: end;"></div>');
     });
 });

@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { setModelAlignment } from 'roosterjs-content-model/lib/modelApi/block/setModelAlignment';
+import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
 
 /**
  * Set text alignment of selected paragraphs
@@ -11,5 +11,5 @@ export default function setAlignment(
     editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
-    formatWithContentModel(editor, 'setIndentation', model => setModelAlignment(model, alignment));
+    formatWithContentModel(editor, 'setAlignment', model => setModelAlignment(model, alignment));
 }

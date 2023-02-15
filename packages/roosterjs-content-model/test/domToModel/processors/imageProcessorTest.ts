@@ -141,7 +141,9 @@ describe('imageProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
+                    format: {
+                        display: 'block',
+                    },
                     segments: [
                         {
                             segmentType: 'Image',

@@ -20,5 +20,5 @@ export type DirectionFormat = {
     /**
      * Horizontal alignment of an element
      */
-    alignSelf?: 'start' | 'center' | 'end';
+    alignSelf?: string;
 };
