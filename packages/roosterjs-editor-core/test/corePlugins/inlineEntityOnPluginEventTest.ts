@@ -1,13 +1,21 @@
-import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
+    commitEntity,
+    findClosestElementAncestor,
+    getEntityFromElement,
+    Position,
+} from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    Entity,
     EntityOperation,
     EntityOperationEvent,
+    PluginKeyDownEvent,
     IEditor,
-    Entity,
     PluginEventType,
-    ChangeSource,
 } from 'roosterjs-editor-types';
+
+const ZERO_WIDTH_SPACE = '\u200B';
 
 describe('Inline Entity On Plugin Event | ', () => {
     let editor: IEditor;
@@ -248,25 +256,12 @@ describe('Inline Entity On Plugin Event | ', () => {
         let delimiterAfter: Entity;
 
         beforeEach(() => {
-            entity = <Entity>{
-                id: 'test',
-                isReadonly: true,
-                type: 'Test',
+            ({ entity, delimiterAfter } = addEntityBeforeEach(
+                entity,
                 wrapper,
-            };
-
-            commitEntity(wrapper, 'test', true, 'test');
-
-            inlineEntityOnPluginEvent(
-                <EntityOperationEvent>{
-                    entity,
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.NewEntity,
-                },
-                editor
-            );
-
-            delimiterAfter = getDelimiter(entity, true /* after */);
+                editor,
+                delimiterAfter
+            ));
         });
 
         it('On click select the delimiter after', () => {
@@ -285,7 +280,135 @@ describe('Inline Entity On Plugin Event | ', () => {
             expect(select).toHaveBeenCalledWith(range);
         });
     });
+
+    describe('Handle Key Up & Down | ', () => {
+        let entity: Entity;
+        let delimiterAfter: Entity;
+        let delimiterBefore: Entity;
+        let textToAdd: Node;
+
+        beforeEach(() => {
+            ({ entity } = addEntityBeforeEach(entity, wrapper, editor, delimiterAfter));
+
+            delimiterAfter = getDelimiter(entity, true /* after */);
+            delimiterBefore = getDelimiter(entity, false /* after */);
+            textToAdd = document.createTextNode('Text');
+
+            editor.getElementAtCursor = (selector: string, selectFrom: Node) =>
+                findClosestElementAncestor(selectFrom, document.body, selector);
+        });
+
+        const KeyEvents = [PluginEventType.KeyDown, PluginEventType.KeyUp];
+
+        describe('Element Before | ', () => {
+            KeyEvents.forEach((ev: PluginEventType) => {
+                function arrangeAndAct(ev: PluginEventType) {
+                    editor.getFocusedPosition = () => new Position(delimiterBefore.wrapper, 0);
+
+                    delimiterBefore.wrapper.insertBefore(
+                        textToAdd,
+                        delimiterBefore.wrapper.firstChild
+                    );
+
+                    inlineEntityOnPluginEvent(
+                        <PluginKeyDownEvent>{
+                            eventType: ev,
+                            rawEvent: <KeyboardEvent>{
+                                which: 66 /* B */,
+                                key: 'B',
+                            },
+                        },
+                        editor
+                    );
+                }
+
+                it('Is Delimiter | ' + ev, () => {
+                    arrangeAndAct(ev);
+
+                    expect(delimiterBefore.wrapper.textContent).toEqual(ZERO_WIDTH_SPACE);
+                    expect(delimiterBefore.wrapper.textContent?.length).toEqual(1);
+                    expect(delimiterBefore.wrapper.childNodes.length).toEqual(1);
+                });
+
+                it('Is not Delimiter | ' + ev, () => {
+                    delimiterBefore.wrapper.setAttribute('class', '');
+                    arrangeAndAct(ev);
+
+                    expect(delimiterBefore.wrapper.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                    expect(delimiterBefore.wrapper.textContent?.length).toEqual(5);
+                    expect(delimiterBefore.wrapper.childNodes.length).toEqual(2);
+                });
+            });
+        });
+
+        describe('Element After | ', () => {
+            function arrangeAndAct(eventType: PluginEventType) {
+                editor.getFocusedPosition = () => new Position(delimiterAfter.wrapper, 0);
+
+                delimiterAfter.wrapper.appendChild(textToAdd);
+
+                inlineEntityOnPluginEvent(
+                    <PluginKeyDownEvent>{
+                        eventType,
+                        rawEvent: <KeyboardEvent>{
+                            which: 66 /* B */,
+                            key: 'B',
+                        },
+                    },
+                    editor
+                );
+            }
+
+            KeyEvents.forEach((ev: PluginEventType) => {
+                it('Is Delimiter' + ev, () => {
+                    arrangeAndAct(ev);
+
+                    delimiterAfter = getDelimiter(entity, true);
+                    expect(delimiterAfter.wrapper.textContent).toEqual(ZERO_WIDTH_SPACE);
+                    expect(delimiterAfter.wrapper.textContent?.length).toEqual(1);
+                    expect(delimiterAfter.wrapper.childNodes.length).toEqual(1);
+                });
+
+                it('Is not Delimiter' + ev, () => {
+                    delimiterAfter.wrapper.setAttribute('class', '');
+                    arrangeAndAct(ev);
+
+                    expect(delimiterAfter.wrapper.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                    expect(delimiterAfter.wrapper.textContent?.length).toEqual(5);
+                    expect(delimiterAfter.wrapper.childNodes.length).toEqual(2);
+                });
+            });
+        });
+    });
 });
+function addEntityBeforeEach(
+    entity: Entity,
+    wrapper: HTMLElement,
+    editor: IEditor,
+    delimiterAfter: Entity
+) {
+    entity = <Entity>{
+        id: 'test',
+        isReadonly: true,
+        type: 'Test',
+        wrapper,
+    };
+
+    commitEntity(wrapper, 'test', true, 'test');
+
+    inlineEntityOnPluginEvent(
+        <EntityOperationEvent>{
+            entity,
+            eventType: PluginEventType.EntityOperation,
+            operation: EntityOperation.NewEntity,
+        },
+        editor
+    );
+
+    delimiterAfter = getDelimiter(entity, true /* after */);
+    return { entity, delimiterAfter };
+}
+
 function getDelimiter(entity: Entity, after: boolean) {
     return getEntityFromElement(
         (after
