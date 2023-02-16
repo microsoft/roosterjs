@@ -16,9 +16,4 @@ export type DirectionFormat = {
      * Whether the text align value comes from attribute rather than CSS
      */
     isTextAlignFromAttr?: boolean;
-
-    /**
-     * Direction of the element, if display flex
-     */
-    flexDirection?: string;
 };

@@ -8,16 +8,19 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 
 describe('directionFormatHandler.parse', () => {
     let div: HTMLElement;
+    let li: HTMLLIElement;
     let format: DirectionFormat;
     let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
+        li = document.createElement('li');
         format = {};
         context = createDomToModelContext();
     });
 
     function runTest(
+        element: HTMLElement,
         textAlignCssValue: string | null,
         textAlignAttrValue: string | null,
         directionCssValue: string | null,
@@ -26,38 +29,33 @@ describe('directionFormatHandler.parse', () => {
         expectedDirectionValue: 'ltr' | 'rtl' | undefined,
         expectedIsAlignFromAttr: boolean | undefined
     ) {
-        if (textAlignCssValue) {
-            div.style.textAlign = textAlignCssValue;
+        if (textAlignCssValue && element.tagName !== 'li') {
+            element.style.textAlign = textAlignCssValue;
+        }
+
+        if (textAlignCssValue && element.tagName === 'li') {
+            element.style.alignSelf = textAlignCssValue;
+            element.style.display = 'flex';
+            element.style.flexDirection = 'column';
         }
 
         if (textAlignAttrValue) {
-            div.setAttribute('align', textAlignAttrValue);
+            element.setAttribute('align', textAlignAttrValue);
         }
 
         if (directionCssValue) {
-            div.style.direction = directionCssValue;
+            element.style.direction = directionCssValue;
         }
 
         if (directionAttrVAlue) {
-            div.setAttribute('dir', directionAttrVAlue);
+            element.setAttribute('dir', directionAttrVAlue);
         }
 
-        directionFormatHandler.parse(format, div, context, {});
+        directionFormatHandler.parse(format, element, context, {});
 
         expect(format.textAlign).toBe(expectedAlignValue);
         expect(format.direction).toBe(expectedDirectionValue);
         expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
-    }
-
-    function runTestAlignSelf(
-        alignSelf: string | undefined,
-        expectedAlignSelfValue: 'start' | 'center' | 'end' | undefined
-    ) {
-        if (alignSelf) {
-            div.style.alignSelf = alignSelf;
-        }
-        directionFormatHandler.parse(format, div, context, {});
-        expect(format.alignSelf).toBe(expectedAlignSelfValue);
     }
 
     it('No alignment, no direction', () => {
@@ -66,45 +64,48 @@ describe('directionFormatHandler.parse', () => {
     });
 
     it('Direction in CSS', () => {
-        runTest(null, null, 'rtl', null, undefined, 'rtl', undefined);
+        runTest(div, null, null, 'rtl', null, undefined, 'rtl', undefined);
     });
 
     it('Direction in attribute', () => {
-        runTest(null, null, null, 'rtl', undefined, 'rtl', undefined);
+        runTest(div, null, null, null, 'rtl', undefined, 'rtl', undefined);
     });
 
     it('Direction in both', () => {
-        runTest(null, null, 'ltr', 'rtl', undefined, 'ltr', undefined);
+        runTest(div, null, null, 'ltr', 'rtl', undefined, 'ltr', undefined);
     });
 
     it('Align in CSS', () => {
-        runTest('left', null, null, null, 'start', undefined, undefined);
+        runTest(div, 'left', null, null, null, 'start', undefined, undefined);
+    });
+
+    it('Align in CSS - list', () => {
+        runTest(li, 'start', null, null, null, 'start', undefined, undefined);
     });
 
     it('Align in attribute', () => {
-        runTest(null, 'left', null, null, 'start', undefined, true);
+        runTest(div, null, 'left', null, null, 'start', undefined, true);
     });
 
     it('Align in both CSS and attribute', () => {
-        runTest('left', 'right', null, null, 'start', undefined, undefined);
+        runTest(div, 'left', 'right', null, null, 'start', undefined, undefined);
     });
 
     it('LTR', () => {
-        runTest('left', null, null, null, 'start', undefined, undefined);
-        runTest('center', null, null, null, 'center', undefined, undefined);
-        runTest('right', null, null, null, 'end', undefined, undefined);
-        runTest('start', null, null, null, 'start', undefined, undefined);
-        runTest('end', null, null, null, 'end', undefined, undefined);
+        runTest(div, 'left', null, null, null, 'start', undefined, undefined);
+        runTest(div, 'center', null, null, null, 'center', undefined, undefined);
+        runTest(div, 'right', null, null, null, 'end', undefined, undefined);
+        runTest(div, 'start', null, null, null, 'start', undefined, undefined);
+        runTest(div, 'end', null, null, null, 'end', undefined, undefined);
     });
 
     it('RTL', () => {
         context.blockFormat.direction = 'rtl';
-
-        runTest('left', null, 'rtl', null, 'end', 'rtl', undefined);
-        runTest('center', null, 'rtl', null, 'center', 'rtl', undefined);
-        runTest('right', null, 'rtl', null, 'start', 'rtl', undefined);
-        runTest('start', null, 'rtl', null, 'start', 'rtl', undefined);
-        runTest('end', null, 'rtl', null, 'end', 'rtl', undefined);
+        runTest(div, 'left', null, 'rtl', null, 'end', 'rtl', undefined);
+        runTest(div, 'center', null, 'rtl', null, 'center', 'rtl', undefined);
+        runTest(div, 'right', null, 'rtl', null, 'start', 'rtl', undefined);
+        runTest(div, 'start', null, 'rtl', null, 'start', 'rtl', undefined);
+        runTest(div, 'end', null, 'rtl', null, 'end', 'rtl', undefined);
     });
 
     it('Center tag', () => {
@@ -117,22 +118,17 @@ describe('directionFormatHandler.parse', () => {
             textAlign: 'center',
         });
     });
-
-    it('AlignSelf', () => {
-        runTestAlignSelf(undefined, undefined);
-        runTestAlignSelf('start', 'start');
-        runTestAlignSelf('end', 'end');
-        runTestAlignSelf('center', 'center');
-    });
 });
 
 describe('directionFormatHandler.apply', () => {
     let div: HTMLElement;
+    let li: HTMLLIElement;
     let format: DirectionFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
+        li = document.createElement('li');
         format = {};
         context = createModelToDomContext();
     });
@@ -189,24 +185,21 @@ describe('directionFormatHandler.apply', () => {
         expect(div.outerHTML).toBe('<div align="right"></div>');
     });
 
-    it(' Align Self start', () => {
-        format.alignSelf = 'start';
-        format.direction = 'ltr';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: start;"></div>');
+    it('Align start - list', () => {
+        format.textAlign = 'start';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: start;"></li>');
     });
 
-    it(' Align Self center', () => {
-        format.alignSelf = 'center';
-        format.direction = 'ltr';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: center;"></div>');
+    it('Align center - list', () => {
+        format.textAlign = 'center';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: center;"></li>');
     });
 
-    it(' Align Self end', () => {
-        format.alignSelf = 'end';
-        format.direction = 'ltr';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr; align-self: end;"></div>');
+    it('Align right - list', () => {
+        format.textAlign = 'end';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: end;"></li>');
     });
 });

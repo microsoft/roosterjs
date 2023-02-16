@@ -869,7 +869,6 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
-                        flexDirection: 'column',
                         display: 'flex',
                     },
                 ],
@@ -894,7 +893,7 @@ describe('setAlignment in list', () => {
                 formatHolder: {
                     segmentType: 'SelectionMarker',
                     isSelected: true,
-                    format: { alignSelf: 'start' },
+                    format: { textAlign: 'start' },
                 },
                 format: {},
             }
@@ -939,7 +938,6 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
-                        flexDirection: 'column',
                         display: 'flex',
                     },
                 ],
@@ -964,7 +962,7 @@ describe('setAlignment in list', () => {
                 formatHolder: {
                     segmentType: 'SelectionMarker',
                     isSelected: true,
-                    format: { alignSelf: 'center' },
+                    format: { textAlign: 'center' },
                 },
                 format: {},
             }
@@ -1009,7 +1007,6 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
-                        flexDirection: 'column',
                         display: 'flex',
                     },
                 ],
@@ -1034,7 +1031,7 @@ describe('setAlignment in list', () => {
                 formatHolder: {
                     segmentType: 'SelectionMarker',
                     isSelected: true,
-                    format: { alignSelf: 'end' },
+                    format: { textAlign: 'end' },
                 },
                 format: {},
             }

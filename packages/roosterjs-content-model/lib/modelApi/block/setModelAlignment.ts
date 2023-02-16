@@ -3,7 +3,7 @@ import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocume
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import { TableOperation } from 'roosterjs-editor-types/lib';
+import { TableOperation } from 'roosterjs-editor-types';
 
 const ResultMap: Record<
     'left' | 'center' | 'right',
@@ -61,7 +61,6 @@ export function setModelAlignment(
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             block.formatHolder.format.textAlign =
                 ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-            block.levels[0].flexDirection = 'column';
             block.levels[0].display = 'flex';
         } else if (block.blockType === 'Table') {
             alignTable(

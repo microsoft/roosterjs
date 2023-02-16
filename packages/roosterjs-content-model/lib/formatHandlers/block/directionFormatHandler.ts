@@ -23,12 +23,12 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
     parse: (format, element, _, defaultStyle) => {
         const dir = element.style.direction || element.dir || defaultStyle.direction;
         const alignFromAttr = element.getAttribute('align');
-        const align =
-            element.style.textAlign ||
-            alignFromAttr ||
-            defaultStyle.textAlign ||
-            element.style.alignSelf;
-        const flexDirection = element.style.flexDirection;
+        const textAlign = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
+        const alignSelf = element.style.alignSelf;
+        const isLI = element.tagName === 'li';
+        const shouldApplyAlignSelf =
+            isLI && element.style.display === 'flex' && element.style.flexDirection === 'column';
+        const align = shouldApplyAlignSelf ? alignSelf : textAlign;
 
         if (dir) {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
@@ -56,10 +56,6 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         if (alignFromAttr && !element.style.textAlign) {
             format.isTextAlignFromAttr = true;
         }
-
-        if (flexDirection) {
-            format.flexDirection = flexDirection;
-        }
     },
     apply: (format, element) => {
         if (format.direction) {
@@ -71,14 +67,11 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
 
             if (format.isTextAlignFromAttr) {
                 element.setAttribute('align', value);
+            } else if (element.tagName === 'LI') {
+                element.style.alignSelf = format.textAlign;
             } else {
                 element.style.textAlign = value;
-                element.style.alignSelf = value;
             }
-        }
-
-        if (format.flexDirection) {
-            element.style.flexDirection = format.flexDirection;
         }
     },
 };

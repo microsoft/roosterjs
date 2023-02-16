@@ -28,14 +28,6 @@ describe('displayFormatHandler.parse', () => {
             display: 'block',
         });
     });
-
-    it('Flex direction: column', () => {
-        div.style.flexDirection = 'column';
-        displayFormatHandler.parse(format, div, context, {});
-        expect(format).toEqual({
-            flexDirection: 'column',
-        });
-    });
 });
 
 describe('displayFormatHandler.apply', () => {
@@ -60,9 +52,16 @@ describe('displayFormatHandler.apply', () => {
         expect(div.outerHTML).toBe('<div style="display: block;"></div>');
     });
 
-    it('Flex direction: Column', () => {
-        format.flexDirection = 'column';
+    it('Display: flex', () => {
+        format.display = 'flex';
         displayFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="flex-direction: column;"></div>');
+        expect(div.outerHTML).toBe('<div style="display: flex;"></div>');
+    });
+
+    it('Display: flex in a list', () => {
+        format.display = 'flex';
+        const ul = document.createElement('ul');
+        displayFormatHandler.apply(format, ul, context);
+        expect(ul.outerHTML).toBe('<ul style="display: flex; flex-direction: column;"></ul>');
     });
 });

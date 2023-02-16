@@ -16,5 +16,9 @@ export const displayFormatHandler: FormatHandler<DisplayFormat> = {
         if (format.display) {
             element.style.display = format.display;
         }
+
+        if (format.display === 'flex' && (element.tagName === 'UL' || element.tagName === 'OL')) {
+            element.style.flexDirection = 'column';
+        }
     },
 };
