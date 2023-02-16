@@ -394,6 +394,15 @@ describe('Content Edit Features | ', () => {
     let select: jasmine.Spy;
 
     let defaultEvent = <PluginKeyDownEvent>{};
+    let getSelectionPrototype: any;
+
+    beforeAll(() => {
+        getSelectionPrototype = document.getSelection;
+    });
+
+    afterAll(() => {
+        document.getSelection = getSelectionPrototype;
+    });
 
     beforeEach(() => {
         defaultEvent = <PluginKeyDownEvent>{};
@@ -410,7 +419,7 @@ describe('Content Edit Features | ', () => {
             queryElements: (selector: string) => {
                 return document.querySelectorAll(selector);
             },
-            triggerContentChangedEvent: (_arg0: any, _arg1: any) => {},
+            triggerContentChangedEvent: (arg0: any, arg1: any) => {},
             runAsync: (callback: () => void) => callback(),
             getSelectionRange: () =>
                 <Range>{
