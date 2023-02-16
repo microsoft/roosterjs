@@ -152,7 +152,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                                     index + 1,
                                     false /* returnFirstPart */
                                 );
-                                splitParentNode(text, true);
+                                splitParentNode(text, true /* splitBefore */);
                                 editor.getElementAtCursor('span', text)?.removeAttribute('class');
                                 editor.getDocument().getSelection()?.setPosition(text, 1);
                             }
@@ -164,8 +164,8 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                             editor.getDocument().getSelection()?.setPosition(textNode, 0);
 
                             editor.runAsync(() => {
-                                const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE);
-                                if (index) {
+                                const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+                                if (index >= 0) {
                                     const text = splitTextNode(
                                         <Text>textNode,
                                         index,
