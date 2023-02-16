@@ -137,5 +137,5 @@ export const enum ExperimentalFeatures {
     /**
      * Delete table with Backspace key with the whole was selected with table selector
      */
-    DeleteTableWithBackspace = 'DeleteTable',
+    DeleteTableWithBackspace = 'DeleteTableWithBackspace',
 }
