@@ -3,6 +3,7 @@ import { isDelimiter } from './isDelimiter';
 import {
     ChangeSource,
     EntityOperation,
+    NodeType,
     PluginEventType,
     PositionType,
 } from 'roosterjs-editor-types';
@@ -12,9 +13,12 @@ import {
     getEntityFromElement,
     getEntitySelector,
     isBlockElement,
+    isCharacterValue,
     matchesSelector,
     Position,
     safeInstanceOf,
+    splitParentNode,
+    splitTextNode,
 } from 'roosterjs-editor-dom';
 import type { Entity, EntityOperationEvent, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
@@ -119,6 +123,64 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     break;
             }
             break;
+
+        case PluginEventType.KeyDown:
+        case PluginEventType.KeyUp:
+            if (isCharacterValue(event.rawEvent)) {
+                const position = editor.getFocusedPosition();
+
+                if (!position) {
+                    return;
+                }
+
+                const entityAtCursor = editor.getElementAtCursor(
+                    getEntitySelector(),
+                    position.element
+                );
+                const delimiter = isDelimiter(entityAtCursor);
+
+                if (delimiter) {
+                    const [delimiterType, entity] = delimiter;
+                    if (delimiterType == DelimiterType.After) {
+                        entity.wrapper.normalize();
+                        const textNode = entity.wrapper.firstChild as Node;
+                        if (textNode.nodeType == NodeType.Text) {
+                            const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+                            if (index >= 0) {
+                                const text = splitTextNode(
+                                    <Text>textNode,
+                                    index + 1,
+                                    false /* returnFirstPart */
+                                );
+                                splitParentNode(text, true);
+                                editor.getElementAtCursor('span', text)?.removeAttribute('class');
+                                editor.getDocument().getSelection()?.setPosition(text, 1);
+                            }
+                        }
+                    } else if (delimiterType == DelimiterType.Before) {
+                        entity.wrapper.normalize();
+                        const textNode = entity.wrapper.firstChild as Node;
+                        if (textNode.nodeType == NodeType.Text) {
+                            editor.getDocument().getSelection()?.setPosition(textNode, 0);
+
+                            editor.runAsync(() => {
+                                const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE);
+                                if (index) {
+                                    const text = splitTextNode(
+                                        <Text>textNode,
+                                        index,
+                                        true /* returnFirstPart */
+                                    );
+                                    entity.wrapper.parentElement?.insertBefore(
+                                        text,
+                                        entity.wrapper
+                                    );
+                                }
+                            });
+                        }
+                    }
+                }
+            }
     }
 
     function insertNode(
