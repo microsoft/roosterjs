@@ -1,3 +1,4 @@
+import { getInlineEntityContentEditFeatures } from '../../lib/corePlugins/utils/InlineEntityHandlers/contentEditFeatures';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     commitEntity,
@@ -11,6 +12,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     PluginKeyDownEvent,
+    PositionType,
     IEditor,
     PluginEventType,
 } from 'roosterjs-editor-types';
@@ -381,6 +383,258 @@ describe('Inline Entity On Plugin Event | ', () => {
         });
     });
 });
+
+describe('Content Edit Features | ', () => {
+    const [moveBefore, moveAfter] = getInlineEntityContentEditFeatures();
+    let entity: Entity;
+    let delimiterAfter: Entity;
+    let delimiterBefore: Entity;
+    let wrapper: HTMLElement;
+    let editor: IEditor;
+    let select: jasmine.Spy;
+
+    let defaultEvent = <PluginKeyDownEvent>{};
+
+    beforeEach(() => {
+        wrapper = document.createElement('span');
+        wrapper.innerHTML = 'Test';
+        document.body.appendChild(wrapper);
+        select = jasmine.createSpy('select');
+
+        editor = <IEditor>(<any>{
+            getDocument: () => document,
+            getElementAtCursor: (selector: string, node: Node) =>
+                findClosestElementAncestor(node, document.body, selector),
+            addContentEditFeature: () => {},
+            queryElements: (selector: string) => {
+                return document.querySelectorAll(selector);
+            },
+            triggerContentChangedEvent: (_arg0: any, _arg1: any) => {},
+            runAsync: (callback: () => void) => callback(),
+            getSelectionRange: () =>
+                <Range>{
+                    collapsed: true,
+                },
+            select,
+        });
+
+        ({ entity } = addEntityBeforeEach(entity, wrapper, editor, delimiterAfter));
+
+        delimiterAfter = getDelimiter(entity, true /* after */);
+        delimiterBefore = getDelimiter(entity, false /* after */);
+    });
+
+    afterEach(() => {
+        document.body.childNodes.forEach(cn => {
+            document.body.removeChild(cn);
+        });
+    });
+
+    describe('Move Before |', () => {
+        function runTest(
+            element: HTMLElement | null,
+            expected: boolean,
+            event: PluginKeyDownEvent
+        ) {
+            editor.getFocusedPosition = () => (element ? new Position(element, 0) : null);
+
+            const result = moveBefore.shouldHandleEvent(event, editor, false /* ctrlOrMeta */);
+
+            expect(result).toBe(expected);
+            return event;
+        }
+
+        it('DelimiterBefore', () => {
+            runTest(delimiterBefore.wrapper, false /* expected */, defaultEvent);
+        });
+
+        it('DelimiterAfter, no shiftKey', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    preventDefault() {
+                        preventDefaultSpy();
+                    },
+                },
+            };
+
+            event = runTest(delimiterAfter.wrapper, true /* expected */, event);
+
+            document.getSelection = () =>
+                <Selection>{
+                    extend(node, offset?) {
+                        extendSpy(node, offset);
+                    },
+                    setPosition(node, offset?) {
+                        setPositionSpy(node, offset);
+                    },
+                };
+            moveBefore.handleEvent(event, editor);
+
+            expect(setPositionSpy).toHaveBeenCalledWith(delimiterBefore.wrapper, 0);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(extendSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('DelimiterAfter, with shiftKey', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    shiftKey: true,
+                    preventDefault() {
+                        preventDefaultSpy();
+                    },
+                },
+            };
+
+            event = runTest(delimiterAfter.wrapper, true /* expected */, event);
+
+            document.getSelection = () =>
+                <Selection>{
+                    extend(node, offset?) {
+                        extendSpy(node, offset);
+                    },
+                    setPosition(node, offset?) {
+                        setPositionSpy(node, offset);
+                    },
+                };
+            moveBefore.handleEvent(event, editor);
+
+            expect(extendSpy).toHaveBeenCalledWith(delimiterBefore.wrapper, 0);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(setPositionSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('Element not an entity', () => {
+            delimiterAfter.wrapper.setAttribute('class', '');
+            runTest(delimiterBefore.wrapper, false /* expected */, defaultEvent);
+        });
+
+        it('Handle Event without cache', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+
+            moveBefore.handleEvent(defaultEvent, editor);
+
+            expect(setPositionSpy).toHaveBeenCalledTimes(0);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+            expect(extendSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('Null', () => {
+            runTest(null, false /* expected */, defaultEvent);
+        });
+    });
+
+    describe('Move After |', () => {
+        function runTest(
+            element: HTMLElement | null,
+            expected: boolean,
+            event: PluginKeyDownEvent
+        ) {
+            editor.getFocusedPosition = () => (element ? new Position(element, 0) : null);
+
+            const result = moveAfter.shouldHandleEvent(event, editor, false /* ctrlOrMeta */);
+
+            expect(result).toBe(expected);
+            return event;
+        }
+
+        it('DelimiterAfter', () => {
+            runTest(delimiterAfter.wrapper, false /* expected */, defaultEvent);
+        });
+
+        it('DelimiterBefore, no shiftKey', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    preventDefault() {
+                        preventDefaultSpy();
+                    },
+                },
+            };
+
+            event = runTest(delimiterBefore.wrapper, true /* expected */, event);
+
+            document.getSelection = () =>
+                <Selection>{
+                    extend(node, offset?) {
+                        extendSpy(node, offset);
+                    },
+                    setPosition(node, offset?) {
+                        setPositionSpy(node, offset);
+                    },
+                };
+            moveAfter.handleEvent(event, editor);
+
+            expect(select).toHaveBeenCalledWith(
+                new Position(delimiterAfter.wrapper, PositionType.After)
+            );
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(extendSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('DelimiterBefore, with shiftKey', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    shiftKey: true,
+                    preventDefault() {
+                        preventDefaultSpy();
+                    },
+                },
+            };
+
+            event = runTest(delimiterBefore.wrapper, true /* expected */, event);
+
+            document.getSelection = () =>
+                <Selection>{
+                    extend(node, offset?) {
+                        extendSpy(node, offset);
+                    },
+                    setPosition(node, offset?) {
+                        setPositionSpy(node, offset);
+                    },
+                };
+            moveAfter.handleEvent(event, editor);
+
+            expect(extendSpy).toHaveBeenCalledWith(delimiterAfter.wrapper, 1);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+            expect(setPositionSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('Element not an entity', () => {
+            delimiterAfter.wrapper.setAttribute('class', '');
+            runTest(delimiterBefore.wrapper, false /* expected */, defaultEvent);
+        });
+
+        it('Handle Event without cache', () => {
+            let preventDefaultSpy = jasmine.createSpy('preventDefault');
+            let extendSpy = jasmine.createSpy('expand');
+            let setPositionSpy = jasmine.createSpy('setPosition');
+
+            moveAfter.handleEvent(defaultEvent, editor);
+
+            expect(setPositionSpy).toHaveBeenCalledTimes(0);
+            expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
+            expect(extendSpy).toHaveBeenCalledTimes(0);
+        });
+
+        it('Null', () => {
+            runTest(null, false /* expected */, defaultEvent);
+        });
+    });
+});
+
 function addEntityBeforeEach(
     entity: Entity,
     wrapper: HTMLElement,

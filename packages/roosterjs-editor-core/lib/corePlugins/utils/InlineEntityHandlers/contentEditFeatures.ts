@@ -15,13 +15,11 @@ import {
  * @internal
  * @param editor editor Instance
  */
-export function addInlineEntityContentEditFeatures(editor: IEditor | null | undefined) {
-    editor?.addContentEditFeature(
-        <GenericContentEditFeature<PluginEvent>>MoveBeforeDelimiterFeature
-    );
-    editor?.addContentEditFeature(
-        <GenericContentEditFeature<PluginEvent>>MoveAfterDelimiterFeature
-    );
+export function getInlineEntityContentEditFeatures() {
+    return [
+        <GenericContentEditFeature<PluginEvent>>MoveBeforeDelimiterFeature,
+        <GenericContentEditFeature<PluginEvent>>MoveAfterDelimiterFeature,
+    ];
 }
 
 //After to Before
