@@ -18,7 +18,7 @@ export type DirectionFormat = {
     isTextAlignFromAttr?: boolean;
 
     /**
-     * Horizontal alignment of an element
+     * Direction of the element, if display flex
      */
-    alignSelf?: string;
+    flexDirection?: string;
 };
