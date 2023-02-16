@@ -12,6 +12,7 @@ import {
     SelectionRangeTypes,
     TableSelectionRange,
     Indentation,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -151,6 +152,23 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
+/**
+ * Requires @see ExperimentalFeatures.DeleteTable
+ * Delete a table selected with the table selector pressing Delete or Backspace key
+ */
+const DeleteTable: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.DELETE, Keys.BACKSPACE],
+    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
+        cacheIsWholeTableSelected(event, editor) &&
+        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTable),
+    handleEvent: (event, editor) => {
+        const td = cacheGetTableCell(event, editor);
+        const vtable = new VTable(td);
+        vtable.edit(TableOperation.DeleteTable);
+        vtable.writeBack();
+    },
+};
+
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
     return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
@@ -189,4 +207,5 @@ export const TableFeatures: Record<
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
     indentTableOnTab: IndentTableOnTab,
+    deleteTable: DeleteTable,
 };

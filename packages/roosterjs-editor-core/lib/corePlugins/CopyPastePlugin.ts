@@ -86,14 +86,11 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     private onCutCopy(event: Event, isCut: boolean) {
         if (this.editor) {
             const selection = this.editor.getSelectionRangeEx();
-            if (selection && !selection.areAllCollapsed) {
+            const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
+            if (selection && !selection.areAllCollapsed && trustedHTMLHandler) {
                 const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
                 const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
-                const metadata = setHtmlWithMetadata(
-                    tempDiv,
-                    html,
-                    this.editor.getTrustedHTMLHandler()
-                );
+                const metadata = setHtmlWithMetadata(tempDiv, html, trustedHTMLHandler);
                 let newRange: Range | null = null;
 
                 if (
@@ -265,8 +262,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         selectedVTable.selection = selection;
 
         forEachSelectedCell(selectedVTable, cell => {
-            if (cell?.td) {
-                cell.td.innerHTML = editor.getTrustedHTMLHandler()('<br>');
+            const trustedHTMLHandler = editor.getTrustedHTMLHandler();
+            if (cell?.td && trustedHTMLHandler) {
+                cell.td.innerHTML = trustedHTMLHandler('<br>');
             }
         });
 
