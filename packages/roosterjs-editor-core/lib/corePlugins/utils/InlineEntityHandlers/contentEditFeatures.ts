@@ -1,8 +1,6 @@
-import { cacheGetEventData, getEntitySelector, Position } from 'roosterjs-editor-dom';
-import { DELIMITER_AFTER, DELIMITER_BEFORE, DelimiterType } from './constants';
-import { isDelimiter } from './isDelimiter';
+import { cacheGetEventData, Position } from 'roosterjs-editor-dom';
 import {
-    Entity,
+    DelimiterClasses,
     GenericContentEditFeature,
     IEditor,
     Keys,
@@ -15,13 +13,11 @@ import {
  * @internal
  * @param editor editor Instance
  */
-export function addInlineEntityContentEditFeatures(editor: IEditor | null | undefined) {
-    editor?.addContentEditFeature(
-        <GenericContentEditFeature<PluginEvent>>MoveBeforeDelimiterFeature
-    );
-    editor?.addContentEditFeature(
-        <GenericContentEditFeature<PluginEvent>>MoveAfterDelimiterFeature
-    );
+export function getInlineEntityContentEditFeatures() {
+    return [
+        <GenericContentEditFeature<PluginEvent>>MoveBeforeDelimiterFeature,
+        <GenericContentEditFeature<PluginEvent>>MoveAfterDelimiterFeature,
+    ];
 }
 
 //After to Before
@@ -29,39 +25,45 @@ const MoveBeforeDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent>
     keys: [Keys.LEFT],
     shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
         const position = editor.getFocusedPosition();
+
         if (!position) {
             return false;
         }
 
-        const entityAtCursor = editor.getElementAtCursor(getEntitySelector(), position.element);
-        let delimiter: [DelimiterType, Entity] | null = null;
+        if (position?.offset == 0 && position.node.previousSibling) {
+            const entityAtCursor = editor.getElementAtCursor(
+                '.' + DelimiterClasses.DELIMITER_AFTER,
+                position.node.previousSibling
+            );
 
-        return !!(
-            entityAtCursor &&
-            (delimiter = isDelimiter(entityAtCursor)) &&
-            delimiter[0] == DelimiterType.After &&
-            cacheDelimiter(event, delimiter[1])
+            if (entityAtCursor) {
+                return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
+            }
+        }
+        const entityAtCursor = editor.getElementAtCursor(
+            '.' + DelimiterClasses.DELIMITER_AFTER,
+            position.element
         );
+
+        return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
     },
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const entity = cacheDelimiter(event);
-        if (!entity) {
+        const delimiter = cacheDelimiter(event);
+        if (!delimiter) {
             return;
         }
-        const id = entity.id;
-        const idBefore = id.substring(0, id.indexOf('_')) + DELIMITER_BEFORE;
-        const elBefore = editor.queryElements(getEntitySelector(idBefore))[0];
+        const delimiterBefore = delimiter.previousElementSibling?.previousElementSibling;
 
-        if (elBefore) {
-            const selection = elBefore.ownerDocument.getSelection();
+        if (delimiterBefore) {
+            const selection = delimiterBefore.ownerDocument.getSelection();
 
             if (selection) {
                 editor.runAsync(() => {
                     if (event.rawEvent.shiftKey) {
-                        selection.extend(elBefore, 0);
+                        selection.extend(delimiterBefore, 0);
                         event.rawEvent.preventDefault();
                     } else {
-                        selection.setPosition(elBefore, 0);
+                        selection.setPosition(delimiterBefore, 0);
                         event.rawEvent.preventDefault();
                     }
                 });
@@ -75,7 +77,6 @@ const MoveAfterDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> 
     keys: [Keys.RIGHT],
     shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
         const position = editor.getFocusedPosition();
-        let delimiter: [DelimiterType, Entity] | null = null;
 
         if (!position) {
             return false;
@@ -84,47 +85,35 @@ const MoveAfterDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> 
         position.element.normalize();
         if (position.isAtEnd && position.node.nextSibling) {
             const elAtCursor = editor.getElementAtCursor(
-                getEntitySelector(),
+                '.' + DelimiterClasses.DELIMITER_BEFORE,
                 position.node.nextSibling
             );
 
-            return !!(
-                elAtCursor &&
-                (delimiter = isDelimiter(elAtCursor))?.[0] == DelimiterType.Before &&
-                delimiter?.[1] &&
-                !!cacheDelimiter(event, delimiter[1])
-            );
+            return !!(elAtCursor && cacheDelimiter(event, elAtCursor));
         }
 
-        const entityAtCursor = editor.getElementAtCursor(getEntitySelector(), position.element);
-
-        return !!(
-            entityAtCursor &&
-            (delimiter = isDelimiter(entityAtCursor)) &&
-            delimiter[0] == DelimiterType.Before &&
-            cacheDelimiter(event, delimiter[1])
+        const entityAtCursor = editor.getElementAtCursor(
+            '.' + DelimiterClasses.DELIMITER_BEFORE,
+            position.element
         );
+
+        return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
     },
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const entity = cacheDelimiter(event);
-
-        if (!entity) {
+        const delimiter = cacheDelimiter(event);
+        if (!delimiter) {
             return;
         }
+        const delimiterAfter = delimiter.nextElementSibling?.nextElementSibling;
 
-        const id = entity.id;
-
-        const idAfter = id.substring(0, id.indexOf('_')) + DELIMITER_AFTER;
-        const elAfter = editor.queryElements(getEntitySelector(idAfter))[0];
-
-        if (elAfter) {
+        if (delimiterAfter) {
             editor.runAsync(() => {
                 if (event.rawEvent.shiftKey) {
-                    const selection = elAfter.ownerDocument.getSelection();
-                    selection?.extend(elAfter, 1);
+                    const selection = delimiterAfter.ownerDocument.getSelection();
+                    selection?.extend(delimiterAfter, 1);
                     event.rawEvent.preventDefault();
                 } else {
-                    editor.select(new Position(elAfter, PositionType.After));
+                    editor.select(new Position(delimiterAfter, PositionType.After));
                     event.rawEvent.preventDefault();
                 }
             });
@@ -132,6 +121,6 @@ const MoveAfterDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> 
     },
 };
 
-function cacheDelimiter(event: PluginEvent, delimiter?: Entity) {
+function cacheDelimiter(event: PluginEvent, delimiter?: HTMLElement | null) {
     return cacheGetEventData(event, 'delimiter_cache_key', () => delimiter);
 }
