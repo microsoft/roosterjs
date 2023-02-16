@@ -396,6 +396,7 @@ describe('Content Edit Features | ', () => {
     let defaultEvent = <PluginKeyDownEvent>{};
 
     beforeEach(() => {
+        defaultEvent = <PluginKeyDownEvent>{};
         wrapper = document.createElement('span');
         wrapper.innerHTML = 'Test';
         document.body.appendChild(wrapper);
@@ -464,10 +465,10 @@ describe('Content Edit Features | ', () => {
 
             document.getSelection = () =>
                 <Selection>{
-                    extend(node, offset?) {
+                    extend(node: Node, offset: number) {
                         extendSpy(node, offset);
                     },
-                    setPosition(node, offset?) {
+                    setPosition(node: Node, offset: number) {
                         setPositionSpy(node, offset);
                     },
                 };
@@ -495,10 +496,10 @@ describe('Content Edit Features | ', () => {
 
             document.getSelection = () =>
                 <Selection>{
-                    extend(node, offset?) {
+                    extend(node: Node, offset: number) {
                         extendSpy(node, offset);
                     },
-                    setPosition(node, offset?) {
+                    setPosition(node: Node, offset: number) {
                         setPositionSpy(node, offset);
                     },
                 };
@@ -565,10 +566,10 @@ describe('Content Edit Features | ', () => {
 
             document.getSelection = () =>
                 <Selection>{
-                    extend(node, offset?) {
+                    extend(node: Node, offset: number) {
                         extendSpy(node, offset);
                     },
-                    setPosition(node, offset?) {
+                    setPosition(node: Node, offset: number) {
                         setPositionSpy(node, offset);
                     },
                 };
@@ -598,10 +599,10 @@ describe('Content Edit Features | ', () => {
 
             document.getSelection = () =>
                 <Selection>{
-                    extend(node, offset?) {
+                    extend(node: Node, offset: number) {
                         extendSpy(node, offset);
                     },
-                    setPosition(node, offset?) {
+                    setPosition(node: Node, offset: number) {
                         setPositionSpy(node, offset);
                     },
                 };
@@ -613,7 +614,7 @@ describe('Content Edit Features | ', () => {
         });
 
         it('Element not an entity', () => {
-            delimiterAfter.wrapper.setAttribute('class', '');
+            delimiterBefore.wrapper.setAttribute('class', '');
             runTest(delimiterBefore.wrapper, false /* expected */, defaultEvent);
         });
 
