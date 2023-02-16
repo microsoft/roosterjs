@@ -159,8 +159,8 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
 const DeleteTableWithBackspace: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
-        cacheIsWholeTableSelected(event, editor) &&
-        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTableWithBackspace),
+        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTableWithBackspace) &&
+        cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
         const vtable = new VTable(td);
