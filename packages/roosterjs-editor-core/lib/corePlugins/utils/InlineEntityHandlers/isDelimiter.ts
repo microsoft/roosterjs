@@ -12,11 +12,10 @@ export function isDelimiter(
         ? <Entity>ent
         : getEntityFromElement(<HTMLElement>ent);
     if (entity) {
-        const id = entity.type;
-        if (id.indexOf(DELIMITER_AFTER) > -1) {
+        if (entity.type.indexOf(DELIMITER_AFTER) > -1) {
             return [DelimiterType.After, entity];
         }
-        if (id.indexOf(DELIMITER_BEFORE) > -1) {
+        if (entity.type.indexOf(DELIMITER_BEFORE) > -1) {
             return [DelimiterType.Before, entity];
         }
     }

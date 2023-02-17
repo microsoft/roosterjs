@@ -55,7 +55,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                         editor.triggerContentChangedEvent(ChangeSource.InsertEntity, elementAfter);
 
                         editor.runAsync(() => {
-                            editor.select(new Position(new Position(wrapper, PositionType.After)));
+                            editor.select(new Position(wrapper, PositionType.After));
                         });
                     }
                     break;
