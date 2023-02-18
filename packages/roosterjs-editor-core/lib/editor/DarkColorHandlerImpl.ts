@@ -9,9 +9,17 @@ const COLOR_VAR_PREFIX = 'darkColor';
  * @internal
  */
 export default class DarkColorHandlerImpl implements DarkColorHandler {
-    private knownColors: Record<string, ModeIndependentColor> = {};
+    private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
 
     constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
+
+    /**
+     * Get a copy of known colors
+     * @returns
+     */
+    getKnownColorsCopy() {
+        return Object.values(this.knownColors);
+    }
 
     /**
      * Given a light mode color value and an optional dark mode color value, register this color
