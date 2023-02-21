@@ -17,6 +17,7 @@ export { ContentModelParagraph } from './block/ContentModelParagraph';
 export { ContentModelSegmentBase } from './segment/ContentModelSegmentBase';
 export { ContentModelSelectionMarker } from './segment/ContentModelSelectionMarker';
 export { ContentModelText } from './segment/ContentModelText';
+export { ContentModelStyledText } from './segment/ContentModelStyledText';
 export { ContentModelBr } from './segment/ContentModelBr';
 export { ContentModelImage } from './segment/ContentModelImage';
 export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment';

@@ -50,6 +50,7 @@ import {
 } from './tableEditButtons';
 import { spacingButton } from './spacingButton';
 import { spaceAfterButton, spaceBeforeButton } from './spaceBeforeAfterButtons';
+import { applyStylingButton } from './applyStylingButton';
 
 const buttons = [
     formatPainterButton,
@@ -101,6 +102,7 @@ const buttons = [
     spacingButton,
     spaceBeforeButton,
     spaceAfterButton,
+    applyStylingButton,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {
