@@ -155,6 +155,7 @@ describe('TableFeature', () => {
                 expect(!!shouldHandleEvent).toBeFalsy();
             });
         });
+
         describe('HandleEvent', () => {
             let setIndentationFn: jasmine.Spy;
 
@@ -335,6 +336,50 @@ describe('TableFeature', () => {
             });
             it('Shift Use DOWN on fourth cell', () => {
                 runTestWithShift(false, 2, 0);
+            });
+        });
+    });
+
+    describe('deleteTable | ', () => {
+        const feature = TableFeatures.deleteTableWithBackspace;
+
+        describe('ShouldHandle', () => {
+            it('Should not handle, is not in a table', () => {
+                editor.setContent(`<span id="${TEST_ELEMENT_ID}"><span>`);
+                editor.focus();
+                editor.select(document.getElementById('TEST_ELEMENT_ID')!, 0);
+                const shouldHandleEvent = feature.shouldHandleEvent(keyboardEvent, editor, false);
+                expect(!!shouldHandleEvent).toBeFalsy();
+            });
+            it('Should handle, table is fully selected', () => {
+                editor.select(table!, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
+                spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
+                const shouldHandleEvent = feature.shouldHandleEvent(keyboardEvent, editor, false);
+                expect(!!shouldHandleEvent).toBeTruthy();
+            });
+            it('Should not handle, table is not fully selected', () => {
+                editor.select(table!, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 0, x: 1 },
+                });
+                const shouldHandleEvent = feature.shouldHandleEvent(keyboardEvent, editor, false);
+                expect(!!shouldHandleEvent).toBeFalsy();
+            });
+        });
+
+        describe('HandleEvent', () => {
+            it('Should delete table', () => {
+                editor.select(table!, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
+
+                feature.handleEvent(keyboardEvent, editor);
+                const deletedTable = document.getElementById('TEST_ELEMENT_ID');
+                expect(deletedTable).toBe(null);
             });
         });
     });
