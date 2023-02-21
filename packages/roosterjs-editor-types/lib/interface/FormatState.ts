@@ -153,6 +153,12 @@ export interface StyleBasedFormatState {
      * Margin Bottom
      */
     marginBottom?: string;
+
+    /**
+     * Name of current style under cursor
+     * This is always undefined on non-content-model editor
+     */
+    styleName?: string;
 }
 
 /**

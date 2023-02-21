@@ -8,6 +8,11 @@ export type ContentModelSegmentType =
     | 'Text'
 
     /**
+     * TODO
+     */
+    | 'StyledText'
+
+    /**
      * Represents a BR element
      */
     | 'Br'

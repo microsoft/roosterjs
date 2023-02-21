@@ -86,6 +86,9 @@ function retrieveFormatStateInternal(
     result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
     result.marginBottom = paragraph.format.marginBottom;
     result.marginTop = paragraph.format.marginTop;
+    result.styleName =
+        (segment.segmentType === 'StyledText' && segment.styleName) ||
+        paragraph.decorator?.styleName;
 
     result.isBold = isBold(format.fontWeight);
     result.isItalic = format.italic;

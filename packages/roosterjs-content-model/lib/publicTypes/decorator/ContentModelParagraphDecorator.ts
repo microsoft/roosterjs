@@ -12,4 +12,9 @@ export interface ContentModelParagraphDecorator
      * Tag name of this paragraph
      */
     tagName: string;
+
+    /**
+     * Name of the style applied
+     */
+    styleName?: string;
 }

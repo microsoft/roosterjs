@@ -99,6 +99,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
             lineHeight: styles[4],
             marginTop: styles[5],
             marginBottom: styles[6],
+            styleName: undefined,
         };
     } else {
         const ogTextColorNode =
@@ -140,6 +141,7 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                   }
                 : undefined,
             lineHeight: styles[4],
+            styleName: undefined,
         };
     }
 };
