@@ -222,6 +222,12 @@ export interface TableFeatureSettings {
      * IndentTableOnTab edit feature, provides the ability to indent the table if it is all cells are selected.
      */
     indentTableOnTab: boolean;
+
+    /**
+     * Requires @see ExperimentalFeatures.DeleteTableWithBackspace
+     * Delete a table selected with the table selector pressing  Backspace key
+     */
+    deleteTableWithBackspace: boolean;
 }
 
 /**
