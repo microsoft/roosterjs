@@ -23,7 +23,6 @@ export default function addDelimiters(element: HTMLElement) {
             element.insertAdjacentElement(insertPosition, span);
         }
     }
-
     insertDelimiter(DelimiterClasses.DELIMITER_AFTER);
     insertDelimiter(DelimiterClasses.DELIMITER_BEFORE);
 }
