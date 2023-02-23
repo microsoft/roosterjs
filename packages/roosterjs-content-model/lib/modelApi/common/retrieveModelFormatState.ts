@@ -8,7 +8,7 @@ import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
+import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 /**
  * @internal
@@ -84,6 +84,8 @@ function retrieveFormatStateInternal(
     result.textColor = format.textColor;
     //TODO: handle block owning segments with different line-heights
     result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
+    result.marginBottom = paragraph.format.marginBottom;
+    result.marginTop = paragraph.format.marginTop;
 
     result.isBold = isBold(format.fontWeight);
     result.isItalic = format.italic;

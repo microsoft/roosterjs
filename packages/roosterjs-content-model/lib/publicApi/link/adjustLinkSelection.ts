@@ -1,6 +1,5 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -18,7 +17,7 @@ export default function adjustLinkSelection(editor: IContentModelEditor): [strin
         let changed = adjustSegmentSelection(
             model,
             target => !!target.isSelected && !!target.link,
-            (target, ref) => !!target.link && areSameFormats(target.link.format, ref.link!.format)
+            (target, ref) => !!target.link && target.link.format.href == ref.link!.format.href
         );
         let segments = getSelectedSegments(model, false /*includingFormatHolder*/);
         const firstSegment = segments[0];

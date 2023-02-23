@@ -1,5 +1,5 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
 import { editTable } from 'roosterjs-content-model';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { TableOperation } from 'roosterjs-editor-types';
 import {
     RibbonButton,

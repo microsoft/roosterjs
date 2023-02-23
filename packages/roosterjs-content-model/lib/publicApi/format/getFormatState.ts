@@ -1,6 +1,6 @@
 import { FormatState } from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getPendingFormat } from './pendingFormat';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';

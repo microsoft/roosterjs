@@ -1,7 +1,7 @@
 import * as validate from 'roosterjs-editor-dom/lib/metadata/validate';
 import { ContentModelWithDataset } from '../../../lib/publicTypes/format/ContentModelWithDataset';
 import { Definition } from 'roosterjs-editor-types';
-import { hasMetadata, updateMetadata } from '../../../lib/modelApi/metadata/updateMetadata';
+import { hasMetadata, updateMetadata } from '../../../lib/domUtils/metadata/updateMetadata';
 
 describe('updateMetadata', () => {
     it('no metadata', () => {

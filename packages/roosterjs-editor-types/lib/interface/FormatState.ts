@@ -143,6 +143,16 @@ export interface StyleBasedFormatState {
      * Line height
      */
     lineHeight?: string;
+
+    /**
+     * Margin Top
+     */
+    marginTop?: string;
+
+    /**
+     * Margin Bottom
+     */
+    marginBottom?: string;
 }
 
 /**

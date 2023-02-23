@@ -1,3 +1,5 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
 /**
  * Represents a combination of color key, light color and dark color, parsed from existing color value
  */
@@ -42,4 +44,9 @@ export default interface DarkColorHandler {
      * @param color The color string to parse
      */
     parseColorValue(color: string | null | undefined): ColorKeyAndValue;
+
+    /**
+     * Get a copy of known colors
+     */
+    getKnownColorsCopy(): Readonly<ModeIndependentColor>[];
 }

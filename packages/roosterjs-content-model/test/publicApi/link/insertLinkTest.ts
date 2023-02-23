@@ -6,7 +6,6 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('insertLink', () => {
@@ -63,10 +62,7 @@ describe('insertLink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
+                            format: {},
                             text: 'http://test.com',
                             link: {
                                 dataset: {},
@@ -74,6 +70,7 @@ describe('insertLink', () => {
                                     href: 'http://test.com',
                                     anchorTitle: undefined,
                                     target: undefined,
+                                    underline: true,
                                 },
                             },
                         },
@@ -108,10 +105,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test',
                                 link: {
                                     dataset: {},
@@ -119,6 +113,7 @@ describe('insertLink', () => {
                                         href: 'http://test.com',
                                         anchorTitle: 'title',
                                         target: undefined,
+                                        underline: true,
                                     },
                                 },
                                 isSelected: true,
@@ -151,10 +146,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'linkText',
                                 link: {
                                     dataset: {},
@@ -162,6 +154,7 @@ describe('insertLink', () => {
                                         href: 'http://test.com',
                                         anchorTitle: 'title',
                                         target: 'target',
+                                        underline: true,
                                     },
                                 },
                             },
@@ -200,6 +193,7 @@ describe('insertLink', () => {
                 href: 'http://test.com',
                 anchorTitle: 'title',
                 target: undefined,
+                underline: true,
             },
         };
 
@@ -216,20 +210,14 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test1',
                                 link,
                                 isSelected: true,
                             },
                             {
                                 segmentType: 'Image',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 src: 'test',
                                 dataset: {},
                                 link,
@@ -237,10 +225,7 @@ describe('insertLink', () => {
                             },
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test2',
                                 link,
                                 isSelected: true,
@@ -274,6 +259,7 @@ describe('insertLink', () => {
                 href: 'http://test.com',
                 anchorTitle: 'title',
                 target: undefined,
+                underline: true,
             },
         };
 
@@ -290,10 +276,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'new text',
                                 link,
                             },

@@ -1,5 +1,5 @@
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
-import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
 // If the value of the lightness is less than 20, the color is dark.

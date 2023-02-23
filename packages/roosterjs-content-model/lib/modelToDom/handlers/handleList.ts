@@ -4,7 +4,7 @@ import { ContentModelListItem } from '../../publicTypes/group/ContentModelListIt
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { updateListMetadata } from '../../modelApi/metadata/updateListMetadata';
+import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 
 /**
  * @internal
