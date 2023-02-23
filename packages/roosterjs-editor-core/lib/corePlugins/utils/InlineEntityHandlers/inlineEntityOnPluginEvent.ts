@@ -6,7 +6,6 @@ import {
     isCharacterValue,
     Position,
     safeInstanceOf,
-    splitParentNode,
     splitTextNode,
 } from 'roosterjs-editor-dom';
 import type { Entity, IEditor, PluginEvent } from 'roosterjs-editor-types';
@@ -72,40 +71,41 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     return;
                 }
 
-                if (delimiterType == DelimiterType.After) {
-                    elementAtCursor.normalize();
-                    const textNode = elementAtCursor.firstChild as Node;
-                    if (textNode.nodeType == NodeType.Text) {
+                elementAtCursor.normalize();
+                const textNode = elementAtCursor.firstChild as Node;
+                if (textNode?.nodeType == NodeType.Text) {
+                    editor.runAsync(() => {
                         const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
                         if (index >= 0) {
-                            const text = splitTextNode(
+                            splitTextNode(
                                 <Text>textNode,
-                                index + 1,
+                                index == 0 ? 1 : index,
                                 false /* returnFirstPart */
                             );
-                            splitParentNode(text, true /* splitBefore */);
-                            editor.getElementAtCursor('span', text)?.removeAttribute('class');
-                            editor.getDocument().getSelection()?.setPosition(text, 1);
-                        }
-                    }
-                } else if (delimiterType == DelimiterType.Before) {
-                    elementAtCursor.normalize();
-                    const textNode = elementAtCursor.firstChild as Node;
-                    if (textNode.nodeType == NodeType.Text) {
-                        editor.getDocument().getSelection()?.setPosition(textNode, 0);
-
-                        editor.runAsync(() => {
-                            const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
-                            if (index >= 0) {
-                                const text = splitTextNode(
-                                    <Text>textNode,
-                                    index,
-                                    true /* returnFirstPart */
+                            let nodeToMove: Node | undefined;
+                            elementAtCursor.childNodes.forEach(node => {
+                                if (node.nodeValue !== ZERO_WIDTH_SPACE) {
+                                    nodeToMove = node;
+                                }
+                            });
+                            if (nodeToMove) {
+                                elementAtCursor.parentElement?.insertBefore(
+                                    nodeToMove,
+                                    delimiterType == DelimiterType.Before
+                                        ? elementAtCursor
+                                        : elementAtCursor.nextSibling
                                 );
-                                elementAtCursor.parentElement?.insertBefore(text, elementAtCursor);
+                                const selection = nodeToMove.ownerDocument?.getSelection();
+
+                                if (selection) {
+                                    selection.setPosition(
+                                        nodeToMove,
+                                        new Position(nodeToMove, PositionType.End).offset
+                                    );
+                                }
                             }
-                        });
-                    }
+                        }
+                    });
                 }
             }
     }

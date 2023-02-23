@@ -226,6 +226,11 @@ describe('Inline Entity On Plugin Event | ', () => {
         const KeyEvents = [PluginEventType.KeyDown, PluginEventType.KeyUp];
 
         describe('Element Before | ', () => {
+            afterEach(() => {
+                document.body.childNodes.forEach(cn => {
+                    document.body.removeChild(cn);
+                });
+            });
             KeyEvents.forEach((ev: PluginEventType) => {
                 function arrangeAndAct(ev: PluginEventType) {
                     editor.getFocusedPosition = () => new Position(delimiterBefore, 0);
@@ -264,6 +269,11 @@ describe('Inline Entity On Plugin Event | ', () => {
         });
 
         describe('Element After | ', () => {
+            afterEach(() => {
+                document.body.childNodes.forEach(cn => {
+                    document.body.removeChild(cn);
+                });
+            });
             function arrangeAndAct(eventType: PluginEventType) {
                 editor.getFocusedPosition = () => new Position(delimiterAfter, 0);
 
@@ -289,6 +299,7 @@ describe('Inline Entity On Plugin Event | ', () => {
                     expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
                     expect(delimiterAfter.textContent?.length).toEqual(1);
                     expect(delimiterAfter.childNodes.length).toEqual(1);
+                    expect(delimiterAfter.id).toBeDefined();
                 });
 
                 it('Is not Delimiter' + ev, () => {
