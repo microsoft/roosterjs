@@ -224,10 +224,10 @@ export interface TableFeatureSettings {
     indentTableOnTab: boolean;
 
     /**
-     * Requires @see ExperimentalFeatures.DeleteTable
-     * Delete a table selected with the table selector pressing Delete or Backspace key
+     * Requires @see ExperimentalFeatures.DeleteTableWithBackspace
+     * Delete a table selected with the table selector pressing  Backspace key
      */
-    deleteTable: boolean;
+    deleteTableWithBackspace: boolean;
 }
 
 /**

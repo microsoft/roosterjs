@@ -48,7 +48,7 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     autoNumberingList:
         'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
     mergeListOnBackspaceAfterList: 'When backspacing between lists, merge the lists',
-    deleteTable: 'Delete table with delete or backspace key with whole table is selected',
+    deleteTableWithBackspace: 'Delete table with backspace key with whole table is selected',
 };
 
 export interface ContentEditFeaturessProps {

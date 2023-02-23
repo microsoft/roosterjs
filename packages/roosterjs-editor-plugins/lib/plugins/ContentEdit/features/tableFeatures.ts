@@ -153,14 +153,14 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Requires @see ExperimentalFeatures.DeleteTable
- * Delete a table selected with the table selector pressing Delete or Backspace key
+ * Requires @see ExperimentalFeatures.DeleteTableWithBackspace
+ * Delete a table selected with the table selector pressing Backspace key
  */
-const DeleteTable: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.DELETE, Keys.BACKSPACE],
+const DeleteTableWithBackspace: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
-        cacheIsWholeTableSelected(event, editor) &&
-        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTable),
+        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTableWithBackspace) &&
+        cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
         const vtable = new VTable(td);
@@ -207,5 +207,5 @@ export const TableFeatures: Record<
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
     indentTableOnTab: IndentTableOnTab,
-    deleteTable: DeleteTable,
+    deleteTableWithBackspace: DeleteTableWithBackspace,
 };

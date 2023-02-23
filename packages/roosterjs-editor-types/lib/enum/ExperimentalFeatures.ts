@@ -135,7 +135,7 @@ export const enum ExperimentalFeatures {
     VariableBasedDarkColor = 'VariableBasedDarkColor',
 
     /**
-     * Delete table with Delete or Backspace key with the whole was selected with table selector
+     * Delete table with Backspace key with the whole was selected with table selector
      */
-    DeleteTable = 'DeleteTable',
+    DeleteTableWithBackspace = 'DeleteTableWithBackspace',
 }

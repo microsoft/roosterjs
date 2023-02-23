@@ -1,3 +1,4 @@
+import ModeIndependentColor from './ModeIndependentColor';
 import { ContentMetadata } from './ContentMetadata';
 
 /**
@@ -13,4 +14,9 @@ export default interface Snapshot {
      * Metadata of the editor content state
      */
     metadata: ContentMetadata | null;
+
+    /**
+     * Known colors for dark mode
+     */
+    knownColors: Readonly<ModeIndependentColor>[];
 }

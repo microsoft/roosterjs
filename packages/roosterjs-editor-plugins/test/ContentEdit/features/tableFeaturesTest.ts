@@ -341,12 +341,7 @@ describe('TableFeature', () => {
     });
 
     describe('deleteTable | ', () => {
-        const feature = TableFeatures.deleteTable;
-        let isFeatureEnabledFn: jasmine.Spy;
-
-        beforeEach(() => {
-            isFeatureEnabledFn = spyOn(editor, 'isFeatureEnabled');
-        });
+        const feature = TableFeatures.deleteTableWithBackspace;
 
         describe('ShouldHandle', () => {
             it('Should not handle, is not in a table', () => {
@@ -361,7 +356,7 @@ describe('TableFeature', () => {
                     firstCell: { x: 0, y: 0 },
                     lastCell: { y: 1, x: 1 },
                 });
-                isFeatureEnabledFn.and.returnValue(true);
+                spyOn(editor, 'isFeatureEnabled').and.returnValue(true);
                 const shouldHandleEvent = feature.shouldHandleEvent(keyboardEvent, editor, false);
                 expect(!!shouldHandleEvent).toBeTruthy();
             });
@@ -376,14 +371,16 @@ describe('TableFeature', () => {
         });
 
         describe('HandleEvent', () => {
-            editor.select(table!, <TableSelection>{
-                firstCell: { x: 0, y: 0 },
-                lastCell: { y: 1, x: 1 },
-            });
+            it('Should delete table', () => {
+                editor.select(table!, <TableSelection>{
+                    firstCell: { x: 0, y: 0 },
+                    lastCell: { y: 1, x: 1 },
+                });
 
-            feature.handleEvent(keyboardEvent, editor);
-            const deletedTable = document.getElementById('TEST_ELEMENT_ID');
-            expect(deletedTable).toBe(null);
+                feature.handleEvent(keyboardEvent, editor);
+                const deletedTable = document.getElementById('TEST_ELEMENT_ID');
+                expect(deletedTable).toBe(null);
+            });
         });
     });
 });
