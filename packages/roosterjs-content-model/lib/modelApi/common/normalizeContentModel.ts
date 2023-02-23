@@ -43,9 +43,9 @@ function removeEmptySegments(block: ContentModelParagraph) {
 }
 
 function normalizeParagraph(block: ContentModelParagraph) {
-    if (!block.isImplicit) {
-        const segments = block.segments;
+    const segments = block.segments;
 
+    if (!block.isImplicit) {
         if (segments.length == 1 && segments[0].segmentType == 'SelectionMarker') {
             segments.push(createBr(segments[0].format));
         } else if (
@@ -56,6 +56,16 @@ function normalizeParagraph(block: ContentModelParagraph) {
             )
         ) {
             segments.pop();
+        }
+    }
+
+    for (let i = 0; i < segments.length - 1; i++) {
+        const segment = segments[i];
+
+        if (segment.segmentType == 'Text') {
+            // If the text is ended with &nbsp; and is not following another space,
+            // replace it to regular space (\u0020) to allow next segment to be able to wrap
+            segment.text = segment.text.replace(/([^\u0020])\u00A0$/, '$1\u0020');
         }
     }
 }
