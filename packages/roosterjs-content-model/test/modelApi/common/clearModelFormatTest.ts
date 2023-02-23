@@ -476,6 +476,65 @@ describe('clearModelFormat', () => {
         expect(tables).toEqual([]);
     });
 
+    it('Model with selection under list, has defaultSegmentFormat', () => {
+        const model = createContentModelDocument();
+        const list = createListItem([{ listType: 'OL' }], { fontSize: '20px' });
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const text = createText('test', { textColor: 'green' });
+
+        text.isSelected = true;
+
+        para.segments.push(text);
+        list.blocks.push(para);
+        model.blocks.push(list);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables, {
+            fontSize: '10px',
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {
+                            fontSize: '20px',
+                        },
+                        isSelected: true,
+                    },
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontSize: '10px',
+                                    },
+                                    text: 'test',
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[list, model], para]]);
+        expect(segments).toEqual([text]);
+        expect(tables).toEqual([]);
+    });
+
     it('Model with selection under quote', () => {
         const model = createContentModelDocument();
         const quote = createQuote({ lineHeight: '25px' });

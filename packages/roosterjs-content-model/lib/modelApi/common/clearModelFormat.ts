@@ -40,7 +40,11 @@ export function clearModelFormat(
             }
         },
         {
-            includeListFormatHolder: 'anySegment',
+            // When there is a default format to apply, we know how to handle segment format under list.
+            // So no need to clear format of list number.
+            // Otherwise, we will clear all format of selected text. And since they are under LI tag, we
+            // also need to clear the format of LI (format holder) so that the format is really cleared
+            includeListFormatHolder: defaultSegmentFormat ? 'never' : 'anySegment',
         }
     );
 
