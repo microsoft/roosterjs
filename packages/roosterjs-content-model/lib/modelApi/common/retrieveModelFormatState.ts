@@ -1,8 +1,8 @@
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
@@ -18,44 +18,71 @@ export function retrieveModelFormatState(
     pendingFormat: ContentModelSegmentFormat | null,
     formatState: FormatState
 ) {
-    let isFirst = true;
     let firstTableContext: TableSelectionContext | undefined;
+    let firstBlock: ContentModelBlock | undefined;
+    let isFirst = true;
+
+    if (pendingFormat) {
+        // Pending format
+        retrieveSegmentFormat(formatState, pendingFormat, isFirst);
+    }
 
     iterateSelections(
         [model],
         (path, tableContext, block, segments) => {
-            if (tableContext && !firstTableContext) {
-                firstTableContext = tableContext;
+            // Structure formats
+            retrieveStructureFormat(formatState, path, isFirst);
+
+            // Multiple line format
+            if (block) {
+                if (firstBlock) {
+                    formatState.isMultilineSelection = true;
+                } else {
+                    firstBlock = block;
+                }
             }
 
-            if (isFirst) {
-                if (block?.blockType == 'Paragraph' && segments?.[0]) {
-                    retrieveFormatStateInternal(
-                        formatState,
-                        path,
-                        tableContext,
-                        block,
-                        segments,
-                        pendingFormat
-                    );
-                } else if (tableContext) {
-                    retrieveTableFormat(tableContext, formatState);
-                }
-                isFirst = false;
-            } else {
-                formatState.isMultilineSelection = true;
+            if (block?.blockType == 'Paragraph') {
+                // Paragraph formats
+                retrieveParagraphFormat(formatState, block, isFirst);
 
-                if (tableContext && firstTableContext) {
+                // Segment formats
+                segments?.forEach(segment => {
+                    if (!pendingFormat) {
+                        retrieveSegmentFormat(formatState, segment.format, isFirst);
+                    }
+
+                    formatState.canUnlink = formatState.canUnlink || !!segment.link;
+                    formatState.canAddImageAltText =
+                        formatState.canAddImageAltText ||
+                        segments.some(segment => segment.segmentType == 'Image');
+
+                    isFirst = false;
+                });
+
+                isFirst = false;
+            }
+
+            if (tableContext) {
+                if (firstTableContext) {
                     const { table, colIndex, rowIndex } = firstTableContext;
 
+                    // Merge table format
                     if (
                         tableContext.table == table &&
                         (tableContext.colIndex != colIndex || tableContext.rowIndex != rowIndex)
                     ) {
                         formatState.canMergeTableCell = true;
+                        formatState.isMultilineSelection = true;
                     }
+                } else {
+                    // Table formats
+                    retrieveTableFormat(tableContext, formatState);
+                    firstTableContext = tableContext;
                 }
             }
+
+            // TODO: Support Code block in format state for Content Model
         },
         {
             includeListFormatHolder: 'never',
@@ -63,61 +90,58 @@ export function retrieveModelFormatState(
     );
 }
 
-function retrieveFormatStateInternal(
+function retrieveSegmentFormat(
+    result: FormatState,
+    format: ContentModelSegmentFormat,
+    isFirst: boolean
+) {
+    const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
+    mergeValue(result, 'isBold', isBold(format.fontWeight), isFirst);
+    mergeValue(result, 'isItalic', format.italic, isFirst);
+    mergeValue(result, 'isUnderline', format.underline, isFirst);
+    mergeValue(result, 'isStrikeThrough', format.strikethrough, isFirst);
+    mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
+    mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
+
+    mergeValue(result, 'fontName', format.fontFamily, isFirst);
+    mergeValue(result, 'fontSize', format.fontSize, isFirst);
+    mergeValue(result, 'backgroundColor', format.backgroundColor, isFirst);
+    mergeValue(result, 'textColor', format.textColor, isFirst);
+
+    //TODO: handle block owning segments with different line-heights
+    mergeValue(result, 'lineHeight', format.lineHeight, isFirst);
+}
+
+function retrieveParagraphFormat(
+    result: FormatState,
+    paragraph: ContentModelParagraph,
+    isFirst: boolean
+) {
+    const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
+    const validHeaderLevel = headerLevel >= 1 && headerLevel <= 6 ? headerLevel : undefined;
+
+    mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst);
+    mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst);
+    mergeValue(result, 'headerLevel', validHeaderLevel, isFirst);
+}
+
+function retrieveStructureFormat(
     result: FormatState,
     path: ContentModelBlockGroup[],
-    tableContext: TableSelectionContext | undefined,
-    paragraph: ContentModelParagraph,
-    segments: ContentModelSegment[],
-    pendingFormat: ContentModelSegmentFormat | null
+    isFirst: boolean
 ) {
-    const segment = segments[0];
-    const format = pendingFormat || segment.format;
-    const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
     const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
-    const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
-
-    result.fontName = format.fontFamily;
-    result.fontSize = format.fontSize;
-    result.backgroundColor = format.backgroundColor;
-    result.textColor = format.textColor;
-    //TODO: handle block owning segments with different line-heights
-    result.lineHeight = paragraph.format.lineHeight || format.lineHeight;
-    result.marginBottom = paragraph.format.marginBottom;
-    result.marginTop = paragraph.format.marginTop;
-
-    result.isBold = isBold(format.fontWeight);
-    result.isItalic = format.italic;
-    result.isUnderline = format.underline;
-    result.isStrikeThrough = format.strikethrough;
-    result.isSuperscript = superOrSubscript == 'super';
-    result.isSubscript = superOrSubscript == 'sub';
-
-    result.canUnlink = !!segment.link;
-    result.canAddImageAltText = segments.some(segment => segment.segmentType == 'Image');
 
     if (listItemIndex >= 0) {
         const listItem = path[listItemIndex] as ContentModelListItem;
         const listType = listItem?.levels[listItem.levels.length - 1]?.listType;
 
-        result.isBullet = listType == 'UL';
-        result.isNumbering = listType == 'OL';
+        mergeValue(result, 'isBullet', listType == 'UL', isFirst);
+        mergeValue(result, 'isNumbering', listType == 'OL', isFirst);
     }
 
-    if (quoteIndex >= 0) {
-        result.isBlockQuote = true;
-    }
-
-    if (headerLevel >= 1 && headerLevel <= 6) {
-        result.headerLevel = headerLevel;
-    }
-
-    if (tableContext) {
-        retrieveTableFormat(tableContext, result);
-    }
-
-    // TODO: Support Code block in format state for Content Model
+    mergeValue(result, 'isBlockQuote', quoteIndex >= 0, isFirst);
 }
 
 function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
@@ -128,5 +152,20 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Format
 
     if (tableFormat) {
         result.tableFormat = tableFormat;
+    }
+}
+
+function mergeValue<K extends keyof FormatState>(
+    format: FormatState,
+    key: K,
+    newValue: FormatState[K] | undefined,
+    isFirst: boolean
+) {
+    if (isFirst) {
+        if (newValue !== undefined) {
+            format[key] = newValue;
+        }
+    } else if (newValue !== format[key]) {
+        delete format[key];
     }
 }
