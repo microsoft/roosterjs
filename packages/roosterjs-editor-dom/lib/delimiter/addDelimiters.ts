@@ -5,7 +5,7 @@ let delimiterId = 0;
 const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
- *
+ * Adds delimiters to the element provided.
  * @param element element to be between delimiters
  */
 export default function addDelimiters(element: HTMLElement) {

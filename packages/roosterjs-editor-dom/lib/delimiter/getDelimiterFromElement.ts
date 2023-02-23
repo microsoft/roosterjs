@@ -1,6 +1,11 @@
 import { Delimiter, DelimiterType } from 'roosterjs-editor-types';
 import { DelimiterClasses } from './DelimiterClasses';
 
+/**
+ * Retrieves Delimiter information from a provided element.
+ * @param element element to try to retrieve a delimiter
+ * @returns delimiter info if it is a Delimiter, else null
+ */
 export default function getDelimiterFromElement(
     element: HTMLElement | Element | null | undefined
 ): Delimiter | null {
