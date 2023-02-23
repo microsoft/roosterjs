@@ -50,6 +50,7 @@ export { default as createElement, KnownCreateElementData } from './utils/create
 export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as getIntersectedRect } from './utils/getIntersectedRect';
 export { default as isNodeAfter } from './utils/isNodeAfter';
+export { default as parseColor } from './utils/parseColor';
 
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
