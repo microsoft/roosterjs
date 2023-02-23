@@ -34,7 +34,7 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
             base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
 
         [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
-        if (options.minWidth && options.minHeight) {
+        if (options.minWidth !== undefined && options.minHeight !== undefined) {
             const horizontalOnly = x == '';
             const verticalOnly = y == '';
             const shouldPreserveRatio =

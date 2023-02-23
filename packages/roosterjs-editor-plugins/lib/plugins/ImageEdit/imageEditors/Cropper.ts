@@ -37,7 +37,12 @@ export const Cropper: DragAndDropHandler<DragAndDropContext, CropInfo> = {
         const widthPercent = 1 - leftPercent - rightPercent;
         const heightPercent = 1 - topPercent - bottomPercent;
 
-        if (widthPercent > 0 && heightPercent > 0 && minWidth && minHeight) {
+        if (
+            widthPercent > 0 &&
+            heightPercent > 0 &&
+            minWidth !== undefined &&
+            minHeight !== undefined
+        ) {
             const fullWidth = widthPx / widthPercent;
             const fullHeight = heightPx / heightPercent;
             const newLeft =
