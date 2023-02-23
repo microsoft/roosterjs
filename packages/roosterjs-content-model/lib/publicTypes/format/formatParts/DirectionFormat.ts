@@ -5,7 +5,7 @@ export type DirectionFormat = {
     /**
      * Text direction
      */
-    direction?: 'ltr' | 'rtl';
+    direction?: 'ltr' | 'rtl' | 'column';
 
     /**
      * Horizontal alignment

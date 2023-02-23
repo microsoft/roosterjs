@@ -1,6 +1,5 @@
 import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
-import { DirectionFormat } from './formatParts/DirectionFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
@@ -14,7 +13,6 @@ import { UnderlineFormat } from './formatParts/UnderlineFormat';
  * The format object for a segment in Content Model
  */
 export type ContentModelSegmentFormat = TextColorFormat &
-    DirectionFormat &
     BackgroundColorFormat &
     FontSizeFormat &
     FontFamilyFormat &

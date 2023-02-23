@@ -95,8 +95,8 @@ const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: blockFormatHandlers,
-    listItem: ['listItemThread', 'listItemMetadata'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'display'],
+    listItem: ['listItemThread', 'listItemMetadata', 'direction'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction'],
     segment: [
         'superOrSubScript',
         'strike',
@@ -108,7 +108,6 @@ const defaultFormatKeysPerCategory: {
         'textColor',
         'backgroundColor',
         'lineHeight',
-        'direction',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],

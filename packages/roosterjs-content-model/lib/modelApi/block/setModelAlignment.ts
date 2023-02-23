@@ -54,14 +54,12 @@ export function setModelAlignment(
     const paragraphOrListItemOrTable = getOperationalBlocks<ContentModelListItem>(
         model,
         ['ListItem'],
-        []
+        ['TableCell']
     );
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
+        const newAligment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            block.formatHolder.format.textAlign =
-                ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-            block.levels[0].display = 'flex';
         } else if (block.blockType === 'Table') {
             alignTable(
                 block,
@@ -69,7 +67,7 @@ export function setModelAlignment(
             );
         } else if (block) {
             const { format } = block;
-            format.textAlign = ResultMap[alignment][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+            format.textAlign = newAligment;
         }
     });
 

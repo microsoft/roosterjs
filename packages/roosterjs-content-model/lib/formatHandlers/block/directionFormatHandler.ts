@@ -73,5 +73,10 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
                 element.style.textAlign = value;
             }
         }
+
+        if (element.tagName == 'OL' || element.tagName == 'UL') {
+            element.style.flexDirection = 'column';
+            element.style.display = 'flex';
+        }
     },
 };
