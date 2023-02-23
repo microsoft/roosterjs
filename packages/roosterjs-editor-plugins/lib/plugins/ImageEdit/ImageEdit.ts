@@ -594,12 +594,12 @@ function setSize(
     width: number | undefined,
     height: number | undefined
 ) {
-    element.style.left = left ? getPx(left) : element.style.left;
-    element.style.top = top ? getPx(top) : element.style.top;
-    element.style.right = right ? getPx(right) : element.style.right;
-    element.style.bottom = bottom ? getPx(bottom) : element.style.bottom;
-    element.style.width = width ? getPx(width) : element.style.width;
-    element.style.height = height ? getPx(height) : element.style.height;
+    element.style.left = left !== undefined ? getPx(left) : element.style.left;
+    element.style.top = top !== undefined ? getPx(top) : element.style.top;
+    element.style.right = right !== undefined ? getPx(right) : element.style.right;
+    element.style.bottom = bottom !== undefined ? getPx(bottom) : element.style.bottom;
+    element.style.width = width !== undefined ? getPx(width) : element.style.width;
+    element.style.height = height !== undefined ? getPx(height) : element.style.height;
 }
 
 function setWrapperSizeDimensions(
@@ -638,15 +638,12 @@ function handleRadIndexCalculator(angleRad: number): number {
     return idx < 0 ? idx + DIRECTIONS : idx;
 }
 
-function rotateHandles(element: HTMLElement, angleRad: number): string | null {
+function rotateHandles(y: string, x: string, angleRad: number): string {
     const radIndex = handleRadIndexCalculator(angleRad);
-    if (element.dataset.y && element.dataset.x) {
-        const originalDirection = element.dataset.y + element.dataset.x;
-        const originalIndex = DirectionOrder.indexOf(originalDirection);
-        const rotatedIndex = originalIndex >= 0 && originalIndex + radIndex;
-        return rotatedIndex ? DirectionOrder[rotatedIndex % DIRECTIONS] : null;
-    }
-    return null;
+    const originalDirection = y + x;
+    const originalIndex = DirectionOrder.indexOf(originalDirection);
+    const rotatedIndex = originalIndex >= 0 && originalIndex + radIndex;
+    return rotatedIndex ? DirectionOrder[rotatedIndex % DIRECTIONS] : '';
 }
 
 /**
@@ -656,7 +653,11 @@ function rotateHandles(element: HTMLElement, angleRad: number): string | null {
  */
 function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
-        handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
+        const y = handle.dataset.y;
+        const x = handle.dataset.x;
+        if (y && x) {
+            handle.style.cursor = `${rotateHandles(y, x, angleRad)}-resize`;
+        }
     });
 }
 

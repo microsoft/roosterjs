@@ -17,9 +17,10 @@ export default function canRegenerateImage(img: HTMLImageElement): boolean {
         if (context) {
             context.drawImage(img, 0, 0);
             context.getImageData(0, 0, 1, 1);
+            return true;
         }
 
-        return true;
+        return false;
     } catch {
         return false;
     }

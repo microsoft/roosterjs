@@ -35,7 +35,7 @@ export function deleteEditInfo(image: HTMLImageElement) {
  */
 export function getEditInfoFromImage(image: HTMLImageElement): ImageEditInfo {
     const obj = getMetadata<ImageEditInfo>(image);
-    return !obj || (obj && checkEditInfoState(obj) == ImageEditInfoState.Invalid)
+    return !obj || checkEditInfoState(obj) == ImageEditInfoState.Invalid
         ? getInitialEditInfo(image)
         : obj;
 }
