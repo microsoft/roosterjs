@@ -3,7 +3,6 @@ export { default as ClipboardData } from './ClipboardData';
 export { default as ContextMenuProvider } from './ContextMenuProvider';
 export { default as CustomData } from './CustomData';
 export { default as ContentChangedData } from './ContentChangedData';
-export { default as Delimiter } from './Delimiter';
 export { default as DefaultFormat } from './DefaultFormat';
 export { default as Entity } from './Entity';
 export {

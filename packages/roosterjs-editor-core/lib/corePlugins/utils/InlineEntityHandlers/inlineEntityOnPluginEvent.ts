@@ -1,9 +1,18 @@
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { getDelimiterFromElement, isBlockElement, safeInstanceOf } from 'roosterjs-editor-dom';
+import { DelimiterClasses, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import type { Entity, PluginEvent } from 'roosterjs-editor-types';
+
+const DELIMITER_SELECTOR =
+    '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 
 export function inlineEntityOnPluginEvent(event: PluginEvent) {
     switch (event.eventType) {
+        case PluginEventType.ExtractContentWithDom:
+            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
+                node.parentElement?.removeChild(node);
+            });
+            break;
+
         case PluginEventType.EntityOperation:
             const { wrapper } = event.entity;
             switch (event.operation) {

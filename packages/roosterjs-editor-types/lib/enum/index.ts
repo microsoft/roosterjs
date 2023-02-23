@@ -8,7 +8,7 @@ export { ChangeSource } from './ChangeSource';
 export { ColorTransformDirection } from './ColorTransformDirection';
 export { ContentPosition } from './ContentPosition';
 export { DarkModeDatasetNames } from './DarkModeDatasetNames';
-export { DelimiterType } from './DelimiterType';
+export { DelimiterClasses } from './DelimiterClasses';
 export { Direction } from './Direction';
 export { EntityClasses } from './EntityClasses';
 export { EntityOperation } from './EntityOperation';

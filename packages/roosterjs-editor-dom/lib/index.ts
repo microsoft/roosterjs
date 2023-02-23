@@ -6,7 +6,6 @@ export { default as PositionContentSearcher } from './contentTraverser/PositionC
 
 export { default as addDelimiters } from './delimiter/addDelimiters';
 export { default as getDelimiterFromElement } from './delimiter/getDelimiterFromElement';
-export { default as getDelimiterSelector } from './delimiter/getDelimiterSelector';
 
 export { default as getInlineElementAtNode } from './inlineElements/getInlineElementAtNode';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
