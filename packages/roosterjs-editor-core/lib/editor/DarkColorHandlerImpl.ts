@@ -1,5 +1,5 @@
 import { ColorKeyAndValue, DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys, parseColor } from 'roosterjs-editor-dom';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
@@ -88,5 +88,32 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
         }
 
         return { key, lightModeColor, darkModeColor };
+    }
+
+    /**
+     * Find related light mode color from dark mode color.
+     * @param darkColor The existing dark color
+     */
+    findLightColorFromDarkColor(darkColor: string): string | null {
+        const rgbSearch = parseColor(darkColor);
+
+        if (rgbSearch) {
+            const key = getObjectKeys(this.knownColors).find(key => {
+                const rgbCurrent = parseColor(this.knownColors[key].darkModeColor);
+
+                return (
+                    rgbCurrent &&
+                    rgbCurrent[0] == rgbSearch[0] &&
+                    rgbCurrent[1] == rgbSearch[1] &&
+                    rgbCurrent[2] == rgbSearch[2]
+                );
+            });
+
+            if (key) {
+                return this.knownColors[key].lightModeColor;
+            }
+        }
+
+        return null;
     }
 }
