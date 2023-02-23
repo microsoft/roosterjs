@@ -23,7 +23,7 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
         const newY = distance * Math.cos(base.angleRad) - deltaY;
         let angleInRad = Math.atan2(newX, newY);
 
-        if (!e.altKey) {
+        if (!e.altKey && options && options.minRotateDeg) {
             const angleInDeg = angleInRad * DEG_PER_RAD;
             const adjustedAngleInDeg =
                 Math.round(angleInDeg / options.minRotateDeg) * options.minRotateDeg;

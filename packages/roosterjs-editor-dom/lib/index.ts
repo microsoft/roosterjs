@@ -54,14 +54,6 @@ export { default as isNodeAfter } from './utils/isNodeAfter';
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
 
-export { default as VImage } from './image/VImage';
-export { default as canRegenerateImage } from './image/api/canRegenerateImage';
-export { default as resizeByPercentage } from './image/api/resizeByPercentage';
-export { default as isResizedTo } from './image/api/isResizedTo';
-export { default as resetImage } from './image/api/resetImage';
-export { OnShowResizeHandle } from './image/imageEditors/Resizer';
-export { DNDDirectionX, DnDDirectionY } from './image/types/DragAndDropContext';
-
 export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
