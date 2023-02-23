@@ -347,7 +347,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, true);
+        //this.setEditingImage(null, true);
     };
     /**
      * Create editing wrapper for the image
@@ -594,12 +594,12 @@ function setSize(
     width: number | undefined,
     height: number | undefined
 ) {
-    element.style.left = getPx(left);
-    element.style.top = getPx(top);
-    element.style.right = getPx(right);
-    element.style.bottom = getPx(bottom);
-    element.style.width = getPx(width);
-    element.style.height = getPx(height);
+    element.style.left = left ? getPx(left) : element.style.left;
+    element.style.top = top ? getPx(top) : element.style.top;
+    element.style.right = right ? getPx(right) : element.style.right;
+    element.style.bottom = bottom ? getPx(bottom) : element.style.bottom;
+    element.style.width = width ? getPx(width) : element.style.width;
+    element.style.height = height ? getPx(height) : element.style.height;
 }
 
 function setWrapperSizeDimensions(
@@ -619,8 +619,8 @@ function setWrapperSizeDimensions(
     wrapper.style.height = getPx(height);
 }
 
-function getPx(value: number | undefined): string {
-    return value === undefined ? '' : value + 'px';
+function getPx(value: number): string {
+    return value + 'px';
 }
 
 function getEditElements(wrapper: HTMLElement, elementClass: ImageEditElementClass): HTMLElement[] {

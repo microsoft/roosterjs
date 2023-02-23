@@ -14,8 +14,11 @@ export default function canRegenerateImage(img: HTMLImageElement): boolean {
         canvas.width = 10;
         canvas.height = 10;
         const context = canvas.getContext('2d');
-        context.drawImage(img, 0, 0);
-        context.getImageData(0, 0, 1, 1);
+        if (context) {
+            context.drawImage(img, 0, 0);
+            context.getImageData(0, 0, 1, 1);
+        }
+
         return true;
     } catch {
         return false;

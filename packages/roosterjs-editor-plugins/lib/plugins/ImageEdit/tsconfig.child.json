@@ -4,6 +4,11 @@
     },
     "extends": "../../../../tsconfig.json",
     "include": ["./**/*.ts"],
+    "files": [
+        "../../pluginUtils/Disposable.ts",
+        "../../pluginUtils/DragAndDropHandler.ts",
+        "../../pluginUtils/DragAndDropHelper.ts"
+    ],
     "references": [
         { "path": "../../../../roosterjs-editor-types/tsconfig.child.json" },
         { "path": "../../../../roosterjs-editor-dom/tsconfig.child.json" }
