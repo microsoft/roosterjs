@@ -20,7 +20,9 @@ import { darkMode, DarkModeButtonStringKey } from './ribbonButtons/darkMode';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { ExportButtonStringKey, exportContent } from './ribbonButtons/export';
 import { getDarkColor } from 'roosterjs-color-utils';
+import { MentionPickerDataProvider } from './PickerDataProvider';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
+import { PickerPlugin } from 'roosterjs-editor-plugins';
 import { popout, PopoutButtonStringKey } from './ribbonButtons/popout';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
@@ -129,6 +131,7 @@ class MainPane extends MainPaneBase {
     private toggleablePlugins: EditorPlugin[] | null = null;
     private contentModelPlugin: ContentModelPlugin;
     private formatPainterPlugin: FormatPainterPlugin;
+    private pickerPlugin: PickerPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -149,6 +152,12 @@ class MainPane extends MainPaneBase {
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
+        this.pickerPlugin = new PickerPlugin(new MentionPickerDataProvider(), {
+            triggerCharacter: '@',
+            elementIdPrefix: 'mention',
+            changeSource: 'Mention',
+        });
+
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.contentModelPlugin = new ContentModelPlugin();
         this.formatPainterPlugin = new FormatPainterPlugin();
@@ -447,6 +456,7 @@ class MainPane extends MainPaneBase {
         }
 
         plugins.push(this.updateContentPlugin);
+        plugins.push(this.pickerPlugin);
 
         return plugins;
     }

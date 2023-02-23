@@ -11,13 +11,13 @@ function startWebpackDevServer() {
             const devServerOptions = Object.assign({}, webpackConfig.devServer, {
                 open: true,
                 port: _port,
-                public: 'localhost:' + _port,
+                public: '0.0.0.0:' + _port,
                 publicPath: '/scripts',
             });
             webpackConfig.devServer = devServerOptions;
             const compiler = webpack(webpackConfig);
             const server = new webpackDevServer(compiler, devServerOptions);
-            server.listen(_port, '127.0.0.1', () => {});
+            server.listen(_port, '0.0.0.0', () => {});
         })
         .catch(err => {
             console.log(err);

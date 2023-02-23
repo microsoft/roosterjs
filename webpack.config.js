@@ -69,6 +69,6 @@ module.exports = {
         port: devServerPort,
         open: true,
         openPage: '',
-        public: 'localhost:' + devServerPort,
+        public: '0.0.0.0:' + devServerPort,
     },
 };
