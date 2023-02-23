@@ -35,6 +35,7 @@ describe('addUndoSnapshot', () => {
                     start: [],
                     end: [],
                 },
+                knownColors: [],
             },
             false
         );
@@ -54,6 +55,7 @@ describe('addUndoSnapshot', () => {
                     start: [],
                     end: [],
                 },
+                knownColors: [],
             },
             false
         );
@@ -94,10 +96,12 @@ describe('addUndoSnapshot', () => {
         expect(snapshot1).toEqual({
             html: 'result 1',
             metadata: { type: 0, isDarkMode: false, start: [], end: [] },
+            knownColors: [],
         });
         expect(snapshot2).toEqual({
             html: 'result 2',
             metadata: { type: 0, isDarkMode: false, start: [], end: [] },
+            knownColors: [],
         });
         expect(core.undo.isNested).toBeFalsy();
     });
@@ -259,6 +263,7 @@ describe('addUndoSnapshot', () => {
                     start: [],
                     end: [],
                 },
+                knownColors: [],
             },
             false
         );
@@ -293,6 +298,7 @@ describe('addUndoSnapshot', () => {
                     isDarkMode: false,
                     ...selectionPath,
                 },
+                knownColors: [],
             },
             false
         );
@@ -329,6 +335,7 @@ describe('addUndoSnapshot', () => {
                     isDarkMode: false,
                     ...coordinates,
                 },
+                knownColors: [],
             },
             false
         );
