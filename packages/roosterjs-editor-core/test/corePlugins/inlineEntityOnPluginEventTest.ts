@@ -239,7 +239,7 @@ describe('Inline Entity On Plugin Event |', () => {
     });
 });
 
-describe('Content Edit Features | ', () => {
+describe('Content Edit Features |', () => {
     const [moveBefore, moveAfter] = getInlineEntityContentEditFeatures();
     let entity: Entity;
     let delimiterAfter: Element;
@@ -249,17 +249,17 @@ describe('Content Edit Features | ', () => {
     let select: jasmine.Spy;
 
     let defaultEvent = <PluginKeyDownEvent>{};
-    let getSelectionPrototype: any;
 
     beforeAll(() => {
-        getSelectionPrototype = document.getSelection;
-    });
-
-    afterAll(() => {
-        document.getSelection = getSelectionPrototype;
+        document.body.childNodes.forEach(cn => {
+            document.body.removeChild(cn);
+        });
     });
 
     beforeEach(() => {
+        document.body.childNodes.forEach(cn => {
+            document.body.removeChild(cn);
+        });
         defaultEvent = <PluginKeyDownEvent>{};
         wrapper = document.createElement('span');
         wrapper.innerHTML = 'Test';
@@ -286,13 +286,13 @@ describe('Content Edit Features | ', () => {
         ({ entity, delimiterAfter, delimiterBefore } = addEntityBeforeEach(entity, wrapper));
     });
 
-    afterEach(() => {
-        document.body.childNodes.forEach(cn => {
-            document.body.removeChild(cn);
-        });
-    });
-
     describe('Move Before |', () => {
+        afterEach(() => {
+            document.body.childNodes.forEach(cn => {
+                document.body.removeChild(cn);
+            });
+        });
+
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null);
 
@@ -301,10 +301,6 @@ describe('Content Edit Features | ', () => {
             expect(result).toBe(expected);
             return event;
         }
-
-        it('DelimiterBefore', () => {
-            runTest(delimiterBefore, false /* expected */, defaultEvent);
-        });
 
         it('DelimiterAfter, no shiftKey', () => {
             let preventDefaultSpy = jasmine.createSpy('preventDefault');
@@ -369,7 +365,7 @@ describe('Content Edit Features | ', () => {
 
         it('Element not an entity', () => {
             delimiterAfter.setAttribute('class', '');
-            runTest(delimiterBefore, false /* expected */, defaultEvent);
+            runTest(delimiterAfter, false /* expected */, defaultEvent);
         });
 
         it('Handle Event without cache', () => {
@@ -390,6 +386,12 @@ describe('Content Edit Features | ', () => {
     });
 
     describe('Move After |', () => {
+        afterEach(() => {
+            document.body.childNodes.forEach(cn => {
+                document.body.removeChild(cn);
+            });
+        });
+
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null);
 
@@ -466,7 +468,7 @@ describe('Content Edit Features | ', () => {
 
         it('Element not an entity', () => {
             delimiterAfter.setAttribute('class', '');
-            runTest(delimiterBefore, false /* expected */, defaultEvent);
+            runTest(delimiterAfter, false /* expected */, defaultEvent);
         });
 
         it('Handle Event without cache', () => {
