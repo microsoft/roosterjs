@@ -42,9 +42,6 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
-        lineHeight: undefined,
-        marginTop: undefined,
-        marginBottom: undefined,
     };
 
     it('Empty model', () => {
@@ -208,6 +205,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             ...paraFormat,
+            isBlockQuote: false,
         });
     });
 
@@ -779,6 +777,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             isInTable: true,
             tableHasHeader: false,
+            isBlockQuote: false,
         });
     });
 
@@ -802,6 +801,7 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isMultilineSelection: true,
             canMergeTableCell: true,
+            isBlockQuote: false,
         });
     });
 
@@ -836,6 +836,12 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isMultilineSelection: true,
             canMergeTableCell: true,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            isBlockQuote: false,
         });
     });
 
@@ -863,16 +869,7 @@ describe('retrieveModelFormatState', () => {
             canAddImageAltText: false,
             isInTable: true,
             tableHasHeader: false,
-            fontName: undefined,
-            fontSize: undefined,
-            backgroundColor: undefined,
-            textColor: undefined,
-            isItalic: undefined,
-            isUnderline: undefined,
-            isStrikeThrough: undefined,
-            lineHeight: undefined,
-            marginTop: undefined,
-            marginBottom: undefined,
+            isBlockQuote: false,
         });
     });
 });

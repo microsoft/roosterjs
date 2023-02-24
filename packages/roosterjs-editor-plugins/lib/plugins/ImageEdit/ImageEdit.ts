@@ -109,10 +109,10 @@ export default class ImageEdit implements EditorPlugin {
     private wrapper: HTMLSpanElement | null = null;
 
     // Image cloned from the current editing image
-    private clonedImage: HTMLImageElement;
+    private clonedImage: HTMLImageElement | null = null;
 
     // The image wrapper
-    private wrapper: HTMLSpanElement;
+    private wrapper: HTMLSpanElement | null = null;
 
     // Current edit info of the image. All changes user made will be stored in this object.
     // We use this object to update the editing UI, and finally we will use this object to generate
@@ -143,12 +143,12 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * The span element that wraps the image and opens shadow dom
      */
-    private shadowSpan: HTMLSpanElement;
+    private shadowSpan: HTMLSpanElement | null = null;
 
     /**
      * The span element that wraps the image and opens shadow dom
      */
-    private isCropping: boolean;
+    private isCropping: boolean = false;
 
     /**
      * Create a new instance of ImageEdit

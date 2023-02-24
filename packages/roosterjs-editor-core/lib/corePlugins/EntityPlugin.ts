@@ -1,3 +1,4 @@
+import { inlineEntityOnPluginEvent } from './utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     inlineEntityOnPluginEvent,
     normalizeDelimitersInEditor,
