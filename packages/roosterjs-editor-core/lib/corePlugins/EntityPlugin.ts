@@ -1,3 +1,4 @@
+import { inlineEntityOnPluginEvent } from './utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     Browser,
     commitEntity,
@@ -21,6 +22,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
+    ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
     Keys,
@@ -153,6 +155,10 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             case PluginEventType.EntityOperation:
                 this.handleEntityOperationEvent(event);
                 break;
+        }
+
+        if (this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
+            inlineEntityOnPluginEvent(event);
         }
     }
 

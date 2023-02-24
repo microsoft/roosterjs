@@ -1258,4 +1258,74 @@ describe('mergeModel', () => {
             ],
         });
     });
+
+    it('Use customized insert position', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+        const marker3 = createSelectionMarker();
+
+        para1.segments.push(marker1, text1, marker2, text2, marker3);
+        majorModel.blocks.push(para1);
+
+        const newPara = createParagraph();
+        const newText = createText('new text');
+
+        newPara.segments.push(newText);
+        sourceModel.blocks.push(newPara);
+
+        mergeModel(majorModel, sourceModel, {
+            insertPosition: {
+                marker: marker2,
+                paragraph: para1,
+                path: [majorModel],
+            },
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'new text',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });
