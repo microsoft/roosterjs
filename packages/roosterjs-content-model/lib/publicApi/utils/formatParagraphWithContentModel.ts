@@ -11,11 +11,17 @@ export function formatParagraphWithContentModel(
     apiName: string,
     setStyleCallback: (paragraph: ContentModelParagraph) => void
 ) {
-    formatWithContentModel(editor, apiName, model => {
-        const paragraphs = getSelectedParagraphs(model);
+    formatWithContentModel(
+        editor,
+        apiName,
+        model => {
+            const paragraphs = getSelectedParagraphs(model);
 
-        paragraphs.forEach(setStyleCallback);
+            paragraphs.forEach(setStyleCallback);
 
-        return paragraphs.length > 0;
-    });
+            return paragraphs.length > 0;
+        },
+        undefined /*options*/,
+        true /*preservePendingFormat*/
+    );
 }

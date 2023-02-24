@@ -5,6 +5,7 @@ import {
     NodeType,
     PluginEventType,
     PositionType,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
     getDelimiterFromElement,
@@ -45,8 +46,12 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
             break;
 
         case PluginEventType.KeyDown:
-        case PluginEventType.KeyUp:
-            if (isCharacterValue(event.rawEvent)) {
+            const range = editor.getSelectionRangeEx();
+            if (
+                range.type == SelectionRangeTypes.Normal &&
+                range.areAllCollapsed &&
+                isCharacterValue(event.rawEvent)
+            ) {
                 const position = editor.getFocusedPosition();
 
                 if (!position) {

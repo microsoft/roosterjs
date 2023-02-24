@@ -9,7 +9,9 @@ import {
     ExtractContentWithDomEvent,
     PositionType,
     IEditor,
+    NormalSelectionRange,
     PluginEventType,
+    SelectionRangeTypes,
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 import {
@@ -44,6 +46,12 @@ describe('Inline Entity On Plugin Event |', () => {
                 <Range>{
                     collapsed: true,
                 },
+            getSelectionRangeEx: () => {
+                return <NormalSelectionRange>{
+                    areAllCollapsed: true,
+                    type: SelectionRangeTypes.Normal,
+                };
+            },
         });
     });
 
@@ -111,65 +119,20 @@ describe('Inline Entity On Plugin Event |', () => {
                 findClosestElementAncestor(selectFrom, document.body, selector);
         });
 
-        const KeyEvents = [PluginEventType.KeyDown, PluginEventType.KeyUp];
-
         describe('Element Before |', () => {
             afterEach(() => {
                 document.body.childNodes.forEach(cn => {
                     document.body.removeChild(cn);
                 });
             });
-            KeyEvents.forEach((ev: PluginEventType) => {
-                function arrangeAndAct(ev: PluginEventType) {
-                    editor.getFocusedPosition = () => new Position(delimiterBefore!, 0);
+            function arrangeAndAct() {
+                editor.getFocusedPosition = () => new Position(delimiterBefore!, 0);
 
-                    delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
-
-                    inlineEntityOnPluginEvent(
-                        <PluginKeyDownEvent>{
-                            eventType: ev,
-                            rawEvent: <KeyboardEvent>{
-                                which: 66 /* B */,
-                                key: 'B',
-                            },
-                        },
-                        editor
-                    );
-                }
-
-                it('Is Delimiter |' + ev, () => {
-                    arrangeAndAct(ev);
-
-                    expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
-                    expect(delimiterBefore?.textContent?.length).toEqual(1);
-                    expect(delimiterBefore?.childNodes.length).toEqual(1);
-                });
-
-                it('Is not Delimiter |' + ev, () => {
-                    delimiterBefore?.removeAttribute('class');
-                    arrangeAndAct(ev);
-
-                    expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
-                    expect(delimiterBefore?.textContent?.length).toEqual(5);
-                    expect(delimiterBefore?.childNodes.length).toEqual(2);
-                });
-            });
-        });
-
-        describe('Element After |', () => {
-            afterEach(() => {
-                document.body.childNodes.forEach(cn => {
-                    document.body.removeChild(cn);
-                });
-            });
-            function arrangeAndAct(eventType: PluginEventType) {
-                editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
-
-                delimiterAfter?.appendChild(textToAdd);
+                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
 
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
-                        eventType,
+                        eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
                             which: 66 /* B */,
                             key: 'B',
@@ -179,25 +142,148 @@ describe('Inline Entity On Plugin Event |', () => {
                 );
             }
 
-            KeyEvents.forEach((ev: PluginEventType) => {
-                it('Is Delimiter' + ev, () => {
-                    arrangeAndAct(ev);
+            it('Is Delimiter', () => {
+                arrangeAndAct();
 
-                    delimiterAfter = getDelimiter(entity, true);
-                    expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
-                    expect(delimiterAfter.textContent?.length).toEqual(1);
-                    expect(delimiterAfter.childNodes.length).toEqual(1);
-                    expect(delimiterAfter.id).toBeDefined();
+                expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterBefore?.textContent?.length).toEqual(1);
+                expect(delimiterBefore?.childNodes.length).toEqual(1);
+            });
+
+            it('Is not Delimiter', () => {
+                delimiterBefore?.removeAttribute('class');
+                arrangeAndAct();
+
+                expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterBefore?.textContent?.length).toEqual(5);
+                expect(delimiterBefore?.childNodes.length).toEqual(2);
+            });
+
+            it('Selection not collapsed', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+            });
+
+            it('Selection collapsed and not Normal Selection', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: true,
+                        type: SelectionRangeTypes.TableSelection,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+            });
+
+            it('Selection not collapsed and not Normal Selection', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.TableSelection,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+            });
+        });
+
+        describe('Element After |', () => {
+            afterEach(() => {
+                document.body.childNodes.forEach(cn => {
+                    document.body.removeChild(cn);
                 });
+            });
+            function arrangeAndAct() {
+                editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
 
-                it('Is not Delimiter' + ev, () => {
-                    delimiterAfter?.removeAttribute('class');
-                    arrangeAndAct(ev);
+                delimiterAfter?.appendChild(textToAdd);
 
-                    expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
-                    expect(delimiterAfter?.textContent?.length).toEqual(5);
-                    expect(delimiterAfter?.childNodes.length).toEqual(2);
-                });
+                inlineEntityOnPluginEvent(
+                    <PluginKeyDownEvent>{
+                        eventType: PluginEventType.KeyDown,
+                        rawEvent: <KeyboardEvent>{
+                            which: 66 /* B */,
+                            key: 'B',
+                        },
+                    },
+                    editor
+                );
+            }
+
+            it('Is Delimiter', () => {
+                arrangeAndAct();
+
+                delimiterAfter = getDelimiter(entity, true);
+                expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterAfter.textContent?.length).toEqual(1);
+                expect(delimiterAfter.childNodes.length).toEqual(1);
+                expect(delimiterAfter.id).toBeDefined();
+            });
+
+            it('Is not Delimiter', () => {
+                delimiterAfter?.removeAttribute('class');
+                arrangeAndAct();
+
+                expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterAfter?.textContent?.length).toEqual(5);
+                expect(delimiterAfter?.childNodes.length).toEqual(2);
+            });
+
+            it('Selection not collapsed', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+            });
+
+            it('Selection collapsed and not Normal Selection', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: true,
+                        type: SelectionRangeTypes.TableSelection,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+            });
+
+            it('Selection not collapsed and not Normal Selection', () => {
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>(<any>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.TableSelection,
+                    });
+                };
+                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
+
+                arrangeAndAct();
+
+                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
             });
         });
     });
