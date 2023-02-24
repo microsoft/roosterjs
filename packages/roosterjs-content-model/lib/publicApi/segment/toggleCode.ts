@@ -1,5 +1,5 @@
 import { addCode } from '../../modelApi/common/addDecorators';
-import { ContentModelCode } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelCode } from '../../publicTypes/decorator/ContentModelDecorator';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

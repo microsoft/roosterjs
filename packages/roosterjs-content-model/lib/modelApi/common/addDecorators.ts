@@ -1,7 +1,7 @@
 import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { DomToModelSegmentDecoratorContext } from 'roosterjs-content-model/lib/publicTypes';
+import { DomToModelSegmentDecoratorContext } from '../../publicTypes/context/DomToModelFormatContext';
 
 /**
  * @internal

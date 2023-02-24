@@ -1,5 +1,5 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelCode } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
