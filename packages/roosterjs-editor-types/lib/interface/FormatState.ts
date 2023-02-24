@@ -153,6 +153,16 @@ export interface StyleBasedFormatState {
      * Margin Bottom
      */
     marginBottom?: string;
+
+    /**
+     * Text Align
+     */
+    textAlign?: string;
+
+    /**
+     * Direction of the element ('ltr' or 'rtl')
+     */
+    direction?: string;
 }
 
 /**
