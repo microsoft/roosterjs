@@ -1,44 +1,36 @@
-import { DELIMITER_AFTER, DELIMITER_BEFORE, DelimiterType } from './constants';
-import { EntityOperation, NodeType, PluginEventType, PositionType } from 'roosterjs-editor-types';
-import { isDelimiter } from './isDelimiter';
 import {
+    DelimiterClasses,
+    EntityOperation,
+    IEditor,
+    NodeType,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
+import {
+    getDelimiterFromElement,
     isBlockElement,
     isCharacterValue,
     Position,
     safeInstanceOf,
     splitTextNode,
 } from 'roosterjs-editor-dom';
-import type { Entity, IEditor, PluginEvent } from 'roosterjs-editor-types';
+import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 
+const DELIMITER_SELECTOR =
+    '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
-
-let delimiterId = 0;
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
+        case PluginEventType.ExtractContentWithDom:
+        case PluginEventType.BeforeCutCopy:
+            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
+                node.parentElement?.removeChild(node);
+            });
+            break;
+
         case PluginEventType.EntityOperation:
-            const { wrapper } = event.entity;
             switch (event.operation) {
-                case EntityOperation.NewEntity:
-                    // If the new entity is Read Only and inline, add delimiters to it
-                    if (isReadOnly(event.entity)) {
-                        const element = wrapper as HTMLElement;
-
-                        // Do not add delimiters if the entity already have them, in scenarios such as Remove + Undo
-                        if (isBetweenDelimiter(element)) {
-                            return;
-                        }
-
-                        const elementBefore = insertNode(ZERO_WIDTH_SPACE, element, 'beforebegin');
-                        const elementAfter = insertNode(ZERO_WIDTH_SPACE, element, 'afterend');
-
-                        commitDelimiters(elementBefore, elementAfter);
-
-                        editor.runAsync(() => {
-                            editor.select(new Position(wrapper, PositionType.After));
-                        });
-                    }
-                    break;
                 case EntityOperation.RemoveFromStart:
                 case EntityOperation.RemoveFromEnd:
                 case EntityOperation.Overwrite:
@@ -62,12 +54,12 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                 }
 
                 const elementAtCursor = editor.getElementAtCursor(
-                    '[id*=DelimiterBefore], [id*=DelimiterAfter]',
+                    DELIMITER_SELECTOR,
                     position.element
                 );
-                const delimiterType = isDelimiter(elementAtCursor);
+                const delimiter = getDelimiterFromElement(elementAtCursor);
 
-                if (!delimiterType || !elementAtCursor) {
+                if (!delimiter || !elementAtCursor) {
                     return;
                 }
 
@@ -91,7 +83,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                             if (nodeToMove) {
                                 elementAtCursor.parentElement?.insertBefore(
                                     nodeToMove,
-                                    delimiterType == DelimiterType.Before
+                                    delimiter.className == DelimiterClasses.DELIMITER_BEFORE
                                         ? elementAtCursor
                                         : elementAtCursor.nextSibling
                                 );
@@ -109,29 +101,19 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                 }
             }
     }
-
-    function insertNode(
-        text: string,
-        scopeElement: HTMLElement,
-        insertPosition: InsertPosition
-    ): HTMLElement {
-        const span = editor.getDocument().createElement('span');
-        span.textContent = text;
-        return scopeElement.insertAdjacentElement(insertPosition, span) as HTMLElement;
-    }
 }
 
 function getDelimiter(entityWrapper: HTMLElement, after: boolean): HTMLElement | undefined {
     const el = after ? entityWrapper.nextElementSibling : entityWrapper.previousElementSibling;
-    return el && isDelimiter(el) && safeInstanceOf(el, 'HTMLElement') ? el : undefined;
+    return el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined;
 }
 
 function removeDelimiters(entityWrapper: HTMLElement): void {
     let el: HTMLElement | undefined = undefined;
-    if ((el = getDelimiter(entityWrapper, true /* after */))) {
+    if ((el = getDelimiter(entityWrapper, true))) {
         el.parentElement?.removeChild(el);
     }
-    if ((el = getDelimiter(entityWrapper, false /* after */))) {
+    if ((el = getDelimiter(entityWrapper, false))) {
         el.parentElement?.removeChild(el);
     }
 }
@@ -142,17 +124,4 @@ function isReadOnly(entity: Entity) {
         !isBlockElement(entity.wrapper) &&
         safeInstanceOf(entity.wrapper, 'HTMLElement')
     );
-}
-
-function isBetweenDelimiter(element: HTMLElement): boolean {
-    return !!(
-        isDelimiter(element.nextElementSibling) && isDelimiter(element.previousElementSibling)
-    );
-}
-
-function commitDelimiters(delimiterBefore: HTMLElement, delimiterAfter: HTMLElement) {
-    delimiterId++;
-
-    delimiterBefore.id = delimiterId + DELIMITER_BEFORE;
-    delimiterAfter.id = delimiterId + DELIMITER_AFTER;
 }

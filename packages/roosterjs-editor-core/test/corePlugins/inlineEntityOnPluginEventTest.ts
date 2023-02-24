@@ -1,156 +1,49 @@
-import { commitEntity, findClosestElementAncestor, Position } from 'roosterjs-editor-dom';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
+import {
+    addDelimiters,
+    commitEntity,
+    findClosestElementAncestor,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     Entity,
     EntityOperation,
     EntityOperationEvent,
-    PluginKeyDownEvent,
     IEditor,
     PluginEventType,
+    PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
 describe('Inline Entity On Plugin Event | ', () => {
-    let editor: IEditor;
-    let triggerPluginEvent: jasmine.Spy;
-    let triggerContentChangedEvent: jasmine.Spy;
-    let select: jasmine.Spy;
-    let queryElements: jasmine.Spy;
     let wrapper: HTMLElement;
+    let editor: IEditor;
 
     beforeEach(() => {
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
-        select = jasmine.createSpy('select');
-        queryElements = jasmine.createSpy('queryElements');
+        wrapper = document.createElement('span');
+        wrapper.innerHTML = 'Test';
+        document.body.appendChild(wrapper);
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
             getElementAtCursor: (selector: string, node: Node) => node,
             addContentEditFeature: () => {},
-            triggerPluginEvent,
             queryElements: (selector: string) => {
-                queryElements();
                 return document.querySelectorAll(selector);
             },
-            triggerContentChangedEvent,
             runAsync: (callback: () => void) => callback(),
-            select,
             getSelectionRange: () =>
                 <Range>{
                     collapsed: true,
                 },
         });
-
-        wrapper = document.createElement('span');
-        wrapper.innerHTML = 'Test';
-        document.body.appendChild(wrapper);
     });
 
     afterEach(() => {
         wrapper.parentElement?.removeChild(wrapper);
         document.body.childNodes.forEach(cn => {
             document.body.removeChild(cn);
-        });
-    });
-
-    describe('New Entity | ', () => {
-        it('Insert new inline editable entity', () => {
-            const entity = <Entity>{
-                id: 'Test',
-                isReadonly: false,
-                type: 'Test',
-                wrapper,
-            };
-            inlineEntityOnPluginEvent(
-                <EntityOperationEvent>{
-                    entity,
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.NewEntity,
-                },
-                editor
-            );
-
-            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(0);
-            expect(select).toHaveBeenCalledTimes(0);
-        });
-
-        it('Insert new inline readonly entity', () => {
-            const entity = <Entity>{
-                id: 'Test',
-                isReadonly: true,
-                type: 'Test',
-                wrapper,
-            };
-            inlineEntityOnPluginEvent(
-                <EntityOperationEvent>{
-                    entity,
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.NewEntity,
-                },
-                editor
-            );
-
-            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(0);
-            expect(select).toHaveBeenCalledTimes(1);
-            const delimiterBefore = getDelimiter(entity, false /* after */);
-            const delimiterAfter = getDelimiter(entity, true /* after */);
-
-            expect(delimiterBefore).toBeDefined();
-            expect(delimiterAfter).toBeDefined();
-            expect(entity.wrapper.nextElementSibling).toBe(delimiterAfter);
-            expect(entity.wrapper.previousElementSibling).toBe(delimiterBefore);
-        });
-
-        it('Insert new block readonly entity', () => {
-            wrapper.parentElement?.removeChild(wrapper);
-            wrapper = document.createElement('DIV');
-            wrapper.innerHTML = 'Test';
-            document.body.appendChild(wrapper);
-
-            const entity = <Entity>{
-                id: 'Test',
-                isReadonly: false,
-                type: 'Test',
-                wrapper,
-            };
-            inlineEntityOnPluginEvent(
-                <EntityOperationEvent>{
-                    entity,
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.NewEntity,
-                },
-                editor
-            );
-
-            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(0);
-            expect(select).toHaveBeenCalledTimes(0);
-        });
-
-        it('Insert new block editable entity', () => {
-            wrapper.parentElement?.removeChild(wrapper);
-            wrapper = document.createElement('DIV');
-            wrapper.innerHTML = 'Test';
-            document.body.appendChild(wrapper);
-
-            const entity = <Entity>{
-                id: 'Test',
-                isReadonly: true,
-                type: 'Test',
-                wrapper,
-            };
-            inlineEntityOnPluginEvent(
-                <EntityOperationEvent>{
-                    entity,
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.NewEntity,
-                },
-                editor
-            );
-
-            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(0);
-            expect(select).toHaveBeenCalledTimes(0);
         });
     });
 
@@ -173,6 +66,7 @@ describe('Inline Entity On Plugin Event | ', () => {
             };
 
             commitEntity(wrapper, 'test', true, 'test');
+            addDelimiters(wrapper);
 
             inlineEntityOnPluginEvent(
                 <EntityOperationEvent>{
@@ -200,8 +94,6 @@ describe('Inline Entity On Plugin Event | ', () => {
 
                 expect(document.contains(delimiterAfter)).toBeFalse();
                 expect(document.contains(delimiterBefore)).toBeFalse();
-                expect(queryElements).toHaveBeenCalledTimes(0);
-                expect(triggerPluginEvent).toHaveBeenCalledTimes(0);
             });
         });
     });
