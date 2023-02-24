@@ -315,7 +315,7 @@ describe('Content Edit Features |', () => {
             };
 
             event = runTest(delimiterAfter, true /* expected */, event);
-
+            const getSelectionProto = document.getSelection;
             document.getSelection = () =>
                 <Selection>{
                     extend(node: Node, offset: number) {
@@ -330,6 +330,8 @@ describe('Content Edit Features |', () => {
             expect(setPositionSpy).toHaveBeenCalledWith(delimiterBefore, 0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(extendSpy).toHaveBeenCalledTimes(0);
+
+            document.getSelection = getSelectionProto;
         });
 
         it('DelimiterAfter, with shiftKey', () => {
@@ -347,6 +349,7 @@ describe('Content Edit Features |', () => {
 
             event = runTest(delimiterAfter, true /* expected */, event);
 
+            const getSelectionProto = document.getSelection;
             document.getSelection = () =>
                 <Selection>{
                     extend(node: Node, offset: number) {
@@ -361,6 +364,8 @@ describe('Content Edit Features |', () => {
             expect(extendSpy).toHaveBeenCalledWith(delimiterBefore, 0);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(setPositionSpy).toHaveBeenCalledTimes(0);
+
+            document.getSelection = getSelectionProto;
         });
 
         it('Element not an entity', () => {
@@ -419,6 +424,7 @@ describe('Content Edit Features |', () => {
 
             event = runTest(delimiterBefore, true /* expected */, event);
 
+            const getSelectionProto = document.getSelection;
             document.getSelection = () =>
                 <Selection>{
                     extend(node: Node, offset: number) {
@@ -433,6 +439,7 @@ describe('Content Edit Features |', () => {
             expect(select).toHaveBeenCalledWith(new Position(delimiterAfter, PositionType.After));
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(extendSpy).toHaveBeenCalledTimes(0);
+            document.getSelection = getSelectionProto;
         });
 
         it('DelimiterBefore, with shiftKey', () => {
@@ -450,6 +457,7 @@ describe('Content Edit Features |', () => {
 
             event = runTest(delimiterBefore, true /* expected */, event);
 
+            const getSelectionProto = document.getSelection;
             document.getSelection = () =>
                 <Selection>{
                     extend(node: Node, offset: number) {
@@ -464,6 +472,7 @@ describe('Content Edit Features |', () => {
             expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
             expect(setPositionSpy).toHaveBeenCalledTimes(0);
+            document.getSelection = getSelectionProto;
         });
 
         it('Element not an entity', () => {
