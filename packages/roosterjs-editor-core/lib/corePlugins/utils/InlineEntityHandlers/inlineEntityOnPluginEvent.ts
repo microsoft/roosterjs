@@ -53,18 +53,18 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     return;
                 }
 
-                const elementAtCursor = editor.getElementAtCursor(
-                    DELIMITER_SELECTOR,
-                    position.element
-                );
-                const delimiter = getDelimiterFromElement(elementAtCursor);
+                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, position.element);
 
-                if (!delimiter || !elementAtCursor) {
+                if (
+                    !delimiter ||
+                    (!delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER) &&
+                        !delimiter.classList.contains(DelimiterClasses.DELIMITER_BEFORE))
+                ) {
                     return;
                 }
 
-                elementAtCursor.normalize();
-                const textNode = elementAtCursor.firstChild as Node;
+                delimiter.normalize();
+                const textNode = delimiter.firstChild as Node;
                 if (textNode?.nodeType == NodeType.Text) {
                     editor.runAsync(() => {
                         const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
@@ -75,17 +75,17 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                                 false /* returnFirstPart */
                             );
                             let nodeToMove: Node | undefined;
-                            elementAtCursor.childNodes.forEach(node => {
+                            delimiter.childNodes.forEach(node => {
                                 if (node.nodeValue !== ZERO_WIDTH_SPACE) {
                                     nodeToMove = node;
                                 }
                             });
                             if (nodeToMove) {
-                                elementAtCursor.parentElement?.insertBefore(
+                                delimiter.parentElement?.insertBefore(
                                     nodeToMove,
                                     delimiter.className == DelimiterClasses.DELIMITER_BEFORE
-                                        ? elementAtCursor
-                                        : elementAtCursor.nextSibling
+                                        ? delimiter
+                                        : delimiter.nextSibling
                                 );
                                 const selection = nodeToMove.ownerDocument?.getSelection();
 
