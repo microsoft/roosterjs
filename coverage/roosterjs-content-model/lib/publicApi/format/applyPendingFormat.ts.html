@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>21/23</span>
+                <span class='fraction'>24/28</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>25/25</span>
             </div>
         
             
@@ -107,10 +107,21 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,11 +147,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -162,6 +178,9 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+&nbsp;
+const ANSI_SPACE = '\u0020';
+const NON_BREAK_SPACE = '\u00A0';
 &nbsp;
 /**
  * Apply pending format to the text user just input
@@ -186,14 +205,19 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
 &nbsp;
                     if (previousSegment?.segmentType == 'Text') {
                         const text = previousSegment.text;
+                        const subStr = text.substr(-data.length, data.length);
 &nbsp;
-                        if (text.substr(-data.length, data.length) == data) {
+                        // For space, there can be &amp;#32 (space) or &amp;#160 (&amp;nbsp;), we treat them as the same
+                        if (subStr == data || (data == ANSI_SPACE &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >subStr == NON_BREAK_SPACE)</span>) {
                             previousSegment.text = text.substring(0, text.length - data.length);
 &nbsp;
-                            const newText = createText(data, {
-                                ...previousSegment.format,
-                                ...format,
-                            });
+                            const newText = createText(
+                                data == ANSI_SPACE ? <span class="branch-0 cbranch-no" title="branch not covered" >NON_BREAK_SPACE </span>: data,
+                                {
+                                    ...previousSegment.format,
+                                    ...format,
+                                }
+                            );
 &nbsp;
                             block.segments.splice(index, 0, newText);
                             isChanged = true;
@@ -214,7 +238,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 24 2023 16:31:44 GMT+0000 (Coordinated Universal Time)
+                at Fri Feb 24 2023 19:02:38 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
