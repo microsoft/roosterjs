@@ -95,7 +95,7 @@ const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: blockFormatHandlers,
-    listItem: ['listItemThread', 'listItemMetadata', 'direction'],
+    listItem: ['listItemThread', 'listItemMetadata'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'display'],
     segment: [
         'superOrSubScript',

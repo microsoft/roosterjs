@@ -25,8 +25,4 @@ export type ContentModelBlockType =
     /**
      * Represents a horizontal divider element
      */
-    | 'Divider'
-    /**
-     * Represents a horizontal divider element
-     */
-    | 'Li';
+    | 'Divider';

@@ -2,9 +2,9 @@ import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRende
 import { DirectionFormat } from 'roosterjs-content-model';
 
 export const DirectionFormatRenderers = [
-    createDropDownFormatRenderer<DirectionFormat, 'ltr' | 'rtl' | 'column'>(
+    createDropDownFormatRenderer<DirectionFormat, 'ltr' | 'rtl'>(
         'Direction',
-        ['ltr', 'rtl', 'column'],
+        ['ltr', 'rtl'],
         format => format.direction,
         (format, value) => (format.direction = value)
     ),
