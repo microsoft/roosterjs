@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40.91% </span>
+                <span class="strong">40.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>36/88</span>
+                <span class='fraction'>37/92</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">40% </span>
+                <span class="strong">37.66% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/65</span>
+                <span class='fraction'>29/77</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">39.76% </span>
+                <span class="strong">39.08% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/83</span>
+                <span class='fraction'>34/87</span>
             </div>
         
             
@@ -298,7 +298,12 @@
 <a name='L239'></a><a href='#L239'>239</a>
 <a name='L240'></a><a href='#L240'>240</a>
 <a name='L241'></a><a href='#L241'>241</a>
-<a name='L242'></a><a href='#L242'>242</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L242'></a><a href='#L242'>242</a>
+<a name='L243'></a><a href='#L243'>243</a>
+<a name='L244'></a><a href='#L244'>244</a>
+<a name='L245'></a><a href='#L245'>245</a>
+<a name='L246'></a><a href='#L246'>246</a>
+<a name='L247'></a><a href='#L247'>247</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -334,7 +339,7 @@
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -363,11 +368,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
-<span class="cline-any cline-yes">36x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -448,6 +454,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -480,6 +488,8 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -575,40 +585,41 @@ export const Resizer: DragAndDropHandler&lt;DragAndDropContext, ResizeInfo&gt; =
             base.widthPx &gt; 0 &amp;&amp; base.heightPx &gt; 0 ? (base.widthPx * 1.0) / base.heightPx : <span class="branch-1 cbranch-no" title="branch not covered" >0;</span>
 &nbsp;
         [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (options.minWidth !== undefined &amp;&amp; options.minHeight !== undefined) {
+            const horizontalOnly = x == '';
+            const verticalOnly = y == '';
+            const shouldPreserveRatio =
+                !(horizontalOnly || verticalOnly) &amp;&amp; (options.preserveRatio || e.shiftKey);
+            let newWidth = horizontalOnly
+                ? base.widthPx
+                : Math.max(base.widthPx + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
+            let newHeight = verticalOnly
+                ? base.heightPx
+                : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
 &nbsp;
-        const horizontalOnly = x == '';
-        const verticalOnly = y == '';
-        const shouldPreserveRatio =
-            !(horizontalOnly || verticalOnly) &amp;&amp; (options.preserveRatio || e.shiftKey);
-        let newWidth = horizontalOnly
-            ? base.widthPx
-            : Math.max(base.widthPx + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
-        let newHeight = verticalOnly
-            ? base.heightPx
-            : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
-&nbsp;
-        if (shouldPreserveRatio &amp;&amp; ratio &gt; 0) {
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (ratio &gt; 1) {
-                // first sure newHeight is right，calculate newWidth
-<span class="cstat-no" title="statement not covered" >                newWidth = newHeight * ratio;</span>
-<span class="cstat-no" title="statement not covered" >                if (newWidth &lt; options.minWidth) {</span>
-<span class="cstat-no" title="statement not covered" >                    newWidth = options.minWidth;</span>
-<span class="cstat-no" title="statement not covered" >                    newHeight = newWidth / ratio;</span>
-                }
-            } else {
-                // first sure newWidth is right，calculate newHeight
-                newHeight = newWidth / ratio;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (newHeight &lt; options.minHeight) {
-<span class="cstat-no" title="statement not covered" >                    newHeight = options.minHeight;</span>
+            if (shouldPreserveRatio &amp;&amp; ratio &gt; 0) {
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (ratio &gt; 1) {
+                    // first sure newHeight is right，calculate newWidth
 <span class="cstat-no" title="statement not covered" >                    newWidth = newHeight * ratio;</span>
+<span class="cstat-no" title="statement not covered" >                    if (newWidth &lt; options.minWidth) {</span>
+<span class="cstat-no" title="statement not covered" >                        newWidth = options.minWidth;</span>
+<span class="cstat-no" title="statement not covered" >                        newHeight = newWidth / ratio;</span>
+                    }
+                } else {
+                    // first sure newWidth is right，calculate newHeight
+                    newHeight = newWidth / ratio;
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (newHeight &lt; options.minHeight) {
+<span class="cstat-no" title="statement not covered" >                        newHeight = options.minHeight;</span>
+<span class="cstat-no" title="statement not covered" >                        newWidth = newHeight * ratio;</span>
+                    }
                 }
             }
+            editInfo.widthPx = newWidth;
+            editInfo.heightPx = newHeight;
+            return true;
+        } else {
+<span class="cstat-no" title="statement not covered" >            return false;</span>
         }
-&nbsp;
-        editInfo.widthPx = newWidth;
-        editInfo.heightPx = newHeight;
-&nbsp;
-        return true;
     },
 };
 &nbsp;
@@ -685,10 +696,12 @@ export function <span class="fstat-no" title="function not covered" >getCornerRe
                           HandleTypes.CircularHandlesCorner
                       )
                     : null;
-<span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle) {</span>
+<span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle &amp;&amp; elementData) {</span>
 <span class="cstat-no" title="statement not covered" >                onShowResizeHandle(elementData, x, y);</span>
             }
-<span class="cstat-no" title="statement not covered" >            result.push(elementData);</span>
+<span class="cstat-no" title="statement not covered" >            if (elementData) {</span>
+<span class="cstat-no" title="statement not covered" >                result.push(elementData);</span>
+            }
         })
     );
 <span class="cstat-no" title="statement not covered" >    return result;</span>
@@ -701,7 +714,7 @@ export function <span class="fstat-no" title="function not covered" >getCornerRe
 export function <span class="fstat-no" title="function not covered" >getSideResizeHTML(</span>
     { borderColor: resizeBorderColor<span class="cstat-no" title="statement not covered" >, isSmallImage: i</span>sSmallImage<span class="cstat-no" title="statement not covered" > }: ImageHtmlOptions,</span>
     onShowResizeHandle?: OnShowResizeHandle
-): CreateElementData[] {
+): CreateElementData[] | null {
 <span class="cstat-no" title="statement not covered" >    if (isSmallImage) {</span>
 <span class="cstat-no" title="statement not covered" >        return null;</span>
     }
@@ -717,10 +730,12 @@ export function <span class="fstat-no" title="function not covered" >getSideResi
                           HandleTypes.CircularHandlesCorner
                       )
                     : null;
-<span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle) {</span>
+<span class="cstat-no" title="statement not covered" >            if (onShowResizeHandle &amp;&amp; elementData) {</span>
 <span class="cstat-no" title="statement not covered" >                onShowResizeHandle(elementData, x, y);</span>
             }
-<span class="cstat-no" title="statement not covered" >            result.push(elementData);</span>
+<span class="cstat-no" title="statement not covered" >            if (elementData) {</span>
+<span class="cstat-no" title="statement not covered" >                result.push(elementData);</span>
+            }
         })
     );
 <span class="cstat-no" title="statement not covered" >    return result;</span>
@@ -744,7 +759,7 @@ function <span class="fstat-no" title="function not covered" >getResizeHandleHTM
     y: DnDDirectionY,
     borderColor: string,
     handleTypes: HandleTypes
-): CreateElementData {
+): CreateElementData | null {
     const leftOrRight = <span class="cstat-no" title="statement not covered" >x == 'w' ? 'left' : 'right';</span>
     const topOrBottom = <span class="cstat-no" title="statement not covered" >y == 'n' ? 'top' : 'bottom';</span>
     const leftOrRightValue = <span class="cstat-no" title="statement not covered" >x == '' ? '50%' : '0px';</span>
@@ -787,7 +802,7 @@ const setHandleStyle: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 24 2023 15:14:39 GMT+0000 (Coordinated Universal Time)
+                at Fri Feb 24 2023 16:31:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

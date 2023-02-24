@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.64% </span>
+                <span class="strong">94.92% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>53/56</span>
+                <span class='fraction'>56/59</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.53% </span>
+                <span class="strong">76.32% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/34</span>
+                <span class='fraction'>29/38</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">94.74% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>51/54</span>
+                <span class='fraction'>54/57</span>
             </div>
         
             
@@ -194,9 +194,41 @@
 <a name='L135'></a><a href='#L135'>135</a>
 <a name='L136'></a><a href='#L136'>136</a>
 <a name='L137'></a><a href='#L137'>137</a>
-<a name='L138'></a><a href='#L138'>138</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a>
+<a name='L149'></a><a href='#L149'>149</a>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -250,9 +282,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -319,6 +351,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -327,6 +362,9 @@
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -337,13 +375,26 @@ import { Browser } from 'roosterjs-editor-dom';
 &nbsp;
 /**
  * @internal
- * Compatible mouse event names for different platform
  */
-interface MouseEventInfo {
+interface MouseEventMoves {
     MOUSEDOWN: string;
     MOUSEMOVE: string;
     MOUSEUP: string;
-    getPageXY: (e: Event) =&gt; number[];
+}
+&nbsp;
+/**
+ * @internal
+ */
+interface MouseEventInfo extends MouseEventMoves {
+    getPageXY: (e: MouseEvent) =&gt; number[];
+}
+&nbsp;
+/**
+ * @internal
+ * Compatible mouse event names for different platform
+ */
+interface TouchEventInfo extends MouseEventMoves {
+    getPageXY: (e: TouchEvent) =&gt; number[];
 }
 &nbsp;
 /**
@@ -358,7 +409,7 @@ const MOUSE_EVENT_INFO_DESKTOP: MouseEventInfo = (() =&gt; {
     };
 })();
 &nbsp;
-const MOUSE_EVENT_INFO_MOBILE: MouseEventInfo = (() =&gt; {
+const MOUSE_EVENT_INFO_MOBILE: TouchEventInfo = (() =&gt; {
     return {
         MOUSEDOWN: 'touchstart',
         MOUSEMOVE: 'touchmove',
@@ -387,10 +438,10 @@ function getTouchEventPageXY(e: TouchEvent): [number, number] {
  * A helper class to help manage drag and drop to an HTML element
  */
 export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Disposable {
-    private initX: number;
-    private initY: number;
-    private initValue: TInitValue;
-    private dndMouse: MouseEventInfo;
+    private initX: number = 0;
+    private initY: number = 0;
+    private initValue: TInitValue | undefined = undefined;
+    private dndMouse: MouseEventInfo | TouchEventInfo;
 &nbsp;
     /**
      * Create a new instance of DragAndDropHelper class
@@ -442,28 +493,34 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Di
         doc.removeEventListener(this.dndMouse.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 &nbsp;
-    private onMouseDown = (e: MouseEvent) =&gt; {
+    private onMouseDown = (e: Event) =&gt; {
         e.preventDefault();
         e.stopPropagation();
         this.addDocumentEvents();
-        [this.initX, this.initY] = this.dndMouse.getPageXY(e);
-        this.initValue = this.handler.onDragStart<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e);
+        [this.initX, this.initY] = this.dndMouse.getPageXY(e as MouseEvent &amp; TouchEvent);
+        this.initValue = this.handler.onDragStart<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e as MouseEvent);
     };
 &nbsp;
-    private onMouseMove = (e: MouseEvent) =&gt; {
+    private onMouseMove = (e: Event) =&gt; {
         e.preventDefault();
-        const [pageX, pageY] = this.dndMouse.getPageXY(e);
+        const [pageX, pageY] = this.dndMouse.getPageXY(e as MouseEvent &amp; TouchEvent);
         const deltaX = (pageX - this.initX) / this.zoomScale;
         const deltaY = (pageY - this.initY) / this.zoomScale;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.handler.onDragging<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e, this.initValue, deltaX, deltaY)) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (
+            this.initValue &amp;&amp;
+            this.handler.onDragging<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e as MouseEvent, this.initValue, deltaX, deltaY)
+        ) {
             this.onSubmit<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, this.trigger);
         }
     };
 &nbsp;
-    private onMouseUp = (e: MouseEvent) =&gt; {
+    private onMouseUp = (e: Event) =&gt; {
         e.preventDefault();
         this.removeDocumentEvents();
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.handler.onDragEnd<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e, this.initValue)) {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (
+            this.initValue &amp;&amp;
+            this.handler.onDragEnd<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, e as MouseEvent, this.initValue)
+        ) {
             this.onSubmit<span class="branch-0 cbranch-no" title="branch not covered" >?.(t</span>his.context, this.trigger);
         }
     };
@@ -475,7 +532,7 @@ export default class DragAndDropHelper&lt;TContext, TInitValue&gt; implements Di
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Feb 24 2023 15:14:39 GMT+0000 (Coordinated Universal Time)
+                at Fri Feb 24 2023 16:31:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
