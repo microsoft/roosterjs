@@ -32,19 +32,21 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     canvas.height = targetHeight;
 
     const context = canvas.getContext('2d');
-    context.translate(targetWidth / 2, targetHeight / 2);
-    context.rotate(angle);
-    context.drawImage(
-        image,
-        naturalWidth * left,
-        naturalHeight * top,
-        imageWidth,
-        imageHeight,
-        -width / 2,
-        -height / 2,
-        width,
-        height
-    );
+    if (context) {
+        context.translate(targetWidth / 2, targetHeight / 2);
+        context.rotate(angle);
+        context.drawImage(
+            image,
+            naturalWidth * left,
+            naturalHeight * top,
+            imageWidth,
+            imageHeight,
+            -width / 2,
+            -height / 2,
+            width,
+            height
+        );
+    }
 
     return canvas.toDataURL('image/png', 1.0);
 }
