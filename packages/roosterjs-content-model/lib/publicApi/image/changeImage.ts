@@ -2,7 +2,7 @@ import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { getMetadata, readFile } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types/lib';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Change the selected image src
