@@ -20,32 +20,12 @@ export function getInlineEntityContentEditFeatures() {
     ];
 }
 
-//After to Before
+/**
+ * Content edit feature to move the cursor from Delimiter After Entity to the delimiter Before
+ */
 const MoveBeforeDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.LEFT],
-    shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const position = editor.getFocusedPosition();
-        if (!position) {
-            return false;
-        }
-
-        if (position?.offset == 0 && position.node.previousSibling) {
-            const entityAtCursor = editor.getElementAtCursor(
-                '.' + DelimiterClasses.DELIMITER_AFTER,
-                position.node.previousSibling
-            );
-
-            if (entityAtCursor) {
-                return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
-            }
-        }
-        const entityAtCursor = editor.getElementAtCursor(
-            '.' + DelimiterClasses.DELIMITER_AFTER,
-            position.element
-        );
-
-        return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
-    },
+    shouldHandleEvent: getIsDelimiterAfterOrInCursor,
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
         const delimiter = cacheDelimiter(event);
         if (!delimiter) {
@@ -71,33 +51,12 @@ const MoveBeforeDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent>
     },
 };
 
-// Before to after
+/**
+ * Content edit feature to move the cursor from Delimiter Before Entity to the delimiter After
+ */
 const MoveAfterDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT],
-    shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const position = editor.getFocusedPosition();
-
-        if (!position) {
-            return false;
-        }
-
-        position.element.normalize();
-        if (position.isAtEnd && position.node.nextSibling) {
-            const elAtCursor = editor.getElementAtCursor(
-                '.' + DelimiterClasses.DELIMITER_BEFORE,
-                position.node.nextSibling
-            );
-
-            return !!(elAtCursor && cacheDelimiter(event, elAtCursor));
-        }
-
-        const entityAtCursor = editor.getElementAtCursor(
-            '.' + DelimiterClasses.DELIMITER_BEFORE,
-            position.element
-        );
-
-        return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
-    },
+    shouldHandleEvent: getIsDelimiterBeforeOrInCursor,
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
         const delimiter = cacheDelimiter(event);
         if (!delimiter) {
@@ -122,4 +81,63 @@ const MoveAfterDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent> 
 
 function cacheDelimiter(event: PluginEvent, delimiter?: HTMLElement | null) {
     return cacheGetEventData(event, 'delimiter_cache_key', () => delimiter);
+}
+
+function getIsDelimiterAfterOrInCursor(event: PluginKeyboardEvent, editor: IEditor) {
+    const position = editor.getFocusedPosition();
+    if (!position) {
+        return false;
+    }
+
+    if (position?.offset == 0 && position.node.previousSibling) {
+        const entityAtCursor = editor.getElementAtCursor(
+            '.' + DelimiterClasses.DELIMITER_AFTER,
+            position.node.previousSibling
+        );
+
+        if (entityAtCursor) {
+            return !!(entityAtCursor && cacheDelimiter(event, entityAtCursor));
+        }
+    }
+    const entityAtCursor = editor.getElementAtCursor(
+        '.' + DelimiterClasses.DELIMITER_AFTER,
+        position.element
+    );
+
+    return !!(
+        entityAtCursor &&
+        cacheDelimiter(event, entityAtCursor) &&
+        entityAtCursor.previousElementSibling?.previousElementSibling?.className ===
+            DelimiterClasses.DELIMITER_BEFORE
+    );
+}
+
+function getIsDelimiterBeforeOrInCursor(event: PluginKeyboardEvent, editor: IEditor) {
+    const position = editor.getFocusedPosition();
+
+    if (!position) {
+        return false;
+    }
+
+    position.element.normalize();
+    if (position.isAtEnd && position.node.nextSibling) {
+        const elAtCursor = editor.getElementAtCursor(
+            '.' + DelimiterClasses.DELIMITER_BEFORE,
+            position.node.nextSibling
+        );
+
+        return !!(elAtCursor && cacheDelimiter(event, elAtCursor));
+    }
+
+    const entityAtCursor = editor.getElementAtCursor(
+        '.' + DelimiterClasses.DELIMITER_BEFORE,
+        position.element
+    );
+
+    return !!(
+        entityAtCursor &&
+        cacheDelimiter(event, entityAtCursor) &&
+        entityAtCursor.nextElementSibling?.nextElementSibling?.className ===
+            DelimiterClasses.DELIMITER_AFTER
+    );
 }
