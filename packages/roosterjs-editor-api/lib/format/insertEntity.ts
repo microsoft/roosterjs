@@ -1,5 +1,6 @@
 import commitListChains from '../utils/commitListChains';
 import {
+    addDelimiters,
     commitEntity,
     getEntityFromElement,
     getEntitySelector,
@@ -110,6 +111,10 @@ export default function insertEntity(
     }
 
     const entity = getEntityFromElement(wrapper);
+    if (!isBlock && isReadonly) {
+        addDelimiters(entity.wrapper);
+    }
+
     editor.triggerContentChangedEvent(ChangeSource.InsertEntity, entity);
 
     return entity;

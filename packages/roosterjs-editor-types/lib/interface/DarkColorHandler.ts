@@ -49,4 +49,10 @@ export default interface DarkColorHandler {
      * Get a copy of known colors
      */
     getKnownColorsCopy(): Readonly<ModeIndependentColor>[];
+
+    /**
+     * Find related light mode color from dark mode color.
+     * @param darkColor The existing dark color
+     */
+    findLightColorFromDarkColor(darkColor: string): string | null;
 }

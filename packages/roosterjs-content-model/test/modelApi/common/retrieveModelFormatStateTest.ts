@@ -40,9 +40,6 @@ describe('retrieveModelFormatState', () => {
         isUnderline: true,
         canUnlink: false,
         canAddImageAltText: false,
-        lineHeight: undefined,
-        marginTop: undefined,
-        marginBottom: undefined,
     };
 
     it('Empty model', () => {
@@ -67,7 +64,7 @@ describe('retrieveModelFormatState', () => {
 
         retrieveModelFormatState(model, null, result);
 
-        expect(result).toEqual(baseFormatResult);
+        expect(result).toEqual({ ...baseFormatResult, isBlockQuote: false });
     });
 
     it('Single selection with list', () => {
@@ -88,6 +85,7 @@ describe('retrieveModelFormatState', () => {
             ...baseFormatResult,
             isBullet: false,
             isNumbering: true,
+            isBlockQuote: false,
         });
     });
 
@@ -130,6 +128,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             headerLevel: 1,
+            isBlockQuote: false,
         });
     });
 
@@ -153,6 +152,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             ...paraFormat,
+            isBlockQuote: false,
         });
     });
 
@@ -187,6 +187,7 @@ describe('retrieveModelFormatState', () => {
             ...baseFormatResult,
             isInTable: true,
             tableHasHeader: false,
+            isBlockQuote: false,
         });
     });
 
@@ -222,6 +223,7 @@ describe('retrieveModelFormatState', () => {
             ...baseFormatResult,
             isInTable: true,
             tableHasHeader: false,
+            isBlockQuote: false,
             tableFormat: {
                 topBorderColor: '#ABABAB',
                 bottomBorderColor: '#ABABAB',
@@ -258,6 +260,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             isInTable: true,
             tableHasHeader: true,
+            isBlockQuote: false,
         });
     });
 
@@ -278,7 +281,10 @@ describe('retrieveModelFormatState', () => {
         retrieveModelFormatState(model, null, result);
 
         expect(result).toEqual({
-            ...baseFormatResult,
+            canAddImageAltText: false,
+            canUnlink: false,
+            isBlockQuote: false,
+            isSubscript: false,
             isMultilineSelection: true,
         });
     });
@@ -301,6 +307,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             isMultilineSelection: true,
+            isBlockQuote: false,
         });
     });
 
@@ -320,7 +327,9 @@ describe('retrieveModelFormatState', () => {
         retrieveModelFormatState(model, null, result);
 
         expect(result).toEqual({
+            ...baseFormatResult,
             isMultilineSelection: true,
+            isBlockQuote: false,
         });
     });
 
@@ -344,20 +353,14 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             fontName: 'Test',
-            fontSize: undefined,
             backgroundColor: 'blue',
             textColor: 'block',
             isBold: false,
-            isItalic: undefined,
-            isUnderline: undefined,
-            isStrikeThrough: undefined,
             isSuperscript: false,
             isSubscript: false,
             canUnlink: false,
             canAddImageAltText: false,
-            lineHeight: undefined,
-            marginTop: undefined,
-            marginBottom: undefined,
+            isBlockQuote: false,
         });
     });
 
@@ -378,6 +381,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             isInTable: true,
             tableHasHeader: false,
+            isBlockQuote: false,
         });
     });
 
@@ -401,6 +405,7 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isMultilineSelection: true,
             canMergeTableCell: true,
+            isBlockQuote: false,
         });
     });
 
@@ -435,6 +440,12 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isMultilineSelection: true,
             canMergeTableCell: true,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            isBlockQuote: false,
         });
     });
 
@@ -462,16 +473,7 @@ describe('retrieveModelFormatState', () => {
             canAddImageAltText: false,
             isInTable: true,
             tableHasHeader: false,
-            fontName: undefined,
-            fontSize: undefined,
-            backgroundColor: undefined,
-            textColor: undefined,
-            isItalic: undefined,
-            isUnderline: undefined,
-            isStrikeThrough: undefined,
-            lineHeight: undefined,
-            marginTop: undefined,
-            marginBottom: undefined,
+            isBlockQuote: false,
         });
     });
 });
