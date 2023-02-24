@@ -133,4 +133,14 @@ export const enum ExperimentalFeatures {
      * if you need them work for dark mode
      */
     VariableBasedDarkColor = 'VariableBasedDarkColor',
+
+    /**
+     * Delete table with Backspace key with the whole was selected with table selector
+     */
+    DeleteTableWithBackspace = 'DeleteTableWithBackspace',
+
+    /**
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
 }

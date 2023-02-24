@@ -88,6 +88,7 @@ function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) 
             {
                 html: core.contentDiv.innerHTML,
                 metadata,
+                knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
             },
             canUndoByBackspace
         );

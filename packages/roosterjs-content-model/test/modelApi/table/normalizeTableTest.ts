@@ -1,3 +1,4 @@
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
@@ -568,6 +569,55 @@ describe('normalizeTable', () => {
             },
             widths: [240],
             heights: [44],
+            dataset: {},
+        });
+    });
+
+    it('Normalize a table with format', () => {
+        const table = createTable(1);
+        const format: ContentModelSegmentFormat = {
+            fontSize: '10px',
+        };
+
+        table.cells[0].push(createTableCell(1, 1, false));
+
+        normalizeTable(table, format);
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            cells: [
+                [
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        segmentType: 'Br',
+                                        format: {
+                                            fontSize: '10px',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        dataset: {},
+                    },
+                ],
+            ],
+            format: {
+                borderCollapse: true,
+                useBorderBox: true,
+            },
+            widths: [120],
+            heights: [22],
             dataset: {},
         });
     });

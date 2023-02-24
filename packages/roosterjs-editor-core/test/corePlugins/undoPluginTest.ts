@@ -444,24 +444,54 @@ describe('UndoPlugin', () => {
     });
 
     it('can undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
         expect(state.snapshotsService.canUndoAutoComplete()).toBeTrue();
     });
 
     it('cannot undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 4', metadata: null, knownColors: [] },
+            false
+        );
         expect(state.snapshotsService.canUndoAutoComplete()).toBeFalse();
     });
 
     it('Backspace trigger undo when can undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -486,9 +516,18 @@ describe('UndoPlugin', () => {
     });
 
     it('Other key does not trigger undo auto complete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -514,9 +553,18 @@ describe('UndoPlugin', () => {
     });
 
     it('Another undo snapshot is added, cannot undo autocomplete any more', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -526,7 +574,10 @@ describe('UndoPlugin', () => {
         editor.getSelectionRange = () => range;
         editor.getFocusedPosition = () => pos;
         editor.addUndoSnapshot = () =>
-            state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+            state.snapshotsService.addSnapshot(
+                { html: 'snapshot 4', metadata: null, knownColors: [] },
+                false
+            );
         state.autoCompletePosition = pos;
 
         plugin.onPluginEvent({
@@ -545,7 +596,10 @@ describe('UndoPlugin', () => {
     });
 
     it('Position changed, cannot undo autocomplete for Backspace', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -559,7 +613,10 @@ describe('UndoPlugin', () => {
 
         editor.getFocusedPosition = () => pos2;
         editor.addUndoSnapshot = () =>
-            state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+            state.snapshotsService.addSnapshot(
+                { html: 'snapshot 4', metadata: null, knownColors: [] },
+                false
+            );
 
         // Press backspace first time, to let plugin remember last pressed key
         plugin.onPluginEvent({
@@ -570,8 +627,14 @@ describe('UndoPlugin', () => {
             }),
         });
 
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
         state.autoCompletePosition = pos;
 
         plugin.onPluginEvent({
@@ -611,6 +674,7 @@ describe('UndoPlugin', () => {
                     start: [1],
                     end: [2],
                 },
+                knownColors: [],
             },
             false
         );
@@ -627,7 +691,7 @@ describe('UndoPlugin', () => {
         expect(canUndoAutoComplete).toHaveBeenCalled();
 
         expect(canMoveResult).toBe(true);
-        expect(moveResult).toEqual({ html: 'test', metadata: null });
+        expect(moveResult).toEqual({ html: 'test', metadata: null, knownColors: [] });
         expect(canUndoAutoCompleteResult).toBe(true);
     });
 
