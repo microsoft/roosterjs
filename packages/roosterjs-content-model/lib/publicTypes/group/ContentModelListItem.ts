@@ -1,6 +1,7 @@
 import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelSegmentListItem } from '../segment/ContentModelSegmentListItem';
 import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
 /**
@@ -18,4 +19,9 @@ export interface ContentModelListItem
      * A dummy segment to hold format of this list item
      */
     formatHolder: ContentModelSelectionMarker;
+
+    /**
+     *
+     */
+    listItemFormat: ContentModelSegmentListItem;
 }

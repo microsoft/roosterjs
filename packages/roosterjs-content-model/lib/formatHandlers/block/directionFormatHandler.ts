@@ -76,7 +76,6 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
 
         if (element.tagName == 'OL' || element.tagName == 'UL') {
             element.style.flexDirection = 'column';
-            element.style.display = 'flex';
         }
     },
 };

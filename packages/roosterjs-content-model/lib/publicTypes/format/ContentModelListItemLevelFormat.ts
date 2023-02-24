@@ -1,4 +1,5 @@
 import { DirectionFormat } from './formatParts/DirectionFormat';
+import { DisplayFormat } from './formatParts/DisplayFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
@@ -9,4 +10,5 @@ import { ListTypeFormat } from './formatParts/ListTypeFormat';
 export type ContentModelListItemLevelFormat = ListTypeFormat &
     ListThreadFormat &
     ListMetadataFormat &
-    DirectionFormat;
+    DirectionFormat &
+    DisplayFormat;

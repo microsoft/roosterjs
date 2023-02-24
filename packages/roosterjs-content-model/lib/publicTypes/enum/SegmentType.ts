@@ -30,4 +30,8 @@ export type ContentModelSegmentType =
     /**
      * Represents an inline entity
      */
-    | 'Entity';
+    | 'Entity'
+    /**
+     * Represents a horizontal divider element
+     */
+    | 'Li';
