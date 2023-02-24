@@ -3,7 +3,6 @@ import { normalizeRect } from 'roosterjs-editor-dom';
 import {
     CreateElementData,
     EditorPlugin,
-    ExperimentalFeatures,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -11,8 +10,6 @@ import {
 } from 'roosterjs-editor-types';
 
 const TABLE_RESIZER_LENGTH = 12;
-const DELETE = 'Delete';
-const BACKSPACE = 'Backspace';
 
 /**
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
@@ -74,15 +71,6 @@ export default class TableResize implements EditorPlugin {
             case PluginEventType.ZoomChanged:
                 this.setTableEditor(null);
                 this.invalidateTableRects();
-                break;
-            case PluginEventType.KeyDown:
-                if (
-                    this.editor.isFeatureEnabled(ExperimentalFeatures.DeleteTable) &&
-                    (e.rawEvent.key === DELETE || e.rawEvent.key === BACKSPACE)
-                ) {
-                    this.setTableEditor(null);
-                    this.invalidateTableRects();
-                }
                 break;
         }
     }

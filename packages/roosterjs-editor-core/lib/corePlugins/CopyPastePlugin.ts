@@ -86,11 +86,14 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     private onCutCopy(event: Event, isCut: boolean) {
         if (this.editor) {
             const selection = this.editor.getSelectionRangeEx();
-            const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
-            if (selection && !selection.areAllCollapsed && trustedHTMLHandler) {
+            if (selection && !selection.areAllCollapsed) {
                 const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
                 const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
-                const metadata = setHtmlWithMetadata(tempDiv, html, trustedHTMLHandler);
+                const metadata = setHtmlWithMetadata(
+                    tempDiv,
+                    html,
+                    this.editor.getTrustedHTMLHandler()
+                );
                 let newRange: Range | null = null;
 
                 if (
