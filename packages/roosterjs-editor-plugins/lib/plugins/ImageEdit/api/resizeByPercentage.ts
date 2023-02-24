@@ -24,14 +24,14 @@ export default function resizeByPercentage(
 
     if (!isResizedTo(image, percentage)) {
         loadImage(image, image.src, () => {
-            if (!editor.isDisposed() && editor.contains(image)) {
+            if (!editor.isDisposed() && editor.contains(image) && editInfo) {
                 const lastSrc = image.getAttribute('src');
                 const { width, height } = getTargetSizeByPercentage(editInfo, percentage);
                 editInfo.widthPx = Math.max(width, minWidth);
                 editInfo.heightPx = Math.max(height, minHeight);
 
                 editor.addUndoSnapshot(() => {
-                    applyChange(editor, image, editInfo, lastSrc, true /*wasResized*/);
+                    applyChange(editor, image, editInfo, lastSrc || '', true /*wasResized*/);
                 }, ChangeSource.ImageResize);
             }
         });

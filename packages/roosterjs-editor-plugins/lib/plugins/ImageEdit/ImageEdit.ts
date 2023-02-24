@@ -59,7 +59,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     preserveRatio: false,
     minRotateDeg: 5,
     imageSelector: 'img',
-    rotateIconHTML: null,
+    rotateIconHTML: '',
     disableCrop: false,
     disableRotate: false,
     disableSideResize: false,
@@ -92,47 +92,47 @@ const MAX_SMALL_SIZE_IMAGE = 10000;
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
  */
 export default class ImageEdit implements EditorPlugin {
-    protected editor: IEditor;
+    protected editor: IEditor | null = null;
     protected options: ImageEditOptions;
-    private disposer: () => void;
+    private disposer: (() => void) | null = null;
 
     // Allowed editing operations
     private allowedOperations: ImageEditOperation;
 
     // Current editing image
-    private image: HTMLImageElement;
+    private image: HTMLImageElement | null = null;
 
     // Image cloned from the current editing image
-    private clonedImage: HTMLImageElement;
+    private clonedImage: HTMLImageElement | null = null;
 
     // The image wrapper
-    private wrapper: HTMLSpanElement;
+    private wrapper: HTMLSpanElement | null = null;
 
     // Current edit info of the image. All changes user made will be stored in this object.
     // We use this object to update the editing UI, and finally we will use this object to generate
     // the new image if necessary
-    private editInfo: ImageEditInfo;
+    private editInfo: ImageEditInfo | null = null;
 
     // Src of the image before current editing
-    private lastSrc: string;
+    private lastSrc: string | null = null;
 
     // Drag and drop helper objects
-    private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[];
+    private dndHelpers: DragAndDropHelper<DragAndDropContext, any>[] = [];
 
     /**
      * Identify if the image was resized by the user.
      */
-    private wasResized: boolean;
+    private wasResized: boolean = false;
 
     /**
      * The span element that wraps the image and opens shadow dom
      */
-    private shadowSpan: HTMLSpanElement;
+    private shadowSpan: HTMLSpanElement | null = null;
 
     /**
      * The span element that wraps the image and opens shadow dom
      */
-    private isCropping: boolean;
+    private isCropping: boolean = false;
 
     /**
      * Create a new instance of ImageEdit
@@ -182,7 +182,7 @@ export default class ImageEdit implements EditorPlugin {
      */
     dispose() {
         this.clearDndHelpers();
-        this.disposer();
+        this.disposer?.();
         this.disposer = null;
         this.editor = null;
     }
@@ -196,7 +196,9 @@ export default class ImageEdit implements EditorPlugin {
             case PluginEventType.SelectionChanged:
                 if (
                     e.selectionRangeEx &&
-                    e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection
+                    e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection &&
+                    this.options &&
+                    this.options.onSelectState !== undefined
                 ) {
                     this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
                 }
@@ -223,9 +225,13 @@ export default class ImageEdit implements EditorPlugin {
 
             case PluginEventType.ExtractContentWithDom:
                 // When extract content, remove all image info since they may not be valid when load the content again
-                toArray(e.clonedRoot.querySelectorAll(this.options.imageSelector)).forEach(img => {
-                    deleteEditInfo(img as HTMLImageElement);
-                });
+                if (this.options?.imageSelector) {
+                    toArray(e.clonedRoot.querySelectorAll(this.options.imageSelector)).forEach(
+                        img => {
+                            deleteEditInfo(img as HTMLImageElement);
+                        }
+                    );
+                }
                 break;
             case PluginEventType.BeforeDispose:
                 this.removeWrapper();
@@ -269,7 +275,14 @@ export default class ImageEdit implements EditorPlugin {
             typeof operationOrSelect === 'number' ? operationOrSelect : ImageEditOperation.None;
         const selectImage = typeof operationOrSelect === 'number' ? false : !!operationOrSelect;
 
-        if (!image && this.image) {
+        if (
+            !image &&
+            this.image &&
+            this.editor &&
+            this.editInfo &&
+            this.lastSrc &&
+            this.clonedImage
+        ) {
             // When there is image in editing, clean up any cached objects and elements
             this.clearDndHelpers();
 
@@ -299,7 +312,7 @@ export default class ImageEdit implements EditorPlugin {
             this.isCropping = false;
         }
 
-        if (!this.image && image?.isContentEditable) {
+        if (!this.image && image?.isContentEditable && this.editor) {
             // If there is new image to edit, enter editing mode for this image
             this.editor.addUndoSnapshot();
             this.image = image;
@@ -340,68 +353,78 @@ export default class ImageEdit implements EditorPlugin {
      * Create editing wrapper for the image
      */
     private createWrapper(operation: ImageEditOperation | CompatibleImageEditOperation) {
-        //Clone the image and insert the clone in a entity
-        this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
-        this.clonedImage.removeAttribute('id');
-        this.wrapper = createElement(
-            KnownCreateElementDataIndex.ImageEditWrapper,
-            this.image.ownerDocument
-        ) as HTMLSpanElement;
-        this.wrapper.firstChild.appendChild(this.clonedImage);
-        this.wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
+        if (this.image && this.editor && this.options && this.editInfo) {
+            //Clone the image and insert the clone in a entity
+            this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
+            this.clonedImage.removeAttribute('id');
+            this.wrapper = createElement(
+                KnownCreateElementDataIndex.ImageEditWrapper,
+                this.image.ownerDocument
+            ) as HTMLSpanElement;
+            this.wrapper?.firstChild?.appendChild(this.clonedImage);
+            this.wrapper.style.display = Browser.isSafari ? 'inline-block' : 'inline-flex';
 
-        // Cache current src so that we can compare it after edit see if src is changed
-        this.lastSrc = this.image.getAttribute('src');
+            // Cache current src so that we can compare it after edit see if src is changed
+            this.lastSrc = this.image.getAttribute('src');
 
-        // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
-        this.clonedImage.src = this.editInfo.src;
-        this.clonedImage.style.position = 'absolute';
-
-        // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
-        const options: ImageHtmlOptions = {
-            borderColor: getColorString(this.options.borderColor, this.editor.isDarkMode()),
-            rotateIconHTML: this.options.rotateIconHTML,
-            rotateHandleBackColor: this.editor.isDarkMode()
-                ? DARK_MODE_BGCOLOR
-                : LIGHT_MODE_BGCOLOR,
-            isSmallImage: isASmallImage(this.editInfo),
-        };
-        const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
-
-        getObjectKeys(ImageEditHTMLMap).forEach(thisOperation => {
-            if ((operation & thisOperation) == thisOperation) {
-                arrayPush(
-                    htmlData,
-                    ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle)
-                );
+            // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
+            if (this.clonedImage) {
+                this.clonedImage.src = this.editInfo.src;
+                this.clonedImage.style.position = 'absolute';
             }
-        });
 
-        htmlData.forEach(data => {
-            const element = createElement(data, this.image.ownerDocument);
-            if (element) {
-                this.wrapper.appendChild(element);
-            }
-        });
-        this.insertImageWrapper(this.wrapper);
+            // Get HTML for all edit elements (resize handle, rotate handle, crop handle and overlay, ...) and create HTML element
+            const options: ImageHtmlOptions = {
+                borderColor: getColorString(this.options.borderColor!, this.editor.isDarkMode()),
+                rotateIconHTML: this.options.rotateIconHTML!,
+                rotateHandleBackColor: this.editor.isDarkMode()
+                    ? DARK_MODE_BGCOLOR
+                    : LIGHT_MODE_BGCOLOR,
+                isSmallImage: isASmallImage(this.editInfo!),
+            };
+            const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
+
+            getObjectKeys(ImageEditHTMLMap).forEach(thisOperation => {
+                const element = ImageEditHTMLMap[thisOperation](options, this.onShowResizeHandle);
+                if ((operation & thisOperation) == thisOperation && element) {
+                    arrayPush(htmlData, element);
+                }
+            });
+
+            htmlData.forEach(data => {
+                const element = createElement(data, this.image!.ownerDocument);
+                if (element && this.wrapper) {
+                    this.wrapper.appendChild(element);
+                }
+            });
+            this.insertImageWrapper(this.wrapper);
+        }
     }
 
     private insertImageWrapper(wrapper: HTMLSpanElement) {
-        this.shadowSpan = wrap(this.image, 'span');
-        const shadowRoot = this.shadowSpan.attachShadow({
-            mode: 'open',
-        });
+        if (this.image) {
+            this.shadowSpan = wrap(this.image, 'span');
+            const shadowRoot = this.shadowSpan.attachShadow({
+                mode: 'open',
+            });
 
-        this.shadowSpan.style.verticalAlign = 'bottom';
+            this.shadowSpan.style.verticalAlign = 'bottom';
 
-        shadowRoot.appendChild(wrapper);
+            shadowRoot.appendChild(wrapper);
+        }
     }
 
     /**
      * Remove the temp wrapper of the image
      */
     private removeWrapper = () => {
-        if (this.editor.contains(this.image) && this.wrapper) {
+        if (
+            this.editor &&
+            this.image &&
+            this.image.parentNode &&
+            this.editor.contains(this.image) &&
+            this.wrapper
+        ) {
             unwrap(this.image.parentNode);
         }
         this.wrapper = null;
@@ -414,7 +437,14 @@ export default class ImageEdit implements EditorPlugin {
      */
     private updateWrapper = (context?: DragAndDropContext) => {
         const wrapper = this.wrapper;
-        if (wrapper) {
+        if (
+            wrapper &&
+            this.editInfo &&
+            this.image &&
+            this.clonedImage &&
+            this.options &&
+            this.shadowSpan?.parentElement
+        ) {
             // Prepare: get related editing elements
             const cropContainers = getEditElements(wrapper, ImageEditElementClass.CropContainer);
             const cropOverlays = getEditElements(wrapper, ImageEditElementClass.CropOverlay);
@@ -491,7 +521,7 @@ export default class ImageEdit implements EditorPlugin {
                     this.wasResized = true;
                     doubleCheckResize(
                         this.editInfo,
-                        this.options.preserveRatio,
+                        this.options.preserveRatio || false,
                         clientWidth,
                         clientHeight
                     );
@@ -499,11 +529,11 @@ export default class ImageEdit implements EditorPlugin {
                     this.updateWrapper();
                 }
 
-                const viewport = this.editor.getVisibleViewport();
+                const viewport = this.editor?.getVisibleViewport();
                 if (rotateHandle && rotateCenter && viewport) {
                     updateRotateHandlePosition(
                         this.editInfo,
-                        this.editor.getVisibleViewport(),
+                        viewport,
                         marginVertical,
                         rotateCenter,
                         rotateHandle
@@ -525,25 +555,22 @@ export default class ImageEdit implements EditorPlugin {
         elementClass: ImageEditElementClass,
         dragAndDrop: DragAndDropHandler<DragAndDropContext, any>
     ): DragAndDropHelper<DragAndDropContext, any>[] {
-        const commonContext = {
-            editInfo: this.editInfo,
-            options: this.options,
-            elementClass,
-        };
         const wrapper = this.wrapper;
-        return wrapper
+        return wrapper && this.editInfo
             ? getEditElements(wrapper, elementClass).map(
                   element =>
                       new DragAndDropHelper<DragAndDropContext, any>(
                           element,
                           {
-                              ...commonContext,
+                              editInfo: this.editInfo!,
+                              options: this.options,
+                              elementClass,
                               x: element.dataset.x as DNDDirectionX,
                               y: element.dataset.y as DnDDirectionY,
                           },
                           this.updateWrapper,
                           dragAndDrop,
-                          this.editor.getZoomScale()
+                          this.editor ? this.editor.getZoomScale() : 1
                       )
               )
             : [];
@@ -554,25 +581,25 @@ export default class ImageEdit implements EditorPlugin {
      */
     private clearDndHelpers() {
         this.dndHelpers?.forEach(helper => helper.dispose());
-        this.dndHelpers = null;
+        this.dndHelpers = [];
     }
 }
 
 function setSize(
     element: HTMLElement,
-    left: number,
-    top: number,
-    right: number,
-    bottom: number,
-    width: number,
-    height: number
+    left: number | undefined,
+    top: number | undefined,
+    right: number | undefined,
+    bottom: number | undefined,
+    width: number | undefined,
+    height: number | undefined
 ) {
-    element.style.left = getPx(left);
-    element.style.top = getPx(top);
-    element.style.right = getPx(right);
-    element.style.bottom = getPx(bottom);
-    element.style.width = getPx(width);
-    element.style.height = getPx(height);
+    element.style.left = left !== undefined ? getPx(left) : element.style.left;
+    element.style.top = top !== undefined ? getPx(top) : element.style.top;
+    element.style.right = right !== undefined ? getPx(right) : element.style.right;
+    element.style.bottom = bottom !== undefined ? getPx(bottom) : element.style.bottom;
+    element.style.width = width !== undefined ? getPx(width) : element.style.width;
+    element.style.height = height !== undefined ? getPx(height) : element.style.height;
 }
 
 function setWrapperSizeDimensions(
@@ -593,7 +620,7 @@ function setWrapperSizeDimensions(
 }
 
 function getPx(value: number): string {
-    return value === undefined ? null : value + 'px';
+    return value + 'px';
 }
 
 function getEditElements(wrapper: HTMLElement, elementClass: ImageEditElementClass): HTMLElement[] {
@@ -611,12 +638,12 @@ function handleRadIndexCalculator(angleRad: number): number {
     return idx < 0 ? idx + DIRECTIONS : idx;
 }
 
-function rotateHandles(element: HTMLElement, angleRad: number): string {
+function rotateHandles(y: string, x: string, angleRad: number): string {
     const radIndex = handleRadIndexCalculator(angleRad);
-    const originalDirection = element.dataset.y + element.dataset.x;
+    const originalDirection = y + x;
     const originalIndex = DirectionOrder.indexOf(originalDirection);
     const rotatedIndex = originalIndex >= 0 && originalIndex + radIndex;
-    return DirectionOrder[rotatedIndex % DIRECTIONS];
+    return rotatedIndex ? DirectionOrder[rotatedIndex % DIRECTIONS] : '';
 }
 
 /**
@@ -626,7 +653,11 @@ function rotateHandles(element: HTMLElement, angleRad: number): string {
  */
 function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
-        handle.style.cursor = `${rotateHandles(handle, angleRad)}-resize`;
+        const y = handle.dataset.y;
+        const x = handle.dataset.x;
+        if (y && x) {
+            handle.style.cursor = `${rotateHandles(y, x, angleRad)}-resize`;
+        }
     });
 }
 
@@ -657,9 +688,9 @@ function isFixedNumberValue(value: string | number) {
     return !isNaN(numberValue);
 }
 
-function isASmallImage(editInfo: ImageEditInfo) {
+function isASmallImage(editInfo: ImageEditInfo): boolean {
     const { widthPx, heightPx } = editInfo;
-    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE;
+    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE ? true : false;
 }
 
 function getColorString(color: string | ModeIndependentColor, isDarkMode: boolean): string {

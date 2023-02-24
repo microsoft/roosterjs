@@ -34,40 +34,41 @@ export const Resizer: DragAndDropHandler<DragAndDropContext, ResizeInfo> = {
             base.widthPx > 0 && base.heightPx > 0 ? (base.widthPx * 1.0) / base.heightPx : 0;
 
         [deltaX, deltaY] = rotateCoordinate(deltaX, deltaY, editInfo.angleRad);
+        if (options.minWidth !== undefined && options.minHeight !== undefined) {
+            const horizontalOnly = x == '';
+            const verticalOnly = y == '';
+            const shouldPreserveRatio =
+                !(horizontalOnly || verticalOnly) && (options.preserveRatio || e.shiftKey);
+            let newWidth = horizontalOnly
+                ? base.widthPx
+                : Math.max(base.widthPx + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
+            let newHeight = verticalOnly
+                ? base.heightPx
+                : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
 
-        const horizontalOnly = x == '';
-        const verticalOnly = y == '';
-        const shouldPreserveRatio =
-            !(horizontalOnly || verticalOnly) && (options.preserveRatio || e.shiftKey);
-        let newWidth = horizontalOnly
-            ? base.widthPx
-            : Math.max(base.widthPx + deltaX * (x == 'w' ? -1 : 1), options.minWidth);
-        let newHeight = verticalOnly
-            ? base.heightPx
-            : Math.max(base.heightPx + deltaY * (y == 'n' ? -1 : 1), options.minHeight);
-
-        if (shouldPreserveRatio && ratio > 0) {
-            if (ratio > 1) {
-                // first sure newHeight is right，calculate newWidth
-                newWidth = newHeight * ratio;
-                if (newWidth < options.minWidth) {
-                    newWidth = options.minWidth;
-                    newHeight = newWidth / ratio;
-                }
-            } else {
-                // first sure newWidth is right，calculate newHeight
-                newHeight = newWidth / ratio;
-                if (newHeight < options.minHeight) {
-                    newHeight = options.minHeight;
+            if (shouldPreserveRatio && ratio > 0) {
+                if (ratio > 1) {
+                    // first sure newHeight is right，calculate newWidth
                     newWidth = newHeight * ratio;
+                    if (newWidth < options.minWidth) {
+                        newWidth = options.minWidth;
+                        newHeight = newWidth / ratio;
+                    }
+                } else {
+                    // first sure newWidth is right，calculate newHeight
+                    newHeight = newWidth / ratio;
+                    if (newHeight < options.minHeight) {
+                        newHeight = options.minHeight;
+                        newWidth = newHeight * ratio;
+                    }
                 }
             }
+            editInfo.widthPx = newWidth;
+            editInfo.heightPx = newHeight;
+            return true;
+        } else {
+            return false;
         }
-
-        editInfo.widthPx = newWidth;
-        editInfo.heightPx = newHeight;
-
-        return true;
     },
 };
 
@@ -144,10 +145,12 @@ export function getCornerResizeHTML(
                           HandleTypes.CircularHandlesCorner
                       )
                     : null;
-            if (onShowResizeHandle) {
+            if (onShowResizeHandle && elementData) {
                 onShowResizeHandle(elementData, x, y);
             }
-            result.push(elementData);
+            if (elementData) {
+                result.push(elementData);
+            }
         })
     );
     return result;
@@ -160,7 +163,7 @@ export function getCornerResizeHTML(
 export function getSideResizeHTML(
     { borderColor: resizeBorderColor, isSmallImage: isSmallImage }: ImageHtmlOptions,
     onShowResizeHandle?: OnShowResizeHandle
-): CreateElementData[] {
+): CreateElementData[] | null {
     if (isSmallImage) {
         return null;
     }
@@ -176,10 +179,12 @@ export function getSideResizeHTML(
                           HandleTypes.CircularHandlesCorner
                       )
                     : null;
-            if (onShowResizeHandle) {
+            if (onShowResizeHandle && elementData) {
                 onShowResizeHandle(elementData, x, y);
             }
-            result.push(elementData);
+            if (elementData) {
+                result.push(elementData);
+            }
         })
     );
     return result;
@@ -203,7 +208,7 @@ function getResizeHandleHTML(
     y: DnDDirectionY,
     borderColor: string,
     handleTypes: HandleTypes
-): CreateElementData {
+): CreateElementData | null {
     const leftOrRight = x == 'w' ? 'left' : 'right';
     const topOrBottom = y == 'n' ? 'top' : 'bottom';
     const leftOrRightValue = x == '' ? '50%' : '0px';
