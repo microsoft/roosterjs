@@ -37,7 +37,12 @@ export const Cropper: DragAndDropHandler<DragAndDropContext, CropInfo> = {
         const widthPercent = 1 - leftPercent - rightPercent;
         const heightPercent = 1 - topPercent - bottomPercent;
 
-        if (widthPercent > 0 && heightPercent > 0) {
+        if (
+            widthPercent > 0 &&
+            heightPercent > 0 &&
+            minWidth !== undefined &&
+            minHeight !== undefined
+        ) {
             const fullWidth = widthPx / widthPercent;
             const fullHeight = heightPx / heightPercent;
             const newLeft =
@@ -100,9 +105,9 @@ export function getCropHTML(): CreateElementData[] {
         className: ImageEditElementClass.CropContainer,
         children: [],
     };
-
-    Xs.forEach(x => Ys.forEach(y => containerHTML.children.push(getCropHTMLInternal(x, y))));
-
+    if (containerHTML) {
+        Xs.forEach(x => Ys.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y))));
+    }
     return [containerHTML, overlayHTML, overlayHTML, overlayHTML, overlayHTML];
 }
 
