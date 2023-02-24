@@ -265,9 +265,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         selectedVTable.selection = selection;
 
         forEachSelectedCell(selectedVTable, cell => {
-            const trustedHTMLHandler = editor.getTrustedHTMLHandler();
-            if (cell?.td && trustedHTMLHandler) {
-                cell.td.innerHTML = trustedHTMLHandler('<br>');
+            if (cell?.td) {
+                cell.td.innerHTML = editor.getTrustedHTMLHandler()('<br>');
             }
         });
 
