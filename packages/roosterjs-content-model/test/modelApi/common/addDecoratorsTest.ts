@@ -1,4 +1,4 @@
-import { addLink } from '../../../lib/modelApi/common/addLink';
+import { addLink } from '../../../lib/modelApi/common/addDecorators';
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 

@@ -1,4 +1,5 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelCode } from 'roosterjs-content-model/lib/publicTypes';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
@@ -12,6 +13,7 @@ export interface StackFormatOptions {
     segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
     paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
     link?: 'linkDefault' | 'empty';
+    code?: 'codeDefault' | 'empty';
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -40,19 +42,21 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat, link: linkFormat } = context;
-    const { segment, paragraph, link } = options;
+    const { segmentFormat, blockFormat, link: linkFormat, code: codeFormat } = context;
+    const { segment, paragraph, link, code } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
         context.link = stackLinkInternal(linkFormat, link);
+        context.code = stackCodeInternal(codeFormat, code);
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
         context.link = linkFormat;
+        context.code = codeFormat;
     }
 }
 
@@ -74,6 +78,23 @@ function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 
 
         default:
             return linkFormat;
+    }
+}
+
+function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 'empty') {
+    switch (code) {
+        case 'codeDefault':
+            return {
+                format: {
+                    fontFamily: 'monospace',
+                },
+            };
+        case 'empty':
+            return {
+                format: {},
+            };
+        default:
+            return codeFormat;
     }
 }
 

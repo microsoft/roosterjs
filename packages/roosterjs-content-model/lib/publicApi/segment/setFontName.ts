@@ -10,8 +10,12 @@ export default function setFontName(editor: IContentModelEditor, fontName: strin
     formatSegmentWithContentModel(
         editor,
         'setFontName',
-        format => {
+        (format, _, segment) => {
             format.fontFamily = fontName;
+
+            if (segment?.code) {
+                segment.code.format.fontFamily = fontName;
+            }
         },
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/

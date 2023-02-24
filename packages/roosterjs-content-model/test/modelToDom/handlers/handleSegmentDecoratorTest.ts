@@ -1,9 +1,10 @@
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
+import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { handleLink } from '../../../lib/modelToDom/handlers/handleLink';
+import { handleSegmentDecorator } from '../../../lib/modelToDom/handlers/handleSegmentDecorator';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
-describe('handleLink', () => {
+describe('handleSegmentDecorator', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
 
@@ -15,7 +16,13 @@ describe('handleLink', () => {
         parent = document.createElement('div');
         parent.innerHTML = 'test';
 
-        handleLink(document, parent.firstChild!, link, context);
+        const segment: ContentModelSegment = {
+            segmentType: 'Br',
+            format: {},
+            link: link,
+        };
+
+        handleSegmentDecorator(document, parent.firstChild!, segment, context);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
     }
