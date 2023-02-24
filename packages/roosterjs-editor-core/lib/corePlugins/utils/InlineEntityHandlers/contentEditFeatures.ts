@@ -25,7 +25,6 @@ const MoveBeforeDelimiterFeature: GenericContentEditFeature<PluginKeyboardEvent>
     keys: [Keys.LEFT],
     shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
         const position = editor.getFocusedPosition();
-
         if (!position) {
             return false;
         }
