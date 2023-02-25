@@ -12,6 +12,7 @@ import {
     ChangeSource,
     ContentPosition,
     Entity,
+    ExperimentalFeatures,
     IEditor,
     NodePosition,
     PositionType,
@@ -111,7 +112,11 @@ export default function insertEntity(
     }
 
     const entity = getEntityFromElement(wrapper);
-    if (!isBlock && isReadonly) {
+    if (
+        !isBlock &&
+        isReadonly &&
+        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+    ) {
         addDelimiters(entity.wrapper);
     }
 
