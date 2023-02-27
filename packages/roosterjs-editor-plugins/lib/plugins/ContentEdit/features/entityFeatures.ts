@@ -1,7 +1,9 @@
 import {
     cacheGetEventData,
+    getComputedStyle,
     getEntityFromElement,
     getEntitySelector,
+    matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
 import {
@@ -197,67 +199,59 @@ function cacheGetNeighborEntityElement(
 }
 
 /**
- * Content edit feature to move the cursor from Delimiter After Entity to the delimiter Before
- */
-const MoveBeforeDelimiterFeature: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.LEFT],
-    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        return getIsDelimiterAtCursor(event, editor, false /* checkBefore */);
-    },
-    handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const delimiter = cacheDelimiter(event, false /* checkBefore */);
-        if (!delimiter) {
-            return;
-        }
-        const delimiterBefore = delimiter.previousElementSibling?.previousElementSibling;
-
-        if (delimiterBefore) {
-            const selection = delimiterBefore.ownerDocument.getSelection();
-
-            if (selection) {
-                event.rawEvent.preventDefault();
-                editor.runAsync(() => {
-                    const position = new Position(delimiterBefore, PositionType.Before);
-                    if (event.rawEvent.shiftKey) {
-                        selection.extend(position.element, position.offset);
-                    } else {
-                        selection.setPosition(position.element, position.offset);
-                    }
-                });
-            }
-        }
-    },
-};
-
-/**
  * Content edit feature to move the cursor from Delimiter Before Entity to the delimiter After
  */
-const MoveAfterDelimiterFeature: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.RIGHT],
+const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.RIGHT, Keys.LEFT],
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        return getIsDelimiterAtCursor(event, editor, true /* checkBefore */);
+        const element = editor.getElementAtCursor();
+        const isRTL = getComputedStyle(element, 'direction') === 'rtl';
+        let shouldCheckBefore: boolean;
+        if (event.rawEvent.which === Keys.RIGHT) {
+            if (isRTL) {
+                shouldCheckBefore = false;
+            } else {
+                shouldCheckBefore = true;
+            }
+        }
+        if (event.rawEvent.which === Keys.LEFT) {
+            if (isRTL) {
+                shouldCheckBefore = true;
+            } else {
+                shouldCheckBefore = false;
+            }
+        }
+        return getIsDelimiterAtCursor(event, editor, shouldCheckBefore);
     },
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        const delimiter = cacheDelimiter(event, true /* checkBefore */);
+        const checkBefore = cacheGetCheckBefore(event);
+        const delimiter = cacheDelimiter(event, checkBefore);
+
         if (!delimiter) {
             return;
         }
-        const delimiterAfter = delimiter.nextElementSibling?.nextElementSibling;
 
-        if (delimiterAfter) {
+        const { delimiterPair, entity } = getRelatedElements(delimiter, checkBefore);
+
+        if (delimiterPair && matchesSelector(entity, getEntitySelector())) {
             event.rawEvent.preventDefault();
             editor.runAsync(() => {
                 let offset = 0;
-                delimiterAfter.childNodes.forEach((node, index) => {
+                delimiterPair.childNodes.forEach((node, index) => {
                     if (node.textContent === ZERO_WIDTH_SPACE) {
                         offset = index;
                     }
                 });
+
+                const position = checkBefore
+                    ? new Position(delimiterPair, offset + 1)
+                    : new Position(delimiterPair, PositionType.Before);
+
                 if (event.rawEvent.shiftKey) {
-                    const selection = delimiterAfter.ownerDocument.getSelection();
-                    selection?.extend(delimiterAfter, offset + 1);
+                    const selection = delimiterPair.ownerDocument.getSelection();
+                    selection?.extend(position.element, position.offset);
                 } else {
-                    editor.select(delimiterAfter, offset + 1);
+                    editor.select(position);
                 }
             });
         }
@@ -302,6 +296,7 @@ const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEve
 
 function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, checkBefore: boolean) {
     const position = editor.getFocusedPosition();
+    cacheGetCheckBefore(event, checkBefore);
 
     if (!position) {
         return false;
@@ -406,6 +401,24 @@ function cacheEntityBetweenDelimiter(
     return element;
 }
 
+function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean) {
+    return cacheGetEventData(event, 'Check_Before', () => checkBefore);
+}
+
+function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean) {
+    let entity: Element;
+    let delimiterPair: Element;
+    if (checkBefore) {
+        entity = delimiter.nextElementSibling;
+        delimiterPair = entity.nextElementSibling;
+    } else {
+        entity = delimiter.previousElementSibling;
+        delimiterPair = entity.previousElementSibling;
+    }
+
+    return { entity, delimiterPair };
+}
+
 /**
  * @internal
  */
@@ -418,7 +431,6 @@ export const EntityFeatures: Record<
     enterBeforeReadonlyEntity: EnterBeforeReadonlyEntityFeature,
     backspaceAfterEntity: BackspaceAfterEntityFeature,
     deleteBeforeEntity: DeleteBeforeEntityFeature,
-    moveToDelimiterAfter: MoveAfterDelimiterFeature,
-    moveToDelimiterBefore: MoveBeforeDelimiterFeature,
+    MoveBetweenDelimitersFeature: MoveBetweenDelimitersFeature,
     removeEntityBetweenDelimiters: RemoveEntityBetweenDelimitersFeature,
 };
