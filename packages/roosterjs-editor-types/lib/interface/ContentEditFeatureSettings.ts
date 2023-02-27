@@ -64,7 +64,7 @@ export interface EntityFeatureSettings {
     deleteBeforeEntity: boolean;
 
     /**
-     * Content edit feature to move the cursor from Delimiters around Readonly inline entity
+     * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
      */
     MoveBetweenDelimitersFeature: boolean;
 

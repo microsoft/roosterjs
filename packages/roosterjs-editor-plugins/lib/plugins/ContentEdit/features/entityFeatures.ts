@@ -199,7 +199,7 @@ function cacheGetNeighborEntityElement(
 }
 
 /**
- * Content edit feature to move the cursor from Delimiter Before Entity to the delimiter After
+ * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
  */
 const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT, Keys.LEFT],

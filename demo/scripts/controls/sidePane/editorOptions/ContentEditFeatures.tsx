@@ -50,9 +50,9 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     mergeListOnBackspaceAfterList: 'When backspacing between lists, merge the lists',
     deleteTableWithBackspace: 'Delete table with backspace key with whole table is selected',
     MoveBetweenDelimitersFeature:
-        'When using arrow keys in a delimiter of a inline read only entity, move to the Entity Pair',
+        'Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys',
     removeEntityBetweenDelimiters:
-        'When using BACKSPACE or DELETE in a delemeter, trigger a Entity Operation',
+        'When using BACKSPACE or DELETE in a Readonly inline entity delimeter, trigger a Entity Operation',
 };
 
 export interface ContentEditFeaturessProps {
