@@ -1,4 +1,3 @@
-import { getInlineEntityContentEditFeatures } from './utils/InlineEntityHandlers/contentEditFeatures';
 import { inlineEntityOnPluginEvent } from './utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     Browser,
@@ -86,12 +85,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-
-        if (this.editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
-            getInlineEntityContentEditFeatures().forEach(feature =>
-                editor.addContentEditFeature(feature)
-            );
-        }
     }
 
     /**

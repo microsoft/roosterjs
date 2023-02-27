@@ -49,6 +49,12 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
         'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
     mergeListOnBackspaceAfterList: 'When backspacing between lists, merge the lists',
     deleteTableWithBackspace: 'Delete table with backspace key with whole table is selected',
+    moveToDelimiterAfter:
+        'When using arrow keys in a delimiter of a inline read only entity, move to the Entity Pair',
+    moveToDelimiterBefore:
+        'When using arrow keys in a delimiter of a inline read only entity, move to the Entity Pair',
+    removeEntityBetweenDelimiters:
+        'When using BACKSPACE or DELETE in a delemeter, trigger a Entity Operation',
 };
 
 export interface ContentEditFeaturessProps {
