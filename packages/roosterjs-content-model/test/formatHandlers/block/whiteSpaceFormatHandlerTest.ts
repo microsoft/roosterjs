@@ -72,7 +72,9 @@ describe('whiteSpaceFormatHandler.apply', () => {
     it('Has white space: pre', () => {
         format.whiteSpace = 'pre';
         whiteSpaceFormatHandler.apply(format, div, context);
-        expect(container.innerHTML).toBe('<pre><div></div></pre>');
+        expect(container.innerHTML).toBe(
+            '<pre style="margin-top: 0px; margin-bottom: 0px;"><div></div></pre>'
+        );
     });
 
     it('Has white space: pre-wrap', () => {
