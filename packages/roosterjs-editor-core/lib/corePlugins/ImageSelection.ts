@@ -86,6 +86,7 @@ export default class ImageSelection implements EditorPlugin {
                             event.rawEvent.stopPropagation();
                         } else if (key === Delete) {
                             this.editor.deleteNode(keyDownSelection.image);
+                            event.rawEvent.preventDefault();
                         } else {
                             this.editor.select(keyDownSelection.ranges[0]);
                         }
