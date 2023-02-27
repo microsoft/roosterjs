@@ -4,13 +4,26 @@ import { Browser } from 'roosterjs-editor-dom';
 
 /**
  * @internal
- * Compatible mouse event names for different platform
  */
-interface MouseEventInfo {
+interface MouseEventMoves {
     MOUSEDOWN: string;
     MOUSEMOVE: string;
     MOUSEUP: string;
-    getPageXY: (e: Event) => number[];
+}
+
+/**
+ * @internal
+ */
+interface MouseEventInfo extends MouseEventMoves {
+    getPageXY: (e: MouseEvent) => number[];
+}
+
+/**
+ * @internal
+ * Compatible mouse event names for different platform
+ */
+interface TouchEventInfo extends MouseEventMoves {
+    getPageXY: (e: TouchEvent) => number[];
 }
 
 /**
@@ -25,7 +38,7 @@ const MOUSE_EVENT_INFO_DESKTOP: MouseEventInfo = (() => {
     };
 })();
 
-const MOUSE_EVENT_INFO_MOBILE: MouseEventInfo = (() => {
+const MOUSE_EVENT_INFO_MOBILE: TouchEventInfo = (() => {
     return {
         MOUSEDOWN: 'touchstart',
         MOUSEMOVE: 'touchmove',
@@ -54,10 +67,10 @@ function getTouchEventPageXY(e: TouchEvent): [number, number] {
  * A helper class to help manage drag and drop to an HTML element
  */
 export default class DragAndDropHelper<TContext, TInitValue> implements Disposable {
-    private initX: number;
-    private initY: number;
-    private initValue: TInitValue;
-    private dndMouse: MouseEventInfo;
+    private initX: number = 0;
+    private initY: number = 0;
+    private initValue: TInitValue | undefined = undefined;
+    private dndMouse: MouseEventInfo | TouchEventInfo;
 
     /**
      * Create a new instance of DragAndDropHelper class
@@ -109,28 +122,34 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         doc.removeEventListener(this.dndMouse.MOUSEUP, this.onMouseUp, true /*useCapture*/);
     }
 
-    private onMouseDown = (e: MouseEvent) => {
+    private onMouseDown = (e: Event) => {
         e.preventDefault();
         e.stopPropagation();
         this.addDocumentEvents();
-        [this.initX, this.initY] = this.dndMouse.getPageXY(e);
-        this.initValue = this.handler.onDragStart?.(this.context, e);
+        [this.initX, this.initY] = this.dndMouse.getPageXY(e as MouseEvent & TouchEvent);
+        this.initValue = this.handler.onDragStart?.(this.context, e as MouseEvent);
     };
 
-    private onMouseMove = (e: MouseEvent) => {
+    private onMouseMove = (e: Event) => {
         e.preventDefault();
-        const [pageX, pageY] = this.dndMouse.getPageXY(e);
+        const [pageX, pageY] = this.dndMouse.getPageXY(e as MouseEvent & TouchEvent);
         const deltaX = (pageX - this.initX) / this.zoomScale;
         const deltaY = (pageY - this.initY) / this.zoomScale;
-        if (this.handler.onDragging?.(this.context, e, this.initValue, deltaX, deltaY)) {
+        if (
+            this.initValue &&
+            this.handler.onDragging?.(this.context, e as MouseEvent, this.initValue, deltaX, deltaY)
+        ) {
             this.onSubmit?.(this.context, this.trigger);
         }
     };
 
-    private onMouseUp = (e: MouseEvent) => {
+    private onMouseUp = (e: Event) => {
         e.preventDefault();
         this.removeDocumentEvents();
-        if (this.handler.onDragEnd?.(this.context, e, this.initValue)) {
+        if (
+            this.initValue &&
+            this.handler.onDragEnd?.(this.context, e as MouseEvent, this.initValue)
+        ) {
             this.onSubmit?.(this.context, this.trigger);
         }
     };

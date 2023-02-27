@@ -136,6 +136,8 @@ function retrieveParagraphFormat(
     mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst);
     mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst);
     mergeValue(result, 'headerLevel', validHeaderLevel, isFirst);
+    mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst);
+    mergeValue(result, 'direction', paragraph.format.direction, isFirst);
 }
 
 function retrieveStructureFormat(

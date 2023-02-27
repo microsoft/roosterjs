@@ -1,7 +1,7 @@
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 
-const OptimizeTags = ['SPAN', 'B', 'EM', 'I', 'U', 'SUB', 'SUP', 'STRIKE', 'S', 'A', 'CODE'];
+const OptimizeTags = ['SPAN', 'B', 'EM', 'I', 'U', 'SUB', 'SUP', 'STRIKE', 'S', 'A', 'PRE', 'CODE'];
 
 /**
  * @internal

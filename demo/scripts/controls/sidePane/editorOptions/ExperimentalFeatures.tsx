@@ -21,6 +21,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
+    [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
+        'Add read entities around read only entities to handle browser edge cases.',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<

@@ -4,6 +4,7 @@ import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -64,10 +65,10 @@ export default function insertLink(
                 segments.every(x => x.segmentType == 'SelectionMarker') ||
                 (!!text && text != originalText)
             ) {
-                const segment = createText(
-                    text || (linkData ? linkData.originalUrl : url),
-                    segments[0]?.format
-                );
+                const segment = createText(text || (linkData ? linkData.originalUrl : url), {
+                    ...(segments[0]?.format || {}),
+                    ...(getPendingFormat(editor) || {}),
+                });
                 const doc = createContentModelDocument();
 
                 addLink(segment, link);

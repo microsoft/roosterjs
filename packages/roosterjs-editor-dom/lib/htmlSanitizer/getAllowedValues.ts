@@ -165,7 +165,6 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     'outline-style': 'none',
     'outline-width': '0px',
     overflow: 'visible',
-    'text-decoration': 'none',
     '-webkit-text-stroke-width': '0px',
     'word-wrap': 'break-word',
     'margin-left': '0px',

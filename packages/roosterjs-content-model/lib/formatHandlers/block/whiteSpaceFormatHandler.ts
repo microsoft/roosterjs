@@ -16,6 +16,9 @@ export const whiteSpaceFormatHandler: FormatHandler<WhiteSpaceFormat> = {
         if (format.whiteSpace == 'pre') {
             const pre = element.ownerDocument.createElement('pre');
 
+            pre.style.marginTop = '0';
+            pre.style.marginBottom = '0';
+
             element.parentNode?.appendChild(pre);
             pre.appendChild(element);
         } else if (format.whiteSpace) {
