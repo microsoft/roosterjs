@@ -60,10 +60,7 @@ export function setModelAlignment(
     paragraphOrListItemOrTable.forEach(({ block }) => {
         const newAligment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            block.listItemFormat.format.textColor = 'red';
-            block.levels.forEach(level => {
-                level.display = 'flex';
-            });
+            block.format.textAlign = newAligment;
         } else if (block.blockType === 'Table') {
             alignTable(
                 block,

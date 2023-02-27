@@ -1,7 +1,7 @@
 import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
-import { ContentModelSegmentListItem } from '../segment/ContentModelSegmentListItem';
 import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
 /**
@@ -9,7 +9,7 @@ import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMar
  */
 export interface ContentModelListItem
     extends ContentModelBlockGroupBase<'ListItem'>,
-        ContentModelBlockBase<'BlockGroup'> {
+        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat> {
     /**
      * Type of this list, either ordered or unordered
      */
@@ -19,9 +19,4 @@ export interface ContentModelListItem
      * A dummy segment to hold format of this list item
      */
     formatHolder: ContentModelSelectionMarker;
-
-    /**
-     *
-     */
-    listItemFormat: ContentModelSegmentListItem;
 }

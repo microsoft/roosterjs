@@ -26,8 +26,11 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         const textAlign = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
         const alignSelf = element.style.alignSelf;
         const isLI = element.tagName === 'li';
-        const shouldApplyAlignSelf =
-            isLI && element.style.display === 'flex' && element.style.flexDirection === 'column';
+        const isFlex =
+            element.parentElement &&
+            element.parentElement.style.display === 'flex' &&
+            element.style.flexDirection === 'column';
+        const shouldApplyAlignSelf = isLI && isFlex;
         const align = shouldApplyAlignSelf ? alignSelf : textAlign;
 
         if (dir) {
@@ -76,6 +79,7 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
 
         if (element.tagName == 'OL' || element.tagName == 'UL') {
             element.style.flexDirection = 'column';
+            element.style.display = 'flex';
         }
     },
 };

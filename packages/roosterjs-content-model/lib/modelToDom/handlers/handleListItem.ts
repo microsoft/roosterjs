@@ -29,6 +29,7 @@ export const handleListItem: ContentModelHandler<ContentModelListItem> = (
         listParent = li;
 
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
+        applyFormat(li, context.formatAppliers.block, listItem.format, context);
 
         if (level) {
             applyFormat(li, context.formatAppliers.listItem, level, context);
