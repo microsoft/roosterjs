@@ -10,6 +10,7 @@ import {
 } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
+const Delete = 'Delete';
 const mouseRightButton = 2;
 const mouseLeftButton = 0;
 
@@ -83,6 +84,8 @@ export default class ImageSelection implements EditorPlugin {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()?.collapse();
                             event.rawEvent.stopPropagation();
+                        } else if (key === Delete) {
+                            this.editor.deleteNode(keyDownSelection.image);
                         } else {
                             this.editor.select(keyDownSelection.ranges[0]);
                         }
