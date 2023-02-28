@@ -7,7 +7,7 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 
-const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
+const specialCharacters = /[`!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?~]/;
 
 /**
  * Automatically transform -- into hyphen, if typed between two words.
@@ -55,7 +55,7 @@ export default class AutoFormat implements EditorPlugin {
             this.lastKeyTyped = '';
         }
 
-        if (event.eventType === PluginEventType.KeyDown) {
+        if (event.eventType === PluginEventType.KeyPress) {
             const keyTyped = event.rawEvent.key;
 
             if (keyTyped && keyTyped.length > 1) {
