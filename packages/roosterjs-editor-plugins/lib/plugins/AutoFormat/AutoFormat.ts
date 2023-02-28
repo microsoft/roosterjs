@@ -7,7 +7,7 @@ import {
     PositionType,
 } from 'roosterjs-editor-types';
 
-const specialCharacters = /[`!@#$%^&*()+\=\[\]{};':"\\|,.<>\/?~]/;
+const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 
 /**
  * Automatically transform -- into hyphen, if typed between two words.
