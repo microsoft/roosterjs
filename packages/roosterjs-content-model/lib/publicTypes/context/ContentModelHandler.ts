@@ -1,6 +1,6 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelLink } from '../decorator/ContentModelLink';
+import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ModelToDomContext } from './ModelToDomContext';
 
@@ -12,5 +12,9 @@ import { ModelToDomContext } from './ModelToDomContext';
  * @param context The context object to provide related information
  */
 export type ContentModelHandler<
-    T extends ContentModelSegment | ContentModelBlock | ContentModelBlockGroup | ContentModelLink
+    T extends
+        | ContentModelSegment
+        | ContentModelBlock
+        | ContentModelBlockGroup
+        | ContentModelDecorator
 > = (doc: Document, parent: Node, model: T, context: ModelToDomContext) => void;

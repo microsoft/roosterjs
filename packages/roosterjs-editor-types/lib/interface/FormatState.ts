@@ -60,6 +60,11 @@ export interface ElementBasedFormatState {
     isBlockQuote?: boolean;
 
     /**
+     * Whether the text is in Code element
+     */
+    isCodeInline?: boolean;
+
+    /**
      * Whether the text is in Code block
      */
     isCodeBlock?: boolean;

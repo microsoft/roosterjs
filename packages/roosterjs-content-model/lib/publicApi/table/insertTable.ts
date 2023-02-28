@@ -4,6 +4,7 @@ import { createSelectionMarker } from '../../modelApi/creators/createSelectionMa
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/selection/deleteSelections';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
@@ -32,7 +33,7 @@ export default function insertTable(
             const doc = createContentModelDocument();
             const table = createTableStructure(doc, columns, rows);
 
-            normalizeTable(table, insertPosition.marker.format);
+            normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
             applyTableFormat(table, format);
             mergeModel(model, doc, {
                 insertPosition,

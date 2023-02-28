@@ -1,4 +1,4 @@
-import { addLink } from '../../modelApi/common/addLink';
+import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
@@ -57,7 +57,8 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             lastSegment?.segmentType == 'Text' &&
             !!lastSegment.isSelected == !!context.isInSelection &&
             areSameFormats(lastSegment.format, context.segmentFormat) &&
-            areSameFormats(lastSegment.link || {}, context.link.format || {})
+            areSameFormats(lastSegment.link || {}, context.link.format || {}) &&
+            areSameFormats(lastSegment.code || {}, context.code.format || {})
         ) {
             lastSegment.text += text;
         } else if (
@@ -71,7 +72,8 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
                 textModel.isSelected = true;
             }
 
-            addLink(textModel, context.link);
+            addDecorators(textModel, context);
+
             addSegment(group, textModel, context.blockFormat);
         }
     }

@@ -8,6 +8,7 @@ import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
 import { changeImageButton } from './changeImageButton';
 import { clearFormatButton } from './clearFormatButton';
+import { codeButton } from './codeButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
@@ -35,6 +36,8 @@ import { setHeaderLevelButton } from './setHeaderLevelButton';
 import { setNumberedListStyleButton } from './setNumberedListStyleButton';
 import { setTableCellShadeButton } from './setTableCellShadeButton';
 import { setTableHeaderButton } from './setTableHeaderButton';
+import { spaceAfterButton, spaceBeforeButton } from './spaceBeforeAfterButtons';
+import { spacingButton } from './spacingButton';
 import { strikethroughButton } from './strikethroughButton';
 import { subscriptButton } from './subscriptButton';
 import { superscriptButton } from './superscriptButton';
@@ -48,8 +51,6 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from './tableEditButtons';
-import { spacingButton } from './spacingButton';
-import { spaceAfterButton, spaceBeforeButton } from './spaceBeforeAfterButtons';
 
 const buttons = [
     formatPainterButton,
@@ -78,6 +79,7 @@ const buttons = [
     subscriptButton,
     strikethroughButton,
     setHeaderLevelButton,
+    codeButton,
     ltrButton,
     rtlButton,
     clearFormatButton,

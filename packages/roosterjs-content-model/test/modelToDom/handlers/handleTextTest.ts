@@ -50,6 +50,23 @@ describe('handleSegment', () => {
         expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
     });
 
+    it('Text segment with code', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+            code: {
+                format: {
+                    fontFamily: 'monospace',
+                },
+            },
+        };
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<span><code>test</code></span>');
+    });
+
     it('call stackFormat', () => {
         const text: ContentModelText = {
             segmentType: 'Text',

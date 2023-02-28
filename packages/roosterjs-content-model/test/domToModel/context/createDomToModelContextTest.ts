@@ -39,6 +39,9 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            code: {
+                format: {},
+            },
             ...contextOptions,
         });
     });
@@ -61,6 +64,9 @@ describe('createDomToModelContext', () => {
             link: {
                 format: {},
                 dataset: {},
+            },
+            code: {
+                format: {},
             },
             ...contextOptions,
         });
@@ -102,6 +108,9 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            code: {
+                format: {},
+            },
             selectionRootNode: mockNode,
             ...contextOptions,
         });
@@ -138,6 +147,9 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            code: {
+                format: {},
+            },
             selectionRootNode: mockTable,
             ...contextOptions,
         });
@@ -162,6 +174,9 @@ describe('createDomToModelContext', () => {
             link: {
                 format: {},
                 dataset: {},
+            },
+            code: {
+                format: {},
             },
             isInSelection: false,
             imageSelection: {
@@ -202,6 +217,9 @@ describe('createDomToModelContext', () => {
                 format: {},
                 dataset: {},
             },
+            code: {
+                format: {},
+            },
             ...contextOptions,
         });
     });
@@ -235,6 +253,9 @@ describe('createDomToModelContext', () => {
             link: {
                 format: {},
                 dataset: {},
+            },
+            code: {
+                format: {},
             },
             listFormat,
             ...contextOptions,
