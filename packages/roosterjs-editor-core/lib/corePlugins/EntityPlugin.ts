@@ -158,7 +158,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
 
         if (this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
-            inlineEntityOnPluginEvent(event);
+            inlineEntityOnPluginEvent(event, this.editor);
         }
     }
 
