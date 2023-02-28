@@ -403,6 +403,29 @@ describe('textProcessor', () => {
         });
     });
 
+    it('Handle text with code format', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+
+        context.code = { format: { fontFamily: 'monospace' } };
+
+        textProcessor(doc, text, context);
+
+        expect(doc.blocks[0]).toEqual({
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {},
+                    code: { format: { fontFamily: 'monospace' } },
+                },
+            ],
+            isImplicit: true,
+            format: {},
+        });
+    });
+
     it('Empty text', () => {
         const doc = createContentModelDocument();
         const text = document.createTextNode('');

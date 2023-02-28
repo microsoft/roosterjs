@@ -32,6 +32,9 @@ export function createDomToModelContext(
             format: {},
             dataset: {},
         },
+        code: {
+            format: {},
+        },
 
         elementProcessors: {
             ...defaultProcessorMap,

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
@@ -56,7 +57,8 @@ export function ContentModelImageView(props: { image: ContentModelImage }) {
                     />
                     Image selection
                 </div>
-                {image.link ? <ContentModelLinkView link={image.link} /> : null}
+                {image.link ? <ContentModelLinkView link={image.link} /> : null}{' '}
+                {image.code ? <ContentModelCodeView code={image.code} /> : null}
             </>
         );
     }, [src, imageSelected, image.link]);

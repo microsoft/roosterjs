@@ -27,7 +27,6 @@ export const defaultStyleMap: DefaultStyleMap = {
         display: 'block',
         textAlign: 'center',
     },
-    code: { fontFamily: 'monospace' },
     dd: blockElement,
     div: blockElement,
     dl: blockElement,
@@ -135,6 +134,9 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
         marginBottom: '1em',
         marginLeft: '40px',
         marginRight: '40px',
+    },
+    code: {
+        fontFamily: 'monospace',
     },
     h1: {
         fontWeight: 'bold',

@@ -1,20 +1,14 @@
-import setFontName from '../../../lib/publicApi/segment/setFontName';
+import toggleCode from '../../../lib/publicApi/segment/toggleCode';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { segmentTestCommon } from './segmentTestCommon';
 
-describe('setFontName', () => {
+describe('toggleCode', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number
     ) {
-        segmentTestCommon(
-            'setFontName',
-            editor => setFontName(editor, 'Arial'),
-            model,
-            result,
-            calledTimes
-        );
+        segmentTestCommon('toggleCode', toggleCode, model, result, calledTimes);
     }
 
     it('empty content', () => {
@@ -106,10 +100,13 @@ describe('setFontName', () => {
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                         ],
                     },
@@ -148,10 +145,13 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                         ],
                     },
@@ -161,7 +161,7 @@ describe('setFontName', () => {
         );
     });
 
-    it('With selection', () => {
+    it('With selection, turn off code', () => {
         runTest(
             {
                 blockGroupType: 'Document',
@@ -173,8 +173,13 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: { fontFamily: 'Tahoma' },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                         ],
                     },
@@ -190,9 +195,7 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
+                                format: {},
                                 isSelected: true,
                             },
                         ],
@@ -215,8 +218,13 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: { fontFamily: 'Tahoma' },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                             {
                                 segmentType: 'Text',
@@ -238,18 +246,24 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                         ],
                     },
@@ -299,8 +313,13 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: { fontFamily: 'Arial' },
+                                format: {},
                                 isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
                             },
                             {
                                 segmentType: 'Text',
@@ -310,58 +329,11 @@ describe('setFontName', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: { fontFamily: 'Arial' },
-                                isSelected: true,
-                            },
-                        ],
-                    },
-                ],
-            },
-            1
-        );
-    });
-
-    it('With code', () => {
-        runTest(
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
-                                format: { fontFamily: 'Tahoma' },
+                                format: {},
                                 isSelected: true,
                                 code: {
                                     format: {
                                         fontFamily: 'monospace',
-                                    },
-                                },
-                            },
-                        ],
-                    },
-                ],
-            },
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'test',
-                                format: {
-                                    fontFamily: 'Arial',
-                                },
-                                isSelected: true,
-                                code: {
-                                    format: {
-                                        fontFamily: 'Arial',
                                     },
                                 },
                             },
