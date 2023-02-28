@@ -1,6 +1,12 @@
 import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
-import { Entity, IEditor, Keys, PluginKeyDownEvent } from 'roosterjs-editor-types';
 import { EntityFeatures } from '../../../lib/plugins/ContentEdit/features/entityFeatures';
+import {
+    Entity,
+    ExperimentalFeatures,
+    IEditor,
+    Keys,
+    PluginKeyDownEvent,
+} from 'roosterjs-editor-types';
 import {
     addDelimiters,
     commitEntity,
@@ -46,7 +52,9 @@ describe('Content Edit Features |', () => {
         editor = <IEditor>(<any>{
             getDocument: () => document,
             getElementAtCursor: (selector: string, node: Node) =>
-                findClosestElementAncestor(node, document.body, selector),
+                selector && node
+                    ? findClosestElementAncestor(node, document.body, selector)
+                    : testContainer,
             addContentEditFeature: () => {},
             queryElements: (selector: string) => {
                 return document.querySelectorAll(selector);
@@ -60,6 +68,9 @@ describe('Content Edit Features |', () => {
                     collapsed: true,
                 },
             select,
+            isFeatureEnabled: (feature: ExperimentalFeatures) => {
+                return feature === ExperimentalFeatures.InlineEntityReadOnlyDelimiters;
+            },
         });
 
         ({ entity, delimiterAfter, delimiterBefore } = addEntityBeforeEach(entity, wrapper));
