@@ -1,3 +1,4 @@
+import { ContentModelCode } from '../decorator/ContentModelCode';
 import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelSegmentType } from '../enum/SegmentType';
@@ -20,4 +21,9 @@ export interface ContentModelSegmentBase<
      * Hyperlink info
      */
     link?: ContentModelLink;
+
+    /**
+     * Code info
+     */
+    code?: ContentModelCode;
 }

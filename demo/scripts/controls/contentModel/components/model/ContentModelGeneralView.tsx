@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { BlockGroupContentView } from './BlockGroupContentView';
+import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
@@ -15,10 +16,12 @@ export function ContentModelGeneralView(props: { model: ContentModelGeneralBlock
     const { model } = props;
     const segment = isGeneralSegment(model) ? model : undefined;
     const link = segment?.link;
+    const code = segment?.code;
     const getContent = React.useCallback(() => {
         return (
             <>
                 {link ? <ContentModelLinkView link={link} /> : null}
+                {code ? <ContentModelCodeView code={code} /> : null}
                 <BlockGroupContentView group={model} />
             </>
         );

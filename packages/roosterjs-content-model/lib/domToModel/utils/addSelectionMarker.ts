@@ -1,4 +1,4 @@
-import { addLink } from '../../modelApi/common/addLink';
+import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
@@ -10,6 +10,7 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 export function addSelectionMarker(group: ContentModelBlockGroup, context: DomToModelContext) {
     const marker = createSelectionMarker(context.segmentFormat);
 
-    addLink(marker, context.link);
+    addDecorators(marker, context);
+
     addSegment(group, marker, context.blockFormat);
 }

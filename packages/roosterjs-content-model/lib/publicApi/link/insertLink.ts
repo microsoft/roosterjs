@@ -1,4 +1,4 @@
-import { addLink } from '../../modelApi/common/addLink';
+import { addLink } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';

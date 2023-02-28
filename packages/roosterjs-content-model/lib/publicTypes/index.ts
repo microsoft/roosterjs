@@ -26,6 +26,8 @@ export { ContentModelDivider } from './block/ContentModelDivider';
 
 export { ContentModelParagraphDecorator } from './decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './decorator/ContentModelLink';
+export { ContentModelCode } from './decorator/ContentModelCode';
+export { ContentModelDecorator } from './decorator/ContentModelDecorator';
 
 export { FormatHandlerTypeMap, FormatKey } from './format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
@@ -79,7 +81,11 @@ export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
 export { ContentModelFormatMap } from './format/ContentModelFormatMap';
 
 export { EditorContext } from './context/EditorContext';
-export { DomToModelListFormat, DomToModelFormatContext } from './context/DomToModelFormatContext';
+export {
+    DomToModelListFormat,
+    DomToModelFormatContext,
+    DomToModelSegmentDecoratorContext,
+} from './context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,
     DomToModelTableSelection,

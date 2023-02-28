@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { addLink } from '../../modelApi/common/addLink';
+import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
@@ -31,7 +31,7 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
         segment.isSelected = true;
     }
 
-    addLink(segment, context.link);
+    addDecorators(segment, context);
     addSegment(group, segment);
 
     stackFormat(

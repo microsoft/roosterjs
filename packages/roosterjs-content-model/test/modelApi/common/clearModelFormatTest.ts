@@ -155,6 +155,49 @@ describe('clearModelFormat', () => {
         expect(tables).toEqual([]);
     });
 
+    it('Model with code', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false);
+        const text1 = createText('test1');
+
+        text1.code = {
+            format: {
+                fontFamily: 'monospace',
+            },
+        };
+        text1.isSelected = true;
+
+        para.segments.push(text1);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([text1]);
+        expect(tables).toEqual([]);
+    });
+
     it('Model with text selection in whole paragraph', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });
