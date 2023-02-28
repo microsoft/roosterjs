@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -79,10 +79,32 @@
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
 <a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L23'></a><a href='#L23'>23</a>
+<a name='L24'></a><a href='#L24'>24</a>
+<a name='L25'></a><a href='#L25'>25</a>
+<a name='L26'></a><a href='#L26'>26</a>
+<a name='L27'></a><a href='#L27'>27</a>
+<a name='L28'></a><a href='#L28'>28</a>
+<a name='L29'></a><a href='#L29'>29</a>
+<a name='L30'></a><a href='#L30'>30</a>
+<a name='L31'></a><a href='#L31'>31</a>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a>
+<a name='L37'></a><a href='#L37'>37</a>
+<a name='L38'></a><a href='#L38'>38</a>
+<a name='L39'></a><a href='#L39'>39</a>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -93,6 +115,14 @@
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -100,11 +130,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
+import { getMetadata, readFile } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { readFile } from 'roosterjs-editor-dom';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * Change the selected image src
@@ -112,17 +155,37 @@ import { readFile } from 'roosterjs-editor-dom';
  * @param file The image file
  */
 export default function changeImage(editor: IContentModelEditor, file: File) {
+    const selection = editor.getSelectionRangeEx();
     readFile(file, dataUrl =&gt; {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (dataUrl &amp;&amp; !editor.isDisposed()) {
-            formatImageWithContentModel(editor, 'changeImage', (image: ContentModelImage) =&gt; {
-                image.src = dataUrl;
-                image.dataset = {};
-                image.format.width = '';
-                image.format.height = '';
-            });
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (
+            dataUrl &amp;&amp;
+            !editor.isDisposed() &amp;&amp;
+            selection.type === SelectionRangeTypes.ImageSelection
+        ) {
+            formatImageWithContentModel(
+                editor,
+                'changeImage',
+                (image: ContentModelImage) =&gt; {
+                    image.src = dataUrl;
+                    image.dataset = {};
+                    image.format.width = '';
+                    image.format.height = '';
+                },
+                {
+                    image: selection.image,
+                    previousSrc: selection.image.src,
+                    newSrc: dataUrl,
+                    originalSrc: getImageSrc(selection.image),
+                }
+            );
         }
     });
 }
+&nbsp;
+const getImageSrc = (image: HTMLImageElement) =&gt; {
+    const obj = getMetadata&lt;{ src: string }&gt;(image);
+    return (obj &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >obj.src)</span> || '';
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -130,7 +193,7 @@ export default function changeImage(editor: IContentModelEditor, file: File) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Feb 28 2023 14:36:40 GMT+0000 (Coordinated Universal Time)
+                at Tue Feb 28 2023 20:34:14 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
