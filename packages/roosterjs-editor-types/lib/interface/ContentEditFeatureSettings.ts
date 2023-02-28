@@ -66,7 +66,7 @@ export interface EntityFeatureSettings {
     /**
      * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
      */
-    MoveBetweenDelimitersFeature: boolean;
+    moveBetweenDelimitersFeature: boolean;
 
     /**
      * Content edit Feature to trigger a Delete Entity Operation when one of the Delimiter is about to be removed with DELETE or Backspace

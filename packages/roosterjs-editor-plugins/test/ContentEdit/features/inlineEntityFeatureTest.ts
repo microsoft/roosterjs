@@ -9,7 +9,7 @@ import {
 } from 'roosterjs-editor-dom';
 
 describe('Content Edit Features |', () => {
-    const { MoveBetweenDelimitersFeature, removeEntityBetweenDelimiters } = EntityFeatures;
+    const { moveBetweenDelimitersFeature, removeEntityBetweenDelimiters } = EntityFeatures;
     let entity: Entity;
     let delimiterAfter: Element | null;
     let delimiterBefore: Element | null;
@@ -73,7 +73,7 @@ describe('Content Edit Features |', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
 
-            const result = MoveBetweenDelimitersFeature.shouldHandleEvent(
+            const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
                 editor,
                 false /* ctrlOrMeta */
@@ -88,7 +88,7 @@ describe('Content Edit Features |', () => {
 
                 spyOnSelection();
 
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(select).toHaveBeenCalledWith(new Position(testContainer, 0));
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -110,7 +110,7 @@ describe('Content Edit Features |', () => {
 
                 spyOnSelection();
 
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(extendSpy).toHaveBeenCalledWith(testContainer, 0);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -157,7 +157,7 @@ describe('Content Edit Features |', () => {
 
                 spyOnSelection();
 
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(extendSpy).toHaveBeenCalledWith(testContainer, 0);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -172,7 +172,7 @@ describe('Content Edit Features |', () => {
             });
 
             it('Handle Event without cache', () => {
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
                 expect(extendSpy).toHaveBeenCalledTimes(0);
@@ -219,7 +219,7 @@ describe('Content Edit Features |', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
 
-            const result = MoveBetweenDelimitersFeature.shouldHandleEvent(
+            const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
                 editor,
                 false /* ctrlOrMeta */
@@ -238,7 +238,7 @@ describe('Content Edit Features |', () => {
                 event = runTest(delimiterBefore, true /* expected */, event);
 
                 spyOnSelection();
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -259,7 +259,7 @@ describe('Content Edit Features |', () => {
 
                 spyOnSelection();
 
-                MoveBetweenDelimitersFeature.handleEvent(event, editor);
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
 
                 expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
@@ -296,7 +296,7 @@ describe('Content Edit Features |', () => {
             });
 
             it('Handle Event without cache', () => {
-                MoveBetweenDelimitersFeature.handleEvent(defaultEvent, editor);
+                moveBetweenDelimitersFeature.handleEvent(defaultEvent, editor);
 
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
                 expect(extendSpy).toHaveBeenCalledTimes(0);

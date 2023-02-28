@@ -206,21 +206,8 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
         const element = editor.getElementAtCursor();
         const isRTL = getComputedStyle(element, 'direction') === 'rtl';
-        let shouldCheckBefore: boolean;
-        if (event.rawEvent.which === Keys.RIGHT) {
-            if (isRTL) {
-                shouldCheckBefore = false;
-            } else {
-                shouldCheckBefore = true;
-            }
-        }
-        if (event.rawEvent.which === Keys.LEFT) {
-            if (isRTL) {
-                shouldCheckBefore = true;
-            } else {
-                shouldCheckBefore = false;
-            }
-        }
+        const shouldCheckBefore = isRTL == (event.rawEvent.which === Keys.LEFT);
+
         return getIsDelimiterAtCursor(event, editor, shouldCheckBefore);
     },
     handleEvent(event: PluginKeyboardEvent, editor: IEditor) {
@@ -431,6 +418,6 @@ export const EntityFeatures: Record<
     enterBeforeReadonlyEntity: EnterBeforeReadonlyEntityFeature,
     backspaceAfterEntity: BackspaceAfterEntityFeature,
     deleteBeforeEntity: DeleteBeforeEntityFeature,
-    MoveBetweenDelimitersFeature: MoveBetweenDelimitersFeature,
+    moveBetweenDelimitersFeature: MoveBetweenDelimitersFeature,
     removeEntityBetweenDelimiters: RemoveEntityBetweenDelimitersFeature,
 };
