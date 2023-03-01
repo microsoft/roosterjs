@@ -133,7 +133,7 @@ export interface DomToModelSettings {
     defaultFormatParsers: Readonly<FormatParsers>;
 
     /**
-     *
+     * Map to determine if the current Element type should be skipped when transforming DOM to Content Model
      */
     shouldSkipProcessElement?: Readonly<Partial<ShouldSkipProcessElementMap>>;
 }
