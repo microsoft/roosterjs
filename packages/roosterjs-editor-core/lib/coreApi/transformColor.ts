@@ -1,4 +1,4 @@
-import { arrayPush, getTagOfNode, safeInstanceOf, setColor, toArray } from 'roosterjs-editor-dom';
+import { arrayPush, safeInstanceOf, setColor, toArray } from 'roosterjs-editor-dom';
 import {
     ColorTransformDirection,
     DarkColorHandler,
@@ -49,7 +49,10 @@ export const transformColor: TransformColor = (
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean
 ) => {
-    const { darkColorHandler } = core;
+    const {
+        darkColorHandler,
+        lifecycle: { isDarkMode },
+    } = core;
     const elements =
         rootNode && (forceTransform || core.lifecycle.isDarkMode)
             ? getAll(rootNode, includeSelf)
@@ -58,7 +61,12 @@ export const transformColor: TransformColor = (
     callback?.();
 
     if (darkColorHandler) {
-        transformV2(elements, darkColorHandler, direction == ColorTransformDirection.LightToDark);
+        transformV2(
+            elements,
+            darkColorHandler,
+            direction == ColorTransformDirection.LightToDark,
+            isDarkMode
+        );
     } else {
         if (direction == ColorTransformDirection.DarkToLight) {
             transformToLightMode(elements);
@@ -70,15 +78,22 @@ export const transformColor: TransformColor = (
     }
 };
 
-function transformV2(elements: HTMLElement[], darkColorHandler: DarkColorHandler, toDark: boolean) {
+function transformV2(
+    elements: HTMLElement[],
+    darkColorHandler: DarkColorHandler,
+    toDark: boolean,
+    isInDarkMode: boolean
+) {
     elements.forEach(element => {
         ColorAttributeName.forEach((names, i) => {
-            const color =
-                tryFetchAndClearFontColor(element, toDark, darkColorHandler, names) ||
-                darkColorHandler.parseColorValue(
-                    element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
-                        element.getAttribute(names[ColorAttributeEnum.HtmlColor])
-                ).lightModeColor;
+            const color = darkColorHandler.parseColorValue(
+                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
+                    element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
+                isInDarkMode
+            ).lightModeColor;
+
+            element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
+            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
 
             if (color && color != 'inherit') {
                 setColor(
@@ -201,36 +216,4 @@ function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
 function isHTMLElement(element: Element): element is HTMLElement {
     const htmlElement = <HTMLElement>element;
     return !!htmlElement.style && !!htmlElement.dataset;
-}
-
-/**
- * There is a known issue that when input with IME in Chrome, it is possible Chrome insert a new FONT tag with colors.
- * If editor is in dark mode, this color will cause the FONT tag doesn't have light mode color info so that after convert
- * to light mode the color will be wrong.
- * To workaround it, we check if this is a known color (for light mode with VariableBasedDarkColor enabled, all used colors
- * are stored in darkColorHandler), then use the related light mode color instead.
- */
-function tryFetchAndClearFontColor(
-    element: HTMLElement,
-    toDark: boolean,
-    darkColorHandler: DarkColorHandler,
-    names: { [key in ColorAttributeEnum]: string }
-) {
-    let darkColor: string | null;
-
-    if (
-        getTagOfNode(element) == 'FONT' &&
-        !element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) &&
-        !toDark &&
-        (darkColor = element.getAttribute(names[ColorAttributeEnum.HtmlColor]))
-    ) {
-        const lightColor = darkColorHandler.findLightColorFromDarkColor(darkColor);
-
-        if (lightColor) {
-            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-            return lightColor;
-        }
-    }
-
-    return null;
 }
