@@ -17,7 +17,7 @@ describe('AutoHyphen |', () => {
 
     const keyDown = (keysTyped: string): PluginEvent => {
         return {
-            eventType: PluginEventType.KeyDown,
+            eventType: PluginEventType.KeyPress,
             rawEvent: <KeyboardEvent>{
                 key: keysTyped,
             },
