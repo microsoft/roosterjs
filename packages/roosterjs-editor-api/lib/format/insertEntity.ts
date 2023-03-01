@@ -118,6 +118,9 @@ export default function insertEntity(
         editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
     ) {
         addDelimiters(entity.wrapper);
+        if (entity.wrapper.nextElementSibling) {
+            editor.select(new Position(entity.wrapper.nextElementSibling, PositionType.After));
+        }
     }
 
     editor.triggerContentChangedEvent(ChangeSource.InsertEntity, entity);
