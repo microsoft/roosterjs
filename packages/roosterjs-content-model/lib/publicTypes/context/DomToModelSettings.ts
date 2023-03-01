@@ -3,6 +3,7 @@ import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { DomToModelContext } from './DomToModelContext';
 import { ElementProcessor } from './ElementProcessor';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
+import { ShouldSkipProcessElement } from './ShouldProcessElement';
 
 /**
  * A type of Default style map, from tag name string (in upper case) to a static style object
@@ -93,6 +94,13 @@ export type ElementProcessorMap = {
         center?: ElementProcessor<HTMLElement>;
     };
 
+export type ShouldSkipProcessElementMap = {
+    /**
+     * Common processor for child nodes of a given element
+     */
+    child: ShouldSkipProcessElement<ParentNode>;
+};
+
 /**
  * Represents settings to customize DOM to Content Model conversion
  */
@@ -123,4 +131,9 @@ export interface DomToModelSettings {
      * This provides a way to call original format parser from an overridden parser function
      */
     defaultFormatParsers: Readonly<FormatParsers>;
+
+    /**
+     *
+     */
+    shouldSkipProcessElement?: Readonly<Partial<ShouldSkipProcessElementMap>>;
 }

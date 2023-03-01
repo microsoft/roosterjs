@@ -21,6 +21,7 @@ export function createModelToDomContext(
         ...(editorContext || {
             isDarkMode: false,
             getDarkColor: undefined,
+            experimentalFeatures: [],
         }),
         regularSelection: {
             current: {

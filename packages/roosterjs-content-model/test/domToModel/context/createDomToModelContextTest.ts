@@ -13,6 +13,7 @@ describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
         getDarkColor: undefined,
+        experimentalFeatures: [],
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -24,6 +25,7 @@ describe('createDomToModelContext', () => {
         formatParsers: getFormatParsers(),
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
+        shouldSkipProcessElement: {},
     };
     it('no param', () => {
         const context = createDomToModelContext();
@@ -50,6 +52,7 @@ describe('createDomToModelContext', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
             getDarkColor: () => '',
+            experimentalFeatures: [],
         };
 
         const context = createDomToModelContext(editorContext);
@@ -195,6 +198,7 @@ describe('createDomToModelContext', () => {
             {
                 isDarkMode: true,
                 getDarkColor,
+                experimentalFeatures: [],
             },
             {
                 selectionRange: {
@@ -209,6 +213,7 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
+            experimentalFeatures: [],
             blockFormat: {},
             zoomScaleFormat: {},
             segmentFormat: {},
@@ -231,6 +236,7 @@ describe('createDomToModelContext', () => {
             {
                 isDarkMode: true,
                 getDarkColor,
+                experimentalFeatures: [],
             },
             {
                 selectionRange: {
@@ -246,6 +252,7 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             isDarkMode: true,
             getDarkColor: getDarkColor,
+            experimentalFeatures: [],
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},

@@ -12,6 +12,7 @@ describe('createModelToDomContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
         getDarkColor: undefined,
+        experimentalFeatures: [],
     };
     const defaultResult: ModelToDomContext = {
         ...editorContext,
@@ -43,6 +44,7 @@ describe('createModelToDomContext', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
             getDarkColor: () => '',
+            experimentalFeatures: [],
         };
 
         const context = createModelToDomContext(editorContext);

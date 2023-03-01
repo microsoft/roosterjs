@@ -17,6 +17,7 @@ export function createDomToModelContext(
         ...(editorContext || {
             isDarkMode: false,
             getDarkColor: undefined,
+            experimentalFeatures: [],
         }),
 
         blockFormat: {},
@@ -53,6 +54,10 @@ export function createDomToModelContext(
 
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
+
+        shouldSkipProcessElement: {
+            ...(options?.shouldSkipProcessElement || {}),
+        },
     };
 
     if (options?.alwaysNormalizeTable) {
