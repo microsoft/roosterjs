@@ -1,5 +1,4 @@
-import { DarkColorHandler, ExperimentalFeatures } from 'roosterjs-editor-types';
-import type { CompatibleExperimentalFeatures } from 'roosterjs-editor-types/lib/compatibleTypes';
+import { DarkColorHandler } from 'roosterjs-editor-types';
 
 /**
  * An editor context interface used by ContentModel PAI
@@ -21,10 +20,4 @@ export interface EditorContext {
      * Dark model color handler
      */
     darkColorHandler?: DarkColorHandler | null;
-
-    /**
-     * Check if the given experimental feature is enabled in the editor
-     * @param feature The feature to check
-     */
-    experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 }

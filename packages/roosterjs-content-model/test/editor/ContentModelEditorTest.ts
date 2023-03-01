@@ -11,9 +11,7 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
 
         const mockedResult = 'Result' as any;
-        const mockedShouldHandle = 'Result' as any;
 
-        spyOn(editor as any, 'createShouldHandleElement').and.returnValue(mockedShouldHandle);
         spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
 
         const model = editor.createContentModel();
@@ -26,7 +24,6 @@ describe('ContentModelEditor', () => {
                 isDarkMode: false,
                 getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
-                experimentalFeatures: (editor as any).core.lifecycle.experimentalFeatures,
             },
             {
                 selectionRange: {
@@ -35,7 +32,6 @@ describe('ContentModelEditor', () => {
                     ranges: [],
                 },
                 alwaysNormalizeTable: true,
-                shouldSkipProcessElement: mockedShouldHandle,
             }
         );
     });
@@ -66,7 +62,6 @@ describe('ContentModelEditor', () => {
                 isDarkMode: false,
                 getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
-                experimentalFeatures: (editor as any).core.lifecycle.experimentalFeatures,
             },
             undefined
         );
@@ -104,7 +99,6 @@ describe('ContentModelEditor', () => {
                 isDarkMode: false,
                 getDarkColor: (editor as any).core.lifecycle.getDarkColor,
                 darkColorHandler: null,
-                experimentalFeatures: (editor as any).core.lifecycle.experimentalFeatures,
             },
             undefined
         );

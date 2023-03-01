@@ -17,10 +17,6 @@ export const childProcessor: ElementProcessor<ParentNode> = (
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, parent);
     let index = 0;
 
-    if (context.shouldSkipProcessElement?.child?.(parent, context)) {
-        return;
-    }
-
     for (let child = parent.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
 

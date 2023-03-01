@@ -1,20 +1,16 @@
 import contentModelToDom from '../modelToDom/contentModelToDom';
 import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
-import { DelimiterClasses, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { DomToModelContext } from '../publicTypes/context/DomToModelContext';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { Position, restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
-import { ShouldSkipProcessElementMap } from '../publicTypes/context/DomToModelSettings';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+
 import {
     DomToModelOption,
     IContentModelEditor,
     ModelToDomOption,
 } from '../publicTypes/IContentModelEditor';
-
-const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
  * Editor for Content Model.
@@ -32,15 +28,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             selectionRange: this.getSelectionRangeEx(),
             alwaysNormalizeTable: true,
             ...(option || {}),
-            shouldSkipProcessElement: this.createShouldHandleElement(),
         });
-    }
-
-    private createShouldHandleElement(): Partial<ShouldSkipProcessElementMap> | undefined {
-        return {
-            child: (element: ParentNode, context: DomToModelContext): boolean =>
-                !!isDelimiter(element, context),
-        };
     }
 
     /**
@@ -80,16 +68,6 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             isDarkMode: this.isDarkMode(),
             getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
-            experimentalFeatures: core.lifecycle.experimentalFeatures,
         };
     }
-}
-
-function isDelimiter(element: Node, context: DomToModelContext) {
-    return (
-        safeInstanceOf(element, 'HTMLSpanElement') &&
-        (element.className === DelimiterClasses.DELIMITER_AFTER ||
-            element.className === DelimiterClasses.DELIMITER_BEFORE) &&
-        element.textContent === ZERO_WIDTH_SPACE
-    );
 }
