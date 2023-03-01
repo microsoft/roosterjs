@@ -17,7 +17,7 @@ export function createDomToModelContext(
         ...(editorContext || {
             isDarkMode: false,
             getDarkColor: undefined,
-            isFeatureEnabled: undefined,
+            experimentalFeatures: [],
         }),
 
         blockFormat: {},

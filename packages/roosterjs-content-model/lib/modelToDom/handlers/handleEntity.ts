@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { Entity, ExperimentalFeatures } from 'roosterjs-editor-types';
+import { Entity } from 'roosterjs-editor-types';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import {
     addDelimiters,
@@ -67,11 +67,7 @@ function addDelimiterElements(
     isReadonly: boolean,
     context: ModelToDomContext
 ) {
-    if (
-        context.isFeatureEnabled?.(ExperimentalFeatures.InlineEntityReadOnlyDelimiters) &&
-        !isBlockElement(wrapper) &&
-        isReadonly
-    ) {
+    if (!isBlockElement(wrapper) && isReadonly) {
         addDelimiters(wrapper);
     }
 }

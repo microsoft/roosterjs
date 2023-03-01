@@ -26,5 +26,5 @@ export interface EditorContext {
      * Check if the given experimental feature is enabled in the editor
      * @param feature The feature to check
      */
-    isFeatureEnabled?: (feature: ExperimentalFeatures | CompatibleExperimentalFeatures) => boolean;
+    experimentalFeatures: (ExperimentalFeatures | CompatibleExperimentalFeatures)[];
 }

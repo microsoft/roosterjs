@@ -26,7 +26,7 @@ describe('domToContentModel', () => {
         const options = {
             includeRoot: false,
         };
-        const editorContext: EditorContext = { isDarkMode: false, isFeatureEnabled: undefined };
+        const editorContext: EditorContext = { isDarkMode: false, experimentalFeatures: [] };
         const model = domToContentModel(rootElement, editorContext, options);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -66,7 +66,7 @@ describe('domToContentModel', () => {
         const options = {
             includeRoot: true,
         };
-        const editorContext: EditorContext = { isDarkMode: false, isFeatureEnabled: undefined };
+        const editorContext: EditorContext = { isDarkMode: false, experimentalFeatures: [] };
         const model = domToContentModel(rootElement, editorContext, options);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
