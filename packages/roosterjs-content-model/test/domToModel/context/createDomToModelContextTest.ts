@@ -13,7 +13,7 @@ describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
         getDarkColor: undefined,
-        experimentalFeatures: [],
+        isFeatureEnabled: undefined,
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -52,7 +52,7 @@ describe('createDomToModelContext', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
             getDarkColor: () => '',
-            experimentalFeatures: [],
+            isFeatureEnabled: undefined,
         };
 
         const context = createDomToModelContext(editorContext);
@@ -193,12 +193,13 @@ describe('createDomToModelContext', () => {
 
     it('with base parameters and wrong selection 1', () => {
         const getDarkColor = () => '';
+        const isFeatureEnabled = () => true;
 
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
                 getDarkColor,
-                experimentalFeatures: [],
+                isFeatureEnabled,
             },
             {
                 selectionRange: {
@@ -213,7 +214,7 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             getDarkColor: getDarkColor,
             isInSelection: false,
-            experimentalFeatures: [],
+            isFeatureEnabled,
             blockFormat: {},
             zoomScaleFormat: {},
             segmentFormat: {},
@@ -231,12 +232,13 @@ describe('createDomToModelContext', () => {
 
     it('with base parameters and wrong selection 2', () => {
         const getDarkColor = () => '';
+        const isFeatureEnabled = () => true;
 
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
                 getDarkColor,
-                experimentalFeatures: [],
+                isFeatureEnabled,
             },
             {
                 selectionRange: {
@@ -252,7 +254,7 @@ describe('createDomToModelContext', () => {
         expect(context).toEqual({
             isDarkMode: true,
             getDarkColor: getDarkColor,
-            experimentalFeatures: [],
+            isFeatureEnabled,
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},

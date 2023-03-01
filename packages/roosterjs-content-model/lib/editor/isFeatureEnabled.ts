@@ -5,5 +5,5 @@ import { ExperimentalFeatures } from 'roosterjs-editor-types/lib';
  * @internal
  */
 export default function isFeatureEnabled(context: EditorContext, feature: ExperimentalFeatures) {
-    return context.experimentalFeatures.indexOf(feature) >= 0;
+    return context.isFeatureEnabled(feature);
 }

@@ -1,7 +1,6 @@
 import * as addDelimiters from 'roosterjs-editor-dom/lib/delimiter/addDelimiters';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { handleEntity } from '../../../lib/modelToDom/handlers/handleEntity';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
@@ -26,7 +25,7 @@ describe('handleEntity', () => {
         };
 
         const parent = document.createElement('div');
-
+        context.isFeatureEnabled = () => false;
         handleEntity(document, parent, entityModel, context);
 
         expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');
@@ -74,7 +73,7 @@ describe('handleEntity', () => {
         };
 
         const parent = document.createElement('div');
-        context.experimentalFeatures = [ExperimentalFeatures.InlineEntityReadOnlyDelimiters];
+        context.isFeatureEnabled = () => true;
         handleEntity(document, parent, entityModel, context);
 
         expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');

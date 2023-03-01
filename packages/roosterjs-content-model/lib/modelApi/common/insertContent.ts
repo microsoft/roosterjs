@@ -21,7 +21,7 @@ export function insertContent(
             htmlContent,
             {
                 isDarkMode: !!isFromDarkMode,
-                experimentalFeatures: [],
+                isFeatureEnabled: () => false,
             },
             {
                 includeRoot: true,

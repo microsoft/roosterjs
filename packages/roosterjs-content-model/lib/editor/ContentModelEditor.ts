@@ -80,7 +80,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             isDarkMode: this.isDarkMode(),
             getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
-            experimentalFeatures: core.lifecycle.experimentalFeatures,
+            isFeatureEnabled: this.isFeatureEnabled.bind(this),
         };
     }
 }
