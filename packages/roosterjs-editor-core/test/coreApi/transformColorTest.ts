@@ -356,7 +356,6 @@ describe('transform to light mode v2', () => {
         expectedRegisterColorCalls: [string, boolean, string][]
     ) {
         const core = createEditorCore(div, {
-            inDarkMode: true,
             getDarkColor,
         });
         const parseColorValue = jasmine
@@ -370,7 +369,15 @@ describe('transform to light mode v2', () => {
 
         core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
 
-        transformColor(core, element, true, null, ColorTransformDirection.DarkToLight);
+        transformColor(
+            core,
+            element,
+            true /*includeSelf*/,
+            null /*callback*/,
+            ColorTransformDirection.DarkToLight,
+            true /*forceTransform*/,
+            true /*fromDark*/
+        );
 
         expect(element.outerHTML).toBe(expectedHtml);
         expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
