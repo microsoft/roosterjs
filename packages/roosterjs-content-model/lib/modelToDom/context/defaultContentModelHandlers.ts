@@ -1,6 +1,5 @@
 import { ContentModelHandlerMap } from '../../publicTypes/context/ModelToDomSettings';
 import { handleBlock } from '../handlers/handleBlock';
-import { handleBlockGroup } from '../handlers/handleBlockGroup';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
 import { handleDivider } from '../handlers/handleDivider';
@@ -21,7 +20,6 @@ import { handleText } from '../handlers/handleText';
  */
 export const defaultContentModelHandlers: ContentModelHandlerMap = {
     block: handleBlock,
-    blockGroup: handleBlockGroup,
     blockGroupChildren: handleBlockGroupChildren,
     br: handleBr,
     entity: handleEntity,

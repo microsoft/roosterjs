@@ -99,4 +99,10 @@ export interface IContentModelEditor extends IEditor {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+
+    /**
+     * Cache a content model object. Next time when format with content model, we can reuse it.
+     * @param model
+     */
+    cacheContentModel(model: ContentModelDocument | null): void;
 }

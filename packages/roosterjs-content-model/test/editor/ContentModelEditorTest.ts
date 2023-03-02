@@ -1,9 +1,13 @@
 import * as contentModelToDom from '../../lib/modelToDom/contentModelToDom';
 import * as domToContentModel from '../../lib/domToModel/domToContentModel';
-import * as entityPlaceholderUtils from 'roosterjs-editor-dom/lib/entity/entityPlaceholderUtils';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
-import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    EditorPlugin,
+    ExperimentalFeatures,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 describe('ContentModelEditor', () => {
     it('domToContentModel', () => {
@@ -50,13 +54,13 @@ describe('ContentModelEditor', () => {
         const mockedModel = 'MockedModel' as any;
 
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
-        spyOn(entityPlaceholderUtils, 'restoreContentWithEntityPlaceholder');
 
         editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.default).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.default).toHaveBeenCalledWith(
             document,
+            div,
             mockedModel,
             {
                 isDarkMode: false,
@@ -64,12 +68,6 @@ describe('ContentModelEditor', () => {
                 darkColorHandler: null,
             },
             undefined
-        );
-        expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledTimes(1);
-        expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledWith(
-            mockedFragment,
-            div,
-            mockedPairs
         );
     });
 
@@ -87,13 +85,13 @@ describe('ContentModelEditor', () => {
         const mockedModel = 'MockedModel' as any;
 
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
-        spyOn(entityPlaceholderUtils, 'restoreContentWithEntityPlaceholder');
 
         editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.default).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.default).toHaveBeenCalledWith(
             document,
+            div,
             mockedModel,
             {
                 isDarkMode: false,
@@ -101,12 +99,6 @@ describe('ContentModelEditor', () => {
                 darkColorHandler: null,
             },
             undefined
-        );
-        expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledTimes(1);
-        expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledWith(
-            mockedFragment,
-            div,
-            mockedPairs
         );
     });
 
@@ -138,5 +130,38 @@ describe('ContentModelEditor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+    });
+
+    it('get model with cache', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div, {
+            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+        });
+        const cachedModel = 'MODEL' as any;
+
+        (editor as any).cachedModel = cachedModel;
+
+        spyOn(domToContentModel, 'default');
+
+        const model = editor.createContentModel();
+
+        expect(model).toBe(cachedModel);
+        expect(domToContentModel.default).not.toHaveBeenCalled();
+    });
+
+    it('cache model', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div, {
+            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+        });
+        const cachedModel = 'MODEL' as any;
+
+        editor.cacheContentModel(cachedModel);
+
+        expect((editor as any).cachedModel).toBe(cachedModel);
+
+        editor.cacheContentModel(null);
+
+        expect((editor as any).cachedModel).toBe(null);
     });
 });

@@ -1,31 +1,54 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
  * @internal
  */
-export const handleBlock: ContentModelHandler<ContentModelBlock> = (
+export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
     doc: Document,
     parent: Node,
     block: ContentModelBlock,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
+    function callHandler<T extends ContentModelBlock>(
+        block: T,
+        handler: ContentModelBlockHandler<T>
+    ) {
+        handler(doc, parent, block, context, refNode);
+    }
+
+    const handlers = context.modelHandlers;
+
     switch (block.blockType) {
         case 'Table':
-            context.modelHandlers.table(doc, parent, block, context);
-            break;
-        case 'BlockGroup':
-            context.modelHandlers.blockGroup(doc, parent, block, context);
+            callHandler(block, handlers.table);
             break;
         case 'Paragraph':
-            context.modelHandlers.paragraph(doc, parent, block, context);
+            callHandler(block, handlers.paragraph);
             break;
         case 'Entity':
-            context.modelHandlers.entity(doc, parent, block, context);
+            callHandler(block, handlers.entity);
             break;
         case 'Divider':
-            context.modelHandlers.divider(doc, parent, block, context);
+            callHandler(block, handlers.divider);
+            break;
+        case 'BlockGroup':
+            switch (block.blockGroupType) {
+                case 'General':
+                    callHandler(block, handlers.general);
+                    break;
+
+                case 'Quote':
+                    callHandler(block, handlers.quote);
+                    break;
+
+                case 'ListItem':
+                    callHandler(block, handlers.listItem);
+                    break;
+            }
+
             break;
     }
 };

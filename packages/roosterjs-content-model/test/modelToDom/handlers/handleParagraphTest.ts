@@ -27,10 +27,11 @@ describe('handleParagraph', () => {
         expectedInnerHTML: string,
         expectedCreateSegmentFromContentCalledTimes: number
     ) {
-        handleParagraph(document, parent, paragraph, context);
+        handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleSegment).toHaveBeenCalledTimes(expectedCreateSegmentFromContentCalledTimes);
+        expect(paragraph.cachedElement).toBe((parent.firstChild as HTMLElement) || undefined);
     }
 
     it('Handle empty explicit paragraph', () => {
@@ -366,5 +367,26 @@ describe('handleParagraph', () => {
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
+    });
+
+    it('Handle paragraph with refNode', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        const br = document.createElement('br');
+
+        parent.appendChild(br);
+
+        handleParagraph(document, parent, paragraph, context, br);
+
+        expect(parent.innerHTML).toBe('<div></div><br>');
+        expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 });
