@@ -117,6 +117,62 @@ describe('normalizeContentModel', () => {
         });
     });
 
+    it('Normalize paragraph with multiple BRs', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const br1 = createBr();
+        const marker = createSelectionMarker();
+        const br2 = createBr();
+        const br3 = createBr();
+        const br4 = createBr();
+
+        para1.segments.push(br1, marker, br2);
+        para2.segments.push(br3, br4);
+        model.blocks.push(para1, para2);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Do not normalize implicit paragraph', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(true /*isImplicit*/);
