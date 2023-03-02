@@ -25,9 +25,11 @@ export default function blockFormat(
         (start, end) => {
             if (!beforeRunCallback || beforeRunCallback()) {
                 const regions = editor.getSelectedRegions();
-                const chains = VListChain.createListChains(regions, start?.node);
-                regions.forEach(region => callback(region, start, end, chains));
-                commitListChains(editor, chains);
+                if (regions.length > 0) {
+                    const chains = VListChain.createListChains(regions, start?.node);
+                    regions.forEach(region => callback(region, start, end, chains));
+                    commitListChains(editor, chains);
+                }
             }
             if (selection.type == SelectionRangeTypes.Normal) {
                 editor.select(start, end);
