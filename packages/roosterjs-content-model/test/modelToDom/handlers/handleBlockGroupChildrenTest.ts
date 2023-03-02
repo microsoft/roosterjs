@@ -232,6 +232,8 @@ describe('handleBlockGroupChildren', () => {
         const div1 = document.createElement('div');
         const div2 = document.createElement('div');
 
+        div1.id = 'div1';
+        div2.id = 'div2';
         div1.textContent = 'test1';
         div2.textContent = 'test2';
 
@@ -261,7 +263,7 @@ describe('handleBlockGroupChildren', () => {
 
         handleBlockGroupChildren(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div><div>test2</div><div>test1</div></div>');
+        expect(parent.outerHTML).toBe('<div><div id="div2">test2</div><div id="div1"></div></div>');
         expect(parent.firstChild).toBe(div2);
         expect(parent.firstChild?.nextSibling).toBe(div1);
     });

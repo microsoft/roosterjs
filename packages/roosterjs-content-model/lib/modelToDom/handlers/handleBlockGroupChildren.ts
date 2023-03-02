@@ -51,7 +51,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                     } else {
                         parent.insertBefore(element, refNode);
                     }
-                } else if (element) {
+                } else {
                     parent.insertBefore(element, refNode);
                 }
 
