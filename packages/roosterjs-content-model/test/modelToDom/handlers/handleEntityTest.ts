@@ -73,12 +73,11 @@ describe('handleEntity', () => {
 
         const parent = document.createElement('div');
         context.addDelimiterForEntity = true;
-        handleEntity(document, parent, entityModel, context);
+        handleEntity(document, parent, entityModel, context, null);
 
-        expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');
-        expect(context.entities).toEqual({
-            entity_1: span,
-        });
+        expect(parent.innerHTML).toBe(
+            '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
+        );
         expect(span.outerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
         );
