@@ -93,7 +93,7 @@ export type ElementProcessorMap = {
         center?: ElementProcessor<HTMLElement>;
 
         /**
-         *
+         * Processor for Inline Readonly Delimiters
          */
         delimiter?: ElementProcessor<HTMLSpanElement>;
     };
