@@ -58,7 +58,8 @@ export const getContent: GetContent = (
                 false /*includeSelf*/,
                 null /*callback*/,
                 ColorTransformDirection.DarkToLight,
-                !!core.darkColorHandler
+                !!core.darkColorHandler,
+                core.lifecycle.isDarkMode
             );
         }
 
