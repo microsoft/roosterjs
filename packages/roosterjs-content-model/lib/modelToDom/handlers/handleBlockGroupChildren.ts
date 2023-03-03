@@ -55,6 +55,8 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                     parent.insertBefore(element, refNode);
                 }
 
+                // No need to add entity delimiter here since entity delimiter is only for inline entity, but here we only handle block entity.
+
                 if (childBlock.blockType == 'BlockGroup') {
                     context.modelHandlers.blockGroupChildren(doc, element, childBlock, context);
                 }
