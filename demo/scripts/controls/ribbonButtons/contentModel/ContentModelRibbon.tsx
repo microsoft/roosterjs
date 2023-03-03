@@ -30,6 +30,7 @@ import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
 import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonPlugin } from 'roosterjs-react';
+import { rotateImageButton } from './rotateImageButton';
 import { rtlButton } from './rtlButton';
 import { setBulletedListStyleButton } from './setBulletedListStyleButton';
 import { setHeaderLevelButton } from './setHeaderLevelButton';
@@ -98,6 +99,7 @@ const buttons = [
     imageBorderColorButton,
     imageBorderWidthButton,
     imageBorderStyleButton,
+    rotateImageButton,
     changeImageButton,
     imageBoxShadowButton,
     spacingButton,

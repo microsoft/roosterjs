@@ -32,6 +32,7 @@ export { default as setSpacing } from './block/setSpacing';
 export { default as setImageBorder } from './image/setImageBorder';
 export { default as setImageBoxShadow } from './image/setImageBoxShadow';
 export { default as changeImage } from './image/changeImage';
+export { default as rotateImage } from './image/rotateImage';
 export { default as getFormatState } from './format/getFormatState';
 export { default as getSegmentFormat } from './format/getSegmentFormat';
 export { default as applyPendingFormat } from './format/applyPendingFormat';
