@@ -11,7 +11,6 @@ import {
     ElementProcessorMap,
     FormatParsers,
     FormatParsersPerCategory,
-    ShouldSkipProcessElementMap,
 } from './context/DomToModelSettings';
 
 /**
@@ -54,11 +53,6 @@ export interface DomToModelOption {
      * @default false
      */
     alwaysNormalizeTable?: boolean;
-
-    /**
-     * Checks whether elements needs to be skipped from being processed
-     */
-    shouldSkipProcessElement?: Partial<ShouldSkipProcessElementMap>;
 }
 
 /**

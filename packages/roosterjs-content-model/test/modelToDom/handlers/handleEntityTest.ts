@@ -25,7 +25,7 @@ describe('handleEntity', () => {
         };
 
         const parent = document.createElement('div');
-        context.isFeatureEnabled = () => false;
+        context.addDelimiterForEntity = false;
         handleEntity(document, parent, entityModel, context);
 
         expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');
@@ -73,7 +73,7 @@ describe('handleEntity', () => {
         };
 
         const parent = document.createElement('div');
-        context.isFeatureEnabled = () => true;
+        context.addDelimiterForEntity = true;
         handleEntity(document, parent, entityModel, context);
 
         expect(parent.innerHTML).toBe('<entity-placeholder id="entity_1"></entity-placeholder>');

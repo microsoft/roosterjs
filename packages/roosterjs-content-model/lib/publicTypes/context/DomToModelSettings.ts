@@ -3,7 +3,6 @@ import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { DomToModelContext } from './DomToModelContext';
 import { ElementProcessor } from './ElementProcessor';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
-import { ShouldSkipProcessElement } from './ShouldProcessElement';
 
 /**
  * A type of Default style map, from tag name string (in upper case) to a static style object
@@ -92,14 +91,12 @@ export type ElementProcessorMap = {
          * Workaround for typescript 4.4.4 that doesn't have element "center" in its element type
          */
         center?: ElementProcessor<HTMLElement>;
-    };
 
-export type ShouldSkipProcessElementMap = {
-    /**
-     * Common processor for child nodes of a given element
-     */
-    child: ShouldSkipProcessElement<ParentNode>;
-};
+        /**
+         *
+         */
+        delimiter?: ElementProcessor<HTMLSpanElement>;
+    };
 
 /**
  * Represents settings to customize DOM to Content Model conversion
@@ -131,9 +128,4 @@ export interface DomToModelSettings {
      * This provides a way to call original format parser from an overridden parser function
      */
     defaultFormatParsers: Readonly<FormatParsers>;
-
-    /**
-     * Map to determine if the current Element type should be skipped when transforming DOM to Content Model
-     */
-    shouldSkipProcessElement?: Readonly<Partial<ShouldSkipProcessElementMap>>;
 }

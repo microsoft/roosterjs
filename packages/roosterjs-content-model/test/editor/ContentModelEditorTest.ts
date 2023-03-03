@@ -10,7 +10,6 @@ const editorContext: EditorContext = {
     isDarkMode: false,
     getDarkColor: () => '',
     darkColorHandler: undefined,
-    isFeatureEnabled: () => true,
 };
 
 describe('ContentModelEditor', () => {
@@ -19,10 +18,8 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
 
         const mockedResult = 'Result' as any;
-        const mockedShouldHandle = 'Result' as any;
 
         spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
-        spyOn(editor as any, 'createShouldHandleElement').and.returnValue(mockedShouldHandle);
         spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
 
         const model = editor.createContentModel();
@@ -36,7 +33,6 @@ describe('ContentModelEditor', () => {
                 ranges: [],
             },
             alwaysNormalizeTable: true,
-            shouldSkipProcessElement: mockedShouldHandle,
         });
     });
 
