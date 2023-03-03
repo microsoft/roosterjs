@@ -1004,7 +1004,9 @@ export default class Editor implements IEditor {
      * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
     public setDarkModeState(nextDarkMode?: boolean) {
-        if (this.isDarkMode() == !!nextDarkMode) {
+        const isDarkMode = this.isDarkMode();
+
+        if (isDarkMode == !!nextDarkMode) {
             return;
         }
         const core = this.getCore();
@@ -1017,7 +1019,8 @@ export default class Editor implements IEditor {
             nextDarkMode
                 ? ColorTransformDirection.LightToDark
                 : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/
+            true /*forceTransform*/,
+            isDarkMode
         );
 
         this.triggerContentChangedEvent(
