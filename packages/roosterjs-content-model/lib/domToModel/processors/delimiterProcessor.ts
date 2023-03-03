@@ -1,4 +1,4 @@
-import { ElementProcessor } from 'roosterjs-content-model/lib/publicTypes';
+import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { handleRegularSelection } from './childProcessor';
 
