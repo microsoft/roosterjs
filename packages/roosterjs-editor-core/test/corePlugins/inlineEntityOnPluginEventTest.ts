@@ -1,6 +1,7 @@
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
+    EditorReadyEvent,
     DelimiterClasses,
     Entity,
     EntityOperation,
@@ -10,6 +11,7 @@ import {
     NormalSelectionRange,
     PluginEventType,
     SelectionRangeTypes,
+    BeforePasteEvent,
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 import {
@@ -319,6 +321,130 @@ describe('Inline Entity On Plugin Event |', () => {
             );
 
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+        });
+    });
+
+    describe('Editor Ready |', () => {
+        function runTest(expectedDelimiters: number, elementToUse?: Node) {
+            const rootDiv = document.createElement('div');
+
+            spyOn(editor, 'queryElements').and.callFake((selector: string) =>
+                Array.from(rootDiv.querySelectorAll(selector))
+            );
+
+            if (elementToUse) {
+                rootDiv.appendChild(elementToUse);
+            }
+
+            inlineEntityOnPluginEvent(
+                <EditorReadyEvent>{
+                    eventType: PluginEventType.EditorReady,
+                },
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+        }
+
+        it('New Editor with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(2, element);
+        });
+
+        it('New Editor with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('New Editor with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('New Editor with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('New Editor with Normal Element', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
+        });
+
+        it('New Editor with no elements', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
+        });
+    });
+
+    describe('Before Paste |', () => {
+        function runTest(expectedDelimiters: number, elementToUse?: Node) {
+            const rootDiv = document.createElement('div');
+
+            spyOn(editor, 'queryElements').and.callFake((selector: string) =>
+                Array.from(rootDiv.querySelectorAll(selector))
+            );
+
+            if (elementToUse) {
+                rootDiv.appendChild(elementToUse);
+            }
+
+            inlineEntityOnPluginEvent(
+                <BeforePasteEvent>(<any>{
+                    eventType: PluginEventType.BeforePaste,
+                    clipboardData: {},
+                    fragment: rootDiv,
+                }),
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+        }
+
+        it('Before Paste with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(2, element);
+        });
+
+        it('Before Paste with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Normal Element', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
+        });
+
+        it('Before Paste with no elements', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
         });
     });
 });

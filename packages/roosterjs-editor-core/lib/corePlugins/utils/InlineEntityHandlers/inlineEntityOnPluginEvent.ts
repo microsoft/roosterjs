@@ -8,7 +8,11 @@ import {
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
+    addDelimiterAfter,
+    addDelimiterBefore,
     getDelimiterFromElement,
+    getEntityFromElement,
+    getEntitySelector,
     isBlockElement,
     isCharacterValue,
     Position,
@@ -20,9 +24,18 @@ import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
+const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
+        case PluginEventType.EditorReady:
+            editor.queryElements(INLINE_ENTITY_SELECTOR).forEach(addDelimitersIfNeeded);
+            break;
+
+        case PluginEventType.BeforePaste:
+            event.fragment.querySelectorAll(INLINE_ENTITY_SELECTOR).forEach(addDelimitersIfNeeded);
+            break;
+
         case PluginEventType.ExtractContentWithDom:
         case PluginEventType.BeforeCutCopy:
             event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
@@ -108,24 +121,36 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     }
 }
 
-function getDelimiter(entityWrapper: HTMLElement, after: boolean): HTMLElement | undefined {
-    const el = after ? entityWrapper.nextElementSibling : entityWrapper.previousElementSibling;
-    return el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined;
+function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
+    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
+        el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined
+    );
+}
+
+function addDelimitersIfNeeded(node: Element) {
+    if (safeInstanceOf(node, 'HTMLElement') && isReadOnly(getEntityFromElement(node))) {
+        const [delimiterAfter, delimiterBefore] = getDelimiters(node);
+
+        if (!delimiterAfter) {
+            addDelimiterAfter(node);
+        }
+        if (!delimiterBefore) {
+            addDelimiterBefore(node);
+        }
+    }
 }
 
 function removeDelimiters(entityWrapper: HTMLElement): void {
-    let el: HTMLElement | undefined = undefined;
-    if ((el = getDelimiter(entityWrapper, true))) {
-        el.parentElement?.removeChild(el);
-    }
-    if ((el = getDelimiter(entityWrapper, false))) {
-        el.parentElement?.removeChild(el);
-    }
+    getDelimiters(entityWrapper).forEach(removeNode);
 }
 
-function isReadOnly(entity: Entity) {
+function removeNode(el: HTMLElement | undefined) {
+    el?.parentElement?.removeChild(el);
+}
+
+function isReadOnly(entity: Entity | null) {
     return (
-        entity.isReadonly &&
+        entity?.isReadonly &&
         !isBlockElement(entity.wrapper) &&
         safeInstanceOf(entity.wrapper, 'HTMLElement')
     );
