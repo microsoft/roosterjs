@@ -343,6 +343,15 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
+    public rotateImage(image: HTMLImageElement, angleRad: number) {
+        this.image = image;
+        this.editInfo = getEditInfoFromImage(image);
+        this.editInfo.angleRad = this.editInfo.angleRad + angleRad;
+        this.createWrapper(ImageEditOperation.Rotate);
+        this.updateWrapper();
+        this.setEditingImage(null, true);
+    }
+
     /**
      * quit editing mode when editor lose focus
      */

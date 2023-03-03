@@ -82,6 +82,37 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
+const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageRotate',
+    unlocalizedText: 'Rotate image',
+    subItems: {
+        menuNameImageRotateLeft: 'Left',
+        menuNameImageRotateRight: 'Right',
+        menuNameImageRotateUpsidedown: 'Upside down',
+    },
+    shouldShow: (_, node, imageEdit) => {
+        return (
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Rotate) &&
+            canRegenerateImage(node as HTMLImageElement)
+        );
+    },
+    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+        editor.addUndoSnapshot(() => {
+            switch (key) {
+                case 'menuNameImageRotateLeft':
+                    imageEdit?.rotateImage(node as HTMLImageElement, -Math.PI / 2);
+                    break;
+                case 'menuNameImageRotateRight':
+                    imageEdit?.rotateImage(node as HTMLImageElement, Math.PI / 2);
+                    break;
+                case 'menuNameImageRotateUpsidedown':
+                    imageEdit?.rotateImage(node as HTMLImageElement, Math.PI);
+                    break;
+            }
+        });
+    },
+};
+
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
@@ -123,7 +154,13 @@ export default function createImageEditMenuProvider(
 ): EditorPlugin {
     return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
-        [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
+        [
+            ImageAltTextMenuItem,
+            ImageResizeMenuItem,
+            ImageCropMenuItem,
+            ImageRemoveMenuItem,
+            ImageRotateMenuItem,
+        ],
         strings,
         shouldShowImageEditItems,
         imageEditPlugin
