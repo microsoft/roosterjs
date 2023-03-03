@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-dom/lib/htmlSanitizer/getInheritableStyles.ts</title>
+    <title>Code coverage report for roosterjs-content-model/lib/domToModel/processors/delimiterProcessor.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-dom/lib/htmlSanitizer</a> getInheritableStyles.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/domToModel/processors</a> delimiterProcessor.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/9</span>
+                <span class='fraction'>0/0</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -78,14 +78,8 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -94,44 +88,38 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">223x</span>
-<span class="cline-any cline-yes">223x</span>
-<span class="cline-any cline-yes">223x</span>
-<span class="cline-any cline-yes">223x</span>
-<span class="cline-any cline-yes">6021x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">223x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { StringMap } from 'roosterjs-editor-types';
-&nbsp;
-// Inheritable CSS properties
-// Ref: https://www.w3.org/TR/CSS21/propidx.html
-const INHERITABLE_PROPERTIES = (
-    'border-spacing,caption-side,color,' +
-    'cursor,direction,empty-cells,font-family,font-size,font-style,font-variant,font-weight,' +
-    'font,letter-spacing,line-height,list-style-image,list-style-position,list-style-type,' +
-    'list-style,orphans,quotes,text-align,text-indent,text-transform,visibility,white-space,' +
-    'widows,word-spacing'
-).split(',');
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { handleRegularSelection } from './childProcessor';
 &nbsp;
 /**
- * Get inheritable CSS style values from the given element
- * @param element The element to get style from
+ * @internal
+ * @param group
+ * @param element
+ * @param context
  */
-export default function getInheritableStyles(element: HTMLElement | null): StringMap {
-    let win = element &amp;&amp; element.ownerDocument &amp;&amp; element.ownerDocument.defaultView;
-    let styles = win &amp;&amp; element &amp;&amp; win.getComputedStyle(element);
-    let result: StringMap = {};
-    INHERITABLE_PROPERTIES.forEach(
-        name =&gt; (result[name] = (styles &amp;&amp; styles.getPropertyValue(name)) || '')
-    );
-    return result;
-}
+export const delimiterProcessor: ElementProcessor&lt;HTMLSpanElement&gt; = (group, element, context) =&gt; {
+    let index = 0;
+    const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, element);
+&nbsp;
+    for (let child = element.firstChild; child; child = child.nextSibling) {
+        handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+        index++;
+    }
+&nbsp;
+    handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+};
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -142,14 +130,14 @@ export default function getInheritableStyles(element: HTMLElement | null): Strin
                 at Fri Mar 03 2023 15:09:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../../../sorter.js"></script>
+        <script src="../../../../block-navigation.js"></script>
     </body>
 </html>
     
