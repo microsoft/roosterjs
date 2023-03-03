@@ -31,6 +31,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
                   isReadonly: !!isReadonly,
               }
             : null;
+    const isInlineEntity = !isBlockElement(wrapper);
 
     if (entity) {
         // Commit the entity attributes in case there is any change
@@ -38,21 +39,14 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     }
 
     parent.insertBefore(wrapper, refNode);
-    addDelimiterElements(wrapper, isReadonly, context);
 
-    if (getObjectKeys(format).length > 0) {
+    if (isInlineEntity && getObjectKeys(format).length > 0) {
         const span = wrap(wrapper, 'span');
 
         applyFormat(span, context.formatAppliers.segment, format, context);
     }
-};
 
-function addDelimiterElements(
-    wrapper: HTMLElement,
-    isReadonly: boolean,
-    context: ModelToDomContext
-) {
-    if (context.addDelimiterForEntity && !isBlockElement(wrapper) && isReadonly) {
+    if (context.addDelimiterForEntity && isInlineEntity && isReadonly) {
         addDelimiters(wrapper);
     }
-}
+};
