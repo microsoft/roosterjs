@@ -1,3 +1,4 @@
+import * as getDelimiterFromElement from 'roosterjs-editor-dom/lib/delimiter/getDelimiterFromElement';
 import { commitEntity } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -12,18 +13,21 @@ describe('elementProcessor', () => {
     let divProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let generalProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let entityProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let delimiterProcessor: jasmine.Spy<ElementProcessor<HTMLSpanElement>>;
 
     beforeEach(() => {
         group = createContentModelDocument();
         divProcessor = jasmine.createSpy('div processor');
         generalProcessor = jasmine.createSpy('general processor');
         entityProcessor = jasmine.createSpy('entity processor');
+        delimiterProcessor = jasmine.createSpy('entity processor');
 
         context = createDomToModelContext(undefined, {
             processorOverride: {
                 div: divProcessor,
                 entity: entityProcessor,
                 '*': generalProcessor,
+                delimiter: delimiterProcessor,
             },
         });
     });
@@ -36,6 +40,7 @@ describe('elementProcessor', () => {
         expect(divProcessor).toHaveBeenCalledWith(group, div, context);
         expect(generalProcessor).not.toHaveBeenCalled();
         expect(entityProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).not.toHaveBeenCalled();
     });
 
     it('Unknown element type', () => {
@@ -46,6 +51,7 @@ describe('elementProcessor', () => {
         expect(divProcessor).not.toHaveBeenCalled();
         expect(generalProcessor).toHaveBeenCalledWith(group, element, context);
         expect(entityProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).not.toHaveBeenCalled();
     });
 
     it('Entity', () => {
@@ -58,6 +64,7 @@ describe('elementProcessor', () => {
         expect(divProcessor).not.toHaveBeenCalled();
         expect(generalProcessor).not.toHaveBeenCalled();
         expect(entityProcessor).toHaveBeenCalledWith(group, div, context);
+        expect(delimiterProcessor).not.toHaveBeenCalled();
     });
 
     it('Namespace', () => {
@@ -68,6 +75,7 @@ describe('elementProcessor', () => {
 
         expect(divProcessor).not.toHaveBeenCalled();
         expect(generalProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).not.toHaveBeenCalled();
         expect(entityProcessor).not.toHaveBeenCalled();
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -102,5 +110,18 @@ describe('elementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+        expect(delimiterProcessor).not.toHaveBeenCalled();
+    });
+
+    it('delimiter', () => {
+        const element = document.createElement('span') as HTMLElement;
+        spyOn(getDelimiterFromElement, 'default').and.returnValue(element);
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).toHaveBeenCalled();
     });
 });

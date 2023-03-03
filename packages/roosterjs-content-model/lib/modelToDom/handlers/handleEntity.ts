@@ -1,9 +1,15 @@
 import { applyFormat } from '../utils/applyFormat';
-import { commitEntity, getObjectKeys, wrap } from 'roosterjs-editor-dom';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { Entity } from 'roosterjs-editor-types';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import {
+    addDelimiters,
+    commitEntity,
+    getObjectKeys,
+    isBlockElement,
+    wrap,
+} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -32,6 +38,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     }
 
     parent.insertBefore(wrapper, refNode);
+    addDelimiterElements(wrapper, isReadonly, context);
 
     if (getObjectKeys(format).length > 0) {
         const span = wrap(wrapper, 'span');
@@ -39,3 +46,13 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
         applyFormat(span, context.formatAppliers.segment, format, context);
     }
 };
+
+function addDelimiterElements(
+    wrapper: HTMLElement,
+    isReadonly: boolean,
+    context: ModelToDomContext
+) {
+    if (context.addDelimiterForEntity && !isBlockElement(wrapper) && isReadonly) {
+        addDelimiters(wrapper);
+    }
+}

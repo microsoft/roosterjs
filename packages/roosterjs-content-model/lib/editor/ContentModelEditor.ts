@@ -4,7 +4,6 @@ import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument'
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EditorOptions, ExperimentalFeatures } from 'roosterjs-editor-types';
-
 import {
     DomToModelOption,
     IContentModelEditor,
@@ -90,6 +89,9 @@ export default class ContentModelEditor extends Editor implements IContentModelE
             isDarkMode: this.isDarkMode(),
             getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
+            addDelimiterForEntity: this.isFeatureEnabled(
+                ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+            ),
         };
     }
 }
