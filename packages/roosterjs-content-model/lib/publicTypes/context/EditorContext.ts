@@ -22,8 +22,7 @@ export interface EditorContext {
     darkColorHandler?: DarkColorHandler | null;
 
     /**
-     * Check if the given experimental feature is enabled in the editor
-     * @param feature The feature to check
+     * Whether to handle delimiters in Content Model
      */
     addDelimiterForEntity?: boolean;
 }
