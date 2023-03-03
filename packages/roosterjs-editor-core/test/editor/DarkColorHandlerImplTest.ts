@@ -65,6 +65,42 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
             darkModeColor: 'ee',
         });
     });
+
+    function runDarkTest(input: string, expectedOutput: ColorKeyAndValue) {
+        const result = handler.parseColorValue(input, true);
+
+        expect(result).toEqual(expectedOutput);
+    }
+
+    it('simple color in dark mode', () => {
+        runDarkTest('aa', {
+            key: undefined,
+            lightModeColor: '',
+            darkModeColor: undefined,
+        });
+    });
+
+    it('var color in dark mode', () => {
+        runDarkTest('var(--aa, bb)', {
+            key: '--aa',
+            lightModeColor: 'bb',
+            darkModeColor: undefined,
+        });
+    });
+
+    it('known simple color in dark mode', () => {
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: '#ff0000',
+                darkModeColor: '#00ffff',
+            },
+        };
+        runDarkTest('#00ffff', {
+            key: undefined,
+            lightModeColor: '#ff0000',
+            darkModeColor: '#00ffff',
+        });
+    });
 });
 
 describe('DarkColorHandlerImpl.registerColor', () => {
