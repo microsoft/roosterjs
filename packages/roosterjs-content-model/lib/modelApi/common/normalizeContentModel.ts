@@ -22,7 +22,9 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
             case 'Table':
                 for (let r = 0; r < block.cells.length; r++) {
                     for (let c = 0; c < block.cells[r].length; c++) {
-                        normalizeContentModel(block.cells[r][c]);
+                        if (block.cells[r][c]) {
+                            normalizeContentModel(block.cells[r][c]);
+                        }
                     }
                 }
                 break;
