@@ -1,18 +1,19 @@
+import * as getDelimiterFromElement from 'roosterjs-editor-dom/lib/delimiter/getDelimiterFromElement';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
-    EditorReadyEvent,
+    BeforePasteEvent,
+    BlockElement,
+    ContentChangedEvent,
     DelimiterClasses,
+    EditorReadyEvent,
     Entity,
-    EntityOperation,
-    EntityOperationEvent,
     ExtractContentWithDomEvent,
     IEditor,
     NormalSelectionRange,
     PluginEventType,
-    SelectionRangeTypes,
-    BeforePasteEvent,
     PluginKeyDownEvent,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
@@ -52,6 +53,13 @@ describe('Inline Entity On Plugin Event |', () => {
                     type: SelectionRangeTypes.Normal,
                 };
             },
+            getBlockElementAtNode: (div: Node) => {
+                return <BlockElement>{
+                    getStartNode() {
+                        return div;
+                    },
+                };
+            },
         });
     });
 
@@ -62,12 +70,7 @@ describe('Inline Entity On Plugin Event |', () => {
         });
     });
 
-    describe('Remove Entity Operations |', () => {
-        const removeOperations = [
-            EntityOperation.RemoveFromStart,
-            EntityOperation.RemoveFromEnd,
-            EntityOperation.Overwrite,
-        ];
+    describe('Content Changed |', () => {
         let entity: Entity;
         let delimiterAfter: HTMLElement;
         let delimiterBefore: HTMLElement;
@@ -87,20 +90,18 @@ describe('Inline Entity On Plugin Event |', () => {
             delimiterBefore = getDelimiter(entity, false /* after */);
         });
 
-        removeOperations.forEach(operation => {
-            it('removeDelimiter when Deleting entity between them', () => {
-                inlineEntityOnPluginEvent(
-                    <EntityOperationEvent>{
-                        entity,
-                        eventType: PluginEventType.EntityOperation,
-                        operation,
-                    },
-                    editor
-                );
+        it('Remove Delimiters on Content Changes', () => {
+            const { wrapper } = entity;
+            wrapper.parentElement?.removeChild(wrapper);
+            inlineEntityOnPluginEvent(
+                <ContentChangedEvent>{
+                    eventType: PluginEventType.ContentChanged,
+                },
+                editor
+            );
 
-                expect(document.contains(delimiterAfter)).toBeFalse();
-                expect(document.contains(delimiterBefore)).toBeFalse();
-            });
+            expect(document.contains(delimiterAfter)).toBeFalse();
+            expect(document.contains(delimiterBefore)).toBeFalse();
         });
     });
 
@@ -143,6 +144,7 @@ describe('Inline Entity On Plugin Event |', () => {
             }
 
             it('Is Delimiter', () => {
+                spyOn(getDelimiterFromElement, 'default').and.returnValue(delimiterBefore);
                 arrangeAndAct();
 
                 expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
@@ -210,7 +212,6 @@ describe('Inline Entity On Plugin Event |', () => {
             });
             function arrangeAndAct() {
                 editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
-
                 delimiterAfter?.appendChild(textToAdd);
 
                 inlineEntityOnPluginEvent(
@@ -226,6 +227,7 @@ describe('Inline Entity On Plugin Event |', () => {
             }
 
             it('Is Delimiter', () => {
+                spyOn(getDelimiterFromElement, 'default').and.returnValue(delimiterAfter);
                 arrangeAndAct();
 
                 delimiterAfter = getDelimiter(entity, true);
