@@ -30,12 +30,12 @@ const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
         case PluginEventType.ContentChanged:
-            if (event.source !== ChangeSource.SetContent) {
-                return;
+            if (event.source === ChangeSource.SetContent) {
+                normalizeDelimitersInEditor(editor);
             }
+            break;
         case PluginEventType.EditorReady:
-            removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
-            addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
+            normalizeDelimitersInEditor(editor);
             break;
 
         case PluginEventType.BeforePaste:
@@ -110,6 +110,11 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                 }
             }
     }
+}
+
+function normalizeDelimitersInEditor(editor: IEditor) {
+    removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
+    addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
 }
 
 function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {

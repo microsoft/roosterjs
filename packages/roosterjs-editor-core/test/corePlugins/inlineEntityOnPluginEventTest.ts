@@ -382,9 +382,9 @@ describe('Inline Entity On Plugin Event |', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', true /* ReadOnly */, '1');
 
-            event.source == undefined;
+            event.source = ChangeSource.AutoLink;
 
-            runEditorReadyContentChangedTest(2, element, event);
+            runEditorReadyContentChangedTest(0, element, event);
         });
 
         it('ContentChanged with Read only Block Entity in content', () => {
