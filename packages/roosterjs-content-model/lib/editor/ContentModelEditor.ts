@@ -16,6 +16,7 @@ import {
  */
 export default class ContentModelEditor extends Editor implements IContentModelEditor {
     private cachedModel: ContentModelDocument | null;
+    private reuseModel: boolean = false;
 
     /**
      * Creates an instance of Editor
@@ -25,6 +26,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
     constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         super(contentDiv, options);
         this.cachedModel = null;
+        this.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
     }
 
     /**
@@ -41,8 +43,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      */
     createContentModel(option?: DomToModelOption): ContentModelDocument {
         const core = this.getCore();
-        const reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
-        const cachedModel = reuseModel ? this.cachedModel : null;
+        const cachedModel = this.reuseModel ? this.cachedModel : null;
 
         return (
             cachedModel ||
@@ -76,7 +77,9 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null) {
-        this.cachedModel = model;
+        if (this.reuseModel) {
+            this.cachedModel = model;
+        }
     }
 
     /**
