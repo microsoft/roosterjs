@@ -357,7 +357,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        // this.setEditingImage(null, true);
+        this.setEditingImage(null, true);
     };
     /**
      * Create editing wrapper for the image
