@@ -13,6 +13,7 @@ import {
     SelectionRangeTypes,
     BeforePasteEvent,
     PluginKeyDownEvent,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
@@ -366,12 +367,22 @@ describe('Inline Entity On Plugin Event |', () => {
         beforeEach(() => {
             event = <ContentChangedEvent>{
                 eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
             };
         });
 
         it('ContentChanged with Read only Inline Entity in content', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(2, element, event);
+        });
+
+        it('ContentChanged source not SetContent', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            event.source == undefined;
 
             runEditorReadyContentChangedTest(2, element, event);
         });

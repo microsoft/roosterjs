@@ -1,4 +1,5 @@
 import {
+    ChangeSource,
     DelimiterClasses,
     IEditor,
     NodeType,
@@ -9,6 +10,7 @@ import {
 import {
     addDelimiterAfter,
     addDelimiterBefore,
+    createRange,
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
@@ -28,6 +30,9 @@ const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
         case PluginEventType.ContentChanged:
+            if (event.source !== ChangeSource.SetContent) {
+                return;
+            }
         case PluginEventType.EditorReady:
             removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
             addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
@@ -142,19 +147,26 @@ function isReadOnly(entity: Entity | null) {
 
 function removeInvalidDelimiters(nodes: Element[]) {
     nodes.forEach(node => {
-        const sibling = node.classList.contains(DelimiterClasses.DELIMITER_AFTER)
-            ? node.nextElementSibling
-            : node.previousElementSibling;
-        if (
-            getDelimiterFromElement(node) &&
-            !!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))
-        ) {
-            removeNode(node);
+        if (getDelimiterFromElement(node)) {
+            const sibling = node.classList.contains(DelimiterClasses.DELIMITER_BEFORE)
+                ? node.nextElementSibling
+                : node.previousElementSibling;
+            if (!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))) {
+                removeNode(node);
+            }
         } else {
             node?.classList.remove(
                 DelimiterClasses.DELIMITER_BEFORE,
                 DelimiterClasses.DELIMITER_AFTER
             );
+
+            node.normalize();
+            node.childNodes.forEach(cn => {
+                const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+                if (index >= 0) {
+                    createRange(cn, index, cn, index + 1)?.deleteContents();
+                }
+            });
         }
     });
 }
