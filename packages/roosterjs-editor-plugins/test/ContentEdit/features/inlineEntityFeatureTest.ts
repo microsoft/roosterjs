@@ -11,6 +11,7 @@ import {
     addDelimiters,
     commitEntity,
     findClosestElementAncestor,
+    PositionContentSearcher,
     Position,
 } from 'roosterjs-editor-dom';
 
@@ -83,6 +84,10 @@ describe('Content Edit Features |', () => {
     describe('Move Before |', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
+            editor.getContentSearcherOfCursor = () =>
+                element
+                    ? new PositionContentSearcher(testContainer, new Position(element, 0))
+                    : null!;
 
             const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
@@ -230,6 +235,11 @@ describe('Content Edit Features |', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
 
+            editor.getContentSearcherOfCursor = () =>
+                element
+                    ? new PositionContentSearcher(testContainer, new Position(element, 0))
+                    : null!;
+
             const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
                 editor,
@@ -353,6 +363,10 @@ describe('Content Edit Features |', () => {
     describe('Remove Entity Between delimiters', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
             editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
+            editor.getContentSearcherOfCursor = () =>
+                element
+                    ? new PositionContentSearcher(testContainer, new Position(element, 0))
+                    : null!;
 
             const result = removeEntityBetweenDelimiters.shouldHandleEvent(
                 event,
