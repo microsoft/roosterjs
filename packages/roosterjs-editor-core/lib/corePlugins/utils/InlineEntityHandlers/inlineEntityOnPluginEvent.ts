@@ -1,6 +1,5 @@
 import {
     DelimiterClasses,
-    EntityOperation,
     IEditor,
     NodeType,
     PluginEventType,
@@ -28,12 +27,14 @@ const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
+        case PluginEventType.ContentChanged:
         case PluginEventType.EditorReady:
-            editor.queryElements(INLINE_ENTITY_SELECTOR).forEach(addDelimitersIfNeeded);
+            removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
+            addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
             break;
 
         case PluginEventType.BeforePaste:
-            event.fragment.querySelectorAll(INLINE_ENTITY_SELECTOR).forEach(addDelimitersIfNeeded);
+            addDelimitersIfNeeded(event.fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
             break;
 
         case PluginEventType.ExtractContentWithDom:
@@ -41,21 +42,6 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
             event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
                 node.parentElement?.removeChild(node);
             });
-            break;
-
-        case PluginEventType.EntityOperation:
-            switch (event.operation) {
-                case EntityOperation.RemoveFromStart:
-                case EntityOperation.RemoveFromEnd:
-                case EntityOperation.Overwrite:
-                    const entity = event.entity;
-
-                    // If the entity removed is a readonly entity, try to remove delimiters around it.
-                    if (isReadOnly(entity)) {
-                        removeDelimiters(entity.wrapper);
-                    }
-                    break;
-            }
             break;
 
         case PluginEventType.KeyDown:
@@ -127,24 +113,22 @@ function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] 
     );
 }
 
-function addDelimitersIfNeeded(node: Element) {
-    if (safeInstanceOf(node, 'HTMLElement') && isReadOnly(getEntityFromElement(node))) {
-        const [delimiterAfter, delimiterBefore] = getDelimiters(node);
+function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
+    nodes.forEach(node => {
+        if (safeInstanceOf(node, 'HTMLElement') && isReadOnly(getEntityFromElement(node))) {
+            const [delimiterAfter, delimiterBefore] = getDelimiters(node);
 
-        if (!delimiterAfter) {
-            addDelimiterAfter(node);
+            if (!delimiterAfter) {
+                addDelimiterAfter(node);
+            }
+            if (!delimiterBefore) {
+                addDelimiterBefore(node);
+            }
         }
-        if (!delimiterBefore) {
-            addDelimiterBefore(node);
-        }
-    }
+    });
 }
 
-function removeDelimiters(entityWrapper: HTMLElement): void {
-    getDelimiters(entityWrapper).forEach(removeNode);
-}
-
-function removeNode(el: HTMLElement | undefined) {
+function removeNode(el: Node | undefined) {
     el?.parentElement?.removeChild(el);
 }
 
@@ -154,4 +138,23 @@ function isReadOnly(entity: Entity | null) {
         !isBlockElement(entity.wrapper) &&
         safeInstanceOf(entity.wrapper, 'HTMLElement')
     );
+}
+
+function removeInvalidDelimiters(nodes: Element[]) {
+    nodes.forEach(node => {
+        const sibling = node.classList.contains(DelimiterClasses.DELIMITER_AFTER)
+            ? node.nextElementSibling
+            : node.previousElementSibling;
+        if (
+            getDelimiterFromElement(node) &&
+            !!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))
+        ) {
+            removeNode(node);
+        } else {
+            node?.classList.remove(
+                DelimiterClasses.DELIMITER_BEFORE,
+                DelimiterClasses.DELIMITER_AFTER
+            );
+        }
+    });
 }
