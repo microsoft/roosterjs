@@ -3,6 +3,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
@@ -49,7 +50,7 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (!pendingFormat) {
-                        retrieveSegmentFormat(formatState, segment.format, isFirst);
+                        retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
                     }
 
                     formatState.canUnlink = formatState.canUnlink || !!segment.link;
@@ -93,23 +94,35 @@ export function retrieveModelFormatState(
 function retrieveSegmentFormat(
     result: FormatState,
     format: ContentModelSegmentFormat,
-    isFirst: boolean
+    isFirst: boolean,
+    segment?: ContentModelSegment
 ) {
     const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
     mergeValue(result, 'isBold', isBold(format.fontWeight), isFirst);
     mergeValue(result, 'isItalic', format.italic, isFirst);
-    mergeValue(result, 'isUnderline', format.underline, isFirst);
+    mergeValue(
+        result,
+        'isUnderline',
+        segment?.link ? segment.link.format.underline : format.underline,
+        isFirst
+    );
     mergeValue(result, 'isStrikeThrough', format.strikethrough, isFirst);
     mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
     mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
 
-    mergeValue(result, 'fontName', format.fontFamily, isFirst);
+    mergeValue(
+        result,
+        'fontName',
+        segment?.code ? segment.code.format.fontFamily : format.fontFamily,
+        isFirst
+    );
     mergeValue(result, 'fontSize', format.fontSize, isFirst);
     mergeValue(result, 'backgroundColor', format.backgroundColor, isFirst);
     mergeValue(result, 'textColor', format.textColor, isFirst);
 
     //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', format.lineHeight, isFirst);
+    mergeValue(result, 'isCodeInline', !!segment?.code, isFirst);
 }
 
 function retrieveParagraphFormat(

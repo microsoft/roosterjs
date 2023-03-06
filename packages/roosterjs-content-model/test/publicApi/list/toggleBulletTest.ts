@@ -24,6 +24,8 @@ describe('toggleBullet', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
+            getCustomData: () => ({}),
+            getFocusedPosition: () => ({}),
         } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

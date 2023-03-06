@@ -64,6 +64,12 @@ describe('getDelimiterFromElementTest', () => {
 
         expect(result).toBeNull();
     });
+
+    it('Null', () => {
+        const result = getDelimiterFromElement(null);
+
+        expect(result).toBeNull();
+    });
 });
 
 function createEl(

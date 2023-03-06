@@ -22,7 +22,9 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
             case 'Table':
                 for (let r = 0; r < block.cells.length; r++) {
                     for (let c = 0; c < block.cells[r].length; c++) {
-                        normalizeContentModel(block.cells[r][c]);
+                        if (block.cells[r][c]) {
+                            normalizeContentModel(block.cells[r][c]);
+                        }
                     }
                 }
                 break;
@@ -48,14 +50,17 @@ function normalizeParagraph(block: ContentModelParagraph) {
 
         if (segments.length == 1 && segments[0].segmentType == 'SelectionMarker') {
             segments.push(createBr(segments[0].format));
-        } else if (
-            segments.length > 1 &&
-            segments[segments.length - 1].segmentType == 'Br' &&
-            segments.some(
-                segment => segment.segmentType != 'SelectionMarker' && segment.segmentType != 'Br'
-            )
-        ) {
-            segments.pop();
+        } else if (segments.length > 1 && segments[segments.length - 1].segmentType == 'Br') {
+            const noMarkerSegments = segments.filter(x => x.segmentType != 'SelectionMarker');
+
+            // When there is content with a <BR> tag at the end, we can remove the BR.
+            // But if there are more than one <BR> at the end, do not remove them.
+            if (
+                noMarkerSegments.length > 1 &&
+                noMarkerSegments[noMarkerSegments.length - 2].segmentType != 'Br'
+            ) {
+                segments.pop();
+            }
         }
     }
 }

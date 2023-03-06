@@ -3,7 +3,14 @@ import * as domToContentModel from '../../lib/domToModel/domToContentModel';
 import * as entityPlaceholderUtils from 'roosterjs-editor-dom/lib/entity/entityPlaceholderUtils';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
+import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
 import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+
+const editorContext: EditorContext = {
+    isDarkMode: false,
+    getDarkColor: () => '',
+    darkColorHandler: undefined,
+};
 
 describe('ContentModelEditor', () => {
     it('domToContentModel', () => {
@@ -12,28 +19,21 @@ describe('ContentModelEditor', () => {
 
         const mockedResult = 'Result' as any;
 
+        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
         spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
 
         const model = editor.createContentModel();
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.default).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.default).toHaveBeenCalledWith(
-            div,
-            {
-                isDarkMode: false,
-                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
-                darkColorHandler: null,
+        expect(domToContentModel.default).toHaveBeenCalledWith(div, editorContext, {
+            selectionRange: {
+                type: SelectionRangeTypes.Normal,
+                areAllCollapsed: true,
+                ranges: [],
             },
-            {
-                selectionRange: {
-                    type: SelectionRangeTypes.Normal,
-                    areAllCollapsed: true,
-                    ranges: [],
-                },
-                alwaysNormalizeTable: true,
-            }
-        );
+            alwaysNormalizeTable: true,
+        });
     });
 
     it('setContentModel with normal selection', () => {
@@ -49,6 +49,7 @@ describe('ContentModelEditor', () => {
         const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
 
+        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
         spyOn(entityPlaceholderUtils, 'restoreContentWithEntityPlaceholder');
 
@@ -58,11 +59,7 @@ describe('ContentModelEditor', () => {
         expect(contentModelToDom.default).toHaveBeenCalledWith(
             document,
             mockedModel,
-            {
-                isDarkMode: false,
-                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
-                darkColorHandler: null,
-            },
+            editorContext,
             undefined
         );
         expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledTimes(1);
@@ -86,6 +83,7 @@ describe('ContentModelEditor', () => {
         const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
 
+        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
         spyOn(entityPlaceholderUtils, 'restoreContentWithEntityPlaceholder');
 
@@ -95,11 +93,7 @@ describe('ContentModelEditor', () => {
         expect(contentModelToDom.default).toHaveBeenCalledWith(
             document,
             mockedModel,
-            {
-                isDarkMode: false,
-                getDarkColor: (editor as any).core.lifecycle.getDarkColor,
-                darkColorHandler: null,
-            },
+            editorContext,
             undefined
         );
         expect(entityPlaceholderUtils.restoreContentWithEntityPlaceholder).toHaveBeenCalledTimes(1);
