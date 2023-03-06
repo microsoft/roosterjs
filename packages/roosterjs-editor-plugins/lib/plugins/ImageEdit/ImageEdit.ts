@@ -349,14 +349,15 @@ export default class ImageEdit implements EditorPlugin {
         this.editInfo.angleRad = this.editInfo.angleRad + angleRad;
         this.createWrapper(ImageEditOperation.Rotate);
         this.updateWrapper();
-        this.setEditingImage(null, true);
+        this.setEditingImage(null);
+        this.editor?.select(image);
     }
 
     /**
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, true);
+        // this.setEditingImage(null, true);
     };
     /**
      * Create editing wrapper for the image
@@ -481,6 +482,7 @@ export default class ImageEdit implements EditorPlugin {
                 visibleWidth,
                 visibleHeight,
             } = getGeneratedImageSize(this.editInfo, this.isCropping);
+
             const marginHorizontal = (targetWidth - visibleWidth) / 2;
             const marginVertical = (targetHeight - visibleHeight) / 2;
             const cropLeftPx = originalWidth * leftPercent;
