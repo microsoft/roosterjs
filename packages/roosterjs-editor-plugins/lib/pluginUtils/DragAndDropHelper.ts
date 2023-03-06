@@ -146,10 +146,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     private onMouseUp = (e: Event) => {
         e.preventDefault();
         this.removeDocumentEvents();
-        if (
-            this.initValue &&
-            this.handler.onDragEnd?.(this.context, e as MouseEvent, this.initValue)
-        ) {
+        if (this.handler.onDragEnd?.(this.context, e as MouseEvent, this.initValue)) {
             this.onSubmit?.(this.context, this.trigger);
         }
     };
