@@ -3,6 +3,7 @@ import getTargetSizeByPercentage from '../editInfoUtils/getTargetSizeByPercentag
 import isResizedTo from './isResizedTo';
 import { ChangeSource, IEditor } from 'roosterjs-editor-types';
 import { getEditInfoFromImage } from '../editInfoUtils/editInfo';
+import { loadImage } from './loadImage';
 
 /**
  * Resize the image by percentage of its natural size. If the image is cropped or rotated,
@@ -36,18 +37,4 @@ export default function resizeByPercentage(
             }
         });
     }
-}
-
-function loadImage(img: HTMLImageElement, src: string, callback: () => void) {
-    img.onload = () => {
-        img.onload = null;
-        img.onerror = null;
-        callback();
-    };
-    img.onerror = () => {
-        img.onload = null;
-        img.onerror = null;
-        callback();
-    };
-    img.src = src;
 }

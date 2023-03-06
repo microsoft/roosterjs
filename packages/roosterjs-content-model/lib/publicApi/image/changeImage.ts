@@ -11,30 +11,32 @@ import { SelectionRangeTypes } from 'roosterjs-editor-types';
  */
 export default function changeImage(editor: IContentModelEditor, file: File) {
     const selection = editor.getSelectionRangeEx();
-    readFile(file, dataUrl => {
-        if (
-            dataUrl &&
-            !editor.isDisposed() &&
-            selection.type === SelectionRangeTypes.ImageSelection
-        ) {
-            formatImageWithContentModel(
-                editor,
-                'changeImage',
-                (image: ContentModelImage) => {
-                    image.src = dataUrl;
-                    image.dataset = {};
-                    image.format.width = '';
-                    image.format.height = '';
-                },
-                {
-                    image: selection.image,
-                    previousSrc: selection.image.src,
-                    newSrc: dataUrl,
-                    originalSrc: getImageSrc(selection.image),
-                }
-            );
-        }
-    });
+    const isImage = selection.type === SelectionRangeTypes.ImageSelection;
+    if (isImage) {
+        const image = selection.image;
+        const previousSrc = image.src;
+        const originalSrc = getImageSrc(image);
+        readFile(file, dataUrl => {
+            if (dataUrl && !editor.isDisposed()) {
+                formatImageWithContentModel(
+                    editor,
+                    'changeImage',
+                    (image: ContentModelImage) => {
+                        image.src = dataUrl;
+                        image.dataset = {};
+                        image.format.width = '';
+                        image.format.height = '';
+                    },
+                    {
+                        image: image,
+                        previousSrc: previousSrc,
+                        newSrc: dataUrl,
+                        originalSrc: originalSrc || '',
+                    }
+                );
+            }
+        });
+    }
 }
 
 const getImageSrc = (image: HTMLImageElement) => {

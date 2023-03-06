@@ -8,6 +8,7 @@ import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { setImageAltText } from 'roosterjs-editor-api';
 import {
     canRegenerateImage,
+    flipImage,
     ImageEdit,
     resetImage,
     resizeByPercentage,
@@ -82,6 +83,27 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
+const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageFlip',
+    unlocalizedText: 'Flip',
+    subItems: {
+        menuNameImageFlipLeft: 'Left',
+        menuNameImageFlipRight: 'Right',
+    },
+    onClick: (key, editor, node) => {
+        editor.addUndoSnapshot(() => {
+            switch (key) {
+                case 'menuNameImageFlipLeft':
+                    flipImage(editor, node as HTMLImageElement, 'left');
+                    break;
+                case 'menuNameImageFlipRight':
+                    flipImage(editor, node as HTMLImageElement, 'right');
+                    break;
+            }
+        });
+    },
+};
+
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
@@ -123,7 +145,13 @@ export default function createImageEditMenuProvider(
 ): EditorPlugin {
     return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
-        [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
+        [
+            ImageAltTextMenuItem,
+            ImageResizeMenuItem,
+            ImageCropMenuItem,
+            ImageRemoveMenuItem,
+            ImageFlipMenuItem,
+        ],
         strings,
         shouldShowImageEditItems,
         imageEditPlugin
