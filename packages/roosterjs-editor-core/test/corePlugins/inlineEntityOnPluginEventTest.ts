@@ -285,7 +285,8 @@ describe('Inline Entity On Plugin Event |', () => {
     function runEditorReadyContentChangedTest(
         expectedDelimiters: number,
         elementToUse: Node,
-        eventParam: PluginEvent
+        eventParam: PluginEvent,
+        updateCallback?: (node: Node) => void
     ) {
         const rootDiv = document.createElement('div');
 
@@ -296,6 +297,7 @@ describe('Inline Entity On Plugin Event |', () => {
         if (elementToUse) {
             rootDiv.appendChild(elementToUse);
         }
+        updateCallback?.(elementToUse);
 
         inlineEntityOnPluginEvent(eventParam, editor);
 
@@ -348,6 +350,14 @@ describe('Inline Entity On Plugin Event |', () => {
             const element = document.createElement('div');
             runEditorReadyContentChangedTest(0, element, event);
         });
+
+        it('New Editor with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
     });
 
     describe('Content Changed |', () => {
@@ -396,16 +406,19 @@ describe('Inline Entity On Plugin Event |', () => {
             const element = document.createElement('div');
             runEditorReadyContentChangedTest(0, element, event);
         });
+
+        it('ContentChanged with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
     });
 
     describe('Before Paste |', () => {
         function runTest(expectedDelimiters: number, elementToUse?: Node) {
             const rootDiv = document.createElement('div');
-
-            spyOn(editor, 'queryElements').and.callFake((selector: string) =>
-                Array.from(rootDiv.querySelectorAll(selector))
-            );
-
             if (elementToUse) {
                 rootDiv.appendChild(elementToUse);
             }
