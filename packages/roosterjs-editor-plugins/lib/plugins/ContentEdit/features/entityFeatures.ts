@@ -321,6 +321,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
             ? position.element.childNodes.item(position.offset)
             : position.element;
 
+    const searcher = editor.getContentSearcherOfCursor(event);
     const data = checkBefore
         ? {
               class: DelimiterClasses.DELIMITER_BEFORE,
@@ -328,18 +329,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.nextElementSibling?.nextElementSibling,
               getNextSibling: () => {
-                  if (position.node.nodeType == NodeType.Text) {
-                      return position.node.nextSibling != null
-                          ? position.node.nextSibling
-                          : (position.node.parentNode as HTMLElement).className ===
-                            DelimiterClasses.DELIMITER_BEFORE
-                          ? position.node.parentElement
-                          : null;
-                  } else if (position.node == position.element) {
-                      return position.element.childNodes.item(position.offset);
-                  } else {
-                      return null;
-                  }
+                  return searcher.getInlineElementAfter()?.getContainerNode();
               },
               isAtEndOrBeginning: position.isAtEnd,
           }
@@ -349,18 +339,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.previousElementSibling?.previousElementSibling,
               getNextSibling: () => {
-                  if (position.node.nodeType == NodeType.Text) {
-                      return position.node.previousSibling != null
-                          ? position.node.previousSibling
-                          : (position.node.parentNode as HTMLElement).className ===
-                            DelimiterClasses.DELIMITER_AFTER
-                          ? position.node.parentElement
-                          : null;
-                  } else if (position.node == position.element) {
-                      return position.element.childNodes.item(position.offset);
-                  } else {
-                      return null;
-                  }
+                  return searcher.getInlineElementBefore()?.getContainerNode();
               },
               isAtEndOrBeginning: position.offset == 0,
           };
