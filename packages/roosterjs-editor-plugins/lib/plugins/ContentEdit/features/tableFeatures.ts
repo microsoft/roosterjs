@@ -51,7 +51,8 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
             }
             let cell = vtable.getCell(row, col);
             if (cell.td) {
-                editor.select(cell.td, PositionType.Begin);
+                const newPos = new Position(cell.td, PositionType.Begin).normalize();
+                editor.select(newPos);
                 break;
             }
         }
@@ -143,7 +144,7 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                             newPos.offset
                         );
                     } else {
-                        editor.select(newPos);
+                        editor.select(newPos.normalize());
                     }
                 }
             });
