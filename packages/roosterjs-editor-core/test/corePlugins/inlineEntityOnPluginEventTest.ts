@@ -14,6 +14,7 @@ import {
     BeforePasteEvent,
     PluginKeyDownEvent,
     ChangeSource,
+    PositionType,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
@@ -29,11 +30,16 @@ const DELIMITER_SELECTOR =
 describe('Inline Entity On Plugin Event |', () => {
     let wrapper: HTMLElement;
     let editor: IEditor;
+    let testContainer: HTMLElement;
+    let selectSpy: jasmine.Spy;
 
     beforeEach(() => {
         wrapper = document.createElement('span');
         wrapper.innerHTML = 'Test';
-        document.body.appendChild(wrapper);
+
+        testContainer = document.createElement('div');
+        testContainer.appendChild(wrapper);
+        document.body.appendChild(testContainer);
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
@@ -53,6 +59,12 @@ describe('Inline Entity On Plugin Event |', () => {
                     type: SelectionRangeTypes.Normal,
                 };
             },
+            getBlockElementAtNode: (node: Node) => {
+                return {
+                    getStartNode: () => testContainer,
+                };
+            },
+            select: selectSpy = jasmine.createSpy('select'),
         });
     });
 
@@ -84,17 +96,26 @@ describe('Inline Entity On Plugin Event |', () => {
                     document.body.removeChild(cn);
                 });
             });
-            function arrangeAndAct() {
+            function arrangeAndAct(
+                which: number = 66 /* B */,
+                addElementOnRunAsync: boolean = true
+            ) {
                 editor.getFocusedPosition = () => new Position(delimiterBefore!, 0);
 
-                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    if (addElementOnRunAsync) {
+                        delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                    }
+
+                    callback(editor);
+                    return () => {};
+                };
 
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
                         eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
-                            which: 66 /* B */,
-                            key: 'B',
+                            which,
                         },
                     },
                     editor
@@ -111,25 +132,13 @@ describe('Inline Entity On Plugin Event |', () => {
 
             it('Is not Delimiter', () => {
                 delimiterBefore?.removeAttribute('class');
+                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterBefore?.textContent?.length).toEqual(5);
                 expect(delimiterBefore?.childNodes.length).toEqual(2);
-            });
-
-            it('Selection not collapsed', () => {
-                editor.getSelectionRangeEx = () => {
-                    return <NormalSelectionRange>(<any>{
-                        areAllCollapsed: false,
-                        type: SelectionRangeTypes.Normal,
-                    });
-                };
-                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
-
-                arrangeAndAct();
-
-                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {
@@ -159,6 +168,14 @@ describe('Inline Entity On Plugin Event |', () => {
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
             });
+
+            it('Enter on delimiter before', () => {
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalledWith(
+                    new Position(delimiterBefore!, PositionType.Before)
+                );
+            });
         });
 
         describe('Element After |', () => {
@@ -170,7 +187,11 @@ describe('Inline Entity On Plugin Event |', () => {
             function arrangeAndAct() {
                 editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
 
-                delimiterAfter?.appendChild(textToAdd);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    delimiterAfter?.appendChild(textToAdd);
+                    callback(editor);
+                    return () => {};
+                };
 
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
@@ -196,25 +217,13 @@ describe('Inline Entity On Plugin Event |', () => {
 
             it('Is not Delimiter', () => {
                 delimiterAfter?.removeAttribute('class');
+                delimiterAfter?.insertBefore(textToAdd, delimiterAfter.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterAfter?.textContent?.length).toEqual(5);
                 expect(delimiterAfter?.childNodes.length).toEqual(2);
-            });
-
-            it('Selection not collapsed', () => {
-                editor.getSelectionRangeEx = () => {
-                    return <NormalSelectionRange>(<any>{
-                        areAllCollapsed: false,
-                        type: SelectionRangeTypes.Normal,
-                    });
-                };
-                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
-
-                arrangeAndAct();
-
-                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {

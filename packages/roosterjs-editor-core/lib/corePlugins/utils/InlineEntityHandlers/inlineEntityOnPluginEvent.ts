@@ -2,6 +2,7 @@ import {
     ChangeSource,
     DelimiterClasses,
     IEditor,
+    Keys,
     NodeType,
     PluginEventType,
     PositionType,
@@ -10,12 +11,14 @@ import {
 import {
     addDelimiterAfter,
     addDelimiterBefore,
+    createElement,
     createRange,
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
     isBlockElement,
     isCharacterValue,
+    isModifierKey,
     Position,
     safeInstanceOf,
     splitTextNode,
@@ -25,6 +28,8 @@ import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
+const NBSP = '\u00A0';
+
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
@@ -51,10 +56,14 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
 
         case PluginEventType.KeyDown:
             const range = editor.getSelectionRangeEx();
+            const { rawEvent } = event;
+            if (range.type != SelectionRangeTypes.Normal) {
+                return;
+            }
+
             if (
-                range.type == SelectionRangeTypes.Normal &&
                 range.areAllCollapsed &&
-                isCharacterValue(event.rawEvent)
+                (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)
             ) {
                 const position = editor.getFocusedPosition();
 
@@ -62,20 +71,69 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     return;
                 }
 
-                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, position.element);
+                const refNode =
+                    position.element == position.node
+                        ? position.element.childNodes.item(position.offset)
+                        : position.element;
 
-                if (
-                    !delimiter ||
-                    (!delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER) &&
-                        !delimiter.classList.contains(DelimiterClasses.DELIMITER_BEFORE))
-                ) {
+                const elementAtCursor = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
+                const delimiter = getDelimiterFromElement(elementAtCursor);
+
+                if (!delimiter) {
+                    // If the element exists but it is not a delimiter, example the text content is not ZWS, remove the classes
+                    if (elementAtCursor) {
+                        removeDelimiterAttr(elementAtCursor);
+                    }
                     return;
                 }
 
-                delimiter.normalize();
-                const textNode = delimiter.firstChild as Node;
-                if (textNode?.nodeType == NodeType.Text) {
+                if (rawEvent.which === Keys.ENTER) {
+                    const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
+                    const sibling = isAfter ? delimiter.nextSibling : delimiter.previousSibling;
+                    let positionToUse: Position | undefined;
+                    let element: Element | null;
+
+                    if (sibling) {
+                        positionToUse = new Position(
+                            sibling,
+                            isAfter ? PositionType.Begin : PositionType.End
+                        );
+                    } else {
+                        element = delimiter.insertAdjacentElement(
+                            isAfter ? 'afterend' : 'beforebegin',
+                            createElement(
+                                {
+                                    tag: 'span',
+                                    children: [NBSP],
+                                },
+                                editor.getDocument()
+                            )!
+                        );
+
+                        if (!element) {
+                            return;
+                        }
+
+                        positionToUse = new Position(element, PositionType.Begin);
+                    }
+
+                    if (positionToUse) {
+                        editor.select(positionToUse);
+
+                        editor.runAsync(asyncEditor => {
+                            if (isAfter) {
+                                const elAfter = asyncEditor.getElementAtCursor();
+                                removeDelimiterAttr(elAfter);
+                            }
+                            if (element) {
+                                removeNode(element);
+                            }
+                        });
+                    }
+                } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
                     editor.runAsync(() => {
+                        delimiter.normalize();
+                        const textNode = delimiter.firstChild as Node;
                         const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
                         if (index >= 0) {
                             splitTextNode(
@@ -108,13 +166,75 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                         }
                     });
                 }
+            } else if (!range.areAllCollapsed && !isModifierKey(rawEvent) && !rawEvent.shiftKey) {
+                const range = editor.getSelectionRange();
+
+                if (!range) {
+                    return;
+                }
+
+                const startContainer = editor.getElementAtCursor(
+                    DELIMITER_SELECTOR,
+                    range.startContainer
+                );
+                const endContainer = editor.getElementAtCursor(
+                    DELIMITER_SELECTOR,
+                    range.endContainer
+                );
+
+                const getPosition = (container: HTMLElement | null, isStartContainer: boolean) => {
+                    if (container && getDelimiterFromElement(container)) {
+                        const isAfter = container.classList.contains(
+                            DelimiterClasses.DELIMITER_AFTER
+                        );
+                        return new Position(
+                            container,
+                            !isAfter === isStartContainer ? PositionType.Before : PositionType.After
+                        );
+                    }
+                    return undefined;
+                };
+
+                const startUpdate = getPosition(startContainer, true /* isStartContainer */);
+                const endUpdate = getPosition(endContainer, false /* isStartContainer */);
+
+                // if (startContainer && getDelimiterFromElement(startContainer)) {
+                //     const isAfter = startContainer.classList.contains(
+                //         DelimiterClasses.DELIMITER_AFTER
+                //     );
+                //     startUpdate = new Position(
+                //         startContainer,
+                //         isAfter ? PositionType.After : PositionType.Before
+                //     );
+                // }
+
+                // if (endContainer && getDelimiterFromElement(endContainer)) {
+                //     const isAfter = endContainer.classList.contains(
+                //         DelimiterClasses.DELIMITER_AFTER
+                //     );
+                //     endUpdate = new Position(
+                //         endContainer,
+                //         isAfter ? PositionType.Before : PositionType.After
+                //     );
+                // }
+
+                if (startUpdate || endUpdate) {
+                    const start = startUpdate
+                        ? startUpdate
+                        : new Position(range.startContainer, range.startOffset);
+                    const end = endUpdate
+                        ? endUpdate
+                        : new Position(range.endContainer, range.endOffset);
+
+                    editor.select(start, end);
+                }
             }
     }
 }
 
 function normalizeDelimitersInEditor(editor: IEditor) {
-    removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
     addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
+    removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
 }
 
 function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
@@ -150,28 +270,28 @@ function isReadOnly(entity: Entity | null) {
     );
 }
 
-function removeInvalidDelimiters(nodes: Element[]) {
+function removeInvalidDelimiters(nodes: Element[] | NodeListOf<HTMLElement>) {
     nodes.forEach(node => {
-        if (getDelimiterFromElement(node)) {
+        if (!getDelimiterFromElement(node)) {
+            removeDelimiterAttr(node);
+        } else {
             const sibling = node.classList.contains(DelimiterClasses.DELIMITER_BEFORE)
                 ? node.nextElementSibling
                 : node.previousElementSibling;
+
             if (!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))) {
                 removeNode(node);
             }
-        } else {
-            node?.classList.remove(
-                DelimiterClasses.DELIMITER_BEFORE,
-                DelimiterClasses.DELIMITER_AFTER
-            );
-
-            node.normalize();
-            node.childNodes.forEach(cn => {
-                const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
-                if (index >= 0) {
-                    createRange(cn, index, cn, index + 1)?.deleteContents();
-                }
-            });
         }
     });
+}
+
+function removeDelimiterAttr(node: ChildNode | undefined | null) {
+    const index = node?.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+    if (node && index >= 0) {
+        createRange(node, index, node, index + 1)?.deleteContents();
+    }
+    if (safeInstanceOf(node, 'HTMLElement')) {
+        node?.classList.remove(DelimiterClasses.DELIMITER_BEFORE, DelimiterClasses.DELIMITER_AFTER);
+    }
 }
