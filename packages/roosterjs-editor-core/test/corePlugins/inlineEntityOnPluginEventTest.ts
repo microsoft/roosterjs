@@ -29,11 +29,16 @@ const DELIMITER_SELECTOR =
 describe('Inline Entity On Plugin Event |', () => {
     let wrapper: HTMLElement;
     let editor: IEditor;
+    let testContainer: HTMLElement;
+    let selectSpy: jasmine.Spy;
 
     beforeEach(() => {
         wrapper = document.createElement('span');
         wrapper.innerHTML = 'Test';
-        document.body.appendChild(wrapper);
+
+        testContainer = document.createElement('div');
+        testContainer.appendChild(wrapper);
+        document.body.appendChild(testContainer);
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
@@ -53,6 +58,7 @@ describe('Inline Entity On Plugin Event |', () => {
                     type: SelectionRangeTypes.Normal,
                 };
             },
+            select: selectSpy = jasmine.createSpy('select'),
         });
     });
 
