@@ -1,3 +1,4 @@
+import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
@@ -39,6 +40,7 @@ describe('Inline Entity On Plugin Event |', () => {
         testContainer = document.createElement('div');
         testContainer.appendChild(wrapper);
         document.body.appendChild(testContainer);
+        spyOn(splitTextNode, 'default').and.callThrough();
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
@@ -90,16 +92,25 @@ describe('Inline Entity On Plugin Event |', () => {
                     document.body.removeChild(cn);
                 });
             });
-            function arrangeAndAct() {
+            function arrangeAndAct(
+                which: number = 66 /* B */,
+                addElementOnRunAsync: boolean = true
+            ) {
                 editor.getFocusedPosition = () => new Position(delimiterBefore!, 0);
 
-                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    if (addElementOnRunAsync) {
+                        delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                    }
 
+                    callback(editor);
+                    return () => {};
+                };
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
                         eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
-                            which: 66 /* B */,
+                            which,
                             key: 'B',
                         },
                     },
@@ -113,15 +124,19 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterBefore?.textContent?.length).toEqual(1);
                 expect(delimiterBefore?.childNodes.length).toEqual(1);
+                expect(splitTextNode.default).toHaveBeenCalled();
             });
 
             it('Is not Delimiter', () => {
                 delimiterBefore?.removeAttribute('class');
+                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterBefore?.textContent?.length).toEqual(5);
                 expect(delimiterBefore?.childNodes.length).toEqual(2);
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed', () => {
@@ -136,6 +151,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {
@@ -150,6 +166,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed and not Normal Selection', () => {
@@ -164,6 +181,32 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
+            });
+
+            it('Delimiter Classes but contains different text content', () => {
+                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+
+                arrangeAndAct();
+
+                expect(splitTextNode.default).not.toHaveBeenCalled();
+            });
+
+            it('Enter on delimiter before, no previous sibling', () => {
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterBefore?.previousElementSibling).toBeNull();
+            });
+
+            it('Enter on delimiter before, no previous sibling', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterBefore?.previousElementSibling).not.toBeNull();
             });
         });
 
@@ -173,16 +216,26 @@ describe('Inline Entity On Plugin Event |', () => {
                     document.body.removeChild(cn);
                 });
             });
-            function arrangeAndAct() {
+            function arrangeAndAct(
+                which: number = 66 /* B */,
+                addElementOnRunAsync: boolean = true
+            ) {
                 editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
 
-                delimiterAfter?.appendChild(textToAdd);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    if (addElementOnRunAsync) {
+                        delimiterAfter?.appendChild(textToAdd);
+                    }
+
+                    callback(editor);
+                    return () => {};
+                };
 
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
                         eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
-                            which: 66 /* B */,
+                            which,
                             key: 'B',
                         },
                     },
@@ -194,19 +247,24 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 delimiterAfter = getDelimiter(entity, true);
+
                 expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterAfter.textContent?.length).toEqual(1);
                 expect(delimiterAfter.childNodes.length).toEqual(1);
                 expect(delimiterAfter.id).toBeDefined();
+                expect(splitTextNode.default).toHaveBeenCalled();
             });
 
             it('Is not Delimiter', () => {
                 delimiterAfter?.removeAttribute('class');
+                delimiterAfter?.insertBefore(textToAdd, delimiterAfter.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterAfter?.textContent?.length).toEqual(5);
                 expect(delimiterAfter?.childNodes.length).toEqual(2);
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed', () => {
@@ -221,6 +279,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {
@@ -235,6 +294,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed and not Normal Selection', () => {
@@ -249,6 +309,24 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
+            });
+
+            it('Enter on delimiter after, no previous sibling', () => {
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterAfter?.nextElementSibling).toBeNull();
+            });
+
+            it('Enter on delimiter after, no previous sibling', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterAfter?.parentElement?.insertBefore(testElement, null);
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterAfter?.nextElementSibling).not.toBeNull();
             });
         });
     });

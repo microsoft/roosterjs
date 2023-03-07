@@ -129,9 +129,9 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                         });
                     }
                 } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
-                    delimiter.normalize();
-                    const textNode = delimiter.firstChild as Node;
                     editor.runAsync(() => {
+                        delimiter.normalize();
+                        const textNode = delimiter.firstChild as Node;
                         const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
                         if (index >= 0) {
                             splitTextNode(
