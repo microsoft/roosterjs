@@ -8,21 +8,38 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * @param element element to be between delimiters
  */
 export default function addDelimiters(element: HTMLElement) {
-    function insertDelimiter(delimiterClass: DelimiterClasses) {
-        const span = createElement(
-            {
-                tag: 'span',
-                className: delimiterClass,
-                children: [ZERO_WIDTH_SPACE],
-            },
-            element.ownerDocument
-        );
-        if (span) {
-            const insertPosition: InsertPosition =
-                delimiterClass == DelimiterClasses.DELIMITER_AFTER ? 'afterend' : 'beforebegin';
-            element.insertAdjacentElement(insertPosition, span);
-        }
+    addDelimiterAfter(element);
+    addDelimiterBefore(element);
+}
+
+/**
+ * Adds delimiter after the element provided.
+ * @param element element to use
+ */
+export function addDelimiterAfter(element: HTMLElement) {
+    insertDelimiter(element, DelimiterClasses.DELIMITER_AFTER);
+}
+
+/**
+ * Adds delimiter before the element provided.
+ * @param element element to use
+ */
+export function addDelimiterBefore(element: HTMLElement) {
+    insertDelimiter(element, DelimiterClasses.DELIMITER_BEFORE);
+}
+
+function insertDelimiter(element: HTMLElement, delimiterClass: DelimiterClasses) {
+    const span = createElement(
+        {
+            tag: 'span',
+            className: delimiterClass,
+            children: [ZERO_WIDTH_SPACE],
+        },
+        element.ownerDocument
+    );
+    if (span) {
+        const insertPosition: InsertPosition =
+            delimiterClass == DelimiterClasses.DELIMITER_AFTER ? 'afterend' : 'beforebegin';
+        element.insertAdjacentElement(insertPosition, span);
     }
-    insertDelimiter(DelimiterClasses.DELIMITER_AFTER);
-    insertDelimiter(DelimiterClasses.DELIMITER_BEFORE);
 }
