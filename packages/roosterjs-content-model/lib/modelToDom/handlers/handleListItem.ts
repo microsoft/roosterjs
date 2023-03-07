@@ -23,13 +23,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     const li = doc.createElement('li');
     const level = listItem.levels[listItem.levels.length - 1];
 
-    if (refNode?.parentNode == listParent) {
-        // It is possible listParent is the same with parent param.
-        // This happens when outdent a list item to cause it has no list level
-        listParent.insertBefore(li, refNode);
-    } else {
-        listParent.appendChild(li);
-    }
+    // It is possible listParent is the same with parent param.
+    // This happens when outdent a list item to cause it has no list level
+    listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
 
     if (level) {
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
