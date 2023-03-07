@@ -47,9 +47,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
 
         case PluginEventType.ExtractContentWithDom:
         case PluginEventType.BeforeCutCopy:
-            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
-                node.parentElement?.removeChild(node);
-            });
+            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(removeNode);
             break;
 
         case PluginEventType.KeyDown:
