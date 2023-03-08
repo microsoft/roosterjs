@@ -19,6 +19,8 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.DefaultFormatInSpan]:
         'When apply default format when initialize or user type, apply the format on a SPAN element.',
     [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
+    [ExperimentalFeatures.ReusableContentModel]:
+        'Reuse existing DOM structure if possible when convert Content Model back to DOM tree',
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
