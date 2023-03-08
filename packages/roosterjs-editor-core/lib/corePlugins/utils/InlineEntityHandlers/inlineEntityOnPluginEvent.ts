@@ -91,7 +91,11 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     }
 }
 
-function normalizeDelimitersInEditor(editor: IEditor) {
+/**
+ * @internal
+ * @param editor Editor instance
+ */
+export function normalizeDelimitersInEditor(editor: IEditor) {
     removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
     addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
 }
