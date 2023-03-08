@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.63% </span>
+                <span class="strong">16.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/32</span>
+                <span class='fraction'>5/31</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">16.13% </span>
+                <span class="strong">16.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/31</span>
+                <span class='fraction'>5/30</span>
             </div>
         
             
@@ -171,7 +171,11 @@
 <a name='L112'></a><a href='#L112'>112</a>
 <a name='L113'></a><a href='#L113'>113</a>
 <a name='L114'></a><a href='#L114'>114</a>
-<a name='L115'></a><a href='#L115'>115</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -198,16 +202,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -304,6 +312,9 @@ import {
 /**
  * Create DOM tree fragment from Content Model document
  * @param doc Document object of the target DOM tree
+ * @param root Target node that will become the container of new DOM tree.
+ * When a DOM node with existing node is passed, it will be merged with content model so that unchanged blocks
+ * won't be touched.
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -314,21 +325,22 @@ import {
  */
 export default function <span class="fstat-no" title="function not covered" >contentModelToDom(</span>
     doc: Document,
+    root: Node,
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, Record&lt;string, HTMLElement&gt;] {
-    const fragment = <span class="cstat-no" title="statement not covered" >doc.createDocumentFragment();</span>
+): SelectionRangeEx | null {
     const modelToDomContext = <span class="cstat-no" title="statement not covered" >createModelToDomContext(editorContext, option);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    modelToDomContext.modelHandlers.blockGroup(doc, fragment, model, modelToDomContext);</span>
-<span class="cstat-no" title="statement not covered" >    optimize(fragment, 2 /*optimizeLevel*/);</span>
+<span class="cstat-no" title="statement not covered" >    modelToDomContext.modelHandlers.blockGroupChildren(doc, root, model, modelToDomContext);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    optimize(root, 2 /*optimizeLevel*/);</span>
 &nbsp;
     const range = <span class="cstat-no" title="statement not covered" >extractSelectionRange(modelToDomContext);</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    fragment.normalize();</span>
+<span class="cstat-no" title="statement not covered" >    root.normalize();</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    return [fragment, range, modelToDomContext.entities];</span>
+<span class="cstat-no" title="statement not covered" >    return range;</span>
 }
 &nbsp;
 function <span class="fstat-no" title="function not covered" >extractSelectionRange(</span>context: ModelToDomContext): SelectionRangeEx | null {
@@ -406,7 +418,7 @@ function <span class="fstat-no" title="function not covered" >calcPosition(</spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 07 2023 01:34:30 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 08 2023 07:20:31 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

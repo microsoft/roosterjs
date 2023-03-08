@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">81.82% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/20</span>
+                <span class='fraction'>18/22</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>17/17</span>
             </div>
         
             
@@ -100,91 +100,94 @@
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
+import { unwrap } from 'roosterjs-editor-dom';
 &nbsp;
 /**
  * @internal
  */
-export const handleListItem: ContentModelHandler&lt;ContentModelListItem&gt; = (
+export const handleListItem: ContentModelBlockHandler&lt;ContentModelListItem&gt; = (
     doc: Document,
     parent: Node,
     listItem: ContentModelListItem,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) =&gt; {
-    context.modelHandlers.list(doc, parent, listItem, context);
+    context.modelHandlers.list(doc, parent, listItem, context, refNode);
 &nbsp;
     const { nodeStack } = context.listFormat;
 &nbsp;
-    let listParent = nodeStack<span class="branch-0 cbranch-no" title="branch not covered" >?.[n</span>odeStack<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength - 1]?.node || parent;
-    let tag = getTagOfNode(listParent);
+    let listParent = nodeStack<span class="branch-0 cbranch-no" title="branch not covered" >?.[n</span>odeStack<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.n</span>ode || <span class="branch-1 cbranch-no" title="branch not covered" >parent;</span>
+    const li = doc.createElement('li');
+    const level = listItem.levels[listItem.levels.length - 1];
 &nbsp;
-    if (tag == 'OL' || tag == 'UL') {
-        const li = doc.createElement('li');
-        const level = listItem.levels[listItem.levels.length - 1];
+    // It is possible listParent is the same with parent param.
+    // This happens when outdent a list item to cause it has no list level
+    listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
 &nbsp;
-        listParent.appendChild(li);
-        listParent = li;
-&nbsp;
+    if (level) {
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
+        applyFormat(li, context.formatAppliers.listItem, level, context);
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (level) {
-            applyFormat(li, context.formatAppliers.listItem, level, context);
-        }
+        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
     } else {
         // There is no level for this list item, that means it should be moved out of the list
         // For each paragraph, make it not implicit so it will have a DIV around it, to avoid more paragraphs connected together
         listItem.blocks.forEach(setParagraphNotImplicit);
-    }
 &nbsp;
-    context.modelHandlers.blockGroupChildren(doc, listParent, listItem, context);
+        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+&nbsp;
+        unwrap(li);
+    }
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -193,7 +196,7 @@ export const handleListItem: ContentModelHandler&lt;ContentModelListItem&gt; = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 07 2023 01:34:30 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 08 2023 07:20:31 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
