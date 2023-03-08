@@ -1,11 +1,16 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { CreateElementData } from 'roosterjs-editor-types';
 import { getObjectKeys, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { stackFormat } from '../utils/stackFormat';
 
 const DefaultParagraphTag = 'div';
+const Pre: CreateElementData = {
+    tag: 'PRE',
+    style: 'margin-top: 0px; margin-bottom: 0px;',
+};
 
 /**
  * @internal
@@ -46,10 +51,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
         // Need some special handling for PRE tag in order to cache the correct element.
         // TODO: Consider use decorator to handle PRE tag
         if (paragraph.format.whiteSpace == 'pre') {
-            pre = wrap(container, 'pre');
-
-            pre.style.marginTop = '0';
-            pre.style.marginBottom = '0';
+            pre = wrap(container, Pre);
         }
 
         context.regularSelection.current = {
