@@ -1,8 +1,11 @@
 import {
     cacheGetEventData,
+    createRange,
     getComputedStyle,
+    getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
+    getTagOfNode,
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
@@ -197,12 +200,29 @@ function cacheGetNeighborEntityElement(
 
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
+        const delimiters: Element[] = [];
+        if (
+            entity.isReadonly &&
+            getTagOfNode(entity.wrapper) === 'SPAN' &&
+            editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+        ) {
+            const { nextElementSibling, previousElementSibling } = entity.wrapper;
+            [nextElementSibling, previousElementSibling].forEach(el => {
+                if (getDelimiterFromElement(el)) {
+                    delimiters.push(el);
+                }
+            });
+        }
         if (entity) {
             editor.triggerPluginEvent(PluginEventType.EntityOperation, {
                 operation,
                 rawEvent: event.rawEvent,
                 entity,
             });
+
+            if (!editor.contains(entity.wrapper)) {
+                delimiters.forEach(el => el.parentElement?.removeChild(el));
+            }
         }
     }
 
@@ -392,6 +412,22 @@ function cacheEntityBetweenDelimiter(
                 rawEvent: event.rawEvent,
                 entity,
             });
+
+            if (!event.rawEvent.defaultPrevented) {
+                const delimiter = cacheDelimiter(event, checkBefore);
+                if (!delimiter) {
+                    return;
+                }
+
+                const { delimiterPair } = getRelatedElements(delimiter, checkBefore);
+
+                editor.select(
+                    createRange(
+                        checkBefore ? delimiter : delimiterPair,
+                        checkBefore ? delimiterPair : delimiter
+                    )
+                );
+            }
         }
     }
 
