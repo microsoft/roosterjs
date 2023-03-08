@@ -8,7 +8,7 @@ export interface ModelToDomBlockAndSegmentNode {
      * The block element of the selection. When segment is null, it represents the start position of this block element,
      * otherwise block element will be ignored and we can always retrieve position from segment node
      */
-    block: HTMLElement | null;
+    block: Node | null;
 
     /**
      * Segment node of this position. When provided, it represents the position right after this node

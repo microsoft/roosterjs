@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
@@ -9,11 +9,12 @@ import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 /**
  * @internal
  */
-export const handleList: ContentModelHandler<ContentModelListItem> = (
+export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
     doc: Document,
     parent: Node,
     listItem: ContentModelListItem,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
     let layer = 0;
     const { nodeStack } = context.listFormat;
@@ -48,7 +49,8 @@ export const handleList: ContentModelHandler<ContentModelListItem> = (
         const newList = doc.createElement(level.listType || 'UL');
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
-        lastParent.appendChild(newList);
+        lastParent.insertBefore(newList, layer == 0 ? refNode : null);
+
         applyFormat(newList, context.formatAppliers.listLevel, level, context);
 
         handleMetadata(level, newList, context);
