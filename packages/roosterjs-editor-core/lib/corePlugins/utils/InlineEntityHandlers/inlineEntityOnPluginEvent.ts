@@ -2,7 +2,6 @@ import {
     ChangeSource,
     DelimiterClasses,
     IEditor,
-    NodeType,
     PluginEventType,
     PositionType,
     SelectionRangeTypes,
@@ -10,7 +9,6 @@ import {
 import {
     addDelimiterAfter,
     addDelimiterBefore,
-    createRange,
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
@@ -18,13 +16,11 @@ import {
     isCharacterValue,
     Position,
     safeInstanceOf,
-    splitTextNode,
 } from 'roosterjs-editor-dom';
 import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
-const ZERO_WIDTH_SPACE = '\u200B';
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
@@ -73,41 +69,24 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                 }
 
                 delimiter.normalize();
-                const textNode = delimiter.firstChild as Node;
-                if (textNode?.nodeType == NodeType.Text) {
-                    editor.runAsync(() => {
-                        const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
-                        if (index >= 0) {
-                            splitTextNode(
-                                <Text>textNode,
-                                index == 0 ? 1 : index,
-                                false /* returnFirstPart */
-                            );
-                            let nodeToMove: Node | undefined;
-                            delimiter.childNodes.forEach(node => {
-                                if (node.nodeValue !== ZERO_WIDTH_SPACE) {
-                                    nodeToMove = node;
-                                }
-                            });
-                            if (nodeToMove) {
-                                delimiter.parentElement?.insertBefore(
-                                    nodeToMove,
-                                    delimiter.className == DelimiterClasses.DELIMITER_BEFORE
-                                        ? delimiter
-                                        : delimiter.nextSibling
-                                );
-                                const selection = nodeToMove.ownerDocument?.getSelection();
+                editor.runAsync(() => {
+                    delimiter.childNodes.forEach(nodeToMove => {
+                        delimiter.parentElement?.insertBefore(
+                            nodeToMove,
+                            delimiter.className == DelimiterClasses.DELIMITER_BEFORE
+                                ? delimiter
+                                : delimiter.nextSibling
+                        );
+                        const selection = nodeToMove.ownerDocument?.getSelection();
 
-                                if (selection) {
-                                    selection.setPosition(
-                                        nodeToMove,
-                                        new Position(nodeToMove, PositionType.End).offset
-                                    );
-                                }
-                            }
+                        if (selection) {
+                            selection.setPosition(
+                                nodeToMove,
+                                new Position(nodeToMove, PositionType.End).offset
+                            );
                         }
                     });
-                }
+                });
             }
     }
 }
@@ -164,14 +143,6 @@ function removeInvalidDelimiters(nodes: Element[]) {
                 DelimiterClasses.DELIMITER_BEFORE,
                 DelimiterClasses.DELIMITER_AFTER
             );
-
-            node.normalize();
-            node.childNodes.forEach(cn => {
-                const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
-                if (index >= 0) {
-                    createRange(cn, index, cn, index + 1)?.deleteContents();
-                }
-            });
         }
     });
 }

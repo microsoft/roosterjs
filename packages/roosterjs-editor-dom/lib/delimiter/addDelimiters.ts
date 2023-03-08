@@ -1,8 +1,6 @@
 import createElement from '../utils/createElement';
 import { DelimiterClasses } from 'roosterjs-editor-types';
 
-const ZERO_WIDTH_SPACE = '\u200B';
-
 /**
  * Adds delimiters to the element provided.
  * @param element element to be between delimiters
@@ -33,7 +31,6 @@ function insertDelimiter(element: HTMLElement, delimiterClass: DelimiterClasses)
         {
             tag: 'span',
             className: delimiterClass,
-            children: [ZERO_WIDTH_SPACE],
         },
         element.ownerDocument
     );

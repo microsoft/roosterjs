@@ -17,12 +17,12 @@ describe('getDelimiterFromElementTest', () => {
         expect(result).toBeTruthy();
     });
 
-    it('No ZWS', () => {
+    it('ZWS', () => {
         const result = getDelimiterFromElement(
             createEl(false /* changeTag */, false /* changeClass */, true /* changeChildren */)
         );
 
-        expect(result).toBeNull();
+        expect(result).not.toBeNull();
     });
 
     it('No Class', () => {

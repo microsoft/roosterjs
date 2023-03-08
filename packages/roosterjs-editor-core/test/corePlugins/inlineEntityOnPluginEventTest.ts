@@ -22,7 +22,6 @@ import {
     Position,
 } from 'roosterjs-editor-dom';
 
-const ZERO_WIDTH_SPACE = '\u200B';
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 
@@ -104,18 +103,18 @@ describe('Inline Entity On Plugin Event |', () => {
             it('Is Delimiter', () => {
                 arrangeAndAct();
 
-                expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
-                expect(delimiterBefore?.textContent?.length).toEqual(1);
-                expect(delimiterBefore?.childNodes.length).toEqual(1);
+                expect(delimiterBefore?.textContent).toEqual('');
+                expect(delimiterBefore?.textContent?.length).toEqual(0);
+                expect(delimiterBefore?.childNodes.length).toEqual(0);
             });
 
             it('Is not Delimiter', () => {
                 delimiterBefore?.removeAttribute('class');
                 arrangeAndAct();
 
-                expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
-                expect(delimiterBefore?.textContent?.length).toEqual(5);
-                expect(delimiterBefore?.childNodes.length).toEqual(2);
+                expect(delimiterBefore?.textContent).not.toEqual('');
+                expect(delimiterBefore?.textContent?.length).toEqual(4);
+                expect(delimiterBefore?.childNodes.length).toEqual(1);
             });
 
             it('Selection not collapsed', () => {
@@ -188,19 +187,18 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 delimiterAfter = getDelimiter(entity, true);
-                expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
-                expect(delimiterAfter.textContent?.length).toEqual(1);
-                expect(delimiterAfter.childNodes.length).toEqual(1);
-                expect(delimiterAfter.id).toBeDefined();
+                expect(delimiterAfter.textContent).toEqual('');
+                expect(delimiterAfter.textContent?.length).toEqual(0);
+                expect(delimiterAfter.childNodes.length).toEqual(0);
             });
 
             it('Is not Delimiter', () => {
                 delimiterAfter?.removeAttribute('class');
                 arrangeAndAct();
 
-                expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
-                expect(delimiterAfter?.textContent?.length).toEqual(5);
-                expect(delimiterAfter?.childNodes.length).toEqual(2);
+                expect(delimiterAfter?.textContent).not.toEqual('');
+                expect(delimiterAfter?.textContent?.length).toEqual(4);
+                expect(delimiterAfter?.childNodes.length).toEqual(1);
             });
 
             it('Selection not collapsed', () => {

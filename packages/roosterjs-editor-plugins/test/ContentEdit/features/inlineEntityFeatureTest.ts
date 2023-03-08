@@ -1,5 +1,11 @@
-import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
 import { EntityFeatures } from '../../../lib/plugins/ContentEdit/features/entityFeatures';
+import {
+    addDelimiters,
+    commitEntity,
+    findClosestElementAncestor,
+    Position,
+    PositionContentSearcher,
+} from 'roosterjs-editor-dom';
 import {
     Entity,
     ExperimentalFeatures,
@@ -7,16 +13,9 @@ import {
     Keys,
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
-import {
-    addDelimiters,
-    commitEntity,
-    findClosestElementAncestor,
-    PositionContentSearcher,
-    Position,
-} from 'roosterjs-editor-dom';
 
 describe('Content Edit Features |', () => {
-    const { moveBetweenDelimitersFeature, removeEntityBetweenDelimiters } = EntityFeatures;
+    const { removeEntityBetweenDelimiters } = EntityFeatures;
     let entity: Entity;
     let delimiterAfter: Element | null;
     let delimiterBefore: Element | null;
@@ -26,20 +25,12 @@ describe('Content Edit Features |', () => {
     let triggerContentChangedEvent: jasmine.Spy;
     let testContainer: HTMLDivElement;
 
-    let defaultEvent = <PluginKeyDownEvent>{};
-    let extendSpy: jasmine.Spy;
-    let event: PluginKeyDownEvent;
-    let preventDefaultSpy: jasmine.Spy;
-
     beforeAll(() => {
         cleanUp();
     });
 
     beforeEach(() => {
-        preventDefaultSpy = jasmine.createSpy('preventDefault');
-        extendSpy = jasmine.createSpy('expand');
         cleanUp();
-        defaultEvent = <PluginKeyDownEvent>{};
         testContainer = document.createElement('div');
         document.body.appendChild(testContainer);
 
@@ -79,362 +70,6 @@ describe('Content Edit Features |', () => {
 
     afterAll(() => {
         cleanUp();
-    });
-
-    describe('Move Before |', () => {
-        function runTest(
-            element: Element | Position | null,
-            expected: boolean,
-            event: PluginKeyDownEvent
-        ) {
-            setEditorFuncs(editor, element, testContainer);
-
-            const result = moveBetweenDelimitersFeature.shouldHandleEvent(
-                event,
-                editor,
-                false /* ctrlOrMeta */
-            );
-
-            expect(result).toBe(expected);
-            return event;
-        }
-        function runTests() {
-            it('DelimiterAfter, shouldHandle and Handle, no shiftKey', () => {
-                event = runTest(delimiterAfter, true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(select).toHaveBeenCalledWith(new Position(testContainer, 0));
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-
-                restoreSelection();
-            });
-
-            it('DelimiterAfter, shouldHandle and Handle, with shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                    },
-                };
-
-                event = runTest(delimiterAfter, true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(extendSpy).toHaveBeenCalledWith(testContainer, 0);
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-
-                restoreSelection();
-            });
-
-            it('DelimiterAfter, should not Handle, no shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                        which: event.rawEvent.which === Keys.RIGHT ? Keys.LEFT : Keys.RIGHT,
-                    },
-                };
-
-                event = runTest(delimiterAfter, false /* expected */, event);
-            });
-
-            it('DelimiterAfter, should not Handle, with shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                        which: event.rawEvent.which === Keys.RIGHT ? Keys.LEFT : Keys.RIGHT,
-                    },
-                };
-
-                event = runTest(delimiterAfter, false /* expected */, event);
-            });
-
-            it('DelimiterAfter, shouldHandle and Handle, with shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                    },
-                };
-
-                event = runTest(delimiterAfter, true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(extendSpy).toHaveBeenCalledWith(testContainer, 0);
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-
-                restoreSelection();
-            });
-
-            it('Element not an delimiter', () => {
-                delimiterAfter!.setAttribute('class', '');
-
-                runTest(delimiterAfter, false /* expected */, event);
-            });
-
-            it('Handle Event without cache', () => {
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-            });
-
-            it('Null', () => {
-                runTest(null, false /* expected */, event);
-            });
-
-            it('Feature not enabled, do not handle', () => {
-                editor.isFeatureEnabled = () => false;
-                runTest(null, false /* expected */, event);
-            });
-
-            it('Selection not collapsed. do not handle', () => {
-                (editor.getSelectionRange = () =>
-                    <Range>{
-                        collapsed: false,
-                    }),
-                    runTest(null, false /* expected */, event);
-            });
-
-            it('DelimiterAfter, shouldHandle and Handle, cursor at start of element after delimiter after', () => {
-                const bold = document.createElement('b');
-                bold.append(document.createTextNode('Bold'));
-                testContainer.insertBefore(bold, null);
-
-                event = runTest(new Position(bold.firstChild!, 0), true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(select).toHaveBeenCalledWith(new Position(testContainer, 0));
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-
-                restoreSelection();
-            });
-
-            it('DelimiterAfter, should not Handle, cursor is not not at the start of the element after delimiter after', () => {
-                const bold = document.createElement('b');
-                bold.append(document.createTextNode('Bold'));
-                testContainer.insertBefore(bold, null);
-
-                event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
-            });
-        }
-
-        describe('LTR |', () => {
-            beforeEach(() => {
-                event = <PluginKeyDownEvent>{
-                    rawEvent: <KeyboardEvent>{
-                        preventDefault() {
-                            preventDefaultSpy();
-                        },
-                        which: Keys.LEFT,
-                    },
-                };
-            });
-            runTests();
-        });
-
-        describe('RTL |', () => {
-            beforeEach(() => {
-                event = <PluginKeyDownEvent>{
-                    rawEvent: <KeyboardEvent>{
-                        preventDefault() {
-                            preventDefaultSpy();
-                        },
-                        which: Keys.RIGHT,
-                    },
-                };
-                spyOn(getComputedStyles, 'getComputedStyle').and.returnValue('rtl');
-            });
-            runTests();
-        });
-    });
-
-    describe('Move After |', () => {
-        let event: PluginKeyDownEvent;
-
-        function runTest(
-            element: Element | Position | null,
-            expected: boolean,
-            event: PluginKeyDownEvent
-        ) {
-            setEditorFuncs(editor, element, testContainer);
-
-            const result = moveBetweenDelimitersFeature.shouldHandleEvent(
-                event,
-                editor,
-                false /* ctrlOrMeta */
-            );
-
-            expect(result).toBe(expected);
-            return event;
-        }
-
-        function runTests() {
-            it('DelimiterAfter', () => {
-                runTest(delimiterAfter, false /* expected */, event);
-            });
-
-            it('DelimiterBefore, should handle and handle,  no shiftKey', () => {
-                event = runTest(delimiterBefore, true /* expected */, event);
-
-                spyOnSelection();
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-
-                restoreSelection();
-            });
-
-            it('DelimiterBefore, should handle and handle, with shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                    },
-                };
-                event = runTest(delimiterBefore, true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-
-                restoreSelection();
-            });
-
-            it('DelimiterBefore, should not handle, no shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        which: event.rawEvent.which === Keys.RIGHT ? Keys.LEFT : Keys.RIGHT,
-                    },
-                };
-                event = runTest(delimiterBefore, false /* expected */, event);
-            });
-
-            it('DelimiterBefore, should not handle, with shiftKey', () => {
-                event = {
-                    ...event,
-                    rawEvent: <KeyboardEvent>{
-                        ...event.rawEvent,
-                        shiftKey: true,
-                        which: event.rawEvent.which === Keys.RIGHT ? Keys.LEFT : Keys.RIGHT,
-                    },
-                };
-                event = runTest(delimiterBefore, false /* expected */, event);
-            });
-
-            it('Element not an delimiter', () => {
-                delimiterAfter!.setAttribute('class', '');
-                runTest(delimiterAfter, false /* expected */, event);
-            });
-
-            it('Handle Event without cache', () => {
-                moveBetweenDelimitersFeature.handleEvent(defaultEvent, editor);
-
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(0);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-            });
-
-            it('Null', () => {
-                runTest(null, false /* expected */, event);
-            });
-
-            it('Feature not enabled, do not handle', () => {
-                editor.isFeatureEnabled = () => false;
-                runTest(null, false /* expected */, event);
-            });
-
-            it('Selection not collapsed. do not handle', () => {
-                (editor.getSelectionRange = () =>
-                    <Range>{
-                        collapsed: false,
-                    }),
-                    runTest(null, false /* expected */, event);
-            });
-
-            it('DelimiterBefore, shouldHandle and Handle, cursor at end of element before delimiter before', () => {
-                const bold = document.createElement('b');
-                bold.append(document.createTextNode('Bold'));
-                testContainer.insertBefore(bold, delimiterBefore);
-
-                event = runTest(new Position(bold.firstChild!, 4), true /* expected */, event);
-
-                spyOnSelection();
-
-                moveBetweenDelimitersFeature.handleEvent(event, editor);
-
-                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
-                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
-                expect(extendSpy).toHaveBeenCalledTimes(0);
-
-                restoreSelection();
-            });
-
-            it('DelimiterBefore, should not Handle, cursor is not not at the start of the element after delimiter after', () => {
-                const bold = document.createElement('b');
-                bold.append(document.createTextNode('Bold'));
-                testContainer.insertBefore(bold, null);
-
-                event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
-            });
-        }
-
-        describe('LTR |', () => {
-            beforeEach(() => {
-                preventDefaultSpy = jasmine.createSpy('preventDefault');
-                event = <PluginKeyDownEvent>{
-                    rawEvent: <KeyboardEvent>{
-                        preventDefault() {
-                            preventDefaultSpy();
-                        },
-                        which: Keys.RIGHT,
-                    },
-                };
-            });
-            runTests();
-        });
-
-        describe('RTL |', () => {
-            beforeEach(() => {
-                preventDefaultSpy = jasmine.createSpy('preventDefault');
-                event = <PluginKeyDownEvent>{
-                    rawEvent: <KeyboardEvent>{
-                        preventDefault() {
-                            preventDefaultSpy();
-                        },
-                        which: Keys.LEFT,
-                    },
-                };
-                spyOn(getComputedStyles, 'getComputedStyle').and.returnValue('rtl');
-            });
-            runTests();
-        });
     });
 
     describe('Remove Entity Between delimiters', () => {
@@ -499,21 +134,6 @@ describe('Content Edit Features |', () => {
             expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
         });
     });
-
-    let selectionTemp: any;
-    function spyOnSelection() {
-        selectionTemp = document.getSelection;
-        document.getSelection = () =>
-            <Selection>{
-                extend(node: Node, offset: number) {
-                    extendSpy(node, offset);
-                },
-            };
-    }
-
-    function restoreSelection() {
-        document.getSelection = selectionTemp;
-    }
 });
 
 function setEditorFuncs(
