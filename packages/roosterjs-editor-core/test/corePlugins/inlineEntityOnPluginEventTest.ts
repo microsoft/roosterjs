@@ -41,6 +41,7 @@ describe('Inline Entity On Plugin Event |', () => {
         testContainer.appendChild(wrapper);
         document.body.appendChild(testContainer);
         spyOn(splitTextNode, 'default').and.callThrough();
+        selectSpy = jasmine.createSpy('select');
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
@@ -60,7 +61,7 @@ describe('Inline Entity On Plugin Event |', () => {
                     type: SelectionRangeTypes.Normal,
                 };
             },
-            select: selectSpy = jasmine.createSpy('select'),
+            select: selectSpy,
         });
     });
 
@@ -139,21 +140,6 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Selection not collapsed', () => {
-                editor.getSelectionRangeEx = () => {
-                    return <NormalSelectionRange>(<any>{
-                        areAllCollapsed: false,
-                        type: SelectionRangeTypes.Normal,
-                    });
-                };
-                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
-
-                arrangeAndAct();
-
-                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
-                expect(splitTextNode.default).not.toHaveBeenCalled();
-            });
-
             it('Selection collapsed and not Normal Selection', () => {
                 editor.getSelectionRangeEx = () => {
                     return <NormalSelectionRange>(<any>{
@@ -199,6 +185,54 @@ describe('Inline Entity On Plugin Event |', () => {
 
                 expect(selectSpy).toHaveBeenCalled();
                 expect(delimiterBefore?.previousElementSibling).not.toBeNull();
+            });
+
+            it('Key press when selection is not collapsed, delimiter before is the endContainer', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
+
+                const range = new Range();
+                range.setStart(testElement, 0);
+                range.setEnd(delimiterBefore!, 0);
+
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                        ranges: [range],
+                    };
+                };
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalledWith(
+                    new Position(testElement, 0),
+                    new Position(testContainer, 1)
+                );
+            });
+
+            it('Key press when selection is not collapsed, delimiter before is the startContainer', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, null);
+
+                const range = new Range();
+                range.setStart(delimiterBefore!, 0);
+                range.setEnd(testElement, 0);
+
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                        ranges: [range],
+                    };
+                };
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalledWith(
+                    new Position(testContainer, 1),
+                    new Position(testElement, 0)
+                );
             });
         });
 
@@ -259,21 +293,6 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Selection not collapsed', () => {
-                editor.getSelectionRangeEx = () => {
-                    return <NormalSelectionRange>(<any>{
-                        areAllCollapsed: false,
-                        type: SelectionRangeTypes.Normal,
-                    });
-                };
-                spyOn(editor, 'getElementAtCursor').and.returnValue(delimiterAfter as HTMLElement);
-
-                arrangeAndAct();
-
-                expect(editor.getElementAtCursor).not.toHaveBeenCalled();
-                expect(splitTextNode.default).not.toHaveBeenCalled();
-            });
-
             it('Selection collapsed and not Normal Selection', () => {
                 editor.getSelectionRangeEx = () => {
                     return <NormalSelectionRange>(<any>{
@@ -319,6 +338,54 @@ describe('Inline Entity On Plugin Event |', () => {
 
                 expect(selectSpy).toHaveBeenCalled();
                 expect(delimiterAfter?.nextElementSibling).not.toBeNull();
+            });
+
+            it('Key press when selection is not collapsed, delimiter after is the endContainer', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
+
+                const range = new Range();
+                range.setStart(testElement, 0);
+                range.setEnd(delimiterAfter!, 0);
+
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                        ranges: [range],
+                    };
+                };
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalledWith(
+                    new Position(testElement, 0),
+                    new Position(testContainer, 4)
+                );
+            });
+
+            it('Key press when selection is not collapsed, delimiter after is the startContainer', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, null);
+
+                const range = new Range();
+                range.setStart(delimiterAfter!, 0);
+                range.setEnd(testElement, 0);
+
+                editor.getSelectionRangeEx = () => {
+                    return <NormalSelectionRange>{
+                        areAllCollapsed: false,
+                        type: SelectionRangeTypes.Normal,
+                        ranges: [range],
+                    };
+                };
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalledWith(
+                    new Position(testContainer, 3),
+                    new Position(testElement, 0)
+                );
             });
         });
     });
