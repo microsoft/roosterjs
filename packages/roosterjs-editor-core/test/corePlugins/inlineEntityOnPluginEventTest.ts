@@ -184,14 +184,6 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Delimiter Classes but contains different text content', () => {
-                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
-
-                arrangeAndAct();
-
-                expect(splitTextNode.default).not.toHaveBeenCalled();
-            });
-
             it('Enter on delimiter before, no previous sibling', () => {
                 arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
 

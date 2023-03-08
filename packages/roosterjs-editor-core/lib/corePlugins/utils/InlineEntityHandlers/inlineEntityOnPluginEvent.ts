@@ -72,14 +72,9 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                         ? position.element.childNodes.item(position.offset)
                         : position.element;
 
-                const elementAtCursor = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
-                const delimiter = getDelimiterFromElement(elementAtCursor);
+                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
 
                 if (!delimiter) {
-                    // If the element exists but it is not a delimiter, example the text content is not ZWS, remove the classes
-                    if (elementAtCursor) {
-                        removeDelimiterAttr(elementAtCursor);
-                    }
                     return;
                 }
 
@@ -163,6 +158,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     });
                 }
             }
+            break;
     }
 }
 
@@ -179,7 +175,7 @@ function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] 
 
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
-        if (safeInstanceOf(node, 'HTMLElement') && isReadOnly(getEntityFromElement(node))) {
+        if (tryGetEntityFromNode(node)) {
             const [delimiterAfter, delimiterBefore] = getDelimiters(node);
 
             if (!delimiterAfter) {
@@ -190,6 +186,14 @@ function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
             }
         }
     });
+}
+
+function tryGetEntityFromNode(node: Element | null): node is HTMLElement {
+    return !!(
+        node &&
+        safeInstanceOf(node, 'HTMLElement') &&
+        isReadOnly(getEntityFromElement(node))
+    );
 }
 
 function removeNode(el: Node | undefined) {
