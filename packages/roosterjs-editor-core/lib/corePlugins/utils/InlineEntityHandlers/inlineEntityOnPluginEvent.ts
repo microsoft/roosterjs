@@ -62,7 +62,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                 rangeEx.areAllCollapsed &&
                 (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)
             ) {
-                let position = editor.getFocusedPosition()?.normalize();
+                const position = editor.getFocusedPosition();
 
                 if (!position) {
                     return;
