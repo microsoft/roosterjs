@@ -29,7 +29,6 @@ describe('createModelToDomContext', () => {
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
         defaultImplicitFormatMap: defaultImplicitFormatMap,
-        entities: {},
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
     };
@@ -90,7 +89,6 @@ describe('createModelToDomContext', () => {
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
         expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
-        expect(context.entities).toEqual({});
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
     });

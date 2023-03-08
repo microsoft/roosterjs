@@ -1,16 +1,19 @@
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
+    EditorReadyEvent,
     DelimiterClasses,
     Entity,
-    EntityOperation,
-    EntityOperationEvent,
     ExtractContentWithDomEvent,
     IEditor,
     NormalSelectionRange,
     PluginEventType,
+    ContentChangedEvent,
+    PluginEvent,
     SelectionRangeTypes,
+    BeforePasteEvent,
     PluginKeyDownEvent,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
@@ -57,48 +60,6 @@ describe('Inline Entity On Plugin Event |', () => {
         wrapper.parentElement?.removeChild(wrapper);
         document.body.childNodes.forEach(cn => {
             document.body.removeChild(cn);
-        });
-    });
-
-    describe('Remove Entity Operations |', () => {
-        const removeOperations = [
-            EntityOperation.RemoveFromStart,
-            EntityOperation.RemoveFromEnd,
-            EntityOperation.Overwrite,
-        ];
-        let entity: Entity;
-        let delimiterAfter: HTMLElement;
-        let delimiterBefore: HTMLElement;
-
-        beforeEach(() => {
-            entity = <Entity>{
-                id: 'test',
-                isReadonly: true,
-                type: 'Test',
-                wrapper,
-            };
-
-            commitEntity(wrapper, 'test', true, 'test');
-            addDelimiters(wrapper);
-
-            delimiterAfter = getDelimiter(entity, true /* after */);
-            delimiterBefore = getDelimiter(entity, false /* after */);
-        });
-
-        removeOperations.forEach(operation => {
-            it('removeDelimiter when Deleting entity between them', () => {
-                inlineEntityOnPluginEvent(
-                    <EntityOperationEvent>{
-                        entity,
-                        eventType: PluginEventType.EntityOperation,
-                        operation,
-                    },
-                    editor
-                );
-
-                expect(document.contains(delimiterAfter)).toBeFalse();
-                expect(document.contains(delimiterBefore)).toBeFalse();
-            });
         });
     });
 
@@ -319,6 +280,208 @@ describe('Inline Entity On Plugin Event |', () => {
             );
 
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+        });
+    });
+
+    function runEditorReadyContentChangedTest(
+        expectedDelimiters: number,
+        elementToUse: Node,
+        eventParam: PluginEvent,
+        updateCallback?: (node: Node) => void
+    ) {
+        const rootDiv = document.createElement('div');
+
+        spyOn(editor, 'queryElements').and.callFake((selector: string) =>
+            Array.from(rootDiv.querySelectorAll(selector))
+        );
+
+        if (elementToUse) {
+            rootDiv.appendChild(elementToUse);
+        }
+        updateCallback?.(elementToUse);
+
+        inlineEntityOnPluginEvent(eventParam, editor);
+
+        expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+    }
+
+    describe('Editor Ready |', () => {
+        let event: EditorReadyEvent;
+
+        beforeEach(() => {
+            event = <EditorReadyEvent>{
+                eventType: PluginEventType.EditorReady,
+            };
+        });
+
+        it('New Editor with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(2, element, event);
+        });
+
+        it('New Editor with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Normal Element', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with no elements', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
+    });
+
+    describe('Content Changed |', () => {
+        let event: ContentChangedEvent;
+
+        beforeEach(() => {
+            event = <ContentChangedEvent>{
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            };
+        });
+
+        it('ContentChanged with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(2, element, event);
+        });
+
+        it('ContentChanged source not SetContent', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            event.source = ChangeSource.AutoLink;
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Normal Element', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with no elements', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
+    });
+
+    describe('Before Paste |', () => {
+        function runTest(expectedDelimiters: number, elementToUse?: Node) {
+            const rootDiv = document.createElement('div');
+            if (elementToUse) {
+                rootDiv.appendChild(elementToUse);
+            }
+
+            inlineEntityOnPluginEvent(
+                <BeforePasteEvent>(<any>{
+                    eventType: PluginEventType.BeforePaste,
+                    clipboardData: {},
+                    fragment: rootDiv,
+                }),
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+        }
+
+        it('Before Paste with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(2, element);
+        });
+
+        it('Before Paste with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Normal Element', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
+        });
+
+        it('Before Paste with no elements', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
         });
     });
 });

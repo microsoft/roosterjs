@@ -19,9 +19,10 @@ describe('handleDivider', () => {
 
         const parent = document.createElement('div');
 
-        handleDivider(document, parent, hr, context);
+        handleDivider(document, parent, hr, context, null);
 
         expect(parent.innerHTML).toBe('<hr>');
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
     it('HR with format', () => {
@@ -33,9 +34,10 @@ describe('handleDivider', () => {
 
         const parent = document.createElement('div');
 
-        handleDivider(document, parent, hr, context);
+        handleDivider(document, parent, hr, context, null);
 
         expect(parent.innerHTML).toBe('<hr style="margin-top: 10px;">');
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
     it('DIV with format', () => {
@@ -47,9 +49,10 @@ describe('handleDivider', () => {
 
         const parent = document.createElement('div');
 
-        handleDivider(document, parent, hr, context);
+        handleDivider(document, parent, hr, context, null);
 
         expect(parent.innerHTML).toBe('<div style="margin-top: 10px;"></div>');
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
     it('HR with size and display', () => {
@@ -64,12 +67,13 @@ describe('handleDivider', () => {
 
         const parent = document.createElement('div');
 
-        handleDivider(document, parent, hr, context);
+        handleDivider(document, parent, hr, context, null);
 
         expect(parent.innerHTML).toBe('<hr style="display: inline-block; width: 98%;">');
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
-    it('DIV with border and padding', () => {
+    it('HR with border and padding', () => {
         const hr: ContentModelDivider = {
             blockType: 'Divider',
             tagName: 'hr',
@@ -81,10 +85,29 @@ describe('handleDivider', () => {
 
         const parent = document.createElement('div');
 
-        handleDivider(document, parent, hr, context);
+        handleDivider(document, parent, hr, context, null);
 
         expect(parent.innerHTML).toBe(
             '<hr style="padding-bottom: 30px; border-top: 1px solid black;">'
         );
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+    });
+
+    it('HR with refNode', () => {
+        const hr: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {},
+        };
+
+        const parent = document.createElement('div');
+        const br = document.createElement('br');
+
+        parent.appendChild(br);
+
+        handleDivider(document, parent, hr, context, br);
+
+        expect(parent.innerHTML).toBe('<hr><br>');
+        expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 });

@@ -12,7 +12,9 @@ describe('ContentModelPlugin', () => {
         spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
-        const editor = ({} as any) as IContentModelEditor;
+        const editor = ({
+            cacheContentModel: () => {},
+        } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
         plugin.initialize(editor);
@@ -39,6 +41,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
         const model = createContentModelDocument();
@@ -71,6 +74,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -101,6 +105,7 @@ describe('ContentModelPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -139,6 +144,7 @@ describe('ContentModelPlugin', () => {
             addUndoSnapshot: (callback: () => void) => {
                 callback();
             },
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -202,6 +208,7 @@ describe('ContentModelPlugin', () => {
             addUndoSnapshot: (callback: () => void) => {
                 callback();
             },
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -256,6 +263,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -287,6 +295,7 @@ describe('ContentModelPlugin', () => {
             addUndoSnapshot: (callback: () => void) => {
                 callback();
             },
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -316,6 +325,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
@@ -345,6 +355,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             createContentModel: () => model,
             setContentModel,
+            cacheContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelPlugin();
 
