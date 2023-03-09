@@ -80,10 +80,14 @@ export default class ContentModelPlugin implements EditorPlugin {
                     if (format && pos) {
                         setPendingFormat(this.editor, format, pos);
                     }
-                } else if (event.rawEvent.which == Keys.BACKSPACE) {
-                    handleDelete(this.editor, 'backspace');
-                } else if (event.rawEvent.which == Keys.DELETE) {
-                    handleDelete(this.editor, 'delete');
+                } else if (
+                    event.rawEvent.which == Keys.BACKSPACE ||
+                    event.rawEvent.which == Keys.DELETE
+                ) {
+                    handleDelete(
+                        this.editor,
+                        event.rawEvent.which == Keys.DELETE ? 'delete' : 'backspace'
+                    );
                 }
 
                 break;

@@ -1,3 +1,4 @@
+import * as deleteContent from '../../lib/publicApi/editing/handleDelete';
 import * as pendingFormat from '../../lib/modelApi/format/pendingFormat';
 import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
 import { addSegment } from '../../lib/modelApi/common/addSegment';
@@ -5,6 +6,7 @@ import { createContentModelDocument } from '../../lib/modelApi/creators/createCo
 import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../lib/modelApi/creators/createText';
 import { IContentModelEditor } from '../../lib/publicTypes/IContentModelEditor';
+import { Keys } from 'roosterjs-editor-types';
 import { PluginEventType } from 'roosterjs-editor-types';
 
 describe('ContentModelPlugin', () => {
@@ -369,5 +371,47 @@ describe('ContentModelPlugin', () => {
         expect(setContentModel).toHaveBeenCalledTimes(0);
         expect(pendingFormat.clearPendingFormat).not.toHaveBeenCalled();
         expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
+    });
+
+    it('Delete key', () => {
+        spyOn(deleteContent, 'default');
+
+        const editor = ({
+            cacheContentModel: () => {},
+        } as any) as IContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent: ({
+                which: Keys.DELETE,
+            } as any) as KeyboardEvent,
+        });
+        plugin.dispose();
+
+        expect(deleteContent.default).toHaveBeenCalledTimes(1);
+        expect(deleteContent.default).toHaveBeenCalledWith(editor, 'delete');
+    });
+
+    it('Backspace key', () => {
+        spyOn(deleteContent, 'default');
+
+        const editor = ({
+            cacheContentModel: () => {},
+        } as any) as IContentModelEditor;
+        const plugin = new ContentModelPlugin();
+
+        plugin.initialize(editor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent: ({
+                which: Keys.BACKSPACE,
+            } as any) as KeyboardEvent,
+        });
+        plugin.dispose();
+
+        expect(deleteContent.default).toHaveBeenCalledTimes(1);
+        expect(deleteContent.default).toHaveBeenCalledWith(editor, 'backspace');
     });
 });
