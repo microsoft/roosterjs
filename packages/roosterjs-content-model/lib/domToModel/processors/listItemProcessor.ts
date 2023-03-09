@@ -1,6 +1,5 @@
 import { createListItem } from '../../modelApi/creators/createListItem';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -10,11 +9,7 @@ import { stackFormat } from '../utils/stackFormat';
 export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, element, context) => {
     const { listFormat } = context;
 
-    if (
-        listFormat.listParent &&
-        listFormat.levels.length > 0 &&
-        (element.style.display || getDefaultStyle(element, context).display) == 'list-item'
-    ) {
+    if (listFormat.listParent && listFormat.levels.length > 0) {
         stackFormat(
             context,
             {

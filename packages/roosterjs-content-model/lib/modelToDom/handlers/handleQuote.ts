@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -10,15 +10,18 @@ const QuoteTagName = 'blockquote';
 /**
  * @internal
  */
-export const handleQuote: ContentModelHandler<ContentModelQuote> = (
+export const handleQuote: ContentModelBlockHandler<ContentModelQuote> = (
     doc: Document,
     parent: Node,
     quote: ContentModelQuote,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
     if (!isBlockGroupEmpty(quote)) {
         const blockQuote = doc.createElement(QuoteTagName);
-        parent.appendChild(blockQuote);
+
+        quote.cachedElement = blockQuote;
+        parent.insertBefore(blockQuote, refNode);
 
         stackFormat(context, QuoteTagName, () => {
             applyFormat(blockQuote, context.formatAppliers.block, quote.format, context);

@@ -6,11 +6,14 @@ import { safeInstanceOf } from 'roosterjs-editor-dom';
  * @internal
  */
 export const listItemThreadFormatHandler: FormatHandler<ListThreadFormat> = {
-    parse: (format, element, context) => {
+    parse: (format, element, context, defaultStyles) => {
         const { listFormat } = context;
         const depth = listFormat.levels.length;
+        const display = element.style.display || defaultStyles.display;
 
-        if (isLiUnderOl(element) && depth > 0) {
+        if (display && display != 'list-item') {
+            format.displayForDummyItem = display;
+        } else if (isLiUnderOl(element) && depth > 0) {
             listFormat.threadItemCounts[depth - 1]++;
             listFormat.threadItemCounts.splice(depth);
             listFormat.levels.forEach(level => {
@@ -21,7 +24,9 @@ export const listItemThreadFormatHandler: FormatHandler<ListThreadFormat> = {
         }
     },
     apply: (format, element, context) => {
-        if (isLiUnderOl(element)) {
+        if (format.displayForDummyItem) {
+            element.style.display = format.displayForDummyItem;
+        } else if (isLiUnderOl(element)) {
             const { listFormat } = context;
             const { threadItemCounts } = listFormat;
             const index = listFormat.nodeStack.length - 2; // The first one is always the parent of list, then minus another 1 to convert length to index

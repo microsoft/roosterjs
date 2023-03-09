@@ -17,6 +17,7 @@ import { stackFormat } from '../utils/stackFormat';
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
     const isLink = element.tagName == 'A' && element.hasAttribute('href');
+    const isCode = element.tagName == 'CODE';
 
     stackFormat(
         context,
@@ -78,7 +79,13 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
 
-            if (isLink) {
+            if (isCode) {
+                stackFormat(context, { code: 'codeDefault' }, () => {
+                    parseFormat(element, context.formatParsers.code, context.code.format, context);
+
+                    context.elementProcessors.child(group, element, context);
+                });
+            } else if (isLink) {
                 stackFormat(context, { link: 'linkDefault' }, () => {
                     parseFormat(element, context.formatParsers.link, context.link.format, context);
                     parseFormat(

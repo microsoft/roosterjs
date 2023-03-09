@@ -55,7 +55,7 @@ export default class AutoFormat implements EditorPlugin {
             this.lastKeyTyped = '';
         }
 
-        if (event.eventType === PluginEventType.KeyDown) {
+        if (event.eventType === PluginEventType.KeyPress) {
             const keyTyped = event.rawEvent.key;
 
             if (keyTyped && keyTyped.length > 1) {

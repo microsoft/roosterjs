@@ -1,21 +1,24 @@
 import { ContentModelBr } from '../../../lib/publicTypes/segment/ContentModelBr';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
-import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
+import {
+    ContentModelBlockHandler,
+    ContentModelHandler,
+} from '../../../lib/publicTypes/context/ContentModelHandler';
 
 describe('handleSegment', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
     let handleBr: jasmine.Spy<ContentModelHandler<ContentModelBr>>;
     let handleText: jasmine.Spy<ContentModelHandler<ContentModelText>>;
-    let handleGeneralModel: jasmine.Spy<ContentModelHandler<ContentModelGeneralBlock>>;
-    let handleEntity: jasmine.Spy<ContentModelHandler<ContentModelEntity>>;
+    let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
+    let handleEntity: jasmine.Spy<ContentModelBlockHandler<ContentModelEntity>>;
     let handleImage: jasmine.Spy<ContentModelHandler<ContentModelImage>>;
 
     beforeEach(() => {
@@ -73,7 +76,7 @@ describe('handleSegment', () => {
 
         handleSegment(document, parent, segment, context);
         expect(parent.innerHTML).toBe('');
-        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, segment, context, null);
     });
 
     it('entity segment', () => {
@@ -90,7 +93,7 @@ describe('handleSegment', () => {
 
         handleSegment(document, parent, segment, context);
         expect(parent.innerHTML).toBe('');
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context, null);
     });
 
     it('image segment', () => {

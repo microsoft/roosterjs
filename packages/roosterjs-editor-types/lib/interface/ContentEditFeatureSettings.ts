@@ -62,6 +62,16 @@ export interface EntityFeatureSettings {
      * press DELETE right after an entity
      */
     deleteBeforeEntity: boolean;
+
+    /**
+     * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
+     */
+    moveBetweenDelimitersFeature: boolean;
+
+    /**
+     * Content edit Feature to trigger a Delete Entity Operation when one of the Delimiter is about to be removed with DELETE or Backspace
+     */
+    removeEntityBetweenDelimiters: boolean;
 }
 
 /**
