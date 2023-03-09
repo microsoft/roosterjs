@@ -176,7 +176,7 @@ describe('ContentModelPlugin', () => {
                         },
                         {
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: { fontSize: '10px' },
                             isSelected: true,
                         },
                     ],
@@ -240,7 +240,7 @@ describe('ContentModelPlugin', () => {
                         },
                         {
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: { fontSize: '10px' },
                             isSelected: true,
                         },
                     ],

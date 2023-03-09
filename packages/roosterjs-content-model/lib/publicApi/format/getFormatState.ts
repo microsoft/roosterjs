@@ -2,7 +2,6 @@ import { FormatState } from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
 
 /**
@@ -28,10 +27,7 @@ export default function getFormatState(editor: IContentModelEditor): FormatState
             return false;
         },
         {
-            processorOverride: {
-                // Create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
-                child: reducedModelChildProcessor,
-            },
+            useReducedModel: true,
         }
     );
 
