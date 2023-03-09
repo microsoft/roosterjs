@@ -343,6 +343,11 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
+    /**
+     * Rotate the image in radian angle.
+     * @param image The image to be rotated
+     * @param angleRad The angle in radian that the image must be rotated.
+     */
     public rotateImage(image: HTMLImageElement, angleRad: number) {
         this.image = image;
         this.editInfo = getEditInfoFromImage(image);
