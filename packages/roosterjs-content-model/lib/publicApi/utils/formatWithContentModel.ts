@@ -38,5 +38,7 @@ export function formatWithContentModel(
                 formatApiName: apiName,
             }
         );
+
+        editor.cacheContentModel?.(model);
     }
 }
