@@ -18,6 +18,7 @@ import {
     getEntitySelector,
     isBlockElement,
     isCharacterValue,
+    matchesSelector,
     Position,
     safeInstanceOf,
     splitTextNode,
@@ -111,54 +112,94 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     if (positionToUse) {
                         editor.select(positionToUse);
 
-                        editor.runAsync(asyncEditor => {
-                            if (isAfter) {
-                                const elAfter = asyncEditor.getElementAtCursor();
-                                removeDelimiterAttr(elAfter);
-                            }
-                            if (element) {
-                                removeNode(element);
-                            }
+                        editor.runAsync(aEditor => {
+                            const elAfter = aEditor.getElementAtCursor();
+                            removeDelimiterAttr(elAfter);
+                            removeNode(element);
                         });
                     }
                 } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
-                    editor.runAsync(() => {
-                        delimiter.normalize();
-                        const textNode = delimiter.firstChild as Node;
-                        const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
-                        if (index >= 0) {
-                            splitTextNode(
-                                <Text>textNode,
-                                index == 0 ? 1 : index,
-                                false /* returnFirstPart */
-                            );
-                            let nodeToMove: Node | undefined;
-                            delimiter.childNodes.forEach(node => {
-                                if (node.nodeValue !== ZERO_WIDTH_SPACE) {
-                                    nodeToMove = node;
-                                }
-                            });
-                            if (nodeToMove) {
-                                delimiter.parentElement?.insertBefore(
-                                    nodeToMove,
-                                    delimiter.className == DelimiterClasses.DELIMITER_BEFORE
-                                        ? delimiter
-                                        : delimiter.nextSibling
-                                );
-                                const selection = nodeToMove.ownerDocument?.getSelection();
-
-                                if (selection) {
-                                    selection.setPosition(
-                                        nodeToMove,
-                                        new Position(nodeToMove, PositionType.End).offset
-                                    );
-                                }
-                            }
-                        }
-                    });
+                    editor.runAsync(() => preventTypeInDelimiter(delimiter));
                 }
+            } else if (
+                !range.areAllCollapsed &&
+                !rawEvent.shiftKey &&
+                rawEvent.which != Keys.SHIFT
+            ) {
+                const currentRange = range.ranges[0];
+                if (!currentRange) {
+                    return;
+                }
+
+                const { startContainer, endContainer, startOffset, endOffset } = currentRange;
+
+                const startElement = editor.getElementAtCursor(DELIMITER_SELECTOR, startContainer);
+                const endElement = editor.getElementAtCursor(DELIMITER_SELECTOR, endContainer);
+
+                const getPosition = (container: HTMLElement | null) => {
+                    if (container && getDelimiterFromElement(container)) {
+                        const isAfter = container.classList.contains(
+                            DelimiterClasses.DELIMITER_AFTER
+                        );
+                        return new Position(
+                            container,
+                            isAfter ? PositionType.After : PositionType.Before
+                        );
+                    }
+                    return undefined;
+                };
+
+                const startUpdate = getPosition(startElement);
+                const endUpdate = getPosition(endElement);
+
+                if (startUpdate || endUpdate) {
+                    editor.select(
+                        startUpdate ?? new Position(startContainer, startOffset),
+                        endUpdate ?? new Position(endContainer, endOffset)
+                    );
+                }
+                editor.runAsync(aEditor => {
+                    const delimiter = aEditor.getElementAtCursor(DELIMITER_SELECTOR);
+                    if (delimiter) {
+                        preventTypeInDelimiter(delimiter);
+                        if (event.rawEvent.which === Keys.ENTER) {
+                            removeDelimiterAttr(delimiter);
+                        }
+                    }
+                });
             }
             break;
+    }
+}
+
+function preventTypeInDelimiter(delimiter: HTMLElement) {
+    delimiter.normalize();
+    const textNode = delimiter.firstChild as Node;
+    const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+    if (index >= 0) {
+        splitTextNode(<Text>textNode, index == 0 ? 1 : index, false /* returnFirstPart */);
+        let nodeToMove: Node | undefined;
+        delimiter.childNodes.forEach(node => {
+            if (node.nodeValue !== ZERO_WIDTH_SPACE) {
+                nodeToMove = node;
+            }
+        });
+        if (nodeToMove) {
+            delimiter.parentElement?.insertBefore(
+                nodeToMove,
+                delimiter.className == DelimiterClasses.DELIMITER_BEFORE
+                    ? delimiter
+                    : delimiter.nextSibling
+            );
+            const selection = nodeToMove.ownerDocument?.getSelection();
+
+            if (selection) {
+                selection.setPosition(
+                    nodeToMove,
+                    new Position(nodeToMove, PositionType.End).offset
+                );
+            }
+        }
     }
 }
 
@@ -196,7 +237,7 @@ function tryGetEntityFromNode(node: Element | null): node is HTMLElement {
     );
 }
 
-function removeNode(el: Node | undefined) {
+function removeNode(el: Node | undefined | null) {
     el?.parentElement?.removeChild(el);
 }
 
@@ -224,10 +265,20 @@ function removeInvalidDelimiters(nodes: Element[]) {
 }
 
 function removeDelimiterAttr(node: Element | undefined | null) {
-    node?.classList.remove(DelimiterClasses.DELIMITER_BEFORE, DelimiterClasses.DELIMITER_AFTER);
+    if (!node) {
+        return;
+    }
 
-    node?.normalize();
-    node?.childNodes.forEach(cn => {
+    const isAfter = node.classList.contains(DelimiterClasses.DELIMITER_AFTER);
+    const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
+    if (entitySibling && matchesSelector(entitySibling, INLINE_ENTITY_SELECTOR)) {
+        return;
+    }
+
+    node.classList.remove(DelimiterClasses.DELIMITER_AFTER, DelimiterClasses.DELIMITER_BEFORE);
+
+    node.normalize();
+    node.childNodes.forEach(cn => {
         const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
         if (index >= 0) {
             createRange(cn, index, cn, index + 1)?.deleteContents();
