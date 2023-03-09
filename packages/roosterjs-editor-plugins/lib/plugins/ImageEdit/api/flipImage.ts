@@ -1,4 +1,5 @@
-import { getEditInfoFromImage, saveEditInfo } from '../editInfoUtils/editInfo';
+import applyChange from '../editInfoUtils/applyChange';
+import { getEditInfoFromImage } from '../editInfoUtils/editInfo';
 import { IEditor } from 'roosterjs-editor-types/lib';
 
 /**
@@ -7,12 +8,25 @@ import { IEditor } from 'roosterjs-editor-types/lib';
 export default function flipImage(editor: IEditor, image: HTMLImageElement) {
     const editInfo = getEditInfoFromImage(image);
     if (!editor.isDisposed() && editor.contains(image) && editInfo) {
-        const flippedImaged = flip(editor, image);
-        image.src = flippedImaged;
-        editor.addUndoSnapshot(() => {
-            editInfo.flipped = !editInfo.flipped;
-            saveEditInfo(image, editInfo);
-        }, 'flippedImage');
+        const lastSrc = image.getAttribute('src');
+        if (!editInfo.flippedImage) {
+            const resetedImage = image;
+            resetedImage.style.width = '';
+            resetedImage.style.height = '';
+            resetedImage.style.maxWidth = '100%';
+            resetedImage.removeAttribute('width');
+            resetedImage.removeAttribute('height');
+            const flippedImage = flip(editor, resetedImage);
+            editInfo.flippedImage = flippedImage;
+            editor.addUndoSnapshot(() => {
+                applyChange(editor, image, editInfo, lastSrc || '', true /*wasResized*/);
+            }, 'flippedImage');
+        } else {
+            editInfo.flippedImage = '';
+            editor.addUndoSnapshot(() => {
+                applyChange(editor, image, editInfo, lastSrc || '', true /*wasResized*/);
+            }, 'flippedImage');
+        }
     }
 }
 

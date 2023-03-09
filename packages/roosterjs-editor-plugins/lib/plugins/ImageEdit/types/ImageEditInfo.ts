@@ -71,7 +71,7 @@ export interface FlipInfo {
      * Rotated angle of inline image, in radian. Cropping or resizing won't impact this percentage value
      * @default 0
      */
-    flipped?: boolean;
+    flippedImage?: string;
 }
 
 /**

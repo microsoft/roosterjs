@@ -30,7 +30,7 @@ export default function applyChange(
     switch (state) {
         case ImageEditInfoState.ResizeOnly:
             // For resize only case, no need to generate a new image, just reuse the original one
-            newSrc = editInfo.src;
+            newSrc = editInfo.flippedImage ? editInfo.flippedImage : editInfo.src;
             break;
         case ImageEditInfoState.SameWithLast:
             // For SameWithLast case, image may be resized but the content is still the same with last one,

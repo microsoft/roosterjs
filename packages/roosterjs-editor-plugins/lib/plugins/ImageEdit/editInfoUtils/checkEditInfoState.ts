@@ -61,16 +61,14 @@ export default function checkEditInfoState(
 ): ImageEditInfoState {
     if (!editInfo || !editInfo.src || ALL_KEYS.some(key => !isNumber(editInfo[key]))) {
         return ImageEditInfoState.Invalid;
-    } else if (
-        ROTATE_CROP_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
-        (!compareTo || compareTo.flipped === editInfo.flipped)
-    ) {
+    } else if (ROTATE_CROP_KEYS.every(key => areSameNumber(editInfo[key], 0))) {
         return ImageEditInfoState.ResizeOnly;
     } else if (
         compareTo &&
         ROTATE_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
         ROTATE_KEYS.every(key => areSameNumber(compareTo[key], 0)) &&
-        CROP_KEYS.every(key => areSameNumber(editInfo[key], compareTo[key]))
+        CROP_KEYS.every(key => areSameNumber(editInfo[key], compareTo[key])) &&
+        editInfo.flippedImage === compareTo.flippedImage
     ) {
         return ImageEditInfoState.SameWithLast;
     } else {
