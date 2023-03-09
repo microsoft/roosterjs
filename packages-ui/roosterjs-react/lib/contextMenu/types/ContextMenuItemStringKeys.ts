@@ -40,9 +40,7 @@ export type ImageEditMenuItemStringKey =
     | 'menuNameImageSizeSmall'
     | 'menuNameImageSizeMedium'
     | 'menuNameImageSizeOriginal'
-    | 'menuNameImageFlip'
-    | 'menuNameImageFlipLeft'
-    | 'menuNameImageFlipRight'
+    | 'menuNameImageFlipHorizontal'
     | OkButtonStringKey
     | CancelButtonStringKey;
 

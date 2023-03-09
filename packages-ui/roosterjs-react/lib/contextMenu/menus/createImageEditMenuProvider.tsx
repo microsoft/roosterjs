@@ -84,22 +84,11 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
 };
 
 const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
-    key: 'menuNameImageFlip',
+    key: 'menuNameImageFlipHorizontal',
     unlocalizedText: 'Flip',
-    subItems: {
-        menuNameImageFlipLeft: 'Left',
-        menuNameImageFlipRight: 'Right',
-    },
     onClick: (key, editor, node) => {
         editor.addUndoSnapshot(() => {
-            switch (key) {
-                case 'menuNameImageFlipLeft':
-                    flipImage(editor, node as HTMLImageElement, 'left');
-                    break;
-                case 'menuNameImageFlipRight':
-                    flipImage(editor, node as HTMLImageElement, 'right');
-                    break;
-            }
+            flipImage(editor, node as HTMLImageElement);
         });
     },
 };

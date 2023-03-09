@@ -461,6 +461,7 @@ export default class ImageEdit implements EditorPlugin {
                 leftPercent,
                 rightPercent,
                 topPercent,
+                flipped,
             } = this.editInfo;
 
             // Width/height of the image
@@ -489,9 +490,12 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
-
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
+
+            if (flipped) {
+                this.clonedImage.style.transform = `scaleX(-1)`;
+            }
 
             if (this.isCropping) {
                 // For crop, we also need to set position of the overlays

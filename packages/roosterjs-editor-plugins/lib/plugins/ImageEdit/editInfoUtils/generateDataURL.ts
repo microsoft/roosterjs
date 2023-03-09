@@ -34,6 +34,7 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     const context = canvas.getContext('2d');
     if (context) {
         context.translate(targetWidth / 2, targetHeight / 2);
+        context.drawImage(image, 0, 0, canvas.width, canvas.height);
         context.rotate(angle);
         context.drawImage(
             image,
