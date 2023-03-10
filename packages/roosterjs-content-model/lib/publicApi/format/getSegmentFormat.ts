@@ -3,7 +3,6 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 
 /**
  * Get current segment format. This is usually used by format painter
@@ -33,10 +32,7 @@ export default function getSegmentFormat(
                 return false;
             },
             {
-                processorOverride: {
-                    // Create a "reduced" Content Model that only scan a sub DOM tree that contains the selection.
-                    child: reducedModelChildProcessor,
-                },
+                useReducedModel: true,
             }
         );
     }

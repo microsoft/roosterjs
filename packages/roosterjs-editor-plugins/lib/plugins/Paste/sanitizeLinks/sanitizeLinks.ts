@@ -3,6 +3,7 @@ import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
 const HTTP = 'http:';
 const HTTPS = 'https:';
+const NOTES = 'notes:';
 
 /**
  * @internal
@@ -25,7 +26,7 @@ function validateLink(link: string, htmlElement: HTMLElement) {
         url = undefined;
     }
 
-    if (url && (url.protocol === HTTP || url.protocol === HTTPS)) {
+    if (url && (url.protocol === HTTP || url.protocol === HTTPS || url.protocol === NOTES /* whitelist Notes protocol */)) {
         return link;
     }
     htmlElement.removeAttribute('href');
