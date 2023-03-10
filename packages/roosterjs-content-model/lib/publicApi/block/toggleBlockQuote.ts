@@ -40,7 +40,8 @@ export default function toggleBlockQuote(
         editor,
         'toggleBlockQuote',
         model => toggleModelBlockQuote(model, fullQuoteFormat, segmentFormat),
-        undefined /*options*/,
-        true /*preservePendingFormat*/
+        {
+            preservePendingFormat: true,
+        }
     );
 }

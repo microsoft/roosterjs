@@ -1,7 +1,13 @@
 import applyPendingFormat from '../publicApi/format/applyPendingFormat';
-import { canApplyPendingFormat, clearPendingFormat } from '../modelApi/format/pendingFormat';
+import getSegmentFormat from '../publicApi/format/getSegmentFormat';
+import handleDelete from '../publicApi/editing/handleDelete';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import {
+    canApplyPendingFormat,
+    clearPendingFormat,
+    setPendingFormat,
+} from '../modelApi/format/pendingFormat';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -67,6 +73,21 @@ export default class ContentModelPlugin implements EditorPlugin {
 
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
+                } else if (event.rawEvent.which == Keys.ENTER) {
+                    const format = getSegmentFormat(this.editor);
+                    const pos = this.editor.getFocusedPosition();
+
+                    if (format && pos) {
+                        setPendingFormat(this.editor, format, pos);
+                    }
+                } else if (
+                    event.rawEvent.which == Keys.BACKSPACE ||
+                    event.rawEvent.which == Keys.DELETE
+                ) {
+                    handleDelete(
+                        this.editor,
+                        event.rawEvent.which == Keys.DELETE ? 'delete' : 'backspace'
+                    );
                 }
 
                 break;
