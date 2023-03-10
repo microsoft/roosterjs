@@ -64,12 +64,11 @@ export interface RotateInfo {
 
 /**
  * @internal
- * Edit info for inline image rotate
+ * Flip info for inline image rotate
  */
 export interface FlipInfo {
     /**
-     * Rotated angle of inline image, in radian. Cropping or resizing won't impact this percentage value
-     * @default 0
+     * If true, the image was flipped.
      */
     flippedImage?: boolean;
 }
