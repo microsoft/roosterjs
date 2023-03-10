@@ -1,4 +1,4 @@
-import { inlineEntityOnPluginEvent } from './utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
+import { inlineEntityOnPluginEvent } from './utils/inlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     Browser,
     commitEntity,

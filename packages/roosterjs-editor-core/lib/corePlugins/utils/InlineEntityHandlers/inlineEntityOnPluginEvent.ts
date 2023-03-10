@@ -5,6 +5,7 @@ import {
     Keys,
     NodeType,
     PluginEventType,
+    PluginKeyDownEvent,
     PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
@@ -18,7 +19,6 @@ import {
     getEntitySelector,
     isBlockElement,
     isCharacterValue,
-    matchesSelector,
     Position,
     safeInstanceOf,
     splitTextNode,
@@ -52,122 +52,7 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
             break;
 
         case PluginEventType.KeyDown:
-            const range = editor.getSelectionRangeEx();
-            const { rawEvent } = event;
-            if (range.type != SelectionRangeTypes.Normal) {
-                return;
-            }
-
-            if (
-                range.areAllCollapsed &&
-                (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)
-            ) {
-                const position = editor.getFocusedPosition();
-
-                if (!position) {
-                    return;
-                }
-
-                const refNode =
-                    position.element == position.node
-                        ? position.element.childNodes.item(position.offset)
-                        : position.element;
-
-                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
-
-                if (!delimiter) {
-                    return;
-                }
-
-                if (rawEvent.which === Keys.ENTER) {
-                    const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
-                    const sibling = isAfter ? delimiter.nextSibling : delimiter.previousSibling;
-                    let positionToUse: Position | undefined;
-                    let element: Element | null;
-
-                    if (sibling) {
-                        positionToUse = new Position(
-                            sibling,
-                            isAfter ? PositionType.Begin : PositionType.End
-                        );
-                    } else {
-                        element = delimiter.insertAdjacentElement(
-                            isAfter ? 'afterend' : 'beforebegin',
-                            createElement(
-                                {
-                                    tag: 'span',
-                                    children: [NBSP],
-                                },
-                                editor.getDocument()
-                            )!
-                        );
-
-                        if (!element) {
-                            return;
-                        }
-
-                        positionToUse = new Position(element, PositionType.Begin);
-                    }
-
-                    if (positionToUse) {
-                        editor.select(positionToUse);
-
-                        editor.runAsync(aEditor => {
-                            const elAfter = aEditor.getElementAtCursor();
-                            removeDelimiterAttr(elAfter);
-                            removeNode(element);
-                        });
-                    }
-                } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
-                    editor.runAsync(() => preventTypeInDelimiter(delimiter));
-                }
-            } else if (
-                !range.areAllCollapsed &&
-                !rawEvent.shiftKey &&
-                rawEvent.which != Keys.SHIFT
-            ) {
-                const currentRange = range.ranges[0];
-                if (!currentRange) {
-                    return;
-                }
-
-                const { startContainer, endContainer, startOffset, endOffset } = currentRange;
-
-                const startElement = editor.getElementAtCursor(DELIMITER_SELECTOR, startContainer);
-                const endElement = editor.getElementAtCursor(DELIMITER_SELECTOR, endContainer);
-
-                const getPosition = (container: HTMLElement | null) => {
-                    if (container && getDelimiterFromElement(container)) {
-                        const isAfter = container.classList.contains(
-                            DelimiterClasses.DELIMITER_AFTER
-                        );
-                        return new Position(
-                            container,
-                            isAfter ? PositionType.After : PositionType.Before
-                        );
-                    }
-                    return undefined;
-                };
-
-                const startUpdate = getPosition(startElement);
-                const endUpdate = getPosition(endElement);
-
-                if (startUpdate || endUpdate) {
-                    editor.select(
-                        startUpdate ?? new Position(startContainer, startOffset),
-                        endUpdate ?? new Position(endContainer, endOffset)
-                    );
-                }
-                editor.runAsync(aEditor => {
-                    const delimiter = aEditor.getElementAtCursor(DELIMITER_SELECTOR);
-                    if (delimiter) {
-                        preventTypeInDelimiter(delimiter);
-                        if (event.rawEvent.which === Keys.ENTER) {
-                            removeDelimiterAttr(delimiter);
-                        }
-                    }
-                });
-            }
+            handleKeyDownEvent(editor, event);
             break;
     }
 }
@@ -271,7 +156,7 @@ function removeDelimiterAttr(node: Element | undefined | null) {
 
     const isAfter = node.classList.contains(DelimiterClasses.DELIMITER_AFTER);
     const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
-    if (entitySibling && matchesSelector(entitySibling, INLINE_ENTITY_SELECTOR)) {
+    if (entitySibling && tryGetEntityFromNode(entitySibling)) {
         return;
     }
 
@@ -284,4 +169,110 @@ function removeDelimiterAttr(node: Element | undefined | null) {
             createRange(cn, index, cn, index + 1)?.deleteContents();
         }
     });
+}
+
+function handleCollapsedEnter(editor: IEditor, delimiter: HTMLElement) {
+    const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
+    const sibling = isAfter ? delimiter.nextSibling : delimiter.previousSibling;
+    let positionToUse: Position | undefined;
+    let element: Element | null;
+
+    if (sibling) {
+        positionToUse = new Position(sibling, isAfter ? PositionType.Begin : PositionType.End);
+    } else {
+        element = delimiter.insertAdjacentElement(
+            isAfter ? 'afterend' : 'beforebegin',
+            createElement(
+                {
+                    tag: 'span',
+                    children: [NBSP],
+                },
+                editor.getDocument()
+            )!
+        );
+
+        if (!element) {
+            return;
+        }
+
+        positionToUse = new Position(element, PositionType.Begin);
+    }
+
+    if (positionToUse) {
+        editor.select(positionToUse);
+        editor.runAsync(aEditor => {
+            const elAfter = aEditor.getElementAtCursor();
+            removeDelimiterAttr(elAfter);
+            removeNode(element);
+        });
+    }
+}
+
+const getPosition = (container: HTMLElement | null) => {
+    if (container && getDelimiterFromElement(container)) {
+        const isAfter = container.classList.contains(DelimiterClasses.DELIMITER_AFTER);
+        return new Position(container, isAfter ? PositionType.After : PositionType.Before);
+    }
+    return undefined;
+};
+
+function handleSelectionNotCollapsed(editor: IEditor, range: Range, event: KeyboardEvent) {
+    const { startContainer, endContainer, startOffset, endOffset } = range;
+
+    const startElement = editor.getElementAtCursor(DELIMITER_SELECTOR, startContainer);
+    const endElement = editor.getElementAtCursor(DELIMITER_SELECTOR, endContainer);
+
+    const startUpdate = getPosition(startElement);
+    const endUpdate = getPosition(endElement);
+
+    if (startUpdate || endUpdate) {
+        editor.select(
+            startUpdate ?? new Position(startContainer, startOffset),
+            endUpdate ?? new Position(endContainer, endOffset)
+        );
+    }
+    editor.runAsync(aEditor => {
+        const delimiter = aEditor.getElementAtCursor(DELIMITER_SELECTOR);
+        if (delimiter) {
+            preventTypeInDelimiter(delimiter);
+            if (event.which === Keys.ENTER) {
+                removeDelimiterAttr(delimiter);
+            }
+        }
+    });
+}
+
+function handleKeyDownEvent(editor: IEditor, event: PluginKeyDownEvent) {
+    const range = editor.getSelectionRangeEx();
+    const { rawEvent } = event;
+    if (range.type != SelectionRangeTypes.Normal) {
+        return;
+    }
+
+    if (range.areAllCollapsed && (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)) {
+        const position = editor.getFocusedPosition()?.normalize();
+        if (!position) {
+            return;
+        }
+
+        const { element, node } = position;
+        const refNode = element == node ? element.childNodes.item(position.offset) : element;
+
+        const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
+        if (!delimiter) {
+            return;
+        }
+
+        if (rawEvent.which === Keys.ENTER) {
+            handleCollapsedEnter(editor, delimiter);
+        } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
+            editor.runAsync(() => preventTypeInDelimiter(delimiter));
+        }
+    } else if (!range.areAllCollapsed && !rawEvent.shiftKey && rawEvent.which != Keys.SHIFT) {
+        const currentRange = range.ranges[0];
+        if (!currentRange) {
+            return;
+        }
+        handleSelectionNotCollapsed(editor, currentRange, rawEvent);
+    }
 }

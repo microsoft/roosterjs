@@ -1,5 +1,5 @@
 import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
-import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
+import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
     EditorReadyEvent,
