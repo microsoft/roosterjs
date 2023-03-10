@@ -123,7 +123,7 @@ describe('handleSegment', () => {
 
         handleSegment(document, parent, segment, context);
         expect(parent.innerHTML).toBe('');
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context, null);
     });
 
     it('image segment', () => {

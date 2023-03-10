@@ -185,7 +185,7 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: ['backgroundColor', 'direction'],
     listItem: ['listItemThread', 'listItemMetadata'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
     segment: [
         'superOrSubScript',
         'strike',

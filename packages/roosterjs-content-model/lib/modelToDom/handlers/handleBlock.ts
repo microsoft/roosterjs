@@ -44,7 +44,7 @@ export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
 
             break;
         case 'Entity':
-            context.modelHandlers.entity(doc, parent, block, context);
+            callHandler(block, handlers.entity);
             break;
     }
 

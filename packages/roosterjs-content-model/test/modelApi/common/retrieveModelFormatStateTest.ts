@@ -205,6 +205,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             ...paraFormat,
+            isCodeInline: false,
             isBlockQuote: false,
         });
     });
@@ -842,6 +843,7 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: false,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 
@@ -870,6 +872,7 @@ describe('retrieveModelFormatState', () => {
             isInTable: true,
             tableHasHeader: false,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 });

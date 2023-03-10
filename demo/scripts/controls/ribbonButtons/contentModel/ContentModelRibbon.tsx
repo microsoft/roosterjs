@@ -56,8 +56,6 @@ import {
     tableMergeButton,
     tableSplitButton,
 } from './tableEditButtons';
-import { spacingButton } from './spacingButton';
-import { spaceAfterButton, spaceBeforeButton } from './spaceBeforeAfterButtons';
 
 const buttons = [
     formatPainterButton,

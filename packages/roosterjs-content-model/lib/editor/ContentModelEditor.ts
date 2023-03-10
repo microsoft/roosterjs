@@ -32,6 +32,7 @@ export default class ContentModelEditor
      */
     createContentModel(option?: DomToModelOption): ContentModelDocument {
         const core = this.getCore();
+        const cachedModel = this.reuseModel ? this.cachedModel : null;
 
         return core.api.createContentModel(core, option);
     }

@@ -157,6 +157,23 @@ function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 
     }
 }
 
+function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 'empty') {
+    switch (code) {
+        case 'codeDefault':
+            return {
+                format: {
+                    fontFamily: 'monospace',
+                },
+            };
+        case 'empty':
+            return {
+                format: {},
+            };
+        default:
+            return codeFormat;
+    }
+}
+
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
     processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForGroup' | 'empty'

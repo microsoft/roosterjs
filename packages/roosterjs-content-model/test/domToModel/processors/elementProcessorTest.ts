@@ -133,6 +133,7 @@ describe('elementProcessor', () => {
 
         expect(divProcessor).not.toHaveBeenCalled();
         expect(generalProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).not.toHaveBeenCalled();
         expect(entityProcessor).not.toHaveBeenCalled();
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -167,5 +168,18 @@ describe('elementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [],
         });
+        expect(delimiterProcessor).not.toHaveBeenCalled();
+    });
+
+    it('delimiter', () => {
+        const element = document.createElement('span') as HTMLElement;
+        spyOn(getDelimiterFromElement, 'default').and.returnValue(element);
+
+        elementProcessor(group, element, context);
+
+        expect(divProcessor).not.toHaveBeenCalled();
+        expect(generalProcessor).not.toHaveBeenCalled();
+        expect(entityProcessor).not.toHaveBeenCalled();
+        expect(delimiterProcessor).toHaveBeenCalled();
     });
 });

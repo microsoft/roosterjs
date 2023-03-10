@@ -77,3 +77,18 @@ export interface DomToModelDecoratorContext {
      */
     blockDecorator: ContentModelParagraphDecorator;
 }
+
+/**
+ * Represents decorator info used by DOM to Content Model conversion
+ */
+export interface DomToModelSegmentDecoratorContext {
+    /**
+     * Context of hyper link info
+     */
+    link: ContentModelLink;
+
+    /**
+     * Context of code info
+     */
+    code: ContentModelCode;
+}

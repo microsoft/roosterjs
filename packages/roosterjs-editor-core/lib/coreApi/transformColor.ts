@@ -99,35 +99,3 @@ function isHTMLElement(node: Node): node is HTMLElement {
     const htmlElement = <HTMLElement>node;
     return node.nodeType == Node.ELEMENT_NODE && !!htmlElement.style;
 }
-
-/**
- * There is a known issue that when input with IME in Chrome, it is possible Chrome insert a new FONT tag with colors.
- * If editor is in dark mode, this color will cause the FONT tag doesn't have light mode color info so that after convert
- * to light mode the color will be wrong.
- * To workaround it, we check if this is a known color (for light mode with VariableBasedDarkColor enabled, all used colors
- * are stored in darkColorHandler), then use the related light mode color instead.
- */
-function tryFetchAndClearFontColor(
-    element: HTMLElement,
-    toDark: boolean,
-    darkColorHandler: DarkColorHandler,
-    names: { [key in ColorAttributeEnum]: string }
-) {
-    let darkColor: string | null;
-
-    if (
-        getTagOfNode(element) == 'FONT' &&
-        !element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) &&
-        !toDark &&
-        (darkColor = element.getAttribute(names[ColorAttributeEnum.HtmlColor]))
-    ) {
-        const lightColor = darkColorHandler.findLightColorFromDarkColor(darkColor);
-
-        if (lightColor) {
-            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-            return lightColor;
-        }
-    }
-
-    return null;
-}

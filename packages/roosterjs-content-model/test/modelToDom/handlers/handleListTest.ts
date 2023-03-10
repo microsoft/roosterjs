@@ -933,4 +933,70 @@ describe('handleList handles metadata', () => {
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listLevel1);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('ul'));
     });
+
+    it('OL with refNode', () => {
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+            },
+        ]);
+        const br = document.createElement('br');
+
+        parent.appendChild(br);
+
+        handleList(document, parent, listItem, context, br);
+
+        expect(parent.outerHTML).toBe('<div><ol start="1"></ol><br></div>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    node: parent.firstChild as HTMLElement,
+                    listType: 'OL',
+                },
+            ],
+        });
+    });
+
+    it('Context has OL with refNode', () => {
+        const existingOL = document.createElement('ol');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+            },
+            {
+                listType: 'OL',
+            },
+        ]);
+        const br = document.createElement('br');
+
+        context.listFormat.threadItemCounts = [1];
+        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+
+        parent.appendChild(existingOL);
+        parent.appendChild(br);
+
+        handleList(document, parent, listItem, context, br);
+
+        expect(parent.outerHTML).toBe('<div><ol><ol start="1"></ol></ol><br></div>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1, 0],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    listType: 'OL',
+                    node: existingOL,
+                },
+                {
+                    listType: 'OL',
+                    node: existingOL.firstChild as HTMLElement,
+                },
+            ],
+        });
+    });
 });

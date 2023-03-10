@@ -280,8 +280,10 @@ describe('handleBlockGroup', () => {
 
         parent = document.createElement('div');
 
-        handleBlock(document, parent, block, context);
+        handleBlock(document, parent, block, context, null);
 
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context, null);
+
+        runTestWithRefNode(block, '<br>');
     });
 });

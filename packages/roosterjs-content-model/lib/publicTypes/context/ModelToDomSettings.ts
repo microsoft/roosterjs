@@ -11,7 +11,6 @@ import { ContentModelFormatContainer } from '../group/ContentModelFormatContaine
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelImage } from '../segment/ContentModelImage';
-import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItem } from '../group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
@@ -79,7 +78,7 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelBr
      */
-    br: ContentModelBr;
+    br: ContentModelHandler<ContentModelBr>;
 
     /**
      * Content Model type for child models of ContentModelEntity
@@ -94,7 +93,7 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelGeneralBlock
      */
-    general: ContentModelGeneralBlock;
+    general: ContentModelBlockHandler<ContentModelGeneralBlock>;
 
     /**
      * Content Model type for ContentModelHR

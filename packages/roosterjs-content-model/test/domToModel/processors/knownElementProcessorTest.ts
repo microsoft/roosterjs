@@ -709,6 +709,73 @@ describe('knownElementProcessor', () => {
         expect(context.link).toEqual({ format: {}, dataset: {} });
     });
 
+    it('Simple Code element', () => {
+        const group = createContentModelDocument();
+        const code = document.createElement('code');
+
+        code.appendChild(document.createTextNode('test'));
+        context.segmentFormat.fontFamily = 'Arial';
+
+        knownElementProcessor(group, code, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontFamily: 'Arial' },
+                            text: 'test',
+                            code: {
+                                format: { fontFamily: 'monospace' },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.code).toEqual({ format: {} });
+    });
+
+    it('Code element with a different font', () => {
+        const group = createContentModelDocument();
+        const code = document.createElement('code');
+
+        code.style.fontFamily = 'Tahoma';
+        code.appendChild(document.createTextNode('test'));
+        context.segmentFormat.fontFamily = 'Arial';
+
+        knownElementProcessor(group, code, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontFamily: 'Tahoma' },
+                            text: 'test',
+                            code: {
+                                format: { fontFamily: 'Tahoma' },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.code).toEqual({ format: {} });
+    });
+
     it('P tag', () => {
         const group = createContentModelDocument();
         const p = document.createElement('p');

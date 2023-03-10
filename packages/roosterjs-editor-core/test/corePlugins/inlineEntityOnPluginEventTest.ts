@@ -712,6 +712,23 @@ describe('Inline Entity On Plugin Event |', () => {
         });
     });
 });
+function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
+    entity = <Entity>{
+        id: 'test',
+        isReadonly: true,
+        type: 'Test',
+        wrapper,
+    };
+
+    commitEntity(wrapper, 'test', true, 'test');
+    addDelimiters(wrapper);
+
+    return {
+        entity,
+        delimiterAfter: wrapper.nextElementSibling,
+        delimiterBefore: wrapper.previousElementSibling,
+    };
+}
 
 function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
     entity = <Entity>{
