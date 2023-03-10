@@ -320,7 +320,7 @@ describe('Content Edit Features |', () => {
 
                 moveBetweenDelimitersFeature.handleEvent(event, editor);
 
-                expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
+                expect(extendSpy).toHaveBeenCalledWith(testContainer, 3);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
 
                 restoreSelection();
