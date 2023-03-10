@@ -37,9 +37,18 @@ export function addDelimiterBefore(element: Element) {
 }
 
 function getDelimiters(entityWrapper: Element): (Element | undefined)[] {
-    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
-        el && getDelimiterFromElement(el) ? el : undefined
+    const result: (Element | undefined)[] = [];
+    const { nextElementSibling, previousElementSibling } = entityWrapper;
+    result.push(
+        isDelimiter(nextElementSibling, DelimiterClasses.DELIMITER_AFTER),
+        isDelimiter(previousElementSibling, DelimiterClasses.DELIMITER_BEFORE)
     );
+
+    return result;
+}
+
+function isDelimiter(el: Element | null, className: string): Element | undefined {
+    return el && getDelimiterFromElement(el) && el.classList.contains(className) ? el : undefined;
 }
 
 function insertDelimiter(element: Element, delimiterClass: DelimiterClasses) {
