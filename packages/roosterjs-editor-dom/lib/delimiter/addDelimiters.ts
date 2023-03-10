@@ -8,7 +8,7 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * Adds delimiters to the element provided. If the delimiters already exists, will not be added
  * @param node the node to add the delimiters
  */
-export default function addDelimiters(node: Element) {
+export default function addDelimiters(node: Element): Element[] {
     let [delimiterAfter, delimiterBefore] = getDelimiters(node);
 
     if (!delimiterAfter) {
@@ -17,7 +17,7 @@ export default function addDelimiters(node: Element) {
     if (!delimiterBefore) {
         delimiterBefore = insertDelimiter(node, DelimiterClasses.DELIMITER_BEFORE);
     }
-    return { delimiterAfter, delimiterBefore };
+    return [delimiterAfter, delimiterBefore];
 }
 
 function getDelimiters(entityWrapper: Element): (Element | undefined)[] {

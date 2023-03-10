@@ -418,7 +418,7 @@ function triggerOperation(
                 if (!editor.contains(entity.wrapper)) {
                     removeDelimiters(nextElementSibling, previousElementSibling);
                 } else {
-                    const { delimiterAfter } = addDelimiters(entity.wrapper);
+                    const [delimiterAfter] = addDelimiters(entity.wrapper);
                     if (delimiterAfter) {
                         editor.select(delimiterAfter, PositionType.After);
                     }
