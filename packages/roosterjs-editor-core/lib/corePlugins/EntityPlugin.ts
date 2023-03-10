@@ -1,7 +1,7 @@
 import {
     inlineEntityOnPluginEvent,
     normalizeDelimitersInEditor,
-} from './utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
+} from './utils/inlineEntityOnPluginEvent';
 import {
     Browser,
     commitEntity,
