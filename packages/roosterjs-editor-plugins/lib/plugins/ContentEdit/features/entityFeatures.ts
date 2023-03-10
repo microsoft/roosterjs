@@ -1,8 +1,12 @@
 import {
+    addDelimiters,
     cacheGetEventData,
+    createRange,
     getComputedStyle,
+    getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
+    isBlockElement,
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
@@ -19,9 +23,8 @@ import {
     PluginEvent,
     NodeType,
     ExperimentalFeatures,
+    Entity,
 } from 'roosterjs-editor-types';
-
-const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
  * A content edit feature to trigger EntityOperation event with operation "Click" when user
@@ -198,11 +201,7 @@ function cacheGetNeighborEntityElement(
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
         if (entity) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
@@ -243,20 +242,15 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
         if (delimiterPair && entity && matchesSelector(entity, getEntitySelector())) {
             event.rawEvent.preventDefault();
             editor.runAsync(() => {
-                let offset = 0;
-                delimiterPair.childNodes.forEach((node, index) => {
-                    if (node.textContent === ZERO_WIDTH_SPACE) {
-                        offset = index;
-                    }
-                });
-
-                const position = checkBefore
-                    ? new Position(delimiterPair, offset + 1)
-                    : new Position(delimiterPair, PositionType.Before);
-
+                const positionType = checkBefore
+                    ? event.rawEvent.shiftKey
+                        ? PositionType.After
+                        : PositionType.End
+                    : PositionType.Before;
+                const position = new Position(delimiterPair, positionType);
                 if (event.rawEvent.shiftKey) {
                     const selection = delimiterPair.ownerDocument.getSelection();
-                    selection?.extend(position.element, position.offset);
+                    selection?.extend(position.node, position.offset);
                 } else {
                     editor.select(position);
                 }
@@ -307,7 +301,7 @@ const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEve
 };
 
 function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, checkBefore: boolean) {
-    const position = editor.getFocusedPosition();
+    const position = editor.getFocusedPosition()?.normalize();
     cacheGetCheckBefore(event, checkBefore);
 
     if (!position) {
@@ -329,7 +323,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.nextElementSibling?.nextElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementAfter()?.getContainerNode();
+                  return searcher?.getInlineElementAfter()?.getContainerNode();
               },
               isAtEndOrBeginning: position.isAtEnd,
           }
@@ -339,12 +333,11 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.previousElementSibling?.previousElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementBefore()?.getContainerNode();
+                  return searcher?.getInlineElementBefore()?.getContainerNode();
               },
               isAtEndOrBeginning: position.offset == 0,
           };
 
-    position.element.normalize();
     const sibling = data.getNextSibling();
     if (data.isAtEndOrBeginning && sibling) {
         const elAtCursor = editor.getElementAtCursor('.' + data.class, sibling);
@@ -387,15 +380,57 @@ function cacheEntityBetweenDelimiter(
         const entity = getEntityFromElement(element);
 
         if (entity) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
     return element;
+}
+
+function triggerOperation(
+    entity: Entity,
+    editor: IEditor,
+    operation: EntityOperation,
+    event: PluginKeyboardEvent
+) {
+    const { nextElementSibling, previousElementSibling } = entity.wrapper;
+    editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+        operation,
+        rawEvent: event.rawEvent,
+        entity,
+    });
+
+    if (
+        entity.isReadonly &&
+        !isBlockElement(entity.wrapper) &&
+        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+    ) {
+        if (event.rawEvent.defaultPrevented) {
+            editor.runAsync(() => {
+                if (!editor.contains(entity.wrapper)) {
+                    removeDelimiters(nextElementSibling, previousElementSibling);
+                } else {
+                    const [delimiterAfter] = addDelimiters(entity.wrapper);
+                    if (delimiterAfter) {
+                        editor.select(delimiterAfter, PositionType.After);
+                    }
+                }
+            });
+        } else if (
+            getDelimiterFromElement(nextElementSibling) &&
+            getDelimiterFromElement(previousElementSibling)
+        ) {
+            editor.select(createRange(previousElementSibling, nextElementSibling));
+        }
+    }
+}
+
+function removeDelimiters(nextElementSibling: Element, previousElementSibling: Element) {
+    [nextElementSibling, previousElementSibling].forEach(sibling => {
+        if (getDelimiterFromElement(sibling)) {
+            sibling?.parentElement?.removeChild(sibling);
+        }
+    });
 }
 
 function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean): boolean {

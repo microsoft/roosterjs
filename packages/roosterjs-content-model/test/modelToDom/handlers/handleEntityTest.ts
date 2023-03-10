@@ -9,7 +9,7 @@ describe('handleEntity', () => {
 
     beforeEach(() => {
         context = createModelToDomContext();
-        spyOn(addDelimiters, 'default').and.callFake(() => {});
+        spyOn(addDelimiters, 'default').and.callFake(() => []);
     });
 
     it('Simple block entity', () => {

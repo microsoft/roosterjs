@@ -1,3 +1,4 @@
+import * as addDelimiters from 'roosterjs-editor-dom/lib/delimiter/addDelimiters';
 import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
 import { EntityFeatures } from '../../../lib/plugins/ContentEdit/features/entityFeatures';
 import {
@@ -8,7 +9,6 @@ import {
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 import {
-    addDelimiters,
     commitEntity,
     findClosestElementAncestor,
     PositionContentSearcher,
@@ -75,6 +75,7 @@ describe('Content Edit Features |', () => {
         });
 
         ({ entity, delimiterAfter, delimiterBefore } = addEntityBeforeEach(entity, wrapper));
+        spyOn(addDelimiters, 'default').and.callThrough();
     });
 
     afterAll(() => {
@@ -320,7 +321,7 @@ describe('Content Edit Features |', () => {
 
                 moveBetweenDelimitersFeature.handleEvent(event, editor);
 
-                expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
+                expect(extendSpy).toHaveBeenCalledWith(testContainer, 3);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
 
                 restoreSelection();
@@ -451,10 +452,11 @@ describe('Content Edit Features |', () => {
             return event;
         }
 
-        it('DelimiterAfter, Backspace', () => {
+        it('DelimiterAfter, Backspace, default not prevented', () => {
             let event = <PluginKeyDownEvent>{
                 rawEvent: <KeyboardEvent>{
                     which: Keys.BACKSPACE,
+                    defaultPrevented: false,
                 },
             };
 
@@ -463,6 +465,45 @@ describe('Content Edit Features |', () => {
             removeEntityBetweenDelimiters.handleEvent(event, editor);
 
             expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(1);
+        });
+
+        it('DelimiterAfter, Backspace, default prevented and entity is still in editor', () => {
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    which: Keys.BACKSPACE,
+                    defaultPrevented: true,
+                },
+            };
+            editor.contains = () => true;
+            runTest(delimiterAfter, true /* expected */, event);
+
+            removeEntityBetweenDelimiters.handleEvent(event, editor);
+
+            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(1);
+            expect(testContainer.contains(delimiterAfter)).toBe(true);
+            expect(testContainer.contains(delimiterBefore)).toBe(true);
+            expect(addDelimiters.default).toHaveBeenCalledWith(entity.wrapper);
+        });
+
+        it('DelimiterAfter, Backspace, default prevented and entity is removed', () => {
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    which: Keys.BACKSPACE,
+                    defaultPrevented: true,
+                },
+            };
+            editor.contains = () => false;
+            runTest(delimiterAfter, true /* expected */, event);
+
+            removeEntityBetweenDelimiters.handleEvent(event, editor);
+
+            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(0);
+            expect(testContainer.contains(delimiterAfter)).toBe(false);
+            expect(testContainer.contains(delimiterBefore)).toBe(false);
+            expect(addDelimiters.default).not.toHaveBeenCalled();
         });
 
         it('DelimiterAfter, DELETE', () => {
@@ -485,10 +526,11 @@ describe('Content Edit Features |', () => {
             runTest(delimiterBefore, false /* expected */, event);
         });
 
-        it('DelimiterBefore, DELETE', () => {
+        it('DelimiterBefore, Backspace, default not prevented', () => {
             let event = <PluginKeyDownEvent>{
                 rawEvent: <KeyboardEvent>{
                     which: Keys.DELETE,
+                    defaultPrevented: false,
                 },
             };
 
@@ -497,6 +539,45 @@ describe('Content Edit Features |', () => {
             removeEntityBetweenDelimiters.handleEvent(event, editor);
 
             expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(1);
+        });
+
+        it('DelimiterBefore, Backspace, default prevented and entity is still in editor', () => {
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    which: Keys.DELETE,
+                    defaultPrevented: true,
+                },
+            };
+            editor.contains = () => true;
+            runTest(delimiterBefore, true /* expected */, event);
+
+            removeEntityBetweenDelimiters.handleEvent(event, editor);
+
+            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(1);
+            expect(testContainer.contains(delimiterAfter)).toBe(true);
+            expect(testContainer.contains(delimiterBefore)).toBe(true);
+            expect(addDelimiters.default).toHaveBeenCalledWith(entity.wrapper);
+        });
+
+        it('DelimiterBefore, Backspace, default prevented and entity is removed', () => {
+            let event = <PluginKeyDownEvent>{
+                rawEvent: <KeyboardEvent>{
+                    which: Keys.DELETE,
+                    defaultPrevented: true,
+                },
+            };
+            editor.contains = () => false;
+            runTest(delimiterBefore, true /* expected */, event);
+
+            removeEntityBetweenDelimiters.handleEvent(event, editor);
+
+            expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
+            expect(select).toHaveBeenCalledTimes(0);
+            expect(testContainer.contains(delimiterAfter)).toBe(false);
+            expect(testContainer.contains(delimiterBefore)).toBe(false);
+            expect(addDelimiters.default).not.toHaveBeenCalled();
         });
     });
 
@@ -543,7 +624,7 @@ function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
     };
 
     commitEntity(wrapper, 'test', true, 'test');
-    addDelimiters(wrapper);
+    addDelimiters.default(wrapper);
 
     return {
         entity,
