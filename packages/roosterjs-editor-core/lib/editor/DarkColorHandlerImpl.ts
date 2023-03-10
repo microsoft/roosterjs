@@ -67,10 +67,12 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * Parse an existing color value, if it is in variable-based color format, extract color key,
      * light color and query related dark color if any
      * @param color The color string to parse
+     * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
+     * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
-    parseColorValue(color: string | undefined | null): ColorKeyAndValue {
+    parseColorValue(color: string | undefined | null, isInDarkMode?: boolean): ColorKeyAndValue {
         let key: string | undefined;
-        let lightModeColor = color || '';
+        let lightModeColor = '';
         let darkModeColor: string | undefined;
 
         if (color) {
@@ -84,6 +86,17 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
                 } else {
                     lightModeColor = '';
                 }
+            } else if (isInDarkMode) {
+                // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
+                // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
+                // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
+                lightModeColor = this.findLightColorFromDarkColor(color) || '';
+
+                if (lightModeColor) {
+                    darkModeColor = color;
+                }
+            } else {
+                lightModeColor = color;
             }
         }
 

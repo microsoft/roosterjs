@@ -101,6 +101,8 @@ function clearSegmentsFormat(
         if (x.link) {
             delete x.link.format.textColor;
         }
+
+        delete x.code;
     });
 }
 

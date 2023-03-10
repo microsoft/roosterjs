@@ -1,12 +1,13 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
 import { ContentModelTableFormat } from './ContentModelTableFormat';
 import { DatasetFormat } from './formatParts/DatasetFormat';
-import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
+import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 
 /**
  * A map from Content Model format name to its combined format type
@@ -65,7 +66,12 @@ export interface ContentModelFormatMap {
     /**
      * Format type for link
      */
-    link: LinkFormat;
+    link: ContentModelHyperLinkFormat;
+
+    /**
+     * Format type for code
+     */
+    code: FontFamilyFormat;
 
     /**
      * Format type for dataset

@@ -17,7 +17,8 @@ export default function setIndentation(
         editor,
         'setIndentation',
         model => setModelIndentation(model, indentation, length),
-        undefined /*options*/,
-        true /*preservePendingFormat*/
+        {
+            preservePendingFormat: true,
+        }
     );
 }

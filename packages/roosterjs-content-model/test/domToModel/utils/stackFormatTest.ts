@@ -69,4 +69,28 @@ describe('stackFormat', () => {
             dataset: {},
         });
     });
+
+    it('use default style for code', () => {
+        const context = createDomToModelContext();
+
+        context.code.format = {
+            fontFamily: 'Arial',
+        };
+
+        stackFormat(context, { code: 'codeDefault' }, () => {
+            expect(context.code).toEqual({
+                format: {
+                    fontFamily: 'monospace',
+                },
+            });
+
+            context.code.format.fontFamily = 'Arial';
+        });
+
+        expect(context.code).toEqual({
+            format: {
+                fontFamily: 'Arial',
+            },
+        });
+    });
 });

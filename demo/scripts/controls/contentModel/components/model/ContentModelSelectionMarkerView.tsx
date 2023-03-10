@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelSelectionMarker } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
@@ -10,7 +11,12 @@ export function ContentModelSelectionMarkerView(props: { marker: ContentModelSel
     const { marker } = props;
 
     const getContent = React.useCallback(() => {
-        return marker.link ? <ContentModelLinkView link={marker.link} /> : null;
+        return (
+            <>
+                {marker.link ? <ContentModelLinkView link={marker.link} /> : null}
+                {marker.code ? <ContentModelCodeView code={marker.code} /> : null}
+            </>
+        );
     }, [marker.link]);
 
     const getFormat = React.useCallback(() => {

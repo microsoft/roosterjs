@@ -1,5 +1,5 @@
 import adjustLinkSelection from '../../../lib/publicApi/link/adjustLinkSelection';
-import { addLink } from '../../../lib/modelApi/common/addLink';
+import { addLink } from '../../../lib/modelApi/common/addDecorators';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
