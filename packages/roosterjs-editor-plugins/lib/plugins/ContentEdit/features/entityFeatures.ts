@@ -1,8 +1,12 @@
 import {
+    addDelimiters,
     cacheGetEventData,
+    createRange,
     getComputedStyle,
+    getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
+    isBlockElement,
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
@@ -19,6 +23,7 @@ import {
     PluginEvent,
     NodeType,
     ExperimentalFeatures,
+    Entity,
 } from 'roosterjs-editor-types';
 
 /**
@@ -196,11 +201,7 @@ function cacheGetNeighborEntityElement(
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
         if (entity) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
@@ -322,7 +323,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.nextElementSibling?.nextElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementAfter()?.getContainerNode();
+                  return searcher?.getInlineElementAfter()?.getContainerNode();
               },
               isAtEndOrBeginning: position.isAtEnd,
           }
@@ -332,7 +333,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.previousElementSibling?.previousElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementBefore()?.getContainerNode();
+                  return searcher?.getInlineElementBefore()?.getContainerNode();
               },
               isAtEndOrBeginning: position.offset == 0,
           };
@@ -379,15 +380,57 @@ function cacheEntityBetweenDelimiter(
         const entity = getEntityFromElement(element);
 
         if (entity) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
     return element;
+}
+
+function triggerOperation(
+    entity: Entity,
+    editor: IEditor,
+    operation: EntityOperation,
+    event: PluginKeyboardEvent
+) {
+    const { nextElementSibling, previousElementSibling } = entity.wrapper;
+    editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+        operation,
+        rawEvent: event.rawEvent,
+        entity,
+    });
+
+    if (
+        entity.isReadonly &&
+        !isBlockElement(entity.wrapper) &&
+        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+    ) {
+        if (event.rawEvent.defaultPrevented) {
+            editor.runAsync(() => {
+                if (!editor.contains(entity.wrapper)) {
+                    removeDelimiters(nextElementSibling, previousElementSibling);
+                } else {
+                    const [delimiterAfter] = addDelimiters(entity.wrapper);
+                    if (delimiterAfter) {
+                        editor.select(delimiterAfter, PositionType.After);
+                    }
+                }
+            });
+        } else if (
+            getDelimiterFromElement(nextElementSibling) &&
+            getDelimiterFromElement(previousElementSibling)
+        ) {
+            editor.select(createRange(previousElementSibling, nextElementSibling));
+        }
+    }
+}
+
+function removeDelimiters(nextElementSibling: Element, previousElementSibling: Element) {
+    [nextElementSibling, previousElementSibling].forEach(sibling => {
+        if (getDelimiterFromElement(sibling)) {
+            sibling?.parentElement?.removeChild(sibling);
+        }
+    });
 }
 
 function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean): boolean {
