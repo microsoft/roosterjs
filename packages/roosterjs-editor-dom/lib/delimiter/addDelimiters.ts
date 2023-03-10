@@ -12,12 +12,28 @@ export default function addDelimiters(node: Element): Element[] {
     let [delimiterAfter, delimiterBefore] = getDelimiters(node);
 
     if (!delimiterAfter) {
-        delimiterAfter = insertDelimiter(node, DelimiterClasses.DELIMITER_AFTER);
+        delimiterAfter = addDelimiterAfter(node);
     }
     if (!delimiterBefore) {
-        delimiterBefore = insertDelimiter(node, DelimiterClasses.DELIMITER_BEFORE);
+        delimiterBefore = addDelimiterBefore(node);
     }
     return [delimiterAfter, delimiterBefore];
+}
+
+/**
+ * Adds delimiter after the element provided.
+ * @param element element to use
+ */
+export function addDelimiterAfter(element: Element) {
+    return insertDelimiter(element, DelimiterClasses.DELIMITER_AFTER);
+}
+
+/**
+ * Adds delimiter before the element provided.
+ * @param element element to use
+ */
+export function addDelimiterBefore(element: Element) {
+    return insertDelimiter(element, DelimiterClasses.DELIMITER_BEFORE);
 }
 
 function getDelimiters(entityWrapper: Element): (Element | undefined)[] {

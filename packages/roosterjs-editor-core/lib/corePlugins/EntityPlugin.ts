@@ -15,7 +15,7 @@ import {
     createRange,
     moveChildNodes,
     getObjectKeys,
-    getTagOfNode,
+    isBlockElement,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -245,7 +245,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 if (
                     !shouldNormalizeDelimiters &&
                     !element.isContentEditable &&
-                    getTagOfNode(element) === 'SPAN'
+                    !isBlockElement(element)
                 ) {
                     shouldNormalizeDelimiters = true;
                 }
