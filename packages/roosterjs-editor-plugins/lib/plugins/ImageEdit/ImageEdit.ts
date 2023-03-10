@@ -344,6 +344,21 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     /**
+     * Rotate the image in radian angle.
+     * @param image The image to be rotated
+     * @param angleRad The angle in radian that the image must be rotated.
+     */
+    public flipImage(image: HTMLImageElement) {
+        this.image = image;
+        this.editInfo = getEditInfoFromImage(image);
+        this.editInfo.flippedImage = !this.editInfo.flippedImage;
+        this.createWrapper(ImageEditOperation.Rotate);
+        this.updateWrapper();
+        this.setEditingImage(null);
+        this.editor?.select(image);
+    }
+
+    /**
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
@@ -370,6 +385,7 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
                 this.clonedImage.src = this.editInfo.src;
+                this.clonedImage.style.transform = this.editInfo.flippedImage ? `scaleX(-1)` : '';
                 this.clonedImage.style.position = 'absolute';
             }
 
@@ -489,7 +505,6 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
-
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 

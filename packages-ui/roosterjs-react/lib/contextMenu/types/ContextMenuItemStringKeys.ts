@@ -36,6 +36,7 @@ export type ImageEditMenuItemStringKey =
     | 'menuNameImageResize'
     | 'menuNameImageCrop'
     | 'menuNameImageRemove'
+    | 'menuNameImageFlip'
     | 'menuNameImageSizeBestFit'
     | 'menuNameImageSizeSmall'
     | 'menuNameImageSizeMedium'

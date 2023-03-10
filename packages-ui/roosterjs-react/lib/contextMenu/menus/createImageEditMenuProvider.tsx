@@ -109,6 +109,18 @@ const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
+const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageFlip',
+    unlocalizedText: 'Flip',
+    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
+        if (editor.contains(node)) {
+            editor.addUndoSnapshot(() => {
+                imageEdit?.flipImage(node as HTMLImageElement);
+            }, 'FlipImage');
+        }
+    },
+};
+
 function shouldShowImageEditItems(editor: IEditor, node: Node) {
     return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
 }
@@ -123,7 +135,13 @@ export default function createImageEditMenuProvider(
 ): EditorPlugin {
     return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
-        [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
+        [
+            ImageAltTextMenuItem,
+            ImageResizeMenuItem,
+            ImageCropMenuItem,
+            ImageRemoveMenuItem,
+            ImageFlipMenuItem,
+        ],
         strings,
         shouldShowImageEditItems,
         imageEditPlugin

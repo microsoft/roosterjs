@@ -30,11 +30,13 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     canvas.width = targetWidth;
     canvas.height = targetHeight;
-
     const context = canvas.getContext('2d');
     if (context) {
         context.translate(targetWidth / 2, targetHeight / 2);
         context.rotate(angle);
+        if (editInfo.flippedImage) {
+            context.scale(-1, 1);
+        }
         context.drawImage(
             image,
             naturalWidth * left,

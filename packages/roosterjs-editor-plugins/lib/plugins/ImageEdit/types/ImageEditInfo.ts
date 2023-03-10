@@ -64,9 +64,21 @@ export interface RotateInfo {
 
 /**
  * @internal
+ * Edit info for inline image rotate
+ */
+export interface FlipInfo {
+    /**
+     * Rotated angle of inline image, in radian. Cropping or resizing won't impact this percentage value
+     * @default 0
+     */
+    flippedImage?: boolean;
+}
+
+/**
+ * @internal
  * Edit info for inline image editing
  */
-export default interface ImageEditInfo extends ResizeInfo, CropInfo, RotateInfo {
+export default interface ImageEditInfo extends ResizeInfo, CropInfo, RotateInfo, FlipInfo {
     /**
      * Original src of the image. This value will not be changed when edit image. We can always use it
      * to get the original image so that all editing operation will be on top of the original image.
