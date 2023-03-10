@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.33% </span>
+                <span class="strong">92.77% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>84/90</span>
+                <span class='fraction'>77/83</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">67.65% </span>
+                <span class="strong">69.29% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>92/136</span>
+                <span class='fraction'>88/127</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">92.86% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>15/16</span>
+                <span class='fraction'>13/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.18% </span>
+                <span class="strong">92.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>82/88</span>
+                <span class='fraction'>77/83</span>
             </div>
         
             
@@ -279,21 +279,7 @@
 <a name='L220'></a><a href='#L220'>220</a>
 <a name='L221'></a><a href='#L221'>221</a>
 <a name='L222'></a><a href='#L222'>222</a>
-<a name='L223'></a><a href='#L223'>223</a>
-<a name='L224'></a><a href='#L224'>224</a>
-<a name='L225'></a><a href='#L225'>225</a>
-<a name='L226'></a><a href='#L226'>226</a>
-<a name='L227'></a><a href='#L227'>227</a>
-<a name='L228'></a><a href='#L228'>228</a>
-<a name='L229'></a><a href='#L229'>229</a>
-<a name='L230'></a><a href='#L230'>230</a>
-<a name='L231'></a><a href='#L231'>231</a>
-<a name='L232'></a><a href='#L232'>232</a>
-<a name='L233'></a><a href='#L233'>233</a>
-<a name='L234'></a><a href='#L234'>234</a>
-<a name='L235'></a><a href='#L235'>235</a>
-<a name='L236'></a><a href='#L236'>236</a>
-<a name='L237'></a><a href='#L237'>237</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L223'></a><a href='#L223'>223</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -304,7 +290,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -457,28 +442,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">23x</span>
 <span class="cline-any cline-yes">23x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">29x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -540,8 +512,7 @@
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
-    addDelimiterAfter,
-    addDelimiterBefore,
+    addDelimiters,
     createElement,
     createRange,
     getDelimiterFromElement,
@@ -693,28 +664,15 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     }
 }
 &nbsp;
-function normalizeDelimitersInEditor(editor: IEditor) {
+export function normalizeDelimitersInEditor(editor: IEditor) {
     removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
     addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
-}
-&nbsp;
-function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
-    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =&gt;
-        el &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >safeInstanceOf(el, 'HTMLElement') </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >getDelimiterFromElement(el) </span>? <span class="branch-0 cbranch-no" title="branch not covered" >el </span>: undefined
-    );
 }
 &nbsp;
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf&lt;Element&gt;) {
     nodes.forEach(node =&gt; {
         if (tryGetEntityFromNode(node)) {
-            const [delimiterAfter, delimiterBefore] = getDelimiters(node);
-&nbsp;
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (!delimiterAfter) {
-                addDelimiterAfter(node);
-            }
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (!delimiterBefore) {
-                addDelimiterBefore(node);
-            }
+            addDelimiters(node);
         }
     });
 }
@@ -772,7 +730,7 @@ function removeDelimiterAttr(node: Element | undefined | null) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 10 2023 15:53:22 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 10 2023 21:02:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
