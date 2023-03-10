@@ -6,7 +6,7 @@ import {
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
-    getTagOfNode,
+    isBlockElement,
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
@@ -402,7 +402,7 @@ function triggerOperation(
 
     if (
         entity.isReadonly &&
-        getTagOfNode(entity.wrapper) === 'SPAN' &&
+        !isBlockElement(entity.wrapper) &&
         editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
     ) {
         if (event.rawEvent.defaultPrevented) {
