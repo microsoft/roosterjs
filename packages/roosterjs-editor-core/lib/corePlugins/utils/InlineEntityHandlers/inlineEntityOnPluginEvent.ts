@@ -1,9 +1,11 @@
 import {
     ChangeSource,
     DelimiterClasses,
+    Entity,
     IEditor,
     Keys,
     NodeType,
+    PluginEvent,
     PluginEventType,
     PluginKeyDownEvent,
     PositionType,
@@ -22,7 +24,6 @@ import {
     safeInstanceOf,
     splitTextNode,
 } from 'roosterjs-editor-dom';
-import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
@@ -87,6 +88,9 @@ function preventTypeInDelimiter(delimiter: HTMLElement) {
     }
 }
 
+/**
+ * @internal
+ */
 export function normalizeDelimitersInEditor(editor: IEditor) {
     removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
     addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
