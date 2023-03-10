@@ -1,17 +1,4 @@
 import {
-    ChangeSource,
-    DelimiterClasses,
-    Entity,
-    IEditor,
-    Keys,
-    NodeType,
-    PluginEvent,
-    PluginEventType,
-    PluginKeyDownEvent,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
-import {
     addDelimiters,
     createElement,
     createRange,
@@ -24,6 +11,19 @@ import {
     safeInstanceOf,
     splitTextNode,
 } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    DelimiterClasses,
+    Entity,
+    IEditor,
+    Keys,
+    NodeType,
+    PluginEvent,
+    PluginEventType,
+    PluginKeyDownEvent,
+    PositionType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
