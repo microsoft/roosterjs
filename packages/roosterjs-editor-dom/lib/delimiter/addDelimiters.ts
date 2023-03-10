@@ -1,22 +1,36 @@
 import createElement from '../utils/createElement';
+import getDelimiterFromElement from './getDelimiterFromElement';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import { DelimiterClasses } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
- * Adds delimiters to the element provided.
- * @param element element to be between delimiters
+ * Adds delimiters to the element provided. If the delimiters already exists, will not add them
+ * @param node the node to add the delimiters
  */
-export default function addDelimiters(element: HTMLElement) {
-    addDelimiterAfter(element);
-    addDelimiterBefore(element);
+export default function addDelimiters(node: Element) {
+    const [delimiterAfter, delimiterBefore] = getDelimiters(node);
+
+    if (!delimiterAfter) {
+        addDelimiterAfter(node);
+    }
+    if (!delimiterBefore) {
+        addDelimiterBefore(node);
+    }
+}
+
+function getDelimiters(entityWrapper: Element): (Element | undefined)[] {
+    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
+        el && getDelimiterFromElement(el) ? el : undefined
+    );
 }
 
 /**
  * Adds delimiter after the element provided.
  * @param element element to use
  */
-export function addDelimiterAfter(element: HTMLElement) {
+function addDelimiterAfter(element: Element) {
     insertDelimiter(element, DelimiterClasses.DELIMITER_AFTER);
 }
 
@@ -24,11 +38,11 @@ export function addDelimiterAfter(element: HTMLElement) {
  * Adds delimiter before the element provided.
  * @param element element to use
  */
-export function addDelimiterBefore(element: HTMLElement) {
+function addDelimiterBefore(element: Element) {
     insertDelimiter(element, DelimiterClasses.DELIMITER_BEFORE);
 }
 
-function insertDelimiter(element: HTMLElement, delimiterClass: DelimiterClasses) {
+function insertDelimiter(element: Element, delimiterClass: DelimiterClasses) {
     const span = createElement(
         {
             tag: 'span',

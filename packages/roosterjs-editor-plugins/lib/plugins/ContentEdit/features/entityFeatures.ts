@@ -1,6 +1,9 @@
 import {
+    addDelimiters,
     cacheGetEventData,
+    createRange,
     getComputedStyle,
+    getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
     matchesSelector,
@@ -329,7 +332,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.nextElementSibling?.nextElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementAfter()?.getContainerNode();
+                  return searcher?.getInlineElementAfter()?.getContainerNode();
               },
               isAtEndOrBeginning: position.isAtEnd,
           }
@@ -339,7 +342,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.previousElementSibling?.previousElementSibling,
               getNextSibling: () => {
-                  return searcher.getInlineElementBefore()?.getContainerNode();
+                  return searcher?.getInlineElementBefore()?.getContainerNode();
               },
               isAtEndOrBeginning: position.offset == 0,
           };
@@ -382,16 +385,42 @@ function cacheEntityBetweenDelimiter(
         'entity_delimiter_cache_key_' + checkBefore,
         () => entity && editor.getElementAtCursor(getEntitySelector(), entity)
     );
+    const delimiter = cacheDelimiter(event, checkBefore);
 
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
 
         if (entity) {
+            const { nextElementSibling, previousElementSibling } = entity.wrapper;
             editor.triggerPluginEvent(PluginEventType.EntityOperation, {
                 operation,
                 rawEvent: event.rawEvent,
                 entity,
             });
+
+            if (event.rawEvent.defaultPrevented) {
+                editor.runAsync(() => {
+                    if (!editor.contains(entity.wrapper)) {
+                        [nextElementSibling, previousElementSibling].forEach(sibling => {
+                            if (getDelimiterFromElement(sibling)) {
+                                sibling?.parentElement?.removeChild(sibling);
+                            }
+                        });
+                    } else {
+                        addDelimiters(entity.wrapper);
+                    }
+                });
+            } else if (delimiter) {
+                const { delimiterPair } = getRelatedElements(delimiter, checkBefore);
+                if (delimiterPair) {
+                    editor.select(
+                        createRange(
+                            checkBefore ? delimiter : delimiterPair,
+                            !checkBefore ? delimiter : delimiterPair
+                        )
+                    );
+                }
+            }
         }
     }
 
