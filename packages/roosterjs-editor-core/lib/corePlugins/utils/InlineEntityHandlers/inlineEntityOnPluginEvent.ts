@@ -9,8 +9,7 @@ import {
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
-    addDelimiterAfter,
-    addDelimiterBefore,
+    addDelimiters,
     createElement,
     createRange,
     getDelimiterFromElement,
@@ -162,28 +161,15 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     }
 }
 
-function normalizeDelimitersInEditor(editor: IEditor) {
+export function normalizeDelimitersInEditor(editor: IEditor) {
     removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
     addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
-}
-
-function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
-    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
-        el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined
-    );
 }
 
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
         if (tryGetEntityFromNode(node)) {
-            const [delimiterAfter, delimiterBefore] = getDelimiters(node);
-
-            if (!delimiterAfter) {
-                addDelimiterAfter(node);
-            }
-            if (!delimiterBefore) {
-                addDelimiterBefore(node);
-            }
+            addDelimiters(node);
         }
     });
 }
