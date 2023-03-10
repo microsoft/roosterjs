@@ -1,12 +1,11 @@
 import createElement from '../utils/createElement';
 import getDelimiterFromElement from './getDelimiterFromElement';
-import safeInstanceOf from '../utils/safeInstanceOf';
 import { DelimiterClasses } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 
 /**
- * Adds delimiters to the element provided. If the delimiters already exists, will not add them
+ * Adds delimiters to the element provided. If the delimiters already exists, will not be added
  * @param node the node to add the delimiters
  */
 export default function addDelimiters(node: Element) {
