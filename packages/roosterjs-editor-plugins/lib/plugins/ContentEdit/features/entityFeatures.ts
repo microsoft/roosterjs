@@ -6,6 +6,7 @@ import {
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
+    getTagOfNode,
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
@@ -22,6 +23,7 @@ import {
     PluginEvent,
     NodeType,
     ExperimentalFeatures,
+    Entity,
 } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
@@ -201,11 +203,7 @@ function cacheGetNeighborEntityElement(
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
         if (entity) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
@@ -385,46 +383,62 @@ function cacheEntityBetweenDelimiter(
         'entity_delimiter_cache_key_' + checkBefore,
         () => entity && editor.getElementAtCursor(getEntitySelector(), entity)
     );
-    const delimiter = cacheDelimiter(event, checkBefore);
 
     if (element && operation !== undefined) {
         const entity = getEntityFromElement(element);
 
         if (entity) {
-            const { nextElementSibling, previousElementSibling } = entity.wrapper;
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent: event.rawEvent,
-                entity,
-            });
-
-            if (event.rawEvent.defaultPrevented) {
-                editor.runAsync(() => {
-                    if (!editor.contains(entity.wrapper)) {
-                        [nextElementSibling, previousElementSibling].forEach(sibling => {
-                            if (getDelimiterFromElement(sibling)) {
-                                sibling?.parentElement?.removeChild(sibling);
-                            }
-                        });
-                    } else {
-                        addDelimiters(entity.wrapper);
-                    }
-                });
-            } else if (delimiter) {
-                const { delimiterPair } = getRelatedElements(delimiter, checkBefore);
-                if (delimiterPair) {
-                    editor.select(
-                        createRange(
-                            checkBefore ? delimiter : delimiterPair,
-                            !checkBefore ? delimiter : delimiterPair
-                        )
-                    );
-                }
-            }
+            triggerOperation(entity, editor, operation, event);
         }
     }
 
     return element;
+}
+
+function triggerOperation(
+    entity: Entity,
+    editor: IEditor,
+    operation: EntityOperation,
+    event: PluginKeyboardEvent
+) {
+    const { nextElementSibling, previousElementSibling } = entity.wrapper;
+    editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+        operation,
+        rawEvent: event.rawEvent,
+        entity,
+    });
+
+    if (
+        entity.isReadonly &&
+        getTagOfNode(entity.wrapper) === 'SPAN' &&
+        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+    ) {
+        if (event.rawEvent.defaultPrevented) {
+            editor.runAsync(() => {
+                if (!editor.contains(entity.wrapper)) {
+                    removeDelimiters(nextElementSibling, previousElementSibling);
+                } else {
+                    const { delimiterAfter } = addDelimiters(entity.wrapper);
+                    if (delimiterAfter) {
+                        editor.select(delimiterAfter, PositionType.After);
+                    }
+                }
+            });
+        } else if (
+            getDelimiterFromElement(nextElementSibling) &&
+            getDelimiterFromElement(previousElementSibling)
+        ) {
+            editor.select(createRange(previousElementSibling, nextElementSibling));
+        }
+    }
+}
+
+function removeDelimiters(nextElementSibling: Element, previousElementSibling: Element) {
+    [nextElementSibling, previousElementSibling].forEach(sibling => {
+        if (getDelimiterFromElement(sibling)) {
+            sibling?.parentElement?.removeChild(sibling);
+        }
+    });
 }
 
 function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean): boolean {

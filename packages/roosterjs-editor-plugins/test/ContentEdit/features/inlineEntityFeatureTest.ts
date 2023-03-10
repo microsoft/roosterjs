@@ -481,7 +481,7 @@ describe('Content Edit Features |', () => {
             removeEntityBetweenDelimiters.handleEvent(event, editor);
 
             expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
-            expect(select).toHaveBeenCalledTimes(0);
+            expect(select).toHaveBeenCalledTimes(1);
             expect(testContainer.contains(delimiterAfter)).toBe(true);
             expect(testContainer.contains(delimiterBefore)).toBe(true);
             expect(addDelimiters.default).toHaveBeenCalledWith(entity.wrapper);
@@ -555,7 +555,7 @@ describe('Content Edit Features |', () => {
             removeEntityBetweenDelimiters.handleEvent(event, editor);
 
             expect(triggerContentChangedEvent).toHaveBeenCalledTimes(1);
-            expect(select).toHaveBeenCalledTimes(0);
+            expect(select).toHaveBeenCalledTimes(1);
             expect(testContainer.contains(delimiterAfter)).toBe(true);
             expect(testContainer.contains(delimiterBefore)).toBe(true);
             expect(addDelimiters.default).toHaveBeenCalledWith(entity.wrapper);

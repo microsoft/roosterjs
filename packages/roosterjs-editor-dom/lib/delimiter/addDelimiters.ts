@@ -9,36 +9,21 @@ const ZERO_WIDTH_SPACE = '\u200B';
  * @param node the node to add the delimiters
  */
 export default function addDelimiters(node: Element) {
-    const [delimiterAfter, delimiterBefore] = getDelimiters(node);
+    let [delimiterAfter, delimiterBefore] = getDelimiters(node);
 
     if (!delimiterAfter) {
-        addDelimiterAfter(node);
+        delimiterAfter = insertDelimiter(node, DelimiterClasses.DELIMITER_AFTER);
     }
     if (!delimiterBefore) {
-        addDelimiterBefore(node);
+        delimiterBefore = insertDelimiter(node, DelimiterClasses.DELIMITER_BEFORE);
     }
+    return { delimiterAfter, delimiterBefore };
 }
 
 function getDelimiters(entityWrapper: Element): (Element | undefined)[] {
     return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
         el && getDelimiterFromElement(el) ? el : undefined
     );
-}
-
-/**
- * Adds delimiter after the element provided.
- * @param element element to use
- */
-function addDelimiterAfter(element: Element) {
-    insertDelimiter(element, DelimiterClasses.DELIMITER_AFTER);
-}
-
-/**
- * Adds delimiter before the element provided.
- * @param element element to use
- */
-function addDelimiterBefore(element: Element) {
-    insertDelimiter(element, DelimiterClasses.DELIMITER_BEFORE);
 }
 
 function insertDelimiter(element: Element, delimiterClass: DelimiterClasses) {
@@ -55,4 +40,6 @@ function insertDelimiter(element: Element, delimiterClass: DelimiterClasses) {
             delimiterClass == DelimiterClasses.DELIMITER_AFTER ? 'afterend' : 'beforebegin';
         element.insertAdjacentElement(insertPosition, span);
     }
+
+    return element;
 }
