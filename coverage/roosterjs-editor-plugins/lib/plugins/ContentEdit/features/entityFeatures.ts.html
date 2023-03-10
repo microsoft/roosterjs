@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">59.44% </span>
+                <span class="strong">57.97% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>85/143</span>
+                <span class='fraction'>80/138</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.14% </span>
+                <span class="strong">51.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>90/176</span>
+                <span class='fraction'>93/180</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.58% </span>
+                <span class="strong">56.25% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>19/33</span>
+                <span class='fraction'>18/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.27% </span>
+                <span class="strong">56.72% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>81/139</span>
+                <span class='fraction'>76/134</span>
             </div>
         
             
@@ -482,15 +482,7 @@
 <a name='L423'></a><a href='#L423'>423</a>
 <a name='L424'></a><a href='#L424'>424</a>
 <a name='L425'></a><a href='#L425'>425</a>
-<a name='L426'></a><a href='#L426'>426</a>
-<a name='L427'></a><a href='#L427'>427</a>
-<a name='L428'></a><a href='#L428'>428</a>
-<a name='L429'></a><a href='#L429'>429</a>
-<a name='L430'></a><a href='#L430'>430</a>
-<a name='L431'></a><a href='#L431'>431</a>
-<a name='L432'></a><a href='#L432'>432</a>
-<a name='L433'></a><a href='#L433'>433</a>
-<a name='L434'></a><a href='#L434'>434</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L426'></a><a href='#L426'>426</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -512,8 +504,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -736,16 +726,11 @@
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-yes">14x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">14x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -836,7 +821,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">36x</span>
 <span class="cline-any cline-yes">13x</span>
@@ -945,8 +929,6 @@ import {
     NodeType,
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
-&nbsp;
-const ZERO_WIDTH_SPACE = '\u200B';
 &nbsp;
 /**
  * A content edit feature to trigger EntityOperation event with operation "Click" when user
@@ -1168,20 +1150,15 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature&lt;PluginKeyboardEvent&gt
         <span class="missing-if-branch" title="else path not taken" >E</span>if (delimiterPair &amp;&amp; entity &amp;&amp; matchesSelector(entity, getEntitySelector())) {
             event.rawEvent.preventDefault();
             editor.runAsync(() =&gt; {
-                let offset = 0;
-                delimiterPair.childNodes.forEach((node, index) =&gt; {
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (node.textContent === ZERO_WIDTH_SPACE) {
-                        offset = index;
-                    }
-                });
-&nbsp;
-                const position = checkBefore
-                    ? new Position(delimiterPair, offset + 1)
-                    : new Position(delimiterPair, PositionType.Before);
-&nbsp;
+                const positionType = checkBefore
+                    ? event.rawEvent.shiftKey
+                        ? PositionType.After
+                        : PositionType.End
+                    : PositionType.Before;
+                const position = new Position(delimiterPair, positionType);
                 if (event.rawEvent.shiftKey) {
                     const selection = delimiterPair.ownerDocument.getSelection();
-                    selection<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>xtend(position.element, position.offset);
+                    selection<span class="branch-0 cbranch-no" title="branch not covered" >?.e</span>xtend(position.node, position.offset);
                 } else {
                     editor.select(position);
                 }
@@ -1232,7 +1209,7 @@ const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature&lt;PluginKeyboard
 };
 &nbsp;
 function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, checkBefore: boolean) {
-    const position = editor.getFocusedPosition();
+    const position = editor.getFocusedPosition()?.normalize();
     cacheGetCheckBefore(event, checkBefore);
 &nbsp;
     if (!position) {
@@ -1242,9 +1219,9 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
     const focusedElement =
         position.node.nodeType == NodeType.Text
             ? position.node
-            : position.node == position.element
+            : <span class="branch-1 cbranch-no" title="branch not covered" >position.node == position.element</span>
             ? position.element.childNodes.item(position.offset)
-            : <span class="branch-1 cbranch-no" title="branch not covered" >position.element;</span>
+            : position.element;
 &nbsp;
     const searcher = editor.getContentSearcherOfCursor(event);
     const data = checkBefore
@@ -1269,7 +1246,6 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               isAtEndOrBeginning: position.offset == 0,
           };
 &nbsp;
-    position.element.normalize();
     const sibling = data.getNextSibling();
     if (data.isAtEndOrBeginning &amp;&amp; sibling) {
         const elAtCursor = editor.getElementAtCursor('.' + data.class, sibling);
@@ -1363,7 +1339,7 @@ export const EntityFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Mar 09 2023 22:17:45 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 10 2023 15:53:22 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
