@@ -11,6 +11,7 @@ import {
     addDelimiters,
     commitEntity,
     findClosestElementAncestor,
+    PositionContentSearcher,
     Position,
 } from 'roosterjs-editor-dom';
 
@@ -81,8 +82,12 @@ describe('Content Edit Features |', () => {
     });
 
     describe('Move Before |', () => {
-        function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
-            editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
+        function runTest(
+            element: Element | Position | null,
+            expected: boolean,
+            event: PluginKeyDownEvent
+        ) {
+            setEditorFuncs(editor, element, testContainer);
 
             const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
@@ -192,6 +197,45 @@ describe('Content Edit Features |', () => {
             it('Null', () => {
                 runTest(null, false /* expected */, event);
             });
+
+            it('Feature not enabled, do not handle', () => {
+                editor.isFeatureEnabled = () => false;
+                runTest(null, false /* expected */, event);
+            });
+
+            it('Selection not collapsed. do not handle', () => {
+                (editor.getSelectionRange = () =>
+                    <Range>{
+                        collapsed: false,
+                    }),
+                    runTest(null, false /* expected */, event);
+            });
+
+            it('DelimiterAfter, shouldHandle and Handle, cursor at start of element after delimiter after', () => {
+                const bold = document.createElement('b');
+                bold.append(document.createTextNode('Bold'));
+                testContainer.insertBefore(bold, null);
+
+                event = runTest(new Position(bold.firstChild!, 0), true /* expected */, event);
+
+                spyOnSelection();
+
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(select).toHaveBeenCalledWith(new Position(testContainer, 0));
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+                expect(extendSpy).toHaveBeenCalledTimes(0);
+
+                restoreSelection();
+            });
+
+            it('DelimiterAfter, should not Handle, cursor is not not at the start of the element after delimiter after', () => {
+                const bold = document.createElement('b');
+                bold.append(document.createTextNode('Bold'));
+                testContainer.insertBefore(bold, null);
+
+                event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
+            });
         }
 
         describe('LTR |', () => {
@@ -227,8 +271,12 @@ describe('Content Edit Features |', () => {
     describe('Move After |', () => {
         let event: PluginKeyDownEvent;
 
-        function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
-            editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
+        function runTest(
+            element: Element | Position | null,
+            expected: boolean,
+            event: PluginKeyDownEvent
+        ) {
+            setEditorFuncs(editor, element, testContainer);
 
             const result = moveBetweenDelimitersFeature.shouldHandleEvent(
                 event,
@@ -272,7 +320,7 @@ describe('Content Edit Features |', () => {
 
                 moveBetweenDelimitersFeature.handleEvent(event, editor);
 
-                expect(extendSpy).toHaveBeenCalledWith(delimiterAfter, 1);
+                expect(extendSpy).toHaveBeenCalledWith(testContainer, 3);
                 expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
 
                 restoreSelection();
@@ -316,6 +364,45 @@ describe('Content Edit Features |', () => {
             it('Null', () => {
                 runTest(null, false /* expected */, event);
             });
+
+            it('Feature not enabled, do not handle', () => {
+                editor.isFeatureEnabled = () => false;
+                runTest(null, false /* expected */, event);
+            });
+
+            it('Selection not collapsed. do not handle', () => {
+                (editor.getSelectionRange = () =>
+                    <Range>{
+                        collapsed: false,
+                    }),
+                    runTest(null, false /* expected */, event);
+            });
+
+            it('DelimiterBefore, shouldHandle and Handle, cursor at end of element before delimiter before', () => {
+                const bold = document.createElement('b');
+                bold.append(document.createTextNode('Bold'));
+                testContainer.insertBefore(bold, delimiterBefore);
+
+                event = runTest(new Position(bold.firstChild!, 4), true /* expected */, event);
+
+                spyOnSelection();
+
+                moveBetweenDelimitersFeature.handleEvent(event, editor);
+
+                expect(select).toHaveBeenCalledWith(new Position(delimiterAfter!, 1));
+                expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
+                expect(extendSpy).toHaveBeenCalledTimes(0);
+
+                restoreSelection();
+            });
+
+            it('DelimiterBefore, should not Handle, cursor is not not at the start of the element after delimiter after', () => {
+                const bold = document.createElement('b');
+                bold.append(document.createTextNode('Bold'));
+                testContainer.insertBefore(bold, null);
+
+                event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
+            });
         }
 
         describe('LTR |', () => {
@@ -352,7 +439,7 @@ describe('Content Edit Features |', () => {
 
     describe('Remove Entity Between delimiters', () => {
         function runTest(element: Element | null, expected: boolean, event: PluginKeyDownEvent) {
-            editor.getFocusedPosition = () => (element ? new Position(element, 0) : null)!;
+            setEditorFuncs(editor, element, testContainer);
 
             const result = removeEntityBetweenDelimiters.shouldHandleEvent(
                 event,
@@ -429,6 +516,18 @@ describe('Content Edit Features |', () => {
     }
 });
 
+function setEditorFuncs(
+    editor: IEditor,
+    element: Element | Position | null,
+    testContainer: HTMLDivElement
+) {
+    editor.getFocusedPosition = () => getPos(element);
+    editor.getContentSearcherOfCursor = () => {
+        const pos = getPos(element);
+        return pos ? new PositionContentSearcher(testContainer, pos) : null!;
+    };
+}
+
 function cleanUp() {
     document.body.childNodes.forEach(cn => {
         document.body.removeChild(cn);
@@ -452,3 +551,11 @@ function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
         delimiterBefore: wrapper.previousElementSibling,
     };
 }
+
+const getPos = (element: Element | Position | null) => {
+    return (element
+        ? (element as Position).element
+            ? (element as Position)
+            : new Position(element as Element, 0)
+        : null)!;
+};

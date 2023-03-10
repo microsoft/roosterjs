@@ -63,7 +63,8 @@ export default function checkEditInfoState(
         return ImageEditInfoState.Invalid;
     } else if (
         ROTATE_CROP_KEYS.every(key => areSameNumber(editInfo[key], 0)) &&
-        !editInfo.flippedImage
+        !editInfo.flippedImage &&
+        (!compareTo || (compareTo && editInfo.angleRad === compareTo.angleRad))
     ) {
         return ImageEditInfoState.ResizeOnly;
     } else if (

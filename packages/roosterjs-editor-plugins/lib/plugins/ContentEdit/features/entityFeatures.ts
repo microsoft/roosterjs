@@ -21,8 +21,6 @@ import {
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 
-const ZERO_WIDTH_SPACE = '\u200B';
-
 /**
  * A content edit feature to trigger EntityOperation event with operation "Click" when user
  * clicks on a readonly entity.
@@ -243,20 +241,15 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
         if (delimiterPair && entity && matchesSelector(entity, getEntitySelector())) {
             event.rawEvent.preventDefault();
             editor.runAsync(() => {
-                let offset = 0;
-                delimiterPair.childNodes.forEach((node, index) => {
-                    if (node.textContent === ZERO_WIDTH_SPACE) {
-                        offset = index;
-                    }
-                });
-
-                const position = checkBefore
-                    ? new Position(delimiterPair, offset + 1)
-                    : new Position(delimiterPair, PositionType.Before);
-
+                const positionType = checkBefore
+                    ? event.rawEvent.shiftKey
+                        ? PositionType.After
+                        : PositionType.End
+                    : PositionType.Before;
+                const position = new Position(delimiterPair, positionType);
                 if (event.rawEvent.shiftKey) {
                     const selection = delimiterPair.ownerDocument.getSelection();
-                    selection?.extend(position.element, position.offset);
+                    selection?.extend(position.node, position.offset);
                 } else {
                     editor.select(position);
                 }
@@ -307,7 +300,7 @@ const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEve
 };
 
 function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, checkBefore: boolean) {
-    const position = editor.getFocusedPosition();
+    const position = editor.getFocusedPosition()?.normalize();
     cacheGetCheckBefore(event, checkBefore);
 
     if (!position) {
@@ -321,6 +314,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
             ? position.element.childNodes.item(position.offset)
             : position.element;
 
+    const searcher = editor.getContentSearcherOfCursor(event);
     const data = checkBefore
         ? {
               class: DelimiterClasses.DELIMITER_BEFORE,
@@ -328,18 +322,7 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.nextElementSibling?.nextElementSibling,
               getNextSibling: () => {
-                  if (position.node.nodeType == NodeType.Text) {
-                      return position.node.nextSibling != null
-                          ? position.node.nextSibling
-                          : (position.node.parentNode as HTMLElement).className ===
-                            DelimiterClasses.DELIMITER_BEFORE
-                          ? position.node.parentElement
-                          : null;
-                  } else if (position.node == position.element) {
-                      return position.element.childNodes.item(position.offset);
-                  } else {
-                      return null;
-                  }
+                  return searcher.getInlineElementAfter()?.getContainerNode();
               },
               isAtEndOrBeginning: position.isAtEnd,
           }
@@ -349,23 +332,11 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
               getDelimiterPair: (element: HTMLElement) =>
                   element.previousElementSibling?.previousElementSibling,
               getNextSibling: () => {
-                  if (position.node.nodeType == NodeType.Text) {
-                      return position.node.previousSibling != null
-                          ? position.node.previousSibling
-                          : (position.node.parentNode as HTMLElement).className ===
-                            DelimiterClasses.DELIMITER_AFTER
-                          ? position.node.parentElement
-                          : null;
-                  } else if (position.node == position.element) {
-                      return position.element.childNodes.item(position.offset);
-                  } else {
-                      return null;
-                  }
+                  return searcher.getInlineElementBefore()?.getContainerNode();
               },
               isAtEndOrBeginning: position.offset == 0,
           };
 
-    position.element.normalize();
     const sibling = data.getNextSibling();
     if (data.isAtEndOrBeginning && sibling) {
         const elAtCursor = editor.getElementAtCursor('.' + data.class, sibling);

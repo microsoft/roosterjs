@@ -23,6 +23,7 @@ export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment
 export { ContentModelSegment } from './segment/ContentModelSegment';
 export { ContentModelEntity } from './entity/ContentModelEntity';
 export { ContentModelDivider } from './block/ContentModelDivider';
+export { ContentModelBlockWithCache } from './block/ContentModelBlockWithCache';
 
 export { ContentModelParagraphDecorator } from './decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './decorator/ContentModelLink';
@@ -120,12 +121,10 @@ export {
     FormatAppliers,
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
-    ContentModelHandlerTypeMap,
     DefaultImplicitFormatMap,
 } from './context/ModelToDomSettings';
-export { ModelToDomEntityContext } from './context/ModelToDomEntityContext';
 export { ElementProcessor } from './context/ElementProcessor';
-export { ContentModelHandler } from './context/ContentModelHandler';
+export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
 
 export { Border } from './interface/Border';
 

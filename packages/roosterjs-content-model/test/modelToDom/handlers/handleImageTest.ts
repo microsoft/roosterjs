@@ -1,6 +1,6 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleImage } from '../../../lib/modelToDom/handlers/handleImage';
@@ -10,7 +10,7 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 describe('handleSegment', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleBlock: jasmine.Spy<ContentModelHandler<ContentModelBlock>>;
+    let handleBlock: jasmine.Spy<ContentModelBlockHandler<ContentModelBlock>>;
 
     beforeEach(() => {
         handleBlock = jasmine.createSpy('handleBlock');

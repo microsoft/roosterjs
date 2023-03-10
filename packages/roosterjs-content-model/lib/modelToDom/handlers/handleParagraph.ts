@@ -1,51 +1,72 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { CreateElementData } from 'roosterjs-editor-types';
+import { getObjectKeys, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { stackFormat } from '../utils/stackFormat';
+
+const DefaultParagraphTag = 'div';
+const Pre: CreateElementData = {
+    tag: 'PRE',
+    style: 'margin-top: 0px; margin-bottom: 0px;',
+};
 
 /**
  * @internal
  */
-export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
+export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = (
     doc: Document,
     parent: Node,
     paragraph: ContentModelParagraph,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
-    let container: HTMLElement;
-
     stackFormat(context, paragraph.decorator?.tagName || null, () => {
-        if (paragraph.decorator) {
-            const { tagName, format } = paragraph.decorator;
-
-            container = doc.createElement(tagName);
-
-            parent.appendChild(container);
-
-            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-            applyFormat(container, context.formatAppliers.segmentOnBlock, format, context);
-        } else if (
+        const needParagraphWrapper =
             !paragraph.isImplicit ||
+            !!paragraph.decorator ||
             (getObjectKeys(paragraph.format).length > 0 &&
-                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'))
-        ) {
-            container = doc.createElement('div');
-            parent.appendChild(container);
+                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
 
+        let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+
+        parent.insertBefore(container, refNode);
+
+        if (needParagraphWrapper) {
             applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-        } else {
-            container = parent as HTMLElement;
+        }
+
+        if (paragraph.decorator) {
+            applyFormat(
+                container,
+                context.formatAppliers.segmentOnBlock,
+                paragraph.decorator.format,
+                context
+            );
+        }
+
+        let pre: HTMLElement | undefined;
+
+        // Need some special handling for PRE tag in order to cache the correct element.
+        // TODO: Consider use decorator to handle PRE tag
+        if (paragraph.format.whiteSpace == 'pre') {
+            pre = wrap(container, Pre);
         }
 
         context.regularSelection.current = {
-            block: container,
+            block: needParagraphWrapper ? container : container.parentNode,
             segment: null,
         };
 
         paragraph.segments.forEach(segment => {
             context.modelHandlers.segment(doc, container, segment, context);
         });
+
+        if (needParagraphWrapper) {
+            paragraph.cachedElement = pre || container;
+        } else {
+            unwrap(container);
+        }
     });
 };

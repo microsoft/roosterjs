@@ -1,11 +1,14 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
+import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 
 /**
  * Content Model of Paragraph
  */
-export interface ContentModelParagraph extends ContentModelBlockBase<'Paragraph'> {
+export interface ContentModelParagraph
+    extends ContentModelBlockBase<'Paragraph'>,
+        ContentModelBlockWithCache {
     /**
      * Segments within this paragraph
      */

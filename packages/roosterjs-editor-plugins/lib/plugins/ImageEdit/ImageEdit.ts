@@ -344,14 +344,28 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     /**
-     * Rotate the image in radian angle.
-     * @param image The image to be rotated
-     * @param angleRad The angle in radian that the image must be rotated.
+     * Flip the image.
+     * @param image The image to be flipped
      */
     public flipImage(image: HTMLImageElement) {
         this.image = image;
         this.editInfo = getEditInfoFromImage(image);
         this.editInfo.flippedImage = !this.editInfo.flippedImage;
+        this.createWrapper(ImageEditOperation.Rotate);
+        this.updateWrapper();
+        this.setEditingImage(null);
+        this.editor?.select(image);
+    }
+
+    /**
+     * Rotate the image in radian angle.
+     * @param image The image to be rotated
+     * @param angleRad The angle in radian that the image must be rotated.
+     */
+    public rotateImage(image: HTMLImageElement, angleRad: number) {
+        this.image = image;
+        this.editInfo = getEditInfoFromImage(image);
+        this.editInfo.angleRad = this.editInfo.angleRad + angleRad;
         this.createWrapper(ImageEditOperation.Rotate);
         this.updateWrapper();
         this.setEditingImage(null);
@@ -488,6 +502,7 @@ export default class ImageEdit implements EditorPlugin {
                 visibleWidth,
                 visibleHeight,
             } = getGeneratedImageSize(this.editInfo, this.isCropping);
+
             const marginHorizontal = (targetWidth - visibleWidth) / 2;
             const marginVertical = (targetHeight - visibleHeight) / 2;
             const cropLeftPx = originalWidth * leftPercent;
@@ -546,13 +561,7 @@ export default class ImageEdit implements EditorPlugin {
 
                 const viewport = this.editor?.getVisibleViewport();
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandlePosition(
-                        this.editInfo,
-                        viewport,
-                        marginVertical,
-                        rotateCenter,
-                        rotateHandle
-                    );
+                    updateRotateHandlePosition(viewport, rotateCenter, rotateHandle);
                 }
 
                 updateHandleCursor(resizeHandles, angleRad);

@@ -1,16 +1,20 @@
+import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/InlineEntityHandlers/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
+    EditorReadyEvent,
     DelimiterClasses,
     Entity,
-    EntityOperation,
-    EntityOperationEvent,
     ExtractContentWithDomEvent,
     IEditor,
     NormalSelectionRange,
     PluginEventType,
+    ContentChangedEvent,
+    PluginEvent,
     SelectionRangeTypes,
+    BeforePasteEvent,
     PluginKeyDownEvent,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
@@ -26,11 +30,17 @@ const DELIMITER_SELECTOR =
 describe('Inline Entity On Plugin Event |', () => {
     let wrapper: HTMLElement;
     let editor: IEditor;
+    let testContainer: HTMLElement;
+    let selectSpy: jasmine.Spy;
 
     beforeEach(() => {
         wrapper = document.createElement('span');
         wrapper.innerHTML = 'Test';
-        document.body.appendChild(wrapper);
+
+        testContainer = document.createElement('div');
+        testContainer.appendChild(wrapper);
+        document.body.appendChild(testContainer);
+        spyOn(splitTextNode, 'default').and.callThrough();
 
         editor = <IEditor>(<any>{
             getDocument: () => document,
@@ -50,6 +60,7 @@ describe('Inline Entity On Plugin Event |', () => {
                     type: SelectionRangeTypes.Normal,
                 };
             },
+            select: selectSpy = jasmine.createSpy('select'),
         });
     });
 
@@ -57,48 +68,6 @@ describe('Inline Entity On Plugin Event |', () => {
         wrapper.parentElement?.removeChild(wrapper);
         document.body.childNodes.forEach(cn => {
             document.body.removeChild(cn);
-        });
-    });
-
-    describe('Remove Entity Operations |', () => {
-        const removeOperations = [
-            EntityOperation.RemoveFromStart,
-            EntityOperation.RemoveFromEnd,
-            EntityOperation.Overwrite,
-        ];
-        let entity: Entity;
-        let delimiterAfter: HTMLElement;
-        let delimiterBefore: HTMLElement;
-
-        beforeEach(() => {
-            entity = <Entity>{
-                id: 'test',
-                isReadonly: true,
-                type: 'Test',
-                wrapper,
-            };
-
-            commitEntity(wrapper, 'test', true, 'test');
-            addDelimiters(wrapper);
-
-            delimiterAfter = getDelimiter(entity, true /* after */);
-            delimiterBefore = getDelimiter(entity, false /* after */);
-        });
-
-        removeOperations.forEach(operation => {
-            it('removeDelimiter when Deleting entity between them', () => {
-                inlineEntityOnPluginEvent(
-                    <EntityOperationEvent>{
-                        entity,
-                        eventType: PluginEventType.EntityOperation,
-                        operation,
-                    },
-                    editor
-                );
-
-                expect(document.contains(delimiterAfter)).toBeFalse();
-                expect(document.contains(delimiterBefore)).toBeFalse();
-            });
         });
     });
 
@@ -123,16 +92,25 @@ describe('Inline Entity On Plugin Event |', () => {
                     document.body.removeChild(cn);
                 });
             });
-            function arrangeAndAct() {
+            function arrangeAndAct(
+                which: number = 66 /* B */,
+                addElementOnRunAsync: boolean = true
+            ) {
                 editor.getFocusedPosition = () => new Position(delimiterBefore!, 0);
 
-                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    if (addElementOnRunAsync) {
+                        delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+                    }
 
+                    callback(editor);
+                    return () => {};
+                };
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
                         eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
-                            which: 66 /* B */,
+                            which,
                             key: 'B',
                         },
                     },
@@ -146,15 +124,19 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(delimiterBefore?.textContent).toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterBefore?.textContent?.length).toEqual(1);
                 expect(delimiterBefore?.childNodes.length).toEqual(1);
+                expect(splitTextNode.default).toHaveBeenCalled();
             });
 
             it('Is not Delimiter', () => {
                 delimiterBefore?.removeAttribute('class');
+                delimiterBefore?.insertBefore(textToAdd, delimiterBefore.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterBefore?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterBefore?.textContent?.length).toEqual(5);
                 expect(delimiterBefore?.childNodes.length).toEqual(2);
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed', () => {
@@ -169,6 +151,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {
@@ -183,6 +166,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed and not Normal Selection', () => {
@@ -197,6 +181,24 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
+            });
+
+            it('Enter on delimiter before, no previous sibling', () => {
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterBefore?.previousElementSibling).toBeNull();
+            });
+
+            it('Enter on delimiter before, no previous sibling', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterBefore?.previousElementSibling).not.toBeNull();
             });
         });
 
@@ -206,16 +208,26 @@ describe('Inline Entity On Plugin Event |', () => {
                     document.body.removeChild(cn);
                 });
             });
-            function arrangeAndAct() {
+            function arrangeAndAct(
+                which: number = 66 /* B */,
+                addElementOnRunAsync: boolean = true
+            ) {
                 editor.getFocusedPosition = () => new Position(delimiterAfter!, 0);
 
-                delimiterAfter?.appendChild(textToAdd);
+                editor.runAsync = (callback: (editor: IEditor) => void) => {
+                    if (addElementOnRunAsync) {
+                        delimiterAfter?.appendChild(textToAdd);
+                    }
+
+                    callback(editor);
+                    return () => {};
+                };
 
                 inlineEntityOnPluginEvent(
                     <PluginKeyDownEvent>{
                         eventType: PluginEventType.KeyDown,
                         rawEvent: <KeyboardEvent>{
-                            which: 66 /* B */,
+                            which,
                             key: 'B',
                         },
                     },
@@ -227,19 +239,24 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 delimiterAfter = getDelimiter(entity, true);
+
                 expect(delimiterAfter.textContent).toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterAfter.textContent?.length).toEqual(1);
                 expect(delimiterAfter.childNodes.length).toEqual(1);
                 expect(delimiterAfter.id).toBeDefined();
+                expect(splitTextNode.default).toHaveBeenCalled();
             });
 
             it('Is not Delimiter', () => {
                 delimiterAfter?.removeAttribute('class');
+                delimiterAfter?.insertBefore(textToAdd, delimiterAfter.firstChild);
+
                 arrangeAndAct();
 
                 expect(delimiterAfter?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
                 expect(delimiterAfter?.textContent?.length).toEqual(5);
                 expect(delimiterAfter?.childNodes.length).toEqual(2);
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed', () => {
@@ -254,6 +271,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection collapsed and not Normal Selection', () => {
@@ -268,6 +286,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
             it('Selection not collapsed and not Normal Selection', () => {
@@ -282,6 +301,24 @@ describe('Inline Entity On Plugin Event |', () => {
                 arrangeAndAct();
 
                 expect(editor.getElementAtCursor).not.toHaveBeenCalled();
+                expect(splitTextNode.default).not.toHaveBeenCalled();
+            });
+
+            it('Enter on delimiter after, no previous sibling', () => {
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterAfter?.nextElementSibling).toBeNull();
+            });
+
+            it('Enter on delimiter after, no previous sibling', () => {
+                const testElement = document.createElement('span');
+                testElement.appendChild(document.createTextNode('Test'));
+                delimiterAfter?.parentElement?.insertBefore(testElement, null);
+                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
+
+                expect(selectSpy).toHaveBeenCalled();
+                expect(delimiterAfter?.nextElementSibling).not.toBeNull();
             });
         });
     });
@@ -319,6 +356,208 @@ describe('Inline Entity On Plugin Event |', () => {
             );
 
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+        });
+    });
+
+    function runEditorReadyContentChangedTest(
+        expectedDelimiters: number,
+        elementToUse: Node,
+        eventParam: PluginEvent,
+        updateCallback?: (node: Node) => void
+    ) {
+        const rootDiv = document.createElement('div');
+
+        spyOn(editor, 'queryElements').and.callFake((selector: string) =>
+            Array.from(rootDiv.querySelectorAll(selector))
+        );
+
+        if (elementToUse) {
+            rootDiv.appendChild(elementToUse);
+        }
+        updateCallback?.(elementToUse);
+
+        inlineEntityOnPluginEvent(eventParam, editor);
+
+        expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+    }
+
+    describe('Editor Ready |', () => {
+        let event: EditorReadyEvent;
+
+        beforeEach(() => {
+            event = <EditorReadyEvent>{
+                eventType: PluginEventType.EditorReady,
+            };
+        });
+
+        it('New Editor with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(2, element, event);
+        });
+
+        it('New Editor with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with Normal Element', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with no elements', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('New Editor with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
+    });
+
+    describe('Content Changed |', () => {
+        let event: ContentChangedEvent;
+
+        beforeEach(() => {
+            event = <ContentChangedEvent>{
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            };
+        });
+
+        it('ContentChanged with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(2, element, event);
+        });
+
+        it('ContentChanged source not SetContent', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            event.source = ChangeSource.AutoLink;
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with Normal Element', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with no elements', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event);
+        });
+
+        it('ContentChanged with invalid delimiters', () => {
+            const element = document.createElement('div');
+            runEditorReadyContentChangedTest(0, element, event, node => {
+                addDelimiters(node as HTMLElement);
+                node.parentElement?.removeChild(node);
+            });
+        });
+    });
+
+    describe('Before Paste |', () => {
+        function runTest(expectedDelimiters: number, elementToUse?: Node) {
+            const rootDiv = document.createElement('div');
+            if (elementToUse) {
+                rootDiv.appendChild(elementToUse);
+            }
+
+            inlineEntityOnPluginEvent(
+                <BeforePasteEvent>(<any>{
+                    eventType: PluginEventType.BeforePaste,
+                    clipboardData: {},
+                    fragment: rootDiv,
+                }),
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+        }
+
+        it('Before Paste with Read only Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(2, element);
+        });
+
+        it('Before Paste with Read only Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', true /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Inline Entity in content', () => {
+            const element = document.createElement('span');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Editable Block Entity in content', () => {
+            const element = document.createElement('div');
+            commitEntity(element, '123', false /* ReadOnly */, '1');
+
+            runTest(0, element);
+        });
+
+        it('Before Paste with Normal Element', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
+        });
+
+        it('Before Paste with no elements', () => {
+            const element = document.createElement('div');
+            runTest(0, element);
         });
     });
 });

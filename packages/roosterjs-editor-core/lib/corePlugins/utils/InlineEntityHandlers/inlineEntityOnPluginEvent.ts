@@ -1,14 +1,21 @@
 import {
+    ChangeSource,
     DelimiterClasses,
-    EntityOperation,
     IEditor,
+    Keys,
     NodeType,
     PluginEventType,
     PositionType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
+    addDelimiterAfter,
+    addDelimiterBefore,
+    createElement,
+    createRange,
     getDelimiterFromElement,
+    getEntityFromElement,
+    getEntitySelector,
     isBlockElement,
     isCharacterValue,
     Position,
@@ -20,37 +27,39 @@ import type { Entity, PluginEvent } from 'roosterjs-editor-types';
 const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
+const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
+const NBSP = '\u00A0';
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
-        case PluginEventType.ExtractContentWithDom:
-        case PluginEventType.BeforeCutCopy:
-            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
-                node.parentElement?.removeChild(node);
-            });
+        case PluginEventType.ContentChanged:
+            if (event.source === ChangeSource.SetContent) {
+                normalizeDelimitersInEditor(editor);
+            }
+            break;
+        case PluginEventType.EditorReady:
+            normalizeDelimitersInEditor(editor);
             break;
 
-        case PluginEventType.EntityOperation:
-            switch (event.operation) {
-                case EntityOperation.RemoveFromStart:
-                case EntityOperation.RemoveFromEnd:
-                case EntityOperation.Overwrite:
-                    const entity = event.entity;
+        case PluginEventType.BeforePaste:
+            addDelimitersIfNeeded(event.fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
+            break;
 
-                    // If the entity removed is a readonly entity, try to remove delimiters around it.
-                    if (isReadOnly(entity)) {
-                        removeDelimiters(entity.wrapper);
-                    }
-                    break;
-            }
+        case PluginEventType.ExtractContentWithDom:
+        case PluginEventType.BeforeCutCopy:
+            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(removeNode);
             break;
 
         case PluginEventType.KeyDown:
             const range = editor.getSelectionRangeEx();
+            const { rawEvent } = event;
+            if (range.type != SelectionRangeTypes.Normal) {
+                return;
+            }
+
             if (
-                range.type == SelectionRangeTypes.Normal &&
                 range.areAllCollapsed &&
-                isCharacterValue(event.rawEvent)
+                (isCharacterValue(rawEvent) || rawEvent.which === Keys.ENTER)
             ) {
                 const position = editor.getFocusedPosition();
 
@@ -58,20 +67,64 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     return;
                 }
 
-                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, position.element);
+                const refNode =
+                    position.element == position.node
+                        ? position.element.childNodes.item(position.offset)
+                        : position.element;
 
-                if (
-                    !delimiter ||
-                    (!delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER) &&
-                        !delimiter.classList.contains(DelimiterClasses.DELIMITER_BEFORE))
-                ) {
+                const delimiter = editor.getElementAtCursor(DELIMITER_SELECTOR, refNode);
+
+                if (!delimiter) {
                     return;
                 }
 
-                delimiter.normalize();
-                const textNode = delimiter.firstChild as Node;
-                if (textNode?.nodeType == NodeType.Text) {
+                if (rawEvent.which === Keys.ENTER) {
+                    const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
+                    const sibling = isAfter ? delimiter.nextSibling : delimiter.previousSibling;
+                    let positionToUse: Position | undefined;
+                    let element: Element | null;
+
+                    if (sibling) {
+                        positionToUse = new Position(
+                            sibling,
+                            isAfter ? PositionType.Begin : PositionType.End
+                        );
+                    } else {
+                        element = delimiter.insertAdjacentElement(
+                            isAfter ? 'afterend' : 'beforebegin',
+                            createElement(
+                                {
+                                    tag: 'span',
+                                    children: [NBSP],
+                                },
+                                editor.getDocument()
+                            )!
+                        );
+
+                        if (!element) {
+                            return;
+                        }
+
+                        positionToUse = new Position(element, PositionType.Begin);
+                    }
+
+                    if (positionToUse) {
+                        editor.select(positionToUse);
+
+                        editor.runAsync(asyncEditor => {
+                            if (isAfter) {
+                                const elAfter = asyncEditor.getElementAtCursor();
+                                removeDelimiterAttr(elAfter);
+                            }
+                            if (element) {
+                                removeNode(element);
+                            }
+                        });
+                    }
+                } else if (delimiter.firstChild?.nodeType == NodeType.Text) {
                     editor.runAsync(() => {
+                        delimiter.normalize();
+                        const textNode = delimiter.firstChild as Node;
                         const index = textNode.nodeValue?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
                         if (index >= 0) {
                             splitTextNode(
@@ -105,28 +158,79 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
                     });
                 }
             }
+            break;
     }
 }
 
-function getDelimiter(entityWrapper: HTMLElement, after: boolean): HTMLElement | undefined {
-    const el = after ? entityWrapper.nextElementSibling : entityWrapper.previousElementSibling;
-    return el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined;
+function normalizeDelimitersInEditor(editor: IEditor) {
+    removeInvalidDelimiters(editor.queryElements(DELIMITER_SELECTOR));
+    addDelimitersIfNeeded(editor.queryElements(INLINE_ENTITY_SELECTOR));
 }
 
-function removeDelimiters(entityWrapper: HTMLElement): void {
-    let el: HTMLElement | undefined = undefined;
-    if ((el = getDelimiter(entityWrapper, true))) {
-        el.parentElement?.removeChild(el);
-    }
-    if ((el = getDelimiter(entityWrapper, false))) {
-        el.parentElement?.removeChild(el);
-    }
+function getDelimiters(entityWrapper: HTMLElement): (HTMLElement | undefined)[] {
+    return [entityWrapper.nextElementSibling, entityWrapper.previousElementSibling].map(el =>
+        el && safeInstanceOf(el, 'HTMLElement') && getDelimiterFromElement(el) ? el : undefined
+    );
 }
 
-function isReadOnly(entity: Entity) {
+function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
+    nodes.forEach(node => {
+        if (tryGetEntityFromNode(node)) {
+            const [delimiterAfter, delimiterBefore] = getDelimiters(node);
+
+            if (!delimiterAfter) {
+                addDelimiterAfter(node);
+            }
+            if (!delimiterBefore) {
+                addDelimiterBefore(node);
+            }
+        }
+    });
+}
+
+function tryGetEntityFromNode(node: Element | null): node is HTMLElement {
+    return !!(
+        node &&
+        safeInstanceOf(node, 'HTMLElement') &&
+        isReadOnly(getEntityFromElement(node))
+    );
+}
+
+function removeNode(el: Node | undefined) {
+    el?.parentElement?.removeChild(el);
+}
+
+function isReadOnly(entity: Entity | null) {
     return (
-        entity.isReadonly &&
+        entity?.isReadonly &&
         !isBlockElement(entity.wrapper) &&
         safeInstanceOf(entity.wrapper, 'HTMLElement')
     );
+}
+
+function removeInvalidDelimiters(nodes: Element[]) {
+    nodes.forEach(node => {
+        if (getDelimiterFromElement(node)) {
+            const sibling = node.classList.contains(DelimiterClasses.DELIMITER_BEFORE)
+                ? node.nextElementSibling
+                : node.previousElementSibling;
+            if (!(safeInstanceOf(sibling, 'HTMLElement') && getEntityFromElement(sibling))) {
+                removeNode(node);
+            }
+        } else {
+            removeDelimiterAttr(node);
+        }
+    });
+}
+
+function removeDelimiterAttr(node: Element | undefined | null) {
+    node?.classList.remove(DelimiterClasses.DELIMITER_BEFORE, DelimiterClasses.DELIMITER_AFTER);
+
+    node?.normalize();
+    node?.childNodes.forEach(cn => {
+        const index = cn.textContent?.indexOf(ZERO_WIDTH_SPACE) ?? -1;
+        if (index >= 0) {
+            createRange(cn, index, cn, index + 1)?.deleteContents();
+        }
+    });
 }

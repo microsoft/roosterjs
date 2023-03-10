@@ -15,7 +15,7 @@ describe('handleTable', () => {
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
         const div = document.createElement('div');
-        handleTable(document, div, model, context);
+        handleTable(document, div, model, context, null);
         expect(div.innerHTML).toBe(expectedInnerHTML);
     }
 
@@ -218,7 +218,8 @@ describe('handleTable', () => {
                 heights: [],
                 dataset: {},
             },
-            context
+            context,
+            null
         );
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
@@ -226,5 +227,29 @@ describe('handleTable', () => {
         const table = div.firstChild as HTMLTableElement;
         expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
         expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
+    });
+
+    it('Regular 1 * 1 table with refNode', () => {
+        const div = document.createElement('div');
+        const br = document.createElement('br');
+
+        div.appendChild(br);
+
+        handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                cells: [[createTableCell(1, 1, false)]],
+                format: {},
+                widths: [],
+                heights: [],
+                dataset: {},
+            },
+            context,
+            br
+        );
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table><br>');
     });
 });

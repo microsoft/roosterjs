@@ -21,7 +21,8 @@ export function formatParagraphWithContentModel(
 
             return paragraphs.length > 0;
         },
-        undefined /*options*/,
-        true /*preservePendingFormat*/
+        {
+            preservePendingFormat: true,
+        }
     );
 }
