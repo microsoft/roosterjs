@@ -69,7 +69,7 @@ describe('applyPendingFormat', () => {
                         },
                         {
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: { fontSize: '10px' },
                             isSelected: true,
                         },
                     ],
