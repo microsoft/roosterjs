@@ -202,6 +202,7 @@ export default class ImageEdit implements EditorPlugin {
                 ) {
                     this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
                 }
+
                 break;
             case PluginEventType.MouseDown:
                 // When left click in a image that already in editing mode, do not quit edit mode
@@ -399,7 +400,9 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
                 this.clonedImage.src = this.editInfo.src;
-                this.clonedImage.style.transform = this.editInfo.flippedImage ? `scaleX(-1)` : '';
+                this.clonedImage.style.transform = this.editInfo.flippedImage
+                    ? 'scaleX(-1)'
+                    : 'scaleX(1)';
                 this.clonedImage.style.position = 'absolute';
             }
 

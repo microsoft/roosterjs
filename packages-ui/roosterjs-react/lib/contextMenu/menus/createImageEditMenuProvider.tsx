@@ -88,7 +88,8 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     subItems: {
         menuNameImageRotateLeft: 'Left',
         menuNameImageRotateRight: 'Right',
-        menuNameImageRotateUpsidedown: 'Upside down',
+        menuNameImageRotateUpsidedown: 'Flip vertically',
+        menuNameImageFlip: 'Flip horizontally',
     },
     shouldShow: (_, node, imageEdit) => {
         return (
@@ -107,6 +108,9 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
                     break;
                 case 'menuNameImageRotateUpsidedown':
                     imageEdit?.rotateImage(node as HTMLImageElement, Math.PI);
+                    break;
+                case 'menuNameImageFlip':
+                    imageEdit?.flipImage(node as HTMLImageElement);
                     break;
             }
         });
@@ -140,18 +144,6 @@ const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
-const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
-    key: 'menuNameImageFlip',
-    unlocalizedText: 'Flip',
-    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
-        if (editor.contains(node)) {
-            editor.addUndoSnapshot(() => {
-                imageEdit?.flipImage(node as HTMLImageElement);
-            }, 'FlipImage');
-        }
-    },
-};
-
 function shouldShowImageEditItems(editor: IEditor, node: Node) {
     return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
 }
@@ -171,7 +163,6 @@ export default function createImageEditMenuProvider(
             ImageResizeMenuItem,
             ImageCropMenuItem,
             ImageRemoveMenuItem,
-            ImageFlipMenuItem,
             ImageRotateMenuItem,
         ],
         strings,
