@@ -418,14 +418,8 @@ export default class ImageEdit implements EditorPlugin {
      * Remove the temp wrapper of the image
      */
     private removeWrapper = () => {
-        if (
-            this.editor &&
-            this.image &&
-            this.image.parentNode &&
-            this.editor.contains(this.image) &&
-            this.wrapper
-        ) {
-            unwrap(this.image.parentNode);
+        if (this.shadowSpan) {
+            unwrap(this.shadowSpan);
         }
         this.wrapper = null;
         this.shadowSpan = null;
