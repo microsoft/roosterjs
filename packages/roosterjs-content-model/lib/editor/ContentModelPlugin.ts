@@ -1,8 +1,12 @@
 import applyPendingFormat from '../publicApi/format/applyPendingFormat';
+import deleteKey from '../publicApi/editing/deleteKey';
 import getSegmentFormat from '../publicApi/format/getSegmentFormat';
-import handleDelete from '../publicApi/editing/handleDelete';
+import { deleteSelection } from '../modelApi/selection/deleteSelections';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
+// import handleDelete from '../publicApi/editing/handleDelete';
 import {
     canApplyPendingFormat,
     clearPendingFormat,
@@ -44,6 +48,17 @@ export default class ContentModelPlugin implements EditorPlugin {
         this.editor = null;
     }
 
+    willHandleEventExclusively(event: PluginEvent) {
+        if (
+            event.eventType == PluginEventType.KeyDown &&
+            (event.rawEvent.which == Keys.DELETE || event.rawEvent.which == Keys.BACKSPACE)
+        ) {
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * Core method for a plugin. Once an event happens in editor, editor will call this
      * method of each plugin to handle the event as long as the event is not handled
@@ -69,11 +84,11 @@ export default class ContentModelPlugin implements EditorPlugin {
                 break;
 
             case PluginEventType.KeyDown:
-                this.editor.cacheContentModel(null);
-
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
+                    this.editor.cacheContentModel(null);
                     clearPendingFormat(this.editor);
                 } else if (event.rawEvent.which == Keys.ENTER) {
+                    this.editor.cacheContentModel(null);
                     const format = getSegmentFormat(this.editor);
                     const pos = this.editor.getFocusedPosition();
 
@@ -84,10 +99,25 @@ export default class ContentModelPlugin implements EditorPlugin {
                     event.rawEvent.which == Keys.BACKSPACE ||
                     event.rawEvent.which == Keys.DELETE
                 ) {
-                    handleDelete(
-                        this.editor,
-                        event.rawEvent.which == Keys.DELETE ? 'delete' : 'backspace'
-                    );
+                    const range = this.editor.getSelectionRangeEx();
+
+                    if (range.areAllCollapsed) {
+                        deleteKey(
+                            this.editor,
+                            event.rawEvent.which == Keys.DELETE ? 'delete' : 'backspace',
+                            event.rawEvent
+                        );
+                    } else {
+                        formatWithContentModel(this.editor, 'delete', model => {
+                            deleteSelection(model);
+                            normalizeContentModel(model);
+                            return true;
+                        });
+
+                        event.rawEvent.preventDefault();
+                    }
+                } else {
+                    this.editor.cacheContentModel(null);
                 }
 
                 break;

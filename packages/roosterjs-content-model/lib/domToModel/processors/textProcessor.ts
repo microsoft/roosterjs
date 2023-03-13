@@ -66,6 +66,10 @@ function addTextSegment(group: ContentModelBlockGroup, text: string, context: Do
             paragraph?.segments.length! > 0 ||
             WhiteSpaceValuesNeedToHandle.indexOf(paragraph?.format.whiteSpace || '') >= 0
         ) {
+            // if (!isInPre) {
+            //     text = text.trim();
+            // }
+
             const textModel = createText(text, context.segmentFormat);
 
             if (context.isInSelection) {

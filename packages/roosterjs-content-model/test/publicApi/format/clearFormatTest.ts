@@ -22,13 +22,7 @@ describe('clearFormat', () => {
         clearFormat(editor);
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(clearModelFormat.clearModelFormat).toHaveBeenCalledTimes(1);
-        expect(clearModelFormat.clearModelFormat).toHaveBeenCalledWith(
-            model,
-            [],
-            [],
-            [],
-            undefined
-        );
+        expect(clearModelFormat.clearModelFormat).toHaveBeenCalledWith(model, [], [], []);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledTimes(1);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(model);
     });

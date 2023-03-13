@@ -23,8 +23,7 @@ export function clearModelFormat(
     model: ContentModelDocument,
     blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][],
     segmentsToClear: ContentModelSegment[],
-    tablesToClear: [ContentModelTable, boolean][],
-    defaultSegmentFormat?: ContentModelSegmentFormat
+    tablesToClear: [ContentModelTable, boolean][]
 ) {
     iterateSelections(
         [model],
@@ -44,7 +43,7 @@ export function clearModelFormat(
             // So no need to clear format of list number.
             // Otherwise, we will clear all format of selected text. And since they are under LI tag, we
             // also need to clear the format of LI (format holder) so that the format is really cleared
-            includeListFormatHolder: defaultSegmentFormat ? 'never' : 'anySegment',
+            includeListFormatHolder: model.defaultFormat ? 'never' : 'anySegment',
         }
     );
 
@@ -70,7 +69,7 @@ export function clearModelFormat(
     }
 
     // 3. Finally clear format for segments
-    clearSegmentsFormat(segmentsToClear, defaultSegmentFormat);
+    clearSegmentsFormat(segmentsToClear, model.defaultFormat);
 
     // 4. Clear format for table if any
     createTablesFormat(tablesToClear);

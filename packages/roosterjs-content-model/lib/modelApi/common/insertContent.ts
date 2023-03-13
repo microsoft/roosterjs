@@ -21,6 +21,7 @@ export function insertContent(
             htmlContent,
             {
                 isDarkMode: !!isFromDarkMode,
+                defaultFormat: {},
             },
             {
                 includeRoot: true,

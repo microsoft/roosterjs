@@ -2,11 +2,12 @@ import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { CreateElementData } from 'roosterjs-editor-types';
-import { getObjectKeys, unwrap, wrap } from 'roosterjs-editor-dom';
+import { getObjectKeys, wrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { stackFormat } from '../utils/stackFormat';
 
 const DefaultParagraphTag = 'div';
+const DefaultImplicitParagraphTag = 'div';
 const Pre: CreateElementData = {
     tag: 'PRE',
     style: 'margin-top: 0px; margin-bottom: 0px;',
@@ -23,19 +24,19 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     refNode: Node | null
 ) => {
     stackFormat(context, paragraph.decorator?.tagName || null, () => {
-        const needParagraphWrapper =
-            !paragraph.isImplicit ||
-            !!paragraph.decorator ||
-            (getObjectKeys(paragraph.format).length > 0 &&
-                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
+        const tagName = paragraph.decorator
+            ? paragraph.decorator.tagName
+            : !paragraph.isImplicit ||
+              (getObjectKeys(paragraph.format).length > 0 &&
+                  paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'))
+            ? DefaultParagraphTag
+            : DefaultImplicitParagraphTag;
 
-        let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+        let container = doc.createElement(tagName);
 
         parent.insertBefore(container, refNode);
 
-        if (needParagraphWrapper) {
-            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-        }
+        applyFormat(container, context.formatAppliers.block, paragraph.format, context);
 
         if (paragraph.decorator) {
             applyFormat(
@@ -55,7 +56,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
         }
 
         context.regularSelection.current = {
-            block: needParagraphWrapper ? container : container.parentNode,
+            block: container,
             segment: null,
         };
 
@@ -63,10 +64,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             context.modelHandlers.segment(doc, container, segment, context);
         });
 
-        if (needParagraphWrapper) {
-            paragraph.cachedElement = pre || container;
-        } else {
-            unwrap(container);
-        }
+        paragraph.cachedElement = pre || container;
     });
 };

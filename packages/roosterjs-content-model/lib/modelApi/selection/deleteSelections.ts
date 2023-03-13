@@ -1,7 +1,6 @@
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
@@ -29,7 +28,7 @@ export function deleteSelection(model: ContentModelDocument): InsertPosition | n
         [model],
         (path, tableContext, block, segments) => {
             let paragraph: ContentModelParagraph | undefined;
-            let markerFormat: ContentModelSegmentFormat | undefined;
+            let markerFormat = model.defaultFormat;
             let insertMarkerIndex = 0;
 
             if (segments) {
@@ -52,7 +51,7 @@ export function deleteSelection(model: ContentModelDocument): InsertPosition | n
             } else if (block) {
                 const blocks = path[0].blocks;
 
-                paragraph = createParagraph(true /*implicit*/);
+                paragraph = createParagraph();
                 const index = blocks.indexOf(block);
 
                 if (index >= 0) {

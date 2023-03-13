@@ -520,7 +520,9 @@ describe('clearModelFormat', () => {
     });
 
     it('Model with selection under list, has defaultSegmentFormat', () => {
-        const model = createContentModelDocument();
+        const model = createContentModelDocument({
+            fontSize: '10px',
+        });
         const list = createListItem([{ listType: 'OL' }], { fontSize: '20px' });
         const para = createParagraph(false, { lineHeight: '10px' });
         const text = createText('test', { textColor: 'green' });
@@ -535,12 +537,13 @@ describe('clearModelFormat', () => {
         const segments: any[] = [];
         const tables: any[] = [];
 
-        clearModelFormat(model, blocks, segments, tables, {
-            fontSize: '10px',
-        });
+        clearModelFormat(model, blocks, segments, tables);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
+            defaultFormat: {
+                fontSize: '10px',
+            },
             blocks: [
                 {
                     blockType: 'BlockGroup',

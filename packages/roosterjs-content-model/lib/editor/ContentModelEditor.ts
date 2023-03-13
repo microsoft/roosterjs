@@ -1,6 +1,7 @@
 import contentModelToDom from '../modelToDom/contentModelToDom';
 import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EditorOptions, ExperimentalFeatures } from 'roosterjs-editor-types';
@@ -17,6 +18,7 @@ import {
 export default class ContentModelEditor extends Editor implements IContentModelEditor {
     private cachedModel: ContentModelDocument | null;
     private reuseModel: boolean = false;
+    private defaultFormat: ContentModelSegmentFormat = {};
 
     /**
      * Creates an instance of Editor
@@ -27,6 +29,8 @@ export default class ContentModelEditor extends Editor implements IContentModelE
         super(contentDiv, options);
         this.cachedModel = null;
         this.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
+
+        this.createDefaultFormat();
     }
 
     /**
@@ -90,11 +94,48 @@ export default class ContentModelEditor extends Editor implements IContentModelE
 
         return {
             isDarkMode: this.isDarkMode(),
+            defaultFormat: this.defaultFormat,
             getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
             addDelimiterForEntity: this.isFeatureEnabled(
                 ExperimentalFeatures.InlineEntityReadOnlyDelimiters
             ),
         };
+    }
+
+    private createDefaultFormat() {
+        const format = this.getDefaultFormat();
+
+        if (format.bold) {
+            this.defaultFormat.fontWeight = 'bold';
+        }
+
+        if (format.italic) {
+            this.defaultFormat.italic = true;
+        }
+
+        if (format.underline) {
+            this.defaultFormat.underline = true;
+        }
+
+        if (format.fontFamily) {
+            this.defaultFormat.fontFamily = format.fontFamily;
+        }
+
+        if (format.fontSize) {
+            this.defaultFormat.fontSize = format.fontSize;
+        }
+
+        if (format.textColors) {
+            this.defaultFormat.textColor = format.textColors.lightModeColor;
+        } else if (format.textColor) {
+            this.defaultFormat.textColor = format.textColor;
+        }
+
+        if (format.backgroundColors) {
+            this.defaultFormat.backgroundColor = format.backgroundColors.lightModeColor;
+        } else if (format.backgroundColor) {
+            this.defaultFormat.backgroundColor = format.backgroundColor;
+        }
     }
 }
