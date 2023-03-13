@@ -34,9 +34,7 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     if (context) {
         context.translate(targetWidth / 2, targetHeight / 2);
         context.rotate(angle);
-        if (editInfo.flippedImage) {
-            context.scale(-1, 1);
-        }
+        context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
         context.drawImage(
             image,
             naturalWidth * left,

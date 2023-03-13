@@ -70,7 +70,11 @@ export interface FlipInfo {
     /**
      * If true, the image was flipped.
      */
-    flippedImage?: boolean;
+    flippedVertical?: boolean;
+    /**
+     * If true, the image was flipped.
+     */
+    flippedHorizontal?: boolean;
 }
 
 /**

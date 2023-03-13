@@ -88,8 +88,6 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     subItems: {
         menuNameImageRotateLeft: 'Left',
         menuNameImageRotateRight: 'Right',
-        menuNameImageRotateUpsidedown: 'Flip vertically',
-        menuNameImageFlip: 'Flip horizontally',
     },
     shouldShow: (_, node, imageEdit) => {
         return (
@@ -106,11 +104,32 @@ const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
                 case 'menuNameImageRotateRight':
                     imageEdit?.rotateImage(node as HTMLImageElement, Math.PI / 2);
                     break;
-                case 'menuNameImageRotateUpsidedown':
-                    imageEdit?.rotateImage(node as HTMLImageElement, Math.PI);
+            }
+        });
+    },
+};
+
+const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageFlip',
+    unlocalizedText: 'Flip image',
+    subItems: {
+        menuNameImageRotateFlipHorizontally: 'Flip Horizontally',
+        menuNameImageRotateFlipVertically: 'Flip Vertically',
+    },
+    shouldShow: (_, node, imageEdit) => {
+        return (
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Rotate) &&
+            canRegenerateImage(node as HTMLImageElement)
+        );
+    },
+    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+        editor.addUndoSnapshot(() => {
+            switch (key) {
+                case 'menuNameImageRotateFlipHorizontally':
+                    imageEdit?.flipImage(node as HTMLImageElement, 'horizontal');
                     break;
-                case 'menuNameImageFlip':
-                    imageEdit?.flipImage(node as HTMLImageElement);
+                case 'menuNameImageRotateFlipVertically':
+                    imageEdit?.flipImage(node as HTMLImageElement, 'vertical');
                     break;
             }
         });
@@ -164,6 +183,7 @@ export default function createImageEditMenuProvider(
             ImageCropMenuItem,
             ImageRemoveMenuItem,
             ImageRotateMenuItem,
+            ImageFlipMenuItem,
         ],
         strings,
         shouldShowImageEditItems,

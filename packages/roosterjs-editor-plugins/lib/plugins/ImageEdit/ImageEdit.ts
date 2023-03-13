@@ -347,11 +347,28 @@ export default class ImageEdit implements EditorPlugin {
     /**
      * Flip the image.
      * @param image The image to be flipped
+     * @param direction
      */
-    public flipImage(image: HTMLImageElement) {
+    public flipImage(image: HTMLImageElement, direction: 'vertical' | 'horizontal') {
         this.image = image;
         this.editInfo = getEditInfoFromImage(image);
-        this.editInfo.flippedImage = !this.editInfo.flippedImage;
+        const { angleRad } = this.editInfo;
+        const isInVerticalPostion =
+            (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
+            (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
+        if (isInVerticalPostion) {
+            if (direction === 'horizontal') {
+                this.editInfo.flippedVertical = !this.editInfo.flippedVertical;
+            } else {
+                this.editInfo.flippedHorizontal = !this.editInfo.flippedHorizontal;
+            }
+        } else {
+            if (direction === 'vertical') {
+                this.editInfo.flippedVertical = !this.editInfo.flippedVertical;
+            } else {
+                this.editInfo.flippedHorizontal = !this.editInfo.flippedHorizontal;
+            }
+        }
         this.createWrapper(ImageEditOperation.Rotate);
         this.updateWrapper();
         this.setEditingImage(null);
@@ -400,9 +417,11 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
                 this.clonedImage.src = this.editInfo.src;
-                this.clonedImage.style.transform = this.editInfo.flippedImage
-                    ? 'scaleX(-1)'
-                    : 'scaleX(1)';
+                setFlipped(
+                    this.clonedImage,
+                    this.editInfo.flippedHorizontal,
+                    this.editInfo.flippedVertical
+                );
                 this.clonedImage.style.position = 'absolute';
             }
 
@@ -725,4 +744,14 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
         return color.trim();
     }
     return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
+}
+
+function setFlipped(
+    element: HTMLImageElement,
+    flipppedHorizontally?: boolean,
+    flipppedVertically?: boolean
+) {
+    element.style.transform = `scale(${flipppedHorizontally ? '-1' : '1'}, ${
+        flipppedVertically ? '-1' : '1'
+    })`;
 }

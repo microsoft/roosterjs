@@ -44,7 +44,8 @@ export type ImageEditMenuItemStringKey =
     | 'menuNameImageSizeOriginal'
     | 'menuNameImageRotateLeft'
     | 'menuNameImageRotateRight'
-    | 'menuNameImageRotateUpsidedown'
+    | 'menuNameImageRotateFlipHorizontally'
+    | 'menuNameImageRotateFlipVertically'
     | OkButtonStringKey
     | CancelButtonStringKey;
 

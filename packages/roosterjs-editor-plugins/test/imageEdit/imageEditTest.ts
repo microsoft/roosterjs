@@ -1,7 +1,7 @@
 import * as TestHelper from '../TestHelper';
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
-import { ImageEdit } from '../../lib/ImageEdit';
 import { IEditor, ImageEditOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ImageEdit } from '../../lib/ImageEdit';
 import {
     getEditInfoFromImage,
     saveEditInfo,
@@ -40,7 +40,12 @@ describe('ImageEdit | rotate and flip', () => {
         editor.setContent('');
     }
 
-    function runFlipTest(editInfo?: ImageEditInfo) {
+    function runFlipTest(
+        direction: 'horizontal' | 'vertical',
+        flippedHorizontal?: boolean,
+        flippedVertical?: boolean,
+        editInfo?: ImageEditInfo
+    ) {
         const IMG_ID = 'IMAGE_ID';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
@@ -48,11 +53,10 @@ describe('ImageEdit | rotate and flip', () => {
         if (editInfo) {
             saveEditInfo(image, editInfo);
         }
-        plugin.flipImage(image);
+        plugin.flipImage(image, direction);
         const metadata = getEditInfoFromImage(image);
-        if (metadata?.angleRad !== undefined) {
-            expect(metadata.flippedImage).toBe(!editInfo?.flippedImage);
-        }
+        expect(metadata.flippedHorizontal).toBe(flippedHorizontal);
+        expect(metadata.flippedVertical).toBe(flippedVertical);
         editor.setContent('');
     }
     it('rotateImage', () => {
@@ -75,7 +79,7 @@ describe('ImageEdit | rotate and flip', () => {
         runRotateTest(50, editInfo);
     });
 
-    it('flipImage', () => {
+    it('flipImage | horizontal', () => {
         const editInfo = {
             src: 'teste',
             widthPx: 10,
@@ -87,12 +91,27 @@ describe('ImageEdit | rotate and flip', () => {
             topPercent: 0,
             bottomPercent: 0,
             angleRad: 20,
-            flippedImage: false,
         };
-        runFlipTest(editInfo);
+        runFlipTest('horizontal', true, undefined, editInfo);
     });
 
-    it('unflipImage', () => {
+    it('flipImage a vertical Image | horizontal', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: Math.PI / 2,
+        };
+        runFlipTest('horizontal', undefined, true, editInfo);
+    });
+
+    it('unflipImage | horizontal', () => {
         const editInfo = {
             src: 'teste',
             widthPx: 10,
@@ -104,9 +123,92 @@ describe('ImageEdit | rotate and flip', () => {
             topPercent: 0,
             bottomPercent: 0,
             angleRad: 20,
-            flippedImage: true,
+            flippedHorizontal: true,
         };
-        runFlipTest(editInfo);
+        runFlipTest('horizontal', false, undefined, editInfo);
+    });
+
+    it('flipImage | vertical', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 20,
+        };
+        runFlipTest('vertical', undefined, true, editInfo);
+    });
+
+    it('flipImage a vertical Image | vertical', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: Math.PI / 2,
+        };
+        runFlipTest('vertical', true, undefined, editInfo);
+    });
+
+    it('unflipVertical | vertical', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 20,
+            flippedVertical: true,
+        };
+        runFlipTest('vertical', undefined, false, editInfo);
+    });
+
+    it('flipVertical a flipped Image', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 20,
+            flippedHorizontal: true,
+        };
+        runFlipTest('vertical', true, true, editInfo);
+    });
+
+    it('flipHorizontal a flipped Image', () => {
+        const editInfo = {
+            src: 'teste',
+            widthPx: 10,
+            heightPx: 10,
+            naturalWidth: 10,
+            naturalHeight: 10,
+            leftPercent: 0,
+            rightPercent: 0,
+            topPercent: 0,
+            bottomPercent: 0,
+            angleRad: 20,
+            flippedVertical: true,
+        };
+        runFlipTest('horizontal', true, true, editInfo);
     });
 
     it('start image editing', () => {
