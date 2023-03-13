@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80% </span>
+                <span class="strong">84% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/25</span>
+                <span class='fraction'>21/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">52.17% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/15</span>
+                <span class='fraction'>12/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">77.78% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>6/9</span>
+                <span class='fraction'>7/9</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.26% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/23</span>
+                <span class='fraction'>20/24</span>
             </div>
         
             
@@ -141,7 +141,14 @@
 <a name='L82'></a><a href='#L82'>82</a>
 <a name='L83'></a><a href='#L83'>83</a>
 <a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L85'></a><a href='#L85'>85</a>
+<a name='L86'></a><a href='#L86'>86</a>
+<a name='L87'></a><a href='#L87'>87</a>
+<a name='L88'></a><a href='#L88'>88</a>
+<a name='L89'></a><a href='#L89'>89</a>
+<a name='L90'></a><a href='#L90'>90</a>
+<a name='L91'></a><a href='#L91'>91</a>
+<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -202,28 +209,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">345x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ImageEditInfo, { CropInfo, ResizeInfo, RotateInfo } from '../types/ImageEditInfo';
 &nbsp;
@@ -288,13 +302,20 @@ export default function checkEditInfoState(
 ): ImageEditInfoState {
     if (!editInfo || !editInfo.src || ALL_KEYS.some(key =&gt; !isNumber(editInfo[key]))) {
         return ImageEditInfoState.Invalid;
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (ROTATE_CROP_KEYS.every(key =&gt; areSameNumber(editInfo[key], 0))) {
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (
+        ROTATE_CROP_KEYS.every(key =&gt; areSameNumber(editInfo[key], 0)) &amp;&amp;
+<span class="branch-1 cbranch-no" title="branch not covered" >        !editInfo.flippedHorizontal </span>&amp;&amp;
+<span class="branch-2 cbranch-no" title="branch not covered" >        !editInfo.flippedVertical </span>&amp;&amp;
+        (<span class="branch-3 cbranch-no" title="branch not covered" >!compareTo </span>|| (<span class="branch-4 cbranch-no" title="branch not covered" >compareTo </span>&amp;&amp; <span class="branch-5 cbranch-no" title="branch not covered" >editInfo.angleRad === compareTo.angleRad)</span>)
+    ) {
 <span class="cstat-no" title="statement not covered" >        return ImageEditInfoState.ResizeOnly;</span>
     } else <span class="missing-if-branch" title="if path not taken" >I</span>if (
         compareTo &amp;&amp;
-<span class="branch-1 cbranch-no" title="branch not covered" >        ROTATE_KEYS.every(<span class="fstat-no" title="function not covered" >key </span>=&gt; <span class="cstat-no" title="statement not covered" >areSameNumber(editInfo[key], 0)) </span></span>&amp;&amp;
+        ROTATE_KEYS.every(key =&gt; areSameNumber(editInfo[key], 0)) &amp;&amp;
 <span class="branch-2 cbranch-no" title="branch not covered" >        ROTATE_KEYS.every(<span class="fstat-no" title="function not covered" >key </span>=&gt; <span class="cstat-no" title="statement not covered" >areSameNumber(compareTo[key], 0)) </span></span>&amp;&amp;
-<span class="branch-3 cbranch-no" title="branch not covered" >        CROP_KEYS.every(<span class="fstat-no" title="function not covered" >key </span>=&gt; <span class="cstat-no" title="statement not covered" >areSameNumber(editInfo[key], compareTo[key]))</span></span>
+<span class="branch-3 cbranch-no" title="branch not covered" >        CROP_KEYS.every(<span class="fstat-no" title="function not covered" >key </span>=&gt; <span class="cstat-no" title="statement not covered" >areSameNumber(editInfo[key], compareTo[key])) </span></span>&amp;&amp;
+<span class="branch-4 cbranch-no" title="branch not covered" >        compareTo.flippedHorizontal === editInfo.flippedHorizontal </span>&amp;&amp;
+<span class="branch-5 cbranch-no" title="branch not covered" >        compareTo.flippedVertical === editInfo.flippedVertical</span>
     ) {
 <span class="cstat-no" title="statement not covered" >        return ImageEditInfoState.SameWithLast;</span>
     } else {
@@ -316,7 +337,7 @@ function areSameNumber(n1: number, n2: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Mar 13 2023 21:44:53 GMT+0000 (Coordinated Universal Time)
+                at Mon Mar 13 2023 21:53:19 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

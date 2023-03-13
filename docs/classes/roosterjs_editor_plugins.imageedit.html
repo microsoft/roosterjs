@@ -113,10 +113,12 @@
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#flipimage" class="tsd-kind-icon">flip<wbr>Image</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#initialize" class="tsd-kind-icon">initialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#isoperationallowed" class="tsd-kind-icon">is<wbr>Operation<wbr>Allowed</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#rotateimage" class="tsd-kind-icon">rotate<wbr>Image</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.imageedit.html#seteditingimage" class="tsd-kind-icon">set<wbr>Editing<wbr>Image</a></li>
 							</ul>
 						</section>
@@ -135,7 +137,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L135">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:135</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L135">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:135</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -173,7 +175,7 @@
 					<div class="tsd-signature tsd-kind-icon">editor<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_editor_types.ieditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IEditor</a><span class="tsd-signature-symbol"> = null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L95">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:95</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L95">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:95</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -183,7 +185,7 @@
 					<div class="tsd-signature tsd-kind-icon">options<span class="tsd-signature-symbol">:</span> <a href="../interfaces/roosterjs_editor_types.imageeditoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">ImageEditOptions</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L96">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:96</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L96">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:96</a></li>
 						</ul>
 					</aside>
 				</section>
@@ -201,7 +203,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L183">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:183</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L183">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:183</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -209,6 +211,42 @@
 									<p>Dispose this plugin</p>
 								</div>
 							</div>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="flipimage" class="tsd-anchor"></a>
+					<h3>flip<wbr>Image</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">flip<wbr>Image<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span>, direction<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;vertical&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;horizontal&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L352">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:352</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Flip the image.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>image: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image to be flipped</p>
+									</div>
+								</li>
+								<li>
+									<h5>direction: <span class="tsd-signature-type">&quot;vertical&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;horizontal&quot;</span></h5>
+									<div class="tsd-comment tsd-typography">
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 						</li>
 					</ul>
@@ -224,7 +262,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L160">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:160</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L160">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:160</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -247,7 +285,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L168">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:168</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L168">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:168</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -278,7 +316,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L247">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:247</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L248">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:248</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -311,7 +349,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L194">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:194</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L194">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:194</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -333,6 +371,43 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="rotateimage" class="tsd-anchor"></a>
+					<h3>rotate<wbr>Image</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">rotate<wbr>Image<span class="tsd-signature-symbol">(</span>image<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLImageElement</span>, angleRad<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L383">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:383</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Rotate the image in radian angle.</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>image: <span class="tsd-signature-type">HTMLImageElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The image to be rotated</p>
+									</div>
+								</li>
+								<li>
+									<h5>angleRad: <span class="tsd-signature-type">number</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The angle in radian that the image must be rotated.</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="seteditingimage" class="tsd-anchor"></a>
 					<h3>set<wbr>Editing<wbr>Image</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -343,7 +418,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L257">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:257</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L258">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:258</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -372,7 +447,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/5fea7a2/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L268">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:268</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/6521f2d/packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts#L269">packages/roosterjs-editor-plugins/lib/plugins/ImageEdit/ImageEdit.ts:269</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -475,6 +550,9 @@
 								<a href="roosterjs_editor_plugins.imageedit.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.imageedit.html#flipimage" class="tsd-kind-icon">flip<wbr>Image</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_plugins.imageedit.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
@@ -485,6 +563,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_plugins.imageedit.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_editor_plugins.imageedit.html#rotateimage" class="tsd-kind-icon">rotate<wbr>Image</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_editor_plugins.imageedit.html#seteditingimage" class="tsd-kind-icon">set<wbr>Editing<wbr>Image</a>

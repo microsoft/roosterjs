@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>11/14</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/4</span>
+                <span class='fraction'>2/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.14% </span>
+                <span class="strong">78.57% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>1/14</span>
+                <span class='fraction'>11/14</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -91,19 +91,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -117,20 +117,20 @@
  * @param img The image element to test
  * @returns True when we can regenerate the edited image, otherwise false
  */
-export default function <span class="fstat-no" title="function not covered" >canRegenerateImage(</span>img: HTMLImageElement): boolean {
-<span class="cstat-no" title="statement not covered" >    if (!img) {</span>
+export default function canRegenerateImage(img: HTMLImageElement): boolean {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!img) {
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    try {</span>
-        const canvas = <span class="cstat-no" title="statement not covered" >img.ownerDocument.createElement('canvas');</span>
-<span class="cstat-no" title="statement not covered" >        canvas.width = 10;</span>
-<span class="cstat-no" title="statement not covered" >        canvas.height = 10;</span>
-        const context = <span class="cstat-no" title="statement not covered" >canvas.getContext('2d');</span>
-<span class="cstat-no" title="statement not covered" >        if (context) {</span>
-<span class="cstat-no" title="statement not covered" >            context.drawImage(img, 0, 0);</span>
-<span class="cstat-no" title="statement not covered" >            context.getImageData(0, 0, 1, 1);</span>
-<span class="cstat-no" title="statement not covered" >            return true;</span>
+    try {
+        const canvas = img.ownerDocument.createElement('canvas');
+        canvas.width = 10;
+        canvas.height = 10;
+        const context = canvas.getContext('2d');
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (context) {
+            context.drawImage(img, 0, 0);
+            context.getImageData(0, 0, 1, 1);
+            return true;
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        return false;</span>
@@ -145,7 +145,7 @@ export default function <span class="fstat-no" title="function not covered" >can
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Mar 13 2023 21:44:53 GMT+0000 (Coordinated Universal Time)
+                at Mon Mar 13 2023 21:53:19 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
