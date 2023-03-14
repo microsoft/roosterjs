@@ -30,4 +30,4 @@ export type ContentModelBlockHandler<T extends ContentModelBlock | ContentModelB
     model: T,
     context: ModelToDomContext,
     refNode: Node | null
-) => void;
+) => Node | null;

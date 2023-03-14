@@ -56,8 +56,15 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
             }
 
-            if (!cell.spanAbove && !cell.spanLeft) {
+            if (cell.cachedElement) {
+                tr.appendChild(cell.cachedElement);
+
+                context.modelHandlers.blockGroupChildren(doc, cell.cachedElement, cell, context);
+            } else if (!cell.spanAbove && !cell.spanLeft) {
                 const td = doc.createElement(cell.isHeader ? 'th' : 'td');
+
+                cell.cachedElement = td;
+
                 tr.appendChild(td);
                 applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
                 applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
@@ -89,4 +96,6 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
         }
     }
+
+    return refNode;
 };

@@ -42,12 +42,21 @@ export function applyTableFormat(
 
         const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
 
+        clearCache(cells);
         formatBorders(cells, effectiveMetadata);
         formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
         setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
         setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
 
         return effectiveMetadata;
+    });
+}
+
+function clearCache(cells: ContentModelTableCell[][]) {
+    cells.forEach(row => {
+        row.forEach(cell => {
+            delete cell.cachedElement;
+        });
     });
 }
 

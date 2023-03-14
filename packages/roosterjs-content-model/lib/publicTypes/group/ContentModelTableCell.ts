@@ -1,4 +1,5 @@
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
 import { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
@@ -12,7 +13,8 @@ export interface ContentModelTableCell
     extends ContentModelBlockGroupBase<'TableCell'>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
         ContentModelWithDataset<TableCellMetadataFormat>,
-        Selectable {
+        Selectable,
+        ContentModelBlockWithCache {
     /**
      * Whether this cell is spanned from left cell
      */

@@ -28,17 +28,23 @@ export function normalizeTable(
                 addSegment(cell, createBr(defaultSegmentFormat));
             }
 
-            if (rowIndex == 0) {
+            if (rowIndex == 0 && cell.spanAbove) {
                 cell.spanAbove = false;
-            } else {
+                delete cell.cachedElement;
+            } else if (rowIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
+                delete cell.cachedElement;
             }
 
-            if (colIndex == 0) {
+            if (colIndex == 0 && cell.spanLeft) {
                 cell.spanLeft = false;
+                delete cell.cachedElement;
             }
 
-            cell.format.useBorderBox = true;
+            if (!cell.format.useBorderBox) {
+                cell.format.useBorderBox = true;
+                delete cell.cachedElement;
+            }
         });
 
         // Make sure table has correct width and height array

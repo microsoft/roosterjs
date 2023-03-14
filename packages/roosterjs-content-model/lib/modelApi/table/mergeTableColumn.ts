@@ -45,7 +45,11 @@ export function mergeTableColumn(
 
                     if (table.cells[rowIndex]?.[newSelectedCol]) {
                         table.cells[rowIndex][newSelectedCol].isSelected = true;
+
+                        delete table.cells[rowIndex][newSelectedCol].cachedElement;
                     }
+
+                    delete cell.cachedElement;
                 }
             }
         }

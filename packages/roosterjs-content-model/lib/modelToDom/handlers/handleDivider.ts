@@ -2,6 +2,7 @@ import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -13,10 +14,18 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const element = doc.createElement(divider.tagName);
+    const element = divider.cachedElement;
 
-    divider.cachedElement = element;
-    parent.insertBefore(element, refNode);
+    if (element) {
+        refNode = reuseCachedElement(parent, element, refNode);
+    } else {
+        const element = doc.createElement(divider.tagName);
 
-    applyFormat(element, context.formatAppliers.divider, divider.format, context);
+        divider.cachedElement = element;
+        parent.insertBefore(element, refNode);
+
+        applyFormat(element, context.formatAppliers.divider, divider.format, context);
+    }
+
+    return refNode;
 };

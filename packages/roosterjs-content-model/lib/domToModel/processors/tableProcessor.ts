@@ -84,6 +84,10 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                 td.tagName == 'TH'
                             );
 
+                            if (hasTd) {
+                                cell.cachedElement = td;
+                            }
+
                             table.cells[row + rowSpan - 1][targetCol] = cell;
 
                             if (hasTd) {

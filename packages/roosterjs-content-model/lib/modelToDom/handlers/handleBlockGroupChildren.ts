@@ -1,11 +1,7 @@
-import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelBlockWithCache } from '../../publicTypes/block/ContentModelBlockWithCache';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { getEntityFromElement } from 'roosterjs-editor-dom';
-import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { NodeType } from 'roosterjs-editor-types';
+import { removeNode } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -34,65 +30,14 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 listFormat.nodeStack = [];
             }
 
-            const element = getCachedElement(childBlock);
-
-            // Check if there is cached element and if we can reuse it
-            if (element) {
-                if (element.parentNode == parent) {
-                    // Remove nodes before the one we are hitting since they don't appear in Content Model at this position.
-                    // But we don't want to touch entity since it would better to keep entity at its place unless it is removed
-                    // In that case we will remove it after we have handled all other nodes
-                    while (refNode && refNode != element && !isEntity(refNode)) {
-                        refNode = remove(refNode);
-                    }
-
-                    if (refNode && refNode == element) {
-                        refNode = refNode.nextSibling;
-                    } else {
-                        parent.insertBefore(element, refNode);
-                    }
-                } else {
-                    parent.insertBefore(element, refNode);
-                }
-
-                // No need to add entity delimiter here since entity delimiter is only for inline entity, but here we only handle block entity.
-
-                if (childBlock.blockType == 'BlockGroup') {
-                    context.modelHandlers.blockGroupChildren(doc, element, childBlock, context);
-                }
-            } else {
-                context.modelHandlers.block(doc, parent, childBlock, context, refNode);
-            }
+            refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
         });
 
         // Remove all rest node if any since they don't appear in content model
         while (refNode) {
-            refNode = remove(refNode);
+            refNode = removeNode(refNode);
         }
     } finally {
         listFormat.nodeStack = nodeStack;
     }
 };
-
-function remove(node: Node) {
-    const next = node.nextSibling;
-    node.parentNode?.removeChild(node);
-
-    return next;
-}
-
-function isEntity(node: Node) {
-    return isNodeOfType(node, NodeType.Element) && !!getEntityFromElement(node);
-}
-
-function getCachedElement(block: ContentModelBlock): HTMLElement | undefined {
-    if ((block as ContentModelBlockWithCache).cachedElement) {
-        return (block as ContentModelBlockWithCache).cachedElement;
-    } else if (block.blockType == 'Entity') {
-        return block.wrapper;
-    } else if (block.blockType == 'BlockGroup' && block.blockGroupType == 'General') {
-        return block.element;
-    } else {
-        return undefined;
-    }
-}

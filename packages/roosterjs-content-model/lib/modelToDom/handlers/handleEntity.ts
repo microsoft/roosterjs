@@ -3,6 +3,7 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { Entity } from 'roosterjs-editor-types';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 import {
     addDelimiters,
     commitEntity,
@@ -38,7 +39,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
         commitEntity(wrapper, entity.type, entity.isReadonly, entity.id);
     }
 
-    parent.insertBefore(wrapper, refNode);
+    refNode = reuseCachedElement(parent, wrapper, refNode);
 
     if (isInlineEntity && getObjectKeys(format).length > 0) {
         const span = wrap(wrapper, 'span');
@@ -49,4 +50,6 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     if (context.addDelimiterForEntity && isInlineEntity && isReadonly) {
         addDelimiters(wrapper);
     }
+
+    return refNode;
 };

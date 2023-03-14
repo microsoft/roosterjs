@@ -21,8 +21,11 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                 )
             ) {
                 table.cells.forEach((row, rowIndex) => {
+                    delete row[colIndex].cachedElement;
+
                     if (rowIndex >= sel.firstRow && rowIndex <= sel.lastRow) {
                         row[colIndex + 1].spanLeft = false;
+                        delete row[colIndex + 1].cachedElement;
                     }
                 });
             } else {
@@ -42,6 +45,8 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                             newCell.isSelected = cell.isSelected;
                         }
                         row.splice(colIndex + 1, 0, newCell);
+
+                        delete row[colIndex].cachedElement;
                     }
                 });
 

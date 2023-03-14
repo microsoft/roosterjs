@@ -31,6 +31,8 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
     }
 
     context.modelHandlers.blockGroupChildren(doc, element, group, context);
+
+    return refNode;
 };
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {
