@@ -15,7 +15,7 @@ describe('handleBlockGroupChildren', () => {
     let parent: HTMLDivElement;
 
     beforeEach(() => {
-        handleBlock = jasmine.createSpy('handleBlock');
+        handleBlock = jasmine.createSpy('handleBlock').and.callFake(originalHandleBlock);
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 block: handleBlock,
@@ -42,7 +42,7 @@ describe('handleBlockGroupChildren', () => {
 
         handleBlockGroupChildren(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div></div>');
+        expect(parent.outerHTML).toBe('<div><div></div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlock).toHaveBeenCalledTimes(1);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph, context, null);
@@ -58,7 +58,7 @@ describe('handleBlockGroupChildren', () => {
 
         handleBlockGroupChildren(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div></div>');
+        expect(parent.outerHTML).toBe('<div><div></div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlock).toHaveBeenCalledTimes(2);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph1, context, null);
@@ -73,8 +73,9 @@ describe('handleBlockGroupChildren', () => {
         group.blocks.push(paragraph);
         context.listFormat.nodeStack = nodeStack;
 
-        handleBlock.and.callFake((doc, parent, child, context) => {
+        handleBlock.and.callFake((doc, parent, child, context, refNode) => {
             expect(context.listFormat.nodeStack).toEqual([]);
+            return refNode;
         });
 
         handleBlockGroupChildren(document, parent, group, context);
@@ -98,7 +99,7 @@ describe('handleBlockGroupChildren', () => {
         group.blocks.push(paragraph2);
         context.listFormat.nodeStack = nodeStack;
 
-        handleBlock.and.callFake((doc, parent, child, context) => {
+        handleBlock.and.callFake((doc, parent, child, context, refNode) => {
             if (child == paragraph1) {
                 expect(context.listFormat.nodeStack).toEqual([]);
                 context.listFormat.nodeStack.push({ c: 'd' } as any);
@@ -109,6 +110,8 @@ describe('handleBlockGroupChildren', () => {
             } else {
                 throw new Error('Should never run to here: ' + JSON.stringify(child));
             }
+
+            return refNode;
         });
 
         handleBlockGroupChildren(document, parent, group, context);

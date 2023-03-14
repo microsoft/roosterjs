@@ -1,7 +1,10 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
-import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
+import {
+    ContentModelBlockHandler,
+    ContentModelHandler,
+} from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
 import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
@@ -14,8 +17,8 @@ describe('handleBlockGroup', () => {
     let context: ModelToDomContext;
     let parent: HTMLDivElement;
     let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
-    let handleListItem: jasmine.Spy<ContentModelHandler<ContentModelListItem>>;
-    let handleQuote: jasmine.Spy<ContentModelHandler<ContentModelQuote>>;
+    let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
+    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelQuote>>;
 
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');

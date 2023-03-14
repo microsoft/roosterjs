@@ -62,13 +62,16 @@ describe('handleTable', () => {
     });
 
     it('Regular 2 * 2 table', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
+        const tdModel4 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, tdModel],
-                    [tdModel, tdModel],
+                    [tdModel1, tdModel2],
+                    [tdModel3, tdModel4],
                 ],
                 format: {},
                 widths: [],
@@ -80,11 +83,12 @@ describe('handleTable', () => {
     });
 
     it('3 * 1 table with empty row', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [[tdModel], [], [tdModel]],
+                cells: [[tdModel1], [], [tdModel2]],
                 format: {},
                 widths: [],
                 heights: [],
@@ -95,13 +99,15 @@ describe('handleTable', () => {
     });
 
     it('Table with spanLeft cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, createTableCell(2, 1, false)],
-                    [tdModel, tdModel],
+                    [tdModel1, createTableCell(2, 1, false)],
+                    [tdModel2, tdModel3],
                 ],
                 format: {},
                 widths: [],
@@ -113,13 +119,15 @@ describe('handleTable', () => {
     });
 
     it('Table with spanAbove cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, tdModel],
-                    [createTableCell(1, 2, false), tdModel],
+                    [tdModel1, tdModel2],
+                    [createTableCell(1, 2, false), tdModel3],
                 ],
                 format: {},
                 widths: [],

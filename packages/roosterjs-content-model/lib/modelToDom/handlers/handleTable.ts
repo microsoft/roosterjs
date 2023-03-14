@@ -16,7 +16,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
-        return;
+        return refNode;
     }
 
     const tableNode = doc.createElement('table');

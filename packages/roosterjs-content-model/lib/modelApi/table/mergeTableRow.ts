@@ -46,7 +46,7 @@ export function mergeTableRow(
                     if (table.cells[newSelectedRow]?.[colIndex]) {
                         table.cells[newSelectedRow][colIndex].isSelected = true;
 
-                        delete table.cells[newSelectedRow][colIndex];
+                        delete table.cells[newSelectedRow][colIndex].cachedElement;
                     }
 
                     delete cell.cachedElement;

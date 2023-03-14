@@ -207,7 +207,7 @@ describe('reducedModelChildProcessor', () => {
         const doc = createContentModelDocument();
         const div = document.createElement('div');
         div.innerHTML =
-            'aa<table><tr><td>test1</td><td><span id="selection">test2</span></td></tr></table>bb';
+            'aa<table><tr><td id="td1">test1</td><td id="td2"><span id="selection">test2</span></td></tr></table>bb';
         context.selectionRootNode = div.querySelector('#selection') as HTMLElement;
 
         reducedModelChildProcessor(doc, div, context);
@@ -240,6 +240,7 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
+                                cachedElement: div.querySelector('#td1') as HTMLElement,
                             },
                             {
                                 blockGroupType: 'TableCell',
@@ -262,6 +263,7 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
+                                cachedElement: div.querySelector('#td2') as HTMLElement,
                             },
                         ],
                     ],
