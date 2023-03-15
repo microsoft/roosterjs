@@ -7,7 +7,7 @@ import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { stackFormat } from '../utils/stackFormat';
 
 const DefaultParagraphTag = 'div';
-const DefaultImplicitParagraphTag = 'div';
+const DefaultImplicitParagraphTag = 'span';
 const Pre: CreateElementData = {
     tag: 'PRE',
     style: 'margin-top: 0px; margin-bottom: 0px;',

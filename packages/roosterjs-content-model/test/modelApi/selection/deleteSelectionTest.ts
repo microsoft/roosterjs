@@ -181,7 +181,6 @@ describe('deleteSelection', () => {
             },
             paragraph: {
                 blockType: 'Paragraph',
-                isImplicit: true,
                 segments: [
                     {
                         segmentType: 'SelectionMarker',
@@ -207,7 +206,6 @@ describe('deleteSelection', () => {
                             isSelected: true,
                         },
                     ],
-                    isImplicit: true,
                 },
             ],
         });
@@ -234,7 +232,6 @@ describe('deleteSelection', () => {
             },
             paragraph: {
                 blockType: 'Paragraph',
-                isImplicit: true,
                 segments: [
                     {
                         segmentType: 'SelectionMarker',
@@ -265,13 +262,11 @@ describe('deleteSelection', () => {
                             isSelected: true,
                         },
                     ],
-                    isImplicit: true,
                 },
                 {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
-                    isImplicit: true,
                 },
                 {
                     blockType: 'Paragraph',
@@ -392,7 +387,6 @@ describe('deleteSelection', () => {
             },
             paragraph: {
                 blockType: 'Paragraph',
-                isImplicit: true,
                 segments: [
                     {
                         segmentType: 'SelectionMarker',
@@ -411,7 +405,6 @@ describe('deleteSelection', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    isImplicit: true,
                     format: {},
                     segments: [
                         {

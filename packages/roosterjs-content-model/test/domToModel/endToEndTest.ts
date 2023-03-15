@@ -195,7 +195,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+            '<ol start="1"><li><span>1</span></li><ol start="1"><li style="list-style-type: lower-alpha;"><span>a</span></li></ol><li style="display: block;"><span>b</span></li><li><span>2</span></li></ol>'
         );
     });
 });

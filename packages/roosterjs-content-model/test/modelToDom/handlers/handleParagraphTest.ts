@@ -54,7 +54,7 @@ describe('handleParagraph', () => {
                 isImplicit: true,
                 format: {},
             },
-            '',
+            '<span></span>',
             0
         );
     });
@@ -96,11 +96,11 @@ describe('handleParagraph', () => {
                 isImplicit: true,
                 format: {},
             },
-            '',
+            '<span></span>',
             1
         );
 
-        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleSegment).toHaveBeenCalledWith(document, parent.firstChild!, segment, context);
     });
 
     it('Handle multiple segments', () => {
