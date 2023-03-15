@@ -5,6 +5,7 @@ import {
     commitEntity,
     ContentTraverser,
     findClosestElementAncestor,
+    getBlockElementAtNode,
     Position,
     PositionContentSearcher,
 } from 'roosterjs-editor-dom';
@@ -70,6 +71,7 @@ describe('Content Edit Features |', () => {
                 feature === ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
             getBodyTraverser: (startNode?: Node) =>
                 ContentTraverser.createBodyTraverser(testContainer, startNode),
+            getBlockElementAtNode: (node: Node) => getBlockElementAtNode(document.body, node),
         });
 
         ({ entity, delimiterAfter, delimiterBefore } = addEntityBeforeEach(entity, wrapper));
@@ -278,6 +280,13 @@ describe('Content Edit Features |', () => {
 
                 event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
             });
+
+            it('DelimiterAfter, should not Handle, cursor is at start of next block', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('afterend', div);
+
+                runTest(new Position(div, 0), false /* expected */, event);
+            });
         }
 
         describe('LTR |', () => {
@@ -485,6 +494,13 @@ describe('Content Edit Features |', () => {
                 testContainer.insertBefore(bold, null);
 
                 event = runTest(new Position(bold.firstChild!, 1), false /* expected */, event);
+            });
+
+            it('DelimiterBefore, should not Handle, cursor is at end of previous block', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('beforeend', div);
+
+                runTest(new Position(div, 0), false /* expected */, event);
             });
         }
 

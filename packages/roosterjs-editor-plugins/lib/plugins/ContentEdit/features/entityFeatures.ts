@@ -1,3 +1,4 @@
+import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
     addDelimiters,
     cacheGetEventData,
@@ -216,8 +217,12 @@ function cacheGetNeighborEntityElement(
  */
 const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT, Keys.LEFT],
+    allowFunctionKeys: true,
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        if (!editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
+        if (
+            event.rawEvent.altKey &&
+            !editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+        ) {
             return false;
         }
 
@@ -356,12 +361,16 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
 
 function getNextSibling(
     editor: IEditor,
-    focusedElement: Node,
+    element: Node,
     getFn: (traverser: IContentTraverser) => InlineElement | null
 ) {
-    const traverser = editor.getBodyTraverser(focusedElement);
+    const traverser = getBlockTraverser(editor, element);
+    if (!traverser) {
+        return undefined;
+    }
+
     let currentInline = traverser.currentInlineElement;
-    while (currentInline && currentInline.getContainerNode() === focusedElement) {
+    while (currentInline && currentInline.getContainerNode() === element) {
         currentInline = getFn(traverser);
     }
     return traverser.currentInlineElement?.getContainerNode();
@@ -372,17 +381,25 @@ function getDelimiterPair(
     element: HTMLElement | null | undefined,
     getFn: (traverser: IContentTraverser) => InlineElement | null
 ) {
-    if (!element) {
+    const traverser = getBlockTraverser(editor, element);
+    if (!traverser) {
         return undefined;
     }
 
-    const traverser = editor.getBodyTraverser(element);
     let currentInline = traverser.currentInlineElement;
     while (currentInline && currentInline.getContainerNode() === element) {
         currentInline = getFn(traverser);
     }
     currentInline = getFn(traverser);
     return currentInline?.getContainerNode();
+}
+
+function getBlockTraverser(editor: IEditor, element: Node | null | undefined) {
+    if (!element) {
+        return undefined;
+    }
+    const blockElement = editor.getBlockElementAtNode(element)?.getStartNode();
+    return blockElement ? ContentTraverser.createBodyTraverser(blockElement, element) : undefined;
 }
 
 function cacheDelimiter(event: PluginEvent, checkBefore: boolean, delimiter?: HTMLElement | null) {
