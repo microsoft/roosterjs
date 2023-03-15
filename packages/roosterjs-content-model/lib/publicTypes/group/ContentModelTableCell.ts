@@ -13,8 +13,8 @@ export interface ContentModelTableCell
     extends ContentModelBlockGroupBase<'TableCell'>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
         ContentModelWithDataset<TableCellMetadataFormat>,
-        Selectable,
-        ContentModelBlockWithCache {
+        ContentModelBlockWithCache<HTMLTableCellElement>,
+        Selectable {
     /**
      * Whether this cell is spanned from left cell
      */

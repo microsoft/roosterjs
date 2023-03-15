@@ -240,7 +240,7 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
-                                cachedElement: div.querySelector('#td1') as HTMLElement,
+                                cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
                             },
                             {
                                 blockGroupType: 'TableCell',
@@ -263,7 +263,7 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
-                                cachedElement: div.querySelector('#td2') as HTMLElement,
+                                cachedElement: div.querySelector('#td2') as HTMLTableCellElement,
                             },
                         ],
                     ],

@@ -54,7 +54,7 @@ describe('tableProcessor', () => {
                             blocks: [],
                             format: {},
                             dataset: {},
-                            cachedElement: div.querySelector('#td1') as HTMLElement,
+                            cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
                         },
                     ],
                 ],
@@ -75,10 +75,10 @@ describe('tableProcessor', () => {
         const tdModel4 = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLElement;
-            tdModel3.cachedElement = div.querySelector('#td3') as HTMLElement;
-            tdModel4.cachedElement = div.querySelector('#td4') as HTMLElement;
+            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
+            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
+            tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
+            tdModel4.cachedElement = div.querySelector('#td4') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -103,9 +103,9 @@ describe('tableProcessor', () => {
         const tdModel4 = createTableCell(2, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLElement;
-            tdModel3.cachedElement = div.querySelector('#td3') as HTMLElement;
+            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
+            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
+            tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -127,7 +127,7 @@ describe('tableProcessor', () => {
 
         runTest(tableHTML, div => {
             const tdModel1 = createTableCell(1, 1, false);
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
+            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -148,7 +148,7 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel.cachedElement = div.querySelector('#td1') as HTMLElement;
+            tdModel.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -170,8 +170,8 @@ describe('tableProcessor', () => {
         const tdModel2 = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLElement;
+            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
+            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -192,7 +192,7 @@ describe('tableProcessor', () => {
         const tdModel2 = createTableCell(2, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
+            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
@@ -232,10 +232,10 @@ describe('tableProcessor', () => {
 
         tdModel2.isSelected = true;
         tdModel4.isSelected = true;
-        tdModel1.cachedElement = div.querySelector('#td1') as HTMLElement;
-        tdModel2.cachedElement = div.querySelector('#td2') as HTMLElement;
-        tdModel3.cachedElement = div.querySelector('#td3') as HTMLElement;
-        tdModel4.cachedElement = div.querySelector('#td4') as HTMLElement;
+        tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
+        tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
+        tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
+        tdModel4.cachedElement = div.querySelector('#td4') as HTMLTableCellElement;
 
         tableProcessor(doc, div.firstChild as HTMLTableElement, context);
 
@@ -359,7 +359,7 @@ describe('tableProcessor with format', () => {
             style: {},
             dataset: {},
             getAttribute: () => '',
-        } as any) as HTMLElement;
+        } as any) as HTMLTableCellElement;
         const mockedTable = ({
             tagName: 'table',
             rows: [
@@ -553,7 +553,7 @@ describe('tableProcessor', () => {
             },
             dataset: {},
             getAttribute: () => '',
-        } as any) as HTMLElement;
+        } as any) as HTMLTableCellElement;
         const mockedTable = ({
             tagName: 'table',
             rows: [
