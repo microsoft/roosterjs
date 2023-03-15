@@ -1,5 +1,6 @@
 import {
     addDelimiters,
+    arrayPush,
     createRange,
     getDelimiterFromElement,
     getEntityFromElement,
@@ -29,17 +30,28 @@ const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
-const CHANGE_SOURCES_TO_HANDLE: string[] = [ChangeSource.SetContent, ChangeSource.Paste];
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
         case PluginEventType.ContentChanged:
-            if (CHANGE_SOURCES_TO_HANDLE.indexOf(event.source) >= 0) {
+            if (event.source === ChangeSource.SetContent) {
                 normalizeDelimitersInEditor(editor);
             }
             break;
         case PluginEventType.EditorReady:
             normalizeDelimitersInEditor(editor);
+            break;
+
+        case PluginEventType.BeforePaste:
+            const { fragment, sanitizingOption } = event;
+            addDelimitersIfNeeded(fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
+
+            if (sanitizingOption.additionalAllowedCssClasses) {
+                arrayPush(sanitizingOption.additionalAllowedCssClasses, [
+                    DelimiterClasses.DELIMITER_AFTER,
+                    DelimiterClasses.DELIMITER_BEFORE,
+                ]);
+            }
             break;
 
         case PluginEventType.ExtractContentWithDom:

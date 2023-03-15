@@ -1,4 +1,20 @@
 import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
+import {
+    BeforeCutCopyEvent,
+    BeforePasteEvent,
+    ChangeSource,
+    ContentChangedEvent,
+    DelimiterClasses,
+    EditorReadyEvent,
+    Entity,
+    ExtractContentWithDomEvent,
+    IEditor,
+    NormalSelectionRange,
+    PluginEvent,
+    PluginEventType,
+    PluginKeyDownEvent,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import {
     addDelimiters,
@@ -7,21 +23,6 @@ import {
     getBlockElementAtNode,
     Position,
 } from 'roosterjs-editor-dom';
-import {
-    BeforeCutCopyEvent,
-    EditorReadyEvent,
-    DelimiterClasses,
-    Entity,
-    ExtractContentWithDomEvent,
-    IEditor,
-    NormalSelectionRange,
-    PluginEventType,
-    ContentChangedEvent,
-    PluginEvent,
-    SelectionRangeTypes,
-    PluginKeyDownEvent,
-    ChangeSource,
-} from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 const DELIMITER_SELECTOR =
@@ -601,55 +602,68 @@ describe('Inline Entity On Plugin Event |', () => {
         });
     });
 
-    describe('Content Change, Paste Source |', () => {
-        let event: ContentChangedEvent;
+    describe('Before Paste |', () => {
+        function runTest(expectedDelimiters: number, elementToUse?: Node) {
+            const rootDiv = document.createElement('div');
+            if (elementToUse) {
+                rootDiv.appendChild(elementToUse);
+            }
 
-        beforeEach(() => {
-            event = <ContentChangedEvent>{
-                eventType: PluginEventType.ContentChanged,
-                source: ChangeSource.Paste,
-            };
-        });
+            inlineEntityOnPluginEvent(
+                <BeforePasteEvent>(<any>{
+                    eventType: PluginEventType.BeforePaste,
+                    clipboardData: {},
+                    fragment: rootDiv,
+                    sanitizingOption: {
+                        additionalAllowedCssClasses: [],
+                    },
+                }),
+                editor
+            );
 
-        it('Content Change, Paste Source with Read only Inline Entity in content', () => {
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+        }
+
+        it('Before Paste with Read only Inline Entity in content', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', true /* ReadOnly */, '1');
 
-            runEditorReadyContentChangedTest(2, element, event);
+            runTest(2, element);
         });
 
-        it('Content Change, Paste Source with Read only Block Entity in content', () => {
+        it('Before Paste with Read only Block Entity in content', () => {
             const element = document.createElement('div');
             commitEntity(element, '123', true /* ReadOnly */, '1');
 
-            runEditorReadyContentChangedTest(0, element, event);
+            runTest(0, element);
         });
 
-        it('Content Change, Paste Source with Editable Inline Entity in content', () => {
+        it('Before Paste with Editable Inline Entity in content', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', false /* ReadOnly */, '1');
 
-            runEditorReadyContentChangedTest(0, element, event);
+            runTest(0, element);
         });
 
-        it('Content Change, Paste Source with Editable Block Entity in content', () => {
+        it('Before Paste with Editable Block Entity in content', () => {
             const element = document.createElement('div');
             commitEntity(element, '123', false /* ReadOnly */, '1');
 
-            runEditorReadyContentChangedTest(0, element, event);
+            runTest(0, element);
         });
 
-        it('Content Change, Paste Source with Normal Element', () => {
+        it('Before Paste with Normal Element', () => {
             const element = document.createElement('div');
-            runEditorReadyContentChangedTest(0, element, event);
+            runTest(0, element);
         });
 
-        it('Content Change, Paste Source with no elements', () => {
+        it('Before Paste with no elements', () => {
             const element = document.createElement('div');
-            runEditorReadyContentChangedTest(0, element, event);
+            runTest(0, element);
         });
     });
 });
+
 function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
     entity = <Entity>{
         id: 'test',
