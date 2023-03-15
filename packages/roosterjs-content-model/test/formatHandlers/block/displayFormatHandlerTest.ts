@@ -62,6 +62,6 @@ describe('displayFormatHandler.apply', () => {
         format.display = 'flex';
         const ul = document.createElement('ul');
         displayFormatHandler.apply(format, ul, context);
-        expect(ul.outerHTML).toBe('<ul style="display: flex; flex-direction: column;"></ul>');
+        expect(ul.outerHTML).toBe('<ul style="display: flex;"></ul>');
     });
 });

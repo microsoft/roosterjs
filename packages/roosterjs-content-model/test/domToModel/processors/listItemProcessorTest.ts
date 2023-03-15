@@ -35,7 +35,7 @@ describe('listItemProcessor', () => {
         });
     });
 
-    it('LI with display:block', () => {
+    it('without format handler', () => {
         const group = createContentModelDocument();
         const li = document.createElement('li');
 
@@ -54,7 +54,7 @@ describe('listItemProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     blocks: [],
-                    levels: [{ listType: 'UL', displayForDummyItem: 'block' }],
+                    levels: [{ listType: 'UL' }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
                 },
@@ -219,7 +219,7 @@ describe('listItemProcessor without format handlers', () => {
         });
     });
 
-    it('LI with display:block', () => {
+    it('without format handler', () => {
         const group = createContentModelDocument();
         const li = document.createElement('li');
 

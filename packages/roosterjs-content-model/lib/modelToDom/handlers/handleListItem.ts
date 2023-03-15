@@ -28,8 +28,9 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
 
     if (level) {
+        applyFormat(li, context.formatAppliers.listItem, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
-        applyFormat(li, context.formatAppliers.listItem, level, context);
+        applyFormat(li, context.formatAppliers.listLevel, level, context);
 
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
     } else {

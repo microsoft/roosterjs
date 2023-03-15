@@ -184,14 +184,16 @@ describe('align left', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL', display: 'flex' }],
+                    levels: [{ listType: 'OL' }],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'start' },
+                        format: {},
                     },
-                    format: {},
+                    format: {
+                        textAlign: 'start',
+                    },
                 },
             ],
         });
@@ -242,16 +244,17 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'start' },
+                        format: {},
                     },
-                    format: {},
+                    format: {
+                        textAlign: 'start',
+                    },
                 },
                 {
                     blockType: 'Table',
@@ -351,16 +354,15 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'center' },
+                        format: {},
                     },
-                    format: {},
+                    format: { textAlign: 'center' },
                 },
                 {
                     blockType: 'Table',
@@ -460,16 +462,15 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'end' },
+                        format: {},
                     },
-                    format: {},
+                    format: { textAlign: 'end' },
                 },
                 {
                     blockType: 'Table',
@@ -554,7 +555,6 @@ describe('align left', () => {
         listItem.format.direction = 'rtl';
         table.format.direction = 'rtl';
         para4.format.direction = 'rtl';
-        text4.format.direction = 'rtl';
         text1.isSelected = true;
         text2.isSelected = true;
         text3.isSelected = true;
@@ -572,17 +572,17 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'end' },
+                        format: {},
                     },
                     format: {
                         direction: 'rtl',
+                        textAlign: 'end',
                     },
                 },
                 {
@@ -627,9 +627,7 @@ describe('align left', () => {
                         {
                             segmentType: 'Text',
                             text: 'test4',
-                            format: {
-                                direction: 'rtl',
-                            },
+                            format: {},
                             isSelected: true,
                         },
                     ],
@@ -662,7 +660,6 @@ describe('align left', () => {
         para2.segments.push(text2);
         para3.segments.push(text3);
         para4.format.direction = 'rtl';
-        text4.format.direction = 'rtl';
 
         listItem.blocks.push(para1);
         listItem.blocks.push(para2);
@@ -673,7 +670,6 @@ describe('align left', () => {
 
         listItem.format.direction = 'rtl';
         table.format.direction = 'rtl';
-        text4.format.direction = 'rtl';
         text1.isSelected = true;
         text2.isSelected = true;
         text3.isSelected = true;
@@ -691,17 +687,17 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'center' },
+                        format: {},
                     },
                     format: {
                         direction: 'rtl',
+                        textAlign: 'center',
                     },
                 },
                 {
@@ -746,9 +742,7 @@ describe('align left', () => {
                         {
                             segmentType: 'Text',
                             text: 'test4',
-                            format: {
-                                direction: 'rtl',
-                            },
+                            format: {},
                             isSelected: true,
                         },
                     ],
@@ -790,7 +784,7 @@ describe('align left', () => {
 
         listItem.format.direction = 'rtl';
         table.format.direction = 'rtl';
-        text4.format.direction = 'rtl';
+
         para4.format.direction = 'rtl';
         text1.isSelected = true;
         text2.isSelected = true;
@@ -809,17 +803,17 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            display: 'flex',
                         },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
                         isSelected: true,
-                        format: { textAlign: 'start' },
+                        format: {},
                     },
                     format: {
                         direction: 'rtl',
+                        textAlign: 'start',
                     },
                 },
                 {
@@ -864,9 +858,7 @@ describe('align left', () => {
                         {
                             segmentType: 'Text',
                             text: 'test4',
-                            format: {
-                                direction: 'rtl',
-                            },
+                            format: {},
                             isSelected: true,
                         },
                     ],

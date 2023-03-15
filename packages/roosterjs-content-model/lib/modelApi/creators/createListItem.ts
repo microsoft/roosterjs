@@ -1,4 +1,3 @@
-import { ContentModelBlockFormat } from 'roosterjs-content-model/lib/publicTypes';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
@@ -10,7 +9,7 @@ import { createSelectionMarker } from './createSelectionMarker';
 export function createListItem(
     levels: ContentModelListItemLevelFormat[],
     format?: ContentModelSegmentFormat,
-    blockFormat?: ContentModelBlockFormat
+    li?: HTMLLIElement
 ): ContentModelListItem {
     return {
         blockType: 'BlockGroup',
@@ -18,6 +17,10 @@ export function createListItem(
         blocks: [],
         levels: levels ? levels.map(level => ({ ...level })) : [],
         formatHolder: createSelectionMarker(format),
-        format: blockFormat || {},
+        format: li?.style.alignSelf
+            ? {
+                  textAlign: li.style.alignSelf as 'start' | 'end' | 'center',
+              }
+            : {},
     };
 }
