@@ -3,7 +3,7 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { moveChildNodes } from 'roosterjs-editor-dom/lib';
+import { moveChildNodes } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
