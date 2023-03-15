@@ -207,7 +207,7 @@ describe('reducedModelChildProcessor', () => {
         const doc = createContentModelDocument();
         const div = document.createElement('div');
         div.innerHTML =
-            'aa<table><tr><td id="td1">test1</td><td id="td2"><span id="selection">test2</span></td></tr></table>bb';
+            'aa<table class="tb1"><tr><td id="td1">test1</td><td id="td2"><span id="selection">test2</span></td></tr></table>bb';
         context.selectionRootNode = div.querySelector('#selection') as HTMLElement;
 
         reducedModelChildProcessor(doc, div, context);
@@ -271,6 +271,7 @@ describe('reducedModelChildProcessor', () => {
                     widths: [],
                     heights: [],
                     dataset: {},
+                    cachedElement: div.querySelector('.tb1') as HTMLTableElement,
                 },
             ],
         });

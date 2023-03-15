@@ -3,6 +3,8 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { moveChildNodes } from 'roosterjs-editor-dom/lib';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -19,12 +21,20 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         return refNode;
     }
 
-    const tableNode = doc.createElement('table');
+    let tableNode = table.cachedElement;
 
-    parent.insertBefore(tableNode, refNode);
+    if (tableNode) {
+        refNode = reuseCachedElement(parent, tableNode, refNode);
 
-    applyFormat(tableNode, context.formatAppliers.table, table.format, context);
-    applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+        moveChildNodes(tableNode);
+    } else {
+        tableNode = doc.createElement('table');
+
+        parent.insertBefore(tableNode, refNode);
+
+        applyFormat(tableNode, context.formatAppliers.table, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+    }
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);

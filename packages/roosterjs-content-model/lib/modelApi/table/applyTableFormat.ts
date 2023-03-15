@@ -42,6 +42,8 @@ export function applyTableFormat(
 
         const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
 
+        delete table.cachedElement;
+
         clearCache(cells);
         formatBorders(cells, effectiveMetadata);
         formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);

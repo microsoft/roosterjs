@@ -34,6 +34,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
             const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
+            table.cachedElement = tableElement;
+
             parseFormat(tableElement, context.formatParsers.table, table.format, context);
             parseFormat(
                 tableElement,
