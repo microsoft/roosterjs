@@ -1,6 +1,13 @@
 import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import {
+    addDelimiters,
+    commitEntity,
+    findClosestElementAncestor,
+    getBlockElementAtNode,
+    Position,
+} from 'roosterjs-editor-dom';
+import {
     BeforeCutCopyEvent,
     EditorReadyEvent,
     DelimiterClasses,
@@ -12,16 +19,9 @@ import {
     ContentChangedEvent,
     PluginEvent,
     SelectionRangeTypes,
-    BeforePasteEvent,
     PluginKeyDownEvent,
     ChangeSource,
 } from 'roosterjs-editor-types';
-import {
-    addDelimiters,
-    commitEntity,
-    findClosestElementAncestor,
-    Position,
-} from 'roosterjs-editor-dom';
 
 const ZERO_WIDTH_SPACE = '\u200B';
 const DELIMITER_SELECTOR =
@@ -61,6 +61,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 };
             },
             select: selectSpy = jasmine.createSpy('select'),
+            getBlockElementAtNode: (node: Node) => getBlockElementAtNode(document.body, node),
         });
     });
 
@@ -169,21 +170,16 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Enter on delimiter before, no previous sibling', () => {
+            it('Enter on delimiter before, clear previous block delimiter', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('beforebegin', div);
+                div.appendChild(delimiterBefore!.cloneNode(true /* deep */));
+
                 arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
 
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterBefore?.previousElementSibling).toBeNull();
-            });
-
-            it('Enter on delimiter before, no previous sibling', () => {
-                const testElement = document.createElement('span');
-                testElement.appendChild(document.createTextNode('Test'));
-                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
-                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
-
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterBefore?.previousElementSibling).not.toBeNull();
+                expect(div.firstElementChild?.className).toEqual('');
+                expect(div.firstElementChild?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterBefore!.className).toEqual(DelimiterClasses.DELIMITER_BEFORE);
             });
 
             it('Key press when selection is not collapsed, delimiter before is the endContainer', () => {
@@ -343,21 +339,15 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Enter on delimiter after, no previous sibling', () => {
+            it('Enter on delimiter after, clear the previous sibling class', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('afterend', div);
+                div.appendChild(delimiterAfter!.cloneNode(true /* deep */));
                 arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
 
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterAfter?.nextElementSibling).toBeNull();
-            });
-
-            it('Enter on delimiter after, no previous sibling', () => {
-                const testElement = document.createElement('span');
-                testElement.appendChild(document.createTextNode('Test'));
-                delimiterAfter?.parentElement?.insertBefore(testElement, null);
-                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
-
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterAfter?.nextElementSibling).not.toBeNull();
+                expect(div.firstElementChild?.className).toEqual('');
+                expect(div.firstElementChild?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterAfter!.className).toEqual(DelimiterClasses.DELIMITER_AFTER);
             });
 
             it('Key press when selection is not collapsed, delimiter after is the endContainer', () => {
@@ -611,61 +601,52 @@ describe('Inline Entity On Plugin Event |', () => {
         });
     });
 
-    describe('Before Paste |', () => {
-        function runTest(expectedDelimiters: number, elementToUse?: Node) {
-            const rootDiv = document.createElement('div');
-            if (elementToUse) {
-                rootDiv.appendChild(elementToUse);
-            }
+    describe('Content Change, Paste Source |', () => {
+        let event: ContentChangedEvent;
 
-            inlineEntityOnPluginEvent(
-                <BeforePasteEvent>(<any>{
-                    eventType: PluginEventType.BeforePaste,
-                    clipboardData: {},
-                    fragment: rootDiv,
-                }),
-                editor
-            );
+        beforeEach(() => {
+            event = <ContentChangedEvent>{
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.Paste,
+            };
+        });
 
-            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
-        }
-
-        it('Before Paste with Read only Inline Entity in content', () => {
+        it('Content Change, Paste Source with Read only Inline Entity in content', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', true /* ReadOnly */, '1');
 
-            runTest(2, element);
+            runEditorReadyContentChangedTest(2, element, event);
         });
 
-        it('Before Paste with Read only Block Entity in content', () => {
+        it('Content Change, Paste Source with Read only Block Entity in content', () => {
             const element = document.createElement('div');
             commitEntity(element, '123', true /* ReadOnly */, '1');
 
-            runTest(0, element);
+            runEditorReadyContentChangedTest(0, element, event);
         });
 
-        it('Before Paste with Editable Inline Entity in content', () => {
+        it('Content Change, Paste Source with Editable Inline Entity in content', () => {
             const element = document.createElement('span');
             commitEntity(element, '123', false /* ReadOnly */, '1');
 
-            runTest(0, element);
+            runEditorReadyContentChangedTest(0, element, event);
         });
 
-        it('Before Paste with Editable Block Entity in content', () => {
+        it('Content Change, Paste Source with Editable Block Entity in content', () => {
             const element = document.createElement('div');
             commitEntity(element, '123', false /* ReadOnly */, '1');
 
-            runTest(0, element);
+            runEditorReadyContentChangedTest(0, element, event);
         });
 
-        it('Before Paste with Normal Element', () => {
+        it('Content Change, Paste Source with Normal Element', () => {
             const element = document.createElement('div');
-            runTest(0, element);
+            runEditorReadyContentChangedTest(0, element, event);
         });
 
-        it('Before Paste with no elements', () => {
+        it('Content Change, Paste Source with no elements', () => {
             const element = document.createElement('div');
-            runTest(0, element);
+            runEditorReadyContentChangedTest(0, element, event);
         });
     });
 });
