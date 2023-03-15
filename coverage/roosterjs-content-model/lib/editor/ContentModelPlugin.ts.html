@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.37% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>35/41</span>
+                <span class='fraction'>36/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.79% </span>
+                <span class="strong">80.56% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>26/33</span>
+                <span class='fraction'>29/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>6/7</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.37% </span>
+                <span class="strong">85.71% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>35/41</span>
+                <span class='fraction'>36/42</span>
             </div>
         
             
@@ -169,7 +169,13 @@
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
 <a name='L112'></a><a href='#L112'>112</a>
-<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,6 +192,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,8 +296,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import applyPendingFormat from '../publicApi/format/applyPendingFormat';
 import getSegmentFormat from '../publicApi/format/getSegmentFormat';
 import handleDelete from '../publicApi/editing/handleDelete';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     canApplyPendingFormat,
     clearPendingFormat,
@@ -299,6 +311,12 @@ import {
  */
 export default class ContentModelPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+&nbsp;
+    /**
+     * Construct a new instance of ContentModelPlugin
+     * @param handleKeyboardEditing A temporary parameter to allow handling keyboard editing event using this plugin
+     */
+    constructor(private handleKeyboardEditing?: boolean) {}
 &nbsp;
     /**
      * Get name of this plugin
@@ -356,7 +374,7 @@ export default class ContentModelPlugin implements EditorPlugin {
 &nbsp;
                 if (event.rawEvent.which &gt;= Keys.PAGEUP &amp;&amp; event.rawEvent.which &lt;= Keys.DOWN) {
                     clearPendingFormat(this.editor);
-                } else <span class="missing-if-branch" title="if path not taken" >I</span>if (event.rawEvent.which == Keys.ENTER) {
+                } else <span class="missing-if-branch" title="if path not taken" >I</span>if (this.handleKeyboardEditing &amp;&amp; event.rawEvent.which == Keys.ENTER) {
                     const format = <span class="cstat-no" title="statement not covered" >getSegmentFormat(this.editor);</span>
                     const pos = <span class="cstat-no" title="statement not covered" >this.editor.getFocusedPosition();</span>
 &nbsp;
@@ -364,8 +382,8 @@ export default class ContentModelPlugin implements EditorPlugin {
 <span class="cstat-no" title="statement not covered" >                        setPendingFormat(this.editor, format, pos);</span>
                     }
                 } else if (
-                    event.rawEvent.which == Keys.BACKSPACE ||
-                    event.rawEvent.which == Keys.DELETE
+                    this.handleKeyboardEditing &amp;&amp;
+                    (event.rawEvent.which == Keys.BACKSPACE || event.rawEvent.which == Keys.DELETE)
                 ) {
                     handleDelete(
                         this.editor,
@@ -400,7 +418,7 @@ export default class ContentModelPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 15 2023 14:01:06 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 15 2023 20:11:46 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
