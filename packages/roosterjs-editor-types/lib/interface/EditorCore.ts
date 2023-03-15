@@ -254,6 +254,7 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  * @param direction To specify the transform direction, light to dark, or dark to light
  * @param forceTransform By default this function will only work when editor core is in dark mode.
  * Pass true to this value to force do color transformation even editor core is in light mode
+ * @param fromDarkModel Whether the given content is already in dark mode
  */
 export type TransformColor = (
     core: EditorCore,
@@ -261,7 +262,8 @@ export type TransformColor = (
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean
+    forceTransform?: boolean,
+    fromDarkMode?: boolean
 ) => void;
 
 /**
@@ -443,6 +445,7 @@ export interface CoreApiMap {
      * @param direction To specify the transform direction, light to dark, or dark to light
      * @param forceTransform By default this function will only work when editor core is in dark mode.
      * Pass true to this value to force do color transformation even editor core is in light mode
+     * @param fromDarkModel Whether the given content is already in dark mode
      */
     transformColor: TransformColor;
 

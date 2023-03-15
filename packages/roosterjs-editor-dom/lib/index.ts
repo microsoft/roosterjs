@@ -4,6 +4,13 @@ export { default as getFirstLastBlockElement } from './blockElements/getFirstLas
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
 
+export {
+    default as addDelimiters,
+    addDelimiterAfter,
+    addDelimiterBefore,
+} from './delimiter/addDelimiters';
+export { default as getDelimiterFromElement } from './delimiter/getDelimiterFromElement';
+
 export { default as getInlineElementAtNode } from './inlineElements/getInlineElementAtNode';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';

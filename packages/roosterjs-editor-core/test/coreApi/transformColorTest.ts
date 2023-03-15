@@ -251,7 +251,7 @@ describe('transform to dark mode v2', () => {
         expectedRegisterColorCalls: [string, boolean, string][]
     ) {
         const core = createEditorCore(div, {
-            inDarkMode: true,
+            inDarkMode: false,
             getDarkColor,
         });
         const parseColorValue = jasmine
@@ -265,14 +265,14 @@ describe('transform to dark mode v2', () => {
 
         core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
 
-        transformColor(core, element, true, null, ColorTransformDirection.LightToDark);
+        transformColor(core, element, true, null, ColorTransformDirection.LightToDark, true);
 
         expect(element.outerHTML).toBe(expectedHtml);
         expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
         expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
 
         expectedParseValueCalls.forEach(v => {
-            expect(parseColorValue).toHaveBeenCalledWith(v);
+            expect(parseColorValue).toHaveBeenCalledWith(v, false);
         });
         expectedRegisterColorCalls.forEach(v => {
             expect(registerColor).toHaveBeenCalledWith(...v);
@@ -308,7 +308,7 @@ describe('transform to dark mode v2', () => {
 
         runTest(
             element,
-            '<div color="red" bgcolor="green" style="color: blue; background-color: yellow;"></div>',
+            '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
                 ['blue', true, undefined!],
@@ -326,7 +326,7 @@ describe('transform to dark mode v2', () => {
 
         runTest(
             element,
-            '<div color="gray" bgcolor="brown" style="color: blue; background-color: yellow;"></div>',
+            '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
                 ['blue', true, undefined!],
@@ -336,7 +336,7 @@ describe('transform to dark mode v2', () => {
     });
 });
 
-describe('transform to lgiht mode v2', () => {
+describe('transform to light mode v2', () => {
     let div: HTMLDivElement;
 
     beforeEach(() => {
@@ -356,7 +356,6 @@ describe('transform to lgiht mode v2', () => {
         expectedRegisterColorCalls: [string, boolean, string][]
     ) {
         const core = createEditorCore(div, {
-            inDarkMode: true,
             getDarkColor,
         });
         const parseColorValue = jasmine
@@ -370,14 +369,22 @@ describe('transform to lgiht mode v2', () => {
 
         core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
 
-        transformColor(core, element, true, null, ColorTransformDirection.DarkToLight);
+        transformColor(
+            core,
+            element,
+            true /*includeSelf*/,
+            null /*callback*/,
+            ColorTransformDirection.DarkToLight,
+            true /*forceTransform*/,
+            true /*fromDark*/
+        );
 
         expect(element.outerHTML).toBe(expectedHtml);
         expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
         expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
 
         expectedParseValueCalls.forEach(v => {
-            expect(parseColorValue).toHaveBeenCalledWith(v);
+            expect(parseColorValue).toHaveBeenCalledWith(v, true);
         });
         expectedRegisterColorCalls.forEach(v => {
             expect(registerColor).toHaveBeenCalledWith(...v);
@@ -413,7 +420,7 @@ describe('transform to lgiht mode v2', () => {
 
         runTest(
             element,
-            '<div color="red" bgcolor="green" style="color: blue; background-color: yellow;"></div>',
+            '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
                 ['blue', false, undefined!],
@@ -431,7 +438,7 @@ describe('transform to lgiht mode v2', () => {
 
         runTest(
             element,
-            '<div color="gray" bgcolor="brown" style="color: blue; background-color: yellow;"></div>',
+            '<div style="color: blue; background-color: yellow;"></div>',
             ['red', 'green'],
             [
                 ['blue', false, undefined!],

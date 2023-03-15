@@ -13,12 +13,7 @@ export const whiteSpaceFormatHandler: FormatHandler<WhiteSpaceFormat> = {
         }
     },
     apply: (format, element) => {
-        if (format.whiteSpace == 'pre') {
-            const pre = element.ownerDocument.createElement('pre');
-
-            element.parentNode?.appendChild(pre);
-            pre.appendChild(element);
-        } else if (format.whiteSpace) {
+        if (format.whiteSpace) {
             element.style.whiteSpace = format.whiteSpace;
         }
     },

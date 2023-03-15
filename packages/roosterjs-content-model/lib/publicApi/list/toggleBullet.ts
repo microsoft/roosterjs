@@ -9,5 +9,7 @@ import { setListType } from '../../modelApi/list/setListType';
  * @param editor The editor to operate on
  */
 export default function toggleBullet(editor: IContentModelEditor) {
-    formatWithContentModel(editor, 'toggleBullet', model => setListType(model, 'UL'));
+    formatWithContentModel(editor, 'toggleBullet', model => setListType(model, 'UL'), {
+        preservePendingFormat: true,
+    });
 }

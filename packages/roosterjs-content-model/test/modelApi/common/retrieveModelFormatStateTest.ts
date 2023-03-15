@@ -1,4 +1,5 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import { addCode } from '../../../lib/modelApi/common/addDecorators';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
@@ -64,7 +65,30 @@ describe('retrieveModelFormatState', () => {
 
         retrieveModelFormatState(model, null, result);
 
-        expect(result).toEqual({ ...baseFormatResult, isBlockQuote: false });
+        expect(result).toEqual({ ...baseFormatResult, isBlockQuote: false, isCodeInline: false });
+    });
+
+    it('Single selection with Code', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const para = createParagraph();
+        const marker = createSelectionMarker(segmentFormat);
+
+        addCode(marker, { format: { fontFamily: 'monospace' } });
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [marker]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            ...baseFormatResult,
+            isBlockQuote: false,
+            fontName: 'monospace',
+            isCodeInline: true,
+        });
     });
 
     it('Single selection with list', () => {
@@ -83,6 +107,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            isCodeInline: false,
             isBullet: false,
             isNumbering: true,
             isBlockQuote: false,
@@ -105,6 +130,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            isCodeInline: false,
             isBlockQuote: true,
         });
     });
@@ -129,6 +155,7 @@ describe('retrieveModelFormatState', () => {
             ...baseFormatResult,
             headerLevel: 1,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 
@@ -152,6 +179,7 @@ describe('retrieveModelFormatState', () => {
         expect(result).toEqual({
             ...baseFormatResult,
             ...paraFormat,
+            isCodeInline: false,
             isBlockQuote: false,
         });
     });
@@ -185,6 +213,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            isCodeInline: false,
             isInTable: true,
             tableHasHeader: false,
             isBlockQuote: false,
@@ -224,6 +253,7 @@ describe('retrieveModelFormatState', () => {
             isInTable: true,
             tableHasHeader: false,
             isBlockQuote: false,
+            isCodeInline: false,
             tableFormat: {
                 topBorderColor: '#ABABAB',
                 bottomBorderColor: '#ABABAB',
@@ -281,6 +311,7 @@ describe('retrieveModelFormatState', () => {
         retrieveModelFormatState(model, null, result);
 
         expect(result).toEqual({
+            isCodeInline: false,
             canAddImageAltText: false,
             canUnlink: false,
             isBlockQuote: false,
@@ -306,6 +337,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            isCodeInline: false,
             isMultilineSelection: true,
             isBlockQuote: false,
         });
@@ -328,6 +360,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            isCodeInline: false,
             isMultilineSelection: true,
             isBlockQuote: false,
         });
@@ -361,6 +394,7 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: false,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 
@@ -446,6 +480,7 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: false,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 
@@ -474,6 +509,7 @@ describe('retrieveModelFormatState', () => {
             isInTable: true,
             tableHasHeader: false,
             isBlockQuote: false,
+            isCodeInline: false,
         });
     });
 });
