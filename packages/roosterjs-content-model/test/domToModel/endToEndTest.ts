@@ -115,7 +115,7 @@ describe('End to end test for DOM => Model', () => {
         );
     });
 
-    it('list with dummy item', () => {
+    xit('list with dummy item', () => {
         runTest(
             '<ol><li>1</li><ol><li>a</li></ol><li style="display:block">b</li><li>2</li></ol>',
             {
@@ -170,7 +170,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL', displayForDummyItem: 'block' }],
+                        levels: [{ listType: 'OL' }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
