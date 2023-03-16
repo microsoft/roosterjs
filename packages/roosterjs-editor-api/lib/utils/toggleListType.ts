@@ -36,7 +36,7 @@ import type {
 export default function toggleListType(
     editor: IEditor,
     listType: ListType | CompatibleListType,
-    startNumber?: number,
+    startNumber: number = 0,
     includeSiblingLists: boolean = true,
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
     unorderedStyle?: BulletListType | CompatibleBulletListType,
@@ -47,15 +47,16 @@ export default function toggleListType(
         (region, start, end, chains) => {
             const chain =
                 startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
+            const block = getBlockElementAtNode(
+                region.rootNode,
+                start.node
+            )?.collapseToSingleElement();
+            if (!block) {
+                return;
+            }
             const vList =
                 chain && start.equalTo(end)
-                    ? chain.createVListAtBlock(
-                          getBlockElementAtNode(
-                              region.rootNode,
-                              start.node
-                          )?.collapseToSingleElement(),
-                          startNumber
-                      )
+                    ? chain.createVListAtBlock(block, startNumber)
                     : createVListFromRegion(
                           region,
                           startNumber === 1 ? false : includeSiblingLists
