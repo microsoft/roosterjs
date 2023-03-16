@@ -73,7 +73,7 @@ export default function createLink(
 
         editor.addUndoSnapshot(() => {
             const selection = editor.getSelectionRangeEx();
-            let anchor: HTMLAnchorElement | null = null;
+            let anchor: HTMLAnchorElement = null;
             if (selection.type === SelectionRangeTypes.Normal) {
                 const range = selection.ranges[0];
                 if (range && range.collapsed) {
@@ -96,18 +96,18 @@ export default function createLink(
                         .getDocument()
                         .execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                     const traverser = editor.getSelectionTraverser();
-                    if (traverser) {
-                        let currentInline = traverser.getNextInlineElement();
 
-                        // list for removing unwanted lines
-                        let deletionInlineList: Node[] = [];
+                    let currentInline = traverser.getNextInlineElement();
 
-                        while (currentInline) {
-                            deletionInlineList.push(currentInline.getContainerNode());
-                            currentInline = traverser.getNextInlineElement();
-                        }
-                        deletionInlineList.forEach(node => editor.deleteNode(node));
+                    // list for removing unwanted lines
+                    let deletionInlineList: Node[] = [];
+
+                    while (currentInline) {
+                        deletionInlineList.push(currentInline.getContainerNode());
+                        currentInline = traverser.getNextInlineElement();
                     }
+
+                    deletionInlineList.forEach(node => editor.deleteNode(node));
 
                     anchor = getAnchorNodeAtCursor(editor);
                     updateAnchorDisplayText(anchor, displayText);
@@ -132,7 +132,7 @@ function getAnchorNodeAtCursor(editor: IEditor): HTMLAnchorElement {
     return editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
 }
 
-function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText?: string) {
+function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
@@ -146,7 +146,7 @@ function updateAnchorTarget(anchor: HTMLAnchorElement, target?: string) {
     }
 }
 
-function checkXss(link: string): string | null {
+function checkXss(link: string): string {
     const sanitizer = new HtmlSanitizer();
     const a = document.createElement('a');
 

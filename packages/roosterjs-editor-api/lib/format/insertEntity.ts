@@ -54,7 +54,7 @@ export default function insertEntity(
     commitEntity(wrapper, type, isReadonly);
 
     if (!editor.contains(wrapper)) {
-        let currentRange: Range | null = null;
+        let currentRange: Range;
         let contentPosition:
             | ContentPosition.Begin
             | ContentPosition.End
@@ -108,12 +108,11 @@ export default function insertEntity(
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
         const br = editor.getDocument().createElement('BR');
-        wrapper.parentNode?.insertBefore(br, wrapper.nextSibling);
+        wrapper.parentNode.insertBefore(br, wrapper.nextSibling);
     }
 
     const entity = getEntityFromElement(wrapper);
     if (
-        entity &&
         !isBlock &&
         isReadonly &&
         editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
