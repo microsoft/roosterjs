@@ -85,7 +85,7 @@ function checkAndAddBr(
         // If the first block and the last block are Siblings, add a BR before so the only two
         // lines that are being pasted are not merged.
         const previousSibling = getPreviousLeafSibling(root, block.start);
-        if (firstBlock.end.contains(previousSibling)) {
+        if (firstBlock.end.contains(previousSibling) && getTagOfNode(block.start) !== 'LI') {
             const br = block.start.ownerDocument?.createElement('br');
             if (br) {
                 block.start.parentNode?.insertBefore(br, block.start);
