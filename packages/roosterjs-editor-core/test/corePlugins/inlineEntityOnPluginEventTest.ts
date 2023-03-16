@@ -1,4 +1,5 @@
 import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
+import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
     BeforePasteEvent,
@@ -15,7 +16,6 @@ import {
     PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import {
     addDelimiters,
     commitEntity,
@@ -608,20 +608,21 @@ describe('Inline Entity On Plugin Event |', () => {
             if (elementToUse) {
                 rootDiv.appendChild(elementToUse);
             }
-
+            const additionalAllowedCssClasses: string[] = [];
             inlineEntityOnPluginEvent(
                 <BeforePasteEvent>(<any>{
                     eventType: PluginEventType.BeforePaste,
                     clipboardData: {},
                     fragment: rootDiv,
                     sanitizingOption: {
-                        additionalAllowedCssClasses: [],
+                        additionalAllowedCssClasses,
                     },
                 }),
                 editor
             );
-
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+            expect(additionalAllowedCssClasses).toContain(DelimiterClasses.DELIMITER_AFTER);
+            expect(additionalAllowedCssClasses).toContain(DelimiterClasses.DELIMITER_BEFORE);
         }
 
         it('Before Paste with Read only Inline Entity in content', () => {
