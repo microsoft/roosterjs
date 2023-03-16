@@ -111,9 +111,8 @@ export default function insertEntity(
         wrapper.parentNode?.insertBefore(br, wrapper.nextSibling);
     }
 
-    const entity = getEntityFromElement(wrapper);
+    const entity = getEntityFromElement(wrapper)!;
     if (
-        entity &&
         !isBlock &&
         isReadonly &&
         editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
