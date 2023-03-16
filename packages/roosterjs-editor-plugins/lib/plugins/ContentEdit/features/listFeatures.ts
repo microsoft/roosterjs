@@ -99,22 +99,20 @@ const handleIndentationEvent = (indenting: boolean) => (
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB, Keys.RIGHT],
+    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.RIGHT],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
-    defaultDisabled: Browser.isMac,
 };
 
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB, Keys.LEFT],
+    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.LEFT],
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
-    defaultDisabled: Browser.isMac,
 };
 
 /**
