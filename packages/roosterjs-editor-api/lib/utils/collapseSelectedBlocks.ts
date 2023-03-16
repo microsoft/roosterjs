@@ -14,7 +14,7 @@ export default function collapseSelectedBlocks(
     let traverser = editor.getSelectionTraverser();
     let block = traverser && traverser.currentBlockElement;
     let blocks: BlockElement[] = [];
-    while (block) {
+    while (block && traverser) {
         if (!isEmptyBlockUnderTR(block)) {
             blocks.push(block);
         }

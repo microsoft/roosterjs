@@ -6,11 +6,14 @@ import { findClosestElementAncestor, getComputedStyle, safeInstanceOf } from 'ro
  * @param quotesHandled Optional parameter to prevent already modified quotes to be rechecked.
  * @returns
  */
-export default function normalizeBlockquote(node: Node, quotesHandled?: Node[]): void {
+export default function normalizeBlockquote(node: Node | null, quotesHandled?: Node[]): void {
     if (safeInstanceOf(node, 'HTMLElement')) {
         const alignment = node.style.textAlign;
 
         let quote = findClosestElementAncestor(node, undefined /* root */, 'blockquote');
+        if (!quote) {
+            return;
+        }
         const isNodeRTL = isRTL(node);
 
         if (quotesHandled) {
@@ -23,15 +26,15 @@ export default function normalizeBlockquote(node: Node, quotesHandled?: Node[]):
         while (quote) {
             if (alignment == 'center') {
                 if (isNodeRTL) {
-                    delete quote.style.marginInlineEnd;
+                    quote.style.removeProperty('marginInlineEnd');
                     quote.style.marginInlineStart = 'auto';
                 } else {
-                    delete quote.style.marginInlineStart;
+                    quote.style.removeProperty('marginInlineStart');
                     quote.style.marginInlineEnd = 'auto';
                 }
             } else {
-                delete quote.style.marginInlineStart;
-                delete quote.style.marginInlineEnd;
+                quote.style.removeProperty('marginInlineEnd');
+                quote.style.removeProperty('marginInlineStart');
             }
 
             quote = findClosestElementAncestor(

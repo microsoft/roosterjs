@@ -50,12 +50,12 @@ export default function applyInlineStyle(
         formatUndoSnapshot(
             editor,
             () => {
-                let firstNode: Node;
-                let lastNode: Node;
+                let firstNode: Node | undefined;
+                let lastNode: Node | undefined;
                 selection.ranges.forEach(range => {
                     let contentTraverser = editor.getSelectionTraverser(range);
                     let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
-                    while (inlineElement) {
+                    while (inlineElement && contentTraverser) {
                         let nextInlineElement = contentTraverser.getNextInlineElement();
                         inlineElement.applyStyle((element, isInnerNode) => {
                             safeCallback(element, isInnerNode);
