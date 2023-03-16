@@ -47,10 +47,8 @@ export default function changeCapitalization(
         switch (capitalization) {
             case Capitalization.Lowercase:
                 result = originalText.toLocaleLowerCase(language);
-                break;
             case Capitalization.Uppercase:
                 result = originalText.toLocaleUpperCase(language);
-                break;
             case Capitalization.CapitalizeEachWord:
                 const wordArray = originalText.toLocaleLowerCase(language).split(' ');
                 for (let i = 0; i < wordArray.length; i++) {
@@ -58,7 +56,6 @@ export default function changeCapitalization(
                         wordArray[i].charAt(0).toLocaleUpperCase(language) + wordArray[i].slice(1);
                 }
                 result = wordArray.join(' ');
-                break;
             case Capitalization.Sentence:
                 // TODO: Add rules on punctuation for internationalization - TASK 104769
                 const punctuationMarks = '[\\.\\!\\?]';
@@ -71,7 +68,6 @@ export default function changeCapitalization(
                 result = originalText.toLocaleLowerCase(language).replace(regex, match => {
                     return match.toLocaleUpperCase(language);
                 });
-                break;
         }
         return result || null;
     }
