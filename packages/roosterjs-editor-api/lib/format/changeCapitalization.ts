@@ -36,19 +36,26 @@ export default function changeCapitalization(
         'changeCapitalization'
     );
 
-    function getCapitalizedText(originalText: string, language: string): string {
+    function getCapitalizedText(
+        originalText: string | null,
+        language: string | undefined
+    ): string | null {
+        let result: string | undefined;
+        if (!originalText) {
+            return null;
+        }
         switch (capitalization) {
             case Capitalization.Lowercase:
-                return originalText.toLocaleLowerCase(language);
+                result = originalText.toLocaleLowerCase(language);
             case Capitalization.Uppercase:
-                return originalText.toLocaleUpperCase(language);
+                result = originalText.toLocaleUpperCase(language);
             case Capitalization.CapitalizeEachWord:
                 const wordArray = originalText.toLocaleLowerCase(language).split(' ');
                 for (let i = 0; i < wordArray.length; i++) {
                     wordArray[i] =
                         wordArray[i].charAt(0).toLocaleUpperCase(language) + wordArray[i].slice(1);
                 }
-                return wordArray.join(' ');
+                result = wordArray.join(' ');
             case Capitalization.Sentence:
                 // TODO: Add rules on punctuation for internationalization - TASK 104769
                 const punctuationMarks = '[\\.\\!\\?]';
@@ -58,9 +65,10 @@ export default function changeCapitalization(
                 // - Or preceded by a punctuation mark and at least one whitespace, for
                 // example 'yes. hello world' would match 'y' and 'h'.
                 const regex = new RegExp('^\\s*\\w|' + punctuationMarks + '\\s+\\w', 'g');
-                return originalText.toLocaleLowerCase(language).replace(regex, match => {
+                result = originalText.toLocaleLowerCase(language).replace(regex, match => {
                     return match.toLocaleUpperCase(language);
                 });
         }
+        return result || null;
     }
 }
