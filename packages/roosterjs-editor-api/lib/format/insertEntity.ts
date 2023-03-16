@@ -38,7 +38,7 @@ export default function insertEntity(
     isReadonly: boolean,
     position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd,
     insertToRegionRoot?: boolean
-): Entity | null {
+): Entity {
     const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
 
     // For inline & readonly entity, we need to set display to "inline-block" otherwise
