@@ -64,10 +64,12 @@ describe('handleList', () => {
         ]);
 
         handleList(document, parent, listItem, context, null);
+        const possibleResults = [
+            '<div><ol start="1" style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ol style="flex-direction: column; display: flex;" start="1"></ol></div>', //Firefox
+        ];
 
-        expect(parent.outerHTML).toBe(
-            '<div><ol start="1" style="flex-direction: column; display: flex;"></ol></div>'
-        );
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [
@@ -284,10 +286,12 @@ describe('handleList', () => {
         ];
 
         handleList(document, parent, listItem, context, null);
+        const possibleResults = [
+            '<div><ul><ol></ol></ul><ol start="2" style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ul><ol></ol></ul><ol style="flex-direction: column; display: flex;" start="2"></ol></div>', //Firefox
+        ];
 
-        expect(parent.outerHTML).toBe(
-            '<div><ul><ol></ol></ul><ol start="2" style="flex-direction: column; display: flex;"></ol></div>'
-        );
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
