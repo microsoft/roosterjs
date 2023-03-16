@@ -170,7 +170,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', displayForDummyItem: 'block' }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,

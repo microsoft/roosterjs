@@ -170,6 +170,10 @@ describe('listItemThreadFormatHandler.parse', () => {
 
         listItemThreadFormatHandler.parse(format, li, context, {});
 
+        expect(format).toEqual({
+            displayForDummyItem: 'block',
+        });
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             levels: [

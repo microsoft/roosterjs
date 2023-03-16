@@ -88,7 +88,6 @@ const blockFormatHandlers: (keyof FormatHandlerTypeMap)[] = [
     'lineHeight',
     'whiteSpace',
     'border',
-    'display',
 ];
 
 const defaultFormatKeysPerCategory: {
