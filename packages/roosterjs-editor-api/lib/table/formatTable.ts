@@ -18,6 +18,10 @@ export default function formatTable(
         formatUndoSnapshot(
             editor,
             (start, end) => {
+                if (!table) {
+                    return;
+                }
+
                 let vtable = new VTable(table);
                 vtable.applyFormat(format);
                 vtable.writeBack();

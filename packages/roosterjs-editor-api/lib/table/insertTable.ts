@@ -42,7 +42,7 @@ export default function insertTable(
                 setBackgroundColor(editor, 'transparent');
             }
             let vtable = new VTable(table);
-            vtable.applyFormat(format);
+            vtable.applyFormat(format || {});
             vtable.writeBack();
             editor.insertNode(table);
             editor.runAsync(editor =>
