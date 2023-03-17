@@ -371,4 +371,27 @@ describe('handleListItem without format handler', () => {
             context
         );
     });
+
+    it('UL with refNode', () => {
+        const listItem = createListItem([{ listType: 'UL' }]);
+        const br = document.createElement('br');
+        const parent = document.createElement('div');
+
+        parent.appendChild(br);
+
+        const result = handleListItem(document, parent, listItem, context, br);
+
+        expect(parent.outerHTML).toBe('<div><ul><li></li></ul><br></div>');
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, br);
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            parent.firstChild!.firstChild as HTMLElement,
+            listItem,
+            context
+        );
+        expect(result).toBe(br);
+    });
 });

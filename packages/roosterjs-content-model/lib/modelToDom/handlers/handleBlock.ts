@@ -12,43 +12,38 @@ export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    function callHandler<T extends ContentModelBlock>(
-        block: T,
-        handler: ContentModelBlockHandler<T>
-    ) {
-        handler(doc, parent, block, context, refNode);
-    }
-
     const handlers = context.modelHandlers;
 
     switch (block.blockType) {
         case 'Table':
-            callHandler(block, handlers.table);
+            refNode = handlers.table(doc, parent, block, context, refNode);
             break;
         case 'Paragraph':
-            callHandler(block, handlers.paragraph);
+            refNode = handlers.paragraph(doc, parent, block, context, refNode);
             break;
         case 'Entity':
-            callHandler(block, handlers.entity);
+            refNode = handlers.entity(doc, parent, block, context, refNode);
             break;
         case 'Divider':
-            callHandler(block, handlers.divider);
+            refNode = handlers.divider(doc, parent, block, context, refNode);
             break;
         case 'BlockGroup':
             switch (block.blockGroupType) {
                 case 'General':
-                    callHandler(block, handlers.general);
+                    refNode = handlers.general(doc, parent, block, context, refNode);
                     break;
 
                 case 'Quote':
-                    callHandler(block, handlers.quote);
+                    refNode = handlers.quote(doc, parent, block, context, refNode);
                     break;
 
                 case 'ListItem':
-                    callHandler(block, handlers.listItem);
+                    refNode = handlers.listItem(doc, parent, block, context, refNode);
                     break;
             }
 
             break;
     }
+
+    return refNode;
 };

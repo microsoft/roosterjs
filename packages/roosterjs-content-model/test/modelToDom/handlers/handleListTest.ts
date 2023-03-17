@@ -788,7 +788,7 @@ describe('handleList handles metadata', () => {
         parent.appendChild(existingOL);
         parent.appendChild(br);
 
-        handleList(document, parent, listItem, context, br);
+        const result = handleList(document, parent, listItem, context, br);
 
         expect(parent.outerHTML).toBe('<div><ol><ol start="1"></ol></ol><br></div>');
         expect(context.listFormat).toEqual({
@@ -807,5 +807,6 @@ describe('handleList handles metadata', () => {
                 },
             ],
         });
+        expect(result).toBe(br);
     });
 });

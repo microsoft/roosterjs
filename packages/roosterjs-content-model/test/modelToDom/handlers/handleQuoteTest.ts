@@ -69,7 +69,7 @@ describe('handleQuote', () => {
 
         handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
-        handleQuote(document, parent, quote, context, br);
+        const result = handleQuote(document, parent, quote, context, br);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote><br></div>'
@@ -82,5 +82,6 @@ describe('handleQuote', () => {
             context
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
     });
 });

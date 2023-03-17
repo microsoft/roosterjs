@@ -16,21 +16,29 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const element = group.element.cloneNode();
+    let element: Node = group.element;
 
-    parent.insertBefore(element, refNode);
+    if (refNode == element) {
+        refNode = refNode.nextSibling;
+    } else {
+        element = element.cloneNode();
 
-    if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
-        if (!group.element.firstChild) {
-            context.regularSelection.current.segment = element;
+        parent.insertBefore(element, refNode);
+
+        if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
+            if (!group.element.firstChild) {
+                context.regularSelection.current.segment = element;
+            }
+
+            applyFormat(element, context.formatAppliers.segment, group.format, context);
+
+            context.modelHandlers.segmentDecorator(doc, element, group, context);
         }
-
-        applyFormat(element, context.formatAppliers.segment, group.format, context);
-
-        context.modelHandlers.segmentDecorator(doc, element, group, context);
     }
 
     context.modelHandlers.blockGroupChildren(doc, element, group, context);
+
+    return refNode;
 };
 
 function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {
