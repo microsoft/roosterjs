@@ -1,5 +1,20 @@
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
+import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
+import { createTableCell as originalCreateTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { setTableCellBackgroundColor } from '../../../lib/modelApi/table/setTableCellBackgroundColor';
+
+function createTableCell(
+    spanLeftOrColSpan?: boolean | number,
+    spanAboveOrRowSpan?: boolean | number,
+    isHeader?: boolean,
+    format?: ContentModelTableCellFormat
+): ContentModelTableCell {
+    const cell = originalCreateTableCell(spanLeftOrColSpan, spanAboveOrRowSpan, isHeader, format);
+
+    cell.cachedElement = {} as any;
+
+    return cell;
+}
 
 describe('setTableCellBackgroundColor', () => {
     it('Set to null', () => {

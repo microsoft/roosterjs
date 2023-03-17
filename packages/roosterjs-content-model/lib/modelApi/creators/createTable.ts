@@ -1,11 +1,11 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
 
 /**
  * @internal
  */
-export function createTable(rowCount: number, format?: ContentModelBlockFormat): ContentModelTable {
+export function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
     const rows: ContentModelTableCell[][] = [];
 
     for (let i = 0; i < rowCount; i++) {

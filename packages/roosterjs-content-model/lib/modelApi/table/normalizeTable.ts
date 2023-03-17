@@ -16,8 +16,12 @@ export function normalizeTable(
     defaultSegmentFormat?: ContentModelSegmentFormat
 ) {
     // Always collapse border and use border box for table in roosterjs to make layout simpler
-    table.format.borderCollapse = true;
-    table.format.useBorderBox = true;
+    const format = table.format;
+
+    if (!format.borderCollapse || !format.useBorderBox) {
+        format.borderCollapse = true;
+        format.useBorderBox = true;
+    }
 
     // Make sure all first cells are not spanned
     // Make sure all inner cells are not header
@@ -30,8 +34,9 @@ export function normalizeTable(
 
             if (rowIndex == 0) {
                 cell.spanAbove = false;
-            } else {
+            } else if (rowIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
+                delete cell.cachedElement;
             }
 
             if (colIndex == 0) {
