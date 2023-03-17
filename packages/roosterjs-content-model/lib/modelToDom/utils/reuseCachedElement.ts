@@ -5,11 +5,7 @@ import { NodeType } from 'roosterjs-editor-types';
 /**
  * @internal
  */
-export function reuseCachedElement(
-    parent: Node,
-    element: HTMLElement,
-    refNode: Node | null
-): Node | null {
+export function reuseCachedElement(parent: Node, element: Node, refNode: Node | null): Node | null {
     if (element.parentNode == parent) {
         // Remove nodes before the one we are hitting since they don't appear in Content Model at this position.
         // But we don't want to touch entity since it would better to keep entity at its place unless it is removed
