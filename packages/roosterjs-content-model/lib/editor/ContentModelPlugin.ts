@@ -1,8 +1,8 @@
 import applyPendingFormat from '../publicApi/format/applyPendingFormat';
 import getSegmentFormat from '../publicApi/format/getSegmentFormat';
 import handleDelete from '../publicApi/editing/handleDelete';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     canApplyPendingFormat,
     clearPendingFormat,
@@ -16,6 +16,12 @@ import {
  */
 export default class ContentModelPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+
+    /**
+     * Construct a new instance of ContentModelPlugin
+     * @param handleKeyboardEditing A temporary parameter to allow handling keyboard editing event using this plugin
+     */
+    constructor(private handleKeyboardEditing?: boolean) {}
 
     /**
      * Get name of this plugin
@@ -73,7 +79,7 @@ export default class ContentModelPlugin implements EditorPlugin {
 
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
-                } else if (event.rawEvent.which == Keys.ENTER) {
+                } else if (this.handleKeyboardEditing && event.rawEvent.which == Keys.ENTER) {
                     const format = getSegmentFormat(this.editor);
                     const pos = this.editor.getFocusedPosition();
 
@@ -81,8 +87,8 @@ export default class ContentModelPlugin implements EditorPlugin {
                         setPendingFormat(this.editor, format, pos);
                     }
                 } else if (
-                    event.rawEvent.which == Keys.BACKSPACE ||
-                    event.rawEvent.which == Keys.DELETE
+                    this.handleKeyboardEditing &&
+                    (event.rawEvent.which == Keys.BACKSPACE || event.rawEvent.which == Keys.DELETE)
                 ) {
                     handleDelete(
                         this.editor,

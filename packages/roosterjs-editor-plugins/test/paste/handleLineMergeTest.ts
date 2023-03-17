@@ -135,4 +135,11 @@ describe('handleLineMerge', () => {
             '<span><span>asdsad</span><span>asdsadsa</span></span><br><span><span>asdsad</span></span>'
         );
     });
+
+    it('Do not had BR when pasting two list items.', () => {
+        runTest(
+            '<span><ul><li><div><span>asdf</span></div></li><li><span><span>asdf&nbsp;</span></span></li></ul></span>',
+            '<span><ul><li><span><span>asdf</span></span></li><li><span><span>asdf&nbsp;</span></span></li></ul></span>'
+        );
+    });
 });
