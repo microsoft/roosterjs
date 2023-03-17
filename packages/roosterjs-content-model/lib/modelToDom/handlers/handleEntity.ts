@@ -48,7 +48,9 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     }
 
     if (context.addDelimiterForEntity && isInlineEntity && isReadonly) {
-        addDelimiters(wrapper);
+        const [after] = addDelimiters(wrapper);
+
+        context.regularSelection.current.segment = after;
     }
 
     return refNode;

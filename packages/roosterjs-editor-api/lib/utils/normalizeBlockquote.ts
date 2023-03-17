@@ -11,6 +11,9 @@ export default function normalizeBlockquote(node: Node, quotesHandled?: Node[]):
         const alignment = node.style.textAlign;
 
         let quote = findClosestElementAncestor(node, undefined /* root */, 'blockquote');
+        if (!quote) {
+            return;
+        }
         const isNodeRTL = isRTL(node);
 
         if (quotesHandled) {
@@ -23,15 +26,15 @@ export default function normalizeBlockquote(node: Node, quotesHandled?: Node[]):
         while (quote) {
             if (alignment == 'center') {
                 if (isNodeRTL) {
-                    delete quote.style.marginInlineEnd;
+                    quote.style.removeProperty('marginInlineEnd');
                     quote.style.marginInlineStart = 'auto';
                 } else {
-                    delete quote.style.marginInlineStart;
+                    quote.style.removeProperty('marginInlineStart');
                     quote.style.marginInlineEnd = 'auto';
                 }
             } else {
-                delete quote.style.marginInlineStart;
-                delete quote.style.marginInlineEnd;
+                quote.style.removeProperty('marginInlineEnd');
+                quote.style.removeProperty('marginInlineStart');
             }
 
             quote = findClosestElementAncestor(

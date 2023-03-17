@@ -1,7 +1,6 @@
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { removeNode } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -35,7 +34,10 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
 
         // Remove all rest node if any since they don't appear in content model
         while (refNode) {
-            refNode = removeNode(refNode);
+            const next = refNode.nextSibling;
+
+            refNode.parentNode?.removeChild(refNode);
+            refNode = next;
         }
     } finally {
         listFormat.nodeStack = nodeStack;

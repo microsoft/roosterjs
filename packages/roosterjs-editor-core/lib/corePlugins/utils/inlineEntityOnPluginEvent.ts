@@ -1,12 +1,13 @@
 import {
     addDelimiters,
-    createElement,
+    arrayPush,
     createRange,
     getDelimiterFromElement,
     getEntityFromElement,
     getEntitySelector,
     isBlockElement,
     isCharacterValue,
+    matchesSelector,
     Position,
     safeInstanceOf,
     splitTextNode,
@@ -29,7 +30,6 @@ const DELIMITER_SELECTOR =
     '.' + DelimiterClasses.DELIMITER_AFTER + ',.' + DelimiterClasses.DELIMITER_BEFORE;
 const ZERO_WIDTH_SPACE = '\u200B';
 const INLINE_ENTITY_SELECTOR = 'span' + getEntitySelector();
-const NBSP = '\u00A0';
 
 export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
     switch (event.eventType) {
@@ -43,7 +43,15 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
             break;
 
         case PluginEventType.BeforePaste:
-            addDelimitersIfNeeded(event.fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
+            const { fragment, sanitizingOption } = event;
+            addDelimitersIfNeeded(fragment.querySelectorAll(INLINE_ENTITY_SELECTOR));
+
+            if (sanitizingOption.additionalAllowedCssClasses) {
+                arrayPush(sanitizingOption.additionalAllowedCssClasses, [
+                    DelimiterClasses.DELIMITER_AFTER,
+                    DelimiterClasses.DELIMITER_BEFORE,
+                ]);
+            }
             break;
 
         case PluginEventType.ExtractContentWithDom:
@@ -98,13 +106,13 @@ export function normalizeDelimitersInEditor(editor: IEditor) {
 
 function addDelimitersIfNeeded(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
-        if (tryGetEntityFromNode(node)) {
+        if (isEntityElement(node)) {
             addDelimiters(node);
         }
     });
 }
 
-function tryGetEntityFromNode(node: Element | null): node is HTMLElement {
+function isEntityElement(node: Node | null): node is HTMLElement {
     return !!(
         node &&
         safeInstanceOf(node, 'HTMLElement') &&
@@ -124,7 +132,7 @@ function isReadOnly(entity: Entity | null) {
     );
 }
 
-function removeInvalidDelimiters(nodes: Element[]) {
+function removeInvalidDelimiters(nodes: Element[] | NodeListOf<Element>) {
     nodes.forEach(node => {
         if (getDelimiterFromElement(node)) {
             const sibling = node.classList.contains(DelimiterClasses.DELIMITER_BEFORE)
@@ -139,14 +147,14 @@ function removeInvalidDelimiters(nodes: Element[]) {
     });
 }
 
-function removeDelimiterAttr(node: Element | undefined | null) {
+function removeDelimiterAttr(node: Element | undefined | null, checkEntity: boolean = true) {
     if (!node) {
         return;
     }
 
     const isAfter = node.classList.contains(DelimiterClasses.DELIMITER_AFTER);
     const entitySibling = isAfter ? node.previousElementSibling : node.nextElementSibling;
-    if (entitySibling && tryGetEntityFromNode(entitySibling)) {
+    if (checkEntity && entitySibling && isEntityElement(entitySibling)) {
         return;
     }
 
@@ -163,39 +171,34 @@ function removeDelimiterAttr(node: Element | undefined | null) {
 
 function handleCollapsedEnter(editor: IEditor, delimiter: HTMLElement) {
     const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
-    const sibling = isAfter ? delimiter.nextSibling : delimiter.previousSibling;
-    let positionToUse: Position | undefined;
-    let element: Element | null;
+    const entity = !isAfter ? delimiter.nextSibling : delimiter.previousSibling;
+    const block = editor.getBlockElementAtNode(delimiter)?.getStartNode();
 
-    if (sibling) {
-        positionToUse = new Position(sibling, isAfter ? PositionType.Begin : PositionType.End);
-    } else {
-        element = delimiter.insertAdjacentElement(
-            isAfter ? 'afterend' : 'beforebegin',
-            createElement(
-                {
-                    tag: 'span',
-                    children: [NBSP],
-                },
-                editor.getDocument()
-            )!
-        );
-
-        if (!element) {
+    editor.runAsync(() => {
+        if (!block) {
             return;
         }
+        const blockToCheck = isAfter ? block.nextSibling : block.previousSibling;
+        if (blockToCheck && safeInstanceOf(blockToCheck, 'HTMLElement')) {
+            const delimiters = blockToCheck.querySelectorAll(DELIMITER_SELECTOR);
+            // Check if the last or first delimiter still contain the delimiter class and remove it.
+            const delimiterToCheck = delimiters.item(isAfter ? 0 : delimiters.length - 1);
+            removeDelimiterAttr(delimiterToCheck);
+        }
 
-        positionToUse = new Position(element, PositionType.Begin);
-    }
-
-    if (positionToUse) {
-        editor.select(positionToUse);
-        editor.runAsync(aEditor => {
-            const elAfter = aEditor.getElementAtCursor();
-            removeDelimiterAttr(elAfter);
-            removeNode(element);
-        });
-    }
+        if (isEntityElement(entity)) {
+            const { nextElementSibling, previousElementSibling } = entity;
+            [nextElementSibling, previousElementSibling].forEach(el => {
+                // Check if after Enter the ZWS got removed but we still have a element with the class
+                // Remove the attributes of the element if it is invalid now.
+                if (el && matchesSelector(el, DELIMITER_SELECTOR) && !getDelimiterFromElement(el)) {
+                    removeDelimiterAttr(el, false /* checkEntity */);
+                }
+            });
+            // Add delimiters to the entity if needed because on Enter we can sometimes lose the ZWS of the element.
+            addDelimiters(entity);
+        }
+    });
 }
 
 const getPosition = (container: HTMLElement | null) => {

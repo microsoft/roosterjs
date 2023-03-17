@@ -24,7 +24,7 @@ describe('toggleItalic()', () => {
 
         toggleItalic(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('italic', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('italic', false, undefined);
     });
 
     TestHelper.itFirefoxOnly(

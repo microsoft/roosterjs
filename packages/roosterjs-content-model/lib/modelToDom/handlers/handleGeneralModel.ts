@@ -5,6 +5,7 @@ import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentMod
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -16,9 +17,16 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const element = group.element.cloneNode();
+    let element: Node = group.element;
 
-    parent.insertBefore(element, refNode);
+    if (refNode && element.parentNode == parent) {
+        refNode = reuseCachedElement(parent, element, refNode);
+    } else {
+        element = element.cloneNode();
+        group.element = element as HTMLElement;
+
+        parent.insertBefore(element, refNode);
+    }
 
     if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
         if (!group.element.firstChild) {
