@@ -27,7 +27,9 @@ export default function formatTable(
                 vtable.writeBack();
                 editor.transformToDarkColor(vtable.table);
                 editor.focus();
-                editor.select(start, end);
+                if (start && end) {
+                    editor.select(start, end);
+                }
             },
             'formatTable'
         );
