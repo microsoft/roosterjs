@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.62% </span>
+                <span class="strong">82.35% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>11/13</span>
+                <span class='fraction'>14/17</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">45% </span>
+                <span class="strong">57.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/20</span>
+                <span class='fraction'>23/40</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.67% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>11/12</span>
+                <span class='fraction'>14/16</span>
             </div>
         
             
@@ -134,7 +134,8 @@
 <a name='L75'></a><a href='#L75'>75</a>
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,7 +173,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,14 +184,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -249,7 +251,7 @@ import type {
 export default function toggleListType(
     editor: IEditor,
     listType: ListType | CompatibleListType,
-    startNumber?: number,
+    <span class="missing-if-branch" title="else path not taken" >E</span>startNumber: number = 0,
     <span class="missing-if-branch" title="else path not taken" >E</span>includeSiblingLists: boolean = true,
     orderedStyle?: NumberingListType | CompatibleNumberingListType,
     unorderedStyle?: BulletListType | CompatibleBulletListType,
@@ -260,21 +262,22 @@ export default function toggleListType(
         (region, start, end, chains) =&gt; {
             const chain =
                 startNumber &gt; 0 &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >chains.filter(<span class="fstat-no" title="function not covered" >chain </span>=&gt; <span class="cstat-no" title="statement not covered" >chain.canAppendAtCursor(startNumber))[</span>0];</span>
+            const block = getBlockElementAtNode(
+                region.rootNode,
+                start<span class="branch-0 cbranch-no" title="branch not covered" >?.n</span>ode ?? <span class="branch-1 cbranch-no" title="branch not covered" >null</span>
+            )<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ollapseToSingleElement();
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!block) {
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
             const vList =
-                chain &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >start.equalTo(end)</span>
-                    ? <span class="branch-0 cbranch-no" title="branch not covered" >chain.createVListAtBlock(</span>
-                          getBlockElementAtNode(
-                              region.rootNode,
-                              start.node
-                          )?.collapseToSingleElement(),
-                          startNumber
-                      )
+                chain &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >end </span>&amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >start?.equalTo(end)</span>
+                    ? <span class="branch-0 cbranch-no" title="branch not covered" >chain.createVListAtBlock(block, startNumber)</span>
                     : createVListFromRegion(
                           region,
                           startNumber === 1 ? <span class="branch-0 cbranch-no" title="branch not covered" >false </span>: includeSiblingLists
                       );
 &nbsp;
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (vList) {
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (vList &amp;&amp; start &amp;&amp; end) {
                 vList.changeListType(start, end, listType);
                 <span class="missing-if-branch" title="if path not taken" >I</span>if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
 <span class="cstat-no" title="statement not covered" >                    vList.setListStyleType(orderedStyle, unorderedStyle);</span>
@@ -295,7 +298,7 @@ export default function toggleListType(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 17 2023 15:40:34 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 17 2023 16:05:32 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
