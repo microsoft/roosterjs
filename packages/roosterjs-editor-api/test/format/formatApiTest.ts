@@ -28,7 +28,7 @@ describe('FormatUtils', () => {
 
         toggleStrikethrough(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('strikeThrough', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('strikeThrough', false, undefined);
     });
 
     it('toggleSuperscript() triggers the superscript command in document', () => {
@@ -37,7 +37,7 @@ describe('FormatUtils', () => {
 
         toggleSuperscript(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('superscript', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('superscript', false, undefined);
     });
 
     it('toggleSubscript() triggers the subscript command in document', () => {
@@ -46,7 +46,7 @@ describe('FormatUtils', () => {
 
         toggleSubscript(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('subscript', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('subscript', false, undefined);
     });
 
     it('setTextColor() triggers the applyInlineStyle method in editor', () => {

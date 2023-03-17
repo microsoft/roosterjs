@@ -12,7 +12,10 @@ export default function collapseSelectedBlocks(
     forEachCallback: (element: HTMLElement) => any
 ) {
     let traverser = editor.getSelectionTraverser();
-    let block = traverser && traverser.currentBlockElement;
+    if (!traverser) {
+        return;
+    }
+    let block = traverser.currentBlockElement;
     let blocks: BlockElement[] = [];
     while (block) {
         if (!isEmptyBlockUnderTR(block)) {

@@ -23,7 +23,7 @@ describe('toggleUnderline()', () => {
 
         toggleUnderline(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('underline', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('underline', false, undefined);
     });
 
     TestHelper.itFirefoxOnly(
