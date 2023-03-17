@@ -101,7 +101,7 @@ describe('setAlignment()', () => {
         setAlignment(editor, alignment);
 
         expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(document.execCommand).toHaveBeenCalledWith(command, false, null);
+        expect(document.execCommand).toHaveBeenCalledWith(command, false, undefined);
     }
 
     function runningTestInTable(alignment: Alignment, table: string) {

@@ -26,7 +26,7 @@ describe('clearFormat()', () => {
         clearFormat(editor);
 
         expect(editor.addUndoSnapshot).toHaveBeenCalled();
-        expect(document.execCommand).toHaveBeenCalledWith('removeFormat', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('removeFormat', false, undefined);
     });
 
     TestHelper.itFirefoxOnly('removes the existing formats', () => {
