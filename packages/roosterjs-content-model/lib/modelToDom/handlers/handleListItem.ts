@@ -15,7 +15,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    context.modelHandlers.list(doc, parent, listItem, context, refNode);
+    refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
     const { nodeStack } = context.listFormat;
 
@@ -41,4 +41,6 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
         unwrap(li);
     }
+
+    return refNode;
 };

@@ -235,7 +235,7 @@ describe('handleTable', () => {
 
         div.appendChild(br);
 
-        handleTable(
+        const result = handleTable(
             document,
             div,
             {
@@ -251,5 +251,6 @@ describe('handleTable', () => {
         );
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table><br>');
+        expect(result).toBe(br);
     });
 });

@@ -3,6 +3,7 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
 const QuoteTagName = 'blockquote';
@@ -17,7 +18,13 @@ export const handleQuote: ContentModelBlockHandler<ContentModelQuote> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    if (!isBlockGroupEmpty(quote)) {
+    let element = quote.cachedElement;
+
+    if (element) {
+        refNode = reuseCachedElement(parent, element, refNode);
+
+        context.modelHandlers.blockGroupChildren(doc, element, quote, context);
+    } else if (!isBlockGroupEmpty(quote)) {
         const blockQuote = doc.createElement(QuoteTagName);
 
         quote.cachedElement = blockQuote;
@@ -35,4 +42,6 @@ export const handleQuote: ContentModelBlockHandler<ContentModelQuote> = (
 
         context.modelHandlers.blockGroupChildren(doc, blockQuote, quote, context);
     }
+
+    return refNode;
 };

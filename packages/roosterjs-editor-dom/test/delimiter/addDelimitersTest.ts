@@ -1,7 +1,7 @@
 import addDelimiters from '../../lib/delimiter/addDelimiters';
 import { DelimiterClasses } from 'roosterjs-editor-types';
 
-describe('addDelimiterstest', () => {
+describe('addDelimitersTest', () => {
     afterAll(() => {
         document.body.childNodes.forEach(node => {
             document.body.removeChild(node);
@@ -12,7 +12,7 @@ describe('addDelimiterstest', () => {
         const element = document.createElement('span');
         document.body.append(element);
 
-        addDelimiters(element);
+        const [after, before] = addDelimiters(element);
 
         expect(element.nextElementSibling).toBeDefined();
         expect(element.nextElementSibling?.className).toEqual(DelimiterClasses.DELIMITER_AFTER);
@@ -20,6 +20,8 @@ describe('addDelimiterstest', () => {
         expect(element.previousElementSibling?.className).toEqual(
             DelimiterClasses.DELIMITER_BEFORE
         );
+        expect(after.outerHTML).toBe('<span class="entityDelimiterAfter">​</span>');
+        expect(before.outerHTML).toBe('<span class="entityDelimiterBefore">​</span>');
     });
 
     it('Add between other Entity with delimiters', () => {
