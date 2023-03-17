@@ -10,8 +10,8 @@ export default function blockFormat(
     editor: IEditor,
     callback: (
         region: Region,
-        start: NodePosition,
-        end: NodePosition,
+        start: NodePosition | null,
+        end: NodePosition | null,
         chains: VListChain[]
     ) => void,
     beforeRunCallback?: () => boolean,
@@ -31,7 +31,7 @@ export default function blockFormat(
                     commitListChains(editor, chains);
                 }
             }
-            if (selection.type == SelectionRangeTypes.Normal) {
+            if (selection.type == SelectionRangeTypes.Normal && start && end) {
                 editor.select(start, end);
             } else {
                 editor.select(selection);

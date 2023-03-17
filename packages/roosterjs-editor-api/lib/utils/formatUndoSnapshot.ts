@@ -11,15 +11,15 @@ import { ChangeSource, IEditor, NodePosition } from 'roosterjs-editor-types';
 export default function formatUndoSnapshot(
     editor: IEditor,
     callback?: (start: NodePosition | null, end: NodePosition | null) => any,
-    formatApiName?: string
+    apiName?: string
 ) {
     editor.addUndoSnapshot(
         callback,
         ChangeSource.Format,
         undefined /* canUndoByBackspace */,
-        formatApiName && formatApiName != ''
+        apiName && apiName != ''
             ? {
-                  formatApiName,
+                  formatApiName: apiName,
               }
             : undefined
     );

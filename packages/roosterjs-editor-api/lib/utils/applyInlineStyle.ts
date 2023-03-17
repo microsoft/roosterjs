@@ -54,6 +54,9 @@ export default function applyInlineStyle(
                 let lastNode: Node | undefined;
                 selection.ranges.forEach(range => {
                     let contentTraverser = editor.getSelectionTraverser(range);
+                    if (!contentTraverser) {
+                        return;
+                    }
                     let inlineElement = contentTraverser && contentTraverser.currentInlineElement;
                     while (inlineElement && contentTraverser) {
                         let nextInlineElement = contentTraverser.getNextInlineElement();

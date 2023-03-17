@@ -49,20 +49,20 @@ export default function toggleListType(
                 startNumber > 0 && chains.filter(chain => chain.canAppendAtCursor(startNumber))[0];
             const block = getBlockElementAtNode(
                 region.rootNode,
-                start.node
+                start?.node ?? null
             )?.collapseToSingleElement();
             if (!block) {
                 return;
             }
             const vList =
-                chain && start.equalTo(end)
+                chain && end && start?.equalTo(end)
                     ? chain.createVListAtBlock(block, startNumber)
                     : createVListFromRegion(
                           region,
                           startNumber === 1 ? false : includeSiblingLists
                       );
 
-            if (vList) {
+            if (vList && start && end) {
                 vList.changeListType(start, end, listType);
                 if (editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)) {
                     vList.setListStyleType(orderedStyle, unorderedStyle);
