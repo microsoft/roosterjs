@@ -133,11 +133,13 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
         if (li.previousSibling) {
             blockFormat(editor, (region, start, end) => {
                 const vList = createVListFromRegion(region, false /*includeSiblingList*/, li);
-                vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
-                vList.writeBack(
-                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
-                );
-                event.rawEvent.preventDefault();
+                if (vList) {
+                    vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
+                    vList.writeBack(
+                        editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                    );
+                    event.rawEvent.preventDefault();
+                }
             });
         } else {
             toggleListAndPreventDefault(event, editor);

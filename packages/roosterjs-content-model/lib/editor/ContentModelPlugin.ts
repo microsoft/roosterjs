@@ -1,7 +1,13 @@
 import applyPendingFormat from '../publicApi/format/applyPendingFormat';
-import { canApplyPendingFormat, clearPendingFormat } from '../modelApi/format/pendingFormat';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import getSegmentFormat from '../publicApi/format/getSegmentFormat';
+import handleDelete from '../publicApi/editing/handleDelete';
 import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    canApplyPendingFormat,
+    clearPendingFormat,
+    setPendingFormat,
+} from '../modelApi/format/pendingFormat';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -10,6 +16,12 @@ import { IContentModelEditor } from '../publicTypes/IContentModelEditor';
  */
 export default class ContentModelPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+
+    /**
+     * Construct a new instance of ContentModelPlugin
+     * @param handleKeyboardEditing A temporary parameter to allow handling keyboard editing event using this plugin
+     */
+    constructor(private handleKeyboardEditing?: boolean) {}
 
     /**
      * Get name of this plugin
@@ -63,13 +75,33 @@ export default class ContentModelPlugin implements EditorPlugin {
                 break;
 
             case PluginEventType.KeyDown:
+                this.editor.cacheContentModel(null);
+
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
+                } else if (this.handleKeyboardEditing && event.rawEvent.which == Keys.ENTER) {
+                    const format = getSegmentFormat(this.editor);
+                    const pos = this.editor.getFocusedPosition();
+
+                    if (format && pos) {
+                        setPendingFormat(this.editor, format, pos);
+                    }
+                } else if (
+                    this.handleKeyboardEditing &&
+                    (event.rawEvent.which == Keys.BACKSPACE || event.rawEvent.which == Keys.DELETE)
+                ) {
+                    handleDelete(
+                        this.editor,
+                        event.rawEvent.which == Keys.DELETE ? 'delete' : 'backspace'
+                    );
                 }
+
                 break;
 
             case PluginEventType.MouseUp:
             case PluginEventType.ContentChanged:
+                this.editor.cacheContentModel(null);
+
                 if (!canApplyPendingFormat(this.editor)) {
                     clearPendingFormat(this.editor);
                 }

@@ -1,3 +1,4 @@
+import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
@@ -39,27 +40,39 @@ export function clearModelFormat(
             }
         },
         {
-            includeListFormatHolder: 'anySegment',
+            // When there is a default format to apply, we know how to handle segment format under list.
+            // So no need to clear format of list number.
+            // Otherwise, we will clear all format of selected text. And since they are under LI tag, we
+            // also need to clear the format of LI (format holder) so that the format is really cleared
+            includeListFormatHolder: defaultSegmentFormat ? 'never' : 'anySegment',
         }
     );
 
-    // If a full block or multiple blocks are selected, clear block format first
+    const marker = segmentsToClear[0];
+
+    // 2. If selection is collapsed, add selection to whole word to clear if any
     if (
-        (blocksToClear.length == 1 && isOnlySelectionMarkerSelected(blocksToClear[0][1])) ||
-        blocksToClear.length > 1 ||
-        blocksToClear.some(x => isWholeBlockSelected(x[1]))
+        blocksToClear.length == 1 &&
+        isOnlySelectionMarkerSelected(blocksToClear[0][1]) &&
+        blocksToClear.length == 1
     ) {
+        segmentsToClear.splice(0, segmentsToClear.length, ...adjustWordSelection(model, marker));
+        clearListFormat(blocksToClear[0][0]);
+    } else if (blocksToClear.length > 1 || blocksToClear.some(x => isWholeBlockSelected(x[1]))) {
+        // 2. If a full block or multiple blocks are selected, clear block format
         for (let i = blocksToClear.length - 1; i >= 0; i--) {
             const [path, block] = blocksToClear[i];
 
-            clearBlockFormat(path, block, segmentsToClear);
+            clearBlockFormat(path, block);
             clearListFormat(path);
             clearQuoteFormat(path, block);
         }
     }
 
-    // Then clear segments format and table format if any
+    // 3. Finally clear format for segments
     clearSegmentsFormat(segmentsToClear, defaultSegmentFormat);
+
+    // 4. Clear format for table if any
     createTablesFormat(tablesToClear);
 }
 
@@ -84,7 +97,12 @@ function clearSegmentsFormat(
 ) {
     segmentsToClear.forEach(x => {
         x.format = { ...(defaultSegmentFormat || {}) };
-        delete x.link;
+
+        if (x.link) {
+            delete x.link.format.textColor;
+        }
+
+        delete x.code;
     });
 }
 
@@ -139,11 +157,7 @@ function clearListFormat(path: ContentModelBlockGroup[]) {
     }
 }
 
-function clearBlockFormat(
-    path: ContentModelBlockGroup[],
-    block: ContentModelBlock,
-    segmentsToClear: ContentModelSegment[]
-) {
+function clearBlockFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
     if (block.blockType == 'Divider') {
         const index = path[0].blocks.indexOf(block);
 
@@ -151,7 +165,6 @@ function clearBlockFormat(
             path[0].blocks.splice(index, 1);
         }
     } else if (block.blockType == 'Paragraph') {
-        arrayPush(segmentsToClear, block.segments);
         block.format = {};
         delete block.decorator;
     }

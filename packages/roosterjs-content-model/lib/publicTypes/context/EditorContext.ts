@@ -20,4 +20,9 @@ export interface EditorContext {
      * Dark model color handler
      */
     darkColorHandler?: DarkColorHandler | null;
+
+    /**
+     * Whether to handle delimiters in Content Model
+     */
+    addDelimiterForEntity?: boolean;
 }

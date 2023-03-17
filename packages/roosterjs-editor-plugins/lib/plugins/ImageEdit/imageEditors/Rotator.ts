@@ -1,9 +1,9 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import ImageEditInfo, { RotateInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
+import { RotateInfo } from '../types/ImageEditInfo';
 
 const ROTATE_SIZE = 32;
 const ROTATE_GAP = 15;
@@ -23,7 +23,7 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
         const newY = distance * Math.cos(base.angleRad) - deltaY;
         let angleInRad = Math.atan2(newX, newY);
 
-        if (!e.altKey) {
+        if (!e.altKey && options && options.minRotateDeg !== undefined) {
             const angleInDeg = angleInRad * DEG_PER_RAD;
             const adjustedAngleInDeg =
                 Math.round(angleInDeg / options.minRotateDeg) * options.minRotateDeg;
@@ -45,21 +45,27 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
  * Fix it by reduce the distance from image to rotate handle
  */
 export function updateRotateHandlePosition(
-    editInfo: ImageEditInfo,
     editorRect: Rect,
-    marginVertical: number,
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement
 ) {
     const rotateHandleRect = rotateHandle.getBoundingClientRect();
+
     if (rotateHandleRect) {
-        const top = rotateHandleRect.top - editorRect?.top;
-        const { angleRad, heightPx } = editInfo;
-        const cosAngle = Math.cos(angleRad);
-        const adjustedDistance =
-            cosAngle <= 0
-                ? Number.MAX_SAFE_INTEGER
-                : (top + heightPx / 2 + marginVertical) / cosAngle - heightPx / 2;
+        const top = rotateHandleRect.top - editorRect.top;
+        const left = rotateHandleRect.left - editorRect.left;
+        const right = rotateHandleRect.right - editorRect.right;
+        const bottom = rotateHandleRect.bottom - editorRect.bottom;
+        let adjustedDistance = Number.MAX_SAFE_INTEGER;
+        if (top <= 0) {
+            adjustedDistance = top;
+        } else if (left <= 0) {
+            adjustedDistance = left;
+        } else if (right >= 0) {
+            adjustedDistance = right;
+        } else if (bottom >= 0) {
+            adjustedDistance = bottom;
+        }
 
         const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
         const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);

@@ -42,3 +42,4 @@ export { default as adjustLinkSelection } from './link/adjustLinkSelection';
 export { default as setImageAltText } from './image/setImageAltText';
 export { default as adjustImageSelection } from './image/adjustImageSelection';
 export { default as setParagraphMargin } from './block/setParagraphMargin';
+export { default as toggleCode } from './segment/toggleCode';

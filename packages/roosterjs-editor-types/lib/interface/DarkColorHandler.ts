@@ -1,3 +1,5 @@
+import ModeIndependentColor from './ModeIndependentColor';
+
 /**
  * Represents a combination of color key, light color and dark color, parsed from existing color value
  */
@@ -40,6 +42,19 @@ export default interface DarkColorHandler {
      * Parse an existing color value, if it is in variable-based color format, extract color key,
      * light color and query related dark color if any
      * @param color The color string to parse
+     * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
+     * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
-    parseColorValue(color: string | null | undefined): ColorKeyAndValue;
+    parseColorValue(color: string | null | undefined, isInDarkMode?: boolean): ColorKeyAndValue;
+
+    /**
+     * Get a copy of known colors
+     */
+    getKnownColorsCopy(): Readonly<ModeIndependentColor>[];
+
+    /**
+     * Find related light mode color from dark mode color.
+     * @param darkColor The existing dark color
+     */
+    findLightColorFromDarkColor(darkColor: string): string | null;
 }

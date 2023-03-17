@@ -36,8 +36,6 @@ function insertImageWithSrc(editor: IEditor, src: string, attributes?: Record<st
                     image.setAttribute(attribute, attributes[attribute])
                 );
             }
-
-            image.style.maxWidth = '100%';
             editor.insertNode(image);
         },
         'insertImage'

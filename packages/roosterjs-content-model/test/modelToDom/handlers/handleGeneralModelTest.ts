@@ -41,7 +41,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context);
+        handleGeneralModel(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><span></span></div>');
         expect(typeof parent.firstChild).toBe('object');
@@ -66,7 +66,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context);
+        handleGeneralModel(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -93,7 +93,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context);
+        handleGeneralModel(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><span></span></div>');
         expect(context.regularSelection.current.segment).toBeNull();
@@ -128,7 +128,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context);
+        handleGeneralModel(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><a href="/test"><span></span></a></div>');
         expect(context.regularSelection.current.segment).toBeNull();
@@ -162,9 +162,37 @@ describe('handleBlockGroup', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context);
+        handleGeneralModel(document, parent, group, context, null);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
+    });
+
+    it('General block with refNode', () => {
+        const clonedChild = document.createElement('span');
+        const childMock = ({
+            cloneNode: () => clonedChild,
+        } as any) as HTMLElement;
+        const group = createGeneralBlock(childMock);
+
+        spyOn(applyFormat, 'applyFormat');
+
+        const br = document.createElement('br');
+        parent.appendChild(br);
+
+        handleGeneralModel(document, parent, group, context, br);
+
+        expect(parent.outerHTML).toBe('<div><span></span><br></div>');
+        expect(typeof parent.firstChild).toBe('object');
+        expect(parent.firstChild).toBe(clonedChild);
+        expect(context.listFormat.nodeStack).toEqual([]);
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            clonedChild,
+            group,
+            context
+        );
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
     });
 });

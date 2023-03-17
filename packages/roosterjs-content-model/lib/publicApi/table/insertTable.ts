@@ -2,7 +2,9 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
+import { deleteSelection } from '../../modelApi/selection/deleteSelections';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
@@ -25,21 +27,29 @@ export default function insertTable(
     format?: TableMetadataFormat
 ) {
     formatWithContentModel(editor, 'insertTable', model => {
-        const doc = createContentModelDocument();
-        const table = createTableStructure(doc, columns, rows);
+        const insertPosition = deleteSelection(model);
 
-        normalizeTable(table);
-        applyTableFormat(table, format);
-        mergeModel(model, doc);
+        if (insertPosition) {
+            const doc = createContentModelDocument();
+            const table = createTableStructure(doc, columns, rows);
 
-        const firstBlock = table.cells[0]?.[0]?.blocks[0];
+            normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
+            applyTableFormat(table, format);
+            mergeModel(model, doc, {
+                insertPosition,
+            });
 
-        if (firstBlock?.blockType == 'Paragraph') {
-            const marker = createSelectionMarker(firstBlock.segments[0]?.format);
-            firstBlock.segments.unshift(marker);
-            setSelection(model, marker);
+            const firstBlock = table.cells[0]?.[0]?.blocks[0];
+
+            if (firstBlock?.blockType == 'Paragraph') {
+                const marker = createSelectionMarker(firstBlock.segments[0]?.format);
+                firstBlock.segments.unshift(marker);
+                setSelection(model, marker);
+            }
+
+            return true;
+        } else {
+            return false;
         }
-
-        return true;
     });
 }

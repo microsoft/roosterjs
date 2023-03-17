@@ -153,6 +153,37 @@ describe('listItemThreadFormatHandler.parse', () => {
             ],
         });
     });
+
+    it('LI under OL with display: block', () => {
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+
+        ol.appendChild(li);
+        li.style.display = 'block';
+        context.listFormat.levels = [
+            {},
+            {
+                listType: 'OL',
+            },
+        ];
+        context.listFormat.threadItemCounts = [1];
+
+        listItemThreadFormatHandler.parse(format, li, context, {});
+
+        expect(format).toEqual({
+            displayForDummyItem: 'block',
+        });
+
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1],
+            levels: [
+                {},
+                {
+                    listType: 'OL',
+                },
+            ],
+        });
+    });
 });
 
 describe('listItemThreadFormatHandler.parse', () => {
@@ -317,6 +348,34 @@ describe('listItemThreadFormatHandler.parse', () => {
                 {
                     node: {} as Node,
                 },
+                {
+                    node: {} as Node,
+                },
+            ],
+        });
+    });
+
+    it('LI under OL with display: block', () => {
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+
+        ol.appendChild(li);
+
+        context.listFormat.nodeStack = [
+            {
+                node: {} as Node,
+            },
+        ];
+
+        context.listFormat.threadItemCounts = [1];
+        format.displayForDummyItem = 'block';
+
+        listItemThreadFormatHandler.apply(format, li, context);
+
+        expect(li.outerHTML).toBe('<li style="display: block;"></li>');
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1],
+            nodeStack: [
                 {
                     node: {} as Node,
                 },

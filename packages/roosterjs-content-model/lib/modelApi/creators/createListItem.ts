@@ -8,7 +8,8 @@ import { createSelectionMarker } from './createSelectionMarker';
  */
 export function createListItem(
     levels: ContentModelListItemLevelFormat[],
-    format?: ContentModelSegmentFormat
+    format?: ContentModelSegmentFormat,
+    li?: HTMLLIElement
 ): ContentModelListItem {
     return {
         blockType: 'BlockGroup',
@@ -16,6 +17,10 @@ export function createListItem(
         blocks: [],
         levels: levels ? levels.map(level => ({ ...level })) : [],
         formatHolder: createSelectionMarker(format),
-        format: {},
+        format: li?.style.alignSelf
+            ? {
+                  textAlign: li.style.alignSelf as 'start' | 'end' | 'center',
+              }
+            : {},
     };
 }

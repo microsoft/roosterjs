@@ -1,4 +1,5 @@
 import { DarkColorHandler, DarkModeDatasetNames } from 'roosterjs-editor-types';
+import { getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -26,6 +27,8 @@ export function getColor(
 
     if (!color) {
         color =
+            (darkColorHandler &&
+                tryGetFontColor(element, isDarkMode, darkColorHandler, isBackground)) ||
             (isBackground ? element.style.backgroundColor : element.style.color) ||
             element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
             undefined;
@@ -72,4 +75,27 @@ export function setColor(
     } else {
         element.style.color = effectiveColor;
     }
+}
+
+/**
+ * There is a known issue that when input with IME in Chrome, it is possible Chrome insert a new FONT tag with colors.
+ * If editor is in dark mode, this color will cause the FONT tag doesn't have light mode color info so that after convert
+ * to light mode the color will be wrong.
+ * To workaround it, we check if this is a known color (for light mode with VariableBasedDarkColor enabled, all used colors
+ * are stored in darkColorHandler), then use the related light mode color instead.
+ */
+function tryGetFontColor(
+    element: HTMLElement,
+    isDarkMode: boolean,
+    darkColorHandler: DarkColorHandler,
+    isBackground: boolean
+) {
+    let darkColor: string | null;
+
+    return getTagOfNode(element) == 'FONT' &&
+        !element.style.getPropertyValue(isBackground ? 'background-color' : 'color') &&
+        isDarkMode &&
+        (darkColor = element.getAttribute(isBackground ? 'bgcolor' : 'color'))
+        ? darkColorHandler.findLightColorFromDarkColor(darkColor)
+        : null;
 }

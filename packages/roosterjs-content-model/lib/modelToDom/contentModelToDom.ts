@@ -17,6 +17,9 @@ import {
 /**
  * Create DOM tree fragment from Content Model document
  * @param doc Document object of the target DOM tree
+ * @param root Target node that will become the container of new DOM tree.
+ * When a DOM node with existing node is passed, it will be merged with content model so that unchanged blocks
+ * won't be touched.
  * @param model The content model document to generate DOM tree from
  * @param editorContext Content for Content Model editor
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -27,21 +30,22 @@ import {
  */
 export default function contentModelToDom(
     doc: Document,
+    root: Node,
     model: ContentModelDocument,
     editorContext: EditorContext,
     option?: ModelToDomOption
-): [DocumentFragment, SelectionRangeEx | null, Record<string, HTMLElement>] {
-    const fragment = doc.createDocumentFragment();
+): SelectionRangeEx | null {
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
-    modelToDomContext.modelHandlers.blockGroup(doc, fragment, model, modelToDomContext);
-    optimize(fragment, 2 /*optimizeLevel*/);
+    modelToDomContext.modelHandlers.blockGroupChildren(doc, root, model, modelToDomContext);
+
+    optimize(root, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);
 
-    fragment.normalize();
+    root.normalize();
 
-    return [fragment, range, modelToDomContext.entities];
+    return range;
 }
 
 function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {

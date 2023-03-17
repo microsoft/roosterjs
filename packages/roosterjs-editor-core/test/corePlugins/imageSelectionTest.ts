@@ -11,6 +11,7 @@ export * from 'roosterjs-editor-dom/test/DomTestHelper';
 
 const Escape = 'Escape';
 const Space = ' ';
+const Delete = 'Delete';
 
 describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
@@ -110,6 +111,19 @@ describe('ImageSelectionPlugin |', () => {
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(true);
+    });
+
+    it('should handle a DELETE KEY in a image', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Delete));
+        imageSelection.onPluginEvent(keyUp(Delete));
+        expect(editor.getContent()).toBe('');
     });
 
     it('should handle any key in a image', () => {

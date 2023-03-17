@@ -320,4 +320,56 @@ describe('setFontName', () => {
             1
         );
     });
+
+    it('With code', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontFamily: 'Tahoma' },
+                                isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    fontFamily: 'Arial',
+                                },
+                                isSelected: true,
+                                code: {
+                                    format: {
+                                        fontFamily: 'Arial',
+                                    },
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
 });

@@ -62,6 +62,16 @@ export interface EntityFeatureSettings {
      * press DELETE right after an entity
      */
     deleteBeforeEntity: boolean;
+
+    /**
+     * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
+     */
+    moveBetweenDelimitersFeature: boolean;
+
+    /**
+     * Content edit Feature to trigger a Delete Entity Operation when one of the Delimiter is about to be removed with DELETE or Backspace
+     */
+    removeEntityBetweenDelimiters: boolean;
 }
 
 /**
@@ -222,6 +232,12 @@ export interface TableFeatureSettings {
      * IndentTableOnTab edit feature, provides the ability to indent the table if it is all cells are selected.
      */
     indentTableOnTab: boolean;
+
+    /**
+     * Requires @see ExperimentalFeatures.DeleteTableWithBackspace
+     * Delete a table selected with the table selector pressing  Backspace key
+     */
+    deleteTableWithBackspace: boolean;
 }
 
 /**

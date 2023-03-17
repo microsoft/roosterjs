@@ -1,4 +1,5 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
+import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelDividerFormat } from '../format/ContentModelDividerFormat';
 import { Selectable } from '../selection/Selectable';
 
@@ -7,7 +8,8 @@ import { Selectable } from '../selection/Selectable';
  */
 export interface ContentModelDivider
     extends ContentModelBlockBase<'Divider', ContentModelDividerFormat>,
-        Selectable {
+        Selectable,
+        ContentModelBlockWithCache {
     /**
      * Tag name of this element, either HR or DIV
      */

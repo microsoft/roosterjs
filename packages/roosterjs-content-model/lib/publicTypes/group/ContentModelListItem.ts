@@ -1,5 +1,6 @@
 import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
@@ -8,7 +9,7 @@ import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMar
  */
 export interface ContentModelListItem
     extends ContentModelBlockGroupBase<'ListItem'>,
-        ContentModelBlockBase<'BlockGroup'> {
+        ContentModelBlockBase<'BlockGroup', ContentModelListItemFormat> {
     /**
      * Type of this list, either ordered or unordered
      */

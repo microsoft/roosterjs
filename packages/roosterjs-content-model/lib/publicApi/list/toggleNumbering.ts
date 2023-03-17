@@ -9,5 +9,7 @@ import { setListType } from '../../modelApi/list/setListType';
  * @param editor The editor to operate on
  */
 export default function toggleNumbering(editor: IContentModelEditor) {
-    formatWithContentModel(editor, 'toggleNumbering', model => setListType(model, 'OL'));
+    formatWithContentModel(editor, 'toggleNumbering', model => setListType(model, 'OL'), {
+        preservePendingFormat: true,
+    });
 }
