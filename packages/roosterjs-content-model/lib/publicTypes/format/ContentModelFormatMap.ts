@@ -50,9 +50,14 @@ export interface ContentModelFormatMap {
     tableCell: ContentModelTableCellFormat;
 
     /**
+     * Format type for li element
+     */
+    listItemElement: ContentModelListItemFormat;
+
+    /**
      * Format type for listItem
      */
-    listItem: ContentModelListItemFormat;
+    listItem: ContentModelListItemLevelFormat;
 
     /**
      * Format type for listLevel

@@ -2,7 +2,6 @@ import { alignTable } from '../table/alignTable';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { getOperationalBlocks } from '../selection/collectSelections';
-import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { TableOperation } from 'roosterjs-editor-types';
 
 const ResultMap: Record<
@@ -59,9 +58,7 @@ export function setModelAlignment(
 
     paragraphOrListItemOrTable.forEach(({ block }) => {
         const newAligment = ResultMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-        if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
-            block.format.textAlign = newAligment;
-        } else if (block.blockType === 'Table') {
+        if (block.blockType === 'Table') {
             alignTable(
                 block,
                 TableAlignMap[alignment][block.format.direction == 'rtl' ? 'rtl' : 'ltr']

@@ -54,8 +54,6 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 listType: 'UL',
                                 marginBottom: '0in',
-                                marginRight: '0in',
-                                marginLeft: '0in',
                             },
                         ],
                         format: {},
@@ -94,8 +92,6 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 listType: 'UL',
                                 marginBottom: '0in',
-                                marginRight: '0in',
-                                marginLeft: '0in',
                             },
                         ],
                         format: {},
@@ -111,11 +107,11 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="flex-direction: column; display: flex; margin-right: 0in; margin-bottom: 0in; margin-left: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-bottom: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black; margin-right: 0in; margin-bottom: 0in; margin-left: 0in;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="flex-direction: column; display: flex; margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
 
-    xit('list with dummy item', () => {
+    it('list with dummy item', () => {
         runTest(
             '<ol><li>1</li><ol><li>a</li></ol><li style="display:block">b</li><li>2</li></ol>',
             {
@@ -170,7 +166,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', displayForDummyItem: 'block' }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,

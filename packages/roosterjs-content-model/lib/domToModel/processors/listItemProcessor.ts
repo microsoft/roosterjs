@@ -23,14 +23,23 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                     context
                 );
 
-                const listItem = createListItem(listFormat.levels, context.segmentFormat, element);
-                parseFormat(element, context.formatParsers.listItem, listItem.format, context);
+                const listItem = createListItem(
+                    listFormat.levels,
+                    context.segmentFormat,
+                    element.style.alignSelf
+                );
+                parseFormat(
+                    element,
+                    context.formatParsers.listItemElement,
+                    listItem.format,
+                    context
+                );
 
                 listFormat.listParent!.blocks.push(listItem);
 
                 parseFormat(
                     element,
-                    context.formatParsers.listLevel,
+                    context.formatParsers.listItem,
                     listItem.levels[listItem.levels.length - 1],
                     context
                 );
