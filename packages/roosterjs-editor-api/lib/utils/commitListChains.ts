@@ -15,7 +15,9 @@ export default function commitListChains(editor: IEditor, chains: VListChain[]) 
             ExperimentalFeatures.ReuseAllAncestorListElements
         );
         chains.forEach(chain => chain.commit(shouldReuseAllAncestorListElements));
-        editor.select(start, end);
+        if (start && end) {
+            editor.select(start, end);
+        }
     }
 }
 
