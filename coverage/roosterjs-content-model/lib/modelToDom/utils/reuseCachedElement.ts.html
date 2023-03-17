@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/ImageResize/ImageResize.ts</title>
+    <title>Code coverage report for roosterjs-content-model/lib/modelToDom/utils/reuseCachedElement.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/ImageResize</a> ImageResize.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/modelToDom/utils</a> reuseCachedElement.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">42.86% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>6/14</span>
+                <span class='fraction'>15/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">73.68% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/12</span>
+                <span class='fraction'>14/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">25% </span>
+                <span class="strong">66.67% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>1/4</span>
+                <span class='fraction'>2/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">38.46% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/13</span>
+                <span class='fraction'>15/18</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -101,38 +101,35 @@
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L45'></a><a href='#L45'>45</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -140,60 +137,57 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ImageEdit from '../ImageEdit/ImageEdit';
-import { ImageEditOperation } from 'roosterjs-editor-types';
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { getEntityFromElement } from 'roosterjs-editor-dom';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
+import { NodeType } from 'roosterjs-editor-types';
 &nbsp;
 /**
- * @deprecated Use ImageEdit plugin instead
+ * @internal
  */
-export default class ImageResize extends ImageEdit {
-    /**
-     * Create a new instance of ImageResize
-     * @param minWidth Minimum width of image when resize in pixel, default value is 10
-     * @param minHeight Minimum height of image when resize in pixel, default value is 10
-     * @param selectionBorderColor Color of resize border and handles, default value is #DB626C
-     * @param forcePreserveRatio Whether always preserve width/height ratio when resize, default value is false
-     * @param resizableImageSelector Selector for picking which image is resizable (e.g. for all images not placeholders), note
-     * that the tag must be IMG regardless what the selector is
-     */
-<span class="fstat-no" title="function not covered" >    constructor(</span>
-<span class="cstat-no" title="statement not covered" >        minWidth: number = 10,</span>
-<span class="cstat-no" title="statement not covered" >        minHeight: number = 10,</span>
-<span class="cstat-no" title="statement not covered" >        selectionBorderColor: string = '#DB626C',</span>
-<span class="cstat-no" title="statement not covered" >        forcePreserveRatio: boolean = false,</span>
-<span class="cstat-no" title="statement not covered" >        resizableImageSelector: string = 'img'</span>
-    ) {
-<span class="cstat-no" title="statement not covered" >        super({</span>
-            minHeight,
-            minWidth,
-            borderColor: selectionBorderColor,
-            preserveRatio: forcePreserveRatio,
-            imageSelector: resizableImageSelector,
-        });
+export function reuseCachedElement(parent: Node, element: Node, refNode: Node | null): Node | null {
+    if (element.parentNode == parent) {
+        // Remove nodes before the one we are hitting since they don't appear in Content Model at this position.
+        // But we don't want to touch entity since it would better to keep entity at its place unless it is removed
+        // In that case we will remove it after we have handled all other nodes
+        while (refNode &amp;&amp; refNode != element &amp;&amp; !isEntity(refNode)) {
+            const next = refNode.nextSibling;
+&nbsp;
+            refNode.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.r</span>emoveChild(refNode);
+            refNode = next;
+        }
+&nbsp;
+        if (refNode &amp;&amp; refNode == element) {
+            refNode = refNode.nextSibling;
+        } else {
+            parent.insertBefore(element, refNode);
+        }
+    } else {
+        parent.insertBefore(element, refNode);
     }
 &nbsp;
-    /**
-     * @deprecated
-     */
-<span class="fstat-no" title="function not covered" >    showResizeHandle(</span>img: HTMLImageElement) {
-<span class="cstat-no" title="statement not covered" >        this.setEditingImage(img, ImageEditOperation.Resize);</span>
-    }
+    return refNode;
+}
 &nbsp;
-    /**
-     * @deprecated
-     */
-<span class="fstat-no" title="function not covered" >    hideResizeHandle(</span>selectImageAfterUnSelect?: boolean) {
-<span class="cstat-no" title="statement not covered" >        this.setEditingImage(null /*image*/, selectImageAfterUnSelect);</span>
-    }
+/**
+ * @internal
+ */
+export function <span class="fstat-no" title="function not covered" >removeNode(</span>node: Node): Node | null {
+    const next = <span class="cstat-no" title="statement not covered" >node.nextSibling;</span>
+<span class="cstat-no" title="statement not covered" >    node.parentNode?.removeChild(node);</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    return next;</span>
+}
+&nbsp;
+function isEntity(node: Node) {
+    return isNodeOfType(node, NodeType.Element) &amp;&amp; !!getEntityFromElement(node);
 }
 &nbsp;</pre></td></tr></table></pre>
 
