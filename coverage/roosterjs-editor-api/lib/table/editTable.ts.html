@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">94.74% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>36/38</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">65% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>9/10</span>
+                <span class='fraction'>13/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>5/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.77% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/31</span>
+                <span class='fraction'>34/36</span>
             </div>
         
             
@@ -131,7 +131,14 @@
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,6 +166,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -167,6 +179,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -232,15 +246,22 @@ export default function editTable(
                 editor.transformToDarkColor(vtable.table);
 &nbsp;
                 editor.focus();
-                let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
-                editor.select(
-                    vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
-                    PositionType.Begin
-                );
+                <span class="missing-if-branch" title="if path not taken" >I</span>if (isUndefined(vtable.row) || isUndefined(vtable.col)) {
+<span class="cstat-no" title="statement not covered" >                    return;</span>
+                }
+                let { newCol, newRow } = calculateCellToSelect(operation, vtable.row, vtable.col);
+                const newTd = vtable.getCell(newRow, newCol).td;
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (newTd) {
+                    editor.select(newTd, PositionType.Begin);
+                }
             },
             'editTable'
         );
     }
+}
+&nbsp;
+function isUndefined(n: number | undefined): n is undefined {
+    return n == undefined;
 }
 &nbsp;
 function calculateCellToSelect(
@@ -276,7 +297,7 @@ function calculateCellToSelect(
 function saveTableSelection(editor: IEditor, vtable: VTable) {
     const selection = editor.getSelectionRangeEx();
     <span class="missing-if-branch" title="if path not taken" >I</span>if (selection &amp;&amp; selection.type === SelectionRangeTypes.TableSelection) {
-<span class="cstat-no" title="statement not covered" >        vtable.selection = selection.coordinates;</span>
+<span class="cstat-no" title="statement not covered" >        vtable.selection = selection.coordinates ?? null;</span>
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -286,7 +307,7 @@ function saveTableSelection(editor: IEditor, vtable: VTable) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Mar 17 2023 16:05:32 GMT+0000 (Coordinated Universal Time)
+                at Fri Mar 17 2023 18:18:16 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
