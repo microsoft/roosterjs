@@ -9,7 +9,7 @@ describe('handleEntity', () => {
 
     beforeEach(() => {
         context = createModelToDomContext();
-        spyOn(addDelimiters, 'default').and.callFake(() => []);
+        spyOn(addDelimiters, 'default').and.callThrough();
     });
 
     it('Simple block entity', () => {
@@ -76,7 +76,7 @@ describe('handleEntity', () => {
         handleEntity(document, parent, entityModel, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
+            '<span class="entityDelimiterBefore">​</span><span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span><span class="entityDelimiterAfter">​</span>'
         );
         expect(span.outerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span>'
@@ -102,7 +102,7 @@ describe('handleEntity', () => {
         const br = document.createElement('br');
         parent.appendChild(br);
 
-        handleEntity(document, parent, entityModel, context, br);
+        const result = handleEntity(document, parent, entityModel, context, br);
 
         expect(parent.innerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</div><br>'
@@ -110,5 +110,66 @@ describe('handleEntity', () => {
         expect(div.outerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</div>'
         );
+        expect(result).toBe(br);
+    });
+
+    it('Entity is already there', () => {
+        const br = document.createElement('br');
+        const insertBefore = jasmine.createSpy('insertBefore');
+        const parent = ({
+            insertBefore,
+        } as any) as HTMLElement;
+        const entityDiv = ({
+            nextSibling: br,
+            parentNode: parent,
+        } as any) as HTMLElement;
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id: 'entity_1',
+            type: 'entity',
+            isReadonly: true,
+            wrapper: entityDiv,
+        };
+
+        entityDiv.textContent = 'test';
+
+        const result = handleEntity(document, parent, entityModel, context, entityDiv);
+
+        expect(insertBefore).not.toHaveBeenCalled();
+        expect(result).toBe(br);
+    });
+
+    it('Entity with delimiter', () => {
+        const span = document.createElement('span');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id: 'entity_1',
+            type: 'entity',
+            isReadonly: true,
+            wrapper: span,
+        };
+
+        span.textContent = 'test';
+
+        const parent = document.createElement('div');
+        const br = document.createElement('br');
+        parent.appendChild(br);
+
+        context.addDelimiterForEntity = true;
+
+        const result = handleEntity(document, parent, entityModel, context, br);
+
+        expect(parent.innerHTML).toBe(
+            '<span class="entityDelimiterBefore">​</span><span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span><span class="entityDelimiterAfter">​</span><br>'
+        );
+        expect(span.outerHTML).toBe(
+            '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span>'
+        );
+        expect(result).toBe(br);
+        expect(context.regularSelection.current.segment).toBe(span.nextSibling);
     });
 });

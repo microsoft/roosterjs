@@ -59,12 +59,12 @@ function insertDelimiter(element: Element, delimiterClass: DelimiterClasses) {
             children: [ZERO_WIDTH_SPACE],
         },
         element.ownerDocument
-    );
+    ) as HTMLElement;
     if (span) {
         const insertPosition: InsertPosition =
             delimiterClass == DelimiterClasses.DELIMITER_AFTER ? 'afterend' : 'beforebegin';
         element.insertAdjacentElement(insertPosition, span);
     }
 
-    return element;
+    return span;
 }

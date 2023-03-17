@@ -382,12 +382,13 @@ describe('handleParagraph', () => {
         };
         const br = document.createElement('br');
 
-        parent.appendChild(br);
+        const result = parent.appendChild(br);
 
         handleParagraph(document, parent, paragraph, context, br);
 
         expect(parent.innerHTML).toBe('<div></div><br>');
         expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
     });
 
     it('Handle paragraph with PRE', () => {

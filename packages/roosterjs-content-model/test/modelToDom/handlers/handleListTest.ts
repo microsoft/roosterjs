@@ -829,7 +829,7 @@ describe('handleList handles metadata', () => {
         parent.appendChild(existingOL);
         parent.appendChild(br);
 
-        handleList(document, parent, listItem, context, br);
+        const result = handleList(document, parent, listItem, context, br);
 
         const possibleResults = [
             '<div><ol><ol start="1" style="flex-direction: column; display: flex;"></ol></ol><br></div>', //Chrome
@@ -853,5 +853,6 @@ describe('handleList handles metadata', () => {
                 },
             ],
         });
+        expect(result).toBe(br);
     });
 });

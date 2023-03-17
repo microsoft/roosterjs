@@ -4,6 +4,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { CreateElementData } from 'roosterjs-editor-types';
 import { getObjectKeys, unwrap, wrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
 const DefaultParagraphTag = 'div';
@@ -22,51 +23,59 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    stackFormat(context, paragraph.decorator?.tagName || null, () => {
-        const needParagraphWrapper =
-            !paragraph.isImplicit ||
-            !!paragraph.decorator ||
-            (getObjectKeys(paragraph.format).length > 0 &&
-                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
+    const element = paragraph.cachedElement;
 
-        let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+    if (element) {
+        refNode = reuseCachedElement(parent, element, refNode);
+    } else {
+        stackFormat(context, paragraph.decorator?.tagName || null, () => {
+            const needParagraphWrapper =
+                !paragraph.isImplicit ||
+                !!paragraph.decorator ||
+                (getObjectKeys(paragraph.format).length > 0 &&
+                    paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
 
-        parent.insertBefore(container, refNode);
+            let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
-        if (needParagraphWrapper) {
-            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-        }
+            parent.insertBefore(container, refNode);
 
-        if (paragraph.decorator) {
-            applyFormat(
-                container,
-                context.formatAppliers.segmentOnBlock,
-                paragraph.decorator.format,
-                context
-            );
-        }
+            if (needParagraphWrapper) {
+                applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+            }
 
-        let pre: HTMLElement | undefined;
+            if (paragraph.decorator) {
+                applyFormat(
+                    container,
+                    context.formatAppliers.segmentOnBlock,
+                    paragraph.decorator.format,
+                    context
+                );
+            }
 
-        // Need some special handling for PRE tag in order to cache the correct element.
-        // TODO: Consider use decorator to handle PRE tag
-        if (paragraph.format.whiteSpace == 'pre') {
-            pre = wrap(container, Pre);
-        }
+            let pre: HTMLElement | undefined;
 
-        context.regularSelection.current = {
-            block: needParagraphWrapper ? container : container.parentNode,
-            segment: null,
-        };
+            // Need some special handling for PRE tag in order to cache the correct element.
+            // TODO: Consider use decorator to handle PRE tag
+            if (paragraph.format.whiteSpace == 'pre') {
+                pre = wrap(container, Pre);
+            }
 
-        paragraph.segments.forEach(segment => {
-            context.modelHandlers.segment(doc, container, segment, context);
+            context.regularSelection.current = {
+                block: needParagraphWrapper ? container : container.parentNode,
+                segment: null,
+            };
+
+            paragraph.segments.forEach(segment => {
+                context.modelHandlers.segment(doc, container, segment, context);
+            });
+
+            if (needParagraphWrapper) {
+                paragraph.cachedElement = pre || container;
+            } else {
+                unwrap(container);
+            }
         });
+    }
 
-        if (needParagraphWrapper) {
-            paragraph.cachedElement = pre || container;
-        } else {
-            unwrap(container);
-        }
-    });
+    return refNode;
 };
