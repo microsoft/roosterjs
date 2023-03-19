@@ -1,6 +1,7 @@
 import { createRange, queryElements } from 'roosterjs-editor-dom';
 import { setHtmlWithMetadata } from 'roosterjs-editor-dom';
 import {
+    BeforeSetContentEvent,
     ChangeSource,
     ColorTransformDirection,
     ContentMetadata,
@@ -26,14 +27,12 @@ export const setContent: SetContent = (
 ) => {
     let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.BeforeSetContent,
-                newContent: content,
-            },
-            true /*broadcast*/
-        );
+        const event: BeforeSetContentEvent = {
+            eventType: PluginEventType.BeforeSetContent,
+            newContent: content,
+        };
+        core.api.triggerEvent(core, event, true /*broadcast*/);
+        content = event.newContent;
 
         const metadataFromContent = setHtmlWithMetadata(
             core.contentDiv,
