@@ -88,7 +88,29 @@ export default class HyperLink implements EditorPlugin {
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
+    private newInitialContent: string = '';
     public onPluginEvent(event: PluginEvent): void {
+        if (event.eventType === PluginEventType.BeforeSetContent) {
+            const regex = /(?<!<a\s+(?:[^>]*?\s+)?href=(?:'|"))(?:(?:https?|ftp|file):\/\/|www\.)(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[-A-Z0-9+&@#\/%=~_|$?!:,.])*(?:\([-A-Z0-9+&@#\/%=~_|$?!:,.]*\)|[A-Z0-9+&@#\/%=~_|$])(?!<\/a>)/gi;
+            const result = event.newContent.match(regex);
+            const newContent = event.newContent;
+            result?.forEach(value => {
+                event.newContent = event.newContent.replace(
+                    value,
+                    `<a href="${value}">${value}</a>`
+                );
+            });
+
+            if (newContent != event.newContent) {
+                this.newInitialContent = event.newContent;
+            }
+        }
+
+        if (event.eventType === PluginEventType.EditorReady) {
+            if (this.newInitialContent !== '') {
+                this.editor?.setContent(this.newInitialContent, false);
+            }
+        }
         if (
             event.eventType == PluginEventType.MouseUp ||
             (event.eventType == PluginEventType.KeyUp &&

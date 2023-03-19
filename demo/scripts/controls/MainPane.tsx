@@ -132,7 +132,7 @@ class MainPane extends MainPaneBase {
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
-    private content: string = '';
+    private content = ' http://life.com and https://fb.com and www.bing.com some links';
 
     private sidePane = React.createRef<SidePane>();
 
@@ -295,7 +295,6 @@ class MainPane extends MainPaneBase {
         this.resetEditor();
         window.location.hash = '';
     };
-
     private onUpdate = (content: string) => {
         this.content = content;
     };
