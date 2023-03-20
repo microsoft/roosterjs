@@ -541,7 +541,7 @@ describe('clearModelFormat', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            defaultFormat: {
+            format: {
                 fontSize: '10px',
             },
             blocks: [

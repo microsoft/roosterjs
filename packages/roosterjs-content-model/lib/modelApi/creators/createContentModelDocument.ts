@@ -13,7 +13,7 @@ export function createContentModelDocument(
     };
 
     if (defaultFormat) {
-        result.defaultFormat = defaultFormat;
+        result.format = defaultFormat;
     }
 
     return result;

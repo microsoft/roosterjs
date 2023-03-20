@@ -29,8 +29,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
         super(contentDiv, options);
         this.cachedModel = null;
         this.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
-
-        this.createDefaultFormat();
+        this.defaultFormat = this.getDefaultSegmentFormat();
     }
 
     /**
@@ -103,39 +102,18 @@ export default class ContentModelEditor extends Editor implements IContentModelE
         };
     }
 
-    private createDefaultFormat() {
+    private getDefaultSegmentFormat(): ContentModelSegmentFormat {
         const format = this.getDefaultFormat();
 
-        if (format.bold) {
-            this.defaultFormat.fontWeight = 'bold';
-        }
-
-        if (format.italic) {
-            this.defaultFormat.italic = true;
-        }
-
-        if (format.underline) {
-            this.defaultFormat.underline = true;
-        }
-
-        if (format.fontFamily) {
-            this.defaultFormat.fontFamily = format.fontFamily;
-        }
-
-        if (format.fontSize) {
-            this.defaultFormat.fontSize = format.fontSize;
-        }
-
-        if (format.textColors) {
-            this.defaultFormat.textColor = format.textColors.lightModeColor;
-        } else if (format.textColor) {
-            this.defaultFormat.textColor = format.textColor;
-        }
-
-        if (format.backgroundColors) {
-            this.defaultFormat.backgroundColor = format.backgroundColors.lightModeColor;
-        } else if (format.backgroundColor) {
-            this.defaultFormat.backgroundColor = format.backgroundColor;
-        }
+        return {
+            fontWeight: format.bold ? 'bold' : undefined,
+            italic: format.italic || undefined,
+            underline: format.underline || undefined,
+            fontFamily: format.fontFamily || undefined,
+            fontSize: format.fontSize || undefined,
+            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+            backgroundColor:
+                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+        };
     }
 }

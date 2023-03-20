@@ -28,7 +28,7 @@ export function deleteSelection(model: ContentModelDocument): InsertPosition | n
         [model],
         (path, tableContext, block, segments) => {
             let paragraph: ContentModelParagraph | undefined;
-            let markerFormat = model.defaultFormat;
+            let markerFormat = model.format;
             let insertMarkerIndex = 0;
 
             if (segments) {
