@@ -22,6 +22,12 @@ export default class ContentModelPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**
+     * Construct a new instance of ContentModelPlugin
+     * @param handleKeyboardEditing A temporary parameter to allow handling keyboard editing event using this plugin
+     */
+    constructor(private handleKeyboardEditing?: boolean) {}
+
+    /**
      * Get name of this plugin
      */
     getName() {
@@ -87,8 +93,7 @@ export default class ContentModelPlugin implements EditorPlugin {
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     this.editor.cacheContentModel(null);
                     clearPendingFormat(this.editor);
-                } else if (event.rawEvent.which == Keys.ENTER) {
-                    this.editor.cacheContentModel(null);
+                } else if (this.handleKeyboardEditing && event.rawEvent.which == Keys.ENTER) {
                     const format = getSegmentFormat(this.editor);
                     const pos = this.editor.getFocusedPosition();
 
@@ -96,8 +101,8 @@ export default class ContentModelPlugin implements EditorPlugin {
                         setPendingFormat(this.editor, format, pos);
                     }
                 } else if (
-                    event.rawEvent.which == Keys.BACKSPACE ||
-                    event.rawEvent.which == Keys.DELETE
+                    this.handleKeyboardEditing &&
+                    (event.rawEvent.which == Keys.BACKSPACE || event.rawEvent.which == Keys.DELETE)
                 ) {
                     const range = this.editor.getSelectionRangeEx();
 

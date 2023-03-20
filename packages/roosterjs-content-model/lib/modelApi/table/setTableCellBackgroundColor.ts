@@ -42,6 +42,8 @@ export function setTableCellBackgroundColor(
         delete cell.format.backgroundColor;
         delete cell.format.textColor;
     }
+
+    delete cell.cachedElement;
 }
 
 function calculateLightness(color: string) {

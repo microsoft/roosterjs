@@ -40,12 +40,17 @@ export function mergeTableRow(
                     let newSelectedRow = mergingRowIndex;
 
                     while (table.cells[newSelectedRow]?.[colIndex]?.spanAbove) {
+                        delete table.cells[newSelectedRow][colIndex].cachedElement;
                         newSelectedRow--;
                     }
 
                     if (table.cells[newSelectedRow]?.[colIndex]) {
                         table.cells[newSelectedRow][colIndex].isSelected = true;
+
+                        delete table.cells[newSelectedRow][colIndex].cachedElement;
                     }
+
+                    delete cell.cachedElement;
                 }
             }
         }

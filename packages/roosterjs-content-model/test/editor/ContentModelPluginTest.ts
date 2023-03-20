@@ -379,7 +379,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelPlugin(true /*handleKeyboardEditing*/);
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -401,7 +401,7 @@ describe('ContentModelPlugin', () => {
             cacheContentModel: () => {},
             getSelectionRangeEx: () => ({}),
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelPlugin(true /*handleKeyboardEditing*/);
 
         plugin.initialize(editor);
         plugin.onPluginEvent({

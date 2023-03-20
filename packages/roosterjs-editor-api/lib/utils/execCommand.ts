@@ -25,7 +25,7 @@ export default function execCommand(
 ) {
     editor.focus();
 
-    let formatter = () => editor.getDocument().execCommand(command, false, null);
+    let formatter = () => editor.getDocument().execCommand(command, false, undefined);
 
     let selection = editor.getSelectionRangeEx();
     if (selection && selection.areAllCollapsed) {

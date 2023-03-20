@@ -3,6 +3,8 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { moveChildNodes } from 'roosterjs-editor-dom';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
  * @internal
@@ -16,15 +18,26 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
-        return;
+        return refNode;
     }
 
-    const tableNode = doc.createElement('table');
+    let tableNode = table.cachedElement;
 
-    parent.insertBefore(tableNode, refNode);
+    if (tableNode) {
+        refNode = reuseCachedElement(parent, tableNode, refNode);
 
-    applyFormat(tableNode, context.formatAppliers.table, table.format, context);
-    applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+        moveChildNodes(tableNode);
+    } else {
+        tableNode = doc.createElement('table');
+
+        table.cachedElement = tableNode;
+        parent.insertBefore(tableNode, refNode);
+
+        applyFormat(tableNode, context.formatAppliers.table, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+    }
+
+    applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
@@ -57,10 +70,17 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
-                const td = doc.createElement(cell.isHeader ? 'th' : 'td');
+                let td = cell.cachedElement || doc.createElement(cell.isHeader ? 'th' : 'td');
+
                 tr.appendChild(td);
-                applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
-                applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
+
+                if (!cell.cachedElement) {
+                    cell.cachedElement = td;
+                    applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
+                    applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
+                }
+
+                applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
 
                 let rowSpan = 1;
                 let colSpan = 1;
@@ -89,4 +109,6 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
         }
     }
+
+    return refNode;
 };
