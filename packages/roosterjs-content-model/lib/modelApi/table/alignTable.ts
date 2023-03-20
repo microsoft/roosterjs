@@ -17,4 +17,6 @@ export function alignTable(
 ) {
     table.format.marginLeft = operation == TableOperation.AlignLeft ? '' : 'auto';
     table.format.marginRight = operation == TableOperation.AlignRight ? '' : 'auto';
+
+    delete table.cachedElement;
 }

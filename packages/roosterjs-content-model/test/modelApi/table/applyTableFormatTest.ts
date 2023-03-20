@@ -14,6 +14,7 @@ describe('applyTableFormat', () => {
             spanLeft: false,
             format: {},
             dataset: {},
+            cachedElement: {} as any,
         };
     }
 
@@ -45,6 +46,7 @@ describe('applyTableFormat', () => {
             widths: [0],
             heights: [0],
             dataset: {},
+            cachedElement: {} as any,
         };
     }
 
@@ -57,22 +59,25 @@ describe('applyTableFormat', () => {
 
         applyTableFormat(table, format);
 
+        expect(table.cachedElement).toBeUndefined();
+
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 4; col++) {
-                expect(table.cells[row][col].format.backgroundColor).toBe(
+                const cell = table.cells[row][col];
+                expect(cell.format.backgroundColor).toBe(
                     exportedBackgroundColors[row][col],
                     `BackgroundColor Row=${row} Col=${col}`
                 );
 
-                const { borderTop, borderRight, borderLeft, borderBottom } = table.cells[row][
-                    col
-                ].format;
+                const { borderTop, borderRight, borderLeft, borderBottom } = cell.format;
                 const borders = expectedBorders[row][col];
 
                 expect(borderTop).toBe(borders[0]);
                 expect(borderRight).toBe(borders[1]);
                 expect(borderBottom).toBe(borders[2]);
                 expect(borderLeft).toBe(borders[3]);
+
+                expect(cell.cachedElement).toBeUndefined();
             }
         }
     }

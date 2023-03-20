@@ -52,4 +52,19 @@ describe('alignTable', () => {
             marginLeft: 'auto',
         });
     });
+
+    it('Align table to left, check cached table is cleared', () => {
+        const tableNode = document.createElement('table');
+        const table = createTable(1);
+
+        table.cachedElement = tableNode;
+
+        alignTable(table, TableOperation.AlignRight);
+
+        expect(table.format).toEqual({
+            marginRight: '',
+            marginLeft: 'auto',
+        });
+        expect(table.cachedElement).toBeUndefined();
+    });
 });

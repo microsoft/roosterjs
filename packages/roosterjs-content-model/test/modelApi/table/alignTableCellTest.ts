@@ -27,10 +27,23 @@ describe('alignTableCell', () => {
         table.cells[1][1].isSelected = true;
         table.cells[1][2].isSelected = true;
 
+        table.cells[0][0].cachedElement = {} as any;
+        table.cells[0][1].cachedElement = {} as any;
+        table.cells[0][2].cachedElement = {} as any;
+        table.cells[1][0].cachedElement = {} as any;
+        table.cells[1][1].cachedElement = {} as any;
+        table.cells[1][2].cachedElement = {} as any;
+
         alignTableCell(table, operation);
 
         expect(table.cells[0].map(c => c.format)).toEqual([{}, expectedFormat, expectedFormat]);
         expect(table.cells[1].map(c => c.format)).toEqual([{}, expectedFormat, expectedFormat]);
+        expect(table.cells[0][0].cachedElement).toEqual({} as any);
+        expect(table.cells[0][1].cachedElement).toBeUndefined();
+        expect(table.cells[0][2].cachedElement).toBeUndefined();
+        expect(table.cells[1][0].cachedElement).toEqual({} as any);
+        expect(table.cells[1][1].cachedElement).toBeUndefined();
+        expect(table.cells[1][2].cachedElement).toBeUndefined();
     }
 
     it('empty table', () => {
