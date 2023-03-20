@@ -4,7 +4,12 @@ import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDo
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
 
 describe('End to end test for DOM => Model', () => {
-    function runTest(html: string, expectedModel: ContentModelDocument, expectedHtml: string) {
+    function runTest(
+        html: string,
+        expectedModel: ContentModelDocument,
+        expectedHtml: string,
+        expectedHTMLFirefox?: string
+    ) {
         const context: EditorContext = {
             isDarkMode: false,
         };
@@ -19,8 +24,12 @@ describe('End to end test for DOM => Model', () => {
         const div2 = document.createElement('div');
 
         contentModelToDom(document, div2, model, context);
+        const possibleHTML = [
+            expectedHtml, //chrome or firefox
+            expectedHTMLFirefox, //firefox
+        ];
 
-        expect(div2.innerHTML).toEqual(expectedHtml);
+        expect(possibleHTML.indexOf(div2.innerHTML)).toBeGreaterThanOrEqual(0);
     }
 
     it('List with margin', () => {
@@ -195,7 +204,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ol start="1" style="flex-direction: column; display: flex;"><li>1</li><ol start="1" style="flex-direction: column; display: flex;"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+            '<ol start="1" style="flex-direction: column; display: flex;"><li>1</li><ol start="1" style="flex-direction: column; display: flex;"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
+            '<ol style="flex-direction: column; display: flex;" start="1"><li>1</li><ol style="flex-direction: column; display: flex;" start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
         );
     });
 });
