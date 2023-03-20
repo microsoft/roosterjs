@@ -439,7 +439,6 @@ describe('deleteSelection', () => {
             marker,
             paragraph: {
                 blockType: 'Paragraph',
-                isImplicit: true,
                 segments: [marker],
                 format: {},
             },
@@ -452,7 +451,6 @@ describe('deleteSelection', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    isImplicit: true,
                     format: {},
                     segments: [marker],
                 },

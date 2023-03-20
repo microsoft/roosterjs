@@ -58,7 +58,7 @@ describe('handleBlockGroupChildren', () => {
 
         handleBlockGroupChildren(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div><div></div></div>');
+        expect(parent.outerHTML).toBe('<div><div></div><span></span></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlock).toHaveBeenCalledTimes(2);
         expect(handleBlock).toHaveBeenCalledWith(document, parent, paragraph1, context, null);
