@@ -55,7 +55,8 @@ export default function insertLink(
             const originalText = segments
                 .map(x => (x.segmentType == 'Text' ? x.text : ''))
                 .join('');
-            const text = displayText || originalText || '';
+
+            const text = displayText?.trim() || originalText?.trim() || '';
 
             if (segments.some(x => x.segmentType != 'SelectionMarker') && originalText == text) {
                 segments.forEach(x => {

@@ -295,4 +295,44 @@ describe('insertLink', () => {
             'new text'
         );
     });
+
+    it('Valid url with space ate the end', () => {
+        const doc = createContentModelDocument();
+        const text = createText('test      ');
+
+        text.isSelected = true;
+        addSegment(doc, text);
+
+        runTest(doc, 'http://test.com', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'http://test.com',
+                                    anchorTitle: undefined,
+                                    target: undefined,
+                                    underline: true,
+                                },
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
