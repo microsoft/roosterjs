@@ -26,11 +26,19 @@ describe('domToContentModel', () => {
         const options = {
             includeRoot: false,
         };
-        const editorContext: EditorContext = { isDarkMode: false };
+        const editorContext: EditorContext = {
+            isDarkMode: false,
+            defaultFormat: {
+                fontSize: '10pt',
+            },
+        };
         const model = domToContentModel(rootElement, editorContext, options);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
+            format: {
+                fontSize: '10pt',
+            },
         };
 
         expect(model).toEqual(result);

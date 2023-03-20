@@ -158,4 +158,37 @@ describe('ContentModelEditor', () => {
 
         expect((editor as any).cachedModel).toBe(null);
     });
+
+    it('default format', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div, {
+            defaultFormat: {
+                bold: true,
+                italic: true,
+                underline: true,
+                fontFamily: 'Arial',
+                fontSize: '10pt',
+                textColors: {
+                    lightModeColor: 'black',
+                    darkModeColor: 'white',
+                },
+                backgroundColors: {
+                    lightModeColor: 'white',
+                    darkModeColor: 'black',
+                },
+            },
+        });
+
+        const model = editor.createContentModel();
+
+        expect(model.format).toEqual({
+            fontWeight: 'bold',
+            italic: true,
+            underline: true,
+            fontFamily: 'Arial',
+            fontSize: '10pt',
+            textColor: 'black',
+            backgroundColor: 'white',
+        });
+    });
 });
