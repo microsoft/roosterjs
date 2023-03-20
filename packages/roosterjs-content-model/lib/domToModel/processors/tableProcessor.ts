@@ -34,6 +34,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
             const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
+            table.cachedElement = tableElement;
+
             parseFormat(tableElement, context.formatParsers.table, table.format, context);
             parseFormat(
                 tableElement,
@@ -87,6 +89,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                             table.cells[row + rowSpan - 1][targetCol] = cell;
 
                             if (hasTd) {
+                                cell.cachedElement = td;
+
                                 stackFormat(context, { segment: 'shallowClone' }, () => {
                                     parseFormat(
                                         td,
