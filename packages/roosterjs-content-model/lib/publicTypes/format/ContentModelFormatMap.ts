@@ -49,7 +49,7 @@ export interface ContentModelFormatMap {
      */
     tableCell: ContentModelTableCellFormat;
 
-    /*
+    /**
      * Format type for table border
      */
     tableBorder: ContentModelTableFormat;
