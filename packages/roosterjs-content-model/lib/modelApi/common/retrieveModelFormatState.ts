@@ -97,8 +97,6 @@ export function retrieveModelFormatState(
             includeListFormatHolder: 'never',
         }
     );
-
-    console.log(formatState);
 }
 
 function retrieveSegmentFormat(
