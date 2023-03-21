@@ -5,6 +5,7 @@ import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
+import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
@@ -510,6 +511,41 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isBlockQuote: false,
             isCodeInline: false,
+        });
+    });
+
+    it('With selection  under image', () => {
+        const model = createContentModelDocument();
+        const result: FormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        image.isSelected = true;
+        para.segments.push(image);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [image]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: {
+                borderColor: 'red',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: undefined,
+                borderRadius: undefined,
+            },
         });
     });
 });

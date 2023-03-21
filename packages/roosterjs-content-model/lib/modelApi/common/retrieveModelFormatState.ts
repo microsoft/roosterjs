@@ -1,10 +1,12 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelImage } from 'roosterjs-content-model/lib/publicTypes';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { extractBorderValues } from 'roosterjs-content-model/lib/domUtils';
 import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
@@ -22,6 +24,7 @@ export function retrieveModelFormatState(
     let firstTableContext: TableSelectionContext | undefined;
     let firstBlock: ContentModelBlock | undefined;
     let isFirst = true;
+    let isFirstImage = true;
 
     if (pendingFormat) {
         // Pending format
@@ -59,6 +62,11 @@ export function retrieveModelFormatState(
                         segments.some(segment => segment.segmentType == 'Image');
 
                     isFirst = false;
+
+                    if (segment.segmentType === 'Image' && isFirstImage) {
+                        retrieveImageFormat(segment, formatState);
+                        isFirstImage = false;
+                    }
                 });
 
                 isFirst = false;
@@ -89,6 +97,8 @@ export function retrieveModelFormatState(
             includeListFormatHolder: 'never',
         }
     );
+
+    console.log(formatState);
 }
 
 function retrieveSegmentFormat(
@@ -168,6 +178,22 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Format
     if (tableFormat) {
         result.tableFormat = tableFormat;
     }
+}
+
+function retrieveImageFormat(image: ContentModelImage, result: FormatState) {
+    const { format } = image;
+    const borderKey = 'borderTop';
+    const extractedBorder = extractBorderValues(format[borderKey]);
+    const borderColor = extractedBorder.color;
+    const borderWidth = extractedBorder.width;
+    const borderStyle = extractedBorder.style;
+    result.imageFormat = {
+        borderColor,
+        borderWidth,
+        borderStyle,
+        boxShadow: format.boxShadow,
+        borderRadius: format.borderRadius,
+    };
 }
 
 function mergeValue<K extends keyof FormatState>(
