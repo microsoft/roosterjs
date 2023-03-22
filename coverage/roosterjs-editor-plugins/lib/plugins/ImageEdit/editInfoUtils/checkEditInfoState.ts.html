@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84% </span>
+                <span class="strong">88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/25</span>
+                <span class='fraction'>22/25</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.17% </span>
+                <span class="strong">78.26% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>12/23</span>
+                <span class='fraction'>18/23</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/24</span>
+                <span class='fraction'>21/24</span>
             </div>
         
             
@@ -209,35 +209,35 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">345x</span>
+<span class="cline-any cline-yes">492x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">49x</span>
-<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">70x</span>
+<span class="cline-any cline-yes">74x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">69x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-yes">49x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">49x</span>
+<span class="cline-any cline-yes">69x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">345x</span>
+<span class="cline-any cline-yes">492x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">59x</span>
+<span class="cline-any cline-yes">94x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import ImageEditInfo, { CropInfo, ResizeInfo, RotateInfo } from '../types/ImageEditInfo';
 &nbsp;
@@ -302,13 +302,13 @@ export default function checkEditInfoState(
 ): ImageEditInfoState {
     if (!editInfo || !editInfo.src || ALL_KEYS.some(key =&gt; !isNumber(editInfo[key]))) {
         return ImageEditInfoState.Invalid;
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (
+    } else if (
         ROTATE_CROP_KEYS.every(key =&gt; areSameNumber(editInfo[key], 0)) &amp;&amp;
-<span class="branch-1 cbranch-no" title="branch not covered" >        !editInfo.flippedHorizontal </span>&amp;&amp;
-<span class="branch-2 cbranch-no" title="branch not covered" >        !editInfo.flippedVertical </span>&amp;&amp;
-        (<span class="branch-3 cbranch-no" title="branch not covered" >!compareTo </span>|| (<span class="branch-4 cbranch-no" title="branch not covered" >compareTo </span>&amp;&amp; <span class="branch-5 cbranch-no" title="branch not covered" >editInfo.angleRad === compareTo.angleRad)</span>)
+        !editInfo.flippedHorizontal &amp;&amp;
+        !editInfo.flippedVertical &amp;&amp;
+        (!compareTo || (compareTo &amp;&amp; editInfo.angleRad === compareTo.angleRad))
     ) {
-<span class="cstat-no" title="statement not covered" >        return ImageEditInfoState.ResizeOnly;</span>
+        return ImageEditInfoState.ResizeOnly;
     } else <span class="missing-if-branch" title="if path not taken" >I</span>if (
         compareTo &amp;&amp;
         ROTATE_KEYS.every(key =&gt; areSameNumber(editInfo[key], 0)) &amp;&amp;
@@ -337,7 +337,7 @@ function areSameNumber(n1: number, n2: number) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 21 2023 15:14:04 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 22 2023 19:23:40 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
