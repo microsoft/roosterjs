@@ -15,7 +15,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    context.modelHandlers.list(doc, parent, listItem, context, refNode);
+    refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
     const { nodeStack } = context.listFormat;
 
@@ -28,6 +28,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     listParent.insertBefore(li, refNode?.parentNode == listParent ? refNode : null);
 
     if (level) {
+        applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
         applyFormat(li, context.formatAppliers.listItem, level, context);
 
@@ -41,4 +42,6 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
         unwrap(li);
     }
+
+    return refNode;
 };

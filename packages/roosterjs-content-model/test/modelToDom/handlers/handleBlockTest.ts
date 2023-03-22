@@ -205,9 +205,10 @@ describe('handleBlockGroup', () => {
         parent = document.createElement('div');
         parent.appendChild(br);
 
-        handleBlock(document, parent, block, context, br);
+        const result = handleBlock(document, parent, block, context, br);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
+        expect(result).toBe(br);
     }
 
     it('General block', () => {
@@ -223,9 +224,10 @@ describe('handleBlockGroup', () => {
         expect(handleGeneralModel).toHaveBeenCalledTimes(1);
         expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleGeneralModel.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleGeneralModel.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });
@@ -239,9 +241,10 @@ describe('handleBlockGroup', () => {
         expect(handleQuote).toHaveBeenCalledTimes(1);
         expect(handleQuote).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleQuote.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleQuote.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });
@@ -255,9 +258,10 @@ describe('handleBlockGroup', () => {
         expect(handleListItem).toHaveBeenCalledTimes(1);
         expect(handleListItem).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleListItem.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleListItem.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });

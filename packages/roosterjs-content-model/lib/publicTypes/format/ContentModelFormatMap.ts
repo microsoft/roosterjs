@@ -2,6 +2,7 @@ import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
 import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
+import { ContentModelListItemFormat } from './ContentModelListItemFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
@@ -47,6 +48,21 @@ export interface ContentModelFormatMap {
      * Format type for tableCell
      */
     tableCell: ContentModelTableCellFormat;
+
+    /**
+     * Format type for table border
+     */
+    tableBorder: ContentModelTableFormat;
+
+    /**
+     * Format type for tableCell border
+     */
+    tableCellBorder: ContentModelTableCellFormat;
+
+    /**
+     * Format type for li element
+     */
+    listItemElement: ContentModelListItemFormat;
 
     /**
      * Format type for listItem
