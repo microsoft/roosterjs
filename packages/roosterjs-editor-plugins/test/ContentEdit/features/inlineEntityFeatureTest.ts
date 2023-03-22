@@ -283,9 +283,24 @@ describe('Content Edit Features |', () => {
 
             it('DelimiterAfter, should not Handle, cursor is at start of next block', () => {
                 const div = document.createElement('div');
+                div.appendChild(document.createTextNode('New block'));
                 testContainer.insertAdjacentElement('afterend', div);
 
-                runTest(new Position(div, 0), false /* expected */, event);
+                runTest(new Position(<Node>div.firstChild!, 0), false /* expected */, event);
+            });
+
+            it('Delimiter After, Inline Readonly Entity with multiple Inline Elements', () => {
+                const b = document.createElement('b');
+                b.appendChild(document.createTextNode('Bold'));
+
+                entity.wrapper.appendChild(b);
+                entity.wrapper.appendChild(b.cloneNode(true));
+
+                wrapElementInB(delimiterBefore);
+                wrapElementInB(entity.wrapper);
+                wrapElementInB(delimiterAfter);
+
+                runTest(delimiterAfter, true /* expected */, event);
             });
         }
 
@@ -501,6 +516,20 @@ describe('Content Edit Features |', () => {
                 testContainer.insertAdjacentElement('beforeend', div);
 
                 runTest(new Position(div, 0), false /* expected */, event);
+            });
+
+            it('DelimiterBefore, Inline Readonly Entity with multiple Inline Elements', () => {
+                const b = document.createElement('b');
+                b.appendChild(document.createTextNode('Bold'));
+
+                entity.wrapper.appendChild(b);
+                entity.wrapper.appendChild(b.cloneNode(true));
+
+                wrapElementInB(delimiterBefore);
+                wrapElementInB(entity.wrapper);
+                wrapElementInB(delimiterAfter);
+
+                runTest(delimiterBefore, true /* expected */, event);
             });
         }
 

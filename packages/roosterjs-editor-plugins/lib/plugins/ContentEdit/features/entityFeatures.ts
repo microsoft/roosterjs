@@ -326,17 +326,15 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
         ? {
               class: DelimiterClasses.DELIMITER_BEFORE,
               pairClass: DelimiterClasses.DELIMITER_AFTER,
-              traverserFn: (t: IContentTraverser) => t.getNextInlineElement(),
               isAtEndOrBeginning: position.isAtEnd,
           }
         : {
               class: DelimiterClasses.DELIMITER_AFTER,
               pairClass: DelimiterClasses.DELIMITER_BEFORE,
-              traverserFn: (t: IContentTraverser) => t.getPreviousInlineElement(),
               isAtEndOrBeginning: position.offset == 0,
           };
 
-    const sibling = getNextSibling(editor, focusedElement, data.traverserFn);
+    const sibling = getNextSibling(editor, focusedElement, checkBefore);
     if (data.isAtEndOrBeginning && sibling) {
         const elAtCursor = editor.getElementAtCursor('.' + data.class, sibling);
 
@@ -345,52 +343,38 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
         }
     }
 
-    const entityAtCursor = editor.getElementAtCursor('.' + data.class, focusedElement);
+    const entityAtCursor =
+        focusedElement && editor.getElementAtCursor('.' + data.class, focusedElement);
     return !!shouldHandle(entityAtCursor);
 
     function shouldHandle(element: HTMLElement | null | undefined) {
-        const delimiterPair = getDelimiterPair(editor, element, data.traverserFn);
-        const delimiterElement = editor.getElementAtCursor('.' + data.pairClass, delimiterPair);
+        if (!element) {
+            return false;
+        }
+
+        const { delimiterPair } = getRelatedElements(element, checkBefore, editor);
+
         return (
-            delimiterElement &&
-            (delimiterElement.className || '').indexOf(data.pairClass) > -1 &&
+            delimiterPair &&
+            (delimiterPair.className || '').indexOf(data.pairClass) > -1 &&
             cacheDelimiter(event, checkBefore, element)
         );
     }
 }
 
-function getNextSibling(
-    editor: IEditor,
-    element: Node,
-    getFn: (traverser: IContentTraverser) => InlineElement | null
-) {
+function getNextSibling(editor: IEditor, element: Node, checkBefore: boolean) {
     const traverser = getBlockTraverser(editor, element);
     if (!traverser) {
         return undefined;
     }
 
-    let currentInline = traverser.currentInlineElement;
-    while (currentInline && currentInline.getContainerNode() === element) {
-        currentInline = getFn(traverser);
-    }
-    return traverser.currentInlineElement?.getContainerNode();
-}
-
-function getDelimiterPair(
-    editor: IEditor,
-    element: HTMLElement | null | undefined,
-    getFn: (traverser: IContentTraverser) => InlineElement | null
-) {
-    const traverser = getBlockTraverser(editor, element);
-    if (!traverser) {
-        return undefined;
-    }
+    const traverseFn = (t: IContentTraverser) =>
+        checkBefore ? t.getNextInlineElement() : t.getPreviousInlineElement();
 
     let currentInline = traverser.currentInlineElement;
     while (currentInline && currentInline.getContainerNode() === element) {
-        currentInline = getFn(traverser);
+        currentInline = traverseFn(traverser);
     }
-    currentInline = getFn(traverser);
     return currentInline?.getContainerNode();
 }
 
@@ -484,21 +468,37 @@ function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean):
 }
 
 function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor: IEditor) {
-    let entity: Element | null;
-    let delimiterPair: Element | null;
-    const traverser = editor.getBodyTraverser(delimiter);
-    const sel = checkBefore ? DelimiterClasses.DELIMITER_AFTER : DelimiterClasses.DELIMITER_BEFORE;
+    let entity: Element | null = null;
+    let delimiterPair: Element | null = null;
+    const traverser = getBlockTraverser(editor, delimiter);
+    if (!traverser) {
+        return { delimiterPair, entity };
+    }
+
+    const selector = `.${
+        checkBefore ? DelimiterClasses.DELIMITER_AFTER : DelimiterClasses.DELIMITER_BEFORE
+    }`;
     const traverseFn = (t: IContentTraverser) =>
         checkBefore ? t.getNextInlineElement() : t.getPreviousInlineElement();
-    const getElementFromInline = (selector: string) => {
-        const node = traverser.currentInlineElement?.getContainerNode();
+    const getElementFromInline = (element: InlineElement, selector: string) => {
+        const node = element?.getContainerNode();
         return (node && editor.getElementAtCursor(selector, node)) ?? null;
     };
+    const entitySelector = getEntitySelector();
 
-    traverseFn(traverser);
-    entity = getElementFromInline(getEntitySelector());
-    traverseFn(traverser);
-    delimiterPair = getElementFromInline('.' + sel);
+    let current = traverser.currentInlineElement;
+    while (current && (!entity || !delimiterPair)) {
+        entity = entity || getElementFromInline(current, entitySelector);
+        delimiterPair = delimiterPair || getElementFromInline(current, selector);
+
+        // If we found the entity but the next inline after the entity is not a delimiter,
+        // it means that the delimiter pair got removed or is invalid, return null instead.
+        if (entity && !delimiterPair && !getElementFromInline(current, entitySelector)) {
+            delimiterPair = null;
+            break;
+        }
+        current = traverseFn(traverser);
+    }
 
     return { entity, delimiterPair };
 }
