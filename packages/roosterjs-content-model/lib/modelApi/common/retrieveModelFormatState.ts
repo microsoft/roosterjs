@@ -63,9 +63,13 @@ export function retrieveModelFormatState(
 
                     isFirst = false;
 
-                    if (segment.segmentType === 'Image' && isFirstImage) {
-                        retrieveImageFormat(segment, formatState);
-                        isFirstImage = false;
+                    if (segment.segmentType === 'Image') {
+                        if (isFirstImage) {
+                            retrieveImageFormat(segment, formatState);
+                            isFirstImage = false;
+                        } else {
+                            formatState.imageFormat = undefined;
+                        }
                     }
                 });
 

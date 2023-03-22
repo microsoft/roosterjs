@@ -548,4 +548,38 @@ describe('retrieveModelFormatState', () => {
             },
         });
     });
+
+    it('With multiple image selection', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        const image2 = createImage('test', {
+            borderTop: 'solid 2px blue',
+        });
+        image.isSelected = true;
+        image2.isSelected = true;
+        para.segments.push(image);
+        para.segments.push(image2);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [image, image2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: undefined,
+        });
+    });
 });
