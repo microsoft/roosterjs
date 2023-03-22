@@ -1,13 +1,13 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { extractBorderValues } from '../../domUtils/borderValues';
-import { FormatState } from 'roosterjs-editor-types';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
@@ -19,7 +19,7 @@ import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata
 export function retrieveModelFormatState(
     model: ContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
-    formatState: FormatState
+    formatState: ContentModelFormatState
 ) {
     let firstTableContext: TableSelectionContext | undefined;
     let firstBlock: ContentModelBlock | undefined;
@@ -100,7 +100,7 @@ export function retrieveModelFormatState(
 }
 
 function retrieveSegmentFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     format: ContentModelSegmentFormat,
     isFirst: boolean,
     segment?: ContentModelSegment
@@ -134,7 +134,7 @@ function retrieveSegmentFormat(
 }
 
 function retrieveParagraphFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     paragraph: ContentModelParagraph,
     isFirst: boolean
 ) {
@@ -149,7 +149,7 @@ function retrieveParagraphFormat(
 }
 
 function retrieveStructureFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     path: ContentModelBlockGroup[],
     isFirst: boolean
 ) {
@@ -167,7 +167,7 @@ function retrieveStructureFormat(
     mergeValue(result, 'isBlockQuote', quoteIndex >= 0, isFirst);
 }
 
-function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
+function retrieveTableFormat(tableContext: TableSelectionContext, result: ContentModelFormatState) {
     const tableFormat = updateTableMetadata(tableContext.table);
 
     result.isInTable = true;
@@ -178,7 +178,7 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Format
     }
 }
 
-function retrieveImageFormat(image: ContentModelImage, result: FormatState) {
+function retrieveImageFormat(image: ContentModelImage, result: ContentModelFormatState) {
     const { format } = image;
     const borderKey = 'borderTop';
     const extractedBorder = extractBorderValues(format[borderKey]);
@@ -194,10 +194,10 @@ function retrieveImageFormat(image: ContentModelImage, result: FormatState) {
     };
 }
 
-function mergeValue<K extends keyof FormatState>(
-    format: FormatState,
+function mergeValue<K extends keyof ContentModelFormatState>(
+    format: ContentModelFormatState,
     key: K,
-    newValue: FormatState[K] | undefined,
+    newValue: ContentModelFormatState[K] | undefined,
     isFirst: boolean
 ) {
     if (isFirst) {

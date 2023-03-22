@@ -1,4 +1,3 @@
-import ImageFormat from './ImageFormat';
 import ModeIndependentColor from './ModeIndependentColor';
 import TableFormat from './TableFormat';
 
@@ -84,11 +83,6 @@ export interface ElementBasedFormatState {
      * Whether add image alt text command can be called to the text
      */
     canAddImageAltText?: boolean;
-
-    /**
-     * Format of image, if there is table at cursor position
-     */
-    imageFormat?: ImageFormat;
 
     /**
      * Header level (0-6, 0 means no header)

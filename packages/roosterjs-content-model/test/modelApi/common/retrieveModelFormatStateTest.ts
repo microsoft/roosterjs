@@ -2,6 +2,7 @@ import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelec
 import { addCode } from '../../../lib/modelApi/common/addDecorators';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
+import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
@@ -13,7 +14,6 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { FormatState } from 'roosterjs-editor-types';
 import { retrieveModelFormatState } from '../../../lib/modelApi/common/retrieveModelFormatState';
 
 describe('retrieveModelFormatState', () => {
@@ -29,7 +29,7 @@ describe('retrieveModelFormatState', () => {
         underline: true,
     };
 
-    const baseFormatResult: FormatState = {
+    const baseFormatResult: ContentModelFormatState = {
         backgroundColor: 'red',
         fontName: 'Arial',
         fontSize: '10px',
@@ -46,7 +46,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Empty model', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
 
         retrieveModelFormatState(model, null, result);
 
@@ -55,7 +55,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph();
         const marker = createSelectionMarker(segmentFormat);
 
@@ -71,7 +71,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with Code', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph();
         const marker = createSelectionMarker(segmentFormat);
 
@@ -94,7 +94,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with list', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph();
         const listItem = createListItem([{ listType: 'OL' }]);
         const marker = createSelectionMarker(segmentFormat);
@@ -117,7 +117,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with quote', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph();
         const quote = createQuote();
         const marker = createSelectionMarker(segmentFormat);
@@ -138,7 +138,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with header', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph(false, undefined, {
             format: {},
             tagName: 'h1',
@@ -162,7 +162,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with margin format', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const paraFormat = {
             marginTop: '2px',
             marginBottom: '5px',
@@ -187,7 +187,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with table', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const table = createTable(1);
         const cell = createTableCell();
         const para = createParagraph(false, undefined);
@@ -223,7 +223,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Single selection with table and format', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const table = createTable(1);
         const cell = createTableCell();
         const para = createParagraph(false, undefined);
@@ -273,7 +273,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With table header', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell(false, false, true);
@@ -297,7 +297,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Multiple selections', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para1 = createParagraph(false, undefined);
         const para2 = createParagraph(false, undefined);
         const marker1 = createSelectionMarker(segmentFormat);
@@ -323,7 +323,7 @@ describe('retrieveModelFormatState', () => {
 
     it('Multiple selections with other types', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para1 = createParagraph(false, undefined);
         const divider = createDivider('hr');
         const marker1 = createSelectionMarker(segmentFormat);
@@ -346,7 +346,7 @@ describe('retrieveModelFormatState', () => {
 
     it('First selection is of other types', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para1 = createParagraph(false, undefined);
         const divider = createDivider('hr');
         const marker1 = createSelectionMarker(segmentFormat);
@@ -369,7 +369,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With pending format', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para1 = createParagraph(false, undefined);
         const marker1 = createSelectionMarker(segmentFormat);
         const pendingFormat: ContentModelSegmentFormat = {
@@ -401,7 +401,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With single table cell selected', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -422,7 +422,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With multiple table cell selected', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -446,7 +446,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With multiple table cell selected, multiple content is in table cell', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -487,7 +487,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With selection marker under table cell', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -516,7 +516,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With selection  under image', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const para = createParagraph();
         const image = createImage('test', {
             borderTop: 'solid 2px red',
