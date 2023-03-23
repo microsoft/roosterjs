@@ -5,17 +5,17 @@ import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidatio
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
 describe('isExcelDesktopDocument |', () => {
-    it('Is a Excel document 1', () => {
+    it('Is an ambiguous Excel document, unconfirmed if Desktop', () => {
         const htmlAttributes: Record<string, string> = {
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
         };
 
         const result = isExcelDesktopDocument(<getSourceInputParams>{ htmlAttributes });
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
     });
 
-    it('Is a Excel document 2', () => {
+    it('Is an Excel Desktop document 1', () => {
         const htmlAttributes: Record<string, string> = {
             'xmlns:x': EXCEL_ATTRIBUTE_VALUE,
             ProgId: EXCEL_ONLINE_ATTRIBUTE_VALUE,
@@ -26,7 +26,7 @@ describe('isExcelDesktopDocument |', () => {
         expect(result).toBeTrue();
     });
 
-    it('Is a Excel document 3', () => {
+    it('Is an Excel Desktop document 2', () => {
         const htmlAttributes: Record<string, string> = {
             'xmlns:x': EXCEL_ATTRIBUTE_VALUE,
         };

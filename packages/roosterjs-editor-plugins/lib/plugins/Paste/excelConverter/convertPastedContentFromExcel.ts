@@ -1,5 +1,5 @@
 import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
-import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -18,6 +18,15 @@ export default function convertPastedContentFromExcel(
 ) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
     const html = excelHandler(clipboardData.html, htmlBefore);
+
+    // For Excel Online
+    if (fragment.childNodes.length > 0 && getTagOfNode(fragment.firstChild) == 'DIV') {
+        fragment.firstChild.childNodes.forEach(child => {
+            if (getTagOfNode(child) == 'TABLE') {
+                event.fragment.replaceChildren(child);
+            }
+        });
+    }
 
     if (clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');

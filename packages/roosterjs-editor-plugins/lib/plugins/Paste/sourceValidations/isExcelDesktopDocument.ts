@@ -1,9 +1,8 @@
-import { PROG_ID_NAME } from './constants';
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
-const EXCEL_ATTRIBUTE_NAME = 'xmlns:x';
+// Excel Online does not have this attribute
+export const EXCEL_DESKTOP_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
-const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
 /**
  * @internal
@@ -13,9 +12,6 @@ const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
  */
 const isExcelDesktopDocument: getSourceFunction = (props: getSourceInputParams) => {
     const { htmlAttributes } = props;
-    return (
-        htmlAttributes[EXCEL_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE ||
-        htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE
-    );
+    return htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE;
 };
 export default isExcelDesktopDocument;

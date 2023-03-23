@@ -69,7 +69,9 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromWord(event);
                     break;
                 case KnownSourceType.ExcelDesktop:
-                    // Handle HTML copied from Excel
+                // Handle HTML copied from Excel Desktop
+                case KnownSourceType.ExcelOnline:
+                    // Handle HTML copied from Excel Online
                     convertPastedContentFromExcel(event, trustedHTMLHandler);
                     break;
                 case KnownSourceType.PowerPointDesktop:
