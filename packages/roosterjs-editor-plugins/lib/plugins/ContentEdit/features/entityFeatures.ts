@@ -220,7 +220,7 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     allowFunctionKeys: true,
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
         if (
-            event.rawEvent.altKey &&
+            event.rawEvent.altKey ||
             !editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
         ) {
             return false;
