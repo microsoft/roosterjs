@@ -1,5 +1,6 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockWithCache } from '../../publicTypes/block/ContentModelBlockWithCache';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 
@@ -18,9 +19,15 @@ export interface TableSelectionContext {
  */
 export interface IterateSelectionsOption {
     /**
-     * When set to true, and a table cell is marked as selected, all content under this table cell will not be included in result
+     * For selected table cell, this property determines how do we handle its content.
+     * include: No matter if table cell is selected, always invoke callback function for selected content (default value)
+     * ignoreForTable: When the whole table is selected we invoke callback for the table (using block parameter) but skip
+     * all its cells and content, otherwise keep invoking callback for table cell and content
+     * ignoreForTableOrCell: If whole table is selected, same with ignoreForTable, or if a table cell is selected, only
+     * invoke callback for the table cell itself but not for its content, otherwise keep invoking callback for content.
+     * @default include
      */
-    ignoreContentUnderSelectedTableCell?: boolean;
+    contentUnderSelectedTableCell?: 'include' | 'ignoreForTable' | 'ignoreForTableOrCell';
 
     /**
      * Whether call the callback for the list item format holder segment
@@ -53,9 +60,31 @@ export function iterateSelections(
     option?: IterateSelectionsOption,
     table?: TableSelectionContext,
     treatAllAsSelect?: boolean
+) {
+    const internalCallback: IterateSelectionsCallback = (path, tableContext, block, segments) => {
+        if (!!(block as ContentModelBlockWithCache)?.cachedElement) {
+            // TODO: This is a temporary solution. A better solution would be making all results from iterationSelection() to be readonly,
+            // use a util function to change it to be editable before edit them where we clear its cached element
+            delete (block as ContentModelBlockWithCache).cachedElement;
+        }
+
+        return callback(path, tableContext, block, segments);
+    };
+
+    internalIterateSelections(path, internalCallback, option, table, treatAllAsSelect);
+}
+
+function internalIterateSelections(
+    path: ContentModelBlockGroup[],
+    callback: IterateSelectionsCallback,
+    option?: IterateSelectionsOption,
+    table?: TableSelectionContext,
+    treatAllAsSelect?: boolean
 ): boolean {
     const parent = path[0];
     const includeListFormatHolder = option?.includeListFormatHolder || 'allSegments';
+    const contentUnderSelectedTableCell = option?.contentUnderSelectedTableCell || 'include';
+
     let hasSelectedSegment = false;
     let hasUnselectedSegment = false;
 
@@ -65,7 +94,7 @@ export function iterateSelections(
         switch (block.blockType) {
             case 'BlockGroup':
                 const newPath = [block, ...path];
-                if (iterateSelections(newPath, callback, option, table, treatAllAsSelect)) {
+                if (internalIterateSelections(newPath, callback, option, table, treatAllAsSelect)) {
                     return true;
                 }
                 break;
@@ -74,7 +103,7 @@ export function iterateSelections(
                 const cells = block.cells;
                 const isWholeTableSelected = cells.every(row => row.every(cell => cell.isSelected));
 
-                if (option?.ignoreContentUnderSelectedTableCell && isWholeTableSelected) {
+                if (contentUnderSelectedTableCell != 'include' && isWholeTableSelected) {
                     if (callback(path, table, block)) {
                         return true;
                     }
@@ -96,12 +125,15 @@ export function iterateSelections(
                                 return true;
                             }
 
-                            if (!cell.isSelected || !option?.ignoreContentUnderSelectedTableCell) {
+                            if (
+                                !cell.isSelected ||
+                                contentUnderSelectedTableCell != 'ignoreForTableOrCell'
+                            ) {
                                 const newPath = [cell, ...path];
                                 const isSelected = treatAllAsSelect || cell.isSelected;
 
                                 if (
-                                    iterateSelections(
+                                    internalIterateSelections(
                                         newPath,
                                         callback,
                                         option,
@@ -130,7 +162,15 @@ export function iterateSelections(
                     } else if (segment.segmentType == 'General') {
                         const newPath = [segment, ...path];
 
-                        if (iterateSelections(newPath, callback, option, table, treatAllAsSelect)) {
+                        if (
+                            internalIterateSelections(
+                                newPath,
+                                callback,
+                                option,
+                                table,
+                                treatAllAsSelect
+                            )
+                        ) {
                             return true;
                         }
                     } else {

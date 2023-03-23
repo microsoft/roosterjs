@@ -27,6 +27,20 @@ describe('Creators', () => {
         });
     });
 
+    it('createContentModelDocument with default format', () => {
+        const result = createContentModelDocument({
+            fontSize: '10pt',
+        });
+
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            format: {
+                fontSize: '10pt',
+            },
+        });
+    });
+
     it('createGeneralBlock', () => {
         const element = document.createElement('div');
         const result = createGeneralBlock(element);

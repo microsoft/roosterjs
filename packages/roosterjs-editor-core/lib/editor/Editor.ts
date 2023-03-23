@@ -1,4 +1,5 @@
 import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
+import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { coreApiMap } from '../coreApi/coreApiMap';
 import {
     BlockElement,
@@ -7,6 +8,7 @@ import {
     ColorTransformDirection,
     ContentChangedData,
     ContentPosition,
+    DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
@@ -132,6 +134,13 @@ export default class Editor implements IEditor {
             imageSelectionBorderColor: options.imageSelectionBorderColor,
         };
 
+        if (this.isFeatureEnabled(ExperimentalFeatures.VariableBasedDarkColor)) {
+            this.core.darkColorHandler = new DarkColorHandlerImpl(
+                contentDiv,
+                this.core.lifecycle.getDarkColor
+            );
+        }
+
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
 
@@ -149,6 +158,8 @@ export default class Editor implements IEditor {
         for (let i = core.plugins.length - 1; i >= 0; i--) {
             core.plugins[i].dispose();
         }
+
+        core.darkColorHandler?.reset();
 
         this.core = null;
     }
@@ -993,7 +1004,9 @@ export default class Editor implements IEditor {
      * @param nextDarkMode The next status of dark mode. True if the editor should be in dark mode, false if not.
      */
     public setDarkModeState(nextDarkMode?: boolean) {
-        if (this.isDarkMode() == !!nextDarkMode) {
+        const isDarkMode = this.isDarkMode();
+
+        if (isDarkMode == !!nextDarkMode) {
             return;
         }
         const core = this.getCore();
@@ -1006,7 +1019,8 @@ export default class Editor implements IEditor {
             nextDarkMode
                 ? ColorTransformDirection.LightToDark
                 : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/
+            true /*forceTransform*/,
+            isDarkMode
         );
 
         this.triggerContentChangedEvent(
@@ -1035,6 +1049,13 @@ export default class Editor implements IEditor {
             null /*callback*/,
             ColorTransformDirection.LightToDark
         );
+    }
+
+    /**
+     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     */
+    public getDarkColorHandler(): DarkColorHandler | null {
+        return this.getCore().darkColorHandler || null;
     }
 
     /**
@@ -1138,7 +1159,7 @@ export default class Editor implements IEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    private getCore(): EditorCore {
+    protected getCore(): EditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }

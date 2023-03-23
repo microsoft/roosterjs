@@ -6,8 +6,8 @@ import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTable
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
-import { updateTableCellMetadata } from '../metadata/updateTableCellMetadata';
-import { updateTableMetadata } from '../metadata/updateTableMetadata';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     topBorderColor: '#ABABAB',
@@ -42,12 +42,23 @@ export function applyTableFormat(
 
         const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
 
+        delete table.cachedElement;
+
+        clearCache(cells);
         formatBorders(cells, effectiveMetadata);
         formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
         setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
         setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
 
         return effectiveMetadata;
+    });
+}
+
+function clearCache(cells: ContentModelTableCell[][]) {
+    cells.forEach(row => {
+        row.forEach(cell => {
+            delete cell.cachedElement;
+        });
     });
 }
 

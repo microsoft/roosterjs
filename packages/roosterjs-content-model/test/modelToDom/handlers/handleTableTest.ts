@@ -15,7 +15,7 @@ describe('handleTable', () => {
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
         const div = document.createElement('div');
-        handleTable(document, div, model, context);
+        handleTable(document, div, model, context, null);
         expect(div.innerHTML).toBe(expectedInnerHTML);
     }
 
@@ -62,13 +62,16 @@ describe('handleTable', () => {
     });
 
     it('Regular 2 * 2 table', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
+        const tdModel4 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, tdModel],
-                    [tdModel, tdModel],
+                    [tdModel1, tdModel2],
+                    [tdModel3, tdModel4],
                 ],
                 format: {},
                 widths: [],
@@ -80,11 +83,12 @@ describe('handleTable', () => {
     });
 
     it('3 * 1 table with empty row', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [[tdModel], [], [tdModel]],
+                cells: [[tdModel1], [], [tdModel2]],
                 format: {},
                 widths: [],
                 heights: [],
@@ -95,13 +99,15 @@ describe('handleTable', () => {
     });
 
     it('Table with spanLeft cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, createTableCell(2, 1, false)],
-                    [tdModel, tdModel],
+                    [tdModel1, createTableCell(2, 1, false)],
+                    [tdModel2, tdModel3],
                 ],
                 format: {},
                 widths: [],
@@ -113,13 +119,15 @@ describe('handleTable', () => {
     });
 
     it('Table with spanAbove cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
                 cells: [
-                    [tdModel, tdModel],
-                    [createTableCell(1, 2, false), tdModel],
+                    [tdModel1, tdModel2],
+                    [createTableCell(1, 2, false), tdModel3],
                 ],
                 format: {},
                 widths: [],
@@ -218,7 +226,8 @@ describe('handleTable', () => {
                 heights: [],
                 dataset: {},
             },
-            context
+            context,
+            null
         );
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
@@ -226,5 +235,67 @@ describe('handleTable', () => {
         const table = div.firstChild as HTMLTableElement;
         expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
         expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
+    });
+
+    it('Regular 1 * 1 table with refNode', () => {
+        const div = document.createElement('div');
+        const br = document.createElement('br');
+
+        div.appendChild(br);
+
+        const result = handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                cells: [[createTableCell(1, 1, false)]],
+                format: {},
+                widths: [],
+                heights: [],
+                dataset: {},
+            },
+            context,
+            br
+        );
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table><br>');
+        expect(result).toBe(br);
+    });
+
+    it('Regular 1 * 1 table with refNode and cached element', () => {
+        const div = document.createElement('div');
+        const table = document.createElement('table');
+        const br = document.createElement('br');
+        const td = document.createElement('td');
+
+        table.id = 't1';
+        td.id = 'd1';
+
+        div.appendChild(table);
+        div.appendChild(br);
+
+        const cell = createTableCell(1, 1, false);
+        cell.cachedElement = td;
+
+        const result = handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                cells: [[cell]],
+                format: {},
+                widths: [],
+                heights: [],
+                dataset: {},
+                cachedElement: table,
+            },
+            context,
+            table
+        );
+
+        expect(div.innerHTML).toBe(
+            '<table id="t1"><tbody><tr><td id="d1"></td></tr></tbody></table><br>'
+        );
+        expect(result).toBe(br);
     });
 });

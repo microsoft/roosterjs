@@ -1,5 +1,6 @@
 import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
+import { delimiterProcessor } from '../processors/delimiterProcessor';
 import { elementProcessor } from '../processors/elementProcessor';
 import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { entityProcessor } from '../processors/entityProcessor';
@@ -55,4 +56,5 @@ export const defaultProcessorMap: ElementProcessorMap = {
     element: elementProcessor,
     entity: entityProcessor,
     child: childProcessor,
+    delimiter: delimiterProcessor,
 };

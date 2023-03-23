@@ -15,6 +15,10 @@ export function splitTableCellVertically(table: ContentModelTable) {
             const row = table.cells[rowIndex];
             const belowRow = table.cells[rowIndex + 1];
 
+            row.forEach(cell => {
+                delete cell.cachedElement;
+            });
+
             if (
                 belowRow?.every(
                     (belowCell, colIndex) =>
@@ -24,6 +28,7 @@ export function splitTableCellVertically(table: ContentModelTable) {
                 belowRow.forEach((belowCell, colIndex) => {
                     if (colIndex >= sel.firstCol && colIndex <= sel.lastCol) {
                         belowCell.spanAbove = false;
+                        delete belowCell.cachedElement;
                     }
                 });
             } else {

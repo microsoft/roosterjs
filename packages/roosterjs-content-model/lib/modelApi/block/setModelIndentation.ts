@@ -41,15 +41,19 @@ export function setModelIndentation(
         } else if (block) {
             const { format } = block;
             const { marginLeft, marginRight, direction } = format;
-            const originalValue = parseValueWithUnit(direction == 'rtl' ? marginRight : marginLeft);
+            const isRtl = direction == 'rtl';
+            const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
             let newValue = (isIndent ? Math.ceil : Math.floor)(originalValue / length) * length;
 
             if (newValue == originalValue) {
                 newValue = Math.max(newValue + length * (isIndent ? 1 : -1), 0);
             }
 
-            format.marginLeft = newValue + 'px';
-            format.marginRight = newValue + 'px';
+            if (isRtl) {
+                format.marginRight = newValue + 'px';
+            } else {
+                format.marginLeft = newValue + 'px';
+            }
         }
     });
 

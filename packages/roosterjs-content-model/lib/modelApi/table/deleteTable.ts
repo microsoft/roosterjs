@@ -5,4 +5,5 @@ import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
  */
 export function deleteTable(table: ContentModelTable) {
     table.cells = [];
+    delete table.cachedElement;
 }

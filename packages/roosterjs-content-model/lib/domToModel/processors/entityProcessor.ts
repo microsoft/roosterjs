@@ -16,18 +16,22 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
     const { id, type, isReadonly } = entity || { isReadonly: true };
     const isBlockEntity = isBlockElement(element, context);
 
-    stackFormat(context, { segment: isBlockEntity ? 'shallowCloneForBlock' : undefined }, () => {
-        const entityModel = createEntity(element, isReadonly, context.segmentFormat, id, type);
+    stackFormat(
+        context,
+        { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
+        () => {
+            const entityModel = createEntity(element, isReadonly, context.segmentFormat, id, type);
 
-        // TODO: Need to handle selection for editable entity
-        if (context.isInSelection) {
-            entityModel.isSelected = true;
-        }
+            // TODO: Need to handle selection for editable entity
+            if (context.isInSelection) {
+                entityModel.isSelected = true;
+            }
 
-        if (isBlockEntity) {
-            addBlock(group, entityModel);
-        } else {
-            addSegment(group, entityModel);
+            if (isBlockEntity) {
+                addBlock(group, entityModel);
+            } else {
+                addSegment(group, entityModel);
+            }
         }
-    });
+    );
 };

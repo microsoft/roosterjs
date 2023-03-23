@@ -16,23 +16,18 @@ import { stackFormat } from '../utils/stackFormat';
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
-    const isLink = element.tagName == 'A';
+    const isLink = element.tagName == 'A' && element.hasAttribute('href');
+    const isCode = element.tagName == 'CODE';
 
     stackFormat(
         context,
         {
             segment: isBlock ? 'shallowCloneForBlock' : 'shallowClone',
             paragraph: 'shallowClone',
-            link: isLink ? 'empty' : undefined,
         },
         () => {
             let topDivider: ContentModelDivider | undefined;
             let bottomDivider: ContentModelDivider | undefined;
-
-            if (isLink) {
-                parseFormat(element, context.formatParsers.link, context.link.format, context);
-                parseFormat(element, context.formatParsers.dataset, context.link.dataset, context);
-            }
 
             if (isBlock) {
                 parseFormat(element, context.formatParsers.block, context.blockFormat, context);
@@ -84,7 +79,27 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
             }
 
-            context.elementProcessors.child(group, element, context);
+            if (isCode) {
+                stackFormat(context, { code: 'codeDefault' }, () => {
+                    parseFormat(element, context.formatParsers.code, context.code.format, context);
+
+                    context.elementProcessors.child(group, element, context);
+                });
+            } else if (isLink) {
+                stackFormat(context, { link: 'linkDefault' }, () => {
+                    parseFormat(element, context.formatParsers.link, context.link.format, context);
+                    parseFormat(
+                        element,
+                        context.formatParsers.dataset,
+                        context.link.dataset,
+                        context
+                    );
+
+                    context.elementProcessors.child(group, element, context);
+                });
+            } else {
+                context.elementProcessors.child(group, element, context);
+            }
 
             if (bottomDivider) {
                 if (context.isInSelection) {

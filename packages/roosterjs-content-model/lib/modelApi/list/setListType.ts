@@ -30,11 +30,13 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             } else if (block.blocks.length == 1) {
                 setParagraphNotImplicit(block.blocks[0]);
             }
-        } else if (block.blockType == 'Paragraph') {
+        } else {
             const index = parent.blocks.indexOf(block);
 
             if (index >= 0) {
                 const prevBlock = parent.blocks[index - 1];
+                const segmentFormat =
+                    (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
                 const newListItem = createListItem(
                     [
                         {
@@ -46,14 +48,23 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                     prevBlock.levels[0]?.listType == 'OL')
                                     ? undefined
                                     : 1,
+                            direction: block.format.direction,
+                            textAlign: block.format.textAlign,
                         },
                     ],
-                    block.segments[0]?.format
+                    // For list bullet, we only want to carry over these formats from segments:
+                    {
+                        fontFamily: segmentFormat.fontFamily,
+                        fontSize: segmentFormat.fontSize,
+                        textColor: segmentFormat.textColor,
+                    }
                 );
 
                 // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
                 // TODO: Do we need to keep the CSS styles applied to original DIV?
-                block.isImplicit = true;
+                if (block.blockType == 'Paragraph') {
+                    block.isImplicit = true;
+                }
 
                 newListItem.blocks.push(block);
 

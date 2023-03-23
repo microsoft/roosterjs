@@ -2,6 +2,7 @@ import { backgroundColorFormatHandler } from './common/backgroundColorFormatHand
 import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
+import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
@@ -51,6 +52,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     bold: boldFormatHandler,
     border: borderFormatHandler,
     borderBox: borderBoxFormatHandler,
+    boxShadow: boxShadowFormatHandler,
     dataset: datasetFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
@@ -93,7 +95,8 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: blockFormatHandlers,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata'],
+    listItemElement: ['direction'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
     segment: [
         'superOrSubScript',
         'strike',
@@ -104,12 +107,12 @@ const defaultFormatKeysPerCategory: {
         'bold',
         'textColor',
         'backgroundColor',
+        'lineHeight',
     ],
     segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
     tableCell: [
         'border',
-        'borderBox',
         'backgroundColor',
         'padding',
         'direction',
@@ -117,18 +120,12 @@ const defaultFormatKeysPerCategory: {
         'wordBreak',
         'textColor',
     ],
-    table: [
-        'id',
-        'border',
-        'borderBox',
-        'tableSpacing',
-        'margin',
-        'backgroundColor',
-        'display',
-        'direction',
-    ],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox'],
-    link: ['link'],
+    table: ['id', 'border', 'margin', 'backgroundColor', 'display', 'direction'],
+    tableBorder: ['borderBox', 'tableSpacing'],
+    tableCellBorder: ['borderBox'],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
+    link: ['link', 'textColor', 'underline'],
+    code: ['fontFamily'],
     dataset: ['dataset'],
     divider: [...blockFormatHandlers, 'display', 'size'],
 };

@@ -17,7 +17,7 @@ describe('handleList', () => {
     it('Empty context, empty list item', () => {
         const listItem = createListItem([]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(context.listFormat).toEqual({
@@ -37,9 +37,11 @@ describe('handleList', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul></ul></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ul style="flex-direction: column; display: flex;"></ul></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -61,9 +63,13 @@ describe('handleList', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
+        const possibleResults = [
+            '<div><ol start="1" style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ol style="flex-direction: column; display: flex;" start="1"></ol></div>', //Firefox
+        ];
 
-        expect(parent.outerHTML).toBe('<div><ol start="1"></ol></div>');
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [
@@ -91,7 +97,7 @@ describe('handleList', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div><ol></ol></div>');
         expect(context.listFormat).toEqual({
@@ -122,10 +128,10 @@ describe('handleList', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ol></ol><ol start="2" data-editing-info="{&quot;orderedStyleType&quot;:2}"></ol></div>'
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;orderedStyleType&quot;:2}" style="flex-direction: column; display: flex;"></ol></div>'
         );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
@@ -159,10 +165,10 @@ describe('handleList', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ol><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:2}"></ol></ol></div>'
+            '<div><ol><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:2}" style="flex-direction: column; display: flex;"></ol></ol></div>'
         );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 0],
@@ -200,10 +206,10 @@ describe('handleList', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}"><ol start="1"></ol></ol></div>'
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="flex-direction: column; display: flex;"><ol start="1" style="flex-direction: column; display: flex;"></ol></ol></div>'
         );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 0],
@@ -243,7 +249,7 @@ describe('handleList', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div><ol><ol></ol></ol></div>');
         expect(context.listFormat).toEqual({
@@ -279,9 +285,13 @@ describe('handleList', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
+        const possibleResults = [
+            '<div><ul><ol></ol></ul><ol start="2" style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ul><ol></ol></ul><ol style="flex-direction: column; display: flex;" start="2"></ol></div>', //Firefox
+        ];
 
-        expect(parent.outerHTML).toBe('<div><ul><ol></ol></ul><ol start="2"></ol></div>');
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -319,9 +329,15 @@ describe('handleList', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul><ol></ol><ol start="3"></ol></ul></div>');
+        const possibleResults = [
+            '<div><ul><ol></ol><ol start="3" style="flex-direction: column; display: flex;"></ol></ul></div>', //Chrome
+            '<div><ul><ol></ol><ol style="flex-direction: column; display: flex;" start="3"></ol></ul></div>', //Firefox
+        ];
+
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 2],
             nodeStack: [
@@ -361,7 +377,7 @@ describe('handleList without format handlers', () => {
     it('Empty context, empty list item', () => {
         const listItem = createListItem([]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(context.listFormat).toEqual({
@@ -381,9 +397,11 @@ describe('handleList without format handlers', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul></ul></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ul style="flex-direction: column; display: flex;"></ul></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -405,9 +423,13 @@ describe('handleList without format handlers', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
+        const possibleResults = [
+            '<div><ol style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ol style="flex-direction: column; display: flex;" start="1"></ol></div>', //Firefox
+        ];
 
-        expect(parent.outerHTML).toBe('<div><ol></ol></div>');
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -435,7 +457,7 @@ describe('handleList without format handlers', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div><ol></ol></div>');
         expect(context.listFormat).toEqual({
@@ -466,9 +488,11 @@ describe('handleList without format handlers', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol></ol><ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol></ol><ol style="flex-direction: column; display: flex;"></ol></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -501,9 +525,11 @@ describe('handleList without format handlers', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol><ol></ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol><ol style="flex-direction: column; display: flex;"></ol></ol></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -540,9 +566,11 @@ describe('handleList without format handlers', () => {
 
         parent.appendChild(existingOL);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol></ol><ol><ol></ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol></ol><ol style="flex-direction: column; display: flex;"><ol style="flex-direction: column; display: flex;"></ol></ol></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -581,7 +609,7 @@ describe('handleList without format handlers', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         expect(parent.outerHTML).toBe('<div><ol><ol></ol></ol></div>');
         expect(context.listFormat).toEqual({
@@ -617,9 +645,14 @@ describe('handleList without format handlers', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul><ol></ol></ul><ol></ol></div>');
+        const possibleResults = [
+            '<div><ul><ol></ol></ul><ol style="flex-direction: column; display: flex;"></ol></div>', //Chrome
+            '<div><ul><ol></ol></ul><ol style="flex-direction: column; display: flex;" start="2"></ol></div>', //Firefox
+        ];
+
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -657,9 +690,11 @@ describe('handleList without format handlers', () => {
             { node: existingOL2, listType: 'OL' },
         ];
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul><ol></ol><ol></ol></ul></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ul><ol></ol><ol style="flex-direction: column; display: flex;"></ol></ul></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 1],
             nodeStack: [
@@ -698,11 +733,11 @@ describe('handleList handles metadata', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         const possibleResults = [
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>', // Chrome
-            '<ol style="list-style-type: upper-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha; flex-direction: column; display: flex;"></ol>', // Chrome
+            '<ol style="list-style-type: upper-alpha; flex-direction: column; display: flex;" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
         ];
         expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
     });
@@ -716,12 +751,13 @@ describe('handleList handles metadata', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         const possibleResults = [
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>', // Chrome
-            '<ol style="list-style-type: lower-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha; flex-direction: column; display: flex;"></ol>', // Chrome
+            '<ol style="list-style-type: lower-alpha; flex-direction: column; display: flex;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
         ];
+
         expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
     });
 
@@ -734,12 +770,89 @@ describe('handleList handles metadata', () => {
             },
         ]);
 
-        handleList(document, parent, listItem, context);
+        handleList(document, parent, listItem, context, null);
 
         const possibleResults = [
-            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>', // Chrome
-            '<ul style="list-style-type: circle;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ul>', // Firefox
+            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle; flex-direction: column; display: flex;"></ul>', // Chrome
+            '<ul style="list-style-type: circle; flex-direction: column; display: flex;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ul>', // Firefox
         ];
         expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(0);
+    });
+
+    it('OL with refNode', () => {
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+            },
+        ]);
+        const br = document.createElement('br');
+
+        parent.appendChild(br);
+
+        handleList(document, parent, listItem, context, br);
+
+        const possibleResults = [
+            '<div><ol start="1" style="flex-direction: column; display: flex;"></ol><br></div>', //Chrome
+            '<div><ol style="flex-direction: column; display: flex;" start="1"></ol><br></div>', //Firefox
+        ];
+
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [0],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    node: parent.firstChild as HTMLElement,
+                    listType: 'OL',
+                },
+            ],
+        });
+    });
+
+    it('Context has OL with refNode', () => {
+        const existingOL = document.createElement('ol');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+            },
+            {
+                listType: 'OL',
+            },
+        ]);
+        const br = document.createElement('br');
+
+        context.listFormat.threadItemCounts = [1];
+        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
+
+        parent.appendChild(existingOL);
+        parent.appendChild(br);
+
+        const result = handleList(document, parent, listItem, context, br);
+
+        const possibleResults = [
+            '<div><ol><ol start="1" style="flex-direction: column; display: flex;"></ol></ol><br></div>', //Chrome
+            '<div><ol><ol style="flex-direction: column; display: flex;" start="1"></ol></ol><br></div>', //Firefox
+        ];
+
+        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(0);
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1, 0],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    listType: 'OL',
+                    node: existingOL,
+                },
+                {
+                    listType: 'OL',
+                    node: existingOL.firstChild as HTMLElement,
+                },
+            ],
+        });
+        expect(result).toBe(br);
     });
 });

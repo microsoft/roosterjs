@@ -25,6 +25,12 @@ export interface MergeModelOption {
      * @default false
      */
     mergeTable?: boolean;
+
+    /**
+     * Use this insert position to merge instead of querying selection from target model
+     * @default undefined
+     */
+    insertPosition?: InsertPosition;
 }
 
 /**
@@ -35,7 +41,7 @@ export function mergeModel(
     source: ContentModelDocument,
     options?: MergeModelOption
 ) {
-    const insertPosition = deleteSelection(target);
+    const insertPosition = options?.insertPosition ?? deleteSelection(target);
 
     if (insertPosition) {
         for (let i = 0; i < source.blocks.length; i++) {
@@ -105,7 +111,7 @@ function mergeTable(
                 const newCell = newTable.cells[i][j];
 
                 if (i == 0 && colIndex + j >= table.cells[0].length) {
-                    for (let k = 0; k < rowIndex; k++) {
+                    for (let k = 0; k < table.cells.length; k++) {
                         const leftCell = table.cells[k]?.[colIndex + j - 1];
                         table.cells[k][colIndex + j] = createTableCell(
                             false /*spanLeft*/,
@@ -121,7 +127,7 @@ function mergeTable(
                         table.cells[rowIndex + i] = [];
                     }
 
-                    for (let k = 0; k < colIndex; k++) {
+                    for (let k = 0; k < table.cells[rowIndex].length; k++) {
                         const aboveCell = table.cells[rowIndex + i - 1]?.[k];
                         table.cells[rowIndex + i][k] = createTableCell(
                             false /*spanLeft*/,
@@ -140,7 +146,7 @@ function mergeTable(
             }
         }
 
-        normalizeTable(table);
+        normalizeTable(table, markerPosition.marker.format);
         applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
     } else {
         insertBlock(markerPosition, newTable);

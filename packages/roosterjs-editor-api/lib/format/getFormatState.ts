@@ -35,6 +35,7 @@ export function getElementBasedFormatState(
     const headerTag = getTagOfNode(
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', null /*startFrom*/, event)
     );
+
     const table = editor.queryElements('table', QueryScope.OnSelection)[0];
     const tableFormat = table ? getTableFormatInfo(table) : undefined;
     const hasHeader = table?.rows[0]
@@ -49,6 +50,8 @@ export function getElementBasedFormatState(
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
+        isCodeInline: !!editor.queryElements('code', QueryScope.OnSelection)[0],
+        isCodeBlock: !!editor.queryElements('pre>code', QueryScope.OnSelection)[0],
         isInTable: !!table,
         tableFormat: tableFormat,
         tableHasHeader: hasHeader,

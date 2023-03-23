@@ -86,7 +86,12 @@ export default class Watermark implements EditorPlugin {
             if (operation == EntityOperation.ReplaceTemporaryContent) {
                 this.removeWatermark(wrapper);
             } else if (event.operation == EntityOperation.NewEntity) {
-                applyFormat(wrapper, this.format, this.editor.isDarkMode());
+                applyFormat(
+                    wrapper,
+                    this.format,
+                    this.editor.isDarkMode(),
+                    this.editor.getDarkColorHandler()
+                );
                 wrapper.spellcheck = false;
             }
         }

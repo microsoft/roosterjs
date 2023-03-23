@@ -11,8 +11,6 @@ import {
 describe('createModelToDomContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
-        zoomScale: 1,
-        isRightToLeft: false,
         getDarkColor: undefined,
     };
     const defaultResult: ModelToDomContext = {
@@ -31,10 +29,8 @@ describe('createModelToDomContext', () => {
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
         defaultImplicitFormatMap: defaultImplicitFormatMap,
-        entities: {},
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
-        doNotReuseEntityDom: false,
     };
     it('no param', () => {
         const context = createModelToDomContext();
@@ -45,8 +41,6 @@ describe('createModelToDomContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
-            zoomScale: 2,
-            isRightToLeft: true,
             getDarkColor: () => '',
         };
 
@@ -59,13 +53,11 @@ describe('createModelToDomContext', () => {
     });
 
     it('with overrides', () => {
-        const mockedMergingCallback = 'mergingCallback' as any;
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
         const mockedAStyle = 'a' as any;
         const context = createModelToDomContext(undefined, {
-            mergingCallback: mockedMergingCallback,
             formatApplierOverride: {
                 bold: mockedBoldApplier,
             },
@@ -97,7 +89,6 @@ describe('createModelToDomContext', () => {
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
         expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
-        expect(context.entities).toEqual({});
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
     });

@@ -887,34 +887,40 @@ describe('mergeModel', () => {
         });
     });
 
-    it('table to table, merge table', () => {
+    it('table to table, merge table 1', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
 
         const para1 = createParagraph();
         const text1 = createText('test1');
-        const cell11 = createTableCell();
-        const cell12 = createTableCell();
-        const cell21 = createTableCell();
-        const cell22 = createTableCell();
-        const table1 = createTable(2);
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const cell21 = createTableCell(false, false, false, { backgroundColor: '21' });
+        const cell22 = createTableCell(false, false, false, { backgroundColor: '22' });
+        const cell31 = createTableCell(false, false, false, { backgroundColor: '31' });
+        const cell32 = createTableCell(false, false, false, { backgroundColor: '32' });
+        const table1 = createTable(4);
 
         para1.segments.push(text1);
         text1.isSelected = true;
-        cell22.blocks.push(para1);
+        cell12.blocks.push(para1);
         table1.cells = [
+            [cell01, cell02],
             [cell11, cell12],
             [cell21, cell22],
+            [cell31, cell32],
         ];
 
         majorModel.blocks.push(table1);
 
         const newPara1 = createParagraph();
         const newText1 = createText('newText1');
-        const newCell11 = createTableCell();
-        const newCell12 = createTableCell();
-        const newCell21 = createTableCell();
-        const newCell22 = createTableCell();
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
         const newTable1 = createTable(2);
 
         newPara1.segments.push(newText1);
@@ -941,28 +947,14 @@ describe('mergeModel', () => {
                     blockType: 'Table',
                     cells: [
                         [
+                            cell01,
+                            cell02,
                             {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
+                                format: {
+                                    backgroundColor: '02',
+                                },
                                 spanLeft: false,
                                 spanAbove: false,
                                 isHeader: false,
@@ -970,15 +962,7 @@ describe('mergeModel', () => {
                             },
                         ],
                         [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
+                            cell11,
                             {
                                 blockGroupType: 'TableCell',
                                 blocks: [
@@ -995,57 +979,26 @@ describe('mergeModel', () => {
                                         isImplicit: true,
                                     },
                                 ],
-                                format: {},
+                                format: {
+                                    backgroundColor: 'n11',
+                                },
                                 spanLeft: false,
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
                             },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'newText1',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
+                            newCell12,
                         ],
+                        [cell21, newCell21, newCell22],
                         [
+                            cell31,
+                            cell32,
                             {
                                 blockGroupType: 'TableCell',
                                 blocks: [],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
+                                format: {
+                                    backgroundColor: '32',
+                                },
                                 spanLeft: false,
                                 spanAbove: false,
                                 isHeader: false,
@@ -1057,6 +1010,320 @@ describe('mergeModel', () => {
                     widths: [],
                     heights: [],
                     dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('table to table, merge table 2', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell03 = createTableCell(false, false, false, { backgroundColor: '03' });
+        const cell04 = createTableCell(false, false, false, { backgroundColor: '04' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const cell13 = createTableCell(false, false, false, { backgroundColor: '13' });
+        const cell14 = createTableCell(false, false, false, { backgroundColor: '14' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.cells = [
+            [cell01, cell02, cell03, cell04],
+            [cell11, cell12, cell13, cell14],
+        ];
+
+        majorModel.blocks.push(table1);
+
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell12.blocks.push(newPara1);
+        newTable1.cells = [
+            [newCell11, newCell12],
+            [newCell21, newCell22],
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(majorModel, sourceModel, {
+            mergeTable: true,
+        });
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [cell01, cell02, cell03, cell04],
+                        [
+                            cell11,
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: true,
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: {
+                                    backgroundColor: 'n11',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            newCell12,
+                            cell14,
+                        ],
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    backgroundColor: '11',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            newCell21,
+                            newCell22,
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    backgroundColor: '14',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                    ],
+                    format: {},
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('table to table, merge table 3', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const cell01 = createTableCell(false, false, false, { backgroundColor: '01' });
+        const cell02 = createTableCell(false, false, false, { backgroundColor: '02' });
+        const cell11 = createTableCell(false, false, false, { backgroundColor: '11' });
+        const cell12 = createTableCell(false, false, false, { backgroundColor: '12' });
+        const table1 = createTable(2);
+
+        para1.segments.push(text1);
+        text1.isSelected = true;
+        cell12.blocks.push(para1);
+        table1.cells = [
+            [cell01, cell02],
+            [cell11, cell12],
+        ];
+
+        majorModel.blocks.push(table1);
+
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell11 = createTableCell(false, false, false, { backgroundColor: 'n11' });
+        const newCell12 = createTableCell(false, false, false, { backgroundColor: 'n12' });
+        const newCell21 = createTableCell(false, false, false, { backgroundColor: 'n21' });
+        const newCell22 = createTableCell(false, false, false, { backgroundColor: 'n22' });
+        const newTable1 = createTable(2);
+
+        newPara1.segments.push(newText1);
+        newCell12.blocks.push(newPara1);
+        newTable1.cells = [
+            [newCell11, newCell12],
+            [newCell21, newCell22],
+        ];
+
+        sourceModel.blocks.push(newTable1);
+
+        spyOn(applyTableFormat, 'applyTableFormat');
+        spyOn(normalizeTable, 'normalizeTable');
+
+        mergeModel(majorModel, sourceModel, {
+            mergeTable: true,
+        });
+
+        expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            cell01,
+                            cell02,
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    backgroundColor: '02',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                        ],
+                        [
+                            cell11,
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: true,
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: {
+                                    backgroundColor: 'n11',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            newCell12,
+                        ],
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    backgroundColor: '11',
+                                },
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                            },
+                            newCell21,
+                            newCell22,
+                        ],
+                    ],
+                    format: {},
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Use customized insert position', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+        const marker3 = createSelectionMarker();
+
+        para1.segments.push(marker1, text1, marker2, text2, marker3);
+        majorModel.blocks.push(para1);
+
+        const newPara = createParagraph();
+        const newText = createText('new text');
+
+        newPara.segments.push(newText);
+        sourceModel.blocks.push(newPara);
+
+        mergeModel(majorModel, sourceModel, {
+            insertPosition: {
+                marker: marker2,
+                paragraph: para1,
+                path: [majorModel],
+            },
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'new text',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
                 },
             ],
         });

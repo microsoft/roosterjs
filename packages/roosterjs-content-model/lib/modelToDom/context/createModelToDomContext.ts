@@ -2,7 +2,7 @@ import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { ModelToDomOption } from '../../publicTypes/IExperimentalContentModelEditor';
+import { ModelToDomOption } from '../../publicTypes/IContentModelEditor';
 import {
     defaultFormatAppliers,
     getFormatAppliers,
@@ -20,8 +20,6 @@ export function createModelToDomContext(
     return {
         ...(editorContext || {
             isDarkMode: false,
-            isRightToLeft: false,
-            zoomScale: 1,
             getDarkColor: undefined,
         }),
         regularSelection: {
@@ -47,10 +45,8 @@ export function createModelToDomContext(
             ...defaultImplicitFormatMap,
             ...(options?.defaultImplicitFormatOverride || {}),
         },
-        entities: {},
 
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
-        doNotReuseEntityDom: !!options?.doNotReuseEntityDom,
     };
 }

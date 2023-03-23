@@ -202,4 +202,78 @@ describe('reducedModelChildProcessor', () => {
             ],
         });
     });
+
+    it('With table, need to do format for all table cells', () => {
+        const doc = createContentModelDocument();
+        const div = document.createElement('div');
+        div.innerHTML =
+            'aa<table class="tb1"><tr><td id="td1">test1</td><td id="td2"><span id="selection">test2</span></td></tr></table>bb';
+        context.selectionRootNode = div.querySelector('#selection') as HTMLElement;
+
+        reducedModelChildProcessor(doc, div, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                text: 'test1',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                text: 'test2',
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                        isImplicit: true,
+                                    },
+                                ],
+                                format: {},
+                                spanLeft: false,
+                                spanAbove: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: div.querySelector('#td2') as HTMLTableCellElement,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                    cachedElement: div.querySelector('.tb1') as HTMLTableElement,
+                },
+            ],
+        });
+    });
 });

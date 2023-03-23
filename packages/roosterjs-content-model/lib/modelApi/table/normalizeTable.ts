@@ -1,6 +1,7 @@
 import { addSegment } from '../common/addSegment';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { createBr } from '../creators/createBr';
@@ -10,10 +11,17 @@ const MIN_HEIGHT = 22;
 /**
  * @internal
  */
-export function normalizeTable(table: ContentModelTable) {
+export function normalizeTable(
+    table: ContentModelTable,
+    defaultSegmentFormat?: ContentModelSegmentFormat
+) {
     // Always collapse border and use border box for table in roosterjs to make layout simpler
-    table.format.borderCollapse = true;
-    table.format.useBorderBox = true;
+    const format = table.format;
+
+    if (!format.borderCollapse || !format.useBorderBox) {
+        format.borderCollapse = true;
+        format.useBorderBox = true;
+    }
 
     // Make sure all first cells are not spanned
     // Make sure all inner cells are not header
@@ -21,13 +29,14 @@ export function normalizeTable(table: ContentModelTable) {
     table.cells.forEach((row, rowIndex) => {
         row.forEach((cell, colIndex) => {
             if (cell.blocks.length == 0) {
-                addSegment(cell, createBr());
+                addSegment(cell, createBr(defaultSegmentFormat));
             }
 
             if (rowIndex == 0) {
                 cell.spanAbove = false;
-            } else {
+            } else if (rowIndex > 0 && cell.isHeader) {
                 cell.isHeader = false;
+                delete cell.cachedElement;
             }
 
             if (colIndex == 0) {

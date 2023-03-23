@@ -1,9 +1,9 @@
-import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
+import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import domToContentModel from '../../../lib/publicApi/domToContentModel';
+import domToContentModel from '../../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createRange } from 'roosterjs-editor-dom';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -258,30 +258,78 @@ describe('changeFontSize', () => {
         );
     }
 
-    it('increase pt', () => {
+    it('increase pt 1', () => {
         testSizeChange('7pt', '8pt', 'increase');
+    });
+
+    it('increase pt 2', () => {
         testSizeChange('8pt', '9pt', 'increase');
+    });
+
+    it('increase pt 3', () => {
         testSizeChange('28pt', '36pt', 'increase');
+    });
+
+    it('increase pt 4', () => {
         testSizeChange('37pt', '48pt', 'increase');
+    });
+
+    it('increase pt 5', () => {
         testSizeChange('72pt', '80pt', 'increase');
+    });
+
+    it('increase pt 6', () => {
         testSizeChange('80pt', '90pt', 'increase');
+    });
+
+    it('increase pt 7', () => {
         testSizeChange('990pt', '1000pt', 'increase');
+    });
+
+    it('increase pt 8', () => {
         testSizeChange('1000pt', '1000pt', 'increase');
     });
 
-    it('decrease pt', () => {
+    it('decrease pt 1', () => {
         testSizeChange('1pt', '1pt', 'decrease');
+    });
+
+    it('decrease pt 2', () => {
         testSizeChange('7pt', '6pt', 'decrease');
+    });
+
+    it('decrease pt 3', () => {
         testSizeChange('8pt', '7pt', 'decrease');
+    });
+
+    it('decrease pt 4', () => {
         testSizeChange('28pt', '26pt', 'decrease');
+    });
+
+    it('decrease pt 5', () => {
         testSizeChange('37pt', '36pt', 'decrease');
+    });
+
+    it('decrease pt 6', () => {
         testSizeChange('72pt', '48pt', 'decrease');
+    });
+
+    it('decrease pt 7', () => {
         testSizeChange('80pt', '72pt', 'decrease');
+    });
+
+    it('decrease pt 8', () => {
         testSizeChange('990pt', '980pt', 'decrease');
+    });
+
+    it('decrease pt 9', () => {
         testSizeChange('1000pt', '990pt', 'decrease');
     });
 
     it('Test format parser', () => {
+        spyOn(pendingFormat, 'setPendingFormat');
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
+
         const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
             callback();
         });
@@ -294,28 +342,24 @@ describe('changeFontSize', () => {
         div.style.fontSize = '20pt';
 
         const editor = ({
-            createContentModel: (startNode: any, option: any) =>
-                domToContentModel(div, null!, {
-                    selectionRange: {
-                        type: SelectionRangeTypes.Normal,
-                        areAllCollapsed: false,
-                        ranges: [createRange(sub)],
-                    },
-                    includeRoot: true,
-                    ...option,
-                }),
+            createContentModel: (option: any) =>
+                domToContentModel(
+                    div,
+                    { isDarkMode: false },
+                    {
+                        selectionRange: {
+                            type: SelectionRangeTypes.Normal,
+                            areAllCollapsed: false,
+                            ranges: [createRange(sub)],
+                        },
+                        includeRoot: true,
+                        ...option,
+                    }
+                ),
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
-            getPendingFormat: () => <ContentModelDocument | null>null,
-            setPendingFormat: () => {},
-        } as any) as IExperimentalContentModelEditor;
-
-        spyOn(getComputedStyles, 'getComputedStyle').and.callFake(
-            (node: HTMLElement, style: string) => {
-                return node.style.fontSize;
-            }
-        );
+        } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');
 
@@ -339,8 +383,5 @@ describe('changeFontSize', () => {
                 },
             ],
         });
-
-        expect(getComputedStyles.getComputedStyle).toHaveBeenCalledTimes(1);
-        expect(getComputedStyles.getComputedStyle).toHaveBeenCalledWith(div, 'font-size');
     });
 });

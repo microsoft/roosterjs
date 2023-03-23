@@ -99,7 +99,7 @@ const handleIndentationEvent = (indenting: boolean) => (
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB, Keys.RIGHT],
+    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.RIGHT],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
@@ -109,7 +109,7 @@ const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: [Keys.TAB, Keys.LEFT],
+    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.LEFT],
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
@@ -131,11 +131,13 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
         if (li.previousSibling) {
             blockFormat(editor, (region, start, end) => {
                 const vList = createVListFromRegion(region, false /*includeSiblingList*/, li);
-                vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
-                vList.writeBack(
-                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
-                );
-                event.rawEvent.preventDefault();
+                if (vList) {
+                    vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
+                    vList.writeBack(
+                        editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                    );
+                    event.rawEvent.preventDefault();
+                }
             });
         } else {
             toggleListAndPreventDefault(event, editor);
@@ -479,7 +481,7 @@ function shouldTriggerList(
     const traverser = editor.getBlockTraverser();
     const text =
         traverser && traverser.currentBlockElement
-            ? traverser.currentBlockElement.getTextContent()
+            ? traverser.currentBlockElement.getTextContent().slice(0, textBeforeCursor.length)
             : null;
     const isATheBeginning = text && text === textBeforeCursor;
     const listChains = getListChains(editor);

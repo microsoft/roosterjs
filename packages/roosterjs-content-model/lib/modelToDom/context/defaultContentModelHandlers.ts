@@ -1,6 +1,5 @@
 import { ContentModelHandlerMap } from '../../publicTypes/context/ModelToDomSettings';
 import { handleBlock } from '../handlers/handleBlock';
-import { handleBlockGroup } from '../handlers/handleBlockGroup';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
 import { handleDivider } from '../handlers/handleDivider';
@@ -12,6 +11,7 @@ import { handleListItem } from '../handlers/handleListItem';
 import { handleParagraph } from '../handlers/handleParagraph';
 import { handleQuote } from '../handlers/handleQuote';
 import { handleSegment } from '../handlers/handleSegment';
+import { handleSegmentDecorator } from '../handlers/handleSegmentDecorator';
 import { handleTable } from '../handlers/handleTable';
 import { handleText } from '../handlers/handleText';
 
@@ -20,7 +20,6 @@ import { handleText } from '../handlers/handleText';
  */
 export const defaultContentModelHandlers: ContentModelHandlerMap = {
     block: handleBlock,
-    blockGroup: handleBlockGroup,
     blockGroupChildren: handleBlockGroupChildren,
     br: handleBr,
     entity: handleEntity,
@@ -32,6 +31,7 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     paragraph: handleParagraph,
     quote: handleQuote,
     segment: handleSegment,
+    segmentDecorator: handleSegmentDecorator,
     table: handleTable,
     text: handleText,
 };

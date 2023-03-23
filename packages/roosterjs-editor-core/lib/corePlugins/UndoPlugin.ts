@@ -241,7 +241,7 @@ function createUndoSnapshotServiceBridge(
         ? {
               canMove: (delta: number) => service.canMove(delta),
               move: (delta: number): Snapshot | null =>
-                  (html = service.move(delta)) ? { html, metadata: null } : null,
+                  (html = service.move(delta)) ? { html, metadata: null, knownColors: [] } : null,
               addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
                   service.addSnapshot(
                       snapshot.html +

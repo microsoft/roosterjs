@@ -1,3 +1,6 @@
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import { DarkColorHandler } from 'roosterjs-editor-types';
+
 /**
  * An editor context interface used by ContentModel PAI
  */
@@ -8,14 +11,9 @@ export interface EditorContext {
     isDarkMode: boolean;
 
     /**
-     * Zoom scale of the content
+     * Default format of editor
      */
-    zoomScale: number;
-
-    /**
-     * Whether current content is from right to left
-     */
-    isRightToLeft: boolean;
+    defaultFormat?: ContentModelSegmentFormat;
 
     /**
      * Calculate color for dark mode
@@ -23,4 +21,14 @@ export interface EditorContext {
      * @returns Dark mode color calculated from lightColor
      */
     getDarkColor?: (lightColor: string) => string;
+
+    /**
+     * Dark model color handler
+     */
+    darkColorHandler?: DarkColorHandler | null;
+
+    /**
+     * Whether to handle delimiters in Content Model
+     */
+    addDelimiterForEntity?: boolean;
 }

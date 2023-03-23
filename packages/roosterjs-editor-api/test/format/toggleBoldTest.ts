@@ -24,7 +24,7 @@ describe('toggleBold()', () => {
 
         toggleBold(editor);
 
-        expect(document.execCommand).toHaveBeenCalledWith('bold', false, null);
+        expect(document.execCommand).toHaveBeenCalledWith('bold', false, undefined);
     });
 
     TestHelper.itFirefoxOnly(

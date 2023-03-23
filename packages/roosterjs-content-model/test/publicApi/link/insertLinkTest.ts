@@ -6,13 +6,12 @@ import { createContentModelDocument } from '../../../lib/modelApi/creators/creat
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('insertLink', () => {
-    let editor: IExperimentalContentModelEditor;
-    let setContentModel: jasmine.Spy<IExperimentalContentModelEditor['setContentModel']>;
-    let createContentModel: jasmine.Spy<IExperimentalContentModelEditor['createContentModel']>;
+    let editor: IContentModelEditor;
+    let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
+    let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
@@ -23,7 +22,9 @@ describe('insertLink', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
-        } as any) as IExperimentalContentModelEditor;
+            getCustomData: () => ({}),
+            getFocusedPosition: () => ({}),
+        } as any) as IContentModelEditor;
     });
 
     function runTest(
@@ -63,10 +64,7 @@ describe('insertLink', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
+                            format: {},
                             text: 'http://test.com',
                             link: {
                                 dataset: {},
@@ -74,6 +72,7 @@ describe('insertLink', () => {
                                     href: 'http://test.com',
                                     anchorTitle: undefined,
                                     target: undefined,
+                                    underline: true,
                                 },
                             },
                         },
@@ -108,10 +107,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test',
                                 link: {
                                     dataset: {},
@@ -119,6 +115,7 @@ describe('insertLink', () => {
                                         href: 'http://test.com',
                                         anchorTitle: 'title',
                                         target: undefined,
+                                        underline: true,
                                     },
                                 },
                                 isSelected: true,
@@ -151,10 +148,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'linkText',
                                 link: {
                                     dataset: {},
@@ -162,6 +156,7 @@ describe('insertLink', () => {
                                         href: 'http://test.com',
                                         anchorTitle: 'title',
                                         target: 'target',
+                                        underline: true,
                                     },
                                 },
                             },
@@ -200,6 +195,7 @@ describe('insertLink', () => {
                 href: 'http://test.com',
                 anchorTitle: 'title',
                 target: undefined,
+                underline: true,
             },
         };
 
@@ -216,20 +212,14 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test1',
                                 link,
                                 isSelected: true,
                             },
                             {
                                 segmentType: 'Image',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 src: 'test',
                                 dataset: {},
                                 link,
@@ -237,10 +227,7 @@ describe('insertLink', () => {
                             },
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'test2',
                                 link,
                                 isSelected: true,
@@ -274,6 +261,7 @@ describe('insertLink', () => {
                 href: 'http://test.com',
                 anchorTitle: 'title',
                 target: undefined,
+                underline: true,
             },
         };
 
@@ -290,10 +278,7 @@ describe('insertLink', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {
-                                    underline: true,
-                                    textColor: HyperLinkColorPlaceholder,
-                                },
+                                format: {},
                                 text: 'new text',
                                 link,
                             },

@@ -12,6 +12,7 @@ import {
     SelectionRangeTypes,
     TableSelectionRange,
     Indentation,
+    ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 import {
     Browser,
@@ -50,7 +51,8 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
             }
             let cell = vtable.getCell(row, col);
             if (cell.td) {
-                editor.select(cell.td, PositionType.Begin);
+                const newPos = new Position(cell.td, PositionType.Begin).normalize();
+                editor.select(newPos);
                 break;
             }
         }
@@ -142,13 +144,30 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                             newPos.offset
                         );
                     } else {
-                        editor.select(newPos);
+                        editor.select(newPos.normalize());
                     }
                 }
             });
         }
     },
     defaultDisabled: !Browser.isChrome && !Browser.isSafari,
+};
+
+/**
+ * Requires @see ExperimentalFeatures.DeleteTableWithBackspace
+ * Delete a table selected with the table selector pressing Backspace key
+ */
+const DeleteTableWithBackspace: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.BACKSPACE],
+    shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) =>
+        editor.isFeatureEnabled(ExperimentalFeatures.DeleteTableWithBackspace) &&
+        cacheIsWholeTableSelected(event, editor),
+    handleEvent: (event, editor) => {
+        const td = cacheGetTableCell(event, editor);
+        const vtable = new VTable(td);
+        vtable.edit(TableOperation.DeleteTable);
+        vtable.writeBack();
+    },
 };
 
 function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
@@ -189,4 +208,5 @@ export const TableFeatures: Record<
     tabInTable: TabInTable,
     upDownInTable: UpDownInTable,
     indentTableOnTab: IndentTableOnTab,
+    deleteTableWithBackspace: DeleteTableWithBackspace,
 };

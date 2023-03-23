@@ -1,24 +1,19 @@
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-
-/**
- * @internal
- */
-export type ObjectStackType = 'empty';
-
-/**
- * @internal
- */
-export type ShallowObjectStackType = 'shallowClone' | 'shallowCloneForBlock' | ObjectStackType;
+import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal
  */
 export interface StackFormatOptions {
-    segment?: ShallowObjectStackType;
-    paragraph?: ShallowObjectStackType;
-    link?: ObjectStackType;
+    segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
+    paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
+    link?: 'linkDefault' | 'empty';
+    code?: 'codeDefault' | 'empty';
 }
 
 // Some styles, such as background color, won't be inherited by block element if it was originally
@@ -30,6 +25,15 @@ export interface StackFormatOptions {
 // </span>
 const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
 
+const CopiedStylesForBlockInherit: (keyof ContentModelBlockFormat)[] = [
+    'backgroundColor',
+    'direction',
+    'textAlign',
+    'isTextAlignFromAttr',
+    'lineHeight',
+    'whiteSpace',
+];
+
 /**
  * @internal
  */
@@ -38,44 +42,89 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat, link: linkFormat } = context;
-    const { segment, paragraph, link } = options;
+    const { segmentFormat, blockFormat, link: linkFormat, code: codeFormat } = context;
+    const { segment, paragraph, link, code } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
-        context.link =
-            link == 'empty'
-                ? {
-                      format: {},
-                      dataset: {},
-                  }
-                : linkFormat;
+        context.link = stackLinkInternal(linkFormat, link);
+        context.code = stackCodeInternal(codeFormat, code);
 
         callback();
     } finally {
         context.segmentFormat = segmentFormat;
         context.blockFormat = blockFormat;
         context.link = linkFormat;
+        context.code = codeFormat;
+    }
+}
+
+function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
+    switch (link) {
+        case 'linkDefault':
+            return {
+                format: {
+                    underline: true,
+                },
+                dataset: {},
+            };
+
+        case 'empty':
+            return {
+                format: {},
+                dataset: {},
+            };
+
+        default:
+            return linkFormat;
+    }
+}
+
+function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 'empty') {
+    switch (code) {
+        case 'codeDefault':
+            return {
+                format: {
+                    fontFamily: 'monospace',
+                },
+            };
+        case 'empty':
+            return {
+                format: {},
+            };
+        default:
+            return codeFormat;
     }
 }
 
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType: ShallowObjectStackType | undefined
+    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCopyInherit' | 'empty'
 ): T | {} {
-    const result =
-        processType == 'empty'
-            ? {}
-            : processType == 'shallowClone' || processType == 'shallowCloneForBlock'
-            ? { ...format }
-            : format;
+    switch (processType) {
+        case 'empty':
+            return {};
 
-    if (processType == 'shallowCloneForBlock') {
-        SkippedStylesForBlock.forEach(key => {
-            delete (result as ContentModelSegmentFormat)[key];
-        });
+        case undefined:
+            return format;
+
+        default:
+            const result = { ...format };
+
+            getObjectKeys(format).forEach(key => {
+                if (
+                    (processType == 'shallowCloneForBlock' &&
+                        SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
+                            0) ||
+                    (processType == 'shallowCopyInherit' &&
+                        CopiedStylesForBlockInherit.indexOf(key as keyof ContentModelBlockFormat) <
+                            0)
+                ) {
+                    delete result[key];
+                }
+            });
+
+            return result;
     }
-
-    return result;
 }

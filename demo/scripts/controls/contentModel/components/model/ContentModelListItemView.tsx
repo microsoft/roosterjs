@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { ContentModelBlockView } from './ContentModelBlockView';
 import { ContentModelView } from '../ContentModelView';
+import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
 import { FontFamilyFormatRenderer } from '../format/formatPart/FontFamilyFormatRenderer';
 import { FontSizeFormatRenderer } from '../format/formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
@@ -8,6 +9,7 @@ import { FormatView } from '../format/FormatView';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
+import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import {
@@ -23,6 +25,8 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ListTypeFormatRenderer,
     ...ListThreadFormatRenderers,
     ...ListMetadataFormatRenderers,
+    ...DirectionFormatRenderers,
+    MarginFormatRenderer,
 ];
 
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [

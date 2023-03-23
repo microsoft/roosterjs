@@ -1,3 +1,4 @@
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
@@ -248,12 +249,17 @@ describe('iterateSelections', () => {
         iterateSelections([group], callback);
 
         expect(callback).toHaveBeenCalledTimes(3);
-        expect(callback).toHaveBeenCalledWith([group], {
-            table: table,
-            colIndex: 0,
-            rowIndex: 0,
-            isWholeTableSelected: false,
-        });
+        expect(callback).toHaveBeenCalledWith(
+            [group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            undefined,
+            undefined
+        );
         expect(callback).toHaveBeenCalledWith(
             [cell1, group],
             {
@@ -299,15 +305,83 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback, { ignoreContentUnderSelectedTableCell: true });
+        iterateSelections([group], callback, {
+            contentUnderSelectedTableCell: 'ignoreForTableOrCell',
+        });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], {
-            table: table,
-            colIndex: 0,
-            rowIndex: 0,
-            isWholeTableSelected: false,
+        expect(callback).toHaveBeenCalledWith(
+            [group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            undefined,
+            undefined
+        );
+    });
+
+    it('Group with table selection and ignore selected table content', () => {
+        const group = createContentModelDocument();
+        const table = createTable(1);
+        const cell1 = createTableCell();
+        const cell2 = createTableCell();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        cell1.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+
+        cell1.blocks.push(para1);
+        cell1.blocks.push(para2);
+        table.cells = [[cell1, cell2]];
+
+        group.blocks.push(table);
+
+        iterateSelections([group], callback, {
+            contentUnderSelectedTableCell: 'ignoreForTable',
         });
+
+        expect(callback).toHaveBeenCalledTimes(3);
+        expect(callback).toHaveBeenCalledWith(
+            [group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            undefined,
+            undefined
+        );
+        expect(callback).toHaveBeenCalledWith(
+            [cell1, group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            para1,
+            [text1]
+        );
+        expect(callback).toHaveBeenCalledWith(
+            [cell1, group],
+            {
+                table: table,
+                colIndex: 0,
+                rowIndex: 0,
+                isWholeTableSelected: false,
+            },
+            para2,
+            [text2]
+        );
     });
 
     it('Group with whole table selection and ignore selected table cell content', () => {
@@ -332,10 +406,10 @@ describe('iterateSelections', () => {
 
         group.blocks.push(table);
 
-        iterateSelections([group], callback, { ignoreContentUnderSelectedTableCell: true });
+        iterateSelections([group], callback, { contentUnderSelectedTableCell: 'ignoreForTable' });
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, table);
+        expect(callback).toHaveBeenCalledWith([group], undefined, table, undefined);
     });
 
     it('Select from the end of paragraph', () => {
@@ -562,7 +636,7 @@ describe('iterateSelections', () => {
         iterateSelections([group], callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, divider);
+        expect(callback).toHaveBeenCalledWith([group], undefined, divider, undefined);
     });
 
     it('Return true from first selection', () => {
@@ -618,7 +692,7 @@ describe('iterateSelections', () => {
 
         expect(newCallback).toHaveBeenCalledTimes(2);
         expect(newCallback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
-        expect(newCallback).toHaveBeenCalledWith([group], undefined, divider);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, divider, undefined);
     });
 
     it('Return true from first selection in nested block group', () => {
@@ -673,10 +747,12 @@ describe('iterateSelections', () => {
                 return block == table;
             });
 
-        iterateSelections([group], newCallback, { ignoreContentUnderSelectedTableCell: true });
+        iterateSelections([group], newCallback, {
+            contentUnderSelectedTableCell: 'ignoreForTable',
+        });
 
         expect(newCallback).toHaveBeenCalledTimes(1);
-        expect(newCallback).toHaveBeenCalledWith([group], undefined, table);
+        expect(newCallback).toHaveBeenCalledWith([group], undefined, table, undefined);
     });
 
     it('Return true from table cell selection', () => {
@@ -708,18 +784,28 @@ describe('iterateSelections', () => {
         iterateSelections([group], newCallback);
 
         expect(newCallback).toHaveBeenCalledTimes(2);
-        expect(newCallback).toHaveBeenCalledWith([group], {
-            table: table,
-            rowIndex: 0,
-            colIndex: 0,
-            isWholeTableSelected: true,
-        });
-        expect(newCallback).toHaveBeenCalledWith([group], {
-            table: table,
-            rowIndex: 0,
-            colIndex: 1,
-            isWholeTableSelected: true,
-        });
+        expect(newCallback).toHaveBeenCalledWith(
+            [group],
+            {
+                table: table,
+                rowIndex: 0,
+                colIndex: 0,
+                isWholeTableSelected: true,
+            },
+            undefined,
+            undefined
+        );
+        expect(newCallback).toHaveBeenCalledWith(
+            [group],
+            {
+                table: table,
+                rowIndex: 0,
+                colIndex: 1,
+                isWholeTableSelected: true,
+            },
+            undefined,
+            undefined
+        );
     });
 
     it('includeListFormatHolder=anySegment', () => {
@@ -828,5 +914,71 @@ describe('iterateSelections', () => {
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([doc], undefined, para, [entity]);
+    });
+
+    it('Check cachedElement is cleared', () => {
+        const quote1 = createQuote();
+        const para1 = createParagraph();
+        const divider1 = createDivider('hr');
+        const quote2 = createQuote();
+        const para2 = createParagraph();
+        const divider2 = createDivider('hr');
+        const marker1 = createSelectionMarker();
+        const marker2 = createSelectionMarker();
+        const cache = 'CACHE' as any;
+
+        quote1.cachedElement = cache;
+        para1.cachedElement = cache;
+        divider1.cachedElement = cache;
+        quote2.cachedElement = cache;
+        para2.cachedElement = cache;
+        divider2.cachedElement = cache;
+
+        addSegment(quote1, marker1);
+        para1.segments.push(marker2);
+        divider1.isSelected = true;
+
+        const doc = createContentModelDocument();
+
+        doc.blocks.push(quote1, quote2, para1, para2, divider1, divider2);
+
+        iterateSelections([doc], callback);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'Quote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [marker1],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    format: {},
+                    quoteSegmentFormat: {},
+                    cachedElement: cache,
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'Quote',
+                    blocks: [],
+                    format: {},
+                    quoteSegmentFormat: {},
+                    cachedElement: cache,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [marker2],
+                    format: {},
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, cachedElement: cache },
+                { blockType: 'Divider', tagName: 'hr', format: {}, isSelected: true },
+                { blockType: 'Divider', tagName: 'hr', format: {}, cachedElement: cache },
+            ],
+        });
     });
 });

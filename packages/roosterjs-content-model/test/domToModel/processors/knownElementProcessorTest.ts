@@ -2,7 +2,6 @@ import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -228,11 +227,8 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
-                            link: { format: { href: '/test' }, dataset: {} },
+                            format: {},
+                            link: { format: { href: '/test', underline: true }, dataset: {} },
                             text: 'test',
                         },
                     ],
@@ -264,12 +260,9 @@ describe('knownElementProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
+                            format: {},
                             link: {
-                                format: { href: '/test' },
+                                format: { href: '/test', underline: true },
                                 dataset: {
                                     a: 'b',
                                     c: 'd',
@@ -282,6 +275,73 @@ describe('knownElementProcessor', () => {
             ],
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
+
+    it('Simple Code element', () => {
+        const group = createContentModelDocument();
+        const code = document.createElement('code');
+
+        code.appendChild(document.createTextNode('test'));
+        context.segmentFormat.fontFamily = 'Arial';
+
+        knownElementProcessor(group, code, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontFamily: 'Arial' },
+                            text: 'test',
+                            code: {
+                                format: { fontFamily: 'monospace' },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.code).toEqual({ format: {} });
+    });
+
+    it('Code element with a different font', () => {
+        const group = createContentModelDocument();
+        const code = document.createElement('code');
+
+        code.style.fontFamily = 'Tahoma';
+        code.appendChild(document.createTextNode('test'));
+        context.segmentFormat.fontFamily = 'Arial';
+
+        knownElementProcessor(group, code, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: { fontFamily: 'Tahoma' },
+                            text: 'test',
+                            code: {
+                                format: { fontFamily: 'Tahoma' },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.code).toEqual({ format: {} });
     });
 
     it('P tag', () => {
@@ -537,7 +597,9 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Divider',
                     tagName: 'div',
-                    format: { borderBottom: '1px solid black' },
+                    format: {
+                        borderBottom: '1px solid black',
+                    },
                 },
                 {
                     blockType: 'Paragraph',

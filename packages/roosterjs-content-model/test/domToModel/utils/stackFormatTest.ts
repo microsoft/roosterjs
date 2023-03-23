@@ -43,4 +43,54 @@ describe('stackFormat', () => {
             backgroundColor: 'green',
         });
     });
+
+    it('use default style for link', () => {
+        const context = createDomToModelContext();
+
+        context.link.format.textColor = 'red';
+        context.link.format.underline = false;
+
+        stackFormat(context, { link: 'linkDefault' }, () => {
+            expect(context.link).toEqual({
+                format: {
+                    underline: true,
+                },
+                dataset: {},
+            });
+
+            context.link.format.textColor = 'green';
+        });
+
+        expect(context.link).toEqual({
+            format: {
+                textColor: 'red',
+                underline: false,
+            },
+            dataset: {},
+        });
+    });
+
+    it('use default style for code', () => {
+        const context = createDomToModelContext();
+
+        context.code.format = {
+            fontFamily: 'Arial',
+        };
+
+        stackFormat(context, { code: 'codeDefault' }, () => {
+            expect(context.code).toEqual({
+                format: {
+                    fontFamily: 'monospace',
+                },
+            });
+
+            context.code.format.fontFamily = 'Arial';
+        });
+
+        expect(context.code).toEqual({
+            format: {
+                fontFamily: 'Arial',
+            },
+        });
+    });
 });

@@ -1,5 +1,6 @@
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
+import DarkColorHandler from './DarkColorHandler';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import Rect from './Rect';
@@ -72,6 +73,12 @@ export default interface EditorCore extends PluginState {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Dark model handler for the editor, used for variable-based solution.
+     * If keep it null, editor will still use original dataset-based dark mode solution.
+     */
+    darkColorHandler?: DarkColorHandler;
 }
 
 /**
@@ -247,6 +254,7 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  * @param direction To specify the transform direction, light to dark, or dark to light
  * @param forceTransform By default this function will only work when editor core is in dark mode.
  * Pass true to this value to force do color transformation even editor core is in light mode
+ * @param fromDarkModel Whether the given content is already in dark mode
  */
 export type TransformColor = (
     core: EditorCore,
@@ -254,7 +262,8 @@ export type TransformColor = (
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean
+    forceTransform?: boolean,
+    fromDarkMode?: boolean
 ) => void;
 
 /**
@@ -436,6 +445,7 @@ export interface CoreApiMap {
      * @param direction To specify the transform direction, light to dark, or dark to light
      * @param forceTransform By default this function will only work when editor core is in dark mode.
      * Pass true to this value to force do color transformation even editor core is in light mode
+     * @param fromDarkModel Whether the given content is already in dark mode
      */
     transformColor: TransformColor;
 

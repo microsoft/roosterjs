@@ -1,18 +1,21 @@
+import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('formatWithContentModel', () => {
-    let editor: IExperimentalContentModelEditor;
+    let editor: IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
+    let cacheContentModel: jasmine.Spy;
+    let getFocusedPosition: jasmine.Spy;
 
     const apiName = 'mockedApi';
+    const mockedPos = 'POS' as any;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -21,15 +24,17 @@ describe('formatWithContentModel', () => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
+        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
 
         editor = ({
             focus,
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-            getPendingFormat: (): ContentModelSegmentFormat | null => null,
-            setPendingFormat: () => {},
-        } as any) as IExperimentalContentModelEditor;
+            cacheContentModel,
+            getFocusedPosition,
+        } as any) as IContentModelEditor;
     });
 
     it('Callback return false', () => {
@@ -60,5 +65,26 @@ describe('formatWithContentModel', () => {
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel);
         expect(focus).toHaveBeenCalledTimes(1);
+    });
+
+    it('Preserve pending format', () => {
+        const callback = jasmine.createSpy('callback').and.returnValue(true);
+        const mockedFormat = 'FORMAT' as any;
+
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(mockedFormat);
+        spyOn(pendingFormat, 'setPendingFormat');
+
+        formatWithContentModel(editor, apiName, callback, {
+            preservePendingFormat: true,
+        });
+
+        expect(callback).toHaveBeenCalledWith(mockedModel);
+        expect(createContentModel).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
+        expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(
+            editor,
+            mockedFormat,
+            mockedPos
+        );
     });
 });

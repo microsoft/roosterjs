@@ -1,8 +1,10 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import { ContentModelCode } from '../decorator/ContentModelCode';
 import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import { ZoomScaleFormat } from '../format/formatParts/ZoomScaleFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List
@@ -44,9 +46,9 @@ export interface DomToModelFormatContext {
     listFormat: DomToModelListFormat;
 
     /**
-     * Context of hyper link info
+     * Zoom scale of the content
      */
-    link: ContentModelLink;
+    zoomScaleFormat: ZoomScaleFormat;
 
     /**
      * When process table, whether we should always normalize it.
@@ -54,4 +56,19 @@ export interface DomToModelFormatContext {
      * @default false
      */
     alwaysNormalizeTable?: boolean;
+}
+
+/**
+ * Represents decorator info used by DOM to Content Model conversion
+ */
+export interface DomToModelSegmentDecoratorContext {
+    /**
+     * Context of hyper link info
+     */
+    link: ContentModelLink;
+
+    /**
+     * Context of code info
+     */
+    code: ContentModelCode;
 }

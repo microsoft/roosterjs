@@ -55,7 +55,8 @@ export const setContent: SetContent = (
             false /*includeSelf*/,
             null /*callback*/,
             isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/
+            true /*forceTransform*/,
+            metadata?.isDarkMode
         );
         contentChanged = true;
     }

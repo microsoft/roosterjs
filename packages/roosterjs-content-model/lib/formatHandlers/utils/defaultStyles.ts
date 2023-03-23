@@ -5,16 +5,10 @@ const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
 };
 
-export const HyperLinkColorPlaceholder = '__hyperLinkColor';
-
 /**
  * @internal
  */
 export const defaultStyleMap: DefaultStyleMap = {
-    a: {
-        textDecoration: 'underline',
-        color: HyperLinkColorPlaceholder,
-    },
     address: blockElement,
     article: blockElement,
     aside: blockElement,
@@ -33,7 +27,6 @@ export const defaultStyleMap: DefaultStyleMap = {
         display: 'block',
         textAlign: 'center',
     },
-    code: { fontFamily: 'monospace' },
     dd: blockElement,
     div: blockElement,
     dl: blockElement,
@@ -135,13 +128,15 @@ export const defaultStyleMap: DefaultStyleMap = {
 export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     a: {
         underline: true,
-        textColor: HyperLinkColorPlaceholder,
     },
     blockquote: {
         marginTop: '1em',
         marginBottom: '1em',
         marginLeft: '40px',
         marginRight: '40px',
+    },
+    code: {
+        fontFamily: 'monospace',
     },
     h1: {
         fontWeight: 'bold',
