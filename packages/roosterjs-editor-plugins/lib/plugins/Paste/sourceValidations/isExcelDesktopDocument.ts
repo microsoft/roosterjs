@@ -1,7 +1,6 @@
+import { EXCEL_DESKTOP_ATTRIBUTE_NAME } from './constants';
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
-// Excel Online does not have this attribute
-export const EXCEL_DESKTOP_ATTRIBUTE_NAME = 'xmlns:x';
 const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 
 /**

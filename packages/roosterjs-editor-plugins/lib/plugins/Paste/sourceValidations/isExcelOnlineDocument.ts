@@ -1,5 +1,4 @@
-import { EXCEL_DESKTOP_ATTRIBUTE_NAME } from './isExcelDesktopDocument';
-import { PROG_ID_NAME } from './constants';
+import { EXCEL_DESKTOP_ATTRIBUTE_NAME, PROG_ID_NAME } from './constants';
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
 // Excel Desktop also has this attribute

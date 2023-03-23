@@ -19,6 +19,11 @@ export default function convertPastedContentFromExcel(
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
     const html = excelHandler(clipboardData.html, htmlBefore);
 
+    if (clipboardData.html != html) {
+        const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
+        moveChildNodes(fragment, doc?.body);
+    }
+
     // For Excel Online
     if (fragment.childNodes.length > 0 && getTagOfNode(fragment.firstChild) == 'DIV') {
         fragment.firstChild.childNodes.forEach(child => {
@@ -26,11 +31,6 @@ export default function convertPastedContentFromExcel(
                 event.fragment.replaceChildren(child);
             }
         });
-    }
-
-    if (clipboardData.html != html) {
-        const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
-        moveChildNodes(fragment, doc?.body);
     }
 
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'TD', element => {
