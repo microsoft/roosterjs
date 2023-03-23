@@ -64,7 +64,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     private currentInputLength: number;
     private newInputLength: number;
 
-    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
+    constructor(public dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
     /**
      * Get a friendly name
@@ -132,6 +132,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.currentInputLength = null;
         this.newInputLength = null;
         this.dataProvider.onDispose();
+        this.dataProvider = undefined;
+        this.pickerOptions = undefined;
     }
 
     /**
