@@ -1,6 +1,7 @@
 import contentModelToDom from '../modelToDom/contentModelToDom';
 import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { Editor } from 'roosterjs-editor-core';
 import { EditorContext } from '../publicTypes/context/EditorContext';
 import { EditorOptions, ExperimentalFeatures } from 'roosterjs-editor-types';
@@ -17,6 +18,7 @@ import {
 export default class ContentModelEditor extends Editor implements IContentModelEditor {
     private cachedModel: ContentModelDocument | null;
     private reuseModel: boolean = false;
+    private defaultFormat: ContentModelSegmentFormat = {};
 
     /**
      * Creates an instance of Editor
@@ -27,6 +29,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
         super(contentDiv, options);
         this.cachedModel = null;
         this.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
+        this.defaultFormat = this.getDefaultSegmentFormat();
     }
 
     /**
@@ -90,11 +93,27 @@ export default class ContentModelEditor extends Editor implements IContentModelE
 
         return {
             isDarkMode: this.isDarkMode(),
+            defaultFormat: this.defaultFormat,
             getDarkColor: core.lifecycle.getDarkColor,
             darkColorHandler: this.getDarkColorHandler(),
             addDelimiterForEntity: this.isFeatureEnabled(
                 ExperimentalFeatures.InlineEntityReadOnlyDelimiters
             ),
+        };
+    }
+
+    private getDefaultSegmentFormat(): ContentModelSegmentFormat {
+        const format = this.getDefaultFormat();
+
+        return {
+            fontWeight: format.bold ? 'bold' : undefined,
+            italic: format.italic || undefined,
+            underline: format.underline || undefined,
+            fontFamily: format.fontFamily || undefined,
+            fontSize: format.fontSize || undefined,
+            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+            backgroundColor:
+                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
         };
     }
 }
