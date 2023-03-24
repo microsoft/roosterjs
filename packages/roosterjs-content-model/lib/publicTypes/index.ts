@@ -35,6 +35,7 @@ export { ContentModelTableFormat } from './format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
 export { ContentModelBlockFormat } from './format/ContentModelBlockFormat';
 export { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
+export { ContentModelListItemFormat } from './format/ContentModelListItemFormat';
 export { ContentModelListItemLevelFormat } from './format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './format/ContentModelWithFormat';
