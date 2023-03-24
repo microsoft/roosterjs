@@ -763,7 +763,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With single table cell selected', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -784,7 +784,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With multiple table cell selected', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -808,7 +808,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With multiple table cell selected, multiple content is in table cell', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -849,7 +849,7 @@ describe('retrieveModelFormatState', () => {
 
     it('With selection marker under table cell', () => {
         const model = createContentModelDocument();
-        const result: FormatState = {};
+        const result: ContentModelFormatState = {};
         const cell1 = createTableCell();
         const cell2 = createTableCell();
         const cell3 = createTableCell();
@@ -873,6 +873,75 @@ describe('retrieveModelFormatState', () => {
             tableHasHeader: false,
             isBlockQuote: false,
             isCodeInline: false,
+        });
+    });
+
+    it('With selection  under image', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        image.isSelected = true;
+        para.segments.push(image);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [image]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: {
+                borderColor: 'red',
+                borderWidth: '2px',
+                borderStyle: 'solid',
+                boxShadow: undefined,
+                borderRadius: undefined,
+            },
+        });
+    });
+
+    it('With multiple image selection', () => {
+        const model = createContentModelDocument();
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const image = createImage('test', {
+            borderTop: 'solid 2px red',
+        });
+        const image2 = createImage('test', {
+            borderTop: 'solid 2px blue',
+        });
+        image.isSelected = true;
+        image2.isSelected = true;
+        para.segments.push(image);
+        para.segments.push(image2);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [image, image2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: true,
+            imageFormat: undefined,
         });
     });
 });

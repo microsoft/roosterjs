@@ -7,11 +7,13 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 
 describe('directionFormatHandler.parse', () => {
     let div: HTMLElement;
+    let li: HTMLLIElement;
     let format: DirectionFormat;
     let context: DomToModelContext;
 
     beforeEach(() => {
         div = document.createElement('div');
+        li = document.createElement('li');
         format = {};
         context = createDomToModelContext();
     });
@@ -61,11 +63,13 @@ describe('directionFormatHandler.parse', () => {
 
 describe('directionFormatHandler.apply', () => {
     let div: HTMLElement;
+    let li: HTMLLIElement;
     let format: DirectionFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
         div = document.createElement('div');
+        li = document.createElement('li');
         format = {};
         context = createModelToDomContext();
     });
@@ -86,5 +90,23 @@ describe('directionFormatHandler.apply', () => {
         format.isTextAlignFromAttr = true;
         directionFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div align="right"></div>');
+    });
+
+    it('Align start - list', () => {
+        format.textAlign = 'start';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: start;"></li>');
+    });
+
+    it('Align center - list', () => {
+        format.textAlign = 'center';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: center;"></li>');
+    });
+
+    it('Align right - list', () => {
+        format.textAlign = 'end';
+        directionFormatHandler.apply(format, li, context);
+        expect(li.outerHTML).toBe('<li style="align-self: end;"></li>');
     });
 });

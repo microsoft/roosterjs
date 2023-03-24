@@ -1422,6 +1422,7 @@ describe('tableProcessor', () => {
                     widths: [],
                     heights: [],
                     cells: [],
+                    cachedElement: mockedTable,
                 },
             ],
         });

@@ -70,4 +70,19 @@ export default class ContentModelEditor
 
         return core.defaultFormat;
     }
+
+    private getDefaultSegmentFormat(): ContentModelSegmentFormat {
+        const format = this.getDefaultFormat();
+
+        return {
+            fontWeight: format.bold ? 'bold' : undefined,
+            italic: format.italic || undefined,
+            underline: format.underline || undefined,
+            fontFamily: format.fontFamily || undefined,
+            fontSize: format.fontSize || undefined,
+            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+            backgroundColor:
+                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+        };
+    }
 }

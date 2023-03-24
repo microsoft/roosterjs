@@ -34,6 +34,13 @@ describe('alignTableCell', () => {
         table.rows[1].cells[1].cachedElement = {} as any;
         table.rows[1].cells[2].cachedElement = {} as any;
 
+        table.cells[0][0].cachedElement = {} as any;
+        table.cells[0][1].cachedElement = {} as any;
+        table.cells[0][2].cachedElement = {} as any;
+        table.cells[1][0].cachedElement = {} as any;
+        table.cells[1][1].cachedElement = {} as any;
+        table.cells[1][2].cachedElement = {} as any;
+
         alignTableCell(table, operation);
 
         expect(table.rows[0].cells.map(c => c.format)).toEqual([

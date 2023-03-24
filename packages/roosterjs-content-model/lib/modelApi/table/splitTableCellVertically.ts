@@ -22,6 +22,10 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
             delete row.cachedElement;
 
+            row.forEach(cell => {
+                delete cell.cachedElement;
+            });
+
             if (
                 belowRow?.cells.every(
                     (belowCell, colIndex) =>

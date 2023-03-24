@@ -833,6 +833,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -843,6 +844,94 @@ describe('normalizeTable', () => {
             widths: [120],
             heights: [22],
             dataset: {},
+            cachedElement: mockedCachedElement,
+        });
+    });
+
+    it('Normalize a table that does not need normalization at all', () => {
+        const table = createTable(2, {
+            useBorderBox: true,
+            borderCollapse: true,
+        });
+
+        table.cells[0].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[0].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[1].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[1].push(createTableCell(1, 1, false, { useBorderBox: true }));
+
+        table.widths = [100, 100];
+        table.heights = [200, 200];
+
+        normalizeTable(table);
+
+        const block: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            cells: [
+                [
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                ],
+                [
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                ],
+            ],
+            format: {
+                borderCollapse: true,
+                useBorderBox: true,
+            },
+            widths: [100, 100],
+            heights: [200, 200],
+            dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 });

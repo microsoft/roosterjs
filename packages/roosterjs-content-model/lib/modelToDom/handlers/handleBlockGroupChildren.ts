@@ -1,11 +1,6 @@
-import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelBlockWithCache } from '../../publicTypes/block/ContentModelBlockWithCache';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { getEntityFromElement } from 'roosterjs-editor-dom';
-import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -48,26 +43,3 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
         listFormat.nodeStack = nodeStack;
     }
 };
-
-function remove(node: Node) {
-    const next = node.nextSibling;
-    node.parentNode?.removeChild(node);
-
-    return next;
-}
-
-function isEntity(node: Node) {
-    return isNodeOfType(node, NodeType.Element) && !!getEntityFromElement(node);
-}
-
-function getCachedElement(block: ContentModelBlock): HTMLElement | undefined {
-    if ((block as ContentModelBlockWithCache).cachedElement) {
-        return (block as ContentModelBlockWithCache).cachedElement;
-    } else if (block.blockType == 'Entity') {
-        return block.wrapper;
-    } else if (block.blockType == 'BlockGroup' && block.blockGroupType == 'General') {
-        return block.element;
-    } else {
-        return undefined;
-    }
-}

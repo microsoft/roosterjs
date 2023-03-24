@@ -209,9 +209,33 @@ describe('handleDivider', () => {
 
         parent.appendChild(br);
 
-        handleDivider(document, parent, hr, context, br);
+        const result = handleDivider(document, parent, hr, context, br);
 
         expect(parent.innerHTML).toBe('<hr><br>');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
+    });
+
+    it('HR with refNode, already in target node', () => {
+        const hrNode = document.createElement('hr');
+        const hr: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {},
+            cachedElement: hrNode,
+        };
+
+        const parent = document.createElement('div');
+        const br = document.createElement('br');
+
+        parent.appendChild(hrNode);
+        parent.appendChild(br);
+
+        const result = handleDivider(document, parent, hr, context, hrNode);
+
+        expect(parent.innerHTML).toBe('<hr><br>');
+        expect(hr.cachedElement).toBe(hrNode);
+        expect(parent.firstChild).toBe(hrNode);
+        expect(result).toBe(br);
     });
 });

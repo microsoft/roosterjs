@@ -126,7 +126,6 @@ const IndentWhenAltShiftRight: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
-    defaultDisabled: Browser.isMac,
 };
 
 /**
@@ -137,7 +136,6 @@ const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
-    defaultDisabled: Browser.isMac,
 };
 
 /**

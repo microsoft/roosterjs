@@ -556,7 +556,6 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
-
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
