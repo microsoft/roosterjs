@@ -51,4 +51,17 @@ describe('displayFormatHandler.apply', () => {
         displayFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="display: block;"></div>');
     });
+
+    it('Display: flex', () => {
+        format.display = 'flex';
+        displayFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe('<div style="display: flex;"></div>');
+    });
+
+    it('Display: flex in a list', () => {
+        format.display = 'flex';
+        const ul = document.createElement('ul');
+        displayFormatHandler.apply(format, ul, context);
+        expect(ul.outerHTML).toBe('<ul style="display: flex;"></ul>');
+    });
 });

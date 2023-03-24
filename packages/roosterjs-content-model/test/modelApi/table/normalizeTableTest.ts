@@ -1,9 +1,36 @@
+import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
+import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelTableFormat } from '../../../lib/publicTypes/format/ContentModelTableFormat';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createTable as originalCreateTable } from '../../../lib/modelApi/creators/createTable';
+import { createTableCell as originalCreateTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { normalizeTable } from '../../../lib/modelApi/table/normalizeTable';
+
+const mockedCachedElement = {} as any;
+
+function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
+    const table = originalCreateTable(rowCount, format);
+
+    table.cachedElement = mockedCachedElement;
+
+    return table;
+}
+
+function createTableCell(
+    spanLeftOrColSpan?: boolean | number,
+    spanAboveOrRowSpan?: boolean | number,
+    isHeader?: boolean,
+    format?: ContentModelTableCellFormat
+) {
+    const cell = originalCreateTableCell(spanLeftOrColSpan, spanAboveOrRowSpan, isHeader, format);
+
+    cell.cachedElement = mockedCachedElement;
+
+    return cell;
+}
 
 describe('normalizeTable', () => {
     it('Normalize an empty table', () => {
@@ -21,6 +48,7 @@ describe('normalizeTable', () => {
             widths: [],
             heights: [],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -55,6 +83,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -65,6 +94,7 @@ describe('normalizeTable', () => {
             widths: [120],
             heights: [22],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -103,6 +133,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
                 [
@@ -130,6 +161,7 @@ describe('normalizeTable', () => {
             widths: [120],
             heights: [22, 22],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -197,6 +229,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -218,6 +251,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -228,6 +262,7 @@ describe('normalizeTable', () => {
             widths: [240, 120],
             heights: [22],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -266,6 +301,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -276,6 +312,7 @@ describe('normalizeTable', () => {
             widths: [240],
             heights: [22],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -321,6 +358,7 @@ describe('normalizeTable', () => {
                         format: { useBorderBox: true },
                         blocks: [block1, block2],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -330,6 +368,7 @@ describe('normalizeTable', () => {
                         format: { useBorderBox: true },
                         blocks: [],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
                 [
@@ -341,6 +380,7 @@ describe('normalizeTable', () => {
                         format: { useBorderBox: true },
                         blocks: [block3],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -350,6 +390,7 @@ describe('normalizeTable', () => {
                         format: { useBorderBox: true },
                         blocks: [block4],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -360,6 +401,7 @@ describe('normalizeTable', () => {
             widths: [120, 120],
             heights: [22, 22],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -428,6 +470,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                     {
                         blockGroupType: 'TableCell',
@@ -460,6 +503,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -470,6 +514,7 @@ describe('normalizeTable', () => {
             widths: [120, 120],
             heights: [44],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -560,6 +605,7 @@ describe('normalizeTable', () => {
                                 format: {},
                             },
                         ],
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -570,6 +616,7 @@ describe('normalizeTable', () => {
             widths: [240],
             heights: [44],
             dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 
@@ -609,6 +656,7 @@ describe('normalizeTable', () => {
                             },
                         ],
                         dataset: {},
+                        cachedElement: mockedCachedElement,
                     },
                 ],
             ],
@@ -619,6 +667,94 @@ describe('normalizeTable', () => {
             widths: [120],
             heights: [22],
             dataset: {},
+            cachedElement: mockedCachedElement,
+        });
+    });
+
+    it('Normalize a table that does not need normalization at all', () => {
+        const table = createTable(2, {
+            useBorderBox: true,
+            borderCollapse: true,
+        });
+
+        table.cells[0].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[0].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[1].push(createTableCell(1, 1, false, { useBorderBox: true }));
+        table.cells[1].push(createTableCell(1, 1, false, { useBorderBox: true }));
+
+        table.widths = [100, 100];
+        table.heights = [200, 200];
+
+        normalizeTable(table);
+
+        const block: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            cells: [
+                [
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                ],
+                [
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                    {
+                        blockGroupType: 'TableCell',
+                        spanAbove: false,
+                        spanLeft: false,
+                        isHeader: false,
+                        format: { useBorderBox: true },
+                        blocks: [block],
+                        dataset: {},
+                        cachedElement: mockedCachedElement,
+                    },
+                ],
+            ],
+            format: {
+                borderCollapse: true,
+                useBorderBox: true,
+            },
+            widths: [100, 100],
+            heights: [200, 200],
+            dataset: {},
+            cachedElement: mockedCachedElement,
         });
     });
 });

@@ -202,6 +202,7 @@ export default class ImageEdit implements EditorPlugin {
                 ) {
                     this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
                 }
+
                 break;
             case PluginEventType.MouseDown:
                 // When left click in a image that already in editing mode, do not quit edit mode
@@ -344,6 +345,52 @@ export default class ImageEdit implements EditorPlugin {
     }
 
     /**
+     * Flip the image.
+     * @param image The image to be flipped
+     * @param direction
+     */
+    public flipImage(image: HTMLImageElement, direction: 'vertical' | 'horizontal') {
+        this.image = image;
+        this.editInfo = getEditInfoFromImage(image);
+        const { angleRad } = this.editInfo;
+        const isInVerticalPostion =
+            (angleRad >= Math.PI / 2 && angleRad < (3 * Math.PI) / 4) ||
+            (angleRad <= -Math.PI / 2 && angleRad > (-3 * Math.PI) / 4);
+        if (isInVerticalPostion) {
+            if (direction === 'horizontal') {
+                this.editInfo.flippedVertical = !this.editInfo.flippedVertical;
+            } else {
+                this.editInfo.flippedHorizontal = !this.editInfo.flippedHorizontal;
+            }
+        } else {
+            if (direction === 'vertical') {
+                this.editInfo.flippedVertical = !this.editInfo.flippedVertical;
+            } else {
+                this.editInfo.flippedHorizontal = !this.editInfo.flippedHorizontal;
+            }
+        }
+        this.createWrapper(ImageEditOperation.Rotate);
+        this.updateWrapper();
+        this.setEditingImage(null);
+        this.editor?.select(image);
+    }
+
+    /**
+     * Rotate the image in radian angle.
+     * @param image The image to be rotated
+     * @param angleRad The angle in radian that the image must be rotated.
+     */
+    public rotateImage(image: HTMLImageElement, angleRad: number) {
+        this.image = image;
+        this.editInfo = getEditInfoFromImage(image);
+        this.editInfo.angleRad = this.editInfo.angleRad + angleRad;
+        this.createWrapper(ImageEditOperation.Rotate);
+        this.updateWrapper();
+        this.setEditingImage(null);
+        this.editor?.select(image);
+    }
+
+    /**
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
@@ -370,6 +417,11 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
                 this.clonedImage.src = this.editInfo.src;
+                setFlipped(
+                    this.clonedImage,
+                    this.editInfo.flippedHorizontal,
+                    this.editInfo.flippedVertical
+                );
                 this.clonedImage.style.position = 'absolute';
             }
 
@@ -466,6 +518,7 @@ export default class ImageEdit implements EditorPlugin {
                 visibleWidth,
                 visibleHeight,
             } = getGeneratedImageSize(this.editInfo, this.isCropping);
+
             const marginHorizontal = (targetWidth - visibleWidth) / 2;
             const marginVertical = (targetHeight - visibleHeight) / 2;
             const cropLeftPx = originalWidth * leftPercent;
@@ -483,7 +536,6 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
-
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
@@ -525,13 +577,7 @@ export default class ImageEdit implements EditorPlugin {
 
                 const viewport = this.editor?.getVisibleViewport();
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandlePosition(
-                        this.editInfo,
-                        viewport,
-                        marginVertical,
-                        rotateCenter,
-                        rotateHandle
-                    );
+                    updateRotateHandlePosition(viewport, rotateCenter, rotateHandle);
                 }
 
                 updateHandleCursor(resizeHandles, angleRad);
@@ -692,4 +738,14 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
         return color.trim();
     }
     return isDarkMode ? color.darkModeColor.trim() : color.lightModeColor.trim();
+}
+
+function setFlipped(
+    element: HTMLImageElement,
+    flipppedHorizontally?: boolean,
+    flipppedVertically?: boolean
+) {
+    element.style.transform = `scale(${flipppedHorizontally ? '-1' : '1'}, ${
+        flipppedVertically ? '-1' : '1'
+    })`;
 }

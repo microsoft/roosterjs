@@ -46,10 +46,12 @@ export default function blockWrap(
 
                 while (
                     nodes[0] &&
+                    nodes[0].parentNode &&
                     isNodeInRegion(region, nodes[0].parentNode) &&
                     nodes.some(node => getTagOfNode(node) == 'LI')
                 ) {
-                    nodes = [splitBalancedNodeRange(nodes)];
+                    const result = splitBalancedNodeRange(nodes);
+                    nodes = result ? [result] : [];
                 }
 
                 wrapFunction(nodes);

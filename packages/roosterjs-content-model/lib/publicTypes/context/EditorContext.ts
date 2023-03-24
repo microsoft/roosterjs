@@ -1,3 +1,4 @@
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { DarkColorHandler } from 'roosterjs-editor-types';
 
 /**
@@ -8,6 +9,11 @@ export interface EditorContext {
      * Whether current content is in dark mode
      */
     isDarkMode: boolean;
+
+    /**
+     * Default format of editor
+     */
+    defaultFormat?: ContentModelSegmentFormat;
 
     /**
      * Calculate color for dark mode

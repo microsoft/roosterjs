@@ -57,6 +57,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         nodeStack.push({ node: newList, ...level });
     }
+
+    return refNode;
 };
 
 function handleMetadata(
