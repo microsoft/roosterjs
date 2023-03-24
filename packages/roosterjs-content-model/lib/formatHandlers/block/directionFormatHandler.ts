@@ -23,7 +23,15 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
     parse: (format, element, _, defaultStyle) => {
         const dir = element.style.direction || element.dir || defaultStyle.direction;
         const alignFromAttr = element.getAttribute('align');
-        const align = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
+        const textAlign = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
+        const alignSelf = element.style.alignSelf;
+        const isLI = element.tagName === 'li';
+        const isFlex =
+            element.parentElement &&
+            element.parentElement.style.display === 'flex' &&
+            element.style.flexDirection === 'column';
+        const shouldApplyAlignSelf = isLI && isFlex;
+        const align = shouldApplyAlignSelf ? alignSelf : textAlign;
 
         if (dir) {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
@@ -62,9 +70,16 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
 
             if (format.isTextAlignFromAttr) {
                 element.setAttribute('align', value);
+            } else if (element.tagName === 'LI') {
+                element.style.alignSelf = format.textAlign;
             } else {
                 element.style.textAlign = value;
             }
+        }
+
+        if (element.tagName == 'OL' || element.tagName == 'UL') {
+            element.style.flexDirection = 'column';
+            element.style.display = 'flex';
         }
     },
 };

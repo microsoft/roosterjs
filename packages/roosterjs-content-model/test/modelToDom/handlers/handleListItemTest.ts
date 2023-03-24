@@ -95,11 +95,17 @@ describe('handleListItem', () => {
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
             listItem.formatHolder.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
@@ -151,11 +157,17 @@ describe('handleListItem', () => {
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
             listItem.formatHolder.format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
             context
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
@@ -249,7 +261,7 @@ describe('handleListItem without format handler', () => {
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
+        expect(applyFormat.applyFormat).not.toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
             document,
@@ -294,7 +306,13 @@ describe('handleListItem without format handler', () => {
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
+            context
+        );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
@@ -350,7 +368,13 @@ describe('handleListItem without format handler', () => {
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(2);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            context.formatAppliers.listItemElement,
+            listItem.format,
+            context
+        );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
@@ -381,7 +405,9 @@ describe('handleListItem without format handler', () => {
 
         const result = handleListItem(document, parent, listItem, context, br);
 
-        expect(parent.outerHTML).toBe('<div><ul><li></li></ul><br></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ul style="flex-direction: column; display: flex;"><li></li></ul><br></div>'
+        );
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, br);
         expect(applyFormat.applyFormat).toHaveBeenCalled();
