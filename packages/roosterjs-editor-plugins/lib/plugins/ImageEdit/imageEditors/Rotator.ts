@@ -1,9 +1,9 @@
 import DragAndDropContext from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import { RotateInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
+import { RotateInfo } from '../types/ImageEditInfo';
 
 const ROTATE_SIZE = 32;
 const ROTATE_GAP = 15;

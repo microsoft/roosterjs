@@ -518,6 +518,7 @@ export default class ImageEdit implements EditorPlugin {
                 visibleWidth,
                 visibleHeight,
             } = getGeneratedImageSize(this.editInfo, this.isCropping);
+
             const marginHorizontal = (targetWidth - visibleWidth) / 2;
             const marginVertical = (targetHeight - visibleHeight) / 2;
             const cropLeftPx = originalWidth * leftPercent;
@@ -535,7 +536,6 @@ export default class ImageEdit implements EditorPlugin {
             wrapper.style.textAlign = isRtl(this.shadowSpan.parentElement) ? 'right' : 'left';
 
             // Update size of the image
-
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
 
