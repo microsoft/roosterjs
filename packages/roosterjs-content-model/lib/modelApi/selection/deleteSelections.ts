@@ -82,20 +82,20 @@ export function deleteSelection(
     };
     const context: DeleteSelectionContext = { isChanged: false };
 
-    DeleteSelectionSteps.forEach(step => step(model, fullOptions, context));
+    DeleteSelectionSteps.forEach(step => step(context, fullOptions, model));
 
     return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
 }
 
 type DeleteSelectionStep = (
-    model: ContentModelDocument,
+    context: DeleteSelectionContext,
     options: Required<DeleteSelectionOptions>,
-    context: DeleteSelectionContext
+    model: ContentModelDocument
 ) => void;
 
 // Step 1: iterate the model and find all selected content if any, delete them, and keep/create an insert point
 // at the first deleted position so that we know where to put cursor to after delete
-const deleteSelectionStep1: DeleteSelectionStep = (model, options, context) => {
+const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
     const { onDeleteEntity, direction } = options;
     const isForward = direction == 'forward';
 
@@ -174,7 +174,7 @@ const deleteSelectionStep1: DeleteSelectionStep = (model, options, context) => {
 };
 
 // Step 2: if we didn't delete anything, and we want to delete forward/backward, now perform it
-const deleteSelectionStep2: DeleteSelectionStep = (model, options, context) => {
+const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
     if (context.insertPoint && !context.isChanged && options.direction != 'selectionOnly') {
         const { onDeleteEntity, direction } = options;
         const isForward = direction == 'forward';
@@ -216,7 +216,7 @@ const deleteSelectionStep2: DeleteSelectionStep = (model, options, context) => {
 };
 
 // Step 3: if we end up with multiple paragraphs impacted, we need to merge them
-const deleteSelectionStep3: DeleteSelectionStep = (model, options, context) => {
+const deleteSelectionStep3: DeleteSelectionStep = context => {
     const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
 
     if (
@@ -255,9 +255,8 @@ function deleteSegment(
     segments: ContentModelSegment[],
     segmentToDelete: ContentModelSegment,
     isForward: boolean,
-    onDeleteEntity?: OnDeleteEntity
+    onDeleteEntity: OnDeleteEntity
 ): boolean {
-    let isChanged = false;
     const index = segments.indexOf(segmentToDelete);
 
     switch (segmentToDelete.segmentType) {
@@ -265,8 +264,7 @@ function deleteSegment(
         case 'Image':
         case 'SelectionMarker':
             segments.splice(index, 1);
-            isChanged = true;
-            break;
+            return true;
 
         case 'Entity':
             if (
@@ -282,8 +280,7 @@ function deleteSegment(
                 segments.splice(index, 1);
             }
 
-            isChanged = true;
-            break;
+            return true;
 
         case 'Text':
             let text = segmentToDelete.text;
@@ -296,23 +293,25 @@ function deleteSegment(
                     : text.substring(0, text.length - 1);
             }
 
-            isChanged = true;
-            break;
+            return true;
 
         case 'General':
-            // No op, let browser handle general segment
-            // TODO: Need to revisit this
-            break;
+            if (segmentToDelete.isSelected) {
+                segments.splice(index, 1);
+                return true;
+            } else {
+                // No op if a general segment is not selected, let browser handle general segment
+                // TODO: Need to revisit this
+                return false;
+            }
     }
-
-    return isChanged;
 }
 
 function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
     isForward: boolean,
-    onDeleteEntity?: OnDeleteEntity,
+    onDeleteEntity: OnDeleteEntity,
     replacement?: ContentModelBlock
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
@@ -325,7 +324,7 @@ function deleteBlock(
 
         case 'Entity':
             if (
-                !onDeleteEntity?.(
+                !onDeleteEntity(
                     blockToDelete,
                     blockToDelete.isSelected
                         ? EntityOperation.Overwrite
