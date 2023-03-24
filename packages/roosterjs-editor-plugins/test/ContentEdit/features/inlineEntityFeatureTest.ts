@@ -396,7 +396,6 @@ describe('Content Edit Features |', () => {
                         shiftKey: true,
                     },
                 };
-
                 event = runTest(delimiterBefore, true /* expected */, event);
 
                 spyOnSelection();
