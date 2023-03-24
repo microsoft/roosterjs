@@ -376,7 +376,8 @@ describe('Creators', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [],
             format: {},
             quoteSegmentFormat: {},
@@ -390,7 +391,8 @@ describe('Creators', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [],
             format: { borderLeft: 'solid 1px black' },
             quoteSegmentFormat: {},

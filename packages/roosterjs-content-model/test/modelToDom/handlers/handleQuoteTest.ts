@@ -53,7 +53,7 @@ describe('handleQuote', () => {
             quote,
             context
         );
-        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
     });
 
     it('Quote with child and refNode', () => {
@@ -81,7 +81,7 @@ describe('handleQuote', () => {
             quote,
             context
         );
-        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
         expect(result).toBe(br);
     });
 });

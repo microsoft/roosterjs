@@ -10,7 +10,8 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -30,7 +31,8 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -50,14 +52,16 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
                     quoteSegmentFormat: {},
                 },
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -68,7 +72,7 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blocks: [],
                 },
             ],
-            ['Quote']
+            ['FormatContainer']
         );
         expect(result).toBe(0);
     });
@@ -77,7 +81,8 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -88,7 +93,7 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blocks: [],
                 },
             ],
-            ['TableCell', 'Quote']
+            ['TableCell', 'FormatContainer']
         );
         expect(result).toBe(0);
     });
@@ -97,7 +102,8 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -108,7 +114,7 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blocks: [],
                 },
             ],
-            ['Quote'],
+            ['FormatContainer'],
             ['Document', 'ListItem']
         );
         expect(result).toBe(0);
@@ -118,7 +124,8 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
@@ -130,7 +137,7 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                 },
             ],
             ['Document'],
-            ['ListItem', 'Quote']
+            ['ListItem', 'FormatContainer']
         );
         expect(result).toBe(-1);
     });

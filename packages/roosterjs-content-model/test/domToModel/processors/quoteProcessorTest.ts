@@ -143,7 +143,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '0px',
@@ -182,7 +183,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -263,7 +265,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',
@@ -306,7 +309,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',

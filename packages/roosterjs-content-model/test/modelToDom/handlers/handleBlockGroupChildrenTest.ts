@@ -232,15 +232,15 @@ describe('handleBlockGroupChildren', () => {
     });
 
     it('handle document with cache 4', () => {
-        const div1 = document.createElement('div');
+        const quote = document.createElement('blockquote');
         const div2 = document.createElement('div');
 
-        div1.id = 'div1';
+        quote.id = 'div1';
         div2.id = 'div2';
-        div1.textContent = 'test1';
+        quote.textContent = 'test1';
         div2.textContent = 'test2';
 
-        parent.appendChild(div1);
+        parent.appendChild(quote);
         parent.appendChild(div2);
 
         const group: ContentModelDocument = {
@@ -255,36 +255,40 @@ describe('handleBlockGroupChildren', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [],
-                    cachedElement: div1,
+                    cachedElement: quote,
                 },
             ],
         };
 
         handleBlockGroupChildren(document, parent, group, context);
 
-        expect(parent.outerHTML).toBe('<div><div id="div2">test2</div><div id="div1"></div></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><div id="div2">test2</div><blockquote id="div1"></blockquote></div>'
+        );
         expect(parent.firstChild).toBe(div2);
-        expect(parent.firstChild?.nextSibling).toBe(div1);
+        expect(parent.firstChild?.nextSibling).toBe(quote);
     });
 
     it('handle document with cache 5', () => {
-        const div1 = document.createElement('div');
+        const quote = document.createElement('blockquote');
 
-        div1.id = 'div1';
-        div1.textContent = 'test1';
+        quote.id = 'div1';
+        quote.textContent = 'test1';
 
-        parent.appendChild(div1);
+        parent.appendChild(quote);
 
         const group: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -299,7 +303,7 @@ describe('handleBlockGroupChildren', () => {
                             ],
                         },
                     ],
-                    cachedElement: div1,
+                    cachedElement: quote,
                 },
             ],
         };
@@ -309,8 +313,8 @@ describe('handleBlockGroupChildren', () => {
         handleBlockGroupChildren(document, parent, group, context);
 
         expect(parent.outerHTML).toBe(
-            '<div><div id="div1"><div><span><br></span></div></div></div>'
+            '<div><blockquote id="div1"><div><span><br></span></div></blockquote></div>'
         );
-        expect(parent.firstChild).toBe(div1);
+        expect(parent.firstChild).toBe(quote);
     });
 });

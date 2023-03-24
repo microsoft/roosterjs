@@ -11,7 +11,8 @@ export function createQuote(
 ): ContentModelQuote {
     return {
         blockType: 'BlockGroup',
-        blockGroupType: 'Quote',
+        blockGroupType: 'FormatContainer',
+        tagName: 'blockquote',
         blocks: [],
         format: { ...(format || {}) },
         quoteSegmentFormat: { ...(quoteSegmentFormat || {}) },

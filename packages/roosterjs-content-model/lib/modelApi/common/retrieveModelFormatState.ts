@@ -1,6 +1,7 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
@@ -158,7 +159,7 @@ function retrieveStructureFormat(
     isFirst: boolean
 ) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
-    const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
+    const containerIndex = getClosestAncestorBlockGroupIndex(path, ['FormatContainer'], []);
 
     if (listItemIndex >= 0) {
         const listItem = path[listItemIndex] as ContentModelListItem;
@@ -168,7 +169,13 @@ function retrieveStructureFormat(
         mergeValue(result, 'isNumbering', listType == 'OL', isFirst);
     }
 
-    mergeValue(result, 'isBlockQuote', quoteIndex >= 0, isFirst);
+    mergeValue(
+        result,
+        'isBlockQuote',
+        containerIndex >= 0 &&
+            (path[containerIndex] as ContentModelFormatContainer)?.tagName == 'blockquote',
+        isFirst
+    );
 }
 
 function retrieveTableFormat(tableContext: TableSelectionContext, result: ContentModelFormatState) {

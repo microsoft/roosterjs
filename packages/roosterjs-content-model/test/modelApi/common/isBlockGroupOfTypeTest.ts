@@ -20,7 +20,8 @@ describe('isBlockGroupOfType', () => {
     it('Invalid input', () => {
         const result = isBlockGroupOfType(
             {
-                blockGroupType: 'Quote',
+                blockGroupType: 'FormatContainer',
+                tagName: 'blockquote',
                 blockType: 'BlockGroup',
                 blocks: [],
                 format: {},

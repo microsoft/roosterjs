@@ -617,7 +617,8 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { lineHeight: '25px' },
                     quoteSegmentFormat: {},
                     blocks: [
@@ -642,7 +643,8 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         lineHeight: '25px',
@@ -663,7 +665,8 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { lineHeight: '25px' },
                     quoteSegmentFormat: {},
                     blocks: [

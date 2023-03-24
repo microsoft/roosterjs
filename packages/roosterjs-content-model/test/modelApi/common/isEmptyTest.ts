@@ -96,7 +96,8 @@ describe('isEmpty', () => {
     it('Empty quote', () => {
         const result = isEmpty({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             format: {},
             blocks: [],
             quoteSegmentFormat: {},
@@ -108,7 +109,8 @@ describe('isEmpty', () => {
     it('Quote has empty block', () => {
         const result = isEmpty({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             format: {},
             blocks: [
                 {

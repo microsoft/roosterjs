@@ -4,8 +4,8 @@ import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
@@ -64,7 +64,7 @@ export function clearModelFormat(
 
             clearBlockFormat(path, block);
             clearListFormat(path);
-            clearQuoteFormat(path, block);
+            clearContainerFormat(path, block);
         }
     }
 
@@ -127,21 +127,25 @@ function clearTableCellFormat(
     }
 }
 
-function clearQuoteFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
-    const quotePathIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], ['TableCell']);
+function clearContainerFormat(path: ContentModelBlockGroup[], block: ContentModelBlock) {
+    const containerPathIndex = getClosestAncestorBlockGroupIndex(
+        path,
+        ['FormatContainer'],
+        ['TableCell']
+    );
 
-    if (quotePathIndex >= 0 && quotePathIndex < path.length - 1) {
-        const quote = path[quotePathIndex] as ContentModelQuote;
-        const quoteIndex = path[quotePathIndex + 1].blocks.indexOf(quote);
-        const blockIndex = quote.blocks.indexOf(block);
+    if (containerPathIndex >= 0 && containerPathIndex < path.length - 1) {
+        const container = path[containerPathIndex] as ContentModelFormatContainer;
+        const containerIndex = path[containerPathIndex + 1].blocks.indexOf(container);
+        const blockIndex = container.blocks.indexOf(block);
 
-        if (blockIndex >= 0 && quoteIndex >= 0) {
-            const newQuote = createQuote(quote.format, quote.quoteSegmentFormat);
+        if (blockIndex >= 0 && containerIndex >= 0) {
+            const newContainer = createQuote(container.format, container.quoteSegmentFormat);
 
-            quote.blocks.splice(blockIndex, 1);
-            newQuote.blocks = quote.blocks.splice(blockIndex);
+            container.blocks.splice(blockIndex, 1);
+            newContainer.blocks = container.blocks.splice(blockIndex);
 
-            path[quotePathIndex + 1].blocks.splice(quoteIndex + 1, 0, block, newQuote);
+            path[containerPathIndex + 1].blocks.splice(containerIndex + 1, 0, block, newContainer);
         }
     }
 }

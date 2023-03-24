@@ -61,7 +61,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -104,7 +105,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -160,7 +162,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -215,7 +218,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -276,7 +280,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -348,7 +353,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { backgroundColor: 'red' },
                     quoteSegmentFormat: {},
                     blocks: [
@@ -367,7 +373,8 @@ describe('toggleModelBlockQuote', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -387,7 +394,8 @@ describe('toggleModelBlockQuote', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { backgroundColor: 'red' },
                     quoteSegmentFormat: {},
                     blocks: [
@@ -441,7 +449,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [
@@ -517,7 +526,8 @@ describe('toggleModelBlockQuote', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'BlockGroup',

@@ -949,7 +949,8 @@ describe('iterateSelections', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -964,7 +965,8 @@ describe('iterateSelections', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {},
                     quoteSegmentFormat: {},

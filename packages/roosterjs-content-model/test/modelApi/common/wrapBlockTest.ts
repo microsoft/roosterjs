@@ -51,7 +51,8 @@ describe('wrapBlockStep1', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [para],
@@ -63,7 +64,8 @@ describe('wrapBlockStep1', () => {
                 parent: parent,
                 wrapper: {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [para],
@@ -92,7 +94,8 @@ describe('wrapBlockStep1', () => {
         };
         const quote: ContentModelQuote = {
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [para1],
             format: {},
             quoteSegmentFormat: {},
@@ -110,7 +113,8 @@ describe('wrapBlockStep1', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [para1, para2],
@@ -122,7 +126,8 @@ describe('wrapBlockStep1', () => {
                 parent: parent,
                 wrapper: {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
                     quoteSegmentFormat: {},
                     blocks: [para1, para2],
@@ -204,7 +209,8 @@ describe('wrapBlockStep2', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {},
                     quoteSegmentFormat: {},
@@ -256,7 +262,8 @@ describe('wrapBlockStep2', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -282,7 +289,8 @@ describe('wrapBlockStep2', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
