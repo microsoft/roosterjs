@@ -192,7 +192,7 @@ describe('handleBlockGroup', () => {
             modelHandlerOverride: {
                 blockGroupChildren: handleBlockGroupChildren,
                 listItem: handleListItem,
-                quote: handleQuote,
+                formatContainer: handleQuote,
                 general: handleGeneralModel,
             },
         });
