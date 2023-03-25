@@ -960,7 +960,6 @@ describe('iterateSelections', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {
@@ -969,7 +968,6 @@ describe('iterateSelections', () => {
                     tagName: 'blockquote',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {

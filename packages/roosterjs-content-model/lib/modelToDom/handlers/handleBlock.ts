@@ -34,11 +34,7 @@ export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
                     break;
 
                 case 'FormatContainer':
-                    switch (block.tagName) {
-                        case 'blockquote':
-                            refNode = handlers.quote(doc, parent, block, context, refNode);
-                            break;
-                    }
+                    refNode = handlers.formatContainer(doc, parent, block, context, refNode);
                     break;
 
                 case 'ListItem':

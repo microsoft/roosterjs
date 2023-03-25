@@ -5,7 +5,6 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
@@ -18,15 +17,11 @@ import { wrapBlockStep1, WrapBlockStep1Result, wrapBlockStep2 } from '../common/
  */
 export function toggleModelBlockQuote(
     model: ContentModelDocument,
-    quoteFormat: ContentModelBlockFormat,
-    segmentFormat: ContentModelSegmentFormat
+    format: ContentModelBlockFormat & ContentModelSegmentFormat
 ): boolean {
-    const paragraphOfQuote = getOperationalBlocks<ContentModelQuote | ContentModelListItem>(
-        model,
-        ['FormatContainer', 'ListItem'],
-        ['TableCell'],
-        true /*deepFirst*/
-    );
+    const paragraphOfQuote = getOperationalBlocks<
+        ContentModelFormatContainer | ContentModelListItem
+    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/);
 
     if (areAllBlockQuotes(paragraphOfQuote)) {
         // All selections are already in quote, we need to unquote them
@@ -34,17 +29,13 @@ export function toggleModelBlockQuote(
             unwrapBlock(parent, block);
         });
     } else {
-        const step1Results: WrapBlockStep1Result<ContentModelQuote>[] = [];
-        const creator = () => createQuote(quoteFormat, segmentFormat);
+        const step1Results: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
+        const creator = () => createQuote(format);
         const canMerge = (
             target: ContentModelBlock,
-            current?: ContentModelQuote
-        ): target is ContentModelQuote =>
-            canMergeQuote(
-                target,
-                current?.format || quoteFormat,
-                current?.quoteSegmentFormat || segmentFormat
-            );
+            current?: ContentModelFormatContainer
+        ): target is ContentModelFormatContainer =>
+            canMergeQuote(target, current?.format || format);
 
         paragraphOfQuote.forEach(({ block, parent }) => {
             if (isQuote(block)) {
@@ -62,17 +53,12 @@ export function toggleModelBlockQuote(
 
 function canMergeQuote(
     target: ContentModelBlock,
-    quoteFormat: ContentModelBlockFormat,
-    segmentFormat: ContentModelSegmentFormat
-): target is ContentModelQuote {
-    return (
-        isQuote(target) &&
-        areSameFormats(quoteFormat, target.format) &&
-        areSameFormats(segmentFormat, target.quoteSegmentFormat)
-    );
+    format: ContentModelBlockFormat & ContentModelSegmentFormat
+): target is ContentModelFormatContainer {
+    return isQuote(target) && areSameFormats(format, target.format);
 }
 
-function isQuote(block: ContentModelBlock): block is ContentModelQuote {
+function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer {
     return (
         isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer') &&
         block.tagName == 'blockquote'
@@ -80,11 +66,7 @@ function isQuote(block: ContentModelBlock): block is ContentModelQuote {
 }
 
 function areAllBlockQuotes(
-    blockAndParents: OperationalBlocks<ContentModelQuote | ContentModelListItem>[]
-): blockAndParents is { block: ContentModelQuote; parent: ContentModelBlockGroup }[] {
-    return blockAndParents.every(
-        blockAndParent =>
-            isBlockGroupOfType<ContentModelQuote>(blockAndParent.block, 'FormatContainer') &&
-            blockAndParent.block.tagName == 'blockquote'
-    );
+    blockAndParents: OperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
+): blockAndParents is { block: ContentModelFormatContainer; parent: ContentModelBlockGroup }[] {
+    return blockAndParents.every(blockAndParent => isQuote(blockAndParent.block));
 }

@@ -620,7 +620,6 @@ describe('clearModelFormat', () => {
                     blockGroupType: 'FormatContainer',
                     tagName: 'blockquote',
                     format: { lineHeight: '25px' },
-                    quoteSegmentFormat: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -649,7 +648,6 @@ describe('clearModelFormat', () => {
                     format: {
                         lineHeight: '25px',
                     },
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -668,7 +666,6 @@ describe('clearModelFormat', () => {
                     blockGroupType: 'FormatContainer',
                     tagName: 'blockquote',
                     format: { lineHeight: '25px' },
-                    quoteSegmentFormat: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',

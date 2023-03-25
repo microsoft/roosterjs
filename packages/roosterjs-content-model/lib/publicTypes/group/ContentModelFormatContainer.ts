@@ -1,6 +1,18 @@
-import { ContentModelQuote } from './ContentModelQuote';
+import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
- * Union type of all format containers
+ * Content Model of Format Container
  */
-export type ContentModelFormatContainer = ContentModelQuote;
+export interface ContentModelFormatContainer
+    extends ContentModelBlockGroupBase<'FormatContainer'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelBlockFormat & ContentModelSegmentFormat>,
+        ContentModelBlockWithCache {
+    /**
+     * Tag name of this container
+     */
+    tagName: 'blockquote';
+}

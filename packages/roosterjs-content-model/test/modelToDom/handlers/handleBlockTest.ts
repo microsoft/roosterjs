@@ -3,11 +3,11 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
+import { ContentModelFormatContainer } from '../../../lib/publicTypes/group/ContentModelFormatContainer';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -179,7 +179,7 @@ describe('handleBlockGroup', () => {
     let parent: HTMLDivElement;
     let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
     let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
-    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelQuote>>;
+    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelFormatContainer>>;
     let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
 
     beforeEach(() => {

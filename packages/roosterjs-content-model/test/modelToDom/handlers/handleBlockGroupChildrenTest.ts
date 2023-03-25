@@ -258,7 +258,6 @@ describe('handleBlockGroupChildren', () => {
                     blockGroupType: 'FormatContainer',
                     tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [],
                     cachedElement: quote,
                 },
@@ -290,7 +289,6 @@ describe('handleBlockGroupChildren', () => {
                     blockGroupType: 'FormatContainer',
                     tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',

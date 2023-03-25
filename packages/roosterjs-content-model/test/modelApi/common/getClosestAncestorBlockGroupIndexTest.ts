@@ -15,7 +15,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -36,7 +35,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -57,7 +55,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'FormatContainer',
@@ -65,7 +62,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -86,7 +82,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -107,7 +102,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -129,7 +123,6 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',

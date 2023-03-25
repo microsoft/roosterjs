@@ -26,7 +26,6 @@ describe('unwrapBlock', () => {
                 },
             ],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 
@@ -61,7 +60,6 @@ describe('unwrapBlock', () => {
                 },
             ],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 

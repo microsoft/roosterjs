@@ -140,7 +140,7 @@ function clearContainerFormat(path: ContentModelBlockGroup[], block: ContentMode
         const blockIndex = container.blocks.indexOf(block);
 
         if (blockIndex >= 0 && containerIndex >= 0) {
-            const newContainer = createQuote(container.format, container.quoteSegmentFormat);
+            const newContainer = cloneFormatContainer(container);
 
             container.blocks.splice(blockIndex, 1);
             newContainer.blocks = container.blocks.splice(blockIndex);
@@ -184,4 +184,11 @@ function isWholeBlockSelected(block: ContentModelBlock) {
         (block as Selectable).isSelected ||
         (block.blockType == 'Paragraph' && block.segments.every(x => x.isSelected))
     );
+}
+
+function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
+    switch (container.tagName) {
+        case 'blockquote':
+            return createQuote(container.format);
+    }
 }

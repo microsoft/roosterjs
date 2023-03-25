@@ -25,7 +25,6 @@ describe('isBlockGroupOfType', () => {
                 blockType: 'BlockGroup',
                 blocks: [],
                 format: {},
-                quoteSegmentFormat: {},
             },
             'Document'
         );

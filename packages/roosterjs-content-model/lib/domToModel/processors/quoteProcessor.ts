@@ -8,6 +8,21 @@ import { knownElementProcessor } from './knownElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 
+// This only used for generate a full list of segment format key, so the values can be just null since we will never use them
+const RequiredSegmentFormat: Required<ContentModelSegmentFormat> = {
+    backgroundColor: null!,
+    fontFamily: null!,
+    fontSize: null!,
+    fontWeight: null!,
+    italic: null!,
+    lineHeight: null!,
+    strikethrough: null!,
+    superOrSubScriptSequence: null!,
+    textColor: null!,
+    underline: null!,
+};
+const AllSegmentFormatKeys = getObjectKeys(RequiredSegmentFormat);
+
 /**
  * @internal
  */
@@ -20,21 +35,24 @@ export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, elemen
                 segment: 'shallowCloneForBlock',
             },
             () => {
-                const quoteFormat: ContentModelBlockFormat = { ...context.blockFormat };
-                const segmentFormat: ContentModelSegmentFormat = {};
+                const format: ContentModelBlockFormat & ContentModelSegmentFormat = {
+                    ...context.blockFormat,
+                };
 
-                parseFormat(element, context.formatParsers.block, quoteFormat, context);
-                parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
+                parseFormat(element, context.formatParsers.block, format, context);
+                parseFormat(element, context.formatParsers.segmentOnBlock, format, context);
 
-                const quote = createQuote(quoteFormat, segmentFormat);
+                const quote = createQuote(format);
 
                 addBlock(group, quote);
 
                 // These inline formats are overridden by quote, and will be applied onto BLOCKQUOTE element
                 // So no need to pass them down into segments.
                 // And when toggle blockquote (unwrap the quote model), no need to modify the inline format of segments
-                getObjectKeys(segmentFormat).forEach(key => {
-                    delete context.segmentFormat[key];
+                AllSegmentFormatKeys.forEach(key => {
+                    if (format[key] !== undefined) {
+                        delete context.segmentFormat[key];
+                    }
                 });
 
                 context.elementProcessors.child(quote, element, context);

@@ -1,9 +1,9 @@
 import * as React from 'react';
-import { ContentModelBlockGroup, ContentModelFormatContainer } from 'roosterjs-content-model';
+import { ContentModelBlockGroup } from 'roosterjs-content-model';
 import { ContentModelDocumentView } from './ContentModelDocumentView';
+import { ContentModelFormatContainerView } from './ContentModelFormatContainerView';
 import { ContentModelGeneralView } from './ContentModelGeneralView';
 import { ContentModelListItemView } from './ContentModelListItemView';
-import { ContentModelQuoteView } from './ContentModelQuoteView';
 import { ContentModelTableCellView } from './ContentModelTableCellView';
 
 export function ContentModelBlockGroupView(props: { group: ContentModelBlockGroup }) {
@@ -20,18 +20,9 @@ export function ContentModelBlockGroupView(props: { group: ContentModelBlockGrou
             return <ContentModelListItemView listItem={group} />;
 
         case 'FormatContainer':
-            return <ContentModelFormatContainerView formatContainer={group} />;
+            return <ContentModelFormatContainerView container={group} />;
 
         case 'TableCell':
             return <ContentModelTableCellView cell={group} />;
-    }
-}
-
-function ContentModelFormatContainerView(props: { formatContainer: ContentModelFormatContainer }) {
-    const { formatContainer } = props;
-
-    switch (formatContainer.tagName) {
-        case 'blockquote':
-            return <ContentModelQuoteView quote={formatContainer} />;
     }
 }

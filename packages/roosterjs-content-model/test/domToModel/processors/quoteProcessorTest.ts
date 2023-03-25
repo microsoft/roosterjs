@@ -156,7 +156,6 @@ describe('quoteProcessor', () => {
                         borderBottom: '1px solid black',
                         borderLeft: '1px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -231,7 +230,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '2px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -275,8 +273,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
                         backgroundColor: 'red',
-                    },
-                    quoteSegmentFormat: {
                         textColor: 'blue',
                     },
                 },
@@ -325,7 +321,6 @@ describe('quoteProcessor', () => {
                         whiteSpace: 'pre',
                         direction: 'rtl',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });

@@ -380,7 +380,6 @@ describe('Creators', () => {
             tagName: 'blockquote',
             blocks: [],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 
@@ -395,7 +394,6 @@ describe('Creators', () => {
             tagName: 'blockquote',
             blocks: [],
             format: { borderLeft: 'solid 1px black' },
-            quoteSegmentFormat: {},
         });
     });
 
