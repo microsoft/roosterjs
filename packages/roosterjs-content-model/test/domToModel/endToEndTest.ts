@@ -29,7 +29,7 @@ describe('End to end test for DOM => Model', () => {
             expectedHTMLFirefox, //firefox
         ];
 
-        expect(possibleHTML.indexOf(div2.innerHTML)).toBeGreaterThanOrEqual(0);
+        expect(possibleHTML.indexOf(div2.innerHTML)).toBeGreaterThanOrEqual(0, div2.innerHTML);
     }
 
     it('List with margin', () => {
@@ -206,6 +206,84 @@ describe('End to end test for DOM => Model', () => {
             },
             '<ol start="1" style="flex-direction: column; display: flex;"><li>1</li><ol start="1" style="flex-direction: column; display: flex;"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
             '<ol style="flex-direction: column; display: flex;" start="1"><li>1</li><ol style="flex-direction: column; display: flex;" start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+        );
+    });
+
+    it('div with whiteSpace, pre and blockquote', () => {
+        runTest(
+            '<div style="white-space:pre">aa\nbb</div><pre>cc\ndd</pre><blockquote>ee</blockquote>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa\nbb',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            whiteSpace: 'pre',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'cc\ndd',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                            whiteSpace: 'pre',
+                            fontFamily: 'monospace',
+                        },
+                    },
+                    {
+                        blockType: 'Divider',
+                        tagName: 'div',
+                        format: {
+                            marginTop: '1em',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'ee',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginRight: '40px',
+                            marginLeft: '40px',
+                        },
+                    },
+                    {
+                        blockType: 'Divider',
+                        tagName: 'div',
+                        format: {
+                            marginBottom: '1em',
+                        },
+                    },
+                ],
+            },
+            '<div style="white-space: pre;">aa\nbb</div><pre>cc\ndd</pre><div style="margin-top: 1em;"></div><div style="margin-right: 40px; margin-left: 40px;">ee</div><div style="margin-bottom: 1em;"></div>'
         );
     });
 });
