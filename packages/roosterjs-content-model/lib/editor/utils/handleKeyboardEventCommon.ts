@@ -1,8 +1,8 @@
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
-import { PluginEventType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -42,6 +42,8 @@ export function handleKeyboardEventResult(
         // We have deleted what we need from content model, no need to let browser keep handling the event
         rawEvent.preventDefault();
         normalizeContentModel(model);
+
+        editor.triggerContentChangedEvent(ChangeSource.Keyboard, rawEvent.which);
     } else {
         // We didn't delete anything from content model, so browser will handle this event and we need to clear the cache
         editor.cacheContentModel(null);
