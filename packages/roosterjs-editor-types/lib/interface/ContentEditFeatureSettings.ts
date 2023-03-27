@@ -170,6 +170,18 @@ export interface MarkdownFeatureSettings {
      * @default true
      */
     markdownInlineCode: boolean;
+
+    /**
+     * When inside a code block, exit the code block by pressing Enter twice, or once on an empty line
+     * @default true
+     */
+    removeCodeWhenEnterOnEmptyLine: boolean;
+
+    /**
+     * When inside an empty code block (or an empty first line), exit the code block by pressing Backspace
+     * @default true
+     */
+    removeCodeWhenBackspaceOnEmptyFirstLine: boolean;
 }
 
 /**
