@@ -37,12 +37,12 @@ function cacheGetRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
     editor: IEditor,
     triggerCharacter: string
-): Range {
-    return cacheGetEventData(event, 'MARKDOWN_RANGE', () => {
+): Range | null {
+    return cacheGetEventData(event, 'MARKDOWN_RANGE', (): Range | null => {
         const searcher = editor.getContentSearcherOfCursor(event);
 
-        let startPosition: NodePosition;
-        let endPosition: NodePosition;
+        let startPosition: NodePosition | null = null;
+        let endPosition: NodePosition | null = null;
         searcher?.forEachTextInlineElement(textInlineElement => {
             if (endPosition && startPosition) {
                 return true;
@@ -85,7 +85,7 @@ function cacheGetRangeForMarkdownOperation(
                 }
             }
         });
-        return !!startPosition && !!endPosition && createRange(startPosition, endPosition);
+        return startPosition && endPosition && createRange(startPosition, endPosition);
     });
 }
 
@@ -98,6 +98,9 @@ function handleMarkdownEvent(
     editor.addUndoSnapshot(
         () => {
             const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
+            if (!range) {
+                return;
+            }
             const lastTypedTriggerPosition = new Position(range.endContainer, PositionType.End);
             const hasLastTypedTrigger = range.endOffset + 1 <= lastTypedTriggerPosition.offset;
             if (!!range && hasLastTypedTrigger) {
@@ -109,7 +112,7 @@ function handleMarkdownEvent(
                 );
 
                 const text = textContentRange.extractContents().textContent;
-                const textNode = editor.getDocument().createTextNode(text);
+                const textNode = editor.getDocument().createTextNode(text ?? '');
 
                 // extract content and put it into a new element.
                 const elementToWrap = wrap(textNode, elementTag);

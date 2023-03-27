@@ -12,6 +12,7 @@ import {
     BuildInEditFeature,
     ContentEditFeatureSettings,
     PluginEvent,
+    PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 
 const allFeatures = {
@@ -32,7 +33,7 @@ const allFeatures = {
  */
 export default function getAllFeatures(): Record<
     keyof ContentEditFeatureSettings,
-    BuildInEditFeature<PluginEvent>
+    BuildInEditFeature<PluginEvent> | BuildInEditFeature<PluginKeyboardEvent>
 > {
     return allFeatures;
 }
