@@ -144,7 +144,7 @@ describe('insertLink', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: true,
+                        isImplicit: false,
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -274,7 +274,7 @@ describe('insertLink', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: true,
+                        isImplicit: false,
                         segments: [
                             {
                                 segmentType: 'Text',
