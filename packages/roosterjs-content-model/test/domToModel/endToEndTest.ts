@@ -286,4 +286,66 @@ describe('End to end test for DOM => Model', () => {
             '<div style="white-space: pre;">aa\nbb</div><pre>cc\ndd</pre><div style="margin-top: 1em;"></div><div style="margin-right: 40px; margin-left: 40px;">ee</div><div style="margin-bottom: 1em;"></div>'
         );
     });
+
+    it('Two PRE tags', () => {
+        runTest(
+            '<pre>test1</pre><pre>test2</pre>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                            whiteSpace: 'pre',
+                            fontFamily: 'monospace',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test1',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                            whiteSpace: 'pre',
+                            fontFamily: 'monospace',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'test2',
+                                        format: {},
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<pre>test1</pre><pre>test2</pre>'
+        );
+    });
 });
