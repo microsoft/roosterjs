@@ -3,15 +3,15 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-editor-types/lib/compatibleEnum/DarkModeDatasetNames.ts</title>
+    <title>Code coverage report for roosterjs-editor-plugins/lib/plugins/Paste/sourceValidations/isExcelOnlineDocument.ts</title>
     <meta charset="utf-8" />
-    <link rel="stylesheet" href="../../../prettify.css" />
-    <link rel="stylesheet" href="../../../base.css" />
-    <link rel="shortcut icon" type="image/x-icon" href="../../../favicon.png" />
+    <link rel="stylesheet" href="../../../../../prettify.css" />
+    <link rel="stylesheet" href="../../../../../base.css" />
+    <link rel="shortcut icon" type="image/x-icon" href="../../../../../favicon.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <style type='text/css'>
         .coverage-summary .sorter {
-            background-image: url(../../../sort-arrow-sprite.png);
+            background-image: url(../../../../../sort-arrow-sprite.png);
         }
     </style>
 </head>
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-types/lib/compatibleEnum</a> DarkModeDatasetNames.ts</h1>
+        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">roosterjs-editor-plugins/lib/plugins/Paste/sourceValidations</a> isExcelOnlineDocument.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>6/6</span>
             </div>
         
             
@@ -78,15 +78,7 @@
 <a name='L19'></a><a href='#L19'>19</a>
 <a name='L20'></a><a href='#L20'>20</a>
 <a name='L21'></a><a href='#L21'>21</a>
-<a name='L22'></a><a href='#L22'>22</a>
-<a name='L23'></a><a href='#L23'>23</a>
-<a name='L24'></a><a href='#L24'>24</a>
-<a name='L25'></a><a href='#L25'>25</a>
-<a name='L26'></a><a href='#L26'>26</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L22'></a><a href='#L22'>22</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -95,43 +87,39 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">/**
- * Constants string for dataset names used by dark mode
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { EXCEL_DESKTOP_ATTRIBUTE_NAME, PROG_ID_NAME } from './constants';
+import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
+&nbsp;
+// Excel Desktop also has this attribute
+const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
+&nbsp;
+/**
+ * @internal
+ * Checks whether the Array provided contains strings that identify Excel Online documents
+ * @param props Properties related to the PasteEvent
+ * @returns
  */
-export enum CompatibleDarkModeDatasetNames {
-&nbsp;
-    /**
-     * Original style text color
-     */
-    OriginalStyleColor = 'ogsc',
-&nbsp;
-    /**
-     * Original style background color
-     */
-    OriginalStyleBackgroundColor = 'ogsb',
-&nbsp;
-    /**
-     * Original attribute text color
-     */
-    OriginalAttributeColor = 'ogac',
-&nbsp;
-    /**
-     * Original attribute background color
-     */
-    OriginalAttributeBackgroundColor = 'ogab',
-}
+const isExcelOnlineDocument: getSourceFunction = (props: getSourceInputParams) =&gt; {
+    const { htmlAttributes } = props;
+    // The presence of Excel.Sheet confirms its origin from Excel, the absence of EXCEL_DESKTOP_ATTRIBUTE_NAME confirms it is from the Online version
+    return (
+        htmlAttributes[PROG_ID_NAME] == EXCEL_ONLINE_ATTRIBUTE_VALUE &amp;&amp;
+        htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] == undefined
+    );
+};
+export default isExcelOnlineDocument;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -142,14 +130,14 @@ export enum CompatibleDarkModeDatasetNames {
                 at Mon Mar 27 2023 21:41:23 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
-        <script src="../../../prettify.js"></script>
+        <script src="../../../../../prettify.js"></script>
         <script>
             window.onload = function () {
                 prettyPrint();
             };
         </script>
-        <script src="../../../sorter.js"></script>
-        <script src="../../../block-navigation.js"></script>
+        <script src="../../../../../sorter.js"></script>
+        <script src="../../../../../block-navigation.js"></script>
     </body>
 </html>
     
