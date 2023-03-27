@@ -25,9 +25,10 @@ describe('handleQuote', () => {
         const parent = document.createElement('div');
         const quote = createQuote();
 
-        handleQuote(document, parent, quote, context);
+        handleQuote(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
+        expect(quote.cachedElement).toBeUndefined();
     });
 
     it('Quote with child', () => {
@@ -40,7 +41,7 @@ describe('handleQuote', () => {
 
         handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
-        handleQuote(document, parent, quote, context);
+        handleQuote(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
@@ -52,5 +53,35 @@ describe('handleQuote', () => {
             quote,
             context
         );
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+    });
+
+    it('Quote with child and refNode', () => {
+        const parent = document.createElement('div');
+        const br = document.createElement('br');
+        const quote = createQuote();
+        const paragraph = createParagraph();
+        const text = createText('test');
+        quote.blocks.push(paragraph);
+        paragraph.segments.push(text);
+
+        parent.appendChild(br);
+
+        handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
+
+        const result = handleQuote(document, parent, quote, context, br);
+
+        expect(parent.outerHTML).toBe(
+            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote><br></div>'
+        );
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            parent.firstChild as HTMLElement,
+            quote,
+            context
+        );
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
     });
 });

@@ -91,6 +91,11 @@ export type ElementProcessorMap = {
          * Workaround for typescript 4.4.4 that doesn't have element "center" in its element type
          */
         center?: ElementProcessor<HTMLElement>;
+
+        /**
+         * Processor for Inline Readonly Delimiters
+         */
+        delimiter?: ElementProcessor<HTMLSpanElement>;
     };
 
 /**

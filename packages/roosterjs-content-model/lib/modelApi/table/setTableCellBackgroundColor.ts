@@ -1,4 +1,5 @@
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { parseColor } from 'roosterjs-editor-dom';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
@@ -8,7 +9,6 @@ const DARK_COLORS_LIGHTNESS = 20;
 const BRIGHT_COLORS_LIGHTNESS = 80;
 const White = '#ffffff';
 const Black = '#000000';
-const RGBA_REGEX = /^rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*(\d+(?:\.\d+)?))?\)$/;
 
 /**
  * @internal
@@ -42,52 +42,23 @@ export function setTableCellBackgroundColor(
         delete cell.format.backgroundColor;
         delete cell.format.textColor;
     }
+
+    delete cell.cachedElement;
 }
 
 function calculateLightness(color: string) {
-    let r: number;
-    let g: number;
-    let b: number;
-
-    if (color.substring(0, 1) == '#') {
-        [r, g, b] = parseHexColor(color);
-    } else {
-        [r, g, b] = parseRGBColor(color);
-    }
+    const colorValues = parseColor(color);
 
     // Use the values of r,g,b to calculate the lightness in the HSl representation
     //First calculate the fraction of the light in each color, since in css the value of r,g,b is in the interval of [0,255], we have
+    if (colorValues) {
+        const red = colorValues[0] / 255;
+        const green = colorValues[1] / 255;
+        const blue = colorValues[2] / 255;
 
-    const red = r / 255;
-    const green = g / 255;
-    const blue = b / 255;
-
-    //Then the lightness in the HSL representation is the average between maximum fraction of r,g,b and the minimum fraction
-    return (Math.max(red, green, blue) + Math.min(red, green, blue)) * 50;
-}
-
-function parseHexColor(color: string) {
-    if (color.length === 4) {
-        color = color.replace(/(.)/g, '$1$1');
-    }
-
-    const colors = color.replace('#', '');
-    const r = parseInt(colors.substr(0, 2), 16);
-    const g = parseInt(colors.substr(2, 2), 16);
-    const b = parseInt(colors.substr(4, 2), 16);
-
-    return [r, g, b];
-}
-
-function parseRGBColor(color: string) {
-    const colors = color.match(RGBA_REGEX);
-
-    if (colors) {
-        const r = parseInt(colors[1]);
-        const g = parseInt(colors[2]);
-        const b = parseInt(colors[3]);
-        return [r, g, b];
+        //Then the lightness in the HSL representation is the average between maximum fraction of r,g,b and the minimum fraction
+        return (Math.max(red, green, blue) + Math.min(red, green, blue)) * 50;
     } else {
-        return [255, 255, 255];
+        return 255;
     }
 }

@@ -21,7 +21,7 @@ export default function domToContentModel(
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument();
+    const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 
     // For root element, use computed style as initial value of segment formats

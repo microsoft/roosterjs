@@ -16,6 +16,8 @@ export function mergeTableCells(table: ContentModelTable) {
                 if (cell) {
                     cell.spanLeft = colIndex > sel.firstCol;
                     cell.spanAbove = rowIndex > sel.firstRow;
+
+                    delete cell.cachedElement;
                 }
             }
         }

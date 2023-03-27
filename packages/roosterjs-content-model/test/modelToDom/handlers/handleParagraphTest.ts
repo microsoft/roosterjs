@@ -27,10 +27,11 @@ describe('handleParagraph', () => {
         expectedInnerHTML: string,
         expectedCreateSegmentFromContentCalledTimes: number
     ) {
-        handleParagraph(document, parent, paragraph, context);
+        handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleSegment).toHaveBeenCalledTimes(expectedCreateSegmentFromContentCalledTimes);
+        expect(paragraph.cachedElement).toBe((parent.firstChild as HTMLElement) || undefined);
     }
 
     it('Handle empty explicit paragraph', () => {
@@ -366,5 +367,55 @@ describe('handleParagraph', () => {
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
+    });
+
+    it('Handle paragraph with refNode', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        const br = document.createElement('br');
+
+        const result = parent.appendChild(br);
+
+        handleParagraph(document, parent, paragraph, context, br);
+
+        expect(parent.innerHTML).toBe('<div></div><br>');
+        expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
+    });
+
+    it('Handle paragraph with PRE', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {
+                whiteSpace: 'pre',
+            },
+        };
+        const br = document.createElement('br');
+
+        parent.appendChild(br);
+
+        handleParagraph(document, parent, paragraph, context, br);
+
+        expect(parent.innerHTML).toBe(
+            '<pre style="margin-top: 0px; margin-bottom: 0px;"><div style="white-space: pre;"></div></pre><br>'
+        );
+        expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(paragraph.cachedElement?.outerHTML).toBe(
+            '<pre style="margin-top: 0px; margin-bottom: 0px;"><div style="white-space: pre;"></div></pre>'
+        );
     });
 });

@@ -10,8 +10,8 @@ export default function blockFormat(
     editor: IEditor,
     callback: (
         region: Region,
-        start: NodePosition,
-        end: NodePosition,
+        start: NodePosition | null,
+        end: NodePosition | null,
         chains: VListChain[]
     ) => void,
     beforeRunCallback?: () => boolean,
@@ -25,11 +25,13 @@ export default function blockFormat(
         (start, end) => {
             if (!beforeRunCallback || beforeRunCallback()) {
                 const regions = editor.getSelectedRegions();
-                const chains = VListChain.createListChains(regions, start?.node);
-                regions.forEach(region => callback(region, start, end, chains));
-                commitListChains(editor, chains);
+                if (regions.length > 0) {
+                    const chains = VListChain.createListChains(regions, start?.node);
+                    regions.forEach(region => callback(region, start, end, chains));
+                    commitListChains(editor, chains);
+                }
             }
-            if (selection.type == SelectionRangeTypes.Normal) {
+            if (selection.type == SelectionRangeTypes.Normal && start && end) {
                 editor.select(start, end);
             } else {
                 editor.select(selection);

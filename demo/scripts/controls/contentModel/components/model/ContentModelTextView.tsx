@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelText } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
@@ -23,6 +24,7 @@ export function ContentModelTextView(props: { text: ContentModelText }) {
             <>
                 <textarea ref={textArea} onChange={onChange} value={value} />
                 {text.link ? <ContentModelLinkView link={text.link} /> : null}
+                {text.code ? <ContentModelCodeView code={text.code} /> : null}
             </>
         );
     }, [text, value, text.link]);

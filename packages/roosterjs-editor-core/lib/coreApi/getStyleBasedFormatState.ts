@@ -44,6 +44,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
               'line-height',
               'margin-top',
               'margin-bottom',
+              'text-align',
+              'direction',
           ])
         : [];
     const {
@@ -99,6 +101,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
             lineHeight: styles[4],
             marginTop: styles[5],
             marginBottom: styles[6],
+            textAlign: styles[7],
+            direction: styles[8],
         };
     } else {
         const ogTextColorNode =
@@ -140,6 +144,8 @@ export const getStyleBasedFormatState: GetStyleBasedFormatState = (
                   }
                 : undefined,
             lineHeight: styles[4],
+            textAlign: styles[7],
+            direction: styles[8],
         };
     }
 };

@@ -9,6 +9,7 @@ import { FormatView } from '../format/FormatView';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
+import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import {
@@ -25,6 +26,7 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ...ListThreadFormatRenderers,
     ...ListMetadataFormatRenderers,
     ...DirectionFormatRenderers,
+    MarginFormatRenderer,
 ];
 
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [

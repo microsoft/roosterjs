@@ -13,7 +13,12 @@ export default function setIndentation(
     indentation: 'indent' | 'outdent',
     length?: number
 ) {
-    formatWithContentModel(editor, 'setIndentation', model =>
-        setModelIndentation(model, indentation, length)
+    formatWithContentModel(
+        editor,
+        'setIndentation',
+        model => setModelIndentation(model, indentation, length),
+        {
+            preservePendingFormat: true,
+        }
     );
 }

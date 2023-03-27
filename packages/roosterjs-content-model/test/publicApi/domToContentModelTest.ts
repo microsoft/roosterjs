@@ -3,6 +3,7 @@ import * as normalizeContentModel from '../../lib/modelApi/common/normalizeConte
 import domToContentModel from '../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { DomToModelContext } from '../../lib/publicTypes/context/DomToModelContext';
+import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
 
 describe('domToContentModel', () => {
     it('Not include root', () => {
@@ -25,11 +26,19 @@ describe('domToContentModel', () => {
         const options = {
             includeRoot: false,
         };
-        const editorContext = { isDarkMode: false };
+        const editorContext: EditorContext = {
+            isDarkMode: false,
+            defaultFormat: {
+                fontSize: '10pt',
+            },
+        };
         const model = domToContentModel(rootElement, editorContext, options);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
+            format: {
+                fontSize: '10pt',
+            },
         };
 
         expect(model).toEqual(result);
@@ -65,7 +74,7 @@ describe('domToContentModel', () => {
         const options = {
             includeRoot: true,
         };
-        const editorContext = { isDarkMode: false };
+        const editorContext: EditorContext = { isDarkMode: false };
         const model = domToContentModel(rootElement, editorContext, options);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',

@@ -95,7 +95,8 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: blockFormatHandlers,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction'],
+    listItemElement: ['direction'],
+    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
     segment: [
         'superOrSubScript',
         'strike',
@@ -112,7 +113,6 @@ const defaultFormatKeysPerCategory: {
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
     tableCell: [
         'border',
-        'borderBox',
         'backgroundColor',
         'padding',
         'direction',
@@ -120,18 +120,12 @@ const defaultFormatKeysPerCategory: {
         'wordBreak',
         'textColor',
     ],
-    table: [
-        'id',
-        'border',
-        'borderBox',
-        'tableSpacing',
-        'margin',
-        'backgroundColor',
-        'display',
-        'direction',
-    ],
+    table: ['id', 'border', 'margin', 'backgroundColor', 'display', 'direction'],
+    tableBorder: ['borderBox', 'tableSpacing'],
+    tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
     link: ['link', 'textColor', 'underline'],
+    code: ['fontFamily'],
     dataset: ['dataset'],
     divider: [...blockFormatHandlers, 'display', 'size'],
 };

@@ -36,7 +36,12 @@ export default function toggleBlockQuote(
         ...quoteFormat,
     };
 
-    formatWithContentModel(editor, 'toggleBlockQuote', model =>
-        toggleModelBlockQuote(model, fullQuoteFormat, segmentFormat)
+    formatWithContentModel(
+        editor,
+        'toggleBlockQuote',
+        model => toggleModelBlockQuote(model, fullQuoteFormat, segmentFormat),
+        {
+            preservePendingFormat: true,
+        }
     );
 }

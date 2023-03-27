@@ -35,11 +35,17 @@ export type ImageEditMenuItemStringKey =
     | 'menuNameImageAltText'
     | 'menuNameImageResize'
     | 'menuNameImageCrop'
+    | 'menuNameImageRotate'
     | 'menuNameImageRemove'
+    | 'menuNameImageFlip'
     | 'menuNameImageSizeBestFit'
     | 'menuNameImageSizeSmall'
     | 'menuNameImageSizeMedium'
     | 'menuNameImageSizeOriginal'
+    | 'menuNameImageRotateLeft'
+    | 'menuNameImageRotateRight'
+    | 'menuNameImageRotateFlipHorizontally'
+    | 'menuNameImageRotateFlipVertically'
     | OkButtonStringKey
     | CancelButtonStringKey;
 

@@ -34,11 +34,11 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
             break;
 
         case 'General':
-            context.modelHandlers.general(doc, parent, segment, context);
+            context.modelHandlers.general(doc, parent, segment, context, null /*refNode*/);
             break;
 
         case 'Entity':
-            context.modelHandlers.entity(doc, parent, segment, context);
+            context.modelHandlers.entity(doc, parent, segment, context, null /*refNode*/);
             break;
     }
 

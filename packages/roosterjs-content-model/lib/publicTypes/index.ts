@@ -23,15 +23,19 @@ export { ContentModelGeneralSegment } from './segment/ContentModelGeneralSegment
 export { ContentModelSegment } from './segment/ContentModelSegment';
 export { ContentModelEntity } from './entity/ContentModelEntity';
 export { ContentModelDivider } from './block/ContentModelDivider';
+export { ContentModelBlockWithCache } from './block/ContentModelBlockWithCache';
 
 export { ContentModelParagraphDecorator } from './decorator/ContentModelParagraphDecorator';
 export { ContentModelLink } from './decorator/ContentModelLink';
+export { ContentModelCode } from './decorator/ContentModelCode';
+export { ContentModelDecorator } from './decorator/ContentModelDecorator';
 
 export { FormatHandlerTypeMap, FormatKey } from './format/FormatHandlerTypeMap';
 export { ContentModelTableFormat } from './format/ContentModelTableFormat';
 export { ContentModelTableCellFormat } from './format/ContentModelTableCellFormat';
 export { ContentModelBlockFormat } from './format/ContentModelBlockFormat';
 export { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
+export { ContentModelListItemFormat } from './format/ContentModelListItemFormat';
 export { ContentModelListItemLevelFormat } from './format/ContentModelListItemLevelFormat';
 export { ContentModelImageFormat } from './format/ContentModelImageFormat';
 export { ContentModelWithFormat } from './format/ContentModelWithFormat';
@@ -79,7 +83,11 @@ export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
 export { ContentModelFormatMap } from './format/ContentModelFormatMap';
 
 export { EditorContext } from './context/EditorContext';
-export { DomToModelListFormat, DomToModelFormatContext } from './context/DomToModelFormatContext';
+export {
+    DomToModelListFormat,
+    DomToModelFormatContext,
+    DomToModelSegmentDecoratorContext,
+} from './context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,
     DomToModelTableSelection,
@@ -114,12 +122,10 @@ export {
     FormatAppliers,
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
-    ContentModelHandlerTypeMap,
     DefaultImplicitFormatMap,
 } from './context/ModelToDomSettings';
-export { ModelToDomEntityContext } from './context/ModelToDomEntityContext';
 export { ElementProcessor } from './context/ElementProcessor';
-export { ContentModelHandler } from './context/ContentModelHandler';
+export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
 
 export { Border } from './interface/Border';
 

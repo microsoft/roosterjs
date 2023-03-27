@@ -1,5 +1,5 @@
 import { ColorKeyAndValue, DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys, parseColor } from 'roosterjs-editor-dom';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
@@ -67,10 +67,12 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * Parse an existing color value, if it is in variable-based color format, extract color key,
      * light color and query related dark color if any
      * @param color The color string to parse
+     * @param isInDarkMode Whether current content is in dark mode. When set to true, if the color value is not in dark var format,
+     * we will treat is as a dark mode color and try to find a matched dark mode color.
      */
-    parseColorValue(color: string | undefined | null): ColorKeyAndValue {
+    parseColorValue(color: string | undefined | null, isInDarkMode?: boolean): ColorKeyAndValue {
         let key: string | undefined;
-        let lightModeColor = color || '';
+        let lightModeColor = '';
         let darkModeColor: string | undefined;
 
         if (color) {
@@ -84,9 +86,47 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
                 } else {
                     lightModeColor = '';
                 }
+            } else if (isInDarkMode) {
+                // If editor is in dark mode but the color is not in dark color format, it is possible the color was inserted from external code
+                // without any light color info. So we first try to see if there is a known dark color can match this color, and use its related
+                // light color as light mode color. Otherwise we need to drop this color to avoid show "white on white" content.
+                lightModeColor = this.findLightColorFromDarkColor(color) || '';
+
+                if (lightModeColor) {
+                    darkModeColor = color;
+                }
+            } else {
+                lightModeColor = color;
             }
         }
 
         return { key, lightModeColor, darkModeColor };
+    }
+
+    /**
+     * Find related light mode color from dark mode color.
+     * @param darkColor The existing dark color
+     */
+    findLightColorFromDarkColor(darkColor: string): string | null {
+        const rgbSearch = parseColor(darkColor);
+
+        if (rgbSearch) {
+            const key = getObjectKeys(this.knownColors).find(key => {
+                const rgbCurrent = parseColor(this.knownColors[key].darkModeColor);
+
+                return (
+                    rgbCurrent &&
+                    rgbCurrent[0] == rgbSearch[0] &&
+                    rgbCurrent[1] == rgbSearch[1] &&
+                    rgbCurrent[2] == rgbSearch[2]
+                );
+            });
+
+            if (key) {
+                return this.knownColors[key].lightModeColor;
+            }
+        }
+
+        return null;
     }
 }

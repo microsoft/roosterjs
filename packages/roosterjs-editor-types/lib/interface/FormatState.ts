@@ -60,6 +60,11 @@ export interface ElementBasedFormatState {
     isBlockQuote?: boolean;
 
     /**
+     * Whether the text is in Code element
+     */
+    isCodeInline?: boolean;
+
+    /**
      * Whether the text is in Code block
      */
     isCodeBlock?: boolean;
@@ -153,6 +158,16 @@ export interface StyleBasedFormatState {
      * Margin Bottom
      */
     marginBottom?: string;
+
+    /**
+     * Text Align
+     */
+    textAlign?: string;
+
+    /**
+     * Direction of the element ('ltr' or 'rtl')
+     */
+    direction?: string;
 }
 
 /**

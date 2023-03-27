@@ -30,21 +30,23 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     canvas.width = targetWidth;
     canvas.height = targetHeight;
-
     const context = canvas.getContext('2d');
-    context.translate(targetWidth / 2, targetHeight / 2);
-    context.rotate(angle);
-    context.drawImage(
-        image,
-        naturalWidth * left,
-        naturalHeight * top,
-        imageWidth,
-        imageHeight,
-        -width / 2,
-        -height / 2,
-        width,
-        height
-    );
+    if (context) {
+        context.translate(targetWidth / 2, targetHeight / 2);
+        context.rotate(angle);
+        context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
+        context.drawImage(
+            image,
+            naturalWidth * left,
+            naturalHeight * top,
+            imageWidth,
+            imageHeight,
+            -width / 2,
+            -height / 2,
+            width,
+            height
+        );
+    }
 
     return canvas.toDataURL('image/png', 1.0);
 }
