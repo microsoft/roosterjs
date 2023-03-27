@@ -26,11 +26,17 @@ export default function convertPastedContentFromExcel(
 
     // For Excel Online
     if (fragment.childNodes.length > 0 && getTagOfNode(fragment.firstChild) == 'DIV') {
-        fragment.firstChild.childNodes.forEach(child => {
-            if (getTagOfNode(child) == 'TABLE') {
-                event.fragment.replaceChildren(child);
-            }
+        const tableFound = Array.from(fragment.firstChild.childNodes).every((child: Node) => {
+            // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
+            return getTagOfNode(child) == 'META'
+                ? true
+                : getTagOfNode(child) == 'TABLE' && child == fragment.firstChild.lastChild;
         });
+
+        // Extract Table from Div
+        if (tableFound) {
+            event.fragment.replaceChildren(fragment.firstChild.lastChild);
+        }
     }
 
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'TD', element => {

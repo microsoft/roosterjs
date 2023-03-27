@@ -11,6 +11,7 @@ const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
  */
 const isExcelDesktopDocument: getSourceFunction = (props: getSourceInputParams) => {
     const { htmlAttributes } = props;
+    // The presence of this attribute confirms its origin from Excel Desktop
     return htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] == EXCEL_ATTRIBUTE_VALUE;
 };
 export default isExcelDesktopDocument;
