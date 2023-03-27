@@ -1,3 +1,4 @@
+import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
     addDelimiters,
     cacheGetEventData,
@@ -24,6 +25,8 @@ import {
     NodeType,
     ExperimentalFeatures,
     Entity,
+    IContentTraverser,
+    InlineElement,
 } from 'roosterjs-editor-types';
 
 /**
@@ -214,8 +217,12 @@ function cacheGetNeighborEntityElement(
  */
 const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT, Keys.LEFT],
+    allowFunctionKeys: true,
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        if (!editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
+        if (
+            event.rawEvent.altKey ||
+            !editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+        ) {
             return false;
         }
 
@@ -237,7 +244,7 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
             return;
         }
 
-        const { delimiterPair, entity } = getRelatedElements(delimiter, checkBefore);
+        const { delimiterPair, entity } = getRelatedElements(delimiter, checkBefore, editor);
 
         if (delimiterPair && entity && matchesSelector(entity, getEntitySelector())) {
             event.rawEvent.preventDefault();
@@ -315,30 +322,19 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
             ? position.element.childNodes.item(position.offset)
             : position.element;
 
-    const searcher = editor.getContentSearcherOfCursor(event);
     const data = checkBefore
         ? {
               class: DelimiterClasses.DELIMITER_BEFORE,
               pairClass: DelimiterClasses.DELIMITER_AFTER,
-              getDelimiterPair: (element: HTMLElement) =>
-                  element.nextElementSibling?.nextElementSibling,
-              getNextSibling: () => {
-                  return searcher?.getInlineElementAfter()?.getContainerNode();
-              },
               isAtEndOrBeginning: position.isAtEnd,
           }
         : {
               class: DelimiterClasses.DELIMITER_AFTER,
               pairClass: DelimiterClasses.DELIMITER_BEFORE,
-              getDelimiterPair: (element: HTMLElement) =>
-                  element.previousElementSibling?.previousElementSibling,
-              getNextSibling: () => {
-                  return searcher?.getInlineElementBefore()?.getContainerNode();
-              },
               isAtEndOrBeginning: position.offset == 0,
           };
 
-    const sibling = data.getNextSibling();
+    const sibling = getNextSibling(editor, focusedElement, checkBefore);
     if (data.isAtEndOrBeginning && sibling) {
         const elAtCursor = editor.getElementAtCursor('.' + data.class, sibling);
 
@@ -347,16 +343,47 @@ function getIsDelimiterAtCursor(event: PluginKeyboardEvent, editor: IEditor, che
         }
     }
 
-    const entityAtCursor = editor.getElementAtCursor('.' + data.class, focusedElement);
+    const entityAtCursor =
+        focusedElement && editor.getElementAtCursor('.' + data.class, focusedElement);
     return !!shouldHandle(entityAtCursor);
 
     function shouldHandle(element: HTMLElement | null | undefined) {
+        if (!element) {
+            return false;
+        }
+
+        const { delimiterPair } = getRelatedElements(element, checkBefore, editor);
+
         return (
-            element &&
-            (data.getDelimiterPair(element)?.className || '').indexOf(data.pairClass!) > -1 &&
+            delimiterPair &&
+            (delimiterPair.className || '').indexOf(data.pairClass) > -1 &&
             cacheDelimiter(event, checkBefore, element)
         );
     }
+}
+
+function getNextSibling(editor: IEditor, element: Node, checkBefore: boolean) {
+    const traverser = getBlockTraverser(editor, element);
+    if (!traverser) {
+        return undefined;
+    }
+
+    const traverseFn = (t: IContentTraverser) =>
+        checkBefore ? t.getNextInlineElement() : t.getPreviousInlineElement();
+
+    let currentInline = traverser.currentInlineElement;
+    while (currentInline && currentInline.getContainerNode() === element) {
+        currentInline = traverseFn(traverser);
+    }
+    return currentInline?.getContainerNode();
+}
+
+function getBlockTraverser(editor: IEditor, element: Node | null | undefined) {
+    if (!element) {
+        return undefined;
+    }
+    const blockElement = editor.getBlockElementAtNode(element)?.getStartNode();
+    return blockElement ? ContentTraverser.createBodyTraverser(blockElement, element) : undefined;
 }
 
 function cacheDelimiter(event: PluginEvent, checkBefore: boolean, delimiter?: HTMLElement | null) {
@@ -420,12 +447,15 @@ function triggerOperation(
             getDelimiterFromElement(nextElementSibling) &&
             getDelimiterFromElement(previousElementSibling)
         ) {
-            editor.select(createRange(previousElementSibling, nextElementSibling));
+            editor.select(createRange(<Node>previousElementSibling, <Node>nextElementSibling));
         }
     }
 }
 
-function removeDelimiters(nextElementSibling: Element, previousElementSibling: Element) {
+function removeDelimiters(
+    nextElementSibling: Element | null,
+    previousElementSibling: Element | null
+) {
     [nextElementSibling, previousElementSibling].forEach(sibling => {
         if (getDelimiterFromElement(sibling)) {
             sibling?.parentElement?.removeChild(sibling);
@@ -437,15 +467,37 @@ function cacheGetCheckBefore(event: PluginKeyboardEvent, checkBefore?: boolean):
     return !!cacheGetEventData(event, 'Check_Before', () => checkBefore);
 }
 
-function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean) {
-    let entity: Element | null;
-    let delimiterPair: Element | null;
-    if (checkBefore) {
-        entity = delimiter.nextElementSibling;
-        delimiterPair = entity?.nextElementSibling ?? null;
-    } else {
-        entity = delimiter.previousElementSibling;
-        delimiterPair = entity?.previousElementSibling ?? null;
+function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor: IEditor) {
+    let entity: Element | null = null;
+    let delimiterPair: Element | null = null;
+    const traverser = getBlockTraverser(editor, delimiter);
+    if (!traverser) {
+        return { delimiterPair, entity };
+    }
+
+    const selector = `.${
+        checkBefore ? DelimiterClasses.DELIMITER_AFTER : DelimiterClasses.DELIMITER_BEFORE
+    }`;
+    const traverseFn = (t: IContentTraverser) =>
+        checkBefore ? t.getNextInlineElement() : t.getPreviousInlineElement();
+    const getElementFromInline = (element: InlineElement, selector: string) => {
+        const node = element?.getContainerNode();
+        return (node && editor.getElementAtCursor(selector, node)) ?? null;
+    };
+    const entitySelector = getEntitySelector();
+
+    let current = traverser.currentInlineElement;
+    while (current && (!entity || !delimiterPair)) {
+        entity = entity || getElementFromInline(current, entitySelector);
+        delimiterPair = delimiterPair || getElementFromInline(current, selector);
+
+        // If we found the entity but the next inline after the entity is not a delimiter,
+        // it means that the delimiter pair got removed or is invalid, return null instead.
+        if (entity && !delimiterPair && !getElementFromInline(current, entitySelector)) {
+            delimiterPair = null;
+            break;
+        }
+        current = traverseFn(traverser);
     }
 
     return { entity, delimiterPair };
