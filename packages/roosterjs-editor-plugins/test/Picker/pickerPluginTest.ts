@@ -11,6 +11,7 @@ const dataProvider = {
         setIsSuggestingCallback: (isSuggesting: boolean) => void,
         editor?: IEditor
     ) => {},
+
     onDispose: () => {
         return;
     },
@@ -42,24 +43,25 @@ const pickerOptions = {
     triggerCharacter: ')',
 };
 
-describe('PickerPlugin |', () => {
+describe('PickerPlugin ', () => {
     let editor: IEditor;
     const TEST_ID = 'pickerTest';
-    const plugin = new PickerPlugin(dataProvider, pickerOptions);
+    let plugin: PickerPlugin;
     let spyOnQueryStringUpdated: any;
     let spyOnIsSuggestingChanged: any;
     let spyOnScroll: any;
     let spyOnContentChange: any;
     let spyOnInitialize: any;
-    let spyOnDispose: any;
+
     beforeEach(() => {
+        plugin = new PickerPlugin(dataProvider, pickerOptions);
         editor = TestHelper.initEditor(TEST_ID, [plugin]);
         spyOnQueryStringUpdated = spyOn(plugin.dataProvider, 'queryStringUpdated');
         spyOnIsSuggestingChanged = spyOn(plugin.dataProvider, 'onIsSuggestingChanged');
         spyOnScroll = spyOn(plugin.dataProvider, 'onScroll');
         spyOnContentChange = spyOn(plugin.dataProvider, 'onContentChanged');
         spyOnInitialize = spyOn(plugin.dataProvider, 'onInitalize');
-        spyOnDispose = spyOn(plugin.dataProvider, 'onDispose');
+        plugin.initialize(editor);
     });
 
     afterEach(() => {
@@ -177,9 +179,23 @@ describe('PickerPlugin |', () => {
         plugin.initialize(editor);
         expect(spyOnInitialize).toHaveBeenCalled();
     });
+});
+
+describe('PickerPlugin | dispose ', () => {
+    let editor: IEditor;
+    const TEST_ID = 'pickerTest';
+    let plugin = new PickerPlugin(dataProvider, pickerOptions);
+    let spyOnDispose: any;
+
+    beforeEach(() => {
+        editor = TestHelper.initEditor(TEST_ID, [plugin]);
+        spyOnDispose = spyOn(plugin.dataProvider, 'onDispose');
+        plugin.initialize(editor);
+    });
 
     it('should execute dispose function', () => {
         plugin.dispose();
         expect(spyOnDispose).toHaveBeenCalled();
+        expect(plugin.dataProvider).toBeUndefined();
     });
 });
