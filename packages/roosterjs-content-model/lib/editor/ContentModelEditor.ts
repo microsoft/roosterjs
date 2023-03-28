@@ -1,25 +1,29 @@
-import contentModelToDom from '../modelToDom/contentModelToDom';
-import domToContentModel from '../domToModel/domToContentModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
+import { createContentModel, setContentModel, switchShadowEdit } from './coreApi/switchShadowEdit';
 import { Editor } from 'roosterjs-editor-core';
-import { EditorContext } from '../publicTypes/context/EditorContext';
-import { EditorOptions, ExperimentalFeatures } from 'roosterjs-editor-types';
+import { EditorCore, EditorOptions, ExperimentalFeatures } from 'roosterjs-editor-types';
+
 import {
     DomToModelOption,
     IContentModelEditor,
     ModelToDomOption,
 } from '../publicTypes/IContentModelEditor';
 
+export interface ContentModelEditorCore extends EditorCore {
+    shadowEditContentModel?: ContentModelDocument;
+    originalContentModel?: ContentModelDocument;
+
+    cachedModel: ContentModelDocument | null;
+    reuseModel: boolean;
+    defaultFormat: ContentModelSegmentFormat;
+}
+
 /**
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export default class ContentModelEditor extends Editor implements IContentModelEditor {
-    private cachedModel: ContentModelDocument | null;
-    private reuseModel: boolean = false;
-    private defaultFormat: ContentModelSegmentFormat = {};
-
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
@@ -27,16 +31,18 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      */
     constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
         super(contentDiv, options);
-        this.cachedModel = null;
-        this.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
-        this.defaultFormat = this.getDefaultSegmentFormat();
+
+        const core = this.getCore();
+        core.cachedModel = null;
+        core.reuseModel = this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModel);
+        core.defaultFormat = this.getDefaultSegmentFormat();
     }
 
     /**
      * Dispose this editor, dispose all plugins and custom data
      */
     dispose() {
-        this.cachedModel = null;
+        this.getCore().cachedModel = null;
         super.dispose();
     }
 
@@ -45,17 +51,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(option?: DomToModelOption): ContentModelDocument {
-        const core = this.getCore();
-        const cachedModel = this.reuseModel ? this.cachedModel : null;
-
-        return (
-            cachedModel ||
-            domToContentModel(core.contentDiv, this.createEditorContext(), {
-                selectionRange: this.getSelectionRangeEx(),
-                alwaysNormalizeTable: true,
-                ...(option || {}),
-            })
-        );
+        return createContentModel(this.getCore(), option);
     }
 
     /**
@@ -64,15 +60,7 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
-        const range = contentModelToDom(
-            this.getDocument(),
-            this.getCore().contentDiv,
-            model,
-            this.createEditorContext(),
-            option
-        );
-
-        this.select(range);
+        setContentModel(this.getCore(), model, option);
     }
 
     /**
@@ -80,26 +68,36 @@ export default class ContentModelEditor extends Editor implements IContentModelE
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null) {
-        if (this.reuseModel) {
-            this.cachedModel = model;
+        const core = this.getCore();
+
+        if (core.reuseModel) {
+            core.cachedModel = model;
         }
     }
 
     /**
-     * Create a EditorContext object used by ContentModel API
+     * Make the editor in "Shadow Edit" mode.
+     * In Shadow Edit mode, all format change will finally be ignored.
+     * This can be used for building a live preview feature for format button, to allow user
+     * see format result without really apply it.
+     * This function can be called repeated. If editor is already in shadow edit mode, we can still
+     * use this function to do more shadow edit operation.
      */
-    private createEditorContext(): EditorContext {
+    public startShadowEdit() {
         const core = this.getCore();
+        switchShadowEdit(core, true /*isOn*/);
+    }
 
-        return {
-            isDarkMode: this.isDarkMode(),
-            defaultFormat: this.defaultFormat,
-            getDarkColor: core.lifecycle.getDarkColor,
-            darkColorHandler: this.getDarkColorHandler(),
-            addDelimiterForEntity: this.isFeatureEnabled(
-                ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-            ),
-        };
+    /**
+     * Leave "Shadow Edit" mode, all changes made during shadow edit will be discarded
+     */
+    public stopShadowEdit() {
+        const core = this.getCore();
+        switchShadowEdit(core, false /*isOn*/);
+    }
+
+    protected getCore(): ContentModelEditorCore {
+        return super.getCore() as ContentModelEditorCore;
     }
 
     private getDefaultSegmentFormat(): ContentModelSegmentFormat {

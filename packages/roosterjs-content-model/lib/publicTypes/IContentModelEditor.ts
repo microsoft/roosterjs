@@ -17,6 +17,8 @@ import {
  * Options for creating DomToModelContext
  */
 export interface DomToModelOption {
+    forceNew?: boolean;
+
     /**
      * True to create content model from the root element itself, false to create from all child nodes of root. @default false
      */
