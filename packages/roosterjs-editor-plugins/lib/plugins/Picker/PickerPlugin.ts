@@ -53,18 +53,65 @@ const UNIDENTIFIED_CODE = [0, 229];
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
-    private editor: IEditor;
-    private eventHandledOnKeyDown: boolean;
-    private blockSuggestions: boolean;
-    private isSuggesting: boolean;
-    private lastKnownRange: Range;
+    private editor: IEditor | undefined = undefined;
+    private core: PickerPluginCore | undefined = undefined;
+    public dataProvider: T | undefined = undefined;
+    private pickerOptions: PickerPluginOptions | undefined = undefined;
+
+    constructor(dataProvider: T, pickerOptions: PickerPluginOptions) {
+        this.dataProvider = dataProvider;
+        this.pickerOptions = pickerOptions;
+    }
+
+    public willHandleEventExclusively(event: PluginEvent) {
+        return this.core ? this.core.willHandleEventExclusively(event) : false;
+    }
+
+    public initialize(editor: IEditor) {
+        this.editor = editor;
+        if (this.editor && this.dataProvider && this.pickerOptions) {
+            this.core = new PickerPluginCore(this.editor, this.dataProvider, this.pickerOptions);
+            this.core.initialize(editor);
+        }
+    }
+
+    public onPluginEvent(event: PluginEvent) {
+        if (this.editor && this.dataProvider && this.core) {
+            this.core.onPluginEvent(event);
+        }
+    }
+
+    public dispose() {
+        this.editor = undefined;
+        this.dataProvider = undefined;
+        this.pickerOptions = undefined;
+        if (this.core) {
+            this.core.dispose();
+            this.core = undefined;
+        }
+    }
+
+    public getName() {
+        return this.core ? this.core.getName() : '';
+    }
+}
+
+class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implements EditorPlugin {
+    private eventHandledOnKeyDown: boolean = false;
+    private blockSuggestions: boolean = false;
+    private isSuggesting: boolean = false;
+    private lastKnownRange: Range | null = null;
 
     // For detecting backspace in Android
     private isPendingInputEventHandling: boolean = false;
-    private currentInputLength: number;
-    private newInputLength: number;
+    private currentInputLength: number | undefined = undefined;
+    private newInputLength: number | undefined = undefined;
 
-    constructor(public dataProvider: T, private pickerOptions: PickerPluginOptions) {}
+    constructor(
+        private editor: IEditor,
+        public dataProvider: T,
+        private pickerOptions: PickerPluginOptions
+    ) {}
 
     /**
      * Get a friendly name
@@ -123,17 +170,14 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * Dispose this plugin
      */
     public dispose() {
-        this.editor = null;
-        this.isSuggesting = null;
-        this.blockSuggestions = null;
-        this.eventHandledOnKeyDown = null;
+        this.isSuggesting = false;
+        this.blockSuggestions = false;
+        this.eventHandledOnKeyDown = false;
         this.lastKnownRange = null;
-        this.isPendingInputEventHandling = null;
-        this.currentInputLength = null;
-        this.newInputLength = null;
+        this.isPendingInputEventHandling = false;
+        this.currentInputLength = undefined;
+        this.newInputLength = undefined;
         this.dataProvider.onDispose();
-        this.dataProvider = undefined;
-        this.pickerOptions = undefined;
     }
 
     /**
@@ -224,7 +268,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
     }
 
-    private setLastKnownRange(range: Range) {
+    private setLastKnownRange(range: Range | null) {
         this.lastKnownRange = range;
     }
 
@@ -246,14 +290,14 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         event.rawEvent.stopImmediatePropagation();
     }
 
-    private getIdValue(node: Node): string {
+    private getIdValue(node: Node): string | null {
         let element = node as Element;
         return element.attributes && element.attributes.getNamedItem('id')
-            ? (element.attributes.getNamedItem('id').value as string)
+            ? (element.attributes.getNamedItem('id')?.value as string)
             : null;
     }
 
-    private getWordBeforeCursor(event: PluginKeyboardEvent): string {
+    private getWordBeforeCursor(event: PluginKeyboardEvent): string | null {
         let searcher = this.editor.getContentSearcherOfCursor(event);
         return searcher ? searcher.getWordBefore() : null;
     }
@@ -269,9 +313,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private getRangeUntilAt(event: PluginKeyboardEvent): Range {
         let positionContentSearcher = this.editor.getContentSearcherOfCursor(event);
-        let startPos: NodePosition;
-        let endPos: NodePosition;
-        positionContentSearcher.forEachTextInlineElement(textInline => {
+        let startPos: NodePosition | undefined = undefined;
+        let endPos: NodePosition | undefined = undefined;
+        positionContentSearcher?.forEachTextInlineElement(textInline => {
             let hasMatched = false;
             let nodeContent = textInline.getTextContent();
             let nodeIndex = nodeContent ? nodeContent.length : -1;
@@ -290,7 +334,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
             return hasMatched;
         });
-        return createRange(startPos, endPos) || this.editor.getDocument().createRange();
+        return startPos && endPos
+            ? createRange(startPos, endPos)
+            : this.editor.getDocument().createRange();
     }
 
     private shouldHandleKeyUpEvent(event: PluginKeyboardEvent) {
@@ -308,6 +354,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (this.isSuggesting) {
             // Word before cursor represents the text prior to the cursor, up to and including the trigger symbol.
             const wordBeforeCursor = this.getWord(event);
+            if (!wordBeforeCursor) {
+                return;
+            }
             const wordBeforeCursorWithoutTriggerChar = wordBeforeCursor.substring(1);
             const trimmedWordBeforeCursor = wordBeforeCursorWithoutTriggerChar.trim();
 
@@ -328,7 +377,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                     trimmedWordBeforeCursor,
                     wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
                 );
-                this.setLastKnownRange(this.editor.getSelectionRange());
+                this.setLastKnownRange(this.editor.getSelectionRange() ?? null);
             } else {
                 this.setIsSuggesting(false);
             }
@@ -347,27 +396,29 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                         trimmedWordBeforeCursor,
                         wordBeforeCursorWithoutTriggerChar == trimmedWordBeforeCursor
                     );
-                    this.setLastKnownRange(this.editor.getSelectionRange());
+                    this.setLastKnownRange(this.editor.getSelectionRange() ?? null);
                     if (this.dataProvider.setCursorPoint) {
                         // Determine the bounding rectangle for the @mention
                         let searcher = this.editor.getContentSearcherOfCursor(event);
                         let rangeNode = this.editor.getDocument().createRange();
-                        let nodeBeforeCursor = searcher.getInlineElementBefore().getContainerNode();
-                        let rangeStartSuccessfullySet = this.setRangeStart(
-                            rangeNode,
-                            nodeBeforeCursor,
-                            wordBeforeCursor
-                        );
+                        let nodeBeforeCursor = searcher
+                            ?.getInlineElementBefore()
+                            ?.getContainerNode();
+                        let rangeStartSuccessfullySet = nodeBeforeCursor
+                            ? this.setRangeStart(rangeNode, nodeBeforeCursor, wordBeforeCursor)
+                            : false;
                         if (!rangeStartSuccessfullySet) {
                             // VSO 24891: Out of range error is occurring because nodeBeforeCursor
                             // is not including the trigger character. In this case, the node before
                             // the node before cursor is the trigger character, and this is where the range should start.
-                            let nodeBeforeNodeBeforeCursor = nodeBeforeCursor.previousSibling;
-                            this.setRangeStart(
-                                rangeNode,
-                                nodeBeforeNodeBeforeCursor,
-                                this.pickerOptions.triggerCharacter
-                            );
+                            let nodeBeforeNodeBeforeCursor = nodeBeforeCursor?.previousSibling;
+                            if (nodeBeforeNodeBeforeCursor) {
+                                this.setRangeStart(
+                                    rangeNode,
+                                    nodeBeforeNodeBeforeCursor,
+                                    this.pickerOptions.triggerCharacter
+                                );
+                            }
                         }
                         let rect = rangeNode.getBoundingClientRect();
 
@@ -448,11 +499,15 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 }
             } else if (keyboardEvent.key == DELETE_CHAR_CODE) {
                 let searcher = this.editor.getContentSearcherOfCursor(event);
-                let nodeAfterCursor = searcher.getInlineElementAfter()
-                    ? searcher.getInlineElementAfter().getContainerNode()
+                let nodeAfterCursor = searcher?.getInlineElementAfter()
+                    ? searcher.getInlineElementAfter()?.getContainerNode()
                     : null;
                 let nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
-                if (nodeId && nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0) {
+                if (
+                    nodeAfterCursor &&
+                    nodeId &&
+                    nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0
+                ) {
                     let replacementNode = this.dataProvider.onRemove(nodeAfterCursor, false);
                     this.replaceNode(nodeAfterCursor, replacementNode);
                     this.cancelDefaultKeyDownEvent(event);
@@ -465,7 +520,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.newInputLength = this.calcInputLength(event);
 
         if (
-            this.newInputLength < this.currentInputLength ||
+            (this.currentInputLength && this.newInputLength < this.currentInputLength) ||
             (event.rawEvent as any).inputType === DELETE_CONTENT_BACKWARDS_INPUT_TYPE
         ) {
             const nodeRemoved = this.tryRemoveNode(event);
@@ -482,14 +537,15 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private tryRemoveNode(event: PluginDomEvent): boolean {
         const searcher = this.editor.getContentSearcherOfCursor(event);
-        const inlineElementBefore = searcher.getInlineElementBefore();
+        const inlineElementBefore = searcher?.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
-            ? inlineElementBefore.getContainerNode()
+            ? inlineElementBefore?.getContainerNode()
             : null;
         const nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
-        const inlineElementAfter = searcher.getInlineElementAfter();
+        const inlineElementAfter = searcher?.getInlineElementAfter();
 
         if (
+            nodeBeforeCursor &&
             nodeId &&
             nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
             (inlineElementAfter == null || !(inlineElementAfter instanceof PartialInlineElement))
@@ -512,7 +568,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         return false;
     }
 
-    private getWord(event: PluginKeyboardEvent) {
+    private getWord(event: PluginKeyboardEvent | null) {
+        if (!event) {
+            return '';
+        }
         let wordFromRange = this.getRangeUntilAt(event).toString();
         let wordFromCache = this.getWordBeforeCursor(event);
         // VSO 24891: In picker, trigger and mention are separated into two nodes.
@@ -528,7 +587,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private setRangeStart(rangeNode: Range, node: Node, target: string) {
-        let nodeOffset = node ? node.textContent.lastIndexOf(target) : -1;
+        let nodeOffset = node && node?.textContent ? node.textContent.lastIndexOf(target) : -1;
         if (nodeOffset > -1) {
             rangeNode.setStart(node, nodeOffset);
             return true;
@@ -545,7 +604,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         );
     }
 
-    private setAriaActiveDescendant(selectedIndex: number) {
+    private setAriaActiveDescendant(selectedIndex: number | null) {
         this.editor.setEditorDomAttribute(
             'aria-activedescendant',
             selectedIndex != null && this.pickerOptions.suggestionLabelPrefix
@@ -554,7 +613,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         );
     }
 
-    private getInlineElementBeforeCursor(event: PluginEvent): string {
+    private getInlineElementBeforeCursor(event: PluginEvent): string | null {
         const searcher = this.editor.getContentSearcherOfCursor(event);
         const element = searcher ? searcher.getInlineElementBefore() : null;
         return element ? element.getTextContent() : null;

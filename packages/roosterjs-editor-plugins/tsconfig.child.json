@@ -12,6 +12,7 @@
         { "path": "./lib/plugins/ImageEdit/tsconfig.child.json" },
         { "path": "./lib/plugins/HyperLink/tsconfig.child.json" },
         { "path": "./lib/plugins/Watermark/tsconfig.child.json" },
+        { "path": "./lib/plugins/Picker/tsconfig.child.json" },
         { "path": "../roosterjs-editor-types/tsconfig.child.json" },
         { "path": "../roosterjs-editor-dom/tsconfig.child.json" },
         { "path": "../roosterjs-editor-api/tsconfig.child.json" }
