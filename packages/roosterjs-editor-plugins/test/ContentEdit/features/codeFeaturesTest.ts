@@ -2,13 +2,20 @@ import { IEditor, PluginEventType, PluginKeyboardEvent, Keys } from 'roosterjs-e
 import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
 import { CodeFeatures } from '../../../lib/plugins/ContentEdit/features/codeFeatures';
 
-const TEST_ELEMENT_ID = 'test';
+const TEST_ELEMENT_ID = 'test_codeFeatures';
+const TEST_EDITOR_ID = 'testEditor_codeFeatures';
 
 describe('CodeFeatures', () => {
     let editor: IEditor;
 
     beforeEach(() => {
-        editor = TestHelper.initEditor('editorId');
+        editor = TestHelper.initEditor(TEST_EDITOR_ID);
+    });
+
+    afterEach(() => {
+        document.getElementById(TEST_EDITOR_ID)?.remove();
+        editor.dispose();
+        editor = null;
     });
 
     function runShouldHandleEvent(
