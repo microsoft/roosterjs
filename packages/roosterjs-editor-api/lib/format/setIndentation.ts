@@ -73,23 +73,27 @@ export default function setIndentation(
                         shouldHandleWithBlockquotes(indentation, editor, startNode)
                     ) {
                         const block = editor.getBlockElementAtNode(vList.rootList);
-                        blockGroups.push([block]);
+                        if (block) {
+                            blockGroups.push([block]);
+                        }
                     } else {
-                        indentation == Indentation.Decrease
-                            ? vList.setIndentation(
-                                  start,
-                                  end,
-                                  indentation,
-                                  false /* softOutdent */,
-                                  isTabKeyTextFeaturesEnabled /* preventItemRemoval */
-                              )
-                            : vList.setIndentation(start, end, indentation);
-                        vList.writeBack(
-                            editor.isFeatureEnabled(
-                                ExperimentalFeatures.ReuseAllAncestorListElements
-                            )
-                        );
-                        blockGroups.push([]);
+                        if (start && end) {
+                            indentation == Indentation.Decrease
+                                ? vList.setIndentation(
+                                      start,
+                                      end,
+                                      indentation,
+                                      false /* softOutdent */,
+                                      isTabKeyTextFeaturesEnabled /* preventItemRemoval */
+                                  )
+                                : vList.setIndentation(start, end, indentation);
+                            vList.writeBack(
+                                editor.isFeatureEnabled(
+                                    ExperimentalFeatures.ReuseAllAncestorListElements
+                                )
+                            );
+                            blockGroups.push([]);
+                        }
                     }
                 } else {
                     blockGroups[blockGroups.length - 1].push(blocks[i]);
@@ -102,11 +106,14 @@ export default function setIndentation(
             const selection = editor.getSelectionRangeEx();
             if (
                 selection.type == SelectionRangeTypes.TableSelection &&
+                selection.coordinates &&
                 isWholeTableSelected(new VTable(selection.table), selection.coordinates)
             ) {
                 if (indentation == Indentation.Decrease) {
                     const quote = editor.getElementAtCursor('blockquote', selection.table);
-                    unwrap(quote);
+                    if (quote) {
+                        unwrap(quote);
+                    }
                 } else if (indentation == Indentation.Increase) {
                     wrap(selection.table, KnownCreateElementDataIndex.BlockquoteWrapper);
                 }
