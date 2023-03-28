@@ -5,6 +5,7 @@
 export const enum KnownSourceType {
     WordDesktop,
     ExcelDesktop,
+    ExcelOnline,
     PowerPointDesktop,
     GoogleSheets,
     WacComponents,
