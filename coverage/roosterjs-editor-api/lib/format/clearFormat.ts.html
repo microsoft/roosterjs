@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.75% </span>
+                <span class="strong">86.84% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>131/151</span>
+                <span class='fraction'>132/152</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75.51% </span>
+                <span class="strong">75.21% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>74/98</span>
+                <span class='fraction'>88/117</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.21% </span>
+                <span class="strong">86.3% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>125/145</span>
+                <span class='fraction'>126/146</span>
             </div>
         
             
@@ -410,7 +410,12 @@
 <a name='L351'></a><a href='#L351'>351</a>
 <a name='L352'></a><a href='#L352'>352</a>
 <a name='L353'></a><a href='#L353'>353</a>
-<a name='L354'></a><a href='#L354'>354</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L354'></a><a href='#L354'>354</a>
+<a name='L355'></a><a href='#L355'>355</a>
+<a name='L356'></a><a href='#L356'>356</a>
+<a name='L357'></a><a href='#L357'>357</a>
+<a name='L358'></a><a href='#L358'>358</a>
+<a name='L359'></a><a href='#L359'>359</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -631,6 +636,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -815,12 +825,12 @@ const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
  */
 function isMultiBlockSelection(editor: IEditor): boolean {
     let transverser = editor.getSelectionTraverser();
-    let blockElement = transverser.currentBlockElement;
+    let blockElement = transverser<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>urrentBlockElement;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!blockElement) {
 <span class="cstat-no" title="statement not covered" >        return false;</span>
     }
 &nbsp;
-    let nextBlockElement = transverser.getNextBlockElement();
+    let nextBlockElement = transverser<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etNextBlockElement();
 &nbsp;
     //At least two blocks are selected
     return !!nextBlockElement;
@@ -914,7 +924,7 @@ function <span class="fstat-no" title="function not covered" >removeNotTableDefa
  * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings with text content
  */
 function isNodeWholeBlock(node: Node, editor: IEditor) {
-    let currentNode = node;
+    let currentNode: ParentNode | Node | null = node;
     while (currentNode &amp;&amp; editor.contains(currentNode.parentNode)) {
         if (currentNode.nextSibling || currentNode.previousSibling) {
             if (safeInstanceOf(currentNode, 'HTMLLIElement')) {
@@ -922,7 +932,7 @@ function isNodeWholeBlock(node: Node, editor: IEditor) {
             }
             let isOnlySiblingWithContent = true;
             currentNode.parentNode<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>hildNodes.forEach(node =&gt; {
-                if (node != currentNode &amp;&amp; node.textContent.length) {
+                if (node != currentNode &amp;&amp; node.textContent<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength) {
                     isOnlySiblingWithContent = false;
                 }
             });
@@ -943,7 +953,7 @@ function clearAutoDetectFormat(editor: IEditor) {
     const isMultiBlock = isMultiBlockSelection(editor);
     if (!isMultiBlock) {
         const transverser = editor.getSelectionTraverser();
-        const inlineElement = transverser.currentInlineElement;
+        const inlineElement = transverser<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>urrentInlineElement;
         const isPartial =
             inlineElement instanceof PartialInlineElement ||
             (inlineElement instanceof NodeInlineElement &amp;&amp;
@@ -983,8 +993,13 @@ function clearBlockFormat(editor: IEditor) {
                     }
                 }
 &nbsp;
-                while (nodes.length &gt; 0 &amp;&amp; isNodeInRegion(region, nodes[0].parentNode)) {
-                    nodes = [splitBalancedNodeRange(nodes)];
+                while (
+                    nodes.length &gt; 0 &amp;&amp;
+                    nodes[0].parentNode &amp;&amp;
+                    isNodeInRegion(region, nodes[0].parentNode)
+                ) {
+                    const balancedNodes = splitBalancedNodeRange(nodes);
+                    nodes = balancedNodes ? [balancedNodes] : <span class="branch-1 cbranch-no" title="branch not covered" >[];</span>
                 }
 &nbsp;
                 nodes.forEach(clearNodeFormat);
@@ -1053,7 +1068,7 @@ function setDefaultFormat(editor: IEditor) {
             let shouldApplyInlineStyle =
                 setColorIgnoredElements.length &gt; 0
                     ? (element: HTMLElement) =&gt; setColorIgnoredElements.indexOf(element) == -1
-                    : null;
+                    : undefined;
 &nbsp;
             <span class="missing-if-branch" title="if path not taken" >I</span>if (defaultFormat.textColors) {
 <span class="cstat-no" title="statement not covered" >                setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);</span>
@@ -1123,7 +1138,7 @@ export default function clearFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 28 2023 19:00:39 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 28 2023 23:22:50 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.56% </span>
+                <span class="strong">93.62% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>43/45</span>
+                <span class='fraction'>44/47</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95% </span>
+                <span class="strong">84.38% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/20</span>
+                <span class='fraction'>27/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.56% </span>
+                <span class="strong">93.62% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>43/45</span>
+                <span class='fraction'>44/47</span>
             </div>
         
             
@@ -182,7 +182,13 @@
 <a name='L123'></a><a href='#L123'>123</a>
 <a name='L124'></a><a href='#L124'>124</a>
 <a name='L125'></a><a href='#L125'>125</a>
-<a name='L126'></a><a href='#L126'>126</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a>
+<a name='L128'></a><a href='#L128'>128</a>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -219,11 +225,13 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -283,11 +291,13 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -302,6 +312,8 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -345,10 +357,12 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
 &nbsp;
             if (
                 isATable &amp;&amp;
+                selection.coordinates &amp;&amp;
                 isWholeTableSelected(new VTable(selection.table), selection.coordinates)
             ) {
                 alignTable(selection, alignment);
             } else if (
+                elementAtCursor &amp;&amp;
                 isList(elementAtCursor) &amp;&amp;
                 editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
             ) {
@@ -407,7 +421,9 @@ function alignText(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (elements.length == 0) {
         const node = <span class="cstat-no" title="statement not covered" >editor.getElementAtCursor();</span>
-<span class="cstat-no" title="statement not covered" >        normalizeBlockquote(node);</span>
+<span class="cstat-no" title="statement not covered" >        if (node) {</span>
+<span class="cstat-no" title="statement not covered" >            normalizeBlockquote(node);</span>
+        }
     }
 }
 &nbsp;
@@ -426,7 +442,9 @@ function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
             );
             const startNode = blocks[0].getStartNode();
             const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
-            vList.setAlignment(start, end, alignment);
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (start &amp;&amp; end) {
+                vList<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>etAlignment(start, end, alignment);
+            }
         },
         undefined /* beforeRunCallback */,
         'alignList'
@@ -439,7 +457,7 @@ function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Mar 28 2023 19:00:39 GMT+0000 (Coordinated Universal Time)
+                at Tue Mar 28 2023 23:22:50 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
