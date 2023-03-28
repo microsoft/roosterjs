@@ -269,6 +269,9 @@ export interface TextFeatureSettings {
     autoHyphen: boolean;
 }
 
+/**
+ * Settings for code features
+ */
 export interface CodeFeatureSettings {
     /**
      * When inside a code block, exit the code block by pressing Enter twice, or once on an empty line
