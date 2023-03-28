@@ -8,6 +8,7 @@ import { ShortcutFeatures } from './features/shortcutFeatures';
 import { StructuredNodeFeatures } from './features/structuredNodeFeatures';
 import { TableFeatures } from './features/tableFeatures';
 import { TextFeatures } from './features/textFeatures';
+import { CodeFeatures } from './features/codeFeatures';
 import {
     BuildInEditFeature,
     ContentEditFeatureSettings,
@@ -25,6 +26,7 @@ const allFeatures = {
     ...MarkdownFeatures,
     ...EntityFeatures,
     ...TextFeatures,
+    ...CodeFeatures,
 };
 
 /**
