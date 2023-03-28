@@ -9,6 +9,7 @@ import { stackFormat } from '../utils/stackFormat';
 
 const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const block = createGeneralBlock(element);
+    const isSelectedBefore = context.isInSelection;
 
     stackFormat(
         context,
@@ -19,9 +20,14 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
         },
         () => {
             addBlock(group, block);
+
             context.elementProcessors.child(block, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        block.isSelected = true;
+    }
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {

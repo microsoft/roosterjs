@@ -97,6 +97,14 @@ function internalIterateSelections(
                 if (internalIterateSelections(newPath, callback, option, table, treatAllAsSelect)) {
                     return true;
                 }
+
+                if (
+                    block.blockGroupType == 'General' &&
+                    block.isSelected &&
+                    callback(path, table, block)
+                ) {
+                    return true;
+                }
                 break;
 
             case 'Table':
