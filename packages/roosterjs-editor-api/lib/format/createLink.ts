@@ -73,7 +73,7 @@ export default function createLink(
 
         editor.addUndoSnapshot(() => {
             const selection = editor.getSelectionRangeEx();
-            let anchor: HTMLAnchorElement = null;
+            let anchor: HTMLAnchorElement | null = null;
             if (selection.type === SelectionRangeTypes.Normal) {
                 const range = selection.ranges[0];
                 if (range && range.collapsed) {
@@ -97,14 +97,14 @@ export default function createLink(
                         .execCommand(DocumentCommand.CreateLink, false, normalizedUrl);
                     const traverser = editor.getSelectionTraverser();
 
-                    let currentInline = traverser.getNextInlineElement();
+                    let currentInline = traverser?.getNextInlineElement();
 
                     // list for removing unwanted lines
                     let deletionInlineList: Node[] = [];
 
                     while (currentInline) {
                         deletionInlineList.push(currentInline.getContainerNode());
-                        currentInline = traverser.getNextInlineElement();
+                        currentInline = traverser?.getNextInlineElement();
                     }
 
                     deletionInlineList.forEach(node => editor.deleteNode(node));
@@ -132,7 +132,7 @@ function getAnchorNodeAtCursor(editor: IEditor): HTMLAnchorElement {
     return editor.queryElements('a[href]', QueryScope.OnSelection)[0] as HTMLAnchorElement;
 }
 
-function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText: string) {
+function updateAnchorDisplayText(anchor: HTMLAnchorElement, displayText?: string) {
     if (displayText && anchor.textContent != displayText) {
         anchor.textContent = displayText;
     }
@@ -146,7 +146,7 @@ function updateAnchorTarget(anchor: HTMLAnchorElement, target?: string) {
     }
 }
 
-function checkXss(link: string): string {
+function checkXss(link: string): string | null {
     const sanitizer = new HtmlSanitizer();
     const a = document.createElement('a');
 
