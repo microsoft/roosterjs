@@ -50,12 +50,12 @@ const TAGS_TO_STOP_UNWRAP = ['TD', 'TH', 'TR', 'TABLE', 'TBODY', 'THEAD'];
  */
 function isMultiBlockSelection(editor: IEditor): boolean {
     let transverser = editor.getSelectionTraverser();
-    let blockElement = transverser.currentBlockElement;
+    let blockElement = transverser?.currentBlockElement;
     if (!blockElement) {
         return false;
     }
 
-    let nextBlockElement = transverser.getNextBlockElement();
+    let nextBlockElement = transverser?.getNextBlockElement();
 
     //At least two blocks are selected
     return !!nextBlockElement;
@@ -149,7 +149,7 @@ function removeNotTableDefaultStyles(element: HTMLTableElement) {
  * @returns `true` if this node, and its parents (minus the children of the contentDiv) have no siblings with text content
  */
 function isNodeWholeBlock(node: Node, editor: IEditor) {
-    let currentNode = node;
+    let currentNode: ParentNode | Node | null = node;
     while (currentNode && editor.contains(currentNode.parentNode)) {
         if (currentNode.nextSibling || currentNode.previousSibling) {
             if (safeInstanceOf(currentNode, 'HTMLLIElement')) {
@@ -157,7 +157,7 @@ function isNodeWholeBlock(node: Node, editor: IEditor) {
             }
             let isOnlySiblingWithContent = true;
             currentNode.parentNode?.childNodes.forEach(node => {
-                if (node != currentNode && node.textContent.length) {
+                if (node != currentNode && node.textContent?.length) {
                     isOnlySiblingWithContent = false;
                 }
             });
@@ -178,7 +178,7 @@ function clearAutoDetectFormat(editor: IEditor) {
     const isMultiBlock = isMultiBlockSelection(editor);
     if (!isMultiBlock) {
         const transverser = editor.getSelectionTraverser();
-        const inlineElement = transverser.currentInlineElement;
+        const inlineElement = transverser?.currentInlineElement;
         const isPartial =
             inlineElement instanceof PartialInlineElement ||
             (inlineElement instanceof NodeInlineElement &&
@@ -218,8 +218,13 @@ function clearBlockFormat(editor: IEditor) {
                     }
                 }
 
-                while (nodes.length > 0 && isNodeInRegion(region, nodes[0].parentNode)) {
-                    nodes = [splitBalancedNodeRange(nodes)];
+                while (
+                    nodes.length > 0 &&
+                    nodes[0].parentNode &&
+                    isNodeInRegion(region, nodes[0].parentNode)
+                ) {
+                    const balancedNodes = splitBalancedNodeRange(nodes);
+                    nodes = balancedNodes ? [balancedNodes] : [];
                 }
 
                 nodes.forEach(clearNodeFormat);
@@ -288,7 +293,7 @@ function setDefaultFormat(editor: IEditor) {
             let shouldApplyInlineStyle =
                 setColorIgnoredElements.length > 0
                     ? (element: HTMLElement) => setColorIgnoredElements.indexOf(element) == -1
-                    : null;
+                    : undefined;
 
             if (defaultFormat.textColors) {
                 setTextColor(editor, defaultFormat.textColors, shouldApplyInlineStyle);

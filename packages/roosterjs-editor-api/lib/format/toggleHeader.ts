@@ -31,7 +31,7 @@ export default function toggleHeader(editor: IEditor, level: number) {
 
             if (level > 0) {
                 let traverser = editor.getSelectionTraverser();
-                let blockElement = traverser ? traverser.currentBlockElement : null;
+                let blockElement = traverser?.currentBlockElement;
                 let sanitizer = new HtmlSanitizer({
                     cssStyleCallbacks: {
                         'font-size': () => false,
@@ -40,7 +40,7 @@ export default function toggleHeader(editor: IEditor, level: number) {
                 while (blockElement) {
                     let element = blockElement.collapseToSingleElement();
                     sanitizer.sanitize(element);
-                    blockElement = traverser.getNextBlockElement();
+                    blockElement = traverser?.getNextBlockElement();
                 }
                 editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, `<H${level}>`);
             }
