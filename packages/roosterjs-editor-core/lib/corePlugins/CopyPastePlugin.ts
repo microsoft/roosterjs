@@ -24,6 +24,7 @@ import {
     SelectionRangeTypes,
     TableSelection,
     TableOperation,
+    DOMEventHandler,
 } from 'roosterjs-editor-types';
 
 /**
@@ -34,6 +35,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
     private editor: IEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
+    private safariSelectionRange: SelectionRangeEx | null = null;
 
     /**
      * Construct a new instance of CopyPastePlugin
@@ -58,11 +60,15 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.addDomEventHandler({
+        const handlerMap: Record<string, DOMEventHandler> = {
             paste: e => this.onPaste(e),
             copy: e => this.onCutCopy(e, false /*isCut*/),
             cut: e => this.onCutCopy(e, true /*isCut*/),
-        });
+        };
+        if (Browser.isSafari) {
+            handlerMap.blur = () => this.onBlur();
+        }
+        this.disposer = this.editor.addDomEventHandler(handlerMap);
     }
 
     /**
@@ -85,6 +91,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
 
     private onCutCopy(event: Event, isCut: boolean) {
         if (this.editor) {
+            if (this.safariSelectionRange) {
+                this.editor.select(this.safariSelectionRange);
+            }
             const selection = this.editor.getSelectionRangeEx();
             if (selection && !selection.areAllCollapsed) {
                 const html = this.editor.getContent(GetContentMode.RawHTMLWithSelection);
@@ -161,6 +170,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         let range: Range | null = null;
         if (this.editor) {
             const editor = this.editor;
+            if (this.safariSelectionRange) {
+                editor.select(this.safariSelectionRange);
+            }
             extractClipboardEvent(
                 event as ClipboardEvent,
                 clipboardData => {
@@ -290,5 +302,9 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
         editor.queryElements('#' + imageId, node => {
             editor.deleteNode(node);
         });
+    }
+
+    private onBlur() {
+        this.safariSelectionRange = this.editor?.getSelectionRangeEx() ?? null;
     }
 }

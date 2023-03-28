@@ -26,6 +26,7 @@ import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonito
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
 import { zoom, ZoomButtonStringKey } from './ribbonButtons/zoom';
+import { clipboard, CopyButtonStringKey } from './ribbonButtons/clipboard';
 import {
     AllButtonStringKeys,
     createRibbonPlugin,
@@ -108,7 +109,8 @@ type RibbonStringKeys =
     | DarkModeButtonStringKey
     | ZoomButtonStringKey
     | ExportButtonStringKey
-    | PopoutButtonStringKey;
+    | PopoutButtonStringKey
+    | CopyButtonStringKey;
 
 class MainPane extends MainPaneBase {
     private mouseX: number;
@@ -158,6 +160,7 @@ class MainPane extends MainPaneBase {
             zoom,
             exportContent,
             popout,
+            clipboard,
         ]);
         this.popoutWindowButtons = getButtons([...AllButtonKeys, darkMode, zoom, exportContent]);
         this.state = {

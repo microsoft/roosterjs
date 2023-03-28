@@ -1,7 +1,7 @@
 import * as addRangeToSelection from 'roosterjs-editor-dom/lib/selection/addRangeToSelection';
 import * as extractClipboardEvent from 'roosterjs-editor-dom/lib/clipboard/extractClipboardEvent';
 import CopyPastePlugin from '../../lib/corePlugins/CopyPastePlugin';
-import { Position } from 'roosterjs-editor-dom';
+import { Position, Browser } from 'roosterjs-editor-dom';
 import {
     ClipboardData,
     DOMEventHandlerFunction,
@@ -117,6 +117,8 @@ describe('CopyPastePlugin copy', () => {
     let plugin: CopyPastePlugin;
     let handler: Record<string, DOMEventHandlerFunction>;
     let editor: IEditor;
+    let rangeEx = {};
+    let select: jasmine.Spy;
     let tempNode: HTMLElement = null;
     let addDomEventHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
@@ -153,11 +155,13 @@ describe('CopyPastePlugin copy', () => {
                 }
             );
         spyOn(addRangeToSelection, 'default');
+        select = jasmine.createSpy('select');
 
         editor = <IEditor>(<any>{
             addDomEventHandler,
             triggerPluginEvent,
             getSelectionRange: () => <Range>{ collapsed: false },
+            getSelectionRangeEx: () => rangeEx,
             getContent: () => '<div>test</div><!--{"start":[0,0],"end":[0,1]}-->',
             getCustomData: (key: string, getter: () => any) => {
                 tempNode = getter();
@@ -168,7 +172,7 @@ describe('CopyPastePlugin copy', () => {
                 document.body.appendChild(node);
             },
             getDocument: () => document,
-            select: () => {},
+            select,
             addUndoSnapshot: (f: () => void) => f(),
             focus: () => {},
             getTrustedHTMLHandler: (html: string) => html,
@@ -294,5 +298,13 @@ describe('CopyPastePlugin copy', () => {
         expect(contentDiv.innerHTML).toBe(
             '<ol><li>line1</li><li><div>line2</div><div>lin</div></li></ol><div>ne5</div>'
         );
+    });
+
+    it('restores pre-blur selection when copying on Safari', () => {
+        Browser.isSafari = true;
+        handler.blur();
+        expect(g);
+        handler.copy(<Event>{});
+        expect(select).toHaveBeenCalledWith(rangeEx);
     });
 });
