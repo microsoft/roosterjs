@@ -25,6 +25,7 @@ export function retrieveModelFormatState(
     let firstBlock: ContentModelBlock | undefined;
     let isFirst = true;
     let isFirstImage = true;
+    let isFirstSegment = true;
 
     if (pendingFormat) {
         // Pending format
@@ -53,7 +54,15 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (!pendingFormat) {
-                        retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                        if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
+                            retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                        }
+
+                        // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
+                        // is after some other selected segments, it mostly like appears at the beginning of a seconde line when the whole first line
+                        // is selected (e.g. triple-click on a line) then the second selection marker doesn't contain a correct format, so we need to
+                        // ignore it
+                        isFirstSegment = false;
                     }
 
                     formatState.canUnlink = formatState.canUnlink || !!segment.link;
