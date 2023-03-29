@@ -54,6 +54,7 @@ export interface DeleteSelectionResult {
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
     contentUnderSelectedTableCell: 'ignoreForTableOrCell', // When a table cell is selected, we replace all content for this cell, so no need to go into its content
+    contentUnderSelectedGeneralElement: 'generalElementOnly', // When a general element is selected, we replace the whole element so no need to go into its content
     includeListFormatHolder: 'never',
 };
 
