@@ -36,7 +36,13 @@ export default function changeCapitalization(
         'changeCapitalization'
     );
 
-    function getCapitalizedText(originalText: string, language: string): string {
+    function getCapitalizedText(
+        originalText: string | null,
+        language: string | undefined
+    ): string | null {
+        if (originalText === null) {
+            return originalText;
+        }
         switch (capitalization) {
             case Capitalization.Lowercase:
                 return originalText.toLocaleLowerCase(language);
@@ -61,6 +67,8 @@ export default function changeCapitalization(
                 return originalText.toLocaleLowerCase(language).replace(regex, match => {
                     return match.toLocaleUpperCase(language);
                 });
+            default:
+                return originalText;
         }
     }
 }

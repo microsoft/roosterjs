@@ -44,11 +44,11 @@ export default function replaceWithNode(
         return false;
     }
 
-    let range: Range;
+    let range: Range | null;
 
     if (typeof textOrRange == 'string') {
-        searcher = searcher || editor.getContentSearcherOfCursor();
-        range = searcher && searcher.getRangeFromText(textOrRange, exactMatch);
+        searcher = (searcher || editor.getContentSearcherOfCursor()) ?? undefined;
+        range = searcher?.getRangeFromText(textOrRange, exactMatch) ?? null;
     } else {
         range = textOrRange;
     }
@@ -58,7 +58,7 @@ export default function replaceWithNode(
 
         // If the range to replace is right before current cursor, it is actually an exact match
         if (
-            backupRange.collapsed &&
+            backupRange?.collapsed &&
             range.endContainer == backupRange.startContainer &&
             range.endOffset == backupRange.startOffset
         ) {
