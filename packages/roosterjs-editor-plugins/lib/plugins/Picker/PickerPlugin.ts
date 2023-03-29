@@ -71,7 +71,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.editor = editor;
         if (this.editor && this.dataProvider && this.pickerOptions) {
             this.core = new PickerPluginCore(this.editor, this.dataProvider, this.pickerOptions);
-            this.core.initialize();
         }
     }
 
@@ -96,7 +95,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 }
 
-class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implements EditorPlugin {
+class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
     private eventHandledOnKeyDown: boolean = false;
     private blockSuggestions: boolean = false;
     private isSuggesting: boolean = false;
@@ -111,20 +110,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
         private editor: IEditor,
         private dataProvider: T,
         private pickerOptions: PickerPluginOptions
-    ) {}
-
-    /**
-     * Get a friendly name
-     */
-    getName() {
-        return 'Picker';
-    }
-
-    /**
-     * Initialize this plugin. This should only be called from Editor
-     * @param editor Editor instance
-     */
-    public initialize() {
+    ) {
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
                 this.editor.focus();
@@ -176,6 +162,8 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
         this.currentInputLength = undefined;
         this.newInputLength = undefined;
         this.dataProvider.onDispose();
+        // Remove this objects on dispose the plugin, we "null!" here to pass the build in strict mode,
+        // but it is not a problem since this class will also be null when dispose.
         this.editor = null!;
         this.dataProvider = null!;
         this.pickerOptions = null!;
