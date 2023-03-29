@@ -53,12 +53,12 @@ const UNIDENTIFIED_CODE = [0, 229];
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
-    private editor: IEditor | undefined = undefined;
-    private core: PickerPluginCore | undefined = undefined;
+    private editor: IEditor | null = null;
+    private core: PickerPluginCore | null = null;
     public dataProvider: T | undefined = undefined;
     private pickerOptions: PickerPluginOptions | undefined = undefined;
 
-    constructor(dataProvider: T, pickerOptions: PickerPluginOptions) {
+    constructor(dataProvider: T | undefined, pickerOptions: PickerPluginOptions) {
         this.dataProvider = dataProvider;
         this.pickerOptions = pickerOptions;
     }
@@ -71,28 +71,28 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         this.editor = editor;
         if (this.editor && this.dataProvider && this.pickerOptions) {
             this.core = new PickerPluginCore(this.editor, this.dataProvider, this.pickerOptions);
-            this.core.initialize(editor);
+            this.core.initialize();
         }
     }
 
     public onPluginEvent(event: PluginEvent) {
-        if (this.editor && this.dataProvider && this.core) {
+        if (this.core) {
             this.core.onPluginEvent(event);
         }
     }
 
     public dispose() {
-        this.editor = undefined;
+        this.editor = null;
         this.dataProvider = undefined;
         this.pickerOptions = undefined;
         if (this.core) {
             this.core.dispose();
-            this.core = undefined;
+            this.core = null;
         }
     }
 
     public getName() {
-        return this.core ? this.core.getName() : '';
+        return 'Picker';
     }
 }
 
@@ -109,7 +109,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
 
     constructor(
         private editor: IEditor,
-        public dataProvider: T,
+        private dataProvider: T,
         private pickerOptions: PickerPluginOptions
     ) {}
 
@@ -124,8 +124,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    public initialize(editor: IEditor) {
-        this.editor = editor;
+    public initialize() {
         this.dataProvider.onInitalize(
             (htmlNode: Node) => {
                 this.editor.focus();
@@ -161,8 +160,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
             },
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
-            },
-            editor
+            }
         );
     }
 
@@ -178,6 +176,9 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> implem
         this.currentInputLength = undefined;
         this.newInputLength = undefined;
         this.dataProvider.onDispose();
+        this.editor = null!;
+        this.dataProvider = null!;
+        this.pickerOptions = null!;
     }
 
     /**
