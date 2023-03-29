@@ -153,7 +153,7 @@ function buildCss(
 
     const css = `${selectors.join(
         ','
-    )} {background-color: rgba(198,198,198,0.7) !important; caret-color: transparent}`;
+    )} {background-color: rgb(198,198,198) !important; caret-color: transparent}`;
 
     return { css, ranges };
 }
