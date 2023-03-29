@@ -368,7 +368,7 @@ describe('listFeatures | MergeInNewLine', () => {
         ListFeatures.mergeInNewLineWhenBackspaceOnFirstChar.handleEvent(keyboardEvent, editor);
         if (isFirstElement) {
             expect(toggleListTypeFn).toHaveBeenCalled();
-            expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+            expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, undefined, true);
         } else {
             expect(blockFormatFn).toHaveBeenCalled();
         }
@@ -452,7 +452,7 @@ describe('listFeatures | OutdentWhenBackOn1stEmptyLine', () => {
         };
         ListFeatures.outdentWhenBackspaceOnEmptyFirstLine.handleEvent(keyboardEvent, editor);
         expect(toggleListTypeFn).toHaveBeenCalled();
-        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, undefined, true);
     }
 
     it('should not handle event', () => {
@@ -585,7 +585,7 @@ describe('listFeatures | OutdentWhenEnterOnEmptyLine', () => {
         };
         ListFeatures.outdentWhenBackspaceOnEmptyFirstLine.handleEvent(keyboardEvent, editor);
         expect(toggleListTypeFn).toHaveBeenCalled();
-        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, null, true);
+        expect(toggleListTypeFn).toHaveBeenCalledWith(editor, 1, undefined, true);
     }
 
     it('should handle event', () => {
