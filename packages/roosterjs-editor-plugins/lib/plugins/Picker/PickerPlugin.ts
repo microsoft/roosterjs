@@ -53,35 +53,44 @@ const UNIDENTIFIED_CODE = [0, 229];
  */
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
-    private editor: IEditor | null = null;
     private core: PickerPluginCore | null = null;
     public dataProvider: T | undefined = undefined;
     private pickerOptions: PickerPluginOptions | undefined = undefined;
 
+    /**
+     * Creates a new instance of PickerPlugin
+     * @param dataProvider the data object contaning the callbacks functions for the picker actions, such as initialize and selectOption
+     * @param pickerOptions the picker options, such the trigger character for the picker
+     */
     constructor(dataProvider: T | undefined, pickerOptions: PickerPluginOptions) {
         this.dataProvider = dataProvider;
         this.pickerOptions = pickerOptions;
     }
 
-    public willHandleEventExclusively(event: PluginEvent) {
-        return this.core ? this.core.willHandleEventExclusively(event) : false;
-    }
-
+    /**
+     * Initialize this plugin. This should only be called from Editor
+     * @param editor Editor instance
+     */
     public initialize(editor: IEditor) {
-        this.editor = editor;
-        if (this.editor && this.dataProvider && this.pickerOptions) {
-            this.core = new PickerPluginCore(this.editor, this.dataProvider, this.pickerOptions);
+        if (this.dataProvider && this.pickerOptions) {
+            this.core = new PickerPluginCore(editor, this.dataProvider, this.pickerOptions);
         }
     }
 
+    /**
+     * Handle events triggered from editor
+     * @param event PluginEvent object
+     */
     public onPluginEvent(event: PluginEvent) {
         if (this.core) {
             this.core.onPluginEvent(event);
         }
     }
 
+    /**
+     * Dispose this plugin
+     */
     public dispose() {
-        this.editor = null;
         this.dataProvider = undefined;
         this.pickerOptions = undefined;
         if (this.core) {
@@ -90,6 +99,9 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         }
     }
 
+    /**
+     * Get a friendly name of this plugin
+     */
     public getName() {
         return 'Picker';
     }
@@ -150,9 +162,6 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
         );
     }
 
-    /**
-     * Dispose this plugin
-     */
     public dispose() {
         this.isSuggesting = false;
         this.blockSuggestions = false;
@@ -169,27 +178,6 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
         this.pickerOptions = null!;
     }
 
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    public willHandleEventExclusively(event: PluginEvent) {
-        return (
-            this.isSuggesting &&
-            (event.eventType == PluginEventType.KeyDown ||
-                event.eventType == PluginEventType.KeyUp ||
-                event.eventType == PluginEventType.Input)
-        );
-    }
-
-    /**
-     * Handle events triggered from editor
-     * @param event PluginEvent object
-     */
     public onPluginEvent(event: PluginEvent) {
         switch (event.eventType) {
             case PluginEventType.ContentChanged:
