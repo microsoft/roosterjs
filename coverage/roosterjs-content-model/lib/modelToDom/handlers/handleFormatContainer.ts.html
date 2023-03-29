@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for roosterjs-content-model/lib/modelToDom/handlers/handleQuote.ts</title>
+    <title>Code coverage report for roosterjs-content-model/lib/modelToDom/handlers/handleFormatContainer.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/modelToDom/handlers</a> handleQuote.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">roosterjs-content-model/lib/modelToDom/handlers</a> handleFormatContainer.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -102,16 +102,12 @@
 <a name='L43'></a><a href='#L43'>43</a>
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L46'></a><a href='#L46'>46</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,47 +149,45 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 &nbsp;
-const QuoteTagName = 'blockquote';
-&nbsp;
 /**
  * @internal
  */
-export const handleQuote: ContentModelBlockHandler&lt;ContentModelQuote&gt; = (
+export const handleFormatContainer: ContentModelBlockHandler&lt;ContentModelFormatContainer&gt; = (
     doc: Document,
     parent: Node,
-    quote: ContentModelQuote,
+    container: ContentModelFormatContainer,
     context: ModelToDomContext,
     refNode: Node | null
 ) =&gt; {
-    let element = quote.cachedElement;
+    let element = container.cachedElement;
 &nbsp;
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
 &nbsp;
-        context.modelHandlers.blockGroupChildren(doc, element, quote, context);
-    } else if (!isBlockGroupEmpty(quote)) {
-        const blockQuote = doc.createElement(QuoteTagName);
+        context.modelHandlers.blockGroupChildren(doc, element, container, context);
+    } else if (!isBlockGroupEmpty(container)) {
+        const blockQuote = doc.createElement(container.tagName);
 &nbsp;
-        quote.cachedElement = blockQuote;
+        container.cachedElement = blockQuote;
         parent.insertBefore(blockQuote, refNode);
 &nbsp;
-        stackFormat(context, QuoteTagName, () =&gt; {
-            applyFormat(blockQuote, context.formatAppliers.block, quote.format, context);
+        stackFormat(context, container.tagName, () =&gt; {
+            applyFormat(blockQuote, context.formatAppliers.block, container.format, context);
             applyFormat(
                 blockQuote,
                 context.formatAppliers.segmentOnBlock,
-                quote.quoteSegmentFormat,
+                container.format,
                 context
             );
         });
 &nbsp;
-        context.modelHandlers.blockGroupChildren(doc, blockQuote, quote, context);
+        context.modelHandlers.blockGroupChildren(doc, blockQuote, container, context);
     }
 &nbsp;
     return refNode;
@@ -205,7 +199,7 @@ export const handleQuote: ContentModelBlockHandler&lt;ContentModelQuote&gt; = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 29 2023 04:26:13 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 29 2023 22:21:48 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
