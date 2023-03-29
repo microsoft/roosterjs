@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>48/50</span>
+                <span class='fraction'>51/54</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">80.65% </span>
+                <span class="strong">78.38% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>25/31</span>
+                <span class='fraction'>29/37</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>48/50</span>
+                <span class='fraction'>51/54</span>
             </div>
         
             
@@ -243,7 +243,10 @@
 <a name='L184'></a><a href='#L184'>184</a>
 <a name='L185'></a><a href='#L185'>185</a>
 <a name='L186'></a><a href='#L186'>186</a>
-<a name='L187'></a><a href='#L187'>187</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L187'></a><a href='#L187'>187</a>
+<a name='L188'></a><a href='#L188'>188</a>
+<a name='L189'></a><a href='#L189'>189</a>
+<a name='L190'></a><a href='#L190'>190</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -286,8 +289,8 @@
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">11x</span>
+<span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -343,6 +346,9 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -468,12 +474,12 @@ function cacheGetRangeForMarkdownOperation(
     event: PluginKeyboardEvent,
     editor: IEditor,
     triggerCharacter: string
-): Range {
-    return cacheGetEventData(event, 'MARKDOWN_RANGE', () =&gt; {
+): Range | null {
+    return cacheGetEventData(event, 'MARKDOWN_RANGE', (): Range | null =&gt; {
         const searcher = editor.getContentSearcherOfCursor(event);
 &nbsp;
-        let startPosition: NodePosition;
-        let endPosition: NodePosition;
+        let startPosition: NodePosition | null = null;
+        let endPosition: NodePosition | null = null;
         searcher<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEachTextInlineElement(textInlineElement =&gt; {
             <span class="missing-if-branch" title="if path not taken" >I</span>if (endPosition &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >startPosition)</span> {
 <span class="cstat-no" title="statement not covered" >                return true;</span>
@@ -516,7 +522,7 @@ function cacheGetRangeForMarkdownOperation(
                 }
             }
         });
-        return !!startPosition &amp;&amp; !!endPosition &amp;&amp; createRange(startPosition, endPosition);
+        return startPosition &amp;&amp; endPosition &amp;&amp; createRange(startPosition, endPosition);
     });
 }
 &nbsp;
@@ -529,6 +535,9 @@ function handleMarkdownEvent(
     editor.addUndoSnapshot(
         () =&gt; {
             const range = cacheGetRangeForMarkdownOperation(event, editor, triggerCharacter);
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!range) {
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
             const lastTypedTriggerPosition = new Position(range.endContainer, PositionType.End);
             const hasLastTypedTrigger = range.endOffset + 1 &lt;= lastTypedTriggerPosition.offset;
             <span class="missing-if-branch" title="else path not taken" >E</span>if (!!range &amp;&amp; hasLastTypedTrigger) {
@@ -540,7 +549,7 @@ function handleMarkdownEvent(
                 );
 &nbsp;
                 const text = textContentRange.extractContents().textContent;
-                const textNode = editor.getDocument().createTextNode(text);
+                const textNode = editor.getDocument().createTextNode(text ?? <span class="branch-1 cbranch-no" title="branch not covered" >'')</span>;
 &nbsp;
                 // extract content and put it into a new element.
                 const elementToWrap = wrap(textNode, elementTag);
@@ -622,7 +631,7 @@ export const MarkdownFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 29 2023 01:17:47 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 29 2023 04:26:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

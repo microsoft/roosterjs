@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">19.05% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/40</span>
+                <span class='fraction'>8/42</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">0% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/32</span>
+                <span class='fraction'>0/38</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">20% </span>
+                <span class="strong">19.05% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>8/40</span>
+                <span class='fraction'>8/42</span>
             </div>
         
             
@@ -178,7 +178,8 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -255,7 +256,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -349,12 +351,12 @@ const UnquoteWhenEnterOnEmptyLine: BuildInEditFeature&lt;PluginKeyboardEvent&gt;
     handleEvent: <span class="fstat-no" title="function not covered" >(e</span>vent, editor) =&gt;
 <span class="cstat-no" title="statement not covered" >        editor.addUndoSnapshot(</span>
 <span class="fstat-no" title="function not covered" >            () =&gt; <span class="cstat-no" title="statement not covered" >s</span>plitQuote(event, editor),</span>
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         ),
 };
 &nbsp;
-function <span class="fstat-no" title="function not covered" >cacheGetQuoteChild(</span>event: PluginKeyboardEvent, editor: IEditor): Node {
+function <span class="fstat-no" title="function not covered" >cacheGetQuoteChild(</span>event: PluginKeyboardEvent, editor: IEditor): Node | null {
 <span class="cstat-no" title="statement not covered" >    return cacheGetEventData(event, 'QUOTE_CHILD', <span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
         let quote = <span class="cstat-no" title="statement not covered" >editor.getElementAtCursor(STRUCTURED_TAGS);</span>
 <span class="cstat-no" title="statement not covered" >        if (quote &amp;&amp; getTagOfNode(quote) == QUOTE_TAG) {</span>
@@ -376,14 +378,15 @@ function <span class="fstat-no" title="function not covered" >cacheGetQuoteChild
 function <span class="fstat-no" title="function not covered" >splitQuote(</span>event: PluginKeyboardEvent, editor: IEditor) {
 <span class="cstat-no" title="statement not covered" >    editor.addUndoSnapshot(<span class="fstat-no" title="function not covered" >() =&gt; {</span></span>
         let childOfQuote = <span class="cstat-no" title="statement not covered" >cacheGetQuoteChild(event, editor);</span>
-        let parent: Node;
-        let shouldClearFormat: boolean;
+<span class="cstat-no" title="statement not covered" >        if (!childOfQuote) {</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
 <span class="cstat-no" title="statement not covered" >        if (getTagOfNode(childOfQuote) == QUOTE_TAG) {</span>
 <span class="cstat-no" title="statement not covered" >            childOfQuote = wrap(toArray(childOfQuote.childNodes));</span>
         }
-<span class="cstat-no" title="statement not covered" >        parent = splitBalancedNodeRange(childOfQuote);</span>
-<span class="cstat-no" title="statement not covered" >        shouldClearFormat = isStyledBlockquote(parent);</span>
-        const newParent = <span class="cstat-no" title="statement not covered" >unwrap(parent);</span>
+        const parent = <span class="cstat-no" title="statement not covered" >splitBalancedNodeRange(childOfQuote);</span>
+        const shouldClearFormat = <span class="cstat-no" title="statement not covered" >!!parent &amp;&amp; isStyledBlockquote(parent);</span>
+        const newParent = <span class="cstat-no" title="statement not covered" >parent &amp;&amp; unwrap(parent);</span>
 <span class="cstat-no" title="statement not covered" >        editor.select(childOfQuote, PositionType.Begin);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        if (shouldClearFormat) {</span>
@@ -427,7 +430,7 @@ export const QuoteFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 29 2023 01:17:47 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 29 2023 04:26:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

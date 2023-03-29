@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/38</span>
+                <span class='fraction'>39/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.43% </span>
+                <span class="strong">89.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>27/28</span>
+                <span class='fraction'>42/47</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">97.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>38/38</span>
+                <span class='fraction'>39/40</span>
             </div>
         
             
@@ -200,7 +200,11 @@
 <a name='L141'></a><a href='#L141'>141</a>
 <a name='L142'></a><a href='#L142'>142</a>
 <a name='L143'></a><a href='#L143'>143</a>
-<a name='L144'></a><a href='#L144'>144</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a>
+<a name='L148'></a><a href='#L148'>148</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -261,6 +265,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
@@ -305,6 +310,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -394,7 +402,7 @@ const UnlinkWhenBackspaceAfterLink: BuildInEditFeature&lt;PluginKeyboardEvent&gt
     defaultDisabled: true,
 };
 &nbsp;
-function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
+function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData | null {
     return event.eventType == PluginEventType.KeyDown ||
         (event.eventType == PluginEventType.ContentChanged &amp;&amp; event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () =&gt; {
@@ -403,15 +411,16 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
               // from clipboard will only contain what we pasted, any existing characters will not
               // be included.
               let clipboardData =
-                  event.eventType == PluginEventType.ContentChanged &amp;&amp;
-                  event.source == ChangeSource.Paste &amp;&amp;
-                  (event.data as ClipboardData);
-              let link = matchLink((clipboardData.text || '').trim());
+                  (event.eventType == PluginEventType.ContentChanged &amp;&amp;
+                      event.source == ChangeSource.Paste &amp;&amp;
+                      (event.data as ClipboardData)) ||
+                  null;
+              let link = matchLink((clipboardData?.text || '').trim());
               let searcher = editor.getContentSearcherOfCursor(event);
 &nbsp;
               // In case the matched link is already inside a &lt;A&gt; tag, we do a range search.
               // getRangeFromText will return null if the given text is already in a LinkInlineElement
-              if (link &amp;&amp; searcher.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
+              if (link &amp;&amp; searcher<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etRangeFromText(link.originalUrl, false /*exactMatch*/)) {
                   return link;
               }
 &nbsp;
@@ -442,13 +451,16 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
 &nbsp;
 function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boolean {
     let contentSearcher = editor.getContentSearcherOfCursor(event);
-    let inline = contentSearcher.getInlineElementBefore();
+    let inline = contentSearcher<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etInlineElementBefore();
     return inline instanceof LinkInlineElement;
 }
 &nbsp;
 function autoLink(event: PluginEvent, editor: IEditor) {
+    const linkData = cacheGetLinkData(event, editor);
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!linkData) {
+<span class="cstat-no" title="statement not covered" >        return;</span>
+    }
     let anchor = editor.getDocument().createElement('a');
-    let linkData = cacheGetLinkData(event, editor);
     // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
     // and at that time a new searcher won't be able to find the link text to replace
     let searcher = editor.getContentSearcherOfCursor();
@@ -463,7 +475,7 @@ function autoLink(event: PluginEvent, editor: IEditor) {
                     linkData.originalUrl,
                     anchor,
                     false /* exactMatch */,
-                    searcher
+                    searcher ?? <span class="branch-1 cbranch-no" title="branch not covered" >undefined</span>
                 );
 &nbsp;
                 // The content at cursor has changed. Should also clear the cursor data cache
@@ -484,7 +496,7 @@ export const AutoLinkFeatures: Record&lt;
     BuildInEditFeature&lt;PluginEvent&gt;
 &gt; = {
     autoLink: AutoLink,
-    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink as BuildInEditFeature&lt;PluginEvent&gt;,
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -493,7 +505,7 @@ export const AutoLinkFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Mar 29 2023 01:17:47 GMT+0000 (Coordinated Universal Time)
+                at Wed Mar 29 2023 04:26:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
