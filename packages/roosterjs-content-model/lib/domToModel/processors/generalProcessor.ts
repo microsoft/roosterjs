@@ -32,10 +32,7 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const segment = createGeneralSegment(element, context.segmentFormat);
-
-    if (context.isInSelection && !element.firstChild) {
-        segment.isSelected = true;
-    }
+    const isSelectedBefore = context.isInSelection;
 
     addDecorators(segment, context);
     addSegment(group, segment);
@@ -50,6 +47,10 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
             context.elementProcessors.child(segment, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        segment.isSelected = true;
+    }
 };
 
 /**

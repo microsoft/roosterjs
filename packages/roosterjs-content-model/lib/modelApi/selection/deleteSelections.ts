@@ -190,24 +190,35 @@ const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
         if (segmentToDelete) {
             context.isChanged = deleteSegment(segments, segmentToDelete, isForward, onDeleteEntity);
         } else if ((blockToDelete = getLeafSiblingBlock(path, paragraph, isForward))) {
-            const { block, path } = blockToDelete;
+            const { block, path, siblingSegment } = blockToDelete;
 
             if (block.blockType == 'Paragraph') {
-                if (isForward) {
-                    context.lastParagraph = block;
+                if (siblingSegment) {
+                    // When selection is under general segment, need to check if it has a sibling sibling, and delete from it
+                    context.isChanged = deleteSegment(
+                        block.segments,
+                        siblingSegment,
+                        isForward,
+                        onDeleteEntity
+                    );
                 } else {
-                    if (block.segments[block.segments.length - 1]?.segmentType == 'Br') {
-                        block.segments.pop();
+                    if (isForward) {
+                        context.lastParagraph = block;
+                    } else {
+                        if (block.segments[block.segments.length - 1]?.segmentType == 'Br') {
+                            block.segments.pop();
+                        }
+
+                        context.insertPoint = createInsertPoint(marker, block, path, tableContext);
+                        context.lastParagraph = paragraph;
+                        delete block.cachedElement;
                     }
 
-                    context.insertPoint = createInsertPoint(marker, block, path, tableContext);
-                    context.lastParagraph = paragraph;
-                    delete block.cachedElement;
+                    context.isChanged = true;
                 }
 
                 // When go across table, getLeafSiblingBlock will return null, when we are here, we must be in the same table context
                 context.lastTableContext = tableContext;
-                context.isChanged = true;
             } else {
                 context.isChanged = deleteBlock(path[0].blocks, block, isForward, onDeleteEntity);
             }
