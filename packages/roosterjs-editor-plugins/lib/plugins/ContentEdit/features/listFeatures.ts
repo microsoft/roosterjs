@@ -40,6 +40,7 @@ import {
     PositionType,
     NumberingListType,
     BulletListType,
+    IPositionContentSearcher,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -88,9 +89,11 @@ const handleIndentationEvent = (indenting: boolean) => (
     event: PluginKeyboardEvent,
     editor: IEditor
 ) => {
+    let currentElement: Node | null = null;
     const isRTL =
         event.rawEvent.keyCode !== Keys.TAB &&
-        getComputedStyle(editor.getElementAtCursor(), 'direction') == 'rtl';
+        (currentElement = editor.getElementAtCursor()) &&
+        getComputedStyle(currentElement, 'direction') == 'rtl';
     setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
     event.rawEvent.preventDefault();
 };
@@ -122,16 +125,20 @@ const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
 const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
+        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         let range = editor.getSelectionRange();
         return li && range?.collapsed && isPositionAtBeginningOf(Position.getStart(range), li);
     },
     handleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        if (li.previousSibling) {
+        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        if (li?.previousSibling) {
             blockFormat(editor, (region, start, end) => {
-                const vList = createVListFromRegion(region, false /*includeSiblingList*/, li);
-                if (vList) {
+                const vList = createVListFromRegion(
+                    region,
+                    false /*includeSiblingList*/,
+                    li ?? undefined
+                );
+                if (vList && start && end) {
                     vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
                     vList.writeBack(
                         editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
@@ -153,7 +160,7 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
+        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return (
             li &&
             isNodeEmpty(li) &&
@@ -171,12 +178,13 @@ const OutdentWhenBackOn1stEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.DELETE],
     shouldHandleEvent: (event, editor) => {
-        const li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
-        if (li) {
+        const li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
+        const range = editor.getSelectionRange();
+        if (li || !range) {
             return false;
         }
-        const isAtEnd = Position.getEnd(editor.getSelectionRange()).isAtEnd;
-        const nextSibling = isAtEnd ? getCacheNextSibling(event, editor) : null;
+        const isAtEnd = Position.getEnd(range).isAtEnd;
+        const nextSibling = isAtEnd ? getCacheNextSibling(event, editor) : undefined;
         const isAtEndAndBeforeLI = editor.getElementAtCursor('LI', nextSibling, event);
         return isAtEndAndBeforeLI;
     },
@@ -193,13 +201,13 @@ const MaintainListChainWhenDelete: BuildInEditFeature<PluginKeyboardEvent> = {
 const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.ENTER],
     shouldHandleEvent: (event, editor) => {
-        let li = editor.getElementAtCursor('LI', null /*startFrom*/, event);
+        let li = editor.getElementAtCursor('LI', undefined /*startFrom*/, event);
         return !event.rawEvent.shiftKey && li && isNodeEmpty(li);
     },
     handleEvent: (event, editor) => {
         editor.addUndoSnapshot(
             () => toggleListAndPreventDefault(event, editor, false /* includeSiblingLists */),
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         );
     },
@@ -225,11 +233,12 @@ function isAListPattern(textBeforeCursor: string) {
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
+        let searcher: IPositionContentSearcher | null;
         if (
             !cacheGetListElement(event, editor) &&
-            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
+            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList) &&
+            (searcher = editor.getContentSearcherOfCursor(event))
         ) {
-            let searcher = editor.getContentSearcherOfCursor(event);
             let textBeforeCursor = searcher.getSubStringBefore(4);
 
             // Auto list is triggered if:
@@ -246,6 +255,9 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             () => {
                 let regions: RegionBase[];
                 let searcher = editor.getContentSearcherOfCursor();
+                if (!searcher) {
+                    return;
+                }
                 let textBeforeCursor = searcher.getSubStringBefore(4);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
@@ -267,7 +279,7 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         );
     },
@@ -294,17 +306,24 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.addUndoSnapshot(
             () => {
                 let searcher = editor.getContentSearcherOfCursor();
+                if (!searcher) {
+                    return;
+                }
                 let textBeforeCursor = searcher.getSubStringBefore(5);
                 let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
                 const listStyle = getAutoBulletListStyle(textBeforeCursor);
 
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor, listStyle, 'autoToggleList' /** apiNameOverride */);
+                    toggleBullet(
+                        editor,
+                        listStyle ?? undefined,
+                        'autoToggleList' /** apiNameOverride */
+                    );
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         );
     },
@@ -331,6 +350,9 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
         editor.addUndoSnapshot(
             () => {
                 const searcher = editor.getContentSearcherOfCursor();
+                if (!searcher) {
+                    return;
+                }
                 const textBeforeCursor = searcher.getSubStringBefore(5);
                 const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
 
@@ -340,7 +362,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                         : parseInt(textBeforeCursor);
 
                     const isLi = getPreviousListItem(editor, textRange);
-                    const listStyle = getAutoNumberingListStyle(textBeforeCursor);
+                    const listStyle = getAutoNumberingListStyle(textBeforeCursor) ?? undefined;
                     prepareAutoBullet(editor, textRange);
                     toggleNumbering(
                         editor,
@@ -351,7 +373,7 @@ const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
-            null /*changeSource*/,
+            undefined /*changeSource*/,
             true /*canUndoByBackspace*/
         );
     },
@@ -361,7 +383,7 @@ const getPreviousListItem = (editor: IEditor, textRange: Range) => {
     const blockElement = editor
         .getBodyTraverser(textRange?.startContainer)
         .getPreviousBlockElement();
-    const previousNode = blockElement?.getEndNode();
+    const previousNode = blockElement?.getEndNode() ?? null;
     return getTagOfNode(previousNode) === 'LI' ? previousNode : undefined;
 };
 
@@ -415,8 +437,8 @@ function getListChains(editor: IEditor) {
 function getCacheNextSibling(event: PluginKeyboardEvent, editor: IEditor): Node | undefined {
     const element = cacheGetEventData(event, 'nextSibling', () => {
         const range = editor.getSelectionRange();
-        const pos = Position.getEnd(range).normalize();
-        const traverser = editor.getBodyTraverser(pos.node);
+        const pos = range && Position.getEnd(range).normalize();
+        const traverser = pos && editor.getBodyTraverser(pos.node);
         return traverser?.getNextBlockElement()?.getStartNode();
     });
     return element;
@@ -430,7 +452,7 @@ function prepareAutoBullet(editor: IEditor, range: Range) {
         if (isBlockElement(endNode)) {
             endNode.appendChild(br);
         } else {
-            endNode.parentNode.insertBefore(br, endNode.nextSibling);
+            endNode.parentNode?.insertBefore(br, endNode.nextSibling);
         }
         editor.select(range.startContainer, range.startOffset);
     }
@@ -450,7 +472,7 @@ function toggleListAndPreventDefault(
             toggleListType(
                 editor,
                 tag == 'UL' ? ListType.Unordered : ListType.Ordered,
-                null /* startNumber */,
+                undefined /* startNumber */,
                 includeSiblingLists
             );
         }
@@ -461,22 +483,28 @@ function toggleListAndPreventDefault(
 }
 
 function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
-    let li = editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event);
+    let li = editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event);
     let listElement = li && getTagOfNode(li) == 'LI' && editor.getElementAtCursor('UL,OL', li);
     return listElement ? [listElement, li] : null;
 }
 
-function shouldTriggerList(
+function shouldTriggerList<
+    T extends ListType,
+    K extends T extends ListType.Ordered ? NumberingListType : BulletListType
+>(
     event: PluginKeyboardEvent,
     editor: IEditor,
     getListStyle: (
         text: string,
         previousListChain?: VListChain[],
-        previousListStyle?: NumberingListType | BulletListType
-    ) => number,
-    listType: ListType
+        previousListStyle?: K
+    ) => K | null,
+    listType: T
 ) {
     const searcher = editor.getContentSearcherOfCursor(event);
+    if (!searcher) {
+        return false;
+    }
     const textBeforeCursor = searcher.getSubStringBefore(4);
     const traverser = editor.getBlockTraverser();
     const text =
@@ -486,9 +514,10 @@ function shouldTriggerList(
     const isATheBeginning = text && text === textBeforeCursor;
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-    const previousListType = getPreviousListType(editor, textRange, listType);
+    const previousListType =
+        textRange && <K | null>getPreviousListType(editor, textRange, listType);
     const isFirstItem = isFirstItemOfAList(textBeforeCursor);
-    const listStyle = getListStyle(textBeforeCursor, listChains, previousListType);
+    const listStyle = getListStyle(textBeforeCursor, listChains, previousListType ?? undefined);
     const shouldTriggerNewListStyle =
         isFirstItem ||
         !previousListType ||

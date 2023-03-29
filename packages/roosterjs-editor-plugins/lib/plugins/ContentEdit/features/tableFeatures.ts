@@ -35,19 +35,27 @@ const TabInTable: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: (event, editor) => {
         let shift = event.rawEvent.shiftKey;
         let td = cacheGetTableCell(event, editor);
+        if (!td) {
+            return;
+        }
         let vtable = cacheVTable(event, td);
 
-        for (let step = shift ? -1 : 1, row = vtable.row, col = vtable.col + step; ; col += step) {
-            if (col < 0 || col >= vtable.cells[row].length) {
+        for (
+            let step = shift ? -1 : 1, row = vtable.row ?? 0, col = (vtable.col ?? 0) + step;
+            ;
+            col += step
+        ) {
+            const tableCells = vtable.cells ?? [];
+            if (col < 0 || col >= tableCells[row].length) {
                 row += step;
                 if (row < 0) {
                     editor.select(vtable.table, PositionType.Before);
                     break;
-                } else if (row >= vtable.cells.length) {
+                } else if (row >= tableCells.length) {
                     editTable(editor, TableOperation.InsertBelow);
                     break;
                 }
-                col = shift ? vtable.cells[row].length - 1 : 0;
+                col = shift ? tableCells[row].length - 1 : 0;
             }
             let cell = vtable.getCell(row, col);
             if (cell.td) {
@@ -74,6 +82,9 @@ const IndentTableOnTab: BuildInEditFeature<PluginKeyboardEvent> = {
             let shift = event.rawEvent.shiftKey;
             let selection = editor.getSelectionRangeEx() as TableSelectionRange;
             let td = cacheGetTableCell(event, editor);
+            if (!td) {
+                return;
+            }
             let vtable = cacheVTable(event, td);
 
             if (shift && editor.getElementAtCursor('blockquote', vtable.table, event)) {
@@ -82,7 +93,9 @@ const IndentTableOnTab: BuildInEditFeature<PluginKeyboardEvent> = {
                 setIndentation(editor, Indentation.Increase);
             }
 
-            editor.select(selection.table, selection.coordinates);
+            if (selection.coordinates) {
+                editor.select(selection.table, selection.coordinates);
+            }
         });
     },
 };
@@ -97,18 +110,25 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
         cacheGetTableCell(event, editor) && !cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
+        if (!td) {
+            return;
+        }
         const vtable = new VTable(td);
         const isUp = event.rawEvent.which == Keys.UP;
         const step = isUp ? -1 : 1;
         const hasShiftKey = event.rawEvent.shiftKey;
         const selection = editor.getDocument().defaultView?.getSelection();
-        let targetTd: HTMLTableCellElement = null;
+        let targetTd: HTMLTableCellElement | null = null;
 
         if (selection) {
             let { anchorNode, anchorOffset } = selection;
 
-            for (let row = vtable.row; row >= 0 && row < vtable.cells.length; row += step) {
-                let cell = vtable.getCell(row, vtable.col);
+            for (
+                let row = vtable.row ?? 0;
+                row >= 0 && vtable.cells && row < vtable.cells.length;
+                row += step
+            ) {
+                let cell = vtable.getCell(row, vtable.col ?? 0);
                 if (cell.td && cell.td != td) {
                     targetTd = cell.td;
                     break;
@@ -137,12 +157,14 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
                                   )
                                 : newPos;
                         const selection = editor.getDocument().defaultView?.getSelection();
-                        selection?.setBaseAndExtent(
-                            anchorNode,
-                            anchorOffset,
-                            newPos.node,
-                            newPos.offset
-                        );
+                        if (anchorNode) {
+                            selection?.setBaseAndExtent(
+                                anchorNode,
+                                anchorOffset,
+                                newPos.node,
+                                newPos.offset
+                            );
+                        }
                     } else {
                         editor.select(newPos.normalize());
                     }
@@ -164,13 +186,16 @@ const DeleteTableWithBackspace: BuildInEditFeature<PluginKeyboardEvent> = {
         cacheIsWholeTableSelected(event, editor),
     handleEvent: (event, editor) => {
         const td = cacheGetTableCell(event, editor);
+        if (!td) {
+            return;
+        }
         const vtable = new VTable(td);
         vtable.edit(TableOperation.DeleteTable);
         vtable.writeBack();
     },
 };
 
-function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement {
+function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellElement | null {
     return cacheGetEventData(event, 'TABLE_CELL_FOR_TABLE_FEATURES', () => {
         let pos = editor.getFocusedPosition();
         let firstTd = pos && editor.getElementAtCursor('TD,TH,LI', pos.node);
@@ -183,10 +208,14 @@ function cacheGetTableCell(event: PluginEvent, editor: IEditor): HTMLTableCellEl
 function cacheIsWholeTableSelected(event: PluginEvent, editor: IEditor) {
     return cacheGetEventData(event, 'WHOLE_TABLE_SELECTED_FOR_FEATURES', () => {
         const td = cacheGetTableCell(event, editor);
+        if (!td) {
+            return false;
+        }
         let vtable = cacheVTable(event, td);
         let selection = editor.getSelectionRangeEx();
         return (
             selection.type == SelectionRangeTypes.TableSelection &&
+            selection.coordinates &&
             isWholeTableSelected(vtable, selection.coordinates)
         );
     });
