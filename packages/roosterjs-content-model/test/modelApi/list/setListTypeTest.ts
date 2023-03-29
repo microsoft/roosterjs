@@ -241,7 +241,8 @@ describe('indent', () => {
                     format: {},
                 },
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [
                         {
@@ -269,7 +270,6 @@ describe('indent', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });

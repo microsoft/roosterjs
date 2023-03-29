@@ -1,46 +1,44 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
-const QuoteTagName = 'blockquote';
-
 /**
  * @internal
  */
-export const handleQuote: ContentModelBlockHandler<ContentModelQuote> = (
+export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatContainer> = (
     doc: Document,
     parent: Node,
-    quote: ContentModelQuote,
+    container: ContentModelFormatContainer,
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let element = quote.cachedElement;
+    let element = container.cachedElement;
 
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
 
-        context.modelHandlers.blockGroupChildren(doc, element, quote, context);
-    } else if (!isBlockGroupEmpty(quote)) {
-        const blockQuote = doc.createElement(QuoteTagName);
+        context.modelHandlers.blockGroupChildren(doc, element, container, context);
+    } else if (!isBlockGroupEmpty(container)) {
+        const blockQuote = doc.createElement(container.tagName);
 
-        quote.cachedElement = blockQuote;
+        container.cachedElement = blockQuote;
         parent.insertBefore(blockQuote, refNode);
 
-        stackFormat(context, QuoteTagName, () => {
-            applyFormat(blockQuote, context.formatAppliers.block, quote.format, context);
+        stackFormat(context, container.tagName, () => {
+            applyFormat(blockQuote, context.formatAppliers.block, container.format, context);
             applyFormat(
                 blockQuote,
                 context.formatAppliers.segmentOnBlock,
-                quote.quoteSegmentFormat,
+                container.format,
                 context
             );
         });
 
-        context.modelHandlers.blockGroupChildren(doc, blockQuote, quote, context);
+        context.modelHandlers.blockGroupChildren(doc, blockQuote, container, context);
     }
 
     return refNode;

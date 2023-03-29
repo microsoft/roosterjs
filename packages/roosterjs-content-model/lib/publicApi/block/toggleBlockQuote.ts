@@ -4,10 +4,8 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 
-const DefaultQuoteFormat: ContentModelBlockFormat = {
+const DefaultQuoteFormat: ContentModelBlockFormat & ContentModelSegmentFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)', // TODO: Support RTL
-};
-const DefaultSegmentFormat: ContentModelSegmentFormat = {
     textColor: 'rgb(102, 102, 102)',
 };
 const BuildInQuoteFormat: ContentModelBlockFormat = {
@@ -24,12 +22,10 @@ const BuildInQuoteFormat: ContentModelBlockFormat = {
  * Otherwise, unwrap all related BLOCKQUOTEs.
  * @param editor The editor object to toggle BLOCKQUOTE onto
  * @param quoteFormat @optional Block format for the new quote object
- * @param segmentFormat @optional Segment format for the content of model
  */
 export default function toggleBlockQuote(
     editor: IContentModelEditor,
-    quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat,
-    segmentFormat: ContentModelSegmentFormat = DefaultSegmentFormat
+    quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat
 ) {
     const fullQuoteFormat = {
         ...BuildInQuoteFormat,
@@ -39,7 +35,7 @@ export default function toggleBlockQuote(
     formatWithContentModel(
         editor,
         'toggleBlockQuote',
-        model => toggleModelBlockQuote(model, fullQuoteFormat, segmentFormat),
+        model => toggleModelBlockQuote(model, fullQuoteFormat),
         {
             preservePendingFormat: true,
         }

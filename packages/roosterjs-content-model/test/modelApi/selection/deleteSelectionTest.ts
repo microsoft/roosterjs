@@ -1368,7 +1368,8 @@ describe('deleteSelection - forward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1377,7 +1378,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -1415,7 +1415,8 @@ describe('deleteSelection - forward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1435,7 +1436,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -1480,7 +1480,8 @@ describe('deleteSelection - forward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1500,7 +1501,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -2644,7 +2644,8 @@ describe('deleteSelection - backward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2664,7 +2665,6 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -2723,7 +2723,8 @@ describe('deleteSelection - backward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2732,7 +2733,6 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -2801,7 +2801,6 @@ describe('deleteSelection - backward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2810,7 +2809,8 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                 },
             ],
         });
