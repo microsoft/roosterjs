@@ -315,7 +315,11 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 
                 if (textRange) {
                     prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor, listStyle, 'autoToggleList' /** apiNameOverride */);
+                    toggleBullet(
+                        editor,
+                        listStyle ?? undefined,
+                        'autoToggleList' /** apiNameOverride */
+                    );
                 }
                 searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
             },
@@ -486,7 +490,7 @@ function cacheGetListElement(event: PluginKeyboardEvent, editor: IEditor) {
 
 function shouldTriggerList<
     T extends ListType,
-    K = T extends ListType.Ordered ? NumberingListType : BulletListType
+    K extends T extends ListType.Ordered ? NumberingListType : BulletListType
 >(
     event: PluginKeyboardEvent,
     editor: IEditor,
@@ -511,7 +515,7 @@ function shouldTriggerList<
     const listChains = getListChains(editor);
     const textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
     const previousListType =
-        textRange && <K | null | undefined>getPreviousListType(editor, textRange, listType);
+        textRange && <K | null>getPreviousListType(editor, textRange, listType);
     const isFirstItem = isFirstItemOfAList(textBeforeCursor);
     const listStyle = getListStyle(textBeforeCursor, listChains, previousListType ?? undefined);
     const shouldTriggerNewListStyle =

@@ -140,8 +140,8 @@ function autoLink(event: PluginEvent, editor: IEditor) {
  */
 export const AutoLinkFeatures: Record<
     keyof AutoLinkFeatureSettings,
-    BuildInEditFeature<PluginEvent> | BuildInEditFeature<PluginKeyboardEvent>
+    BuildInEditFeature<PluginEvent>
 > = {
     autoLink: AutoLink,
-    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink as BuildInEditFeature<PluginEvent>,
 };
