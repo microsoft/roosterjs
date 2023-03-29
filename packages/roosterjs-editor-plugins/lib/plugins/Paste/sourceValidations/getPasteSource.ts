@@ -1,5 +1,6 @@
 import documentContainWacElements from './documentContainWacElements';
 import isExcelDesktopDocument from './isExcelDesktopDocument';
+import isExcelOnlineDocument from './isExcelOnlineDocument';
 import isGoogleSheetDocument from './isGoogleSheetDocument';
 import isPowerPointDesktopDocument from './isPowerPointDesktopDocument';
 import isWordDesktopDocument from './isWordDesktopDocument';
@@ -25,6 +26,7 @@ export type getSourceFunction = (props: getSourceInputParams) => boolean;
 const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
     [KnownSourceType.WordDesktop, isWordDesktopDocument],
     [KnownSourceType.ExcelDesktop, isExcelDesktopDocument],
+    [KnownSourceType.ExcelOnline, isExcelOnlineDocument],
     [KnownSourceType.PowerPointDesktop, isPowerPointDesktopDocument],
     [KnownSourceType.WacComponents, documentContainWacElements],
     [KnownSourceType.GoogleSheets, isGoogleSheetDocument],

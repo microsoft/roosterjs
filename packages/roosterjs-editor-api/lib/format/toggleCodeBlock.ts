@@ -28,7 +28,9 @@ export default function toggleCodeBlock(
                 if (!code.previousSibling && !code.nextSibling) {
                     const parent = code.parentNode;
                     unwrap(code);
-                    unwrap(parent);
+                    if (parent) {
+                        unwrap(parent);
+                    }
                 }
             }).length == 0,
         'toggleCodeBlock'
