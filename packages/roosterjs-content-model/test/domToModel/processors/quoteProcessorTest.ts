@@ -143,7 +143,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '0px',
@@ -155,7 +156,6 @@ describe('quoteProcessor', () => {
                         borderBottom: '1px solid black',
                         borderLeft: '1px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -182,7 +182,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -229,7 +230,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '2px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -263,7 +263,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',
@@ -272,8 +273,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
                         backgroundColor: 'red',
-                    },
-                    quoteSegmentFormat: {
                         textColor: 'blue',
                     },
                 },
@@ -306,7 +305,8 @@ describe('quoteProcessor', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',
@@ -321,7 +321,6 @@ describe('quoteProcessor', () => {
                         whiteSpace: 'pre',
                         direction: 'rtl',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });

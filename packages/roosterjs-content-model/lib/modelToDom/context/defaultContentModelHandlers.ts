@@ -4,12 +4,12 @@ import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
 import { handleDivider } from '../handlers/handleDivider';
 import { handleEntity } from '../handlers/handleEntity';
+import { handleFormatContainer } from '../handlers/handleFormatContainer';
 import { handleGeneralModel } from '../handlers/handleGeneralModel';
 import { handleImage } from '../handlers/handleImage';
 import { handleList } from '../handlers/handleList';
 import { handleListItem } from '../handlers/handleListItem';
 import { handleParagraph } from '../handlers/handleParagraph';
-import { handleQuote } from '../handlers/handleQuote';
 import { handleSegment } from '../handlers/handleSegment';
 import { handleSegmentDecorator } from '../handlers/handleSegmentDecorator';
 import { handleTable } from '../handlers/handleTable';
@@ -29,7 +29,7 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     list: handleList,
     listItem: handleListItem,
     paragraph: handleParagraph,
-    quote: handleQuote,
+    formatContainer: handleFormatContainer,
     segment: handleSegment,
     segmentDecorator: handleSegmentDecorator,
     table: handleTable,

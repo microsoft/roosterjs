@@ -68,7 +68,7 @@ export function mergeModel(
                 case 'BlockGroup':
                     switch (block.blockGroupType) {
                         case 'General':
-                        case 'Quote':
+                        case 'FormatContainer':
                             insertBlock(insertPosition, block);
                             break;
                         case 'ListItem':
@@ -191,7 +191,7 @@ function splitParagraph(markerPosition: InsertPoint) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(
         path,
         ['ListItem'],
-        ['Quote', 'TableCell']
+        ['FormatContainer', 'TableCell']
     );
     const listItem = path[listItemIndex] as ContentModelListItem;
 

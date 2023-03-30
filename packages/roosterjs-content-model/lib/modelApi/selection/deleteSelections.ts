@@ -362,7 +362,7 @@ function deleteBlock(
                     }
 
                 case 'ListItem':
-                case 'Quote':
+                case 'FormatContainer':
                     blocks.splice(index, 1);
                     return true;
             }

@@ -1372,7 +1372,8 @@ describe('iterateSelections', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1382,15 +1383,14 @@ describe('iterateSelections', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {
