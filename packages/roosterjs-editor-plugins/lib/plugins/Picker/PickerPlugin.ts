@@ -54,7 +54,7 @@ const UNIDENTIFIED_CODE = [0, 229];
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
     private core: PickerPluginCore | null = null;
-    public dataProvider: T | undefined = undefined;
+    private pluginDataProvider: T | undefined = undefined;
     private pickerOptions: PickerPluginOptions | undefined = undefined;
 
     /**
@@ -63,7 +63,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param pickerOptions the picker options, such the trigger character for the picker
      */
     constructor(dataProvider: T | undefined, pickerOptions: PickerPluginOptions) {
-        this.dataProvider = dataProvider;
+        this.pluginDataProvider = dataProvider;
         this.pickerOptions = pickerOptions;
     }
 
@@ -72,9 +72,25 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param editor Editor instance
      */
     public initialize(editor: IEditor) {
-        if (this.dataProvider && this.pickerOptions) {
-            this.core = new PickerPluginCore(editor, this.dataProvider, this.pickerOptions);
+        if (this.pluginDataProvider && this.pickerOptions) {
+            this.core = new PickerPluginCore(editor, this.pluginDataProvider, this.pickerOptions);
         }
+    }
+
+    public get dataProvider() {
+        return this.core?.dataProvider;
+    }
+
+    /**
+     * Check if the plugin should handle the given event exclusively.
+     * Handle an event exclusively means other plugin will not receive this event in
+     * onPluginEvent method.
+     * If two plugins will return true in willHandleEventExclusively() for the same event,
+     * the final result depends on the order of the plugins are added into editor
+     * @param event The event to check
+     */
+    public willHandleEventExclusively(event: PluginEvent) {
+        return this.core ? this.core.willHandleEventExclusively(event) : false;
     }
 
     /**
@@ -91,7 +107,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * Dispose this plugin
      */
     public dispose() {
-        this.dataProvider = undefined;
+        this.pluginDataProvider = undefined;
         this.pickerOptions = undefined;
         if (this.core) {
             this.core.dispose();
@@ -120,7 +136,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
 
     constructor(
         private editor: IEditor,
-        private dataProvider: T,
+        public dataProvider: T,
         private pickerOptions: PickerPluginOptions
     ) {
         this.dataProvider.onInitalize(
@@ -159,6 +175,15 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
             (isSuggesting: boolean) => {
                 this.setIsSuggesting(isSuggesting);
             }
+        );
+    }
+
+    public willHandleEventExclusively(event: PluginEvent) {
+        return (
+            this.isSuggesting &&
+            (event.eventType == PluginEventType.KeyDown ||
+                event.eventType == PluginEventType.KeyUp ||
+                event.eventType == PluginEventType.Input)
         );
     }
 
