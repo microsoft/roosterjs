@@ -3,6 +3,7 @@ import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
+import { ContentModelListItem } from 'roosterjs-content-model/lib/publicTypes';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
@@ -10,6 +11,7 @@ import { createBr } from '../creators/createBr';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import {
     iterateSelections,
@@ -173,6 +175,33 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
     );
 };
 
+const mergeInNewLine: DeleteSelectionStep = (context, options) => {
+    const insertPoint = context.insertPoint;
+
+    if (!context.isChanged && insertPoint && options.direction == 'backward') {
+        const index = insertPoint.paragraph.segments.indexOf(insertPoint.marker);
+        const listPathIndex = getClosestAncestorBlockGroupIndex(
+            insertPoint.path,
+            ['ListItem'],
+            ['TableCell']
+        );
+        const list = insertPoint.path[listPathIndex] as ContentModelListItem;
+
+        if (index == 0 && list && list.blocks[0] == insertPoint.paragraph) {
+            const listParent = insertPoint.path[listPathIndex + 1];
+            const listIndex = listParent.blocks.indexOf(list);
+            const prevList = listParent.blocks[listIndex - 1];
+
+            if (prevList?.blockType == 'BlockGroup' && prevList.blockGroupType == 'ListItem') {
+                list.blocks.forEach(setParagraphNotImplicit);
+                prevList.blocks.push(...list.blocks);
+                list.blocks = [];
+                context.isChanged = true;
+            }
+        }
+    }
+};
+
 // Step 2: if we didn't delete anything, and we want to delete forward/backward, now perform it
 const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
     if (context.insertPoint && !context.isChanged && options.direction != 'selectionOnly') {
@@ -233,6 +262,7 @@ const deleteSelectionStep3: DeleteSelectionStep = context => {
 
 const DeleteSelectionSteps: DeleteSelectionStep[] = [
     deleteSelectionStep1,
+    mergeInNewLine,
     deleteSelectionStep2,
     deleteSelectionStep3,
 ];
