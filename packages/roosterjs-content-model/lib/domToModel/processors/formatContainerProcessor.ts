@@ -1,7 +1,7 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { createQuote } from '../../modelApi/creators/createQuote';
+import { createFormatContainer } from '../../modelApi/creators/createFormatContainer';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { knownElementProcessor } from './knownElementProcessor';
@@ -26,8 +26,14 @@ const AllSegmentFormatKeys = getObjectKeys(RequiredSegmentFormat);
 /**
  * @internal
  */
-export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, element, context) => {
-    if (element.style.borderLeft || element.style.borderRight) {
+export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
+    group,
+    element,
+    context
+) => {
+    const tagName = element.tagName.toLowerCase();
+
+    if (tagName == 'pre' || tagName == 'blockquote') {
         stackFormat(
             context,
             {
@@ -42,9 +48,9 @@ export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, elemen
                 parseFormat(element, context.formatParsers.block, format, context);
                 parseFormat(element, context.formatParsers.segmentOnBlock, format, context);
 
-                const quote = createQuote(format);
+                const container = createFormatContainer(tagName, format);
 
-                addBlock(group, quote);
+                addBlock(group, container);
 
                 // These inline formats are overridden by quote, and will be applied onto BLOCKQUOTE element
                 // So no need to pass them down into segments.
@@ -55,10 +61,20 @@ export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, elemen
                     }
                 });
 
-                context.elementProcessors.child(quote, element, context);
+                context.elementProcessors.child(container, element, context);
             }
         );
-    } else {
-        knownElementProcessor(group, element, context);
     }
+};
+
+/**
+ * @internal
+ */
+export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, element, context) => {
+    const processor =
+        element.style.borderLeft || element.style.borderRight
+            ? formatContainerProcessor
+            : knownElementProcessor;
+
+    processor(group, element, context);
 };
