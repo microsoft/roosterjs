@@ -6,6 +6,7 @@
     "include": ["./lib/**/*.ts"],
     "references": [
         { "path": "./lib/plugins/AutoFormat/tsconfig.child.json" },
+        { "path": "./lib/plugins/ContentEdit/tsconfig.child.json" },
         { "path": "./lib/plugins/ContextMenu/tsconfig.child.json" },
         { "path": "./lib/plugins/CustomReplace/tsconfig.child.json" },
         { "path": "./lib/plugins/CutPasteListChain/tsconfig.child.json" },

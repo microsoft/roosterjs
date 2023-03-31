@@ -44,7 +44,8 @@ const identifyNumberingType = (text: string, previousListStyle?: NumberingListTy
         return NumberingTypes.Decimal;
     } else if (/[a-z]+/g.test(text)) {
         if (
-            (lowerRomanTypes.indexOf(previousListStyle) > -1 &&
+            (previousListStyle != undefined &&
+                lowerRomanTypes.indexOf(previousListStyle) > -1 &&
                 lowerRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'i')
         ) {
@@ -54,7 +55,8 @@ const identifyNumberingType = (text: string, previousListStyle?: NumberingListTy
         }
     } else if (/[A-Z]+/g.test(text)) {
         if (
-            (upperRomanTypes.indexOf(previousListStyle) > -1 &&
+            (previousListStyle != undefined &&
+                upperRomanTypes.indexOf(previousListStyle) > -1 &&
                 upperRomanNumbers.indexOf(text[0]) > -1) ||
             (!previousListStyle && text === 'I')
         ) {

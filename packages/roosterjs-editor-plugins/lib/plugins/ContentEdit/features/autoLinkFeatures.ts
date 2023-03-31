@@ -49,7 +49,7 @@ const UnlinkWhenBackspaceAfterLink: BuildInEditFeature<PluginKeyboardEvent> = {
     defaultDisabled: true,
 };
 
-function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
+function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData | null {
     return event.eventType == PluginEventType.KeyDown ||
         (event.eventType == PluginEventType.ContentChanged && event.source == ChangeSource.Paste)
         ? cacheGetEventData(event, 'LINK_DATA', () => {
@@ -58,15 +58,16 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
               // from clipboard will only contain what we pasted, any existing characters will not
               // be included.
               let clipboardData =
-                  event.eventType == PluginEventType.ContentChanged &&
-                  event.source == ChangeSource.Paste &&
-                  (event.data as ClipboardData);
-              let link = matchLink((clipboardData.text || '').trim());
+                  (event.eventType == PluginEventType.ContentChanged &&
+                      event.source == ChangeSource.Paste &&
+                      (event.data as ClipboardData)) ||
+                  null;
+              let link = matchLink((clipboardData?.text || '').trim());
               let searcher = editor.getContentSearcherOfCursor(event);
 
               // In case the matched link is already inside a <A> tag, we do a range search.
               // getRangeFromText will return null if the given text is already in a LinkInlineElement
-              if (link && searcher.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
+              if (link && searcher?.getRangeFromText(link.originalUrl, false /*exactMatch*/)) {
                   return link;
               }
 
@@ -97,13 +98,16 @@ function cacheGetLinkData(event: PluginEvent, editor: IEditor): LinkData {
 
 function hasLinkBeforeCursor(event: PluginKeyboardEvent, editor: IEditor): boolean {
     let contentSearcher = editor.getContentSearcherOfCursor(event);
-    let inline = contentSearcher.getInlineElementBefore();
+    let inline = contentSearcher?.getInlineElementBefore();
     return inline instanceof LinkInlineElement;
 }
 
 function autoLink(event: PluginEvent, editor: IEditor) {
+    const linkData = cacheGetLinkData(event, editor);
+    if (!linkData) {
+        return;
+    }
     let anchor = editor.getDocument().createElement('a');
-    let linkData = cacheGetLinkData(event, editor);
     // Need to get searcher before we enter the async callback since the callback can happen when cursor is moved to next line
     // and at that time a new searcher won't be able to find the link text to replace
     let searcher = editor.getContentSearcherOfCursor();
@@ -118,7 +122,7 @@ function autoLink(event: PluginEvent, editor: IEditor) {
                     linkData.originalUrl,
                     anchor,
                     false /* exactMatch */,
-                    searcher
+                    searcher ?? undefined
                 );
 
                 // The content at cursor has changed. Should also clear the cursor data cache
@@ -139,5 +143,5 @@ export const AutoLinkFeatures: Record<
     BuildInEditFeature<PluginEvent>
 > = {
     autoLink: AutoLink,
-    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink,
+    unlinkWhenBackspaceAfterLink: UnlinkWhenBackspaceAfterLink as BuildInEditFeature<PluginEvent>,
 };

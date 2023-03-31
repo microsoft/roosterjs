@@ -53,19 +53,19 @@ export default class ContentEdit implements EditorPlugin {
                 this.settingsOverride && this.settingsOverride[key] !== undefined;
 
             if (
-                (hasSettingForKey && this.settingsOverride[key]) ||
+                (hasSettingForKey && this.settingsOverride?.[key]) ||
                 (!hasSettingForKey && !feature.defaultDisabled)
             ) {
                 this.features.push(feature);
             }
         });
         this.features = this.features.concat(this.additionalFeatures || []);
-        this.features.forEach(feature => this.editor.addContentEditFeature(feature));
+        this.features.forEach(feature => this.editor?.addContentEditFeature(feature));
     }
 
     private disposeFeatures() {
         if (this.editor) {
-            this.features.forEach(feature => this.editor.removeContentEditFeature(feature));
+            this.features.forEach(feature => this.editor!.removeContentEditFeature(feature));
         }
         this.features = [];
     }

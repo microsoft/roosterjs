@@ -14,3 +14,9 @@ export const PROG_ID_NAME = 'ProgId';
  */
 export const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+
+/**
+ * @internal
+ * Name of the HTMLMeta Property that identifies pated content as from Excel Desktop
+ */
+export const EXCEL_DESKTOP_ATTRIBUTE_NAME = 'xmlns:x';
