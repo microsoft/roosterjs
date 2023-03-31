@@ -42,18 +42,20 @@ function processBlock(block: { start: Node; end: Node }) {
     const { start, end } = block;
 
     if (start == end && getTagOfNode(start) == 'DIV') {
-        const node = changeElementTag(start as HTMLElement, 'SPAN');
+        const node = changeElementTag(start as HTMLElement, 'SPAN') as Node;
         block.start = node;
         block.end = node;
 
-        if (getTagOfNode(node.lastChild) == 'BR') {
+        if (node && node.lastChild && getTagOfNode(node.lastChild) == 'BR') {
             node.removeChild(node.lastChild);
         }
     } else if (getTagOfNode(end) == 'BR') {
-        const node = end.ownerDocument.createTextNode('');
-        end.parentNode?.insertBefore(node, end);
-        block.end = node;
-        end.parentNode?.removeChild(end);
+        const node = end.ownerDocument?.createTextNode('');
+        if (node) {
+            end.parentNode?.insertBefore(node, end);
+            block.end = node;
+            end.parentNode?.removeChild(end);
+        }
     }
 }
 

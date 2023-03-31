@@ -6,17 +6,17 @@ export default interface ListItemBlock {
     /**
      * The first element in block of list item from pasted word online document.
      */
-    startElement: Element;
+    startElement: Element | null;
 
     /**
      * The last element in block of list item from pasted word online document.
      */
-    endElement: Element;
+    endElement: Element | null;
 
     /**
      * The position where the processed bulleted list should be inserted.
      */
-    insertPositionNode: Node;
+    insertPositionNode: Node | null;
 
     /**
      * The list of containers that wraps each list item.
@@ -28,7 +28,7 @@ export default interface ListItemBlock {
  * @internal
  * Initialize an empty ListItemBlock
  */
-export function createListItemBlock(listItem: Element = null): ListItemBlock {
+export function createListItemBlock(listItem: Element | null = null): ListItemBlock {
     return {
         startElement: listItem,
         endElement: listItem,
