@@ -12,6 +12,7 @@ import {
     IEditor,
     PositionType,
     CodeFeatureSettings,
+    QueryScope,
 } from 'roosterjs-editor-types';
 
 const RemoveCodeWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
@@ -46,7 +47,9 @@ const RemoveCodeWhenBackspaceOnEmptyFirstLine: BuildInEditFeature<PluginKeyboard
 
 function cacheGetCodeChild(event: PluginKeyboardEvent, editor: IEditor): Node | null {
     return cacheGetEventData(event, 'CODE_CHILD', () => {
-        const codeElement = editor.getElementAtCursor('code');
+        const codeElement =
+            editor.getElementAtCursor('code') ??
+            editor.queryElements('code', QueryScope.OnSelection)[0];
         if (codeElement) {
             const pos = editor.getFocusedPosition();
             const block = pos && editor.getBlockElementAtNode(pos.normalize().node);
@@ -72,8 +75,10 @@ function splitCode(event: PluginKeyboardEvent, editor: IEditor) {
     if (!codeChild) {
         const codeParent = splitBalancedNodeRange(currentContainer);
         unwrap(codeParent);
-        const preParent = splitBalancedNodeRange(currentContainer);
-        unwrap(preParent);
+        if (safeInstanceOf(currentContainer.parentElement, 'HTMLPreElement')) {
+            const preParent = splitBalancedNodeRange(currentContainer);
+            unwrap(preParent);
+        }
     } else {
         //Content model
         unwrap(codeChild);
