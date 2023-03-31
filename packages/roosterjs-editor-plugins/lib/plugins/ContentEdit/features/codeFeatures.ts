@@ -27,7 +27,7 @@ const RemoveCodeWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = 
             () => {
                 splitCode(event, editor);
             },
-            null /* changeSource */,
+            undefined /* changeSource */,
             true /* canUndoByBackspace */
         );
     },
@@ -74,10 +74,14 @@ function splitCode(event: PluginKeyboardEvent, editor: IEditor) {
     const codeChild = currentContainer.querySelector('code');
     if (!codeChild) {
         const codeParent = splitBalancedNodeRange(currentContainer);
-        unwrap(codeParent);
+        if (codeParent) {
+            unwrap(codeParent);
+        }
         if (safeInstanceOf(currentContainer.parentElement, 'HTMLPreElement')) {
             const preParent = splitBalancedNodeRange(currentContainer);
-            unwrap(preParent);
+            if (preParent) {
+                unwrap(preParent);
+            }
         }
     } else {
         //Content model
