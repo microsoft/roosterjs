@@ -1,44 +1,106 @@
-import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockBase } from '../../publicTypes/block/ContentModelBlockBase';
-import { ContentModelBlockGroupBase } from '../../publicTypes/group/ContentModelBlockGroupBase';
-import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
-import { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
-import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
-import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
-import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelSegmentBase } from '../../publicTypes/segment/ContentModelSegmentBase';
-import { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
-import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
-import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import type { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import type { ContentModelBlockBase } from '../../publicTypes/block/ContentModelBlockBase';
+import type { ContentModelBlockGroupBase } from '../../publicTypes/group/ContentModelBlockGroupBase';
+import type { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
+import type { ContentModelBlockType } from '../../publicTypes/enum/BlockType';
+import type { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
+import type { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import type { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
+import type { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
+import type { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
+import type { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
+import type { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
+import type { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
+import type { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import type { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import type { ContentModelSegmentBase } from '../../publicTypes/segment/ContentModelSegmentBase';
+import type { ContentModelSegmentType } from '../../publicTypes/enum/SegmentType';
+import type { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
+import type { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import type { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import type { ContentModelWithDataset } from '../../publicTypes/format/ContentModelWithDataset';
+import type { ContentModelWithFormat } from '../../publicTypes/format/ContentModelWithFormat';
+import type { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
+import type { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 
 /**
  * @internal
  */
 export function cloneModel(model: ContentModelDocument): ContentModelDocument {
+    const newModel: ContentModelDocument = cloneBlockGroupBase(model);
+
+    if (model.format) {
+        newModel.format = Object.assign({}, model.format);
+    }
+
+    return newModel;
+}
+
+function cloneBlock(block: ContentModelBlock): ContentModelBlock {
+    switch (block.blockType) {
+        case 'BlockGroup':
+            switch (block.blockGroupType) {
+                case 'FormatContainer':
+                    return cloneFormatContainer(block);
+                case 'General':
+                    return cloneGeneralBlock(block);
+                case 'ListItem':
+                    return cloneListItem(block);
+            }
+            break;
+        case 'Divider':
+            return cloneDivider(block);
+        case 'Entity':
+            return cloneEntity(block);
+        case 'Paragraph':
+            return cloneParagraph(block);
+        case 'Table':
+            return cloneTable(block);
+    }
+}
+
+function cloneSegment(segment: ContentModelSegment): ContentModelSegment {
+    switch (segment.segmentType) {
+        case 'Br':
+            return cloneSegmentBase(segment);
+        case 'Entity':
+            return cloneEntity(segment);
+        case 'General':
+            return cloneGeneralSegment(segment);
+        case 'Image':
+            return cloneImage(segment);
+        case 'SelectionMarker':
+            return cloneSelectionMarker(segment);
+        case 'Text':
+            return cloneText(segment);
+    }
+}
+
+function cloneModelWithFormat<T extends ContentModelFormatBase>(
+    model: ContentModelWithFormat<T>
+): ContentModelWithFormat<T> {
     return {
-        ...cloneBlockGroupBase(model),
-        format: model.format,
+        format: Object.assign({}, model.format),
     };
 }
 
-function cloneFormat<T extends ContentModelFormatBase>(format: T): T {
-    return { ...format };
+function cloneModelWithDataset<T>(model: ContentModelWithDataset<T>): ContentModelWithDataset<T> {
+    return {
+        dataset: Object.assign({}, model.dataset),
+    };
 }
 
 function cloneBlockBase<T extends ContentModelBlockType>(
     block: ContentModelBlockBase<T>
 ): ContentModelBlockBase<T> {
-    const { blockType, format } = block;
+    const { blockType } = block;
 
-    return {
-        blockType: blockType,
-        format: cloneFormat(format),
-    };
+    return Object.assign(
+        {
+            blockType,
+        },
+        cloneModelWithFormat(block)
+    );
 }
 
 function cloneBlockGroupBase<T extends ContentModelBlockGroupType>(
@@ -55,167 +117,141 @@ function cloneBlockGroupBase<T extends ContentModelBlockGroupType>(
 function cloneSegmentBase<T extends ContentModelSegmentType>(
     segment: ContentModelSegmentBase<T>
 ): ContentModelSegmentBase<T> {
-    const { segmentType, format, isSelected, code, link } = segment;
+    const { segmentType, isSelected, code, link } = segment;
 
-    return {
-        segmentType: segmentType,
-        format: cloneFormat(format),
-        isSelected: isSelected,
-        code: code ? { format: cloneFormat(code.format) } : undefined,
-        link: link
-            ? {
-                  format: cloneFormat(link.format),
-                  dataset: cloneFormat(link.dataset),
-              }
-            : undefined,
-    };
+    const newSegment: ContentModelSegmentBase<T> = Object.assign(
+        {
+            segmentType,
+            isSelected,
+        },
+        cloneModelWithFormat(segment)
+    );
+
+    if (code) {
+        newSegment.code = cloneModelWithFormat(code);
+    }
+    if (link) {
+        newSegment.link = Object.assign(cloneModelWithFormat(link), cloneModelWithDataset(link));
+    }
+
+    return newSegment;
 }
 
 function cloneEntity(entity: ContentModelEntity): ContentModelEntity {
     const { wrapper, isReadonly, type, id } = entity;
 
-    return {
-        ...cloneBlockBase(entity),
-        ...cloneSegmentBase(entity),
-        wrapper: wrapper,
-        isReadonly: isReadonly,
-        type: type,
-        id: id,
-    };
+    return Object.assign(
+        { wrapper, isReadonly, type, id },
+        cloneBlockBase(entity),
+        cloneSegmentBase(entity)
+    );
 }
 
 function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph {
     const { cachedElement, segments, isImplicit, decorator } = paragraph;
-    return {
-        ...cloneBlockBase(paragraph),
-        cachedElement,
-        segments: segments.map(cloneSegment),
-        isImplicit: isImplicit,
-        decorator: decorator
-            ? {
-                  tagName: decorator.tagName,
-                  format: cloneFormat(decorator.format),
-              }
-            : undefined,
-    };
+
+    const newParagraph: ContentModelParagraph = Object.assign(
+        {
+            cachedElement,
+            isImplicit,
+            segments: segments.map(cloneSegment),
+        },
+        cloneBlockBase(paragraph),
+        cloneModelWithFormat(paragraph)
+    );
+
+    if (decorator) {
+        newParagraph.decorator = Object.assign(
+            {
+                tagName: decorator.tagName,
+            },
+            cloneModelWithFormat(decorator)
+        );
+    }
+
+    return newParagraph;
 }
 
 function cloneTable(table: ContentModelTable): ContentModelTable {
-    const { dataset, cachedElement, widths, heights, cells } = table;
+    const { cachedElement, widths, heights, cells } = table;
 
-    return {
-        ...cloneBlockBase(table),
-        dataset: cloneFormat(dataset),
-        cachedElement,
-        widths: [...widths],
-        heights: [...heights],
-        cells: cells.map(row => row.map(cloneTableCell)),
-    };
+    return Object.assign(
+        {
+            cachedElement,
+            widths: Array.from(widths),
+            heights: Array.from(heights),
+            cells: cells.map(row => row.map(cloneTableCell)),
+        },
+        cloneBlockBase(table),
+        cloneModelWithDataset(table)
+    );
 }
 
 function cloneTableCell(cell: ContentModelTableCell): ContentModelTableCell {
-    const { format, dataset, cachedElement, isSelected, spanAbove, spanLeft, isHeader } = cell;
+    const { cachedElement, isSelected, spanAbove, spanLeft, isHeader } = cell;
 
-    return {
-        ...cloneBlockGroupBase(cell),
-        format: cloneFormat(format),
-        dataset: cloneFormat(dataset),
-        cachedElement,
-        isSelected,
-        spanAbove,
-        spanLeft,
-        isHeader,
-    };
+    return Object.assign(
+        { cachedElement, isSelected, spanAbove, spanLeft, isHeader },
+        cloneBlockGroupBase(cell),
+        cloneModelWithFormat(cell),
+        cloneModelWithDataset(cell)
+    );
 }
 
-function cloneGeneralBlock(block: ContentModelGeneralBlock): ContentModelGeneralBlock {
-    return {
-        ...cloneBlockBase(block),
-        ...cloneBlockGroupBase(block),
-        element: block.element,
-    };
+function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
+    const { tagName, cachedElement } = container;
+
+    return Object.assign(
+        { tagName, cachedElement },
+        cloneBlockBase(container),
+        cloneBlockGroupBase(container)
+    );
+}
+
+function cloneListItem(item: ContentModelListItem): ContentModelListItem {
+    const { formatHolder, levels } = item;
+
+    return Object.assign(
+        {
+            formatHolder: cloneSelectionMarker(formatHolder),
+            levels: levels.map(x => Object.assign({}, x)),
+        },
+        cloneBlockBase(item),
+        cloneBlockGroupBase(item)
+    );
+}
+
+function cloneDivider(divider: ContentModelDivider): ContentModelDivider {
+    const { tagName, isSelected, cachedElement } = divider;
+
+    return Object.assign({ isSelected, tagName, cachedElement }, cloneBlockBase(divider));
+}
+
+function cloneGeneralBlock(general: ContentModelGeneralBlock): ContentModelGeneralBlock {
+    const { element } = general;
+
+    return Object.assign({ element }, cloneBlockBase(general), cloneBlockGroupBase(general));
 }
 
 function cloneSelectionMarker(marker: ContentModelSelectionMarker): ContentModelSelectionMarker {
-    return {
-        ...cloneSegmentBase(marker),
-        isSelected: true,
-    };
-}
-
-function cloneBlock(block: ContentModelBlock): ContentModelBlock {
-    switch (block.blockType) {
-        case 'BlockGroup':
-            switch (block.blockGroupType) {
-                case 'FormatContainer':
-                    return {
-                        ...cloneBlockBase(block),
-                        ...cloneBlockGroupBase(block),
-                        tagName: block.tagName,
-                        cachedElement: block.cachedElement,
-                    };
-                case 'General':
-                    return cloneGeneralBlock(block);
-                case 'ListItem':
-                    return {
-                        ...cloneBlockBase(block),
-                        ...cloneBlockGroupBase(block),
-                        formatHolder: cloneSelectionMarker(block.formatHolder),
-                        levels: block.levels.map(cloneFormat),
-                    };
-            }
-            break;
-
-        case 'Divider':
-            return {
-                ...cloneBlockBase(block),
-                isSelected: block.isSelected,
-                tagName: block.tagName,
-                cachedElement: block.cachedElement,
-            };
-        case 'Entity':
-            return cloneEntity(block);
-        case 'Paragraph':
-            return cloneParagraph(block);
-        case 'Table':
-            return cloneTable(block);
-    }
+    return Object.assign({ isSelected: marker.isSelected }, cloneSegmentBase(marker));
 }
 
 function cloneImage(image: ContentModelImage): ContentModelImage {
-    const { dataset, src, alt, title, isSelectedAsImageSelection } = image;
+    const { src, alt, title, isSelectedAsImageSelection } = image;
 
-    return {
-        ...cloneSegmentBase(image),
-        dataset,
-        src,
-        alt,
-        title,
-        isSelectedAsImageSelection,
-    };
+    return Object.assign(
+        { src, alt, title, isSelectedAsImageSelection },
+        cloneSegmentBase(image),
+        cloneModelWithDataset(image)
+    );
 }
 
-function cloneSegment(segment: ContentModelSegment): ContentModelSegment {
-    switch (segment.segmentType) {
-        case 'Br':
-            return {
-                ...cloneSegmentBase(segment),
-            };
-        case 'Entity':
-            return cloneEntity(segment);
-        case 'General':
-            return {
-                ...cloneGeneralBlock(segment),
-                ...cloneSegmentBase(segment),
-            };
-        case 'Image':
-            return cloneImage(segment);
-        case 'SelectionMarker':
-            return cloneSelectionMarker(segment);
-        case 'Text':
-            return {
-                ...cloneSegmentBase(segment),
-                text: segment.text,
-            };
-    }
+function cloneGeneralSegment(general: ContentModelGeneralSegment): ContentModelGeneralSegment {
+    return Object.assign(cloneGeneralBlock(general), cloneSegmentBase(general));
+}
+
+function cloneText(textSegment: ContentModelText): ContentModelText {
+    const { text } = textSegment;
+    return Object.assign({ text }, cloneSegmentBase(textSegment));
 }
