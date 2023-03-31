@@ -9,7 +9,7 @@ import { ContentModelListItem } from '../../publicTypes/group/ContentModelListIt
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { createQuote } from '../creators/createQuote';
+import { createFormatContainer } from '../creators/createFormatContainer';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
 import { Selectable } from '../../publicTypes/selection/Selectable';
@@ -140,7 +140,7 @@ function clearContainerFormat(path: ContentModelBlockGroup[], block: ContentMode
         const blockIndex = container.blocks.indexOf(block);
 
         if (blockIndex >= 0 && containerIndex >= 0) {
-            const newContainer = cloneFormatContainer(container);
+            const newContainer = createFormatContainer(container.tagName, container.format);
 
             container.blocks.splice(blockIndex, 1);
             newContainer.blocks = container.blocks.splice(blockIndex);
@@ -184,11 +184,4 @@ function isWholeBlockSelected(block: ContentModelBlock) {
         (block as Selectable).isSelected ||
         (block.blockType == 'Paragraph' && block.segments.every(x => x.isSelected))
     );
-}
-
-function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
-    switch (container.tagName) {
-        case 'blockquote':
-            return createQuote(container.format);
-    }
 }

@@ -14,5 +14,5 @@ export interface ContentModelFormatContainer
     /**
      * Tag name of this container
      */
-    tagName: 'blockquote';
+    tagName: 'blockquote' | 'pre';
 }

@@ -12,9 +12,10 @@ export const whiteSpaceFormatHandler: FormatHandler<WhiteSpaceFormat> = {
             format.whiteSpace = whiteSpace;
         }
     },
-    apply: (format, element) => {
-        if (format.whiteSpace) {
-            element.style.whiteSpace = format.whiteSpace;
+    apply: (format, element, context) => {
+        const whiteSpace = context.implicitFormat.whiteSpace;
+        if (format.whiteSpace != whiteSpace) {
+            element.style.whiteSpace = format.whiteSpace || 'normal';
         }
     },
 };

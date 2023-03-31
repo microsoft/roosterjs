@@ -80,4 +80,18 @@ describe('whiteSpaceFormatHandler.apply', () => {
         whiteSpaceFormatHandler.apply(format, div, context);
         expect(container.innerHTML).toBe('<div style="white-space: pre-wrap;"></div>');
     });
+
+    it('Has white space in implicit format', () => {
+        format.whiteSpace = 'pre';
+        context.implicitFormat.whiteSpace = 'pre';
+        whiteSpaceFormatHandler.apply(format, div, context);
+        expect(container.innerHTML).toBe('<div></div>');
+    });
+
+    it('Has different white space from implicit format', () => {
+        format.whiteSpace = 'pre';
+        context.implicitFormat.whiteSpace = 'pre-wrap';
+        whiteSpaceFormatHandler.apply(format, div, context);
+        expect(container.innerHTML).toBe('<div style="white-space: pre;"></div>');
+    });
 });
