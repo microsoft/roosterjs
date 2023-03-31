@@ -5,13 +5,13 @@ import { elementProcessor } from '../processors/elementProcessor';
 import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
+import { formatContainerProcessor, quoteProcessor } from '../processors/formatContainerProcessor';
 import { generalProcessor } from '../processors/generalProcessor';
 import { hrProcessor } from '../processors/hrProcessor';
 import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
-import { quoteProcessor } from '../processors/quoteProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
@@ -40,7 +40,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     li: listItemProcessor,
     ol: listProcessor,
     p: knownElementProcessor,
-    pre: knownElementProcessor,
+    pre: formatContainerProcessor,
     s: knownElementProcessor,
     span: knownElementProcessor,
     strike: knownElementProcessor,
