@@ -32,9 +32,6 @@ const allFeatures = {
 /**
  * Get all content edit features provided by roosterjs
  */
-export default function getAllFeatures(): Record<
-    keyof ContentEditFeatureSettings,
-    BuildInEditFeature<PluginEvent>
-> {
-    return allFeatures;
+export default function getAllFeatures() {
+    return allFeatures as Record<keyof ContentEditFeatureSettings, BuildInEditFeature<PluginEvent>>;
 }

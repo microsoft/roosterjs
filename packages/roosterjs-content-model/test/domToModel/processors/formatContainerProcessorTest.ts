@@ -1,9 +1,9 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { quoteProcessor } from '../../../lib/domToModel/processors/quoteProcessor';
+import { formatContainerProcessor } from '../../../lib/domToModel/processors/formatContainerProcessor';
 
-describe('quoteProcessor', () => {
+describe('formatContainerProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -14,38 +14,22 @@ describe('quoteProcessor', () => {
         const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
 
-        quoteProcessor(doc, quote, context);
+        formatContainerProcessor(doc, quote, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [],
                     format: {
                         marginTop: '1em',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {
+                        marginBottom: '1em',
                         marginRight: '40px',
                         marginLeft: '40px',
                     },
-                },
-                {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        marginBottom: '1em',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
-                    isImplicit: true,
                 },
             ],
         });
@@ -58,31 +42,22 @@ describe('quoteProcessor', () => {
         quote.style.marginTop = '1px';
         quote.style.marginBottom = '0';
 
-        quoteProcessor(doc, quote, context);
+        formatContainerProcessor(doc, quote, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
+                    blocks: [],
                     format: {
                         marginTop: '1px',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {
+                        marginBottom: '0px',
                         marginRight: '40px',
                         marginLeft: '40px',
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
-                    isImplicit: true,
                 },
             ],
         });
@@ -97,32 +72,36 @@ describe('quoteProcessor', () => {
         quote.style.color = 'red';
         quote.appendChild(document.createTextNode('test'));
 
-        quoteProcessor(doc, quote, context);
+        formatContainerProcessor(doc, quote, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                textColor: 'red',
-                            },
-                            text: 'test',
-                        },
-                    ],
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
                     format: {
                         marginRight: '40px',
                         marginLeft: '40px',
+                        textColor: 'red',
+                        marginTop: '0px',
+                        marginBottom: '0px',
                     },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
-                    isImplicit: true,
+                    tagName: 'blockquote',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'test',
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
                 },
             ],
         });
@@ -136,14 +115,15 @@ describe('quoteProcessor', () => {
         quote.style.marginBottom = '0';
         quote.style.border = 'solid 1px black';
 
-        quoteProcessor(doc, quote, context);
+        formatContainerProcessor(doc, quote, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '0px',
@@ -155,7 +135,6 @@ describe('quoteProcessor', () => {
                         borderBottom: '1px solid black',
                         borderLeft: '1px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -175,14 +154,15 @@ describe('quoteProcessor', () => {
         quote.appendChild(div);
         quote.appendChild(document.createTextNode('test3'));
 
-        quoteProcessor(group, quote, context);
+        formatContainerProcessor(group, quote, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -229,7 +209,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '2px solid black',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -256,14 +235,15 @@ describe('quoteProcessor', () => {
         context.segmentFormat.fontSize = '20px';
         context.elementProcessors.child = childProcessor;
 
-        quoteProcessor(group, quote, context);
+        formatContainerProcessor(group, quote, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',
@@ -272,8 +252,6 @@ describe('quoteProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
                         backgroundColor: 'red',
-                    },
-                    quoteSegmentFormat: {
                         textColor: 'blue',
                     },
                 },
@@ -299,14 +277,15 @@ describe('quoteProcessor', () => {
 
         context.elementProcessors.child = childProcessor;
 
-        quoteProcessor(group, quote, context);
+        formatContainerProcessor(group, quote, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         marginTop: '1em',
@@ -321,7 +300,6 @@ describe('quoteProcessor', () => {
                         whiteSpace: 'pre',
                         direction: 'rtl',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });

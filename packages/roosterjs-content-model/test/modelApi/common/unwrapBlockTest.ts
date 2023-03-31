@@ -15,7 +15,8 @@ describe('unwrapBlock', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -25,7 +26,6 @@ describe('unwrapBlock', () => {
                 },
             ],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 
@@ -49,7 +49,8 @@ describe('unwrapBlock', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -59,7 +60,6 @@ describe('unwrapBlock', () => {
                 },
             ],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 
