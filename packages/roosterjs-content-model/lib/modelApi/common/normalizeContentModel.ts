@@ -2,6 +2,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { createBr } from '../creators/createBr';
 import { isBlockEmpty, isSegmentEmpty } from './isEmpty';
+import { unwrapBlock } from './unwrapBlock';
 
 /**
  * @internal
@@ -12,7 +13,12 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
 
         switch (block.blockType) {
             case 'BlockGroup':
-                normalizeContentModel(block);
+                if (block.blockGroupType == 'ListItem' && block.levels.length == 0) {
+                    i += block.blocks.length;
+                    unwrapBlock(group, block);
+                } else {
+                    normalizeContentModel(block);
+                }
                 break;
             case 'Paragraph':
                 removeEmptySegments(block);

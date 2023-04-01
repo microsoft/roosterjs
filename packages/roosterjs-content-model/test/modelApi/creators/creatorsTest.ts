@@ -5,6 +5,7 @@ import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
@@ -392,6 +393,20 @@ describe('Creators', () => {
             blockType: 'BlockGroup',
             blockGroupType: 'FormatContainer',
             tagName: 'blockquote',
+            blocks: [],
+            format: { borderLeft: 'solid 1px black' },
+        });
+    });
+
+    it('createFormatContainer with format', () => {
+        const quote = createFormatContainer('pre', {
+            borderLeft: 'solid 1px black',
+        });
+
+        expect(quote).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'FormatContainer',
+            tagName: 'pre',
             blocks: [],
             format: { borderLeft: 'solid 1px black' },
         });

@@ -10,14 +10,21 @@ import {
  * Handle Delete key event
  */
 export default function handleDeleteKey(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
-    formatWithContentModel(editor, 'handleDeleteKey', model => {
-        const { isChanged } = deleteSelection(model, {
-            direction: 'forward',
-            onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent),
-        });
+    formatWithContentModel(
+        editor,
+        'handleDeleteKey',
+        model => {
+            const { isChanged } = deleteSelection(model, {
+                direction: 'forward',
+                onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent),
+            });
 
-        handleKeyboardEventResult(editor, model, rawEvent, isChanged);
+            handleKeyboardEventResult(editor, model, rawEvent, isChanged);
 
-        return isChanged;
-    });
+            return isChanged;
+        },
+        {
+            skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
+        }
+    );
 }

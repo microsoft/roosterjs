@@ -80,11 +80,33 @@ describe('formatWithContentModel', () => {
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(ChangeSource.Format);
+        expect(addUndoSnapshot.calls.argsFor(0)[2]).toBe(false);
+        expect(addUndoSnapshot.calls.argsFor(0)[3]).toEqual({
+            formatApiName: apiName,
+        });
         expect(pendingFormat.setPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(
             editor,
             mockedFormat,
             mockedPos
         );
+    });
+
+    it('Skip undo snapshot', () => {
+        const callback = jasmine.createSpy('callback').and.returnValue(true);
+        const mockedFormat = 'FORMAT' as any;
+
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue(mockedFormat);
+        spyOn(pendingFormat, 'setPendingFormat');
+
+        formatWithContentModel(editor, apiName, callback, {
+            skipUndoSnapshot: true,
+        });
+
+        expect(callback).toHaveBeenCalledWith(mockedModel);
+        expect(createContentModel).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 });

@@ -3,6 +3,7 @@ import { ContentModelListItem } from '../../publicTypes/group/ContentModelListIt
 import { createListItem } from '../creators/createListItem';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
+import { normalizeContentModel } from '../common/normalizeContentModel';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 
 /**
@@ -72,6 +73,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             }
         }
     });
+
+    normalizeContentModel(model);
 
     return paragraphOrListItems.length > 0;
 }
