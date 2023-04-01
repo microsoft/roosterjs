@@ -36,7 +36,7 @@ export function editingTestCommon(
 
     executionCallback(editor);
 
-    expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
+    expect(addUndoSnapshot).toHaveBeenCalledTimes(0); // Should not add undo snapshot since this will be handled by UndoPlugin instead
     expect(setContentModel).toHaveBeenCalledTimes(calledTimes);
     expect(model).toEqual(result);
 }
