@@ -17,6 +17,11 @@ export interface FormatWithContentModelOptions {
      * When set to true, if there is pending format, it will be preserved after this format operation is done
      */
     preservePendingFormat?: boolean;
+
+    /**
+     * When pass true, skip adding undo snapshot when write Content Model back to DOM
+     */
+    skipUndoSnapshot?: boolean;
 }
 
 /**
@@ -38,28 +43,29 @@ export function formatWithContentModel(
     const model = editor.createContentModel(domToModelOption);
 
     if (callback(model)) {
-        editor.addUndoSnapshot(
-            () => {
-                editor.focus();
-                if (model) {
-                    editor.setContentModel(model);
-                }
-
-                if (options?.preservePendingFormat) {
-                    const pendingFormat = getPendingFormat(editor);
-                    const pos = editor.getFocusedPosition();
-
-                    if (pendingFormat && pos) {
-                        setPendingFormat(editor, pendingFormat, pos);
-                    }
-                }
-            },
-            ChangeSource.Format,
-            false /*canUndoByBackspace*/,
-            {
-                formatApiName: apiName,
+        const callback = () => {
+            editor.focus();
+            if (model) {
+                editor.setContentModel(model);
             }
-        );
+
+            if (options?.preservePendingFormat) {
+                const pendingFormat = getPendingFormat(editor);
+                const pos = editor.getFocusedPosition();
+
+                if (pendingFormat && pos) {
+                    setPendingFormat(editor, pendingFormat, pos);
+                }
+            }
+        };
+
+        if (options?.skipUndoSnapshot) {
+            callback();
+        } else {
+            editor.addUndoSnapshot(callback, ChangeSource.Format, false /*canUndoByBackspace*/, {
+                formatApiName: apiName,
+            });
+        }
 
         editor.cacheContentModel?.(model);
     }

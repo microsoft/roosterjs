@@ -106,6 +106,7 @@ export {
     StructuredNodeFeatureSettings,
     TableFeatureSettings,
     TextFeatureSettings,
+    CodeFeatureSettings,
 } from './ContentEditFeatureSettings';
 export { default as CustomReplacement } from './CustomReplacement';
 export { default as UndoSnapshotsService } from './UndoSnapshotsService';
