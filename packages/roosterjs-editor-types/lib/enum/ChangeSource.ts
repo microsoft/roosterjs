@@ -62,4 +62,10 @@ export const enum ChangeSource {
      * List chain reorganized numbers of lists
      */
     ListChain = 'ListChain',
+
+    /**
+     * Keyboard event, used by Content Model.
+     * Data of this event will be the key code number
+     */
+    Keyboard = 'Keyboard',
 }
