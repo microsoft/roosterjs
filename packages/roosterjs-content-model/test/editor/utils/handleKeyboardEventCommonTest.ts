@@ -1,10 +1,10 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
-import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
 } from '../../../lib/editor/utils/handleKeyboardEventCommon';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('getOnDeleteEntityCallback', () => {
     let mockedEditor: IContentModelEditor;
@@ -107,13 +107,16 @@ describe('handleKeyboardEventResult', () => {
     let mockedEvent: KeyboardEvent;
     let cacheContentModel: jasmine.Spy;
     let preventDefault: jasmine.Spy;
+    let triggerContentChangedEvent: jasmine.Spy;
 
     beforeEach(() => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         preventDefault = jasmine.createSpy('preventDefault');
+        triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
 
         mockedEditor = ({
             cacheContentModel,
+            triggerContentChangedEvent,
         } as any) as IContentModelEditor;
         mockedEvent = ({
             preventDefault,
@@ -124,10 +127,14 @@ describe('handleKeyboardEventResult', () => {
 
     it('isChanged = true', () => {
         const mockedModel = 'MODEL' as any;
+        const which = 'WHICH' as any;
+        (<any>mockedEvent).which = which;
+
         handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, true);
 
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
+        expect(triggerContentChangedEvent).toHaveBeenCalledWith(ChangeSource.Keyboard, which);
         expect(cacheContentModel).not.toHaveBeenCalled();
     });
 
@@ -136,6 +143,7 @@ describe('handleKeyboardEventResult', () => {
         handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, false);
 
         expect(preventDefault).not.toHaveBeenCalled();
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
         expect(cacheContentModel).toHaveBeenCalledWith(null);
     });
