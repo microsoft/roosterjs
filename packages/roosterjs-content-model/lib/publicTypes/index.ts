@@ -129,7 +129,12 @@ export { ContentModelHandler, ContentModelBlockHandler } from './context/Content
 
 export { Border } from './interface/Border';
 
-export { IContentModelEditor, DomToModelOption, ModelToDomOption } from './IContentModelEditor';
+export {
+    IContentModelEditor,
+    DomToModelOption,
+    ModelToDomOption,
+    ContentModelEditorOptions,
+} from './IContentModelEditor';
 export {
     CreateEditorContext,
     ContentModelCoreApiMap,
