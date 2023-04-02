@@ -2,23 +2,13 @@ import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlug
 import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { isFeatureEnabled } from './isFeatureEnabled';
 import {
+    CoreCreator,
     EditorCore,
-    EditorOptions,
     EditorPlugin,
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
-
-/**
- * Type of Editor Core Creator
- * @param contentDiv The DIV HTML element which will be the container element of editor
- * @param options An optional options object to customize the editor
- */
-export type CoreCreator<TEditorCore extends EditorCore> = (
-    contentDiv: HTMLDivElement,
-    options: EditorOptions
-) => TEditorCore;
+import { isFeatureEnabled } from './isFeatureEnabled';
 
 /**
  * Create a new instance of Editor Core

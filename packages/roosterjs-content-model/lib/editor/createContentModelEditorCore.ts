@@ -1,20 +1,19 @@
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { CoreCreator, createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
+import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
-import { EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
+import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { setContentModel } from './coreApi/setContentModel';
 
 /**
  * @internal
  */
-export const createContentModelEditorCore: CoreCreator<ContentModelEditorCore> = (
-    contentDiv,
-    editorOptions
-) => {
-    const options = editorOptions as ContentModelEditorOptions;
+export const createContentModelEditorCore: CoreCreator<
+    ContentModelEditorCore,
+    ContentModelEditorOptions
+> = (contentDiv, options) => {
     const core = createEditorCore(contentDiv, options);
     const experimentalFeatures = core.lifecycle.experimentalFeatures;
 

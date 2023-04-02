@@ -2,9 +2,9 @@ import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument'
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { EditorOptions } from 'roosterjs-editor-types';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import {
+    ContentModelEditorOptions,
     DomToModelOption,
     IContentModelEditor,
     ModelToDomOption,
@@ -14,14 +14,15 @@ import {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelEditor extends EditorBase<ContentModelEditorCore>
+export default class ContentModelEditor
+    extends EditorBase<ContentModelEditorCore, ContentModelEditorOptions>
     implements IContentModelEditor {
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: EditorOptions = {}) {
+    constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
 
         const core = this.getCore();

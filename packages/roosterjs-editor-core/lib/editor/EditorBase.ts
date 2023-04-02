@@ -1,4 +1,3 @@
-import { CoreCreator } from './createEditorCore';
 import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     BlockElement,
@@ -7,6 +6,7 @@ import {
     ColorTransformDirection,
     ContentChangedData,
     ContentPosition,
+    CoreCreator,
     DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
@@ -70,7 +70,10 @@ import type {
 /**
  * Base class of editor
  */
-export class EditorBase<TEditorCore extends EditorCore> implements IEditor {
+export class EditorBase<
+    TEditorCore extends EditorCore,
+    TEditorOptions extends EditorOptions = EditorOptions
+> implements IEditor {
     private core: TEditorCore | null = null;
 
     //#region Lifecycle
@@ -82,8 +85,8 @@ export class EditorBase<TEditorCore extends EditorCore> implements IEditor {
      */
     constructor(
         contentDiv: HTMLDivElement,
-        options: EditorOptions,
-        coreCreator: CoreCreator<TEditorCore>
+        options: TEditorOptions,
+        coreCreator: CoreCreator<TEditorCore, TEditorOptions>
     ) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
