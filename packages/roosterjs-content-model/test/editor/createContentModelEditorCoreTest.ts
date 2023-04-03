@@ -203,4 +203,45 @@ describe('createContentModelEditorCore', () => {
             addDelimiterForEntity: false,
         } as any);
     });
+
+    it('Allow entity delimiters', () => {
+        mockedCore.lifecycle.experimentalFeatures.push(
+            ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+        );
+
+        const options = {};
+        const core = createContentModelEditorCore(contentDiv, options);
+
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(core).toEqual({
+            lifecycle: {
+                experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+            },
+            api: {
+                switchShadowEdit: mockedSwitchShadowEdit,
+                createEditorContext,
+                createContentModel,
+                setContentModel,
+            },
+            originalApi: {
+                a: 'b',
+                createEditorContext,
+                createContentModel,
+                setContentModel,
+            },
+            defaultDomToModelOptions: {},
+            defaultModelToDomOptions: {},
+            defaultFormat: {
+                fontWeight: undefined,
+                italic: undefined,
+                underline: undefined,
+                fontFamily: undefined,
+                fontSize: undefined,
+                textColor: undefined,
+                backgroundColor: undefined,
+            },
+            reuseModel: false,
+            addDelimiterForEntity: true,
+        } as any);
+    });
 });
