@@ -71,10 +71,95 @@
 							<h3>Classes</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_editor_core.editor.html" class="tsd-kind-icon">Editor</a></li>
-								<li class="tsd-kind-class tsd-parent-kind-module"><a href="../classes/roosterjs_editor_core.editorbase.html" class="tsd-kind-icon">Editor<wbr>Base</a></li>
+								<li class="tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter"><a href="../classes/roosterjs_editor_core.editorbase.html" class="tsd-kind-icon">Editor<wbr>Base</a></li>
+							</ul>
+						</section>
+						<section class="tsd-index-section ">
+							<h3>Functions</h3>
+							<ul class="tsd-index-list">
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_core.html#createeditorcore" class="tsd-kind-icon">create<wbr>Editor<wbr>Core</a></li>
+								<li class="tsd-kind-function tsd-parent-kind-module"><a href="roosterjs_editor_core.html#isfeatureenabled" class="tsd-kind-icon">is<wbr>Feature<wbr>Enabled</a></li>
 							</ul>
 						</section>
 					</div>
+				</section>
+			</section>
+			<section class="tsd-panel-group tsd-member-group ">
+				<h2>Functions</h2>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="createeditorcore" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagConst">Const</span> create<wbr>Editor<wbr>Core</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">create<wbr>Editor<wbr>Core<span class="tsd-signature-symbol">(</span>contentDiv<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">HTMLDivElement</span>, options<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.editoroptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.editorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorCore</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/793c21b/packages/roosterjs-editor-core/lib/editor/createEditorCore.ts#L19">packages/roosterjs-editor-core/lib/editor/createEditorCore.ts:19</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Create a new instance of Editor Core</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>contentDiv: <span class="tsd-signature-type">HTMLDivElement</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The DIV HTML element which will be the container element of editor</p>
+									</div>
+								</li>
+								<li>
+									<h5>options: <a href="../interfaces/roosterjs_editor_types.editoroptions.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorOptions</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An optional options object to customize the editor</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_editor_types.editorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorCore</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-function tsd-parent-kind-module">
+					<a name="isfeatureenabled" class="tsd-anchor"></a>
+					<h3>is<wbr>Feature<wbr>Enabled</h3>
+					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
+						<li class="tsd-signature tsd-kind-icon">is<wbr>Feature<wbr>Enabled<span class="tsd-signature-symbol">(</span>featureSet<span class="tsd-signature-symbol">: </span><span class="tsd-signature-symbol">(</span><a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span>, feature<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/793c21b/packages/roosterjs-editor-core/lib/editor/isFeatureEnabled.ts#L10">packages/roosterjs-editor-core/lib/editor/isFeatureEnabled.ts:10</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Check if the given experimental feature is enabled</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>featureSet: <span class="tsd-signature-symbol">(</span><a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">undefined</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>All enabled features</p>
+									</div>
+								</li>
+								<li>
+									<h5>feature: <a href="../enums/roosterjs_editor_types.experimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">ExperimentalFeatures</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleexperimentalfeatures.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleExperimentalFeatures</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>The feature to check</p>
+									</div>
+								</li>
+							</ul>
+							<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">boolean</span></h4>
+							<p>True if the given feature is enabled, otherwise false</p>
+						</li>
+					</ul>
 				</section>
 			</section>
 		</div>
@@ -118,8 +203,14 @@
 					<li class=" tsd-kind-class tsd-parent-kind-module">
 						<a href="../classes/roosterjs_editor_core.editor.html" class="tsd-kind-icon">Editor</a>
 					</li>
-					<li class=" tsd-kind-class tsd-parent-kind-module">
+					<li class=" tsd-kind-class tsd-parent-kind-module tsd-has-type-parameter">
 						<a href="../classes/roosterjs_editor_core.editorbase.html" class="tsd-kind-icon">Editor<wbr>Base</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_core.html#createeditorcore" class="tsd-kind-icon">create<wbr>Editor<wbr>Core</a>
+					</li>
+					<li class=" tsd-kind-function tsd-parent-kind-module">
+						<a href="roosterjs_editor_core.html#isfeatureenabled" class="tsd-kind-icon">is<wbr>Feature<wbr>Enabled</a>
 					</li>
 				</ul>
 			</nav>
