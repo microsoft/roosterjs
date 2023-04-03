@@ -1,3 +1,4 @@
+import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -6,6 +7,11 @@ import { createText } from '../../../lib/modelApi/creators/createText';
 import { setListType } from '../../../lib/modelApi/list/setListType';
 
 describe('indent', () => {
+    let normalizeContentModelSpy: jasmine.Spy;
+    beforeEach(() => {
+        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
+    });
+
     it('Empty group', () => {
         const group = createContentModelDocument();
 
@@ -145,6 +151,29 @@ describe('indent', () => {
                     format: {},
                 },
             ],
+        });
+        expect(result).toBeTrue();
+    });
+
+    it('Group with single list item selection in same type and then normalize', () => {
+        const group = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('test');
+        const listItem = createListItem([{ listType: 'OL' }]);
+
+        para.segments.push(text);
+        listItem.blocks.push(para);
+        group.blocks.push(listItem);
+
+        text.isSelected = true;
+
+        normalizeContentModelSpy.and.callThrough();
+
+        const result = setListType(group, 'OL');
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [para],
         });
         expect(result).toBeTrue();
     });

@@ -1,5 +1,6 @@
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -258,6 +259,31 @@ describe('normalizeContentModel', () => {
                     widths: [],
                     heights: [],
                     dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Normalize list item without level', () => {
+        const model = createContentModelDocument();
+        const listItem = createListItem([]);
+        const para = createParagraph(true /*isImplicit*/);
+        const text = createText('test');
+
+        para.segments.push(text);
+        listItem.blocks.push(para);
+        model.blocks.push(listItem);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text],
+                    format: {},
+                    isImplicit: false,
                 },
             ],
         });
