@@ -1,6 +1,4 @@
-import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
-import DarkColorHandlerImpl from './DarkColorHandlerImpl';
-import { coreApiMap } from '../coreApi/coreApiMap';
+import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     BlockElement,
     ChangeSource,
@@ -8,12 +6,12 @@ import {
     ColorTransformDirection,
     ContentChangedData,
     ContentPosition,
+    CoreCreator,
     DarkColorHandler,
     DefaultFormat,
     DOMEventHandler,
     EditorCore,
     EditorOptions,
-    EditorPlugin,
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
@@ -35,7 +33,6 @@ import {
     RegionType,
     SelectionPath,
     SelectionRangeEx,
-    SelectionRangeTypes,
     SizeTransformer,
     StyleBasedFormatState,
     TableSelection,
@@ -46,7 +43,6 @@ import {
     collapseNodes,
     contains,
     ContentTraverser,
-    createRange,
     deleteSelectedContent,
     getRegionsFromRange,
     findClosestElementAncestor,
@@ -54,16 +50,12 @@ import {
     getSelectionPath,
     getTagOfNode,
     isNodeEmpty,
-    safeInstanceOf,
     Position,
     PositionContentSearcher,
     queryElements,
     wrap,
     isPositionAtBeginningOf,
-    arrayPush,
     toArray,
-    getObjectKeys,
-    getIntersectedRect,
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
@@ -76,70 +68,31 @@ import type {
 } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
- * RoosterJs core editor class
+ * Base class of editor
  */
-export class EditorBase implements IEditor {
-    private core: EditorCore | null = null;
+export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends EditorOptions>
+    implements IEditor {
+    private core: TEditorCore | null = null;
 
     //#region Lifecycle
 
     /**
-     * Creates an instance of Editor
+     * Creates an instance of EditorBase
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
-    constructor(contentDiv: HTMLDivElement, options: EditorOptions) {
+    constructor(
+        contentDiv: HTMLDivElement,
+        options: TEditorOptions,
+        coreCreator: CoreCreator<TEditorCore, TEditorOptions>
+    ) {
         // 1. Make sure all parameters are valid
         if (getTagOfNode(contentDiv) != 'DIV') {
             throw new Error('contentDiv must be an HTML DIV element');
         }
 
-        // 2. Store options values to local variables
-        const corePlugins = createCorePlugins(contentDiv, options);
-        const plugins: EditorPlugin[] = [];
-        getObjectKeys(corePlugins).forEach(name => {
-            if (name == '_placeholder') {
-                if (options.plugins) {
-                    arrayPush(plugins, options.plugins);
-                }
-            } else {
-                plugins.push(corePlugins[name]);
-            }
-        });
-
-        const zoomScale: number = (options.zoomScale ?? -1) > 0 ? options.zoomScale! : 1;
-        this.core = {
-            contentDiv,
-            api: {
-                ...coreApiMap,
-                ...(options.coreApiOverride || {}),
-            },
-            originalApi: coreApiMap,
-            plugins: plugins.filter(x => !!x),
-            ...getPluginState(corePlugins),
-            trustedHTMLHandler: options.trustedHTMLHandler || ((html: string) => html),
-            zoomScale: zoomScale,
-            sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
-            getVisibleViewport:
-                options.getVisibleViewport ||
-                (() => {
-                    const scrollContainer = this.getScrollContainer();
-
-                    return getIntersectedRect(
-                        scrollContainer == contentDiv
-                            ? [scrollContainer]
-                            : [scrollContainer, contentDiv]
-                    );
-                }),
-            imageSelectionBorderColor: options.imageSelectionBorderColor,
-        };
-
-        if (this.isFeatureEnabled(ExperimentalFeatures.VariableBasedDarkColor)) {
-            this.core.darkColorHandler = new DarkColorHandlerImpl(
-                contentDiv,
-                this.core.lifecycle.getDarkColor
-            );
-        }
+        // 2. Create editor core
+        this.core = coreCreator(contentDiv, options);
 
         // 3. Initialize plugins
         this.core.plugins.forEach(plugin => plugin.initialize(this));
@@ -475,98 +428,7 @@ export class EditorBase implements IEditor {
     ): boolean {
         const core = this.getCore();
 
-        let rangeEx: SelectionRangeEx | null = null;
-
-        if (isSelectionRangeEx(arg1)) {
-            rangeEx = arg1;
-        } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelection(arg2)) {
-            rangeEx = {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: arg1,
-                coordinates: arg2,
-            };
-        } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
-            rangeEx = {
-                type: SelectionRangeTypes.ImageSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                image: arg1,
-            };
-        } else {
-            let range = !arg1
-                ? null
-                : safeInstanceOf(arg1, 'Range')
-                ? arg1
-                : isSelectionPath(arg1)
-                ? createRange(core.contentDiv, arg1.start, arg1.end)
-                : isNodePosition(arg1) || safeInstanceOf(arg1, 'Node')
-                ? createRange(
-                      <Node>arg1,
-                      <number | PositionType>arg2,
-                      <Node>arg3,
-                      <number | PositionType>arg4
-                  )
-                : null;
-
-            rangeEx = range
-                ? {
-                      type: SelectionRangeTypes.Normal,
-                      ranges: [range],
-                      areAllCollapsed: range.collapsed,
-                  }
-                : null;
-        }
-
-        if (rangeEx) {
-            switch (rangeEx.type) {
-                case SelectionRangeTypes.TableSelection:
-                    if (this.contains(rangeEx.table)) {
-                        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-                        core.domEvent.tableSelectionRange = core.api.selectTable(
-                            core,
-                            rangeEx.table,
-                            rangeEx.coordinates
-                        );
-                        rangeEx = core.domEvent.tableSelectionRange;
-                    }
-                    break;
-                case SelectionRangeTypes.ImageSelection:
-                    if (this.contains(rangeEx.image)) {
-                        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                        core.domEvent.imageSelectionRange = core.api.selectImage(
-                            core,
-                            rangeEx.image
-                        );
-                        rangeEx = core.domEvent.imageSelectionRange;
-                    }
-                    break;
-                case SelectionRangeTypes.Normal:
-                    core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-
-                    if (this.contains(rangeEx.ranges[0])) {
-                        core.api.selectRange(core, rangeEx.ranges[0]);
-                    } else {
-                        rangeEx = null;
-                    }
-                    break;
-            }
-
-            this.triggerPluginEvent(
-                PluginEventType.SelectionChanged,
-                {
-                    selectionRangeEx: rangeEx,
-                },
-                true /** broadcast **/
-            );
-        } else {
-            core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-            core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-        }
-
-        return !!rangeEx;
+        return core.api.select(core, arg1, arg2, arg3, arg4);
     }
 
     /**
@@ -1093,7 +955,7 @@ export class EditorBase implements IEditor {
     public isFeatureEnabled(
         feature: ExperimentalFeatures | CompatibleExperimentalFeatures
     ): boolean {
-        return this.getCore().lifecycle.experimentalFeatures.indexOf(feature) >= 0;
+        return isFeatureEnabled(this.getCore().lifecycle.experimentalFeatures, feature);
     }
 
     /**
@@ -1159,7 +1021,7 @@ export class EditorBase implements IEditor {
      * @returns the current EditorCore object
      * @throws a standard Error if there's no core object
      */
-    protected getCore(): EditorCore {
+    protected getCore(): TEditorCore {
         if (!this.core) {
             throw new Error('Editor is already disposed');
         }
@@ -1167,42 +1029,4 @@ export class EditorBase implements IEditor {
     }
 
     //#endregion
-}
-
-function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
-    const rangeEx = obj as SelectionRangeEx;
-    return (
-        rangeEx &&
-        typeof rangeEx == 'object' &&
-        typeof rangeEx.type == 'number' &&
-        Array.isArray(rangeEx.ranges)
-    );
-}
-
-function isTableSelection(obj: any): obj is TableSelection {
-    const selection = obj as TableSelection;
-
-    return (
-        selection &&
-        typeof selection == 'object' &&
-        typeof selection.firstCell == 'object' &&
-        typeof selection.lastCell == 'object'
-    );
-}
-
-function isSelectionPath(obj: any): obj is SelectionPath {
-    const path = obj as SelectionPath;
-
-    return path && typeof path == 'object' && Array.isArray(path.start) && Array.isArray(path.end);
-}
-
-function isNodePosition(obj: any): obj is NodePosition {
-    const pos = obj as NodePosition;
-
-    return (
-        pos &&
-        typeof pos == 'object' &&
-        typeof pos.node == 'object' &&
-        typeof pos.offset == 'number'
-    );
 }
