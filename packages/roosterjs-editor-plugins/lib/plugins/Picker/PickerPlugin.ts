@@ -62,7 +62,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * @param dataProvider the data object contaning the callbacks functions for the picker actions, such as initialize and selectOption
      * @param pickerOptions the picker options, such the trigger character for the picker
      */
-    constructor(dataProvider: T | undefined, pickerOptions: PickerPluginOptions) {
+    constructor(dataProvider: T, pickerOptions: PickerPluginOptions) {
         this.pluginDataProvider = dataProvider;
         this.pickerOptions = pickerOptions;
     }
