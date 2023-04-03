@@ -70,10 +70,8 @@ import type {
 /**
  * Base class of editor
  */
-export class EditorBase<
-    TEditorCore extends EditorCore,
-    TEditorOptions extends EditorOptions = EditorOptions
-> implements IEditor {
+export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends EditorOptions>
+    implements IEditor {
     private core: TEditorCore | null = null;
 
     //#region Lifecycle
