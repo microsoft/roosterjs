@@ -18,11 +18,6 @@ import {
  */
 export interface DomToModelOption {
     /**
-     * When pass true, a new content model will always be created no matter if there is cached model
-     */
-    ignoreCache?: boolean;
-
-    /**
      * True to create content model from the root element itself, false to create from all child nodes of root. @default false
      */
     includeRoot?: boolean;
