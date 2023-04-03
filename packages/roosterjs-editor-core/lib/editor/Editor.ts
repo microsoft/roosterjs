@@ -5,7 +5,7 @@ import { EditorCore, EditorOptions } from 'roosterjs-editor-types';
 /**
  * RoosterJs core editor class
  */
-export default class Editor extends EditorBase<EditorCore> {
+export default class Editor extends EditorBase<EditorCore, EditorOptions> {
     /**
      * Creates an instance of EditorBase
      * @param contentDiv The DIV HTML element which will be the container element of editor
