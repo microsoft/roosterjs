@@ -84,6 +84,7 @@ export {
     HasFocus,
     InsertNode,
     RestoreUndoSnapshot,
+    Select,
     SelectRange,
     SetContent,
     SwitchShadowEdit,
