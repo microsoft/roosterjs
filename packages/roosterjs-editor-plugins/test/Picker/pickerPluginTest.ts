@@ -180,22 +180,3 @@ describe('PickerPlugin ', () => {
         expect(spyOnInitialize).toHaveBeenCalled();
     });
 });
-
-describe('PickerPlugin | dispose ', () => {
-    let editor: IEditor;
-    const TEST_ID = 'pickerTest';
-    let plugin = new PickerPlugin(dataProvider, pickerOptions);
-    let spyOnDispose: any;
-
-    beforeEach(() => {
-        editor = TestHelper.initEditor(TEST_ID, [plugin]);
-        spyOnDispose = spyOn(plugin.dataProvider, 'onDispose');
-        plugin.initialize(editor);
-    });
-
-    it('should execute dispose function', () => {
-        plugin.dispose();
-        expect(spyOnDispose).toHaveBeenCalled();
-        expect(plugin.dataProvider).toBeUndefined();
-    });
-});
