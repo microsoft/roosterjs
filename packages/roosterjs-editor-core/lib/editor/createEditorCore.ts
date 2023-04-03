@@ -6,6 +6,7 @@ import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     CoreCreator,
     EditorCore,
+    EditorOptions,
     EditorPlugin,
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
