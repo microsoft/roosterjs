@@ -17,7 +17,7 @@ export const setTableCellShadeButton: RibbonButton<
 > = {
     dropDownMenu: {
         ...originalBackgroundColorButton.dropDownMenu,
-        allowLivePreview: false,
+        allowLivePreview: true,
     },
     key: 'ribbonButtonSetTableCellShade',
     unlocalizedText: 'Set table shade color',

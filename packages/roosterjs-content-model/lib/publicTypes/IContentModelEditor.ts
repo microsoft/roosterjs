@@ -1,5 +1,5 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
-import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
@@ -17,6 +17,11 @@ import {
  * Options for creating DomToModelContext
  */
 export interface DomToModelOption {
+    /**
+     * When pass true, a new content model will always be created no matter if there is cached model
+     */
+    ignoreCache?: boolean;
+
     /**
      * True to create content model from the root element itself, false to create from all child nodes of root. @default false
      */
@@ -105,4 +110,19 @@ export interface IContentModelEditor extends IEditor {
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null): void;
+}
+
+/**
+ * Options for Content Model editor
+ */
+export interface ContentModelEditorOptions extends EditorOptions {
+    /**
+     * Default options used for DOM to Content Model conversion
+     */
+    defaultDomToModelOptions?: DomToModelOption;
+
+    /**
+     * Default options used for Content Model to DOM conversion
+     */
+    defaultModelToDomOptions?: ModelToDomOption;
 }
