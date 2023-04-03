@@ -4,5 +4,5 @@ export { default as ContentModelFormatPlugin } from './plugins/ContentModelForma
 export { default as ContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
 export {
     createContentModelEditorCore,
-    internalCreateContentModelEditorCore,
+    promoteToContentModelEditorCore,
 } from './createContentModelEditorCore';

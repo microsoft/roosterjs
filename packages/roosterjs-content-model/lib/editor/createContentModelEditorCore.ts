@@ -15,9 +15,11 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
-    const core = createEditorCore(contentDiv, options);
+    const core = createEditorCore(contentDiv, options) as ContentModelEditorCore;
 
-    return internalCreateContentModelEditorCore(core, options);
+    promoteToContentModelEditorCore(core, options);
+
+    return core;
 };
 
 /**
@@ -25,40 +27,37 @@ export const createContentModelEditorCore: CoreCreator<
  * @param core The original EditorCore object
  * @param options Options of this editor
  */
-export function internalCreateContentModelEditorCore(
+export function promoteToContentModelEditorCore(
     core: EditorCore,
     options: ContentModelEditorOptions
-): ContentModelEditorCore {
+) {
     const experimentalFeatures = core.lifecycle.experimentalFeatures;
     const reuseModel = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.ReusableContentModel
     );
+    const cmCore = core as ContentModelEditorCore;
 
-    return {
-        ...core,
-        defaultDomToModelOptions: options.defaultDomToModelOptions || {},
-        defaultModelToDomOptions: options.defaultModelToDomOptions || {},
-        defaultFormat: getDefaultSegmentFormat(core),
-        reuseModel,
-        addDelimiterForEntity: isFeatureEnabled(
-            experimentalFeatures,
-            ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-        ),
-        api: {
-            ...core.api,
-            createEditorContext,
-            createContentModel,
-            setContentModel,
-            switchShadowEdit: reuseModel ? switchShadowEdit : core.api.switchShadowEdit, // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
-        },
-        originalApi: {
-            ...core.originalApi,
-            createEditorContext,
-            createContentModel,
-            setContentModel,
-        },
-    };
+    cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
+    cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
+    cmCore.defaultFormat = getDefaultSegmentFormat(core);
+    cmCore.reuseModel = reuseModel;
+    (cmCore.addDelimiterForEntity = isFeatureEnabled(
+        experimentalFeatures,
+        ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+    )),
+        (cmCore.api.createEditorContext = createEditorContext);
+    cmCore.api.createContentModel = createContentModel;
+    cmCore.api.setContentModel = setContentModel;
+
+    if (reuseModel) {
+        // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
+        cmCore.api.switchShadowEdit = switchShadowEdit;
+    }
+
+    cmCore.originalApi.createEditorContext = createEditorContext;
+    cmCore.originalApi.createContentModel = createContentModel;
+    cmCore.originalApi.setContentModel = setContentModel;
 }
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
