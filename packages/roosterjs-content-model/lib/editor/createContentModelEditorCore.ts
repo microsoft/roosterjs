@@ -9,13 +9,26 @@ import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
 /**
- * @internal
+ * Editor Core creator for Content Model editor
  */
 export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
     const core = createEditorCore(contentDiv, options);
+
+    return internalCreateContentModelEditorCore(core, options);
+};
+
+/**
+ * Creator Content Model Editor Core from Editor Core
+ * @param core The original EditorCore object
+ * @param options Options of this editor
+ */
+export function internalCreateContentModelEditorCore(
+    core: EditorCore,
+    options: ContentModelEditorOptions
+): ContentModelEditorCore {
     const experimentalFeatures = core.lifecycle.experimentalFeatures;
     const reuseModel = isFeatureEnabled(
         experimentalFeatures,
@@ -46,7 +59,7 @@ export const createContentModelEditorCore: CoreCreator<
             setContentModel,
         },
     };
-};
+}
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
     const format = core.lifecycle.defaultFormat ?? {};
