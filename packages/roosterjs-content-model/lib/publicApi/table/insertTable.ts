@@ -2,7 +2,7 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { deleteSelection } from '../../modelApi/selection/deleteSelections';
+import { deleteForReplace } from '../../modelApi/selection/deleteForReplace';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -27,7 +27,7 @@ export default function insertTable(
     format?: TableMetadataFormat
 ) {
     formatWithContentModel(editor, 'insertTable', model => {
-        const insertPosition = deleteSelection(model).insertPoint;
+        const insertPosition = deleteForReplace(model).insertPoint;
 
         if (insertPosition) {
             const doc = createContentModelDocument();

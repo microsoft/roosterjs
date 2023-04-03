@@ -1,7 +1,7 @@
 import handleBackspaceKey from '../../publicApi/editing/handleBackspaceKey';
 import handleDeleteKey from '../../publicApi/editing/handleDeleteKey';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -50,7 +50,11 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     willHandleEventExclusively(event: PluginEvent) {
         if (
             event.eventType == PluginEventType.KeyDown &&
-            (event.rawEvent.which == Keys.DELETE || event.rawEvent.which == Keys.BACKSPACE)
+            (event.rawEvent.which == Keys.DELETE || event.rawEvent.which == Keys.BACKSPACE) &&
+            !event.rawEvent.altKey &&
+            !event.rawEvent.ctrlKey &&
+            !event.rawEvent.shiftKey &&
+            !event.rawEvent.metaKey
         ) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             return true;

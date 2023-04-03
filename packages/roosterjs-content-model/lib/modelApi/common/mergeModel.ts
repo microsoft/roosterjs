@@ -9,8 +9,9 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPoint } from '../selection/deleteSelections';
+import { deleteForReplace } from '../selection/deleteForReplace';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { InsertPoint } from '../editing/DeleteSelectionStep';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
 
@@ -41,7 +42,7 @@ export function mergeModel(
     source: ContentModelDocument,
     options?: MergeModelOption
 ) {
-    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
+    const insertPosition = options?.insertPosition ?? deleteForReplace(target).insertPoint;
 
     if (insertPosition) {
         for (let i = 0; i < source.blocks.length; i++) {

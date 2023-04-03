@@ -2,7 +2,7 @@ import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
-import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
+import { OnDeleteEntity } from '../../modelApi/editing/DeleteSelectionStep';
 
 /**
  * @internal

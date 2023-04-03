@@ -1,10 +1,20 @@
-import { deleteSelection } from '../../modelApi/selection/deleteSelections';
+import { deleteFromSibling } from '../../modelApi/editing/deleteFromSibling';
+import { deleteSelectedContent } from '../../modelApi/editing/deleteSelectedContent';
+import { DeleteSelectionStep } from '../../modelApi/editing/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { invokeDeleteSteps } from '../../modelApi/editing/invokeDeleteSteps';
+import { mergeAfterDelete } from '../../modelApi/editing/mergeAfterDelete';
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
 } from '../../editor/utils/handleKeyboardEventCommon';
+
+const DeleteSteps: DeleteSelectionStep[] = [
+    deleteSelectedContent,
+    deleteFromSibling,
+    mergeAfterDelete,
+];
 
 /**
  * Handle Delete key event
@@ -14,7 +24,7 @@ export default function handleDeleteKey(editor: IContentModelEditor, rawEvent: K
         editor,
         'handleDeleteKey',
         model => {
-            const { isChanged } = deleteSelection(model, {
+            const { isChanged } = invokeDeleteSteps(DeleteSteps, model, {
                 direction: 'forward',
                 onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent),
             });
