@@ -54,31 +54,20 @@ const UNIDENTIFIED_CODE = [0, 229];
 export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvider>
     implements EditorPlugin {
     private core: PickerPluginCore | null = null;
-    private pluginDataProvider: T | undefined = undefined;
-    private pickerOptions: PickerPluginOptions | undefined = undefined;
 
     /**
      * Creates a new instance of PickerPlugin
      * @param dataProvider the data object contaning the callbacks functions for the picker actions, such as initialize and selectOption
      * @param pickerOptions the picker options, such the trigger character for the picker
      */
-    constructor(dataProvider: T, pickerOptions: PickerPluginOptions) {
-        this.pluginDataProvider = dataProvider;
-        this.pickerOptions = pickerOptions;
-    }
+    constructor(public readonly dataProvider: T, private pickerOptions: PickerPluginOptions) {}
 
     /**
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
     public initialize(editor: IEditor) {
-        if (this.pluginDataProvider && this.pickerOptions) {
-            this.core = new PickerPluginCore(editor, this.pluginDataProvider, this.pickerOptions);
-        }
-    }
-
-    public get dataProvider() {
-        return this.core?.dataProvider;
+        this.core = new PickerPluginCore(editor, this.dataProvider, this.pickerOptions);
     }
 
     /**
@@ -107,8 +96,6 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
      * Dispose this plugin
      */
     public dispose() {
-        this.pluginDataProvider = undefined;
-        this.pickerOptions = undefined;
         if (this.core) {
             this.core.dispose();
             this.core = null;
@@ -136,7 +123,7 @@ class PickerPluginCore<T extends PickerDataProvider = PickerDataProvider> {
 
     constructor(
         private editor: IEditor,
-        public dataProvider: T,
+        private dataProvider: T,
         private pickerOptions: PickerPluginOptions
     ) {
         this.dataProvider.onInitalize(
