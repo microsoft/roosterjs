@@ -19,5 +19,7 @@ export const setContentModel: SetContentModel = (core, model, option) => {
         }
     );
 
-    core.api.select(core, range);
+    if (!core.lifecycle.shadowEditFragment) {
+        core.api.select(core, range);
+    }
 };

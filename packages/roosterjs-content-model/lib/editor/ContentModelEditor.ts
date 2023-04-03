@@ -2,7 +2,6 @@ import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument'
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -24,13 +23,6 @@ export default class ContentModelEditor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
-
-        const core = this.getCore();
-
-        if (core.reuseModel) {
-            // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
-            core.api.switchShadowEdit = switchShadowEdit;
-        }
     }
 
     /**

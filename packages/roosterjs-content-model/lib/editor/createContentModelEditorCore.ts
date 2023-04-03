@@ -6,6 +6,7 @@ import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { setContentModel } from './coreApi/setContentModel';
+import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
 /**
  * @internal
@@ -16,16 +17,17 @@ export const createContentModelEditorCore: CoreCreator<
 > = (contentDiv, options) => {
     const core = createEditorCore(contentDiv, options);
     const experimentalFeatures = core.lifecycle.experimentalFeatures;
+    const reuseModel = isFeatureEnabled(
+        experimentalFeatures,
+        ExperimentalFeatures.ReusableContentModel
+    );
 
     return {
         ...core,
         defaultDomToModelOptions: options.defaultDomToModelOptions || {},
         defaultModelToDomOptions: options.defaultModelToDomOptions || {},
         defaultFormat: getDefaultSegmentFormat(core),
-        reuseModel: isFeatureEnabled(
-            experimentalFeatures,
-            ExperimentalFeatures.ReusableContentModel
-        ),
+        reuseModel,
         addDelimiterForEntity: isFeatureEnabled(
             experimentalFeatures,
             ExperimentalFeatures.InlineEntityReadOnlyDelimiters
@@ -35,6 +37,7 @@ export const createContentModelEditorCore: CoreCreator<
             createEditorContext,
             createContentModel,
             setContentModel,
+            switchShadowEdit: reuseModel ? switchShadowEdit : core.api.switchShadowEdit, // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
         },
         originalApi: {
             ...core.originalApi,
