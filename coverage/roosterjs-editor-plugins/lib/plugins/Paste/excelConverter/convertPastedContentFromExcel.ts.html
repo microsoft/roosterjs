@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.84% </span>
+                <span class="strong">53.13% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>17/31</span>
+                <span class='fraction'>17/32</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">23.08% </span>
+                <span class="strong">18.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/26</span>
+                <span class='fraction'>6/33</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.84% </span>
+                <span class="strong">53.13% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>17/31</span>
+                <span class='fraction'>17/32</span>
             </div>
         
             
@@ -124,7 +124,8 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -151,6 +152,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -210,25 +212,26 @@ export default function <span class="fstat-no" title="function not covered" >con
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = <span class="cstat-no" title="statement not covered" >event;</span>
-    const html = <span class="cstat-no" title="statement not covered" >excelHandler(clipboardData.html, htmlBefore);</span>
+    const html = <span class="cstat-no" title="statement not covered" >clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >    if (clipboardData.html != html) {</span>
+<span class="cstat-no" title="statement not covered" >    if (html &amp;&amp; clipboardData.html != html) {</span>
         const doc = <span class="cstat-no" title="statement not covered" >new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');</span>
 <span class="cstat-no" title="statement not covered" >        moveChildNodes(fragment, doc?.body);</span>
     }
 &nbsp;
     // For Excel Online
-<span class="cstat-no" title="statement not covered" >    if (fragment.childNodes.length &gt; 0 &amp;&amp; getTagOfNode(fragment.firstChild) == 'DIV') {</span>
-        const tableFound = <span class="cstat-no" title="statement not covered" >Array.from(fragment.firstChild.childNodes).every(<span class="fstat-no" title="function not covered" >(c</span>hild: Node) =&gt; {</span>
+    const firstChild = <span class="cstat-no" title="statement not covered" >fragment.firstChild;</span>
+<span class="cstat-no" title="statement not covered" >    if (firstChild &amp;&amp; firstChild.childNodes.length &gt; 0 &amp;&amp; getTagOfNode(firstChild) == 'DIV') {</span>
+        const tableFound = <span class="cstat-no" title="statement not covered" >Array.from(firstChild.childNodes).every(<span class="fstat-no" title="function not covered" >(c</span>hild: Node) =&gt; {</span>
             // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
 <span class="cstat-no" title="statement not covered" >            return getTagOfNode(child) == 'META'</span>
                 ? true
-                : getTagOfNode(child) == 'TABLE' &amp;&amp; child == fragment.firstChild.lastChild;
+                : getTagOfNode(child) == 'TABLE' &amp;&amp; child == firstChild.lastChild;
         });
 &nbsp;
         // Extract Table from Div
-<span class="cstat-no" title="statement not covered" >        if (tableFound) {</span>
-<span class="cstat-no" title="statement not covered" >            event.fragment.replaceChildren(fragment.firstChild.lastChild);</span>
+<span class="cstat-no" title="statement not covered" >        if (tableFound &amp;&amp; firstChild.lastChild) {</span>
+<span class="cstat-no" title="statement not covered" >            event.fragment.replaceChildren(firstChild.lastChild);</span>
         }
     }
 &nbsp;
@@ -265,7 +268,7 @@ export function excelHandler(html: string, htmlBefore: string): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 04 2023 18:19:41 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 04 2023 21:25:18 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
