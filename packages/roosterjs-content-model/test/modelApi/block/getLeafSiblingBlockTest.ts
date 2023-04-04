@@ -1,9 +1,11 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { getLeafSiblingBlock } from '../../../lib/modelApi/block/getLeafSiblingBlock';
 
 describe('getLeafSiblingBlock', () => {
@@ -277,6 +279,75 @@ describe('getLeafSiblingBlock', () => {
         });
         expect(resultAfter).toEqual({
             block: table2,
+            path: [model],
+        });
+    });
+
+    it('Block is under general segment, has sibling segment', () => {
+        const block = createParagraph();
+        const general = createGeneralSegment(null!);
+        const parentParagraph = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+        const model = createContentModelDocument();
+
+        general.blocks.push(block);
+        parentParagraph.segments.push(text1, general, text2);
+        model.blocks.push(parentParagraph);
+
+        const resultBefore = getLeafSiblingBlock([general, model], block, false);
+        const resultAfter = getLeafSiblingBlock([general, model], block, true);
+
+        expect(resultBefore).toEqual({
+            block: parentParagraph,
+            path: [model],
+            siblingSegment: text1,
+        });
+        expect(resultAfter).toEqual({
+            block: parentParagraph,
+            path: [model],
+            siblingSegment: text2,
+        });
+    });
+
+    it('Block is under general segment, no sibling segment, no sibling block', () => {
+        const block = createParagraph();
+        const general = createGeneralSegment(null!);
+        const parentParagraph = createParagraph();
+        const model = createContentModelDocument();
+
+        general.blocks.push(block);
+        parentParagraph.segments.push(general);
+        model.blocks.push(parentParagraph);
+
+        const resultBefore = getLeafSiblingBlock([general, model], block, false);
+        const resultAfter = getLeafSiblingBlock([general, model], block, true);
+
+        expect(resultBefore).toEqual(null);
+        expect(resultAfter).toEqual(null);
+    });
+
+    it('Block is under general segment, no sibling segment, has sibling blocks', () => {
+        const block = createParagraph();
+        const general = createGeneralSegment(null!);
+        const parentParagraph1 = createParagraph(false, { lineHeight: '1' });
+        const parentParagraph2 = createParagraph(false, { lineHeight: '2' });
+        const parentParagraph3 = createParagraph(false, { lineHeight: '3' });
+        const model = createContentModelDocument();
+
+        general.blocks.push(block);
+        parentParagraph2.segments.push(general);
+        model.blocks.push(parentParagraph1, parentParagraph2, parentParagraph3);
+
+        const resultBefore = getLeafSiblingBlock([general, model], block, false);
+        const resultAfter = getLeafSiblingBlock([general, model], block, true);
+
+        expect(resultBefore).toEqual({
+            block: parentParagraph1,
+            path: [model],
+        });
+        expect(resultAfter).toEqual({
+            block: parentParagraph3,
             path: [model],
         });
     });
