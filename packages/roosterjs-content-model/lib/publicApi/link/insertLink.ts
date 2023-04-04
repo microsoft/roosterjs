@@ -1,6 +1,6 @@
 import { addLink } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
-import { ChangeSource } from 'roosterjs-editor-types/lib';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
