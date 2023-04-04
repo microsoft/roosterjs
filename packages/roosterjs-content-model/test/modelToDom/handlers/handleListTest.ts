@@ -890,7 +890,7 @@ describe('handleList handles metadata', () => {
                 '<ol start="1" style="flex-direction: column; display: flex;"><ul style="flex-direction: column; display: flex;"></ul></ol>',
                 '<ol style="flex-direction: column; display: flex;" start="1"><ul style="flex-direction: column; display: flex;"></ul></ol>',
             ].indexOf(parent.innerHTML) >= 0
-        ).toBeTrue;
+        ).toBeTrue();
         expect(onNodeCreated).toHaveBeenCalledTimes(2);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listLevel0);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
