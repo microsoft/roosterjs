@@ -121,4 +121,9 @@ export const enum PluginEventType {
      * Editor changed the selection.
      */
     SelectionChanged = 22,
+
+    /**
+     * Before Paste event, provide a chance to change paste content using Content Model
+     */
+    ContentModelBeforePaste = 23,
 }

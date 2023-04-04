@@ -126,6 +126,7 @@ export {
 } from './context/ModelToDomSettings';
 export { ElementProcessor } from './context/ElementProcessor';
 export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
+export { ContentModelBeforePasteEventData } from './event/ContentModelBeforePasteEvent';
 
 export { Border } from './interface/Border';
 
