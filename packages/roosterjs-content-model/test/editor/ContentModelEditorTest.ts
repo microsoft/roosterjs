@@ -23,7 +23,7 @@ describe('ContentModelEditor', () => {
 
         const mockedResult = 'Result' as any;
 
-        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
+        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
         spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
 
         const model = editor.createContentModel();
@@ -53,7 +53,7 @@ describe('ContentModelEditor', () => {
         const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
 
-        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
+        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
 
         editor.setContentModel(mockedModel);
@@ -64,7 +64,7 @@ describe('ContentModelEditor', () => {
             div,
             mockedModel,
             editorContext,
-            undefined
+            {}
         );
     });
 
@@ -81,7 +81,7 @@ describe('ContentModelEditor', () => {
         const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
 
-        spyOn(editor as any, 'createEditorContext').and.returnValue(editorContext);
+        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
         spyOn(contentModelToDom, 'default').and.returnValue(mockedResult);
 
         editor.setContentModel(mockedModel);
@@ -92,7 +92,7 @@ describe('ContentModelEditor', () => {
             div,
             mockedModel,
             editorContext,
-            undefined
+            {}
         );
     });
 
@@ -123,6 +123,15 @@ describe('ContentModelEditor', () => {
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [],
+            format: {
+                fontWeight: undefined,
+                italic: undefined,
+                underline: undefined,
+                fontFamily: undefined,
+                fontSize: undefined,
+                textColor: undefined,
+                backgroundColor: undefined,
+            },
         });
     });
 
@@ -133,7 +142,7 @@ describe('ContentModelEditor', () => {
         });
         const cachedModel = 'MODEL' as any;
 
-        (editor as any).cachedModel = cachedModel;
+        (editor as any).core.cachedModel = cachedModel;
 
         spyOn(domToContentModel, 'default');
 
@@ -152,11 +161,11 @@ describe('ContentModelEditor', () => {
 
         editor.cacheContentModel(cachedModel);
 
-        expect((editor as any).cachedModel).toBe(cachedModel);
+        expect((editor as any).core.cachedModel).toBe(cachedModel);
 
         editor.cacheContentModel(null);
 
-        expect((editor as any).cachedModel).toBe(null);
+        expect((editor as any).core.cachedModel).toBe(undefined);
     });
 
     it('default format', () => {
