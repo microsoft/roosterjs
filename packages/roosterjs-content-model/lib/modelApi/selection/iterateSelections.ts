@@ -113,6 +113,9 @@ function internalIterateSelections(
 
                         for (let colIndex = 0; colIndex < row.length; colIndex++) {
                             const cell = row[colIndex];
+                            if (!cell) {
+                                continue;
+                            }
 
                             const newTable: TableSelectionContext = {
                                 table: block,
