@@ -1,6 +1,5 @@
-import { Browser, getComputedStyles, getObjectKeys, setColor } from 'roosterjs-editor-dom';
+import { Browser, getObjectKeys, setColor } from 'roosterjs-editor-dom';
 import {
-    DefaultFormat,
     DocumentCommand,
     EditorOptions,
     IEditor,
@@ -53,7 +52,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private editor: IEditor | null = null;
     private state: LifecyclePluginState;
     private initialContent: string;
-    private contentDivFormat: string[];
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
     private adjustColor: () => void;
@@ -65,7 +63,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      */
     constructor(options: EditorOptions, contentDiv: HTMLDivElement) {
         this.initialContent = options.initialContent || contentDiv.innerHTML || '';
-        this.contentDivFormat = getComputedStyles(contentDiv);
 
         // Make the container editable and set its selection styles
         if (contentDiv.getAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME) === null) {
@@ -133,9 +130,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     initialize(editor: IEditor) {
         this.editor = editor;
 
-        // Calculate default format
-        this.recalculateDefaultFormat();
-
         // Ensure initial content and its format
         this.editor.setContent(this.initialContent, false /*triggerContentChangedEvent*/);
 
@@ -195,7 +189,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                 event.source == ChangeSource.SwitchToLightMode)
         ) {
             this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
-            this.recalculateDefaultFormat();
             this.adjustColor();
         }
     }
@@ -207,59 +200,5 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                 this.editor?.getDocument().execCommand(command, false, COMMANDS[command]);
             } catch {}
         });
-    }
-
-    private recalculateDefaultFormat() {
-        const { defaultFormat: baseFormat, isDarkMode } = this.state;
-
-        if (isDarkMode && baseFormat) {
-            if (!baseFormat.backgroundColors) {
-                baseFormat.backgroundColors = DARK_MODE_DEFAULT_FORMAT.backgroundColors;
-            }
-            if (!baseFormat.textColors) {
-                baseFormat.textColors = DARK_MODE_DEFAULT_FORMAT.textColors;
-            }
-        }
-
-        if (baseFormat && getObjectKeys(baseFormat).length === 0) {
-            return;
-        }
-
-        const {
-            fontFamily,
-            fontSize,
-            textColor,
-            textColors,
-            backgroundColor,
-            backgroundColors,
-            bold,
-            italic,
-            underline,
-        } = baseFormat || <DefaultFormat>{};
-        const defaultFormat = this.contentDivFormat;
-
-        this.state.defaultFormat = {
-            fontFamily: fontFamily || defaultFormat[0],
-            fontSize: fontSize || defaultFormat[1],
-            get textColor() {
-                return textColors
-                    ? isDarkMode
-                        ? textColors.darkModeColor
-                        : textColors.lightModeColor
-                    : textColor || defaultFormat[2];
-            },
-            textColors: textColors,
-            get backgroundColor() {
-                return backgroundColors
-                    ? isDarkMode
-                        ? backgroundColors.darkModeColor
-                        : backgroundColors.lightModeColor
-                    : backgroundColor || '';
-            },
-            backgroundColors: backgroundColors,
-            bold: bold,
-            italic: italic,
-            underline: underline,
-        };
     }
 }
