@@ -5,6 +5,7 @@ import {
     DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 import {
     DefaultStyleMap,
@@ -78,6 +79,13 @@ export interface ModelToDomOption {
      * Overrides default element styles
      */
     defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
+
+    /**
+     * An optional callback that will be called when a DOM node is created
+     * @param modelElement The related Content Model element
+     * @param node The node created for this model element
+     */
+    onNodeCreated?: OnNodeCreated;
 }
 
 /**

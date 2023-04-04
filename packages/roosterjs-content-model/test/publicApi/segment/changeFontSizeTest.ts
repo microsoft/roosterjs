@@ -363,25 +363,28 @@ describe('changeFontSize', () => {
 
         changeFontSize(editor, 'increase');
 
-        expect(setContentModel).toHaveBeenCalledWith({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {
-                                fontSize: '22pt',
-                                superOrSubScriptSequence: 'sub',
+        expect(setContentModel).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    fontSize: '22pt',
+                                    superOrSubScriptSequence: 'sub',
+                                },
+                                isSelected: true,
                             },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+                        ],
+                    },
+                ],
+            },
+            { onNodeCreated: undefined }
+        );
     });
 });
