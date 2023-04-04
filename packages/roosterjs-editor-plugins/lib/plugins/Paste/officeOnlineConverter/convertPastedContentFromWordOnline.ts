@@ -109,7 +109,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
             let listType: 'OL' | 'UL' | null = getContainerListType(listItemContainer); // list type that is contained by iterator.
             if (listType) {
                 // Initialize processed element with proper listType if this is the first element
-                if (!convertedListElement && listType) {
+                if (!convertedListElement) {
                     convertedListElement = createNewList(listItemContainer, doc, listType);
                 }
 
@@ -221,7 +221,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
             const { listItemContainers } = curListItemBlock;
             const lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
             if (
-                (lastItemInCurBlock.parentNode && curItem == lastItemInCurBlock.nextSibling) ||
+                curItem == lastItemInCurBlock.nextSibling ||
                 (lastItemInCurBlock.parentNode &&
                     getFirstLeafNode(curItem) ==
                         getNextLeafSibling(lastItemInCurBlock.parentNode, lastItemInCurBlock))
@@ -236,7 +236,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
         }
     }
 
-    if (curListItemBlock && curListItemBlock?.listItemContainers.length > 0) {
+    if (curListItemBlock && curListItemBlock.listItemContainers.length > 0) {
         result.push(curListItemBlock);
     }
 

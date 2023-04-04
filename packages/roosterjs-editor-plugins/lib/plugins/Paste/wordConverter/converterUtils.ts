@@ -28,126 +28,122 @@ const LINE_BREAKS = /[\n|\r]/gi;
  */
 export function processNodesDiscovery(wordConverter: WordConverter): boolean {
     let args = wordConverter.wordConverterArgs;
-    if (args) {
-        while (args.currentIndex < args.nodes.length) {
-            let node = args.nodes.item(args.currentIndex);
+    if (!args) {
+        return false;
+    }
+    while (args.currentIndex < args.nodes.length) {
+        let node = args.nodes.item(args.currentIndex);
 
-            // Try to get the list metadata for the specified node
-            let itemMetadata = getListItemMetadata(node);
-            if (itemMetadata) {
-                let levelInfo =
-                    args.currentListIdsByLevels[itemMetadata.level - 1] || createLevelLists();
-                args.currentListIdsByLevels[itemMetadata.level - 1] = levelInfo;
+        // Try to get the list metadata for the specified node
+        let itemMetadata = getListItemMetadata(node);
+        if (itemMetadata) {
+            let levelInfo =
+                args.currentListIdsByLevels[itemMetadata.level - 1] || createLevelLists();
+            args.currentListIdsByLevels[itemMetadata.level - 1] = levelInfo;
 
-                // We need to drop some list information if this is not an item next to another
-                if (
-                    args.lastProcessedItem &&
-                    getRealPreviousSibling(node) != args.lastProcessedItem
-                ) {
-                    // This list item is not next to the previous one. This means that there is some content in between them
-                    // so we need to reset our list of list ids per level
-                    resetCurrentLists(args);
-                }
-
-                // Get the list metadata for the list that will hold this item
-                let listMetadata = levelInfo.listsMetadata[itemMetadata.wordListId];
-                if (!listMetadata) {
-                    // Get the first item fake bullet.. This will be used later to check what is the right type of list
-                    let firstFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
-
-                    // This is a the first item of a list.. We'll create the list metadata using the information
-                    // we already have from this first item
-                    listMetadata = {
-                        numberOfItems: 0,
-                        uniqueListId: wordConverter.nextUniqueId++,
-                        firstFakeBullet: firstFakeBullet,
-
-                        // If the bullet we got is empty or not found, we ignore the list out.. this means
-                        // that this is not an item we need to convert of that the format doesn't match what
-                        // we are expecting
-                        ignore: !firstFakeBullet || firstFakeBullet.length == 0,
-
-                        // We'll use the first fake bullet to try to figure out which type of list we create. If this list has a second
-                        // item, we'll perform a better comparison, but for one item lists, this will be check that will determine the list type
-                        tagName: getFakeBulletTagName(firstFakeBullet),
-                    };
-                    levelInfo.listsMetadata[itemMetadata.wordListId] = listMetadata;
-                    args.lists[listMetadata.uniqueListId.toString()] = listMetadata;
-                } else if (!listMetadata.ignore && listMetadata.numberOfItems == 1) {
-                    // This is the second item we've seen for this list.. we'll compare the 2 fake bullet
-                    // items we have an decide if we create ordered or unordered lists based on this.
-                    // This is the best way we can do this since we cannot read the metadata that Word
-                    // puts in the head of the HTML...
-                    let secondFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
-                    listMetadata.tagName =
-                        listMetadata.firstFakeBullet == secondFakeBullet ? 'UL' : 'OL';
-                }
-
-                // Set the unique id to the list
-                itemMetadata.uniqueListId = listMetadata.uniqueListId;
-
-                // Check if we need to ignore this list... we'll either know already that we need to ignore
-                // it, or we'll know it because the previous list items are not next to this one
-                if (
-                    listMetadata.ignore ||
-                    (listMetadata.tagName == 'OL' &&
-                        listMetadata.numberOfItems > 0 &&
-                        levelInfo.currentUniqueListId != itemMetadata.uniqueListId)
-                ) {
-                    // We need to ignore this item... and we also need to forget about the lists that
-                    // are not at the root level
-                    listMetadata.ignore = true;
-                    args.currentListIdsByLevels[0].currentUniqueListId = -1;
-                    args.currentListIdsByLevels = args.currentListIdsByLevels.slice(0, 1);
-                } else {
-                    // This is an item we don't need to ignore... If added lists deep under this one before
-                    // we'll drop their ids from the list of ids per level.. this is because this list item
-                    // breaks the deeper lists.
-                    if (args.currentListIdsByLevels.length > itemMetadata.level) {
-                        args.currentListIdsByLevels = args.currentListIdsByLevels.slice(
-                            0,
-                            itemMetadata.level
-                        );
-                    }
-
-                    levelInfo.currentUniqueListId = itemMetadata.uniqueListId;
-
-                    // Add the list item into the list of items to be processed
-                    args.listItems.push(itemMetadata);
-                    listMetadata.numberOfItems++;
-                }
-
-                args.lastProcessedItem = node;
-            } else {
-                // Here, we know that this is not a list item, but we'll want to check if it is one "no bullet" list items...
-                // these can be created by creating a bullet and hitting delete on it it... The content will continue to be indented, but there will
-                // be no bullet and the list will continue correctly after that. Visually, it looks like the previous item has multiple lines, but
-                // the HTML generated has multiple paragraphs with the same class. We'll merge these when we find them, so the logic doesn't skips
-                // the list conversion thinking that the list items are not together...
-                let last = args.lastProcessedItem;
-                if (
-                    last &&
-                    getRealPreviousSibling(node) == last &&
-                    node.tagName == last.tagName &&
-                    node.className == last.className
-                ) {
-                    // Add 2 line breaks and move all the nodes to the last item
-                    last.appendChild(last.ownerDocument.createElement('br'));
-                    last.appendChild(last.ownerDocument.createElement('br'));
-                    moveChildNodes(last, node, true /*keepExistingChildren*/);
-
-                    // Remove the item that we don't need anymore
-                    node.parentNode?.removeChild(node);
-                }
+            // We need to drop some list information if this is not an item next to another
+            if (args.lastProcessedItem && getRealPreviousSibling(node) != args.lastProcessedItem) {
+                // This list item is not next to the previous one. This means that there is some content in between them
+                // so we need to reset our list of list ids per level
+                resetCurrentLists(args);
             }
 
-            // Move to the next element are return true if more elements need to be processed
-            args.currentIndex++;
-        }
-        return args.listItems.length > 0;
-    }
+            // Get the list metadata for the list that will hold this item
+            let listMetadata = levelInfo.listsMetadata[itemMetadata.wordListId];
+            if (!listMetadata) {
+                // Get the first item fake bullet.. This will be used later to check what is the right type of list
+                let firstFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
 
-    return false;
+                // This is a the first item of a list.. We'll create the list metadata using the information
+                // we already have from this first item
+                listMetadata = {
+                    numberOfItems: 0,
+                    uniqueListId: wordConverter.nextUniqueId++,
+                    firstFakeBullet: firstFakeBullet,
+
+                    // If the bullet we got is empty or not found, we ignore the list out.. this means
+                    // that this is not an item we need to convert of that the format doesn't match what
+                    // we are expecting
+                    ignore: !firstFakeBullet || firstFakeBullet.length == 0,
+
+                    // We'll use the first fake bullet to try to figure out which type of list we create. If this list has a second
+                    // item, we'll perform a better comparison, but for one item lists, this will be check that will determine the list type
+                    tagName: getFakeBulletTagName(firstFakeBullet),
+                };
+                levelInfo.listsMetadata[itemMetadata.wordListId] = listMetadata;
+                args.lists[listMetadata.uniqueListId.toString()] = listMetadata;
+            } else if (!listMetadata.ignore && listMetadata.numberOfItems == 1) {
+                // This is the second item we've seen for this list.. we'll compare the 2 fake bullet
+                // items we have an decide if we create ordered or unordered lists based on this.
+                // This is the best way we can do this since we cannot read the metadata that Word
+                // puts in the head of the HTML...
+                let secondFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
+                listMetadata.tagName =
+                    listMetadata.firstFakeBullet == secondFakeBullet ? 'UL' : 'OL';
+            }
+
+            // Set the unique id to the list
+            itemMetadata.uniqueListId = listMetadata.uniqueListId;
+
+            // Check if we need to ignore this list... we'll either know already that we need to ignore
+            // it, or we'll know it because the previous list items are not next to this one
+            if (
+                listMetadata.ignore ||
+                (listMetadata.tagName == 'OL' &&
+                    listMetadata.numberOfItems > 0 &&
+                    levelInfo.currentUniqueListId != itemMetadata.uniqueListId)
+            ) {
+                // We need to ignore this item... and we also need to forget about the lists that
+                // are not at the root level
+                listMetadata.ignore = true;
+                args.currentListIdsByLevels[0].currentUniqueListId = -1;
+                args.currentListIdsByLevels = args.currentListIdsByLevels.slice(0, 1);
+            } else {
+                // This is an item we don't need to ignore... If added lists deep under this one before
+                // we'll drop their ids from the list of ids per level.. this is because this list item
+                // breaks the deeper lists.
+                if (args.currentListIdsByLevels.length > itemMetadata.level) {
+                    args.currentListIdsByLevels = args.currentListIdsByLevels.slice(
+                        0,
+                        itemMetadata.level
+                    );
+                }
+
+                levelInfo.currentUniqueListId = itemMetadata.uniqueListId;
+
+                // Add the list item into the list of items to be processed
+                args.listItems.push(itemMetadata);
+                listMetadata.numberOfItems++;
+            }
+
+            args.lastProcessedItem = node;
+        } else {
+            // Here, we know that this is not a list item, but we'll want to check if it is one "no bullet" list items...
+            // these can be created by creating a bullet and hitting delete on it it... The content will continue to be indented, but there will
+            // be no bullet and the list will continue correctly after that. Visually, it looks like the previous item has multiple lines, but
+            // the HTML generated has multiple paragraphs with the same class. We'll merge these when we find them, so the logic doesn't skips
+            // the list conversion thinking that the list items are not together...
+            let last = args.lastProcessedItem;
+            if (
+                last &&
+                getRealPreviousSibling(node) == last &&
+                node.tagName == last.tagName &&
+                node.className == last.className
+            ) {
+                // Add 2 line breaks and move all the nodes to the last item
+                last.appendChild(last.ownerDocument.createElement('br'));
+                last.appendChild(last.ownerDocument.createElement('br'));
+                moveChildNodes(last, node, true /*keepExistingChildren*/);
+
+                // Remove the item that we don't need anymore
+                node.parentNode?.removeChild(node);
+            }
+        }
+
+        // Move to the next element are return true if more elements need to be processed
+        args.currentIndex++;
+    }
+    return args.listItems.length > 0;
 }
 
 /**
