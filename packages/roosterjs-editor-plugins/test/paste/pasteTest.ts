@@ -3,8 +3,8 @@ import * as convertPastedContentForLI from '../../lib/plugins/Paste/commonConver
 import * as convertPastedContentFromExcel from '../../lib/plugins/Paste/excelConverter/convertPastedContentFromExcel';
 import * as convertPastedContentFromPowerPoint from '../../lib/plugins/Paste/pptConverter/convertPastedContentFromPowerPoint';
 import * as convertPastedContentFromWord from '../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
+import * as getPasteSource from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
 import * as handleLineMerge from '../../lib/plugins/Paste/lineMerge/handleLineMerge';
-import * as roosterDOM from 'roosterjs-editor-dom';
 import * as sanitizeHtmlColorsFromPastedContent from '../../lib/plugins/Paste/sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import * as wordOnlineFile from '../../lib/plugins/Paste/officeOnlineConverter/convertPastedContentFromWordOnline';
 import { Editor } from 'roosterjs-editor-core';
@@ -67,7 +67,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Word Content', () => {
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.WordDesktop);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WordDesktop);
             spyOn(convertPastedContentFromWord, 'default').and.callFake(() => {});
 
             paste.onPluginEvent(ev);
@@ -79,7 +79,7 @@ describe('Paste Plugin Test', () => {
         it('Excel Content', () => {
             const mockHandler = <TrustedHTMLHandler>{};
 
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.ExcelDesktop);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.ExcelDesktop);
             spyOn(convertPastedContentFromExcel, 'default').and.callFake(() => {});
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
 
@@ -95,7 +95,7 @@ describe('Paste Plugin Test', () => {
         it('PowerPoint Content', () => {
             const mockHandler = <TrustedHTMLHandler>{};
 
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(
+            spyOn(getPasteSource, 'default').and.returnValue(
                 KnownPasteSourceType.PowerPointDesktop
             );
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
@@ -116,7 +116,7 @@ describe('Paste Plugin Test', () => {
             tempEl.style.margin = '0px';
             ev.fragment.append(tempEl);
 
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.WacComponents);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WacComponents);
             spyOn(wordOnlineFile, 'isWordOnlineWithList').and.returnValue(false);
 
             paste.onPluginEvent(ev);
@@ -126,7 +126,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Document with WAC elements with list', () => {
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.WacComponents);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WacComponents);
             spyOn(wordOnlineFile, 'isWordOnlineWithList').and.returnValue(true);
             spyOn(wordOnlineFile, 'default').and.callFake(() => {});
 
@@ -137,7 +137,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Document from google sheets', () => {
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.GoogleSheets);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.GoogleSheets);
 
             paste.onPluginEvent(ev);
 
@@ -151,7 +151,7 @@ describe('Paste Plugin Test', () => {
         it('Convert SIngle Image', () => {
             const mockHandler = <TrustedHTMLHandler>{};
             spyOn(editor, 'getTrustedHTMLHandler').and.returnValue(mockHandler);
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.SingleImage);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.SingleImage);
             spyOn(convertPasteContentForSingleImage, 'default');
 
             paste.onPluginEvent(ev);
@@ -164,7 +164,7 @@ describe('Paste Plugin Test', () => {
         });
 
         it('Any doc', () => {
-            spyOn(roosterDOM, 'getPasteSource').and.returnValue(KnownPasteSourceType.Default);
+            spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.Default);
             spyOn(convertPastedContentForLI, 'default');
             spyOn(handleLineMerge, 'default');
 
