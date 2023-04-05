@@ -100,42 +100,52 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
         flattenListBlock(fragment, itemBlock);
 
         // Find the node to insertBefore, which is next sibling node of the end of a listItemBlock.
-        itemBlock.insertPositionNode = itemBlock.endElement.nextSibling;
+        itemBlock.insertPositionNode = itemBlock.endElement?.nextSibling ?? null;
 
-        let convertedListElement: Element;
+        let convertedListElement: Element | undefined = undefined;
         const doc = fragment.ownerDocument;
 
         itemBlock.listItemContainers.forEach(listItemContainer => {
-            let listType: 'OL' | 'UL' = getContainerListType(listItemContainer); // list type that is contained by iterator.
-            // Initialize processed element with proper listType if this is the first element
-            if (!convertedListElement) {
-                convertedListElement = createNewList(listItemContainer, doc, listType);
-            }
-
-            // Get all list items(<li>) in the current iterator element.
-            const currentListItems = toArray(listItemContainer.querySelectorAll('li'));
-            currentListItems.forEach(item => {
-                // If item is in root level and the type of list changes then
-                // insert the current list into body and then reinitialize the convertedListElement
-                // Word Online is using data-aria-level to determine the the depth of the list item.
-                const itemLevel = parseInt(item.getAttribute('data-aria-level'));
-                // In first level list, there are cases where a consecutive list item DIV may have different list type
-                // When that happens we need to insert the processed elements into the document, then change the list type
-                // and keep the processing going.
-                if (getTagOfNode(convertedListElement) != listType && itemLevel == 1) {
-                    insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
+            let listType: 'OL' | 'UL' | null = getContainerListType(listItemContainer); // list type that is contained by iterator.
+            if (listType) {
+                // Initialize processed element with proper listType if this is the first element
+                if (!convertedListElement) {
                     convertedListElement = createNewList(listItemContainer, doc, listType);
                 }
-                insertListItem(convertedListElement, item, listType, doc);
-            });
-        });
 
-        insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
+                // Get all list items(<li>) in the current iterator element.
+                const currentListItems = toArray(listItemContainer.querySelectorAll('li'));
+                currentListItems.forEach(item => {
+                    // If item is in root level and the type of list changes then
+                    // insert the current list into body and then reinitialize the convertedListElement
+                    // Word Online is using data-aria-level to determine the the depth of the list item.
+                    const itemLevel = parseInt(item.getAttribute('data-aria-level') ?? '');
+                    // In first level list, there are cases where a consecutive list item DIV may have different list type
+                    // When that happens we need to insert the processed elements into the document, then change the list type
+                    // and keep the processing going.
+                    if (
+                        convertedListElement &&
+                        getTagOfNode(convertedListElement) != listType &&
+                        itemLevel == 1 &&
+                        listType
+                    ) {
+                        insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
+                        convertedListElement = createNewList(listItemContainer, doc, listType);
+                    }
+                    if (convertedListElement && listType) {
+                        insertListItem(convertedListElement, item, listType, doc);
+                    }
+                });
+            }
+        });
+        if (convertedListElement) {
+            insertConvertedListToDoc(convertedListElement, fragment, itemBlock);
+        }
 
         // Once we finish the process the list items and put them into a list.
         // After inserting the processed element,
         // we need to remove all the non processed node from the parent node.
-        const parentContainer = itemBlock.startElement.parentNode;
+        const parentContainer = itemBlock.startElement?.parentNode;
         if (parentContainer) {
             itemBlock.listItemContainers.forEach(listItemContainer => {
                 parentContainer.removeChild(listItemContainer);
@@ -157,7 +167,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
         if (safeInstanceOf(node, 'HTMLSpanElement')) {
             node.childNodes.forEach(childNode => {
                 if (getTagOfNode(childNode) != 'IMG') {
-                    childNode.parentElement.removeChild(childNode);
+                    childNode.parentElement?.removeChild(childNode);
                 }
             });
         }
@@ -202,7 +212,7 @@ function sanitizeListItemContainer(fragment: DocumentFragment) {
 function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
     const listElements = fragment.querySelectorAll('.' + LIST_CONTAINER_ELEMENT_CLASS_NAME);
     const result: ListItemBlock[] = [];
-    let curListItemBlock: ListItemBlock;
+    let curListItemBlock: ListItemBlock | null = null;
     for (let i = 0; i < listElements.length; i++) {
         let curItem = listElements[i];
         if (!curListItemBlock) {
@@ -212,8 +222,9 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
             const lastItemInCurBlock = listItemContainers[listItemContainers.length - 1];
             if (
                 curItem == lastItemInCurBlock.nextSibling ||
-                getFirstLeafNode(curItem) ==
-                    getNextLeafSibling(lastItemInCurBlock.parentNode, lastItemInCurBlock)
+                (lastItemInCurBlock.parentNode &&
+                    getFirstLeafNode(curItem) ==
+                        getNextLeafSibling(lastItemInCurBlock.parentNode, lastItemInCurBlock))
             ) {
                 listItemContainers.push(curItem);
                 curListItemBlock.endElement = curItem;
@@ -225,7 +236,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
         }
     }
 
-    if (curListItemBlock?.listItemContainers.length > 0) {
+    if (curListItemBlock && curListItemBlock.listItemContainers.length > 0) {
         result.push(curListItemBlock);
     }
 
@@ -238,17 +249,19 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
  * @param listItemBlock The list item block needed to be flattened.
  */
 function flattenListBlock(fragment: DocumentFragment, listItemBlock: ListItemBlock) {
-    const collapsedListItemSections = collapseNodes(
-        fragment,
-        listItemBlock.startElement,
-        listItemBlock.endElement,
-        true
-    );
-    collapsedListItemSections.forEach(section => {
-        if (getTagOfNode(section.firstChild) == 'DIV') {
-            unwrap(section);
-        }
-    });
+    if (listItemBlock.startElement && listItemBlock.endElement) {
+        const collapsedListItemSections = collapseNodes(
+            fragment,
+            listItemBlock.startElement,
+            listItemBlock.endElement,
+            true
+        );
+        collapsedListItemSections.forEach(section => {
+            if (getTagOfNode(section.firstChild) == 'DIV') {
+                unwrap(section);
+            }
+        });
+    }
 }
 
 /**
@@ -296,20 +309,24 @@ function insertListItem(
             // If the current level is empty, create empty list within the current level
             // then move the level iterator into the next level.
             curListLevel.appendChild(doc.createElement(listType));
-            curListLevel = curListLevel.firstElementChild;
+            if (curListLevel.firstElementChild) {
+                curListLevel = curListLevel.firstElementChild;
+            }
         } else {
             // If the current level is not empty, the last item in the needs to be a UL or OL
             // and the level iterator should move to the UL/OL at the last position.
             let lastChild = curListLevel.lastElementChild;
             let lastChildTag = getTagOfNode(lastChild);
-            if (lastChildTag == 'UL' || lastChildTag == 'OL') {
+            if (lastChild && (lastChildTag == 'UL' || lastChildTag == 'OL')) {
                 // If the last child is a list(UL/OL), then move the level iterator to last child.
                 curListLevel = lastChild;
             } else {
                 // If the last child is not a list, then append a new list to the level
                 // and move the level iterator to the new level.
                 curListLevel.appendChild(doc.createElement(listType));
-                curListLevel = curListLevel.lastElementChild;
+                if (curListLevel.lastElementChild) {
+                    curListLevel = curListLevel.lastElementChild;
+                }
             }
         }
         itemLevel--;
@@ -341,7 +358,7 @@ function insertConvertedListToDoc(
             parentNode.insertBefore(convertedListElement, insertPositionNode);
         }
     } else {
-        const parentNode = listItemBlock.startElement.parentNode;
+        const parentNode = listItemBlock.startElement?.parentNode;
         if (parentNode) {
             parentNode.appendChild(convertedListElement);
         } else {

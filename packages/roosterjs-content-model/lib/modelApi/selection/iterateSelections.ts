@@ -30,6 +30,15 @@ export interface IterateSelectionsOption {
     contentUnderSelectedTableCell?: 'include' | 'ignoreForTable' | 'ignoreForTableOrCell';
 
     /**
+     * For a selected general element, this property determines how do we handle its content.
+     * contentOnly: (Default) When the whole general element is selected, we only invoke callback for its selected content
+     * generalElementOnly: When the whole general element is selected, we only invoke callback for the general element (using block or
+     * segment parameter depends on if it is a block or segment), but skip all its content.
+     * both: When general element is selected, we invoke callback first for its content, then for general element itself
+     */
+    contentUnderSelectedGeneralElement?: 'contentOnly' | 'generalElementOnly' | 'both';
+
+    /**
      * Whether call the callback for the list item format holder segment
      * anySegment: call the callback if any segment is selected under a list item
      * allSegments: call the callback only when all segments under the list item are selected
@@ -84,6 +93,8 @@ function internalIterateSelections(
     const parent = path[0];
     const includeListFormatHolder = option?.includeListFormatHolder || 'allSegments';
     const contentUnderSelectedTableCell = option?.contentUnderSelectedTableCell || 'include';
+    const contentUnderSelectedGeneralElement =
+        option?.contentUnderSelectedGeneralElement || 'contentOnly';
 
     let hasSelectedSegment = false;
     let hasUnselectedSegment = false;
@@ -94,7 +105,35 @@ function internalIterateSelections(
         switch (block.blockType) {
             case 'BlockGroup':
                 const newPath = [block, ...path];
-                if (internalIterateSelections(newPath, callback, option, table, treatAllAsSelect)) {
+
+                if (block.blockGroupType == 'General') {
+                    const isSelected = treatAllAsSelect || block.isSelected;
+                    const handleGeneralContent =
+                        !isSelected ||
+                        contentUnderSelectedGeneralElement == 'both' ||
+                        contentUnderSelectedGeneralElement == 'contentOnly';
+                    const handleGeneralElement =
+                        isSelected &&
+                        (contentUnderSelectedGeneralElement == 'both' ||
+                            contentUnderSelectedGeneralElement == 'generalElementOnly' ||
+                            block.blocks.length == 0);
+
+                    if (
+                        (handleGeneralContent &&
+                            internalIterateSelections(
+                                newPath,
+                                callback,
+                                option,
+                                table,
+                                isSelected
+                            )) ||
+                        (handleGeneralElement && callback(path, table, block))
+                    ) {
+                        return true;
+                    }
+                } else if (
+                    internalIterateSelections(newPath, callback, option, table, treatAllAsSelect)
+                ) {
                     return true;
                 }
                 break;
@@ -158,24 +197,41 @@ function internalIterateSelections(
 
                 for (let i = 0; i < block.segments.length; i++) {
                     const segment = block.segments[i];
+                    const isSelected = treatAllAsSelect || segment.isSelected;
 
-                    if (treatAllAsSelect || segment.isSelected) {
-                        segments.push(segment);
-                        hasSelectedSegment = true;
-                    } else if (segment.segmentType == 'General') {
-                        const newPath = [segment, ...path];
+                    if (segment.segmentType == 'General') {
+                        const handleGeneralContent =
+                            !isSelected ||
+                            contentUnderSelectedGeneralElement == 'both' ||
+                            contentUnderSelectedGeneralElement == 'contentOnly';
+                        const handleGeneralElement =
+                            isSelected &&
+                            (contentUnderSelectedGeneralElement == 'both' ||
+                                contentUnderSelectedGeneralElement == 'generalElementOnly' ||
+                                segment.blocks.length == 0);
 
                         if (
+                            handleGeneralContent &&
                             internalIterateSelections(
-                                newPath,
+                                [segment, ...path],
                                 callback,
                                 option,
                                 table,
-                                treatAllAsSelect
+                                isSelected
                             )
                         ) {
                             return true;
                         }
+
+                        if (handleGeneralElement) {
+                            segments.push(segment);
+                        }
+                    } else if (isSelected) {
+                        segments.push(segment);
+                    }
+
+                    if (isSelected) {
+                        hasSelectedSegment = true;
                     } else {
                         hasUnselectedSegment = true;
                     }
@@ -188,7 +244,7 @@ function internalIterateSelections(
 
             case 'Divider':
             case 'Entity':
-                if (block.isSelected && callback(path, table, block)) {
+                if ((treatAllAsSelect || block.isSelected) && callback(path, table, block)) {
                     return true;
                 }
 
