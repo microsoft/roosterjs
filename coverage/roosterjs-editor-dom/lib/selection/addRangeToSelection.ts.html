@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">81.82% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>22/33</span>
+                <span class='fraction'>27/33</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/13</span>
+                <span class='fraction'>13/13</span>
             </div>
         
             
@@ -107,33 +107,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">705x</span>
-<span class="cline-any cline-yes">705x</span>
-<span class="cline-any cline-yes">705x</span>
+<span class="cline-any cline-yes">710x</span>
+<span class="cline-any cline-yes">710x</span>
+<span class="cline-any cline-yes">710x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">705x</span>
+<span class="cline-any cline-yes">710x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">703x</span>
-<span class="cline-any cline-yes">703x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">703x</span>
+<span class="cline-any cline-yes">707x</span>
+<span class="cline-any cline-yes">707x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">707x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">703x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">706x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">705x</span>
-<span class="cline-any cline-yes">705x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">710x</span>
+<span class="cline-any cline-yes">709x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,22 +157,22 @@ export default function addRangeToSelection(range: Range, skipSameRange?: boolea
                 let currentRange: Range | null = null;
                 // Do not remove/add range if current selection is the same with target range
                 // Without this check, execCommand() may fail in Edge since we changed the selection
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (
+                if (
                     (skipSameRange || Browser.isEdge) &amp;&amp;
                     (currentRange = selection.rangeCount == 1 ? selection.getRangeAt(0) : <span class="branch-1 cbranch-no" title="branch not covered" >null)</span> &amp;&amp;
                     currentRange.startContainer == range.startContainer &amp;&amp;
-<span class="branch-4 cbranch-no" title="branch not covered" >                    currentRange.startOffset == range.startOffset </span>&amp;&amp;
-<span class="branch-5 cbranch-no" title="branch not covered" >                    currentRange.endContainer == range.endContainer </span>&amp;&amp;
-<span class="branch-6 cbranch-no" title="branch not covered" >                    currentRange.endOffset == range.endOffset</span>
+                    currentRange.startOffset == range.startOffset &amp;&amp;
+                    currentRange.endContainer == range.endContainer &amp;&amp;
+                    currentRange.endOffset == range.endOffset
                 ) {
-<span class="cstat-no" title="statement not covered" >                    needAddRange = false;</span>
+                    needAddRange = false;
                 } else {
                     selection.removeAllRanges();
                 }
             } catch (e) {}
         }
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (needAddRange) {
+        if (needAddRange) {
             selection.addRange(range);
         }
     }
@@ -184,7 +184,7 @@ export default function addRangeToSelection(range: Range, skipSameRange?: boolea
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Apr 05 2023 20:32:08 GMT+0000 (Coordinated Universal Time)
+                at Wed Apr 05 2023 21:52:21 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
