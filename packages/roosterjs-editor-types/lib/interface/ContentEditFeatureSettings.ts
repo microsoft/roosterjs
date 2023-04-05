@@ -141,6 +141,18 @@ export interface ListFeatureSettings {
      * @default true
      */
     mergeListOnBackspaceAfterList: boolean;
+
+    /**
+     * indentWhenAltShiftRight edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Right
+     * @default when browser is in Mac it is default disabled, else it is enabled
+     */
+    indentWhenAltShiftRight: boolean;
+
+    /**
+     * outdentWhenAltShiftLeft edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Left
+     * @default when browser is in Mac it is default disabled, else it is enabled
+     */
+    outdentWhenAltShiftLeft: boolean;
 }
 
 /**
