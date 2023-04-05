@@ -1,15 +1,10 @@
 import * as TestHelper from '../TestHelper';
-import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
 import resizeByPercentage from '../../lib/plugins/ImageEdit/api/resizeByPercentage';
-import { getEditInfoFromImage } from '../../lib/plugins/ImageEdit/editInfoUtils/editInfo';
 import { IEditor } from 'roosterjs-editor-types';
 import { ImageEdit } from '../../lib/ImageEdit';
 
 const IMG_SRC =
     'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAKCAYAAAC0VX7mAAAALUlEQVQ4EWNgYGD4T2U8lAz8TyZACzKEl8k0Dz0OhpKBaGGB7hVi+QgvD0oDATe/bqDDw39VAAAAAElFTkSuQmCC';
-const WIDTH = 20;
-const HEIGHT = 10;
-const IMAGE_EDIT_EDITINFO_NAME = 'editingInfo';
 
 describe('resizeByPercentage', () => {
     let editor: IEditor;
@@ -30,23 +25,12 @@ describe('resizeByPercentage', () => {
 
     async function runTest(percentage: number, expectedWidth: number, expectedHeight: number) {
         const img = await loadImage(IMG_SRC);
-        const editInfo: ImageEditInfo = {
-            src: IMG_SRC,
-            widthPx: 100,
-            heightPx: 100,
-            naturalWidth: WIDTH,
-            naturalHeight: HEIGHT,
-            leftPercent: 0.1,
-            rightPercent: 0.2,
-            topPercent: 0.3,
-            bottomPercent: 0.4,
-            angleRad: 0.5,
-        };
-        img.dataset[IMAGE_EDIT_EDITINFO_NAME] = JSON.stringify(editInfo);
-        resizeByPercentage(editor, img, 0.5, 10, 10);
-        const resizedEditInfo = getEditInfoFromImage(img);
-        expect(resizedEditInfo.widthPx).toBe(expectedWidth);
-        expect(resizedEditInfo.heightPx).toBe(expectedHeight);
+        img.width = 100;
+        img.height = 100;
+        editor.insertNode(img);
+        resizeByPercentage(editor, img, percentage, 10, 10);
+        expect(img.width).toBe(expectedWidth);
+        expect(img.height).toBe(expectedHeight);
     }
 
     it('resize image by 1', () => {
