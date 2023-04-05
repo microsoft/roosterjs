@@ -101,11 +101,32 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                   );
               };
 
+        const getDarkColor = options.getDarkColor ?? ((color: string) => color);
+        const defaultFormat = options.defaultFormat ? { ...options.defaultFormat } : null;
+
+        if (defaultFormat) {
+            if (defaultFormat.textColor && !defaultFormat.textColors) {
+                defaultFormat.textColors = {
+                    lightModeColor: defaultFormat.textColor,
+                    darkModeColor: getDarkColor(defaultFormat.textColor),
+                };
+                delete defaultFormat.textColor;
+            }
+
+            if (defaultFormat.backgroundColor && !defaultFormat.backgroundColors) {
+                defaultFormat.backgroundColors = {
+                    lightModeColor: defaultFormat.backgroundColor,
+                    darkModeColor: getDarkColor(defaultFormat.backgroundColor),
+                };
+                delete defaultFormat.backgroundColor;
+            }
+        }
+
         this.state = {
             customData: {},
-            defaultFormat: options.defaultFormat ?? null,
+            defaultFormat,
             isDarkMode: !!options.inDarkMode,
-            getDarkColor: options.getDarkColor ?? ((color: string) => color),
+            getDarkColor,
             onExternalContentTransform: options.onExternalContentTransform ?? null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
