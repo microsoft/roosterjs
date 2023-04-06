@@ -2,7 +2,7 @@ import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htm
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { createPasteFragment, transformTabCharacters } from '../../lib/coreApi/createPasteFragment';
-import { itFirefoxOnly } from '../TestHelper';
+import { itChromeOnly, itFirefoxOnly } from '../TestHelper';
 
 describe('createPasteFragment', () => {
     let div: HTMLDivElement;
@@ -274,7 +274,7 @@ describe('createPasteFragment', () => {
         expect(html).toBe('');
     });
 
-    it('create image fragment', () => {
+    itChromeOnly('create image fragment', () => {
         const triggerEvent = jasmine.createSpy();
         const core = createEditorCore(div, {
             coreApiOverride: {
@@ -293,6 +293,27 @@ describe('createPasteFragment', () => {
         const fragment = createPasteFragment(core, clipboardData, null, true, false, true);
         const html = getHTML(fragment);
         expect(html).toBe('<img src="test" style="max-width:100%">');
+    });
+
+    itFirefoxOnly('create image fragment', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: '',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: 'test',
+            customValues: {},
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, true);
+        const html = getHTML(fragment);
+        expect(html).toBe('<img style="max-width:100%" src="test">');
     });
 
     it('html input, html output', () => {
