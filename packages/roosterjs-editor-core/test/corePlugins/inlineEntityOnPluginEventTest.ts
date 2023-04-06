@@ -664,6 +664,7 @@ describe('Inline Entity On Plugin Event |', () => {
         });
     });
 });
+
 function addEntityBeforeEach(entity: Entity, wrapper: HTMLElement) {
     entity = <Entity>{
         id: 'test',
