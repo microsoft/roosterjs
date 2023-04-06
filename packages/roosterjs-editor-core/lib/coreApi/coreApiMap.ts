@@ -12,6 +12,7 @@ import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
+import { select } from './select';
 import { selectImage } from './selectImage';
 import { selectRange } from './selectRange';
 import { selectTable } from './selectTable';
@@ -37,6 +38,7 @@ export const coreApiMap: CoreApiMap = {
     hasFocus,
     insertNode,
     restoreUndoSnapshot,
+    select,
     selectRange,
     setContent,
     switchShadowEdit,

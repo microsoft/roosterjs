@@ -3,11 +3,11 @@ import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBl
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDivider } from '../../../lib/publicTypes/block/ContentModelDivider';
 import { ContentModelEntity } from '../../../lib/publicTypes/entity/ContentModelEntity';
+import { ContentModelFormatContainer } from '../../../lib/publicTypes/group/ContentModelFormatContainer';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -179,7 +179,7 @@ describe('handleBlockGroup', () => {
     let parent: HTMLDivElement;
     let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
     let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
-    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelQuote>>;
+    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelFormatContainer>>;
     let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
 
     beforeEach(() => {
@@ -192,7 +192,7 @@ describe('handleBlockGroup', () => {
             modelHandlerOverride: {
                 blockGroupChildren: handleBlockGroupChildren,
                 listItem: handleListItem,
-                quote: handleQuote,
+                formatContainer: handleQuote,
                 general: handleGeneralModel,
             },
         });
@@ -205,9 +205,10 @@ describe('handleBlockGroup', () => {
         parent = document.createElement('div');
         parent.appendChild(br);
 
-        handleBlock(document, parent, block, context, br);
+        const result = handleBlock(document, parent, block, context, br);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
+        expect(result).toBe(br);
     }
 
     it('General block', () => {
@@ -223,9 +224,10 @@ describe('handleBlockGroup', () => {
         expect(handleGeneralModel).toHaveBeenCalledTimes(1);
         expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleGeneralModel.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleGeneralModel.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });
@@ -239,9 +241,10 @@ describe('handleBlockGroup', () => {
         expect(handleQuote).toHaveBeenCalledTimes(1);
         expect(handleQuote).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleQuote.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleQuote.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });
@@ -255,9 +258,10 @@ describe('handleBlockGroup', () => {
         expect(handleListItem).toHaveBeenCalledTimes(1);
         expect(handleListItem).toHaveBeenCalledWith(document, parent, group, context, null);
 
-        handleListItem.and.callFake((doc, parent, model, context, refNode) =>
-            parent.insertBefore(doc.createTextNode('test'), refNode)
-        );
+        handleListItem.and.callFake((doc, parent, model, context, refNode) => {
+            parent.insertBefore(doc.createTextNode('test'), refNode);
+            return refNode;
+        });
 
         runTestWithRefNode(group, 'test<br>');
     });

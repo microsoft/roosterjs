@@ -35,7 +35,7 @@ export default interface WordConverterArguments {
     currentListIdsByLevels: LevelLists[];
 
     /** Remembers the item that was last processed  */
-    lastProcessedItem: HTMLElement;
+    lastProcessedItem: HTMLElement | null;
 }
 
 /**

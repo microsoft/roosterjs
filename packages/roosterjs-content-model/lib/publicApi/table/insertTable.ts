@@ -27,7 +27,7 @@ export default function insertTable(
     format?: TableMetadataFormat
 ) {
     formatWithContentModel(editor, 'insertTable', model => {
-        const insertPosition = deleteSelection(model);
+        const insertPosition = deleteSelection(model).insertPoint;
 
         if (insertPosition) {
             const doc = createContentModelDocument();

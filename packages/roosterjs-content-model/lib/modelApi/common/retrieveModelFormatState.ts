@@ -1,11 +1,14 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
+import { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
+import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { FormatState } from 'roosterjs-editor-types';
+import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
@@ -17,11 +20,13 @@ import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata
 export function retrieveModelFormatState(
     model: ContentModelDocument,
     pendingFormat: ContentModelSegmentFormat | null,
-    formatState: FormatState
+    formatState: ContentModelFormatState
 ) {
     let firstTableContext: TableSelectionContext | undefined;
     let firstBlock: ContentModelBlock | undefined;
     let isFirst = true;
+    let isFirstImage = true;
+    let isFirstSegment = true;
 
     if (pendingFormat) {
         // Pending format
@@ -50,7 +55,15 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (!pendingFormat) {
-                        retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                        if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
+                            retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                        }
+
+                        // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
+                        // is after some other selected segments, it mostly like appears at the beginning of a seconde line when the whole first line
+                        // is selected (e.g. triple-click on a line) then the second selection marker doesn't contain a correct format, so we need to
+                        // ignore it
+                        isFirstSegment = false;
                     }
 
                     formatState.canUnlink = formatState.canUnlink || !!segment.link;
@@ -59,6 +72,15 @@ export function retrieveModelFormatState(
                         segments.some(segment => segment.segmentType == 'Image');
 
                     isFirst = false;
+
+                    if (segment.segmentType === 'Image') {
+                        if (isFirstImage) {
+                            retrieveImageFormat(segment, formatState);
+                            isFirstImage = false;
+                        } else {
+                            formatState.imageFormat = undefined;
+                        }
+                    }
                 });
 
                 isFirst = false;
@@ -92,7 +114,7 @@ export function retrieveModelFormatState(
 }
 
 function retrieveSegmentFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     format: ContentModelSegmentFormat,
     isFirst: boolean,
     segment?: ContentModelSegment
@@ -126,7 +148,7 @@ function retrieveSegmentFormat(
 }
 
 function retrieveParagraphFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     paragraph: ContentModelParagraph,
     isFirst: boolean
 ) {
@@ -141,12 +163,12 @@ function retrieveParagraphFormat(
 }
 
 function retrieveStructureFormat(
-    result: FormatState,
+    result: ContentModelFormatState,
     path: ContentModelBlockGroup[],
     isFirst: boolean
 ) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(path, ['ListItem'], []);
-    const quoteIndex = getClosestAncestorBlockGroupIndex(path, ['Quote'], []);
+    const containerIndex = getClosestAncestorBlockGroupIndex(path, ['FormatContainer'], []);
 
     if (listItemIndex >= 0) {
         const listItem = path[listItemIndex] as ContentModelListItem;
@@ -156,10 +178,16 @@ function retrieveStructureFormat(
         mergeValue(result, 'isNumbering', listType == 'OL', isFirst);
     }
 
-    mergeValue(result, 'isBlockQuote', quoteIndex >= 0, isFirst);
+    mergeValue(
+        result,
+        'isBlockQuote',
+        containerIndex >= 0 &&
+            (path[containerIndex] as ContentModelFormatContainer)?.tagName == 'blockquote',
+        isFirst
+    );
 }
 
-function retrieveTableFormat(tableContext: TableSelectionContext, result: FormatState) {
+function retrieveTableFormat(tableContext: TableSelectionContext, result: ContentModelFormatState) {
     const tableFormat = updateTableMetadata(tableContext.table);
 
     result.isInTable = true;
@@ -170,10 +198,26 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Format
     }
 }
 
-function mergeValue<K extends keyof FormatState>(
-    format: FormatState,
+function retrieveImageFormat(image: ContentModelImage, result: ContentModelFormatState) {
+    const { format } = image;
+    const borderKey = 'borderTop';
+    const extractedBorder = extractBorderValues(format[borderKey]);
+    const borderColor = extractedBorder.color;
+    const borderWidth = extractedBorder.width;
+    const borderStyle = extractedBorder.style;
+    result.imageFormat = {
+        borderColor,
+        borderWidth,
+        borderStyle,
+        boxShadow: format.boxShadow,
+        borderRadius: format.borderRadius,
+    };
+}
+
+function mergeValue<K extends keyof ContentModelFormatState>(
+    format: ContentModelFormatState,
     key: K,
-    newValue: FormatState[K] | undefined,
+    newValue: ContentModelFormatState[K] | undefined,
     isFirst: boolean
 ) {
     if (isFirst) {

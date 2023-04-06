@@ -5,10 +5,10 @@ import { createParagraph } from '../../../lib/modelApi/creators/createParagraph'
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleBlockGroupChildren as originalHandleBlockGroupChildren } from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
-import { handleQuote } from '../../../lib/modelToDom/handlers/handleQuote';
+import { handleFormatContainer } from '../../../lib/modelToDom/handlers/handleFormatContainer';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
-describe('handleQuote', () => {
+describe('handleFormatContainer', () => {
     let context: ModelToDomContext;
     let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
 
@@ -25,7 +25,7 @@ describe('handleQuote', () => {
         const parent = document.createElement('div');
         const quote = createQuote();
 
-        handleQuote(document, parent, quote, context, null);
+        handleFormatContainer(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(quote.cachedElement).toBeUndefined();
@@ -41,7 +41,7 @@ describe('handleQuote', () => {
 
         handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
-        handleQuote(document, parent, quote, context, null);
+        handleFormatContainer(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
@@ -53,7 +53,7 @@ describe('handleQuote', () => {
             quote,
             context
         );
-        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
     });
 
     it('Quote with child and refNode', () => {
@@ -69,7 +69,7 @@ describe('handleQuote', () => {
 
         handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
-        handleQuote(document, parent, quote, context, br);
+        const result = handleFormatContainer(document, parent, quote, context, br);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote><br></div>'
@@ -81,6 +81,7 @@ describe('handleQuote', () => {
             quote,
             context
         );
-        expect(quote.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
+        expect(result).toBe(br);
     });
 });

@@ -42,9 +42,12 @@ export function alignTableCell(
 
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
-                const format = table.cells[rowIndex]?.[colIndex]?.format;
+                const cell = table.cells[rowIndex]?.[colIndex];
+                const format = cell?.format;
 
                 if (format) {
+                    delete cell.cachedElement;
+
                     format.textAlign = textAlign || format.textAlign;
                     format.verticalAlign = verticalAlign || format.verticalAlign;
                 }

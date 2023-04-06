@@ -1,6 +1,7 @@
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildInPluginState';
 import { AutoFormat } from 'roosterjs-editor-plugins/lib/AutoFormat';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
+import { ContentModelEditPlugin, ContentModelFormatPlugin } from 'roosterjs-content-model';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { EditorPlugin } from 'roosterjs-editor-types';
@@ -55,6 +56,8 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
+        contentModelFormat: pluginList.contentModelFormat ? new ContentModelFormatPlugin() : null,
+        contentModelEdit: pluginList.contentModelEdit ? new ContentModelEditPlugin() : null,
     };
 
     return Object.values(plugins);

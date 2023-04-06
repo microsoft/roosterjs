@@ -34,40 +34,15 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 listFormat.nodeStack = [];
             }
 
-            const element = getCachedElement(childBlock);
-
-            // Check if there is cached element and if we can reuse it
-            if (element) {
-                if (element.parentNode == parent) {
-                    // Remove nodes before the one we are hitting since they don't appear in Content Model at this position.
-                    // But we don't want to touch entity since it would better to keep entity at its place unless it is removed
-                    // In that case we will remove it after we have handled all other nodes
-                    while (refNode && refNode != element && !isEntity(refNode)) {
-                        refNode = remove(refNode);
-                    }
-
-                    if (refNode && refNode == element) {
-                        refNode = refNode.nextSibling;
-                    } else {
-                        parent.insertBefore(element, refNode);
-                    }
-                } else {
-                    parent.insertBefore(element, refNode);
-                }
-
-                // No need to add entity delimiter here since entity delimiter is only for inline entity, but here we only handle block entity.
-
-                if (childBlock.blockType == 'BlockGroup') {
-                    context.modelHandlers.blockGroupChildren(doc, element, childBlock, context);
-                }
-            } else {
-                context.modelHandlers.block(doc, parent, childBlock, context, refNode);
-            }
+            refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
         });
 
         // Remove all rest node if any since they don't appear in content model
         while (refNode) {
-            refNode = remove(refNode);
+            const next = refNode.nextSibling;
+
+            refNode.parentNode?.removeChild(refNode);
+            refNode = next;
         }
     } finally {
         listFormat.nodeStack = nodeStack;

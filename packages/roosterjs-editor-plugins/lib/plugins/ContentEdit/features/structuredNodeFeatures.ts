@@ -38,7 +38,7 @@ const InsertLineBeforeStructuredNodeFeature: BuildInEditFeature<PluginKeyboardEv
             editor.getDocument()
         ) as HTMLElement;
         editor.addUndoSnapshot(() => {
-            element.parentNode.insertBefore(div, element);
+            element?.parentNode?.insertBefore(div, element);
             // Select the new line when we are in table. This is the same behavior with Word
             if (getTagOfNode(element) == 'TABLE') {
                 editor.select(new Position(div, PositionType.Begin).normalize());

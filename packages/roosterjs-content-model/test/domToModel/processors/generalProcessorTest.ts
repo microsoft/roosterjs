@@ -1,5 +1,6 @@
 import * as createGeneralBlock from '../../../lib/modelApi/creators/createGeneralBlock';
 import * as createGeneralSegment from '../../../lib/modelApi/creators/createGeneralSegment';
+import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { ContentModelGeneralBlock } from '../../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { ContentModelGeneralSegment } from '../../../lib/publicTypes/segment/ContentModelGeneralSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -132,6 +133,161 @@ describe('generalProcessor', () => {
                             link: { format: { href: '/test' }, dataset: {} },
                             blocks: [],
                             element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a SPAN element with partial selection 1', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+        const text = document.createTextNode('test');
+
+        span.appendChild(text);
+        context.regularSelection = {
+            startContainer: text,
+            startOffset: 1,
+            endContainer: text,
+            endOffset: 3,
+            isSelectionCollapsed: false,
+        };
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 't',
+                                            format: {},
+                                        },
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'es',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                        {
+                                            segmentType: 'Text',
+                                            text: 't',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a SPAN element with partial selection 2 - already in selection', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+        const text = document.createTextNode('test');
+
+        span.appendChild(text);
+        context.regularSelection = {
+            startContainer: text,
+            startOffset: 1,
+            endContainer: text,
+            endOffset: 3,
+            isSelectionCollapsed: false,
+        };
+        context.isInSelection = true;
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'tes',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                        {
+                                            segmentType: 'Text',
+                                            text: 't',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            element: span,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Process a SPAN element with full selection', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+
+        context.isInSelection = true;
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [],
+                            element: span,
+                            isSelected: true,
                         },
                     ],
                     format: {},

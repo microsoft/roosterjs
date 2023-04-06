@@ -1,4 +1,5 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
+import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelTableCell } from '../group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
@@ -9,7 +10,8 @@ import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';
  */
 export interface ContentModelTable
     extends ContentModelBlockBase<'Table', ContentModelTableFormat>,
-        ContentModelWithDataset<TableMetadataFormat> {
+        ContentModelWithDataset<TableMetadataFormat>,
+        ContentModelBlockWithCache<HTMLTableElement> {
     /**
      * Widths of each column
      */

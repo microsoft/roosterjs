@@ -2,24 +2,25 @@ import * as splitTextNode from 'roosterjs-editor-dom/lib/utils/splitTextNode';
 import { inlineEntityOnPluginEvent } from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import {
     BeforeCutCopyEvent,
-    EditorReadyEvent,
+    BeforePasteEvent,
+    ChangeSource,
+    ContentChangedEvent,
     DelimiterClasses,
+    EditorReadyEvent,
     Entity,
     ExtractContentWithDomEvent,
     IEditor,
     NormalSelectionRange,
-    PluginEventType,
-    ContentChangedEvent,
     PluginEvent,
-    SelectionRangeTypes,
-    BeforePasteEvent,
+    PluginEventType,
     PluginKeyDownEvent,
-    ChangeSource,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 import {
     addDelimiters,
     commitEntity,
     findClosestElementAncestor,
+    getBlockElementAtNode,
     Position,
 } from 'roosterjs-editor-dom';
 
@@ -61,6 +62,7 @@ describe('Inline Entity On Plugin Event |', () => {
                 };
             },
             select: selectSpy = jasmine.createSpy('select'),
+            getBlockElementAtNode: (node: Node) => getBlockElementAtNode(document.body, node),
         });
     });
 
@@ -169,21 +171,16 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Enter on delimiter before, no previous sibling', () => {
+            it('Enter on delimiter before, clear previous block delimiter', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('beforebegin', div);
+                div.appendChild(delimiterBefore!.cloneNode(true /* deep */));
+
                 arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
 
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterBefore?.previousElementSibling).toBeNull();
-            });
-
-            it('Enter on delimiter before, no previous sibling', () => {
-                const testElement = document.createElement('span');
-                testElement.appendChild(document.createTextNode('Test'));
-                delimiterBefore?.parentElement?.insertBefore(testElement, delimiterBefore);
-                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
-
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterBefore?.previousElementSibling).not.toBeNull();
+                expect(div.firstElementChild?.className).toEqual('');
+                expect(div.firstElementChild?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterBefore!.className).toEqual(DelimiterClasses.DELIMITER_BEFORE);
             });
 
             it('Key press when selection is not collapsed, delimiter before is the endContainer', () => {
@@ -343,21 +340,15 @@ describe('Inline Entity On Plugin Event |', () => {
                 expect(splitTextNode.default).not.toHaveBeenCalled();
             });
 
-            it('Enter on delimiter after, no previous sibling', () => {
+            it('Enter on delimiter after, clear the previous sibling class', () => {
+                const div = document.createElement('div');
+                testContainer.insertAdjacentElement('afterend', div);
+                div.appendChild(delimiterAfter!.cloneNode(true /* deep */));
                 arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
 
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterAfter?.nextElementSibling).toBeNull();
-            });
-
-            it('Enter on delimiter after, no previous sibling', () => {
-                const testElement = document.createElement('span');
-                testElement.appendChild(document.createTextNode('Test'));
-                delimiterAfter?.parentElement?.insertBefore(testElement, null);
-                arrangeAndAct(13 /* ENTER */, false /* addElementOnRunAsync */);
-
-                expect(selectSpy).toHaveBeenCalled();
-                expect(delimiterAfter?.nextElementSibling).not.toBeNull();
+                expect(div.firstElementChild?.className).toEqual('');
+                expect(div.firstElementChild?.textContent).not.toEqual(ZERO_WIDTH_SPACE);
+                expect(delimiterAfter!.className).toEqual(DelimiterClasses.DELIMITER_AFTER);
             });
 
             it('Key press when selection is not collapsed, delimiter after is the endContainer', () => {
@@ -617,17 +608,21 @@ describe('Inline Entity On Plugin Event |', () => {
             if (elementToUse) {
                 rootDiv.appendChild(elementToUse);
             }
-
+            const additionalAllowedCssClasses: string[] = [];
             inlineEntityOnPluginEvent(
                 <BeforePasteEvent>(<any>{
                     eventType: PluginEventType.BeforePaste,
                     clipboardData: {},
                     fragment: rootDiv,
+                    sanitizingOption: {
+                        additionalAllowedCssClasses,
+                    },
                 }),
                 editor
             );
-
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(expectedDelimiters);
+            expect(additionalAllowedCssClasses).toContain(DelimiterClasses.DELIMITER_AFTER);
+            expect(additionalAllowedCssClasses).toContain(DelimiterClasses.DELIMITER_BEFORE);
         }
 
         it('Before Paste with Read only Inline Entity in content', () => {

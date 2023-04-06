@@ -19,7 +19,7 @@ import { KnownSourceType } from './sourceValidations/KnownSourceType';
  * 3. Content copied from Word Online or OneNote Online
  */
 export default class Paste implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 
     /**
      * Construct a new instance of Paste class
@@ -59,7 +59,7 @@ export default class Paste implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.BeforePaste) {
+        if (this.editor && event.eventType == PluginEventType.BeforePaste) {
             const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
 
@@ -69,6 +69,7 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromWord(event);
                     break;
                 case KnownSourceType.ExcelDesktop:
+                case KnownSourceType.ExcelOnline:
                     // Handle HTML copied from Excel
                     convertPastedContentFromExcel(event, trustedHTMLHandler);
                     break;
