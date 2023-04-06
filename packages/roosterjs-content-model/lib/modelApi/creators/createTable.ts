@@ -1,4 +1,3 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
