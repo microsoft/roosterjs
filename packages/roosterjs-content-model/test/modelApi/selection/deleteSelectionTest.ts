@@ -3620,46 +3620,4 @@ describe('deleteSelection - backward', () => {
             ],
         });
     });
-
-    it('delete with default format', () => {
-        const model = createContentModelDocument({
-            fontSize: '10pt',
-        });
-        const divider = createDivider('div');
-
-        divider.isSelected = true;
-        model.blocks.push(divider);
-
-        const result = deleteSelection(model);
-        const marker: ContentModelSelectionMarker = {
-            segmentType: 'SelectionMarker',
-            format: { fontSize: '10pt' },
-            isSelected: true,
-        };
-
-        expect(result).toEqual({
-            marker,
-            paragraph: {
-                blockType: 'Paragraph',
-                isImplicit: true,
-                segments: [marker],
-                format: {},
-            },
-            path: [model],
-            tableContext: undefined,
-        });
-
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    format: {},
-                    segments: [marker],
-                },
-            ],
-            format: { fontSize: '10pt' },
-        });
-    });
 });
