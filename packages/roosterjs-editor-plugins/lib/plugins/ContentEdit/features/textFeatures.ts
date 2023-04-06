@@ -39,7 +39,11 @@ const IndentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
             !event.rawEvent.shiftKey
         ) {
             let activeElement = editor.getDocument().activeElement as HTMLElement;
-            const listOrTable = editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event);
+            const listOrTable = editor.getElementAtCursor(
+                'LI,TABLE',
+                undefined /*startFrom*/,
+                event
+            );
             const entity = editor.getElementAtCursor(
                 getEntitySelector(),
                 undefined /*startFrom*/,
@@ -95,8 +99,8 @@ const OutdentWhenTabText: BuildInEditFeature<PluginKeyboardEvent> = {
             return (
                 selection.type == SelectionRangeTypes.Normal &&
                 !selection.areAllCollapsed &&
-                editor.getElementAtCursor('blockquote', null, event) &&
-                !editor.getElementAtCursor('LI,TABLE', null /*startFrom*/, event) &&
+                editor.getElementAtCursor('blockquote', undefined, event) &&
+                !editor.getElementAtCursor('LI,TABLE', undefined /*startFrom*/, event) &&
                 shouldSetIndentation(editor, selection.ranges[0])
             );
         }
@@ -184,9 +188,12 @@ function isRangeEmpty(range: Range) {
 function insertTab(editor: IEditor, event: PluginKeyboardEvent) {
     const span = editor.getDocument().createElement('span');
     let searcher = editor.getContentSearcherOfCursor(event);
+    if (!searcher) {
+        return;
+    }
     const charsBefore = searcher.getSubStringBefore(Number.MAX_SAFE_INTEGER);
     const numberOfChars = TAB_SPACES - (charsBefore.length % TAB_SPACES);
-    let span2: HTMLSpanElement;
+    let span2: HTMLSpanElement | null = null;
 
     let textContent = '';
     for (let index = 0; index < numberOfChars; index++) {

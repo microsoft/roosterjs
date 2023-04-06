@@ -9,7 +9,7 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPosition } from '../selection/deleteSelections';
+import { deleteSelection, InsertPoint } from '../selection/deleteSelections';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
@@ -30,7 +30,7 @@ export interface MergeModelOption {
      * Use this insert position to merge instead of querying selection from target model
      * @default undefined
      */
-    insertPosition?: InsertPosition;
+    insertPosition?: InsertPoint;
 }
 
 /**
@@ -41,7 +41,7 @@ export function mergeModel(
     source: ContentModelDocument,
     options?: MergeModelOption
 ) {
-    const insertPosition = options?.insertPosition ?? deleteSelection(target);
+    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
 
     if (insertPosition) {
         for (let i = 0; i < source.blocks.length; i++) {
@@ -68,7 +68,7 @@ export function mergeModel(
                 case 'BlockGroup':
                     switch (block.blockGroupType) {
                         case 'General':
-                        case 'Quote':
+                        case 'FormatContainer':
                             insertBlock(insertPosition, block);
                             break;
                         case 'ListItem':
@@ -84,7 +84,7 @@ export function mergeModel(
 }
 
 function mergeParagraph(
-    markerPosition: InsertPosition,
+    markerPosition: InsertPoint,
     newPara: ContentModelParagraph,
     mergeToCurrentParagraph: boolean
 ) {
@@ -98,7 +98,7 @@ function mergeParagraph(
 }
 
 function mergeTable(
-    markerPosition: InsertPosition,
+    markerPosition: InsertPoint,
     newTable: ContentModelTable,
     source: ContentModelDocument
 ) {
@@ -153,7 +153,7 @@ function mergeTable(
     }
 }
 
-function mergeList(markerPosition: InsertPosition, newList: ContentModelListItem) {
+function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     splitParagraph(markerPosition);
 
     const { path, paragraph } = markerPosition;
@@ -174,7 +174,7 @@ function mergeList(markerPosition: InsertPosition, newList: ContentModelListItem
     }
 }
 
-function splitParagraph(markerPosition: InsertPosition) {
+function splitParagraph(markerPosition: InsertPoint) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
@@ -191,7 +191,7 @@ function splitParagraph(markerPosition: InsertPosition) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(
         path,
         ['ListItem'],
-        ['Quote', 'TableCell']
+        ['FormatContainer', 'TableCell']
     );
     const listItem = path[listItemIndex] as ContentModelListItem;
 
@@ -219,7 +219,7 @@ function splitParagraph(markerPosition: InsertPosition) {
     return newParagraph;
 }
 
-function insertBlock(markerPosition: InsertPosition, block: ContentModelBlock) {
+function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
     const newPara = splitParagraph(markerPosition);
     const blockIndex = path[0].blocks.indexOf(newPara);

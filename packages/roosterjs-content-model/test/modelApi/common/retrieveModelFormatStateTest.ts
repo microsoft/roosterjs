@@ -295,7 +295,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('Multiple selections', () => {
+    it('Multiple selection markers', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para1 = createParagraph(false, undefined);
@@ -318,6 +318,92 @@ describe('retrieveModelFormatState', () => {
             isBlockQuote: false,
             isSubscript: false,
             isMultilineSelection: true,
+            isBold: true,
+            isItalic: true,
+            isUnderline: true,
+            isStrikeThrough: true,
+            fontName: 'Arial',
+            isSuperscript: true,
+            fontSize: '10px',
+            backgroundColor: 'red',
+            textColor: 'green',
+        });
+    });
+
+    it('With multiple text selection in same format', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('test1', { fontFamily: 'Arial' });
+        const text2 = createText('test2', { fontFamily: 'Arial' });
+        const result: ContentModelFormatState = {};
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontName: 'Arial',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
+
+    it('With multiple text selection in different format', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text1 = createText('test1', { fontFamily: 'Arial' });
+        const text2 = createText('test2', { fontFamily: 'Times' });
+        const result: ContentModelFormatState = {};
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
+
+    it('With multiple text selection in different format but second one is selection marker', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('test1', { fontFamily: 'Arial' });
+        const marker = createSelectionMarker({ fontFamily: 'Times' });
+        const result: ContentModelFormatState = {};
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text, marker]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            fontName: 'Arial',
         });
     });
 
@@ -514,7 +600,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('With selection  under image', () => {
+    it('With selection under image', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para = createParagraph();
