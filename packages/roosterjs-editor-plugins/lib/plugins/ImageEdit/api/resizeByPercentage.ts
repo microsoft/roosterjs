@@ -33,6 +33,7 @@ export default function resizeByPercentage(
                 editor.addUndoSnapshot(() => {
                     applyChange(editor, image, editInfo, lastSrc || '', true /*wasResized*/);
                 }, ChangeSource.ImageResize);
+                editor.select(image);
             }
         });
     }

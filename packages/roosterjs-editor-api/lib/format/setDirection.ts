@@ -19,7 +19,9 @@ export default function setDirection(editor: IEditor, direction: Direction | Com
                 element.setAttribute('dir', direction == Direction.LeftToRight ? 'ltr' : 'rtl');
                 element.style.textAlign = direction == Direction.LeftToRight ? 'left' : 'right';
             });
-            editor.select(start, end);
+            if (start && end) {
+                editor.select(start, end);
+            }
         },
         'setDirection'
     );

@@ -9,6 +9,7 @@ import { stackFormat } from '../utils/stackFormat';
 
 const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const block = createGeneralBlock(element);
+    const isSelectedBefore = context.isInSelection;
 
     stackFormat(
         context,
@@ -19,17 +20,19 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
         },
         () => {
             addBlock(group, block);
+
             context.elementProcessors.child(block, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        block.isSelected = true;
+    }
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const segment = createGeneralSegment(element, context.segmentFormat);
-
-    if (context.isInSelection && !element.firstChild) {
-        segment.isSelected = true;
-    }
+    const isSelectedBefore = context.isInSelection;
 
     addDecorators(segment, context);
     addSegment(group, segment);
@@ -44,6 +47,10 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
             context.elementProcessors.child(segment, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        segment.isSelected = true;
+    }
 };
 
 /**

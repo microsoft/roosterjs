@@ -16,7 +16,7 @@ export default interface WordConverter {
     numNumberedConverted: number;
 
     /** The structure that records the status of the conversion */
-    wordConverterArgs: WordConverterArguments;
+    wordConverterArgs: WordConverterArguments | null;
 
     /** Custom data storage for list items */
     wordCustomData: WordCustomData;

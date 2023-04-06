@@ -8,9 +8,9 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
 /**
  * Set table cell shade color
  * @param editor The editor instance
- * @param color The color to set
+ * @param color The color to set. Pass null to remove existing shade color
  */
-export default function setTableCellShade(editor: IContentModelEditor, color: string) {
+export default function setTableCellShade(editor: IContentModelEditor, color: string | null) {
     formatWithContentModel(editor, 'setTableCellShade', model => {
         const table = getFirstSelectedTable(model);
 

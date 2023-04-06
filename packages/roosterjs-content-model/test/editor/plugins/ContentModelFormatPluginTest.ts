@@ -1,15 +1,13 @@
-import * as deleteContent from '../../lib/publicApi/editing/handleDelete';
-import * as pendingFormat from '../../lib/modelApi/format/pendingFormat';
-import ContentModelPlugin from '../../lib/editor/ContentModelPlugin';
-import { addSegment } from '../../lib/modelApi/common/addSegment';
-import { createContentModelDocument } from '../../lib/modelApi/creators/createContentModelDocument';
-import { createSelectionMarker } from '../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../lib/modelApi/creators/createText';
-import { IContentModelEditor } from '../../lib/publicTypes/IContentModelEditor';
-import { Keys } from 'roosterjs-editor-types';
+import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
+import ContentModelFormatPlugin from '../../../lib/editor/plugins/ContentModelFormatPlugin';
+import { addSegment } from '../../../lib/modelApi/common/addSegment';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { createText } from '../../../lib/modelApi/creators/createText';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 
-describe('ContentModelPlugin', () => {
+describe('ContentModelFormatPlugin', () => {
     it('no pending format, trigger key down event', () => {
         spyOn(pendingFormat, 'clearPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
@@ -17,7 +15,7 @@ describe('ContentModelPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
 
@@ -45,7 +43,7 @@ describe('ContentModelPlugin', () => {
             isInIME: () => false,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
         const model = createContentModelDocument();
 
         plugin.initialize(editor);
@@ -78,7 +76,7 @@ describe('ContentModelPlugin', () => {
             setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -109,7 +107,7 @@ describe('ContentModelPlugin', () => {
             isInIME: () => false,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -148,7 +146,7 @@ describe('ContentModelPlugin', () => {
             },
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -212,7 +210,7 @@ describe('ContentModelPlugin', () => {
             },
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -267,7 +265,7 @@ describe('ContentModelPlugin', () => {
             setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -299,7 +297,7 @@ describe('ContentModelPlugin', () => {
             },
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -329,7 +327,7 @@ describe('ContentModelPlugin', () => {
             setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -359,7 +357,7 @@ describe('ContentModelPlugin', () => {
             setContentModel,
             cacheContentModel: () => {},
         } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin();
+        const plugin = new ContentModelFormatPlugin();
 
         plugin.initialize(editor);
         plugin.onPluginEvent({
@@ -371,47 +369,5 @@ describe('ContentModelPlugin', () => {
         expect(setContentModel).toHaveBeenCalledTimes(0);
         expect(pendingFormat.clearPendingFormat).not.toHaveBeenCalled();
         expect(pendingFormat.canApplyPendingFormat).toHaveBeenCalledTimes(1);
-    });
-
-    it('Delete key', () => {
-        spyOn(deleteContent, 'default');
-
-        const editor = ({
-            cacheContentModel: () => {},
-        } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin(true /*handleKeyboardEditing*/);
-
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
-            rawEvent: ({
-                which: Keys.DELETE,
-            } as any) as KeyboardEvent,
-        });
-        plugin.dispose();
-
-        expect(deleteContent.default).toHaveBeenCalledTimes(1);
-        expect(deleteContent.default).toHaveBeenCalledWith(editor, 'delete');
-    });
-
-    it('Backspace key', () => {
-        spyOn(deleteContent, 'default');
-
-        const editor = ({
-            cacheContentModel: () => {},
-        } as any) as IContentModelEditor;
-        const plugin = new ContentModelPlugin(true /*handleKeyboardEditing*/);
-
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
-            rawEvent: ({
-                which: Keys.BACKSPACE,
-            } as any) as KeyboardEvent,
-        });
-        plugin.dispose();
-
-        expect(deleteContent.default).toHaveBeenCalledTimes(1);
-        expect(deleteContent.default).toHaveBeenCalledWith(editor, 'backspace');
     });
 });
