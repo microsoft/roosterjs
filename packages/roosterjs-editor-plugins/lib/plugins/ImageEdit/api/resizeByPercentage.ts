@@ -21,7 +21,6 @@ export default function resizeByPercentage(
     minHeight: number
 ) {
     const editInfo = getEditInfoFromImage(image);
-
     if (!isResizedTo(image, percentage)) {
         loadImage(image, image.src, () => {
             if (!editor.isDisposed() && editor.contains(image) && editInfo) {
@@ -29,7 +28,6 @@ export default function resizeByPercentage(
                 const { width, height } = getTargetSizeByPercentage(editInfo, percentage);
                 editInfo.widthPx = Math.max(width, minWidth);
                 editInfo.heightPx = Math.max(height, minHeight);
-
                 editor.addUndoSnapshot(() => {
                     applyChange(editor, image, editInfo, lastSrc || '', true /*wasResized*/);
                 }, ChangeSource.ImageResize);
