@@ -4,6 +4,8 @@ import resetImage from '../../lib/plugins/ImageEdit/api/resetImage';
 import { IEditor } from 'roosterjs-editor-types';
 import { ImageEdit } from '../../lib/ImageEdit';
 
+const EDIT_INFO = 'editingInfo';
+
 describe('resetImage', () => {
     let editor: IEditor;
     const TEST_ID = 'imageEditTest';
@@ -29,7 +31,7 @@ describe('resetImage', () => {
         expect(element.style.maxWidth).toBe('100%');
         expect(element.width).toBe(0);
         expect(element.height).toBe(0);
-        expect(element.dataset['editingInfo']).toBeUndefined();
+        expect(element.dataset[EDIT_INFO]).toBeUndefined();
     }
 
     it('reset Image', () => {
@@ -48,7 +50,7 @@ describe('resetImage', () => {
             heightPx: 100,
             angleRad: 0,
         };
-        image.dataset['editingInfo'] = JSON.stringify(editInfo);
+        image.dataset[EDIT_INFO] = JSON.stringify(editInfo);
         editor.insertNode(image);
         runTest(image);
     });

@@ -1,6 +1,8 @@
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
 import isResizedTo from '../../lib/plugins/ImageEdit/api/isResizedTo';
 
+const EDIT_INFO = 'editingInfo';
+
 describe('isResizedTo', () => {
     function runTest(element: HTMLImageElement, percentage: number, isResized: boolean) {
         const result = isResizedTo(element, percentage);
@@ -23,7 +25,7 @@ describe('isResizedTo', () => {
             heightPx: 100,
             angleRad: 0,
         };
-        image.dataset['editingInfo'] = JSON.stringify(editInfo);
+        image.dataset[EDIT_INFO] = JSON.stringify(editInfo);
         runTest(image, 0.5, false);
     });
 
@@ -43,7 +45,7 @@ describe('isResizedTo', () => {
             heightPx: 50,
             angleRad: 0,
         };
-        image.dataset['editingInfo'] = JSON.stringify(editInfo);
+        image.dataset[EDIT_INFO] = JSON.stringify(editInfo);
         runTest(image, 0.4, false);
     });
 
@@ -63,7 +65,7 @@ describe('isResizedTo', () => {
             heightPx: 50,
             angleRad: 0,
         };
-        image.dataset['editingInfo'] = JSON.stringify(editInfo);
+        image.dataset[EDIT_INFO] = JSON.stringify(editInfo);
         runTest(image, 0.5, true);
     });
 });
