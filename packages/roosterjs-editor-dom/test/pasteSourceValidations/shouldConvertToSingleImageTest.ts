@@ -1,6 +1,6 @@
-import shouldConvertToSingleImage from '../../../lib/plugins/Paste/sourceValidations/shouldConvertToSingleImage';
+import shouldConvertToSingleImage from '../../lib/pasteSourceValidations/shouldConvertToSingleImage';
 import { ClipboardData } from 'roosterjs-editor-types';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
 
 describe('shouldConvertToSingleImage |', () => {
     it('Is Single Image', () => {
