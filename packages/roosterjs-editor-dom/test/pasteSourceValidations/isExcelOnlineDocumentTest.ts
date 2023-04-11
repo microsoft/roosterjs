@@ -1,6 +1,6 @@
-import isExcelOnlineDocument from '../../../lib/plugins/Paste/sourceValidations/isExcelOnlineDocument';
-import { EXCEL_ATTRIBUTE_VALUE } from '../pasteTestUtils';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
+import isExcelOnlineDocument from '../../lib/pasteSourceValidations/isExcelOnlineDocument';
+import { EXCEL_ATTRIBUTE_VALUE } from './pasteTestUtils';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
 
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
