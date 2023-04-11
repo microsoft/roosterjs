@@ -124,7 +124,8 @@ export type CreatePasteFragment = (
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
-    applyCurrentStyle: boolean
+    applyCurrentStyle: boolean,
+    pasteAsImage: boolean
 ) => DocumentFragment | null;
 
 /**

@@ -210,7 +210,12 @@ export default interface IEditor {
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      */
-    paste(clipboardData: ClipboardData, pasteAsText?: boolean, applyCurrentFormat?: boolean): void;
+    paste(
+        clipboardData: ClipboardData,
+        pasteAsText?: boolean,
+        applyCurrentFormat?: boolean,
+        pasteAsImage?: boolean
+    ): void;
 
     //#endregion
 
