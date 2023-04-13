@@ -1,6 +1,6 @@
-import isWordDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isWordDesktopDocument';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
-import { WORD_ATTRIBUTE_VALUE } from '../pasteTestUtils';
+import isWordDesktopDocument from '../../lib/pasteSourceValidations/isWordDesktopDocument';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
+import { WORD_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 const WORD_PROG_ID = 'Word.Document';
 

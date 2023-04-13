@@ -145,3 +145,5 @@ export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
 export { default as arrayPush } from './jsUtils/arrayPush';
 export { default as getObjectKeys } from './jsUtils/getObjectKeys';
 export { default as toArray } from './jsUtils/toArray';
+
+export { default as getPasteSource } from './pasteSourceValidations/getPasteSource';

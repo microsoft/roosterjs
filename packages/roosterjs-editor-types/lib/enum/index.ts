@@ -25,6 +25,7 @@ export { TableOperation } from './TableOperation';
 export { ImageEditOperation } from './ImageEditOperation';
 export { ClearFormatMode } from './ClearFormatMode';
 export { KnownCreateElementDataIndex } from './KnownCreateElementDataIndex';
+export { KnownPasteSourceType } from './KnownPasteSourceType';
 export { TableBorderFormat } from './TableBorderFormat';
 export { PluginEventType } from './PluginEventType';
 export { SelectionRangeTypes } from './SelectionRangeTypes';
