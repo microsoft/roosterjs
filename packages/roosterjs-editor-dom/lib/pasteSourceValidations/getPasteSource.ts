@@ -5,8 +5,7 @@ import isGoogleSheetDocument from './isGoogleSheetDocument';
 import isPowerPointDesktopDocument from './isPowerPointDesktopDocument';
 import isWordDesktopDocument from './isWordDesktopDocument';
 import shouldConvertToSingleImage from './shouldConvertToSingleImage';
-import { BeforePasteEvent, ClipboardData } from 'roosterjs-editor-types';
-import { KnownSourceType } from './KnownSourceType';
+import { BeforePasteEvent, ClipboardData, KnownPasteSourceType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -23,18 +22,17 @@ export type getSourceInputParams = {
  */
 export type getSourceFunction = (props: getSourceInputParams) => boolean;
 
-const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
-    [KnownSourceType.WordDesktop, isWordDesktopDocument],
-    [KnownSourceType.ExcelDesktop, isExcelDesktopDocument],
-    [KnownSourceType.ExcelOnline, isExcelOnlineDocument],
-    [KnownSourceType.PowerPointDesktop, isPowerPointDesktopDocument],
-    [KnownSourceType.WacComponents, documentContainWacElements],
-    [KnownSourceType.GoogleSheets, isGoogleSheetDocument],
-    [KnownSourceType.SingleImage, shouldConvertToSingleImage],
+const getSourceFunctions = new Map<KnownPasteSourceType, getSourceFunction>([
+    [KnownPasteSourceType.WordDesktop, isWordDesktopDocument],
+    [KnownPasteSourceType.ExcelDesktop, isExcelDesktopDocument],
+    [KnownPasteSourceType.ExcelOnline, isExcelOnlineDocument],
+    [KnownPasteSourceType.PowerPointDesktop, isPowerPointDesktopDocument],
+    [KnownPasteSourceType.WacComponents, documentContainWacElements],
+    [KnownPasteSourceType.GoogleSheets, isGoogleSheetDocument],
+    [KnownPasteSourceType.SingleImage, shouldConvertToSingleImage],
 ]);
 
 /**
- * @internal
  * This function tries to get the source of the Pasted content
  * @param event the before paste event
  * @param shouldConvertSingleImage Whether convert single image is enabled.
@@ -43,10 +41,10 @@ const getSourceFunctions = new Map<KnownSourceType, getSourceFunction>([
 export default function getPasteSource(
     event: BeforePasteEvent,
     shouldConvertSingleImage: boolean
-): KnownSourceType {
+): KnownPasteSourceType {
     const { htmlAttributes, clipboardData, fragment } = event;
 
-    let result: KnownSourceType | null = null;
+    let result: KnownPasteSourceType | null = null;
     const param: getSourceInputParams = {
         htmlAttributes,
         fragment,
@@ -60,5 +58,5 @@ export default function getPasteSource(
         }
     });
 
-    return result ?? KnownSourceType.Default;
+    return result ?? KnownPasteSourceType.Default;
 }
