@@ -40,7 +40,8 @@ export const createPasteFragment: CreatePasteFragment = (
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
-    applyCurrentStyle: boolean
+    applyCurrentStyle: boolean,
+    pasteAsImage: boolean = false
 ) => {
     if (!clipboardData) {
         return null;
@@ -108,7 +109,7 @@ export const createPasteFragment: CreatePasteFragment = (
     }
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (!pasteAsText && !text && imageDataUri) {
+    if ((pasteAsImage && imageDataUri) || (!pasteAsText && !text && imageDataUri)) {
         // Paste image
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
@@ -158,7 +159,6 @@ export const createPasteFragment: CreatePasteFragment = (
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
-
     sanitizer.convertGlobalCssToInlineCss(fragment);
     sanitizer.sanitize(fragment, position ? getInheritableStyles(position.element) : undefined);
 

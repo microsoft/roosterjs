@@ -212,33 +212,31 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
         indent: boolean,
         keysPressed: (keyof KeyboardEventInit)[],
         keyCode: number,
-        shouldHandle: boolean
+        shouldHandle: boolean,
+        runAltShiftTest: boolean = false
     ) {
         const keyboardEvent: PluginKeyboardEvent = {
             eventType: PluginEventType.KeyDown,
             rawEvent: getKeyboardEvent(keysPressed, keyCode),
         };
-        let triggered: boolean;
-        if (indent) {
-            triggered = ListFeatures.indentWhenTab.shouldHandleEvent(keyboardEvent, editor, false)
-                ? true
-                : false;
-        } else {
-            triggered = ListFeatures.outdentWhenShiftTab.shouldHandleEvent(
-                keyboardEvent,
-                editor,
-                false
-            )
-                ? true
-                : false;
-        }
+
+        const feature = indent
+            ? !runAltShiftTest
+                ? ListFeatures.indentWhenTab
+                : ListFeatures.indentWhenAltShiftRight
+            : !runAltShiftTest
+            ? ListFeatures.outdentWhenShiftTab
+            : ListFeatures.outdentWhenAltShiftLeft;
+
+        const triggered: boolean = !!feature.shouldHandleEvent(keyboardEvent, editor, false);
         expect(triggered).toBe(shouldHandle);
     }
 
     function runTestHandleEvent(
         keysPressed: (keyof KeyboardEventInit)[],
         keyCode: number,
-        indent: boolean
+        indent: boolean,
+        runAltShiftTest: boolean = false
     ) {
         const range = document.createRange();
         range.setStart(list, 0);
@@ -248,11 +246,16 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
             eventType: PluginEventType.KeyDown,
             rawEvent: getKeyboardEvent(keysPressed, keyCode),
         };
-        if (!indent) {
-            ListFeatures.outdentWhenShiftTab.handleEvent(keyboardEvent, editor);
-        } else {
-            ListFeatures.indentWhenTab.handleEvent(keyboardEvent, editor);
-        }
+
+        const feature = indent
+            ? !runAltShiftTest
+                ? ListFeatures.indentWhenTab
+                : ListFeatures.indentWhenAltShiftRight
+            : !runAltShiftTest
+            ? ListFeatures.outdentWhenShiftTab
+            : ListFeatures.outdentWhenAltShiftLeft;
+
+        feature.handleEvent(keyboardEvent, editor);
 
         expect(setIndentationFn).toHaveBeenCalled();
         expect(setIndentationFn).toHaveBeenCalledWith(
@@ -261,38 +264,50 @@ describe('listFeatures | IndentWhenTab | OutdentWhenShiftTab', () => {
         );
     }
 
-    it('should not handle event | indent', () => {
+    it('should not handle event | indent with tab', () => {
         runTestShouldHandleEvent(true, ['shiftKey'], Keys.TAB, false);
-        runTestShouldHandleEvent(true, ['shiftKey', 'altKey'], Keys.LEFT, false);
-        runTestShouldHandleEvent(true, ['shiftKey'], Keys.RIGHT, false);
-        runTestShouldHandleEvent(true, ['altKey'], Keys.RIGHT, false);
     });
 
-    it('should handle event | indent', () => {
+    it('should handle event | indent with tab', () => {
         runTestShouldHandleEvent(true, [], Keys.TAB, true);
-        runTestShouldHandleEvent(true, ['shiftKey', 'altKey'], Keys.RIGHT, true);
     });
 
-    it('should not handle event | outdent', () => {
+    it('should not handle event | outdent with shift + tab', () => {
         runTestShouldHandleEvent(false, [], Keys.TAB, false);
-        runTestShouldHandleEvent(false, ['shiftKey', 'altKey'], Keys.RIGHT, false);
-        runTestShouldHandleEvent(false, ['shiftKey'], Keys.LEFT, false);
-        runTestShouldHandleEvent(false, ['altKey'], Keys.LEFT, false);
     });
 
-    it('should handle event | outdent', () => {
+    it('should handle event | outdent with shift + tab', () => {
         runTestShouldHandleEvent(false, ['shiftKey'], Keys.TAB, true);
-        runTestShouldHandleEvent(false, ['shiftKey', 'altKey'], Keys.LEFT, true);
     });
 
-    it('handle indent | indent', () => {
+    it('handle indent | indent with tab', () => {
         runTestHandleEvent([], Keys.TAB, true);
-        runTestHandleEvent(['shiftKey', 'altKey'], Keys.RIGHT, true);
     });
 
-    it('handle indent | outdent', () => {
-        runTestHandleEvent(['shiftKey'], Keys.TAB, false);
-        runTestHandleEvent(['shiftKey', 'altKey'], Keys.LEFT, false);
+    it('should not handle event | indent with Alt + Shift + Arrow', () => {
+        runTestShouldHandleEvent(true, ['shiftKey'], Keys.TAB, false, true);
+    });
+
+    it('should handle event | indent with Alt + Shift + Arrow', () => {
+        runTestShouldHandleEvent(true, ['shiftKey', 'altKey'], Keys.RIGHT, true, true);
+    });
+
+    it('should not handle event | outdent with Alt + Shift + Arrow', () => {
+        runTestShouldHandleEvent(false, ['shiftKey', 'altKey'], Keys.RIGHT, false, true);
+        runTestShouldHandleEvent(false, ['shiftKey'], Keys.LEFT, false, true);
+        runTestShouldHandleEvent(false, ['altKey'], Keys.LEFT, false, true);
+    });
+
+    it('should handle event | outdent with Alt + Shift + Arrow', () => {
+        runTestShouldHandleEvent(false, ['shiftKey', 'altKey'], Keys.LEFT, true, true);
+    });
+
+    it('handle indent | indent with Alt + Shift + Arrow', () => {
+        runTestHandleEvent(['shiftKey', 'altKey'], Keys.RIGHT, true, true);
+    });
+
+    it('handle indent | outdent with Alt + Shift + Arrow', () => {
+        runTestHandleEvent(['shiftKey', 'altKey'], Keys.LEFT, true, true);
     });
 });
 

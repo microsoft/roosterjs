@@ -225,7 +225,7 @@ describe('ImageEdit | rotate and flip', () => {
     });
 });
 
-describe('ImageEdit | plugin events', () => {
+describe('ImageEdit | plugin events | quitting', () => {
     let editor: IEditor;
     const TEST_ID = 'imageEditTest';
     let plugin: ImageEdit;
@@ -309,5 +309,38 @@ describe('ImageEdit | plugin events', () => {
         plugin.onPluginEvent(keyDown('A'));
         expect(setEditingImageSpy).toHaveBeenCalled();
         expect(setEditingImageSpy).toHaveBeenCalledWith(null);
+    });
+});
+
+describe('ImageEdit | wrapper', () => {
+    let editor: IEditor;
+    const TEST_ID = 'imageEditTest';
+    let plugin: ImageEdit;
+
+    beforeEach(() => {
+        plugin = new ImageEdit();
+        editor = TestHelper.initEditor(TEST_ID, [plugin]);
+    });
+
+    afterEach(() => {
+        let element = document.getElementById(TEST_ID);
+        if (element) {
+            element.parentElement.removeChild(element);
+        }
+        editor.dispose();
+    });
+
+    it('image selection, remove max-width', () => {
+        const IMG_ID = 'IMAGE_ID';
+        const content = `<img id="${IMG_ID}" src='test'/>`;
+        editor.setContent(content);
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        image.style.maxWidth = '100%';
+        editor.focus();
+        editor.select(image);
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const imageShadow = shadowRoot?.querySelector('img');
+        expect(imageShadow?.style.maxWidth).toBe('');
     });
 });

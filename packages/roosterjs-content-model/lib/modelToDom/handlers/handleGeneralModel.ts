@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
-import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
+import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
@@ -44,7 +44,3 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
 
     return refNode;
 };
-
-function isGeneralSegment(block: ContentModelGeneralBlock): block is ContentModelGeneralSegment {
-    return (block as ContentModelGeneralSegment).segmentType == 'General';
-}

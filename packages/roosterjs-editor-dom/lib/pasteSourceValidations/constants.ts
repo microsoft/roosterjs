@@ -10,13 +10,6 @@ export const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 export const PROG_ID_NAME = 'ProgId';
 /**
  * @internal
- * Selector used to identify Wac Elements
- */
-export const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
-
-/**
- * @internal
  * Name of the HTMLMeta Property that identifies pated content as from Excel Desktop
  */
 export const EXCEL_DESKTOP_ATTRIBUTE_NAME = 'xmlns:x';

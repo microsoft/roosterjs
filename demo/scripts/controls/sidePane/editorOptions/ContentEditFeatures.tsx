@@ -55,6 +55,8 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
         'When using BACKSPACE or DELETE in a Readonly inline entity delimeter, trigger a Entity Operation',
     removeCodeWhenEnterOnEmptyLine: 'Remove code line when enter on empty line',
     removeCodeWhenBackspaceOnEmptyFirstLine: 'Remove code line when backspace on empty first line',
+    indentWhenAltShiftRight: 'Indent list item using Alt + Shift + Right',
+    outdentWhenAltShiftLeft: 'Outdent list item using Alt + Shift + Left',
 };
 
 export interface ContentEditFeaturessProps {
