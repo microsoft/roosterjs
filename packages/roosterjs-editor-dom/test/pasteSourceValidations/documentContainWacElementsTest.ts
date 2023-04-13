@@ -1,6 +1,6 @@
-import documentContainWacElements from '../../../lib/plugins/Paste/sourceValidations/documentContainWacElements';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
-import { getWacElement } from '../pasteTestUtils';
+import documentContainWacElements from '../../lib/pasteSourceValidations/documentContainWacElements';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
+import { getWacElement } from './pasteTestUtils';
 
 describe('documentContainWacElements |', () => {
     it('Fragment contain Wac elements', () => {

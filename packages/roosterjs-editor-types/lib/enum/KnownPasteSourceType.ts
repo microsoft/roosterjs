@@ -1,8 +1,7 @@
 /**
- * @internal
  * Represent the types of sources to handle in the Paste Plugin
  */
-export const enum KnownSourceType {
+export const enum KnownPasteSourceType {
     WordDesktop,
     ExcelDesktop,
     ExcelOnline,

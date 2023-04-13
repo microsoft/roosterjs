@@ -404,6 +404,7 @@ export default class ImageEdit implements EditorPlugin {
             //Clone the image and insert the clone in a entity
             this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
             this.clonedImage.removeAttribute('id');
+            this.clonedImage.style.removeProperty('max-width');
             this.wrapper = createElement(
                 KnownCreateElementDataIndex.ImageEditWrapper,
                 this.image.ownerDocument

@@ -1,6 +1,6 @@
-import isExcelDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isExcelDesktopDocument';
-import { EXCEL_ATTRIBUTE_VALUE } from '../pasteTestUtils';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
+import isExcelDesktopDocument from '../../lib/pasteSourceValidations/isExcelDesktopDocument';
+import { EXCEL_ATTRIBUTE_VALUE } from './pasteTestUtils';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
 
 const EXCEL_ONLINE_ATTRIBUTE_VALUE = 'Excel.Sheet';
 
