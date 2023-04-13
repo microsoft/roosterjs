@@ -69,6 +69,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         'contentModelEdit',
                         'Handle keyboard edit event using Content Model'
                     )}
+                    {this.renderPluginItem('contentModelPaste', 'Paste Plugin using content model')}
                 </tbody>
             </table>
         );

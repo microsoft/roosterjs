@@ -24,6 +24,7 @@ export interface BuildInPluginList {
     autoFormat: boolean;
     contentModelFormat: boolean;
     contentModelEdit: boolean;
+    contentModelPaste: boolean;
 }
 
 export default interface BuildInPluginState {

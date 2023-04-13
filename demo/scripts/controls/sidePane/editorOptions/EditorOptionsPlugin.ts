@@ -23,6 +23,7 @@ const initialState: BuildInPluginState = {
         autoFormat: true,
         contentModelFormat: true,
         contentModelEdit: false,
+        contentModelPaste: false,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
