@@ -1,7 +1,7 @@
-import ContentModelBeforePasteEvent from 'roosterjs-content-model/lib/publicTypes/event/ContentModelBeforePasteEvent';
+import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import domToContentModel from '../../domToModel/domToContentModel';
-import { ContentModelEditorCore } from '../../publicTypes';
+import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import {
     applyFormat,
     applyTextStyle,
