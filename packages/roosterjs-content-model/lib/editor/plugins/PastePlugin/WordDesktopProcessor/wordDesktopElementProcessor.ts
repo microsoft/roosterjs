@@ -59,7 +59,7 @@ function processWordList(
             listType,
             startNumberOverride,
         };
-        console.log(newLevel);
+
         if (level > listFormat.levels.length) {
             while (level != listFormat.levels.length) {
                 listFormat.levels.push(newLevel);
