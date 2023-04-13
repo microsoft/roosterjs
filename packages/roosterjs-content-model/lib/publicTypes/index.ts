@@ -140,3 +140,5 @@ export {
     ContentModelCoreApiMap,
     ContentModelEditorCore,
 } from './ContentModelEditorCore';
+
+export { default as ContentModelBeforePasteEvent } from './event/ContentModelBeforePasteEvent';
