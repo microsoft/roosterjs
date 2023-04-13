@@ -1,9 +1,10 @@
-import { addBlock } from 'roosterjs-content-model/lib/modelApi/common/addBlock';
-import { ContentModelBlockGroup, DomToModelContext } from '../../../../publicTypes';
-import { createListItem } from 'roosterjs-content-model/lib/modelApi/creators/createListItem';
+import { addBlock } from '../../../../modelApi/common/addBlock';
+import { ContentModelBlockGroup } from '../../../../publicTypes/group/ContentModelBlockGroup';
+import { createListItem } from '../../../../modelApi/creators/createListItem';
+import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
 import { getStyles, safeInstanceOf } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
-import { parseFormat } from 'roosterjs-content-model/lib/domToModel/utils/parseFormat';
+import { parseFormat } from '../../../../domToModel/utils/parseFormat';
 import { PasteElementProcessor } from '../../../../publicTypes/event/PasteElementProcessor';
 
 const MSO_COMMENT_ANCHOR_HREF_REGEX = /#_msocom_/;
