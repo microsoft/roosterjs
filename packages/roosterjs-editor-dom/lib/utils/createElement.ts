@@ -22,7 +22,7 @@ export const KnownCreateElementData: Record<KnownCreateElementDataIndex, CreateE
     [KnownCreateElementDataIndex.CopyPasteTempDiv]: {
         tag: 'div',
         style:
-            'width: 1px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text',
+            'width: 600px; height: 1px; overflow: hidden; position: fixed; top: 0; left; 0; -webkit-user-select: text',
         attributes: {
             contenteditable: 'true',
         },
