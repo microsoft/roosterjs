@@ -25,7 +25,7 @@ const BuildInQuoteFormat: ContentModelBlockFormat = {
  */
 export default function toggleBlockQuote(
     editor: IContentModelEditor,
-    quoteFormat: ContentModelBlockFormat = DefaultQuoteFormat
+    quoteFormat: ContentModelBlockFormat & ContentModelSegmentFormat = DefaultQuoteFormat
 ) {
     const fullQuoteFormat = {
         ...BuildInQuoteFormat,
