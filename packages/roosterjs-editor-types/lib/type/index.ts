@@ -23,3 +23,4 @@ export {
     CustomizeDefinition,
     Definition,
 } from './Definition';
+export { CoreCreator } from './CoreCreator';

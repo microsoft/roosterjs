@@ -1,9 +1,9 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { Coordinates } from 'roosterjs-editor-types';
+import { isGeneralSegment } from '../common/isGeneralSegment';
 import { Selectable } from '../../publicTypes/selection/Selectable';
 
 /**
@@ -174,13 +174,6 @@ function setSelectionToSegment(
             setIsSelected(segment, isInSelection);
             return isInSelection;
     }
-}
-
-function isGeneralSegment(group: ContentModelBlockGroup): group is ContentModelGeneralSegment {
-    return (
-        group.blockGroupType == 'General' &&
-        (<ContentModelGeneralSegment>group).segmentType == 'General'
-    );
 }
 
 function setIsSelected(selectable: Selectable, value: boolean) {

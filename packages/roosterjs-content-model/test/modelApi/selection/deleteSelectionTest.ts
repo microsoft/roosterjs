@@ -3,6 +3,8 @@ import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
+import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -649,6 +651,176 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
             format: { fontSize: '10pt' },
+        });
+    });
+
+    it('delete with general block', () => {
+        const model = createContentModelDocument();
+        const general = createGeneralBlock(null!);
+
+        general.isSelected = true;
+        model.blocks.push(general);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.isChanged).toBeTrue();
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+                isImplicit: false,
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                    isImplicit: false,
+                },
+            ],
+        });
+    });
+
+    it('delete with general block and others', () => {
+        const model = createContentModelDocument();
+        const divider = createDivider('div');
+        const general = createGeneralBlock(null!);
+
+        divider.isSelected = true;
+        general.isSelected = true;
+        model.blocks.push(divider, general);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.isChanged).toBeTrue();
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+                isImplicit: false,
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                    isImplicit: false,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('delete with general segment', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const general = createGeneralSegment(null!);
+
+        general.isSelected = true;
+        para.segments.push(general);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.isChanged).toBeTrue();
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                },
+            ],
+        });
+    });
+
+    it('delete with general segment and others', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const general = createGeneralSegment(null!);
+        const text = createText('test');
+
+        general.isSelected = true;
+        text.isSelected = true;
+        para.segments.push(general, text);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.isChanged).toBeTrue();
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                },
+            ],
         });
     });
 });
@@ -1368,7 +1540,8 @@ describe('deleteSelection - forward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1377,7 +1550,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -1415,7 +1587,8 @@ describe('deleteSelection - forward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1435,7 +1608,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -1480,7 +1652,8 @@ describe('deleteSelection - forward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1500,7 +1673,6 @@ describe('deleteSelection - forward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'BlockGroup',
@@ -1942,6 +2114,112 @@ describe('deleteSelection - forward', () => {
                 },
             ],
             format: { fontSize: '10pt' },
+        });
+    });
+
+    it('Delete from general segment, no sibling', () => {
+        const model = createContentModelDocument();
+        const parentParagraph = createParagraph();
+        const general = createGeneralSegment(null!);
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        general.blocks.push(para);
+        parentParagraph.segments.push(general);
+        model.blocks.push(parentParagraph);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeFalse();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [general, model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [marker],
+                                    format: {},
+                                },
+                            ],
+                            element: null!,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Delete from general segment, has sibling', () => {
+        const model = createContentModelDocument();
+        const parentParagraph = createParagraph();
+        const general = createGeneralSegment(null!);
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test');
+
+        para.segments.push(marker);
+        general.blocks.push(para);
+        parentParagraph.segments.push(general, text);
+        model.blocks.push(parentParagraph);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [general, model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [marker],
+                                    format: {},
+                                },
+                            ],
+                            element: null!,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'est',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
         });
     });
 });
@@ -2644,7 +2922,8 @@ describe('deleteSelection - backward', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2664,7 +2943,6 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -2723,7 +3001,8 @@ describe('deleteSelection - backward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2732,7 +3011,6 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -2801,7 +3079,6 @@ describe('deleteSelection - backward', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -2810,7 +3087,8 @@ describe('deleteSelection - backward', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                 },
             ],
         });
@@ -3234,6 +3512,112 @@ describe('deleteSelection - backward', () => {
                 },
             ],
             format: { fontSize: '10pt' },
+        });
+    });
+
+    it('Delete from general segment, no sibling', () => {
+        const model = createContentModelDocument();
+        const parentParagraph = createParagraph();
+        const general = createGeneralSegment(null!);
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        general.blocks.push(para);
+        parentParagraph.segments.push(general);
+        model.blocks.push(parentParagraph);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeFalse();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [general, model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [marker],
+                                    format: {},
+                                },
+                            ],
+                            element: null!,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Delete from general segment, has sibling', () => {
+        const model = createContentModelDocument();
+        const parentParagraph = createParagraph();
+        const general = createGeneralSegment(null!);
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test');
+
+        para.segments.push(marker);
+        general.blocks.push(para);
+        parentParagraph.segments.push(text, general);
+        model.blocks.push(parentParagraph);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [general, model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tes',
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'General',
+                            segmentType: 'General',
+                            format: {},
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [marker],
+                                    format: {},
+                                },
+                            ],
+                            element: null!,
+                        },
+                    ],
+                },
+            ],
         });
     });
 });

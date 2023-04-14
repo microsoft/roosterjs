@@ -14,7 +14,9 @@ export default function removeLink(editor: IEditor) {
         editor,
         (start, end) => {
             editor.queryElements('a[href]', QueryScope.OnSelection, unwrap);
-            editor.select(start, end);
+            if (start && end) {
+                editor.select(start, end);
+            }
         },
         'removeLink'
     );

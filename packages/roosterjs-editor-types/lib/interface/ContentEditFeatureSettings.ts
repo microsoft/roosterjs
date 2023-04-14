@@ -141,6 +141,18 @@ export interface ListFeatureSettings {
      * @default true
      */
     mergeListOnBackspaceAfterList: boolean;
+
+    /**
+     * indentWhenAltShiftRight edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Right
+     * @default when browser is in Mac it is default disabled, else it is enabled
+     */
+    indentWhenAltShiftRight: boolean;
+
+    /**
+     * outdentWhenAltShiftLeft edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Left
+     * @default when browser is in Mac it is default disabled, else it is enabled
+     */
+    outdentWhenAltShiftLeft: boolean;
 }
 
 /**
@@ -270,6 +282,23 @@ export interface TextFeatureSettings {
 }
 
 /**
+ * Settings for code features
+ */
+export interface CodeFeatureSettings {
+    /**
+     * When inside a code block, exit the code block by pressing Enter twice, or once on an empty line
+     * @default true
+     */
+    removeCodeWhenEnterOnEmptyLine: boolean;
+
+    /**
+     * When inside an empty code block (or an empty first line), exit the code block by pressing Backspace
+     * @default true
+     */
+    removeCodeWhenBackspaceOnEmptyFirstLine: boolean;
+}
+
+/**
  * A list to specify whether each of the listed content edit features is enabled
  */
 export default interface ContentEditFeatureSettings
@@ -282,4 +311,5 @@ export default interface ContentEditFeatureSettings
         CursorFeatureSettings,
         MarkdownFeatureSettings,
         EntityFeatureSettings,
-        TextFeatureSettings {}
+        TextFeatureSettings,
+        CodeFeatureSettings {}

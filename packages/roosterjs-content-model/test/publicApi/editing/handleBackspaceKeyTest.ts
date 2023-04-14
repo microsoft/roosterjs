@@ -109,4 +109,53 @@ describe('handleBackspaceKey', () => {
             0
         );
     });
+
+    it('Model with content and selection', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'test',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'test',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            true,
+            1
+        );
+    });
 });

@@ -116,10 +116,10 @@ function cacheGetCommand(event: PluginKeyboardEvent) {
             // the ALT+BACKSPACE combination.
             event.eventType == PluginEventType.KeyDown && !e.getModifierState('AltGraph')
                 ? e.which |
-                  (e.metaKey && Keys.Meta) |
-                  (e.shiftKey && Keys.Shift) |
-                  (e.ctrlKey && Keys.Ctrl) |
-                  (e.altKey && Keys.ALT)
+                  (<number>(e.metaKey && Keys.Meta)) |
+                  (<number>(e.shiftKey && Keys.Shift)) |
+                  (<number>(e.ctrlKey && Keys.Ctrl)) |
+                  (<number>(e.altKey && Keys.ALT))
                 : 0;
         return key && commands.filter(cmd => (Browser.isMac ? cmd.macKey : cmd.winKey) == key)[0];
     });

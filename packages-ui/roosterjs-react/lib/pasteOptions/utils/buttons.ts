@@ -28,6 +28,11 @@ export const Buttons: Record<PasteOptionButtonKeys, PasteOptionButtonType> = {
         shortcut: 'M',
         icon: 'ClipboardList',
     },
+    pasteOptionPasteAsImage: {
+        unlocalizedText: 'Paste as image',
+        shortcut: 'I',
+        icon: 'PictureFill',
+    },
 };
 
 /**

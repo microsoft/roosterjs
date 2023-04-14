@@ -28,6 +28,9 @@ const LINE_BREAKS = /[\n|\r]/gi;
  */
 export function processNodesDiscovery(wordConverter: WordConverter): boolean {
     let args = wordConverter.wordConverterArgs;
+    if (!args) {
+        return false;
+    }
     while (args.currentIndex < args.nodes.length) {
         let node = args.nodes.item(args.currentIndex);
 
@@ -133,14 +136,13 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 moveChildNodes(last, node, true /*keepExistingChildren*/);
 
                 // Remove the item that we don't need anymore
-                node.parentNode.removeChild(node);
+                node.parentNode?.removeChild(node);
             }
         }
 
         // Move to the next element are return true if more elements need to be processed
         args.currentIndex++;
     }
-
     return args.listItems.length > 0;
 }
 
@@ -152,49 +154,49 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
  */
 export function processNodeConvert(wordConverter: WordConverter): boolean {
     let args = wordConverter.wordConverterArgs;
-    args.currentIndex = 0;
+    if (args) {
+        args.currentIndex = 0;
 
-    while (args.currentIndex < args.listItems.length) {
-        let metadata = args.listItems[args.currentIndex];
-        let node = metadata.originalNode;
-        let listMetadata = args.lists[metadata.uniqueListId.toString()];
-        if (!listMetadata.ignore) {
-            // We have a list item that we need to convert, get or create the list
-            // that hold this item out
-            let list = getOrCreateListForNode(wordConverter, node, metadata, listMetadata);
-            if (list) {
-                // Clean the element out.. this call gets rid of the fake bullet and unneeded nodes
-                cleanupListIgnore(node, LOOKUP_DEPTH);
+        while (args.currentIndex < args.listItems.length) {
+            let metadata = args.listItems[args.currentIndex];
+            let node = metadata.originalNode;
+            let listMetadata = args.lists[metadata.uniqueListId.toString()];
+            if (!listMetadata.ignore) {
+                // We have a list item that we need to convert, get or create the list
+                // that hold this item out
+                let list = getOrCreateListForNode(wordConverter, node, metadata, listMetadata);
+                if (list) {
+                    // Clean the element out.. this call gets rid of the fake bullet and unneeded nodes
+                    cleanupListIgnore(node, LOOKUP_DEPTH);
 
-                // Create a new list item and transfer the children
-                let li = node.ownerDocument.createElement('LI');
-                if (getTagOfNode(node).startsWith('H')) {
-                    const clone = node.cloneNode(true /* deep */) as HTMLHeadingElement;
-                    clone.style.textIndent = '';
-                    clone.style.marginLeft = '';
-                    clone.style.marginRight = '';
-                    li.appendChild(clone);
-                } else {
-                    moveChildNodes(li, node);
-                }
+                    // Create a new list item and transfer the children
+                    let li = node.ownerDocument.createElement('LI');
+                    if (getTagOfNode(node).startsWith('H')) {
+                        const clone = node.cloneNode(true /* deep */) as HTMLHeadingElement;
+                        clone.style.textIndent = '';
+                        clone.style.marginLeft = '';
+                        clone.style.marginRight = '';
+                        li.appendChild(clone);
+                    } else {
+                        moveChildNodes(li, node);
+                    }
 
-                // Append the list item into the list
-                list.appendChild(li);
+                    // Append the list item into the list
+                    list.appendChild(li);
 
-                // Remove the node we just converted
-                node.parentNode.removeChild(node);
+                    // Remove the node we just converted
+                    node.parentNode?.removeChild(node);
 
-                if (listMetadata.tagName == 'UL') {
-                    wordConverter.numBulletsConverted++;
-                } else {
-                    wordConverter.numNumberedConverted++;
+                    if (listMetadata.tagName == 'UL') {
+                        wordConverter.numBulletsConverted++;
+                    } else {
+                        wordConverter.numNumberedConverted++;
+                    }
                 }
             }
+            args.currentIndex++;
         }
-
-        args.currentIndex++;
     }
-
     return wordConverter.numBulletsConverted > 0 || wordConverter.numNumberedConverted > 0;
 }
 
@@ -221,7 +223,7 @@ function getOrCreateListForNode(
     // is a completely new list, so we'll append a new list for that
     if ((listId && listId != metadata.uniqueListId) || (!listId && list.firstChild)) {
         let newList = node.ownerDocument.createElement(listMetadata.tagName);
-        list.parentNode.insertBefore(newList, list.nextSibling);
+        list.parentNode?.insertBefore(newList, list.nextSibling);
         list = newList;
     }
 
@@ -251,17 +253,20 @@ function convertListIfNeeded(
     // Check if we need to convert the list out
     if (listMetadata.tagName != getTagOfNode(list)) {
         // We have the wrong list type.. convert it, set the id again and transfer all the children
-        let newList = list.ownerDocument.createElement(listMetadata.tagName);
-        setObject(
-            wordConverter.wordCustomData,
-            newList,
-            UNIQUE_LIST_ID_CUSTOM_DATA,
-            getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
-        );
-        moveChildNodes(newList, list);
-        list.parentNode.insertBefore(newList, list);
-        list.parentNode.removeChild(list);
-        list = newList;
+        let newList = list.ownerDocument?.createElement(listMetadata.tagName);
+        if (newList) {
+            setObject(
+                wordConverter.wordCustomData,
+                newList,
+                UNIQUE_LIST_ID_CUSTOM_DATA,
+                getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA)
+            );
+            moveChildNodes(newList, list);
+
+            list.parentNode?.insertBefore(newList, list);
+            list.parentNode?.removeChild(list);
+            list = newList;
+        }
     }
 
     return list;
@@ -273,10 +278,10 @@ function convertListIfNeeded(
 function recurringGetOrCreateListAtNode(
     node: HTMLElement,
     level: number,
-    listMetadata: ListMetadata
+    listMetadata: ListMetadata | null
 ): Node {
-    let parent: Node = null;
-    let possibleList: Node;
+    let parent: Node | null = null;
+    let possibleList: Node | null = null;
     if (level == 1) {
         // Root case, we'll check if the list is the previous sibling of the node
         possibleList = getRealPreviousSibling(node);
@@ -284,7 +289,9 @@ function recurringGetOrCreateListAtNode(
         // If we get here, we are looking for level 2 or deeper... get the upper list
         // and check if the last element is a list
         parent = recurringGetOrCreateListAtNode(node, level - 1, null);
-        possibleList = parent.lastChild;
+        if (parent.lastChild) {
+            possibleList = parent.lastChild;
+        }
     }
 
     // Check the element that we got and verify that it is a list
@@ -298,14 +305,14 @@ function recurringGetOrCreateListAtNode(
 
     // If we get here, it means we don't have a list and we need to create one
     // this code path will always create new lists as UL lists
-    let newList = node.ownerDocument.createElement(listMetadata ? listMetadata.tagName : 'UL');
+    let newList = node.ownerDocument?.createElement(listMetadata ? listMetadata.tagName : 'UL');
     if (level == 1) {
         // For level 1, we'll insert the list before the node
-        node.parentNode.insertBefore(newList, node);
+        node.parentNode?.insertBefore(newList, node);
     } else {
         // Any level 2 or above, we insert the list as the last
         // child of the upper level list
-        parent.appendChild(newList);
+        parent?.appendChild(newList);
     }
 
     return newList;
@@ -319,18 +326,20 @@ function recurringGetOrCreateListAtNode(
 function cleanupListIgnore(node: Node, levels: number) {
     let nodesToRemove: Node[] = [];
 
-    for (let child: Node = node.firstChild; child; child = child.nextSibling) {
-        // Clean up the item internally first if we need to based on the number of levels
-        if (child.nodeType == NodeType.Element && levels > 1) {
-            cleanupListIgnore(child, levels - 1);
-        }
+    for (let child: Node | null = node.firstChild; child; child = child.nextSibling) {
+        if (child) {
+            // Clean up the item internally first if we need to based on the number of levels
+            if (child && child.nodeType == NodeType.Element && levels > 1) {
+                cleanupListIgnore(child, levels - 1);
+            }
 
-        // Try to convert word comments into ignore elements if we haven't done so for this element
-        child = fixWordListComments(child, true /*removeComments*/);
+            // Try to convert word comments into ignore elements if we haven't done so for this element
+            child = fixWordListComments(child, true /*removeComments*/);
 
-        // Check if we can remove this item out
-        if (isEmptySpan(child) || isIgnoreNode(child)) {
-            nodesToRemove.push(child);
+            // Check if we can remove this item out
+            if (isEmptySpan(child) || isIgnoreNode(child)) {
+                nodesToRemove.push(child);
+            }
         }
     }
 
@@ -341,7 +350,7 @@ function cleanupListIgnore(node: Node, levels: number) {
  * Reads the word list meta dada out of the specified node. If the node
  * is not a Word list item, it returns null.
  */
-function getListItemMetadata(node: HTMLElement): ListItemMetadata {
+function getListItemMetadata(node: HTMLElement): ListItemMetadata | null {
     if (node.nodeType == NodeType.Element) {
         let listAttribute = getStyleValue(node, MSO_LIST_STYLE_NAME);
         if (listAttribute && listAttribute.length > 0) {
@@ -393,8 +402,8 @@ function getFakeBulletText(node: Node, levels: number): string {
     //
     // Basically, we need to locate the mso-list:Ignore SPAN, which holds either one text or image node. That
     // text or image node will be the fake bullet we are looking for
-    let result: string = null;
-    let child: Node = node.firstChild;
+    let result: string = '';
+    let child: Node | null = node.firstChild;
     while (!result && child) {
         // First, check if we need to convert the Word list comments into real elements
         child = fixWordListComments(child, true /*removeComments*/);
@@ -402,7 +411,7 @@ function getFakeBulletText(node: Node, levels: number): string {
         // Check if this is the node that holds the fake bullets (mso-list: Ignore)
         if (isIgnoreNode(child)) {
             // Yes... this is the node that holds either the text or image data
-            result = child.textContent.trim();
+            result = child.textContent?.trim() ?? '';
 
             // This is the case for image case
             if (result.length == 0) {
@@ -434,8 +443,8 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
         if (value && value.trim().toLowerCase() == '[if !supportlists]') {
             // We have a list ignore start, find the end.. We know is not more than
             // 3 nodes away, so we'll optimize our checks
-            let nextElement = child;
-            let endComment: Node = null;
+            let nextElement: Node | null = child;
+            let endComment: Node | null = null;
             for (let j = 0; j < 4; j++) {
                 nextElement = getRealNextSibling(nextElement);
                 if (!nextElement) {
@@ -452,25 +461,32 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
 
             // if we found the end node, wrap everything out
             if (endComment) {
-                let newSpan = child.ownerDocument.createElement('span');
-                newSpan.setAttribute('style', 'mso-list: ignore');
+                let newSpan = child.ownerDocument?.createElement('span');
+                newSpan?.setAttribute('style', 'mso-list: ignore');
+
                 nextElement = getRealNextSibling(child);
                 while (nextElement != endComment) {
-                    nextElement = nextElement.nextSibling as HTMLElement;
-                    newSpan.appendChild(nextElement.previousSibling);
+                    nextElement = nextElement?.nextSibling as HTMLElement;
+                    if (nextElement.previousSibling) {
+                        newSpan?.appendChild(nextElement.previousSibling);
+                    }
                 }
 
                 // Insert the element out and use that one as the current child
-                endComment.parentNode.insertBefore(newSpan, endComment);
+                if (newSpan) {
+                    endComment.parentNode?.insertBefore(newSpan, endComment);
+                }
 
                 // Remove the comments out if the call specified it out
                 if (removeComments) {
-                    child.parentNode.removeChild(child);
-                    endComment.parentNode.removeChild(endComment);
+                    child.parentNode?.removeChild(child);
+                    endComment.parentNode?.removeChild(endComment);
                 }
 
                 // Last, make sure we return the new element out instead of the comment
-                child = newSpan;
+                if (newSpan) {
+                    child = newSpan;
+                }
             }
         }
     }
@@ -479,8 +495,8 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
 }
 
 /** Finds the real previous sibling, ignoring empty text nodes */
-function getRealPreviousSibling(node: Node): Node {
-    let prevSibling = node;
+function getRealPreviousSibling(node: Node): Node | null {
+    let prevSibling: Node | null = node;
     do {
         prevSibling = prevSibling.previousSibling;
     } while (prevSibling && isEmptyTextNode(prevSibling));
@@ -488,8 +504,8 @@ function getRealPreviousSibling(node: Node): Node {
 }
 
 /** Finds the real next sibling, ignoring empty text nodes */
-function getRealNextSibling(node: Node): Node {
-    let nextSibling = node;
+function getRealNextSibling(node: Node): Node | null {
+    let nextSibling: Node | null = node;
     do {
         nextSibling = nextSibling.nextSibling;
     } while (nextSibling && isEmptyTextNode(nextSibling));
@@ -523,7 +539,7 @@ function isEmptySpan(node: Node): boolean {
 }
 
 /** Reads the specified style value from the node */
-function getStyleValue(node: HTMLElement, styleName: string): string {
+function getStyleValue(node: HTMLElement, styleName: string): string | null {
     // Word uses non-standard names for the metadata that puts in the style of the element...
     // Most browsers will not provide the information for those nonstandard values through the node.style
     // property, so the only reliable way to read them is to get the attribute directly and do
@@ -541,13 +557,17 @@ function isEmptyTextNode(node: Node): boolean {
     // Empty text node is empty
     if (node.nodeType == NodeType.Text) {
         let value = node.nodeValue;
-        value = value.replace(LINE_BREAKS, '');
-        return value.trim().length == 0;
+        value = value?.replace(LINE_BREAKS, '') ?? '';
+        return value?.trim().length == 0;
     }
 
     // Span or Font with an empty child node is empty
     let tagName = getTagOfNode(node);
-    if (node.firstChild == node.lastChild && (tagName == 'SPAN' || tagName == 'FONT')) {
+    if (
+        node.firstChild &&
+        node.firstChild == node.lastChild &&
+        (tagName == 'SPAN' || tagName == 'FONT')
+    ) {
         return isEmptyTextNode(node.firstChild);
     }
 

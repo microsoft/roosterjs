@@ -166,4 +166,10 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
         marginTop: '1em',
         marginBottom: '1em',
     },
+    pre: {
+        fontFamily: 'monospace',
+        whiteSpace: 'pre',
+        marginTop: '1em',
+        marginBottom: '1em',
+    },
 };

@@ -4,7 +4,8 @@
 export type PasteOptionButtonKeys =
     | 'pasteOptionPasteAsIs'
     | 'pasteOptionPasteText'
-    | 'pasteOptionMergeFormat';
+    | 'pasteOptionMergeFormat'
+    | 'pasteOptionPasteAsImage';
 
 /**
  * Localized string keys for Paste Option buttons and its UI component

@@ -703,7 +703,7 @@ describe('getOperationalBlocks', () => {
                 { block: para2, path: [quote, listItem2, group] },
             ],
             ['ListItem'],
-            ['Quote'],
+            ['FormatContainer'],
             false,
             [
                 { block: listItem1, parent: group },
@@ -724,7 +724,7 @@ describe('getOperationalBlocks', () => {
                 { block: para1, path: [listItem, group] },
                 { block: para2, path: [quote, group] },
             ],
-            ['ListItem', 'Quote'],
+            ['ListItem', 'FormatContainer'],
             ['TableCell'],
             false,
             [
@@ -750,7 +750,7 @@ describe('getOperationalBlocks', () => {
                 { block: para1, path: [quote1, listItem, group] },
                 { block: para2, path: [quote2, group] },
             ],
-            ['ListItem', 'Quote'],
+            ['ListItem', 'FormatContainer'],
             ['TableCell'],
             false,
             [
@@ -773,7 +773,7 @@ describe('getOperationalBlocks', () => {
                 { block: para1, path: [quote1, listItem, group] },
                 { block: para2, path: [quote2, group] },
             ],
-            ['ListItem', 'Quote'],
+            ['ListItem', 'FormatContainer'],
             ['TableCell'],
             true,
             [
