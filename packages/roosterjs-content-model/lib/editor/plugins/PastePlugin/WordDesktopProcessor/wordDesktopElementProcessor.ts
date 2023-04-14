@@ -25,15 +25,12 @@ export const wordDesktopElementProcessor: PasteElementProcessor<HTMLElement> = (
 };
 
 function processWordCommand(styles: Record<string, string>, element: HTMLElement) {
-    if (
+    return (
         styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT ||
         (safeInstanceOf(element, 'HTMLAnchorElement') &&
             MSO_COMMENT_ANCHOR_HREF_REGEX.test(element.href)) ||
         styles[MSO_ELEMENT] == MSO_ELEMENT_COMMENT_LIST
-    ) {
-        return true;
-    }
-    return false;
+    );
 }
 
 function processWordList(
@@ -54,11 +51,10 @@ function processWordList(
     if (wordListStyle && group && typeof level === 'number') {
         const fakeBullet = getFakeBulletText(element, 5);
         const listType = getFakeBulletTagName(fakeBullet);
-        const startNumberOverride = listType == 'OL' ? parseInt(fakeBullet) || 1 : undefined;
 
         const newLevel = {
             listType,
-            startNumberOverride,
+            startNumberOverride: listType == 'OL' ? parseInt(fakeBullet) || 1 : undefined,
         };
 
         if (level > listFormat.levels.length) {
@@ -76,6 +72,7 @@ function processWordList(
 
         parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
         parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
+
         context.elementProcessors.child(listItem, element, context);
         addBlock(group, listItem);
         return true;
