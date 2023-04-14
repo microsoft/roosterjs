@@ -1,24 +1,16 @@
-import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
-import contentModelToDom from '../../modelToDom/contentModelToDom';
-import domToContentModel from '../../domToModel/domToContentModel';
-import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import applyFormat from '../utils/applyFormat';
+import applyTextStyle from '../inlineElements/applyTextStyle';
+import getInheritableStyles from '../htmlSanitizer/getInheritableStyles';
+import getTagOfNode from '../utils/getTagOfNode';
+import HtmlSanitizer from '../htmlSanitizer/HtmlSanitizer';
+import moveChildNodes from '../utils/moveChildNodes';
+import toArray from '../jsUtils/toArray';
+import wrap from '../utils/wrap';
 import {
-    applyFormat,
-    applyTextStyle,
-    createDefaultHtmlSanitizerOptions,
-    getInheritableStyles,
-    getTagOfNode,
-    HtmlSanitizer,
-    moveChildNodes,
-    toArray,
-    wrap,
-} from 'roosterjs-editor-dom';
-import {
+    BeforePasteEvent,
     ClipboardData,
-    CreatePasteFragment,
-    EditorCore,
-    PluginEventType,
     DefaultFormat,
+    EditorCore,
     NodePosition,
 } from 'roosterjs-editor-types';
 
@@ -28,20 +20,26 @@ const NBSP_HTML = '\u00A0';
 const ENSP_HTML = '\u2002';
 const TAB_SPACES = 6;
 
-export const createPasteFragment: CreatePasteFragment = (
+/**
+ * Create a DocumentFragment for paste from a ClipboardData
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param position The position to paste to
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * @param pasteAsImage Whether to force paste as image
+ * @param event Event to trigger.
+ * false to keep original format
+ */
+export default function createFragmentFromClipboardData(
     core: EditorCore,
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
-    applyCurrentStyle: boolean
-) => {
-    if (!clipboardData) {
-        return null;
-    }
-
-    // Step 1: Prepare BeforePasteEvent object
-    const event = createBeforePasteEvent(core, clipboardData);
-
+    applyCurrentStyle: boolean,
+    pasteAsImage: boolean,
+    event: BeforePasteEvent
+) {
     const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
@@ -102,7 +100,7 @@ export const createPasteFragment: CreatePasteFragment = (
     }
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
-    if (!pasteAsText && !text && imageDataUri) {
+    if ((pasteAsImage && imageDataUri) || (!pasteAsText && !text && imageDataUri)) {
         // Paste image
         const img = document.createElement('img');
         img.style.maxWidth = '100%';
@@ -152,47 +150,18 @@ export const createPasteFragment: CreatePasteFragment = (
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     const sanitizer = new HtmlSanitizer(event.sanitizingOption);
-
     sanitizer.convertGlobalCssToInlineCss(fragment);
     sanitizer.sanitize(fragment, position ? getInheritableStyles(position.element) : undefined);
 
-    if (fragment) {
-        const cmCore = core as ContentModelEditorCore;
-
-        const model = domToContentModel(
-            wrap(fragment, 'span'),
-            cmCore.api.createEditorContext(cmCore),
-            {
-                processorOverride: {
-                    element: (group, element, context) => {
-                        const wasHandled =
-                            event.elementProcessors.length > 0 &&
-                            event.elementProcessors.some(p => p(group, element, context));
-
-                        if (!wasHandled) {
-                            context.defaultElementProcessors.element(group, element, context);
-                        }
-                    },
-                },
-            }
-        );
-        contentModelToDom(
-            fragment.ownerDocument,
-            fragment,
-            model,
-            cmCore.api.createEditorContext(cmCore)
-        );
-    }
-
     return fragment;
-};
-
+}
 /**
  * @internal
  * Transform \t characters into EN SPACE characters
  * @param input string NOT containing \n characters
  * @example t("\thello", 2) => "&ensp;&ensp;&ensp;&ensp;hello"
  */
+
 export function transformTabCharacters(input: string, initialOffset: number = 0) {
     let line = input;
     let tIndex: number;
@@ -205,7 +174,6 @@ export function transformTabCharacters(input: string, initialOffset: number = 0)
     }
     return line;
 }
-
 function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
     const pendableFormat = core.api.getPendableFormatState(core, true /** forceGetStateFromDOM*/);
     const styleBasedFormat = core.api.getStyleBasedFormatState(core, node);
@@ -219,27 +187,6 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
         bold: pendableFormat.isBold,
         italic: pendableFormat.isItalic,
         underline: pendableFormat.isUnderline,
-    };
-}
-
-function createBeforePasteEvent(
-    core: EditorCore,
-    clipboardData: ClipboardData
-): ContentModelBeforePasteEvent {
-    const options = createDefaultHtmlSanitizerOptions();
-
-    // Remove "caret-color" style generated by Safari to make sure caret shows in right color after paste
-    options.cssStyleCallbacks['caret-color'] = () => false;
-
-    return {
-        eventType: PluginEventType.BeforePaste,
-        clipboardData,
-        fragment: core.contentDiv.ownerDocument.createDocumentFragment(),
-        sanitizingOption: options,
-        htmlBefore: '',
-        htmlAfter: '',
-        htmlAttributes: {},
-        elementProcessors: [],
     };
 }
 

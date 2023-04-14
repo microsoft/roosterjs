@@ -2,7 +2,7 @@ import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditor
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { createPasteFragment } from '../../lib/editor/coreApi/createPasteFragment';
+import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
@@ -46,7 +46,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteFragment,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
@@ -88,7 +88,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteFragment,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
@@ -145,7 +145,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteFragment,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
@@ -185,7 +185,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteFragment,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
@@ -227,7 +227,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteFragment,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
