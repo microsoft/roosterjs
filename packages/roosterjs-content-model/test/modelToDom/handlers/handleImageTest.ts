@@ -136,4 +136,25 @@ describe('handleSegment', () => {
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
+
+    it('With onNodeCreated', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: {},
+            dataset: {},
+        };
+        const parent = document.createElement('div');
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleImage(document, parent, segment, context);
+
+        expect(parent.innerHTML).toBe('<span><img src="http://test.com/test"></span>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('img'));
+    });
 });

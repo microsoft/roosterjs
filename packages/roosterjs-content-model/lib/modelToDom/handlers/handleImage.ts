@@ -55,4 +55,6 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
             image: img,
         };
     }
+
+    context.onNodeCreated?.(imageModel, img);
 };
