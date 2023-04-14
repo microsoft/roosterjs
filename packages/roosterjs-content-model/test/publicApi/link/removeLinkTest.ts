@@ -32,7 +32,9 @@ describe('removeLink', () => {
 
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel);
+            expect(setContentModel).toHaveBeenCalledWith(expectedModel, {
+                onNodeCreated: undefined,
+            });
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }
