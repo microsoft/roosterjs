@@ -21,6 +21,7 @@ export { default as applyTextStyle } from './inlineElements/applyTextStyle';
 export { default as extractClipboardEvent } from './clipboard/extractClipboardEvent';
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
+export { default as createFragmentFromClipboardData } from './clipboard/createFragmentFromClipboardData';
 
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
