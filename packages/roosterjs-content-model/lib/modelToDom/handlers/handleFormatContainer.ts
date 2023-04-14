@@ -23,22 +23,21 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
 
         context.modelHandlers.blockGroupChildren(doc, element, container, context);
     } else if (!isBlockGroupEmpty(container)) {
-        const blockQuote = doc.createElement(container.tagName);
+        element = doc.createElement(container.tagName);
 
-        container.cachedElement = blockQuote;
-        parent.insertBefore(blockQuote, refNode);
+        container.cachedElement = element;
+        parent.insertBefore(element, refNode);
 
         stackFormat(context, container.tagName, () => {
-            applyFormat(blockQuote, context.formatAppliers.block, container.format, context);
-            applyFormat(
-                blockQuote,
-                context.formatAppliers.segmentOnBlock,
-                container.format,
-                context
-            );
+            applyFormat(element!, context.formatAppliers.block, container.format, context);
+            applyFormat(element!, context.formatAppliers.segmentOnBlock, container.format, context);
         });
 
-        context.modelHandlers.blockGroupChildren(doc, blockQuote, container, context);
+        context.modelHandlers.blockGroupChildren(doc, element, container, context);
+    }
+
+    if (element) {
+        context.onNodeCreated?.(container, element);
     }
 
     return refNode;
