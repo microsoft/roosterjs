@@ -15,6 +15,7 @@ import {
     IEditor,
     Keys,
     PluginKeyDownEvent,
+    BlockElement,
 } from 'roosterjs-editor-types';
 
 describe('Content Edit Features |', () => {
@@ -302,6 +303,30 @@ describe('Content Edit Features |', () => {
 
                 runTest(delimiterAfter, true /* expected */, event);
             });
+
+            it('DelimiterAfter, should not Handle, getBlockElementAtCursor returned inline', () => {
+                const div = document.createElement('div');
+                div.appendChild(document.createTextNode('New block'));
+                testContainer.insertAdjacentElement('afterend', div);
+
+                const pos = new Position(<Node>div.firstChild!, 0);
+
+                setEditorFuncs(editor, pos, testContainer);
+                editor.getBlockElementAtNode = node => {
+                    return <BlockElement>{
+                        getStartNode: () => node,
+                    };
+                };
+
+                const result = moveBetweenDelimitersFeature.shouldHandleEvent(
+                    event,
+                    editor,
+                    false /* ctrlOrMeta */
+                );
+
+                expect(result).toBe(false);
+                return event;
+            });
         }
 
         describe('LTR |', () => {
@@ -531,6 +556,30 @@ describe('Content Edit Features |', () => {
 
                 runTest(delimiterBefore, true /* expected */, event);
             });
+
+            it('DelimiterBefore, should not Handle, getBlockElementAtCursor returned inline', () => {
+                const div = document.createElement('div');
+                div.appendChild(document.createTextNode('New block'));
+                testContainer.insertAdjacentElement('afterend', div);
+
+                const pos = new Position(<Node>div.firstChild!, 0);
+
+                setEditorFuncs(editor, pos, testContainer);
+                editor.getBlockElementAtNode = node => {
+                    return <BlockElement>{
+                        getStartNode: () => node,
+                    };
+                };
+
+                const result = moveBetweenDelimitersFeature.shouldHandleEvent(
+                    event,
+                    editor,
+                    false /* ctrlOrMeta */
+                );
+
+                expect(result).toBe(false);
+                return event;
+            });
         }
 
         describe('LTR |', () => {
@@ -578,6 +627,30 @@ describe('Content Edit Features |', () => {
             expect(result).toBe(expected);
             return event;
         }
+
+        it('removeEntityBetweenDelimiters, should not Handle, getBlockElementAtCursor returned inline', () => {
+            const div = document.createElement('div');
+            div.appendChild(document.createTextNode('New block'));
+            testContainer.insertAdjacentElement('afterend', div);
+
+            const pos = new Position(<Node>div.firstChild!, 0);
+
+            setEditorFuncs(editor, pos, testContainer);
+            editor.getBlockElementAtNode = node => {
+                return <BlockElement>{
+                    getStartNode: () => node,
+                };
+            };
+
+            const result = removeEntityBetweenDelimiters.shouldHandleEvent(
+                event,
+                editor,
+                false /* ctrlOrMeta */
+            );
+
+            expect(result).toBe(false);
+            return event;
+        });
 
         it('DelimiterAfter, Backspace, default not prevented', () => {
             let event = <PluginKeyDownEvent>{

@@ -35,7 +35,7 @@ export default function getBlockElementAtNode(
     rootNode: Node,
     node: Node | null
 ): BlockElement | null {
-    if (!contains(rootNode, node)) {
+    if (!node || !contains(rootNode, node)) {
         return null;
     }
 
@@ -50,12 +50,8 @@ export default function getBlockElementAtNode(
     }
 
     // Find the head and leaf node in the block
-    let headNode = findHeadTailLeafNode(node!, containerBlockNode, false /*isTail*/);
-    let tailNode = findHeadTailLeafNode(node!, containerBlockNode, true /*isTail*/);
-
-    if (!headNode || !tailNode) {
-        return null;
-    }
+    let headNode = findHeadTailLeafNode(node, containerBlockNode, false /*isTail*/);
+    let tailNode = findHeadTailLeafNode(node, containerBlockNode, true /*isTail*/);
 
     // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
     // 1) &lt;root&gt;&lt;div&gt;hello&lt;br&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: &lt;br&gt;
@@ -63,6 +59,11 @@ export default function getBlockElementAtNode(
     // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
     // So we shall try to collapse as much as we can to the nearest common ancestor
     let nodes = collapseNodes(rootNode, headNode, tailNode, false /*canSplitParent*/);
+
+    if (nodes.length === 0) {
+        return null;
+    }
+
     headNode = nodes[0];
     tailNode = nodes[nodes.length - 1];
 
