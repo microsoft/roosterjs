@@ -35,7 +35,7 @@ export default function getBlockElementAtNode(
     rootNode: Node,
     node: Node | null
 ): BlockElement | null {
-    if (!node || !contains(rootNode, node)) {
+    if (!contains(rootNode, node)) {
         return null;
     }
 
@@ -50,8 +50,12 @@ export default function getBlockElementAtNode(
     }
 
     // Find the head and leaf node in the block
-    let headNode = findHeadTailLeafNode(node, containerBlockNode, false /*isTail*/);
-    let tailNode = findHeadTailLeafNode(node, containerBlockNode, true /*isTail*/);
+    let headNode = findHeadTailLeafNode(node!, containerBlockNode, false /*isTail*/);
+    let tailNode = findHeadTailLeafNode(node!, containerBlockNode, true /*isTail*/);
+
+    if (!headNode || !tailNode) {
+        return null;
+    }
 
     // At this point, we have the head and tail of a block, here are some examples and where head and tail point to
     // 1) &lt;root&gt;&lt;div&gt;hello&lt;br&gt;&lt;/div&gt;&lt;/root&gt;, head: hello, tail: &lt;br&gt;

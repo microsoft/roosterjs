@@ -502,6 +502,7 @@ function getRelatedElements(delimiter: HTMLElement, checkBefore: boolean, editor
         }
         current = traverseFn(traverser);
     }
+
     return { entity, delimiterPair };
 }
 
