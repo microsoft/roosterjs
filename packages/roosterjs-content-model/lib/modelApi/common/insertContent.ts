@@ -1,7 +1,7 @@
 import domToContentModel from '../../domToModel/domToContentModel';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { safeInstanceOf, wrap } from 'roosterjs-editor-dom';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { setSelection } from '../../modelApi/selection/setSelection';
 
 /**
@@ -12,11 +12,7 @@ export function insertContent(
     htmlContent: DocumentFragment | HTMLElement | ContentModelDocument,
     isFromDarkMode?: boolean
 ) {
-    if (safeInstanceOf(htmlContent, 'DocumentFragment')) {
-        htmlContent = wrap(htmlContent, 'span');
-    }
-
-    if (safeInstanceOf(htmlContent, 'HTMLElement')) {
+    if (safeInstanceOf(htmlContent, 'Node')) {
         htmlContent = domToContentModel(
             htmlContent,
             {

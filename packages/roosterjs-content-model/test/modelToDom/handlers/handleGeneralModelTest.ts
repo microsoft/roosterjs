@@ -219,4 +219,21 @@ describe('handleBlockGroup', () => {
         expect(result).toBe(br);
         expect(group.element).toBe(node);
     });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const node = document.createElement('span');
+        const group = createGeneralBlock(node);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleGeneralModel(document, parent, group, context, null);
+
+        expect(parent.innerHTML).toBe('<span></span>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(group);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span'));
+    });
 });

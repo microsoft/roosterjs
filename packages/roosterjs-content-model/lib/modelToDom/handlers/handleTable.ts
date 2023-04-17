@@ -39,6 +39,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
     applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
 
+    context.onNodeCreated?.(table, tableNode);
+
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 
@@ -106,6 +108,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
 
                 context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+
+                context.onNodeCreated?.(cell, td);
             }
         }
     }

@@ -123,6 +123,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 export { ElementProcessor } from './context/ElementProcessor';
 export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';

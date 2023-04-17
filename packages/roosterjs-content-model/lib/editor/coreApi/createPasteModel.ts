@@ -1,12 +1,11 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
+import { ClipboardData, EditorCore, NodePosition, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelEditorCore, CreatePasteModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     createDefaultHtmlSanitizerOptions,
     createFragmentFromClipboardData,
-    wrap,
 } from 'roosterjs-editor-dom';
-import { ClipboardData, EditorCore, PluginEventType, NodePosition } from 'roosterjs-editor-types';
 
 export const createPasteModel: CreatePasteModel = (
     core: ContentModelEditorCore,
@@ -16,10 +15,6 @@ export const createPasteModel: CreatePasteModel = (
     applyCurrentStyle: boolean,
     pasteAsImage: boolean = false
 ) => {
-    if (!clipboardData) {
-        return null;
-    }
-
     // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData);
 
@@ -33,7 +28,7 @@ export const createPasteModel: CreatePasteModel = (
         event
     );
 
-    return domToContentModel(wrap(fragment, 'span'), core.api.createEditorContext(core), {
+    return domToContentModel(fragment, core.api.createEditorContext(core), {
         processorOverride: {
             element: (group, element, context) => {
                 const wasHandled =
