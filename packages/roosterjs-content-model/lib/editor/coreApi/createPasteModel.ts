@@ -5,7 +5,6 @@ import { ContentModelEditorCore, CreatePasteModel } from '../../publicTypes/Cont
 import {
     createDefaultHtmlSanitizerOptions,
     createFragmentFromClipboardData,
-    wrap,
 } from 'roosterjs-editor-dom';
 
 export const createPasteModel: CreatePasteModel = (
@@ -29,7 +28,7 @@ export const createPasteModel: CreatePasteModel = (
         event
     );
 
-    return domToContentModel(wrap(fragment, 'span'), core.api.createEditorContext(core), {
+    return domToContentModel(fragment, core.api.createEditorContext(core), {
         processorOverride: {
             element: (group, element, context) => {
                 const wasHandled =
