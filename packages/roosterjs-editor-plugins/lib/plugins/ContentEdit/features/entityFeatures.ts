@@ -383,7 +383,10 @@ function getBlockTraverser(editor: IEditor, element: Node | null | undefined) {
         return undefined;
     }
     const blockElement = editor.getBlockElementAtNode(element)?.getStartNode();
-    return blockElement ? ContentTraverser.createBodyTraverser(blockElement, element) : undefined;
+    if (!blockElement || !isBlockElement(blockElement)) {
+        return undefined;
+    }
+    return ContentTraverser.createBodyTraverser(blockElement, element);
 }
 
 function cacheDelimiter(event: PluginEvent, checkBefore: boolean, delimiter?: HTMLElement | null) {
