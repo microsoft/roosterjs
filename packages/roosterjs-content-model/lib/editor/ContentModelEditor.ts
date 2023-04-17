@@ -1,8 +1,9 @@
-import { ClipboardData, GetContentMode } from 'roosterjs-editor-types';
+import { ChangeSource, ClipboardData, GetContentMode } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
 import { mergeModel } from '../modelApi/common/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -90,7 +91,7 @@ export default class ContentModelEditor
 
         const range = this.getSelectionRange();
         const pos = range && Position.getStart(range);
-        const model = core.api.createPasteModel(
+        const pasteModel = core.api.createPasteModel(
             core,
             clipboardData,
             pos,
@@ -99,12 +100,18 @@ export default class ContentModelEditor
             pasteAsImage
         );
 
-        if (model) {
-            const currentModel = this.createContentModel();
-
-            mergeModel(currentModel, model);
-
-            this.setContentModel(currentModel);
+        if (pasteModel) {
+            formatWithContentModel(
+                this,
+                'Paste',
+                model => {
+                    mergeModel(model, pasteModel);
+                    return true;
+                },
+                {
+                    changeSource: ChangeSource.Paste,
+                }
+            );
         }
     }
 }
