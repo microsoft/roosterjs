@@ -325,7 +325,6 @@ describe('Content Edit Features |', () => {
                 );
 
                 expect(result).toBe(false);
-                return event;
             });
         }
 
@@ -578,7 +577,6 @@ describe('Content Edit Features |', () => {
                 );
 
                 expect(result).toBe(false);
-                return event;
             });
         }
 
@@ -643,13 +641,17 @@ describe('Content Edit Features |', () => {
             };
 
             const result = removeEntityBetweenDelimiters.shouldHandleEvent(
-                event,
+                <PluginKeyDownEvent>{
+                    rawEvent: <KeyboardEvent>{
+                        which: Keys.BACKSPACE,
+                        defaultPrevented: false,
+                    },
+                },
                 editor,
                 false /* ctrlOrMeta */
             );
 
             expect(result).toBe(false);
-            return event;
         });
 
         it('DelimiterAfter, Backspace, default not prevented', () => {
