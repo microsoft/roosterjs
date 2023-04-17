@@ -55,7 +55,7 @@ describe('handleDivider', () => {
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
-    it('HR with size and display', () => {
+    it('HR with width, size and display', () => {
         const hr: ContentModelDivider = {
             blockType: 'Divider',
             tagName: 'hr',
@@ -63,13 +63,14 @@ describe('handleDivider', () => {
                 display: 'inline-block',
                 width: '98%',
             },
+            size: '2',
         };
 
         const parent = document.createElement('div');
 
         handleDivider(document, parent, hr, context, null);
 
-        expect(parent.innerHTML).toBe('<hr style="display: inline-block; width: 98%;">');
+        expect(parent.innerHTML).toBe('<hr size="2" style="display: inline-block; width: 98%;">');
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
