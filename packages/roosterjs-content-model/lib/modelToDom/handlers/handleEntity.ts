@@ -53,5 +53,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
         context.regularSelection.current.segment = after;
     }
 
+    context.onNodeCreated?.(entityModel, wrapper);
+
     return refNode;
 };

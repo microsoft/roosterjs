@@ -1,5 +1,7 @@
+import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import insertLink from '../../../lib/publicApi/link/insertLink';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -41,7 +43,8 @@ describe('insertLink', () => {
 
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel);
+            expect(setContentModel.calls.argsFor(0)[0]).toEqual(expectedModel);
+            expect(typeof setContentModel.calls.argsFor(0)[1]!.onNodeCreated).toEqual('function');
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }
@@ -294,5 +297,40 @@ describe('insertLink', () => {
             'title',
             'new text'
         );
+    });
+
+    it('Valid url on existing text, trigger event with data', () => {
+        const div = document.createElement('div');
+        document.body.appendChild(div);
+
+        const onPluginEvent = jasmine.createSpy('onPluginEvent');
+        const mockedPlugin = {
+            initialize: () => {},
+            dispose: () => {},
+            getName: () => 'mock',
+            onPluginEvent: onPluginEvent,
+        };
+        const editor = new ContentModelEditor(div, { plugins: [mockedPlugin] });
+
+        editor.focus();
+
+        insertLink(editor, 'http://test.com', 'title');
+
+        editor.dispose();
+
+        const a = div.querySelector('a');
+
+        expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
+        expect(onPluginEvent).toHaveBeenCalledTimes(4);
+        expect(onPluginEvent).toHaveBeenCalledWith({
+            eventType: PluginEventType.ContentChanged,
+            source: ChangeSource.CreateLink,
+            data: a,
+            additionalData: {
+                formatApiName: 'insertLink',
+            },
+        });
+
+        document.body.removeChild(div);
     });
 });

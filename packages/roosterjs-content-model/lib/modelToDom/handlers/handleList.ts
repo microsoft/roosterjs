@@ -56,6 +56,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         handleMetadata(level, newList, context);
 
         nodeStack.push({ node: newList, ...level });
+
+        context.onNodeCreated?.(level, newList);
     }
 
     return refNode;

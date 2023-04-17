@@ -40,5 +40,7 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
 
     context.modelHandlers.blockGroupChildren(doc, element, group, context);
 
+    context.onNodeCreated?.(group, element);
+
     return refNode;
 };
