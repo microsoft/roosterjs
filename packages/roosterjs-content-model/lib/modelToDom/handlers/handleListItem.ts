@@ -43,5 +43,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         unwrap(li);
     }
 
+    context.onNodeCreated?.(listItem, li);
+
     return refNode;
 };

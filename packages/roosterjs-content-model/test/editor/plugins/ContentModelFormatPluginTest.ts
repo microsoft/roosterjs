@@ -156,33 +156,36 @@ describe('ContentModelFormatPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {},
-                            text: '',
-                        },
-                        {
-                            segmentType: 'Text',
-                            format: { fontSize: '10px' },
-                            text: 'a',
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: { fontSize: '10px' },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+        expect(setContentModel).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: '',
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: { fontSize: '10px' },
+                                text: 'a',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: { fontSize: '10px' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            { onNodeCreated: undefined }
+        );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
@@ -220,33 +223,36 @@ describe('ContentModelFormatPlugin', () => {
         plugin.dispose();
 
         expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: { fontFamily: 'Arial' },
-                            text: 'test a ',
-                        },
-                        {
-                            segmentType: 'Text',
-                            format: { fontSize: '10px', fontFamily: 'Arial' },
-                            text: 'test',
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            format: { fontSize: '10px' },
-                            isSelected: true,
-                        },
-                    ],
-                },
-            ],
-        });
+        expect(setContentModel).toHaveBeenCalledWith(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: { fontFamily: 'Arial' },
+                                text: 'test a ',
+                            },
+                            {
+                                segmentType: 'Text',
+                                format: { fontSize: '10px', fontFamily: 'Arial' },
+                                text: 'test',
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: { fontSize: '10px' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            { onNodeCreated: undefined }
+        );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
     });
