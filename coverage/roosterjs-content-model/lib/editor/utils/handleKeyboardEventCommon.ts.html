@@ -23,23 +23,23 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">92.31% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/12</span>
+                <span class='fraction'>12/13</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">87.5% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>6/6</span>
+                <span class='fraction'>7/8</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>3/4</span>
             </div>
         
             
@@ -108,7 +108,11 @@
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -121,8 +125,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -135,7 +144,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,14 +163,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
@@ -170,20 +178,26 @@ import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
  */
 export function getOnDeleteEntityCallback(
     editor: IContentModelEditor,
-    rawEvent: KeyboardEvent
+    rawEvent: KeyboardEvent,
+    triggeredEntityEvents: EntityOperationEvent[]
 ): OnDeleteEntity {
     return (entity, operation) =&gt; {
         if (entity.id &amp;&amp; entity.type) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                entity: {
-                    id: entity.id,
-                    isReadonly: entity.isReadonly,
-                    type: entity.type,
-                    wrapper: entity.wrapper,
-                },
-                operation,
-                rawEvent: rawEvent,
-            });
+            // Only trigger entity operation event when the same event was not triggered before.
+            // TODO: This is a temporary solution as the event deletion is handled by both original EntityPlugin/EntityFeatures and ContentModel.
+            // Later when Content Model can fully replace Content Edit Features, we can remove this check.
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (!triggeredEntityEvents.some(<span class="fstat-no" title="function not covered" >x </span>=&gt; <span class="cstat-no" title="statement not covered" >x.entity.wrapper == entity.wrapper))</span> {
+                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                    entity: {
+                        id: entity.id,
+                        isReadonly: entity.isReadonly,
+                        type: entity.type,
+                        wrapper: entity.wrapper,
+                    },
+                    operation,
+                    rawEvent: rawEvent,
+                });
+            }
         }
 &nbsp;
         return rawEvent.defaultPrevented;
@@ -203,8 +217,6 @@ export function handleKeyboardEventResult(
         // We have deleted what we need from content model, no need to let browser keep handling the event
         rawEvent.preventDefault();
         normalizeContentModel(model);
-&nbsp;
-        editor.triggerContentChangedEvent(ChangeSource.Keyboard, rawEvent.which);
     } else {
         // We didn't delete anything from content model, so browser will handle this event and we need to clear the cache
         editor.cacheContentModel(null);
@@ -217,7 +229,7 @@ export function handleKeyboardEventResult(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 18 2023 16:26:55 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 18 2023 21:22:01 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
