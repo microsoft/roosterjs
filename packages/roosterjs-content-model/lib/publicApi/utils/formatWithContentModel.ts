@@ -89,6 +89,10 @@ export function formatWithContentModel(
 
         if (skipUndoSnapshot) {
             callback();
+
+            if (changeSource) {
+                editor.triggerContentChangedEvent(changeSource, getChangeData?.());
+            }
         } else {
             editor.addUndoSnapshot(
                 callback,
