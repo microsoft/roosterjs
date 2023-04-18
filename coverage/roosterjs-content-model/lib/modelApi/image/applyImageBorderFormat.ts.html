@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.86% </span>
+                <span class="strong">93.75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/14</span>
+                <span class='fraction'>15/16</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/31</span>
+                <span class='fraction'>36/36</span>
             </div>
         
             
@@ -110,7 +110,13 @@
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -123,6 +129,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">20x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">54x</span>
 <span class="cline-any cline-yes">18x</span>
@@ -153,15 +160,20 @@
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Border } from '../../publicTypes/interface/Border';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
@@ -173,48 +185,54 @@ import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUni
  */
 export default function applyImageBorderFormat(
     image: ContentModelImage,
-    border: Border,
+    border: Border | null,
     borderRadius?: string
 ) {
-    const format = image.format;
-    const { width, style, color } = border;
-    const borderKey = 'borderTop';
-    const extractedBorder = extractBorderValues(format[borderKey]);
-    const borderColor = extractedBorder.color;
-    const borderWidth = extractedBorder.width;
-    const borderStyle = extractedBorder.style;
-    let borderFormat = '';
+    if (border) {
+        const format = image.format;
+        const { width, style, color } = border;
+        const borderKey = 'borderTop';
+        const extractedBorder = extractBorderValues(format[borderKey]);
+        const borderColor = extractedBorder.color;
+        const borderWidth = extractedBorder.width;
+        const borderStyle = extractedBorder.style;
+        let borderFormat = '';
 &nbsp;
-    if (width) {
-        borderFormat = parseValueWithUnit(width) + 'px';
-    } else if (borderWidth) {
-        borderFormat = borderWidth;
+        if (width) {
+            borderFormat = parseValueWithUnit(width) + 'px';
+        } else if (borderWidth) {
+            borderFormat = borderWidth;
+        } else {
+            borderFormat = '1px';
+        }
+&nbsp;
+        if (style) {
+            borderFormat = `${borderFormat} ${style}`;
+        } else if (borderStyle) {
+            borderFormat = `${borderFormat} ${borderStyle}`;
+        } else {
+            borderFormat = `${borderFormat} solid`;
+        }
+&nbsp;
+        if (color) {
+            borderFormat = `${borderFormat} ${color}`;
+        } else if (borderColor) {
+            borderFormat = `${borderFormat} ${borderColor}`;
+        }
+        image.format.borderLeft = borderFormat;
+        image.format.borderTop = borderFormat;
+        image.format.borderBottom = borderFormat;
+        image.format.borderRight = borderFormat;
     } else {
-        borderFormat = '1px';
-    }
-&nbsp;
-    if (style) {
-        borderFormat = `${borderFormat} ${style}`;
-    } else if (borderStyle) {
-        borderFormat = `${borderFormat} ${borderStyle}`;
-    } else {
-        borderFormat = `${borderFormat} solid`;
-    }
-&nbsp;
-    if (color) {
-        borderFormat = `${borderFormat} ${color}`;
-    } else if (borderColor) {
-        borderFormat = `${borderFormat} ${borderColor}`;
+        delete image.format.borderLeft;
+        delete image.format.borderTop;
+        delete image.format.borderBottom;
+        delete image.format.borderRight;
     }
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (borderRadius) {
         image.format.borderRadius = borderRadius;
     }
-&nbsp;
-    image.format.borderLeft = borderFormat;
-    image.format.borderTop = borderFormat;
-    image.format.borderBottom = borderFormat;
-    image.format.borderRight = borderFormat;
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -223,7 +241,7 @@ export default function applyImageBorderFormat(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Apr 17 2023 17:46:41 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 18 2023 05:04:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
