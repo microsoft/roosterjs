@@ -70,7 +70,12 @@ describe('handleDivider', () => {
 
         handleDivider(document, parent, hr, context, null);
 
-        expect(parent.innerHTML).toBe('<hr size="2" style="display: inline-block; width: 98%;">');
+        expect(
+            [
+                '<hr size="2" style="display: inline-block; width: 98%;">',
+                '<hr style="display: inline-block; width: 98%;" size="2">',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
