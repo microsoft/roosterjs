@@ -1,14 +1,10 @@
 import { clearState } from './utils/clearState';
 import { DeleteTableContents } from './features/DeleteTableContents';
-import { getCellCoordinates } from './utils/getCellCoordinates';
 import { handleKeyDownEvent } from './keyUtils/handleKeyDownEvent';
 import { handleKeyUpEvent } from './keyUtils/handleKeyUpEvent';
 import { handleMouseDownEvent } from './mouseUtils/handleMouseDownEvent';
-import { restoreSelection } from './utils/restoreSelection';
-import { selectTable } from './utils/selectTable';
-import { setData } from './utils/setData';
+import { handleScrollEvent } from './mouseUtils/handleScrollEvent';
 import { TableCellSelectionState } from './TableCellSelectionState';
-import { updateSelection } from './utils/updateSelection';
 import {
     EditorPlugin,
     IEditor,
@@ -22,9 +18,9 @@ import {
  * TableCellSelectionPlugin help highlight table cells
  */
 export default class TableCellSelection implements EditorPlugin {
-    private editor: IEditor;
-    private state: TableCellSelectionState;
-    private shadowEditCoordinatesBackup: TableSelection | null;
+    private editor: IEditor | null = null;
+    private state: TableCellSelectionState | null;
+    private shadowEditCoordinatesBackup: TableSelection | undefined;
 
     constructor() {
         this.state = {
@@ -61,6 +57,7 @@ export default class TableCellSelection implements EditorPlugin {
      */
     dispose() {
         clearState(this.state, this.editor);
+        this.state = null;
         this.editor = null;
     }
 
@@ -69,13 +66,13 @@ export default class TableCellSelection implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor) {
+        if (this.editor && this.state) {
             switch (event.eventType) {
                 case PluginEventType.EnteredShadowEdit:
-                    this.handleEnteredShadowEdit();
+                    this.handleEnteredShadowEdit(this.state, this.editor);
                     break;
                 case PluginEventType.LeavingShadowEdit:
-                    this.handleLeavingShadowEdit();
+                    this.handleLeavingShadowEdit(this.state, this.editor);
                     break;
                 case PluginEventType.MouseDown:
                     if (!this.state.startedSelection) {
@@ -98,7 +95,7 @@ export default class TableCellSelection implements EditorPlugin {
                     break;
                 case PluginEventType.Scroll:
                     if (this.state.startedSelection) {
-                        this.handleScrollEvent();
+                        handleScrollEvent(this.state, this.editor);
                     }
                     break;
                 case PluginEventType.BeforeSetContent:
@@ -110,46 +107,24 @@ export default class TableCellSelection implements EditorPlugin {
         }
     }
 
-    private handleLeavingShadowEdit() {
-        if (this.state.firstTable && this.state.tableSelection) {
-            const table = this.editor.queryElements('#' + this.state.firstTable.id);
+    private handleLeavingShadowEdit(state: TableCellSelectionState, editor: IEditor) {
+        if (state.firstTable && state.tableSelection && state.firstTable) {
+            const table = editor.queryElements('#' + state.firstTable.id);
             if (table.length == 1) {
-                this.state.firstTable = table[0] as HTMLTableElement;
-                this.editor.select(this.state.firstTable, this.shadowEditCoordinatesBackup);
-                this.shadowEditCoordinatesBackup = null;
+                state.firstTable = table[0] as HTMLTableElement;
+                editor.select(state.firstTable, this.shadowEditCoordinatesBackup);
+                this.shadowEditCoordinatesBackup = undefined;
             }
         }
     }
 
-    private handleEnteredShadowEdit() {
-        const selection = this.editor.getSelectionRangeEx();
+    private handleEnteredShadowEdit(state: TableCellSelectionState, editor: IEditor) {
+        const selection = editor.getSelectionRangeEx();
         if (selection.type == SelectionRangeTypes.TableSelection) {
             this.shadowEditCoordinatesBackup = selection.coordinates;
-            this.state.firstTable = selection.table;
-            this.state.tableSelection = true;
-            this.editor.select(selection.table, null);
-        }
-    }
-
-    /**
-     * Handle Scroll Event and mantains the selection range,
-     * Since when we scroll the cursor does not trigger the on Mouse Move event
-     * The table selection gets removed.
-     */
-    private handleScrollEvent() {
-        const eventTarget = this.editor.getElementAtCursor();
-        setData(eventTarget, this.state, this.editor);
-        if (this.state.firstTable == this.state.targetTable) {
-            if (this.state.tableSelection) {
-                this.state.vTable.selection.lastCell = getCellCoordinates(
-                    this.state.vTable,
-                    this.state.lastTarget
-                );
-                selectTable(this.editor, this.state);
-                updateSelection(this.editor, this.state.firstTarget, 0);
-            }
-        } else if (this.state.tableSelection) {
-            restoreSelection(this.state, this.editor);
+            state.firstTable = selection.table;
+            state.tableSelection = true;
+            editor.select(selection.table, undefined);
         }
     }
 }

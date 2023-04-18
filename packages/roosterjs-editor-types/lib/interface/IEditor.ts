@@ -317,9 +317,9 @@ export default interface IEditor {
     /**
      * Select content using the Table Selection
      * @param table to select
-     * @param coordinates first and last cell of the range
+     * @param coordinates first and last cell of the range, if not provided will remove the selection on the table
      */
-    select(table: HTMLTableElement, coordinates: TableSelection): boolean;
+    select(table: HTMLTableElement, coordinates?: TableSelection): boolean;
 
     /**
      * Select content SelectionRangeEx

@@ -7,6 +7,6 @@ import { TableCellSelectionState } from '../TableCellSelectionState';
  */
 export function selectTable(editor: IEditor, state: TableCellSelectionState) {
     if (editor && state.vTable) {
-        editor?.select(state.vTable.table, normalizeTableSelection(state.vTable));
+        editor?.select(state.vTable.table, normalizeTableSelection(state.vTable) ?? undefined);
     }
 }
