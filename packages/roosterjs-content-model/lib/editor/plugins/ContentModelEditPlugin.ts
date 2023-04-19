@@ -1,7 +1,14 @@
 import handleBackspaceKey from '../../publicApi/editing/handleBackspaceKey';
 import handleDeleteKey from '../../publicApi/editing/handleDeleteKey';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    EditorPlugin,
+    EntityOperationEvent,
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -11,6 +18,7 @@ import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roost
  */
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+    private triggeredEntityEvents: EntityOperationEvent[] = [];
 
     /**
      * Get name of this plugin
@@ -40,42 +48,46 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     }
 
     /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check:
-     */
-    willHandleEventExclusively(event: PluginEvent) {
-        if (
-            event.eventType == PluginEventType.KeyDown &&
-            (event.rawEvent.which == Keys.DELETE || event.rawEvent.which == Keys.BACKSPACE)
-        ) {
-            // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
-            return true;
-        }
-
-        return false;
-    }
-
-    /**
      * Core method for a plugin. Once an event happens in editor, editor will call this
      * method of each plugin to handle the event as long as the event is not handled
      * exclusively by another plugin.
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == PluginEventType.KeyDown) {
-            // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
-            switch (event.rawEvent.which) {
-                case Keys.BACKSPACE:
-                    handleBackspaceKey(this.editor, event.rawEvent);
-                    break;
+        if (this.editor) {
+            if (
+                event.eventType == PluginEventType.EntityOperation &&
+                event.rawEvent?.type == 'keydown'
+            ) {
+                // If we see an entity operation event triggered from keydown event, it means the event can be triggered from original
+                // EntityFeatures or EntityPlugin, so we don't need to trigger the same event again from ContentModel.
+                // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
+                this.triggeredEntityEvents.push(event);
+            } else if (event.eventType == PluginEventType.KeyDown) {
+                if (!event.rawEvent.defaultPrevented) {
+                    // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
+                    switch (event.rawEvent.which) {
+                        case Keys.BACKSPACE:
+                            handleBackspaceKey(
+                                this.editor,
+                                event.rawEvent,
+                                this.triggeredEntityEvents
+                            );
+                            break;
 
-                case Keys.DELETE:
-                    handleDeleteKey(this.editor, event.rawEvent);
-                    break;
+                        case Keys.DELETE:
+                            handleDeleteKey(
+                                this.editor,
+                                event.rawEvent,
+                                this.triggeredEntityEvents
+                            );
+                            break;
+                    }
+                }
+
+                if (this.triggeredEntityEvents.length > 0) {
+                    this.triggeredEntityEvents = [];
+                }
             }
         }
     }

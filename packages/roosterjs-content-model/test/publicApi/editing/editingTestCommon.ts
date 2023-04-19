@@ -13,6 +13,8 @@ export function editingTestCommon(
     spyOn(pendingFormat, 'setPendingFormat');
     spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
+    const triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
+
     const addUndoSnapshot = jasmine
         .createSpy('addUndoSnapshot')
         .and.callFake((callback: () => void, source: string, _, param: any) => {
@@ -32,6 +34,7 @@ export function editingTestCommon(
         setContentModel,
         isDisposed: () => false,
         getFocusedPosition: () => null as NodePosition,
+        triggerContentChangedEvent,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
