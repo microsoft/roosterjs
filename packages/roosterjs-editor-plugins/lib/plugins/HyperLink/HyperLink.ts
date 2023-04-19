@@ -1,5 +1,6 @@
 import { isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
     DOMEventHandler,
     EditorPlugin,
     IEditor,
@@ -105,6 +106,18 @@ export default class HyperLink implements EditorPlugin {
                 (anchor && anchor !== this.trackedLink) ||
                 event.eventType == PluginEventType.KeyUp ||
                 event.eventType == PluginEventType.ContentChanged;
+
+            if (
+                event.eventType == PluginEventType.ContentChanged &&
+                event.source == ChangeSource.Keyboard &&
+                this.trackedLink != anchor &&
+                anchor
+            ) {
+                // For Keyboard event that causes content change (mostly come from Content Model), this tracked list may be staled.
+                // So we need to get an up-to-date link element
+                // TODO: This is a temporary solution. Later when Content Model can fully take over this behavior, we can remove this code.
+                this.trackedLink = anchor;
+            }
 
             if (
                 this.trackedLink &&

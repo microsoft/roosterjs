@@ -1,7 +1,9 @@
-import { WAC_IDENTIFY_SELECTOR } from '../sourceValidations/constants';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './convertPastedContentFromWordOnline';
+
+const WAC_IDENTIFY_SELECTOR =
+    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
 
 /**
  * @internal
@@ -11,9 +13,10 @@ import convertPastedContentFromWordOnline, {
  * @param event The BeforePaste event
  */
 export default function convertPastedContentFromOfficeOnline(fragment: DocumentFragment) {
-    fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR).forEach((el: HTMLElement) => {
-        el.style.display = null;
-        el.style.margin = null;
+    fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR).forEach((el: Element) => {
+        const element = el as HTMLElement;
+        element.style.removeProperty('display');
+        element.style.removeProperty('margin');
     });
     // call conversion function if the pasted content is from word online and
     // has list element in the pasted content.

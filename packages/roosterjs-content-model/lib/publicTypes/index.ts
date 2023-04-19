@@ -7,7 +7,7 @@ export { ContentModelBlockBase } from './block/ContentModelBlockBase';
 export { ContentModelTable } from './block/ContentModelTable';
 export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './group/ContentModelDocument';
-export { ContentModelQuote } from './group/ContentModelQuote';
+export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
 export { ContentModelListItem } from './group/ContentModelListItem';
 export { ContentModelTableCell } from './group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
@@ -123,10 +123,21 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 export { ElementProcessor } from './context/ElementProcessor';
 export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
 
 export { Border } from './interface/Border';
 
-export { IContentModelEditor, DomToModelOption, ModelToDomOption } from './IContentModelEditor';
+export {
+    IContentModelEditor,
+    DomToModelOption,
+    ModelToDomOption,
+    ContentModelEditorOptions,
+} from './IContentModelEditor';
+export {
+    CreateEditorContext,
+    ContentModelCoreApiMap,
+    ContentModelEditorCore,
+} from './ContentModelEditorCore';

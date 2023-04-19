@@ -23,20 +23,27 @@ describe('setTableCellShade', () => {
         } as any) as IContentModelEditor;
     });
 
-    function runTest(table: ContentModelTable, expectedTable: ContentModelTable | null) {
+    function runTest(
+        table: ContentModelTable,
+        expectedTable: ContentModelTable | null,
+        colorValue: string | null = 'red'
+    ) {
         const model = createContentModelDocument();
         model.blocks.push(table);
 
         createContentModel.and.returnValue(model);
 
-        setTableCellShade(editor, 'red');
+        setTableCellShade(editor, colorValue);
 
         if (expectedTable) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith({
-                blockGroupType: 'Document',
-                blocks: [expectedTable],
-            });
+            expect(setContentModel).toHaveBeenCalledWith(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [expectedTable],
+                },
+                { onNodeCreated: undefined }
+            );
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }
@@ -344,6 +351,80 @@ describe('setTableCellShade', () => {
                 heights: [0],
                 dataset: {},
             }
+        );
+    });
+
+    it('Set to no color', () => {
+        runTest(
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {
+                                backgroundColor: 'red',
+                                textColor: 'green',
+                                direction: 'rtl',
+                            },
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {
+                                backgroundColor: 'red',
+                                textColor: 'green',
+                                direction: 'rtl',
+                            },
+                            dataset: {},
+                            isSelected: true,
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            {
+                blockType: 'Table',
+                cells: [
+                    [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: {
+                                backgroundColor: 'red',
+                                textColor: 'green',
+                                direction: 'rtl',
+                            },
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            spanAbove: false,
+                            spanLeft: false,
+                            format: { direction: 'rtl' },
+                            dataset: {},
+                            isSelected: true,
+                        },
+                    ],
+                ],
+                format: {},
+                widths: [0],
+                heights: [0],
+                dataset: {},
+            },
+            null
         );
     });
 });

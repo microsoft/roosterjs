@@ -1,6 +1,6 @@
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelFormatContainer } from '../../../lib/publicTypes/group/ContentModelFormatContainer';
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import {
@@ -11,7 +11,7 @@ import {
 
 describe('wrapBlockStep1', () => {
     it('null parent', () => {
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [];
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
         const canMerge = jasmine.createSpy().and.returnValue(true);
 
         wrapBlockStep1(
@@ -31,7 +31,7 @@ describe('wrapBlockStep1', () => {
     });
 
     it('Valid parent', () => {
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [];
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
         const para: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [],
@@ -51,9 +51,9 @@ describe('wrapBlockStep1', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [para],
                 },
             ],
@@ -63,9 +63,9 @@ describe('wrapBlockStep1', () => {
                 parent: parent,
                 wrapper: {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [para],
                 },
             },
@@ -75,7 +75,7 @@ describe('wrapBlockStep1', () => {
     });
 
     it('Can merge', () => {
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [
             { parent: null!, wrapper: null! },
         ];
         const para1: ContentModelParagraph = {
@@ -90,12 +90,12 @@ describe('wrapBlockStep1', () => {
             format: { backgroundColor: 'red' },
             isImplicit: true,
         };
-        const quote: ContentModelQuote = {
+        const quote: ContentModelFormatContainer = {
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [para1],
             format: {},
-            quoteSegmentFormat: {},
         };
         const parent: ContentModelDocument = {
             blockGroupType: 'Document',
@@ -110,9 +110,9 @@ describe('wrapBlockStep1', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [para1, para2],
                 },
             ],
@@ -122,9 +122,9 @@ describe('wrapBlockStep1', () => {
                 parent: parent,
                 wrapper: {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: {},
-                    quoteSegmentFormat: {},
                     blocks: [para1, para2],
                 },
             },
@@ -139,7 +139,7 @@ describe('wrapBlockStep1', () => {
 
 describe('wrapBlockStep2', () => {
     it('empty result', () => {
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [];
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
         const canMerge = jasmine.createSpy().and.returnValue(true);
 
         wrapBlockStep2(result, canMerge as any);
@@ -149,12 +149,12 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has result, invalid parent', () => {
-        const quote: ContentModelQuote = createQuote();
+        const quote: ContentModelFormatContainer = createQuote();
         const doc: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
         };
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [
             {
                 parent: doc,
                 wrapper: quote,
@@ -178,12 +178,12 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has result, no block to merge', () => {
-        const quote: ContentModelQuote = createQuote();
+        const quote: ContentModelFormatContainer = createQuote();
         const doc: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [quote],
         };
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [
             {
                 parent: doc,
                 wrapper: quote,
@@ -204,10 +204,10 @@ describe('wrapBlockStep2', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
             ],
         });
@@ -216,10 +216,10 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has results, can merge', () => {
-        const quote1: ContentModelQuote = createQuote({ backgroundColor: 'red' });
-        const quote2: ContentModelQuote = createQuote({ backgroundColor: 'green' });
-        const quote3: ContentModelQuote = createQuote({ backgroundColor: 'blue' });
-        const quote4: ContentModelQuote = createQuote({ backgroundColor: 'yellow' });
+        const quote1: ContentModelFormatContainer = createQuote({ backgroundColor: 'red' });
+        const quote2: ContentModelFormatContainer = createQuote({ backgroundColor: 'green' });
+        const quote3: ContentModelFormatContainer = createQuote({ backgroundColor: 'blue' });
+        const quote4: ContentModelFormatContainer = createQuote({ backgroundColor: 'yellow' });
         const para1: ContentModelParagraph = createParagraph(true, { backgroundColor: 'red' });
         const para2: ContentModelParagraph = createParagraph(true, { backgroundColor: 'green' });
         const para3: ContentModelParagraph = createParagraph(true, { backgroundColor: 'blue' });
@@ -234,7 +234,7 @@ describe('wrapBlockStep2', () => {
         quote3.blocks.push(para3);
         quote4.blocks.push(para4);
 
-        const result: WrapBlockStep1Result<ContentModelQuote>[] = [
+        const result: WrapBlockStep1Result<ContentModelFormatContainer>[] = [
             {
                 parent: doc,
                 wrapper: quote3,
@@ -256,7 +256,8 @@ describe('wrapBlockStep2', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -278,11 +279,11 @@ describe('wrapBlockStep2', () => {
                     format: {
                         backgroundColor: 'red',
                     },
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -304,7 +305,6 @@ describe('wrapBlockStep2', () => {
                     format: {
                         backgroundColor: 'blue',
                     },
-                    quoteSegmentFormat: {},
                 },
             ],
         });

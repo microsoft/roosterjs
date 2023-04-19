@@ -1,10 +1,11 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
-import { IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 import {
     DefaultStyleMap,
@@ -78,6 +79,13 @@ export interface ModelToDomOption {
      * Overrides default element styles
      */
     defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
+
+    /**
+     * An optional callback that will be called when a DOM node is created
+     * @param modelElement The related Content Model element
+     * @param node The node created for this model element
+     */
+    onNodeCreated?: OnNodeCreated;
 }
 
 /**
@@ -105,4 +113,19 @@ export interface IContentModelEditor extends IEditor {
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null): void;
+}
+
+/**
+ * Options for Content Model editor
+ */
+export interface ContentModelEditorOptions extends EditorOptions {
+    /**
+     * Default options used for DOM to Content Model conversion
+     */
+    defaultDomToModelOptions?: DomToModelOption;
+
+    /**
+     * Default options used for Content Model to DOM conversion
+     */
+    defaultModelToDomOptions?: ModelToDomOption;
 }

@@ -2,6 +2,7 @@ import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -606,6 +607,106 @@ describe('iterateSelections', () => {
         expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text1]);
     });
 
+    it('Get Selection from model that contains empty general segment with different options', () => {
+        const group = createContentModelDocument();
+        const generalSpan = createGeneralSegment(document.createElement('span'));
+        const para1 = createParagraph(true /*implicit*/);
+
+        para1.segments.push(generalSpan);
+        group.blocks.push(para1);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(0);
+        expect(callback1).toHaveBeenCalledTimes(0);
+        expect(callback2).toHaveBeenCalledTimes(0);
+        expect(callback3).toHaveBeenCalledTimes(0);
+    });
+
+    it('Get Selection from model that contains general segment with content for different options', () => {
+        const group = createContentModelDocument();
+        const generalSpan = createGeneralSegment(document.createElement('span'));
+        const para1 = createParagraph(true /*implicit*/);
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        para2.segments.push(text1, text2);
+        generalSpan.blocks.push(para2);
+        para1.segments.push(generalSpan);
+        group.blocks.push(para1);
+
+        text2.isSelected = true;
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text2]);
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text2]);
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text2]);
+        expect(callback3).toHaveBeenCalledTimes(1);
+        expect(callback3).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [text2]);
+    });
+
+    it('Get Selection from model that contains empty selected general', () => {
+        const group = createContentModelDocument();
+        const generalSpan = createGeneralSegment(document.createElement('span'));
+        const para1 = createParagraph(true /*implicit*/);
+
+        generalSpan.isSelected = true;
+        para1.segments.push(generalSpan);
+        group.blocks.push(para1);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+
+        expect(callback3).toHaveBeenCalledTimes(1);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+    });
+
     it('Get Selection from model that contains selected general segment', () => {
         const group = createContentModelDocument();
         const generalSpan = createGeneralSegment(document.createElement('span'));
@@ -620,10 +721,332 @@ describe('iterateSelections', () => {
         para2.segments.push(text1, text2);
         group.blocks.push(para1);
 
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+
+        expect(callback3).toHaveBeenCalledTimes(2);
+        expect(callback3).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+    });
+
+    it('Get Selection from model that contains general segment, treat all as selected', () => {
+        const group = createContentModelDocument();
+        const generalSpan = createGeneralSegment(document.createElement('span'));
+        const para1 = createParagraph(true /*implicit*/);
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        para1.segments.push(generalSpan);
+        generalSpan.blocks.push(para2);
+        para2.segments.push(text1, text2);
+        group.blocks.push(para1);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback, undefined, undefined, true);
+        iterateSelections(
+            [group],
+            callback1,
+            {
+                contentUnderSelectedGeneralElement: 'contentOnly',
+            },
+            undefined,
+            true
+        );
+        iterateSelections(
+            [group],
+            callback2,
+            {
+                contentUnderSelectedGeneralElement: 'generalElementOnly',
+            },
+            undefined,
+            true
+        );
+        iterateSelections(
+            [group],
+            callback3,
+            { contentUnderSelectedGeneralElement: 'both' },
+            undefined,
+            true
+        );
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+
+        expect(callback3).toHaveBeenCalledTimes(2);
+        expect(callback3).toHaveBeenCalledWith([generalSpan, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+    });
+
+    it('Get Selection from model that contains general block', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        text1.isSelected = true;
+        generalDiv.blocks.push(para2);
+        para2.segments.push(text1, text2);
+        group.blocks.push(generalDiv);
+
         iterateSelections([group], callback);
 
         expect(callback).toHaveBeenCalledTimes(1);
-        expect(callback).toHaveBeenCalledWith([group], undefined, para1, [generalSpan]);
+        expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text1]);
+    });
+
+    it('Get Selection from model that contains empty general block with different options', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+
+        group.blocks.push(generalDiv);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(0);
+        expect(callback1).toHaveBeenCalledTimes(0);
+        expect(callback2).toHaveBeenCalledTimes(0);
+        expect(callback3).toHaveBeenCalledTimes(0);
+    });
+
+    it('Get Selection from model that contains general block with content for different options', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        para2.segments.push(text1, text2);
+        generalDiv.blocks.push(para2);
+        group.blocks.push(generalDiv);
+
+        text2.isSelected = true;
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text2]);
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text2]);
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text2]);
+        expect(callback3).toHaveBeenCalledTimes(1);
+        expect(callback3).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [text2]);
+    });
+
+    it('Get Selection from model that contains empty selected general block', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+
+        generalDiv.isSelected = true;
+        group.blocks.push(generalDiv);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+
+        expect(callback3).toHaveBeenCalledTimes(1);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+    });
+
+    it('Get Selection from model that contains selected general block', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        generalDiv.isSelected = true;
+        generalDiv.blocks.push(para2);
+        para2.segments.push(text1, text2);
+        group.blocks.push(generalDiv);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback);
+        iterateSelections([group], callback1, {
+            contentUnderSelectedGeneralElement: 'contentOnly',
+        });
+        iterateSelections([group], callback2, {
+            contentUnderSelectedGeneralElement: 'generalElementOnly',
+        });
+        iterateSelections([group], callback3, { contentUnderSelectedGeneralElement: 'both' });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+
+        expect(callback3).toHaveBeenCalledTimes(2);
+        expect(callback3).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+    });
+
+    it('Get Selection from model that contains general block, treat all as selected', () => {
+        const group = createContentModelDocument();
+        const generalDiv = createGeneralBlock(document.createElement('div'));
+        const para2 = createParagraph(true /*implicit*/);
+        const text1 = createText('test1');
+        const text2 = createText('test1');
+
+        generalDiv.blocks.push(para2);
+        para2.segments.push(text1, text2);
+        group.blocks.push(generalDiv);
+
+        const callback1 = jasmine.createSpy('callback1');
+        const callback2 = jasmine.createSpy('callback2');
+        const callback3 = jasmine.createSpy('callback3');
+
+        iterateSelections([group], callback, undefined, undefined, true);
+        iterateSelections(
+            [group],
+            callback1,
+            {
+                contentUnderSelectedGeneralElement: 'contentOnly',
+            },
+            undefined,
+            true
+        );
+        iterateSelections(
+            [group],
+            callback2,
+            {
+                contentUnderSelectedGeneralElement: 'generalElementOnly',
+            },
+            undefined,
+            true
+        );
+        iterateSelections(
+            [group],
+            callback3,
+            { contentUnderSelectedGeneralElement: 'both' },
+            undefined,
+            true
+        );
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback1).toHaveBeenCalledTimes(1);
+        expect(callback1).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+
+        expect(callback2).toHaveBeenCalledTimes(1);
+        expect(callback2).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
+
+        expect(callback3).toHaveBeenCalledTimes(2);
+        expect(callback3).toHaveBeenCalledWith([generalDiv, group], undefined, para2, [
+            text1,
+            text2,
+        ]);
+        expect(callback3).toHaveBeenCalledWith([group], undefined, generalDiv, undefined);
     });
 
     it('Divider selection', () => {
@@ -949,7 +1372,8 @@ describe('iterateSelections', () => {
             blocks: [
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -959,15 +1383,14 @@ describe('iterateSelections', () => {
                         },
                     ],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                     cachedElement: cache,
                 },
                 {

@@ -3,9 +3,12 @@ import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentMod
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
+import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
@@ -392,6 +395,47 @@ describe('handleParagraph', () => {
     });
 
     it('Handle paragraph with PRE', () => {
+        const segment1 = createText('test1');
+        const segment2 = createText('test2');
+        const para1 = createParagraph(false, { whiteSpace: 'pre' });
+        const para2 = createParagraph(false, { whiteSpace: 'pre' });
+        const br = document.createElement('br');
+
+        para1.segments.push(segment1);
+        para2.segments.push(segment2);
+
+        parent.appendChild(br);
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, para1, context, br);
+        handleParagraph(document, parent, para2, context, br);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="white-space: pre;"><span>test1</span></div><div style="white-space: pre;"><span>test2</span></div><br>'
+        );
+        expect(para1.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(para1.cachedElement?.outerHTML).toBe(
+            '<div style="white-space: pre;"><span>test1</span></div>'
+        );
+        expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
+        expect(para2.cachedElement?.outerHTML).toBe(
+            '<div style="white-space: pre;"><span>test2</span></div>'
+        );
+
+        optimize(parent, 2);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="white-space: pre;">test1</div><div style="white-space: pre;">test2</div><br>'
+        );
+        expect(para1.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(para1.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test1</div>');
+        expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
+        expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
+    });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
         const segment: ContentModelSegment = {
             segmentType: 'Text',
             text: 'test',
@@ -400,22 +444,18 @@ describe('handleParagraph', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [segment],
-            format: {
-                whiteSpace: 'pre',
-            },
+            format: {},
         };
-        const br = document.createElement('br');
 
-        parent.appendChild(br);
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        handleParagraph(document, parent, paragraph, context, br);
+        context.onNodeCreated = onNodeCreated;
 
-        expect(parent.innerHTML).toBe(
-            '<pre style="margin-top: 0px; margin-bottom: 0px;"><div style="white-space: pre;"></div></pre><br>'
-        );
-        expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(paragraph.cachedElement?.outerHTML).toBe(
-            '<pre style="margin-top: 0px; margin-bottom: 0px;"><div style="white-space: pre;"></div></pre>'
-        );
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div></div>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
 });

@@ -1,8 +1,8 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
+import { ContentModelFormatContainer } from '../../../lib/publicTypes/group/ContentModelFormatContainer';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
-import { ContentModelQuote } from '../../../lib/publicTypes/group/ContentModelQuote';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -18,7 +18,7 @@ describe('handleBlockGroup', () => {
     let parent: HTMLDivElement;
     let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
     let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
-    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelQuote>>;
+    let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelFormatContainer>>;
 
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
@@ -29,7 +29,7 @@ describe('handleBlockGroup', () => {
             modelHandlerOverride: {
                 blockGroupChildren: handleBlockGroupChildren,
                 listItem: handleListItem,
-                quote: handleQuote,
+                formatContainer: handleQuote,
             },
         });
         parent = document.createElement('div');
@@ -218,5 +218,22 @@ describe('handleBlockGroup', () => {
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context);
         expect(result).toBe(br);
         expect(group.element).toBe(node);
+    });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const node = document.createElement('span');
+        const group = createGeneralBlock(node);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleGeneralModel(document, parent, group, context, null);
+
+        expect(parent.innerHTML).toBe('<span></span>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(group);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span'));
     });
 });

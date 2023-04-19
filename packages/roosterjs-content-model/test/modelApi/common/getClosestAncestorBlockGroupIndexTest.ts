@@ -10,11 +10,11 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -30,11 +30,11 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -50,25 +50,25 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
                     blocks: [],
                 },
             ],
-            ['Quote']
+            ['FormatContainer']
         );
         expect(result).toBe(0);
     });
@@ -77,18 +77,18 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
                     blocks: [],
                 },
             ],
-            ['TableCell', 'Quote']
+            ['TableCell', 'FormatContainer']
         );
         expect(result).toBe(0);
     });
@@ -97,18 +97,18 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
                     blocks: [],
                 },
             ],
-            ['Quote'],
+            ['FormatContainer'],
             ['Document', 'ListItem']
         );
         expect(result).toBe(0);
@@ -118,11 +118,11 @@ describe('getClosestAncestorBlockGroupIndex', () => {
         const result = getClosestAncestorBlockGroupIndex(
             [
                 {
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blockType: 'BlockGroup',
                     blocks: [],
                     format: {},
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockGroupType: 'Document',
@@ -130,7 +130,7 @@ describe('getClosestAncestorBlockGroupIndex', () => {
                 },
             ],
             ['Document'],
-            ['ListItem', 'Quote']
+            ['ListItem', 'FormatContainer']
         );
         expect(result).toBe(-1);
     });
