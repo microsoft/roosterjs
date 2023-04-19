@@ -25,13 +25,13 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
 
     if (isSelectionRangeEx(arg1)) {
         rangeEx = arg1;
-    } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelectionOrUndefined(arg2)) {
+    } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelectionOrNull(arg2)) {
         rangeEx = {
             type: SelectionRangeTypes.TableSelection,
             ranges: [],
             areAllCollapsed: false,
             table: arg1,
-            coordinates: arg2,
+            coordinates: arg2 ?? undefined,
         };
     } else if (safeInstanceOf(arg1, 'HTMLImageElement') && typeof arg2 == 'undefined') {
         rangeEx = {
@@ -123,11 +123,11 @@ function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
     );
 }
 
-function isTableSelectionOrUndefined(obj: any): obj is TableSelection | undefined {
-    const selection = obj as TableSelection | undefined;
+function isTableSelectionOrNull(obj: any): obj is TableSelection | null {
+    const selection = obj as TableSelection | null;
 
     return (
-        selection === undefined ||
+        selection === null ||
         (selection &&
             typeof selection == 'object' &&
             typeof selection.firstCell == 'object' &&
