@@ -2222,6 +2222,95 @@ describe('deleteSelection - forward', () => {
             ],
         });
     });
+
+    it('Delete text and need to convert space to &nbsp;', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('   test');
+
+        para.segments.push(marker, text);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\u00A0test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Delete text and no need to convert space to &nbsp; when preserve white space', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('   test');
+
+        para.format.whiteSpace = 'pre';
+        para.segments.push(marker, text);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        whiteSpace: 'pre',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '  test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
 
 describe('deleteSelection - backward', () => {
@@ -3614,6 +3703,95 @@ describe('deleteSelection - backward', () => {
                                 },
                             ],
                             element: null!,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Delete text and need to convert space to &nbsp;', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test   ');
+
+        para.segments.push(text, marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test\u00A0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Delete text and no need to convert space to &nbsp; when preserve white space', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test   ');
+
+        para.format.whiteSpace = 'pre';
+        para.segments.push(text, marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        whiteSpace: 'pre',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test  ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
                         },
                     ],
                 },
