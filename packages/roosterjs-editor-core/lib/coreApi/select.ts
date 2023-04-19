@@ -25,7 +25,7 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
 
     if (isSelectionRangeEx(arg1)) {
         rangeEx = arg1;
-    } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelection(arg2)) {
+    } else if (safeInstanceOf(arg1, 'HTMLTableElement') && isTableSelectionOrUndefined(arg2)) {
         rangeEx = {
             type: SelectionRangeTypes.TableSelection,
             ranges: [],
@@ -123,14 +123,15 @@ function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
     );
 }
 
-function isTableSelection(obj: any): obj is TableSelection {
-    const selection = obj as TableSelection;
+function isTableSelectionOrUndefined(obj: any): obj is TableSelection | undefined {
+    const selection = obj as TableSelection | undefined;
 
     return (
-        selection &&
-        typeof selection == 'object' &&
-        typeof selection.firstCell == 'object' &&
-        typeof selection.lastCell == 'object'
+        selection === undefined ||
+        (selection &&
+            typeof selection == 'object' &&
+            typeof selection.firstCell == 'object' &&
+            typeof selection.lastCell == 'object')
     );
 }
 
