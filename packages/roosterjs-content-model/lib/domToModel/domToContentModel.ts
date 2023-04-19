@@ -1,4 +1,3 @@
-import { computedSegmentFormatHandler } from '../formatHandlers/segment/computedSegmentFormatHandler';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
@@ -23,9 +22,6 @@ export default function domToContentModel(
 ): ContentModelDocument {
     const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
-
-    // For root element, use computed style as initial value of segment formats
-    parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
 
     // Need to calculate direction (ltr or rtl), use it as initial value
     parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
