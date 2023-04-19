@@ -13,6 +13,7 @@ describe('formatWithContentModel', () => {
     let mockedModel: ContentModelDocument;
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
+    let triggerContentChangedEvent: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedPos = 'POS' as any;
@@ -26,6 +27,7 @@ describe('formatWithContentModel', () => {
         focus = jasmine.createSpy('focus');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
+        triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
 
         editor = ({
             focus,
@@ -34,6 +36,7 @@ describe('formatWithContentModel', () => {
             setContentModel,
             cacheContentModel,
             getFocusedPosition,
+            triggerContentChangedEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -119,6 +122,21 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
         expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe('TEST');
+    });
+
+    it('Customize change source and skip undo snapshot', () => {
+        const callback = jasmine.createSpy('callback').and.returnValue(true);
+
+        formatWithContentModel(editor, apiName, callback, {
+            changeSource: 'TEST',
+            skipUndoSnapshot: true,
+            getChangeData: () => 'DATA',
+        });
+
+        expect(callback).toHaveBeenCalledWith(mockedModel);
+        expect(createContentModel).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
+        expect(triggerContentChangedEvent).toHaveBeenCalledWith('TEST', 'DATA');
     });
 
     it('Has onNodeCreated', () => {
