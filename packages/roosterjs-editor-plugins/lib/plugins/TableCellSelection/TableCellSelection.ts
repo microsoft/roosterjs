@@ -20,7 +20,7 @@ import {
 export default class TableCellSelection implements EditorPlugin {
     private editor: IEditor | null = null;
     private state: TableCellSelectionState | null;
-    private shadowEditCoordinatesBackup: TableSelection | undefined;
+    private shadowEditCoordinatesBackup: TableSelection | null = null;
 
     constructor() {
         this.state = {
@@ -113,7 +113,7 @@ export default class TableCellSelection implements EditorPlugin {
             if (table.length == 1) {
                 state.firstTable = table[0] as HTMLTableElement;
                 editor.select(state.firstTable, this.shadowEditCoordinatesBackup);
-                this.shadowEditCoordinatesBackup = undefined;
+                this.shadowEditCoordinatesBackup = null;
             }
         }
     }
@@ -121,10 +121,10 @@ export default class TableCellSelection implements EditorPlugin {
     private handleEnteredShadowEdit(state: TableCellSelectionState, editor: IEditor) {
         const selection = editor.getSelectionRangeEx();
         if (selection.type == SelectionRangeTypes.TableSelection) {
-            this.shadowEditCoordinatesBackup = selection.coordinates;
+            this.shadowEditCoordinatesBackup = selection.coordinates ?? null;
             state.firstTable = selection.table;
             state.tableSelection = true;
-            editor.select(selection.table, undefined);
+            editor.select(selection.table, null);
         }
     }
 }

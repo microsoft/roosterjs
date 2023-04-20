@@ -1,5 +1,5 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
-import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,
@@ -22,7 +22,7 @@ describe('getOnDeleteEntityCallback', () => {
     });
 
     it('Entity without id', () => {
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -40,7 +40,7 @@ describe('getOnDeleteEntityCallback', () => {
     });
 
     it('Entity with id and type', () => {
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -73,7 +73,7 @@ describe('getOnDeleteEntityCallback', () => {
             param.rawEvent.defaultPrevented = true;
         });
 
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -99,6 +99,25 @@ describe('getOnDeleteEntityCallback', () => {
             operation: EntityOperation.RemoveFromStart,
             rawEvent: mockedEvent,
         });
+    });
+
+    it('Call with triggeredEntityEvents', () => {
+        const wrapper = 'WRAPPER';
+        const entity = {
+            wrapper,
+        } as any;
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, [
+            {
+                eventType: PluginEventType.EntityOperation,
+                operation: EntityOperation.Overwrite,
+                entity,
+            },
+        ]);
+
+        const result = func({ wrapper } as any, EntityOperation.Overwrite);
+
+        expect(result).toBeFalse();
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
     });
 });
 
@@ -134,7 +153,7 @@ describe('handleKeyboardEventResult', () => {
 
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
-        expect(triggerContentChangedEvent).toHaveBeenCalledWith(ChangeSource.Keyboard, which);
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(cacheContentModel).not.toHaveBeenCalled();
     });
 
