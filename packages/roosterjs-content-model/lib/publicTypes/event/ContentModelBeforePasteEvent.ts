@@ -1,4 +1,4 @@
-import { PasteElementProcessor } from './PasteElementProcessor';
+import { DomToModelOption } from '../IContentModelEditor';
 import {
     BeforePasteEvent,
     BeforePasteEventData,
@@ -10,11 +10,9 @@ import {
  */
 export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
-     * Element processors to use when pasting.
-     * If the a processor function in the array returns true, means that the element procesing was done by the function.
-     * If all the processors return false, the default processor will be used instead.
+     * domToModel Options to use when creating the content model from the paste fragment
      */
-    elementProcessors: PasteElementProcessor<HTMLElement>[];
+    domToModelOption: Partial<DomToModelOption>;
 }
 
 /**
