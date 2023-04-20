@@ -1,12 +1,22 @@
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
-import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import {
+    CoreCreator,
+    DefaultFormat,
+    EditorCore,
+    ExperimentalFeatures,
+} from 'roosterjs-editor-types';
+
+const DEFAULT_FORMAT: DefaultFormat = {
+    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+    fontSize: '12pt',
+};
 
 /**
  * Editor Core creator for Content Model editor
@@ -31,26 +41,61 @@ export function promoteToContentModelEditorCore(
     core: EditorCore,
     options: ContentModelEditorOptions
 ) {
-    const experimentalFeatures = core.lifecycle.experimentalFeatures;
-    const reuseModel = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.ReusableContentModel
-    );
     const cmCore = core as ContentModelEditorCore;
+
+    promoteDefaultFormat(cmCore);
+    promoteContentModelInfo(cmCore, options);
+    promoteCoreApi(cmCore);
+}
+
+function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
+    cmCore.lifecycle.defaultFormat = {
+        ...DEFAULT_FORMAT,
+        ...(cmCore.lifecycle.defaultFormat || {}),
+    };
+    cmCore.defaultFormat = getDefaultSegmentFormat(cmCore);
+
+    const { contentDiv, defaultFormat } = cmCore;
+    const { fontFamily, fontSize } = defaultFormat;
+
+    if (fontFamily) {
+        contentDiv.style.fontFamily = fontFamily;
+    }
+
+    if (fontSize) {
+        contentDiv.style.fontSize = fontSize;
+    }
+}
+
+function promoteContentModelInfo(
+    cmCore: ContentModelEditorCore,
+    options: ContentModelEditorOptions
+) {
+    const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
 
     cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
     cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
-    cmCore.defaultFormat = getDefaultSegmentFormat(core);
-    cmCore.reuseModel = reuseModel;
-    (cmCore.addDelimiterForEntity = isFeatureEnabled(
+    cmCore.reuseModel = isFeatureEnabled(
+        experimentalFeatures,
+        ExperimentalFeatures.ReusableContentModel
+    );
+    cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-    )),
-        (cmCore.api.createEditorContext = createEditorContext);
+    );
+}
+
+function promoteCoreApi(cmCore: ContentModelEditorCore) {
+    cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
 
-    if (reuseModel) {
+    if (
+        isFeatureEnabled(
+            cmCore.lifecycle.experimentalFeatures,
+            ExperimentalFeatures.ReusableContentModel
+        )
+    ) {
         // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
         cmCore.api.switchShadowEdit = switchShadowEdit;
     }
@@ -67,9 +112,10 @@ function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
         fontWeight: format.bold ? 'bold' : undefined,
         italic: format.italic || undefined,
         underline: format.underline || undefined,
-        fontFamily: format.fontFamily || undefined,
-        fontSize: format.fontSize || undefined,
-        textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+        fontFamily: format.fontFamily || DEFAULT_FORMAT.fontFamily,
+        fontSize: format.fontSize || DEFAULT_FORMAT.fontSize,
+        textColor:
+            format.textColors?.lightModeColor || format.textColor || DEFAULT_FORMAT.textColor,
         backgroundColor:
             format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
     };

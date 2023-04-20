@@ -7,13 +7,17 @@ import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
-const contentDiv = 'DIV' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
     let mockedCore: any;
+    let contentDiv: any;
 
     beforeEach(() => {
+        contentDiv = {
+            style: {},
+        } as any;
+
         mockedCore = {
             lifecycle: {
                 experimentalFeatures: [],
@@ -24,6 +28,7 @@ describe('createContentModelEditorCore', () => {
             originalApi: {
                 a: 'b',
             },
+            contentDiv,
         } as any;
 
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
@@ -39,6 +44,10 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
+                defaultFormat: {
+                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                    fontSize: '12pt',
+                },
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
@@ -58,13 +67,16 @@ describe('createContentModelEditorCore', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
+                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                fontSize: '12pt',
                 textColor: undefined,
                 backgroundColor: undefined,
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: { fontFamily: 'Calibri, Arial, Helvetica, sans-serif', fontSize: '12pt' },
+            },
         } as any);
     });
 
@@ -80,6 +92,10 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
+                defaultFormat: {
+                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                    fontSize: '12pt',
+                },
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
@@ -99,13 +115,16 @@ describe('createContentModelEditorCore', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
+                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                fontSize: '12pt',
                 textColor: undefined,
                 backgroundColor: undefined,
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: { fontFamily: 'Calibri, Arial, Helvetica, sans-serif', fontSize: '12pt' },
+            },
         } as any);
     });
 
@@ -162,6 +181,9 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: { fontFamily: 'Arial', fontSize: '10pt' },
+            },
         } as any);
     });
 
@@ -175,6 +197,10 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+                defaultFormat: {
+                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                    fontSize: '12pt',
+                },
             },
             api: {
                 switchShadowEdit: switchShadowEdit,
@@ -194,13 +220,16 @@ describe('createContentModelEditorCore', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
+                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                fontSize: '12pt',
                 textColor: undefined,
                 backgroundColor: undefined,
             },
             reuseModel: true,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: { fontFamily: 'Calibri, Arial, Helvetica, sans-serif', fontSize: '12pt' },
+            },
         } as any);
     });
 
@@ -216,6 +245,10 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+                defaultFormat: {
+                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                    fontSize: '12pt',
+                },
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
@@ -235,13 +268,16 @@ describe('createContentModelEditorCore', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
+                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                fontSize: '12pt',
                 textColor: undefined,
                 backgroundColor: undefined,
             },
             reuseModel: false,
             addDelimiterForEntity: true,
+            contentDiv: {
+                style: { fontFamily: 'Calibri, Arial, Helvetica, sans-serif', fontSize: '12pt' },
+            },
         } as any);
     });
 });
