@@ -1,9 +1,9 @@
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import {
-    BuildInEditFeature,
+    GenericContentEditFeature,
     IEditor,
     Keys,
-    PluginKeyboardEvent,
+    PluginEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
@@ -11,7 +11,7 @@ import {
  * @internal
  * Feature that when Backspace is pressed and there is Table Selection, delete the contents inside of the selection
  */
-export const DeleteTableContents: BuildInEditFeature<PluginKeyboardEvent> = {
+export const DeleteTableContents: GenericContentEditFeature<PluginEvent> = {
     keys: [Keys.DELETE, Keys.BACKSPACE],
     shouldHandleEvent: (_, editor: IEditor) => {
         const selection = editor.getSelectionRangeEx();
