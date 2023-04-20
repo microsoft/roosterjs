@@ -7,6 +7,16 @@ import {
     createFragmentFromClipboardData,
 } from 'roosterjs-editor-dom';
 
+/**
+ * @internal
+ * Create content model from clipboard data
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @param position The position to paste to
+ * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
+ * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+ * false to keep original format
+ */
 export const createPasteModel: CreatePasteModel = (
     core: ContentModelEditorCore,
     clipboardData: ClipboardData,
@@ -15,7 +25,6 @@ export const createPasteModel: CreatePasteModel = (
     applyCurrentStyle: boolean,
     pasteAsImage: boolean = false
 ) => {
-    // Step 1: Prepare BeforePasteEvent object
     const event = createBeforePasteEvent(core, clipboardData);
 
     const fragment = createFragmentFromClipboardData(
@@ -31,7 +40,14 @@ export const createPasteModel: CreatePasteModel = (
     return domToContentModel(fragment, core.api.createEditorContext(core), event.domToModelOption);
 };
 
-function createBeforePasteEvent(
+/**
+ * @internal
+ * Exported only for unit test
+ * @param core The EditorCore object.
+ * @param clipboardData Clipboard data retrieved from clipboard
+ * @returns
+ */
+export function createBeforePasteEvent(
     core: EditorCore,
     clipboardData: ClipboardData
 ): ContentModelBeforePasteEvent {
