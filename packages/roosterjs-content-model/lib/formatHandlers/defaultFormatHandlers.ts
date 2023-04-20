@@ -95,7 +95,7 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: blockFormatHandlers,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction'],
+    listItemElement: ['direction', 'lineHeight'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
     segment: [
         'superOrSubScript',
