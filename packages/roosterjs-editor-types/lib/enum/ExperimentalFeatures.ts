@@ -144,6 +144,11 @@ export const enum ExperimentalFeatures {
     ReusableContentModel = 'ReusableContentModel',
 
     /**
+     * Apply default format on editor container
+     */
+    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
+
+    /**
      * Delete table with Backspace key with the whole was selected with table selector
      */
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
