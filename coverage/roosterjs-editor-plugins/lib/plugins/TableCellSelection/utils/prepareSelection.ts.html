@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">75% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>12/16</span>
+                <span class='fraction'>15/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">56.25% </span>
+                <span class="strong">58.97% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/32</span>
+                <span class='fraction'>23/39</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">75% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>12/16</span>
+                <span class='fraction'>15/20</span>
             </div>
         
             
@@ -123,7 +123,10 @@
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -134,13 +137,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -161,12 +167,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">63x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -174,9 +180,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -200,6 +206,9 @@ import { TableCellSelectionState } from '../TableCellSelectionState';
  *  Check if the selection started in a inner table.
  */
 export function prepareSelection(state: TableCellSelectionState, editor: IEditor) {
+    if (!state.firstTable || !state.targetTable) {
+        return;
+    }
     let isNewTargetTableContained =
         state.lastTarget != state.firstTarget &amp;&amp;
         state.firstTable<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ontains(
@@ -228,21 +237,21 @@ export function prepareSelection(state: TableCellSelectionState, editor: IEditor
 &nbsp;
     let isFirstTargetTableContained =
         state.lastTarget != state.firstTarget &amp;&amp;
-        state.targetTable?.contains(
+        state.targetTable<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ontains(
             findClosestElementAncestor(state.firstTable, state.targetTable, TABLE_CELL_SELECTOR)
         );
 &nbsp;
-    if (isFirstTargetTableContained &amp;&amp; state.tableSelection) {
+    if (isFirstTargetTableContained &amp;&amp; state.tableSelection &amp;&amp; state.targetTable) {
         while (isFirstTargetTableContained) {
             state.firstTarget = findClosestElementAncestor(
                 state.firstTable,
                 state.targetTable,
                 TABLE_CELL_SELECTOR
             );
-            state.firstTable = editor.getElementAtCursor(
-                'table',
-                state.firstTarget
-            ) as HTMLTableElement;
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (!state.firstTarget) {
+<span class="cstat-no" title="statement not covered" >                return;</span>
+            }
+            state.firstTable = getTableAtCursor(editor, state.firstTarget);
             isFirstTargetTableContained =
                 state.lastTarget != state.firstTarget &amp;&amp;
 <span class="branch-1 cbranch-no" title="branch not covered" >                state.targetTable?.contains(</span>
@@ -262,7 +271,7 @@ export function prepareSelection(state: TableCellSelectionState, editor: IEditor
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Apr 19 2023 23:18:25 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 20 2023 17:03:23 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
