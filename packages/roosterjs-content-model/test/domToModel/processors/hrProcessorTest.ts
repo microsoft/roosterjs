@@ -73,12 +73,13 @@ describe('hrProcessor', () => {
         });
     });
 
-    it('HR with width and display', () => {
+    it('HR with width, size and display', () => {
         const doc = createContentModelDocument();
         const hr = document.createElement('hr');
 
         hr.style.display = 'inline-block';
         hr.style.width = '98%';
+        hr.size = '2';
 
         hrProcessor(doc, hr, context);
 
@@ -88,6 +89,7 @@ describe('hrProcessor', () => {
                 {
                     blockType: 'Divider',
                     tagName: 'hr',
+                    size: '2',
                     format: {
                         display: 'inline-block',
                         width: '98%',
