@@ -13,8 +13,10 @@ export function updateSelection(
     end?: Node,
     endOffset?: number
 ) {
-    const selection = editor.getDocument().defaultView.getSelection();
-    end = end || start;
-    endOffset = endOffset || offset;
-    selection.setBaseAndExtent(start, offset, end, endOffset);
+    const selection = editor.getDocument().defaultView?.getSelection();
+    if (selection) {
+        end = end || start;
+        endOffset = endOffset || offset;
+        selection.setBaseAndExtent(start, offset, end, endOffset);
+    }
 }

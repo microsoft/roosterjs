@@ -6,6 +6,7 @@ import { FontFamilyFormatRenderer } from '../format/formatPart/FontFamilyFormatR
 import { FontSizeFormatRenderer } from '../format/formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
@@ -14,6 +15,7 @@ import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRen
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelListItem,
+    ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
     ContentModelSegmentFormat,
     hasSelectionInBlockGroup,
@@ -28,7 +30,10 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ...DirectionFormatRenderers,
     MarginFormatRenderer,
 ];
-
+const ListItemFormatRenderers: FormatRenderer<ContentModelListItemFormat>[] = [
+    ...DirectionFormatRenderers,
+    LineHeightFormatRenderer,
+];
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,
     FontSizeFormatRenderer,
@@ -69,6 +74,10 @@ export function ContentModelListItemView(props: { listItem: ContentModelListItem
                     />
                 ))}
                 <hr className={styles.hr} />
+
+                <div>List item format:</div>
+                <FormatView format={listItem.format} renderers={ListItemFormatRenderers} />
+
                 <div>List marker format:</div>
                 <FormatView
                     format={listItem.formatHolder.format}

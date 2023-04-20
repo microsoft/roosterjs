@@ -20,7 +20,11 @@ describe('applyImageBorderFormat', () => {
         };
     }
 
-    function runTest(format: Border, expectedBorder: string, previousBorder?: string) {
+    function runTest(
+        format: Border | null,
+        expectedBorder: string | undefined,
+        previousBorder?: string
+    ) {
         const image = createImage(previousBorder);
         applyImageBorderFormat(image, format, '5px');
         expect(image.format.borderBottom).toBe(expectedBorder);
@@ -154,5 +158,9 @@ describe('applyImageBorderFormat', () => {
             },
             '20px dotted'
         );
+    });
+
+    it('remove border', () => {
+        runTest(null /* remove format */, undefined /* no expected border */, '10px groove blue');
     });
 });

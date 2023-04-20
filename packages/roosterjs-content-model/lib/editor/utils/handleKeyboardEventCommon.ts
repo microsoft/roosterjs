@@ -1,5 +1,5 @@
-import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
@@ -9,20 +9,26 @@ import { OnDeleteEntity } from '../../modelApi/selection/deleteSelections';
  */
 export function getOnDeleteEntityCallback(
     editor: IContentModelEditor,
-    rawEvent: KeyboardEvent
+    rawEvent: KeyboardEvent,
+    triggeredEntityEvents: EntityOperationEvent[]
 ): OnDeleteEntity {
     return (entity, operation) => {
         if (entity.id && entity.type) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                entity: {
-                    id: entity.id,
-                    isReadonly: entity.isReadonly,
-                    type: entity.type,
-                    wrapper: entity.wrapper,
-                },
-                operation,
-                rawEvent: rawEvent,
-            });
+            // Only trigger entity operation event when the same event was not triggered before.
+            // TODO: This is a temporary solution as the event deletion is handled by both original EntityPlugin/EntityFeatures and ContentModel.
+            // Later when Content Model can fully replace Content Edit Features, we can remove this check.
+            if (!triggeredEntityEvents.some(x => x.entity.wrapper == entity.wrapper)) {
+                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                    entity: {
+                        id: entity.id,
+                        isReadonly: entity.isReadonly,
+                        type: entity.type,
+                        wrapper: entity.wrapper,
+                    },
+                    operation,
+                    rawEvent: rawEvent,
+                });
+            }
         }
 
         return rawEvent.defaultPrevented;
@@ -42,8 +48,6 @@ export function handleKeyboardEventResult(
         // We have deleted what we need from content model, no need to let browser keep handling the event
         rawEvent.preventDefault();
         normalizeContentModel(model);
-
-        editor.triggerContentChangedEvent(ChangeSource.Keyboard, rawEvent.which);
     } else {
         // We didn't delete anything from content model, so browser will handle this event and we need to clear the cache
         editor.cacheContentModel(null);
