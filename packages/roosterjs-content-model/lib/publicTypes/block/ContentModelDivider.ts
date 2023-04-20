@@ -14,4 +14,9 @@ export interface ContentModelDivider
      * Tag name of this element, either HR or DIV
      */
     tagName: 'hr' | 'div';
+
+    /**
+     * Size property for HR
+     */
+    size?: string;
 }
