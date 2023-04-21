@@ -823,6 +823,47 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
     });
+
+    it('Normalize spaces before deleted segment', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const text = createText('test ');
+        const image = createImage('test');
+
+        image.isSelected = true;
+        para.segments.push(text, image);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.isChanged).toBeTrue();
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [{ segmentType: 'Text', text: 'test\u00A0', format: {} }, marker],
+                format: {},
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [{ segmentType: 'Text', text: 'test\u00A0', format: {} }, marker],
+                },
+            ],
+        });
+    });
 });
 
 describe('deleteSelection - forward', () => {
@@ -2311,6 +2352,99 @@ describe('deleteSelection - forward', () => {
             ],
         });
     });
+
+    it('Normalize text and space before deleted content', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1  ');
+        const text2 = createText('test2');
+
+        para.segments.push(text1, marker, text2);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1\u00A0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'est2',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Normalize text and space before deleted content, delete empty text', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1  ');
+        const text2 = createText('a');
+
+        para.segments.push(text1, marker, text2);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'forward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1\u00A0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
 
 describe('deleteSelection - backward', () => {
@@ -3786,6 +3920,99 @@ describe('deleteSelection - backward', () => {
                         {
                             segmentType: 'Text',
                             text: 'test  ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Normalize text and space before deleted content', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1  ');
+        const text2 = createText('test2');
+
+        para.segments.push(text1, text2, marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1\u00A0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Normalize text and space before deleted content, delete empty text', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text1 = createText('test1  ');
+        const text2 = createText('a');
+
+        para.segments.push(text1, text2, marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, { direction: 'backward' });
+
+        expect(result.isChanged).toBeTrue();
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1\u00A0',
                             format: {},
                         },
                         {

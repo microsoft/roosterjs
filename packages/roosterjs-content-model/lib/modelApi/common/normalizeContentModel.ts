@@ -1,13 +1,11 @@
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { isBlockEmpty, isSegmentEmpty } from './isEmpty';
+import { isBlockEmpty } from './isEmpty';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
 
 /**
  * @internal
- */
-export function normalizeContentModel(group: ContentModelBlockGroup) {
+ */ export function normalizeContentModel(group: ContentModelBlockGroup) {
     for (let i = group.blocks.length - 1; i >= 0; i--) {
         const block = group.blocks[i];
 
@@ -21,8 +19,6 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
                 }
                 break;
             case 'Paragraph':
-                removeEmptySegments(block);
-
                 normalizeParagraph(block);
                 break;
             case 'Table':
@@ -38,14 +34,6 @@ export function normalizeContentModel(group: ContentModelBlockGroup) {
 
         if (isBlockEmpty(block)) {
             group.blocks.splice(i, 1);
-        }
-    }
-}
-
-function removeEmptySegments(block: ContentModelParagraph) {
-    for (let j = block.segments.length - 1; j >= 0; j--) {
-        if (isSegmentEmpty(block.segments[j])) {
-            block.segments.splice(j, 1);
         }
     }
 }

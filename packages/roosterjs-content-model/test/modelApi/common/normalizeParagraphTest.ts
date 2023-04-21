@@ -1,3 +1,4 @@
+import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -100,8 +101,184 @@ describe('Normalize text that contains space', () => {
                         },
                         {
                             segmentType: 'Text',
+                            text: '\u00A0b',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('with BR', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+
+        para.segments.push(createText('  a  '), createBr(), createText('  b  '));
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'a',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
                             text: 'b',
                             format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Remove empty', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+
+        para.segments.push(createText('  a  '), createText(''), createText('  b  '));
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'a ',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '\u00A0b',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Add Br for empty paragraph', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Add Br after Br', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const br = createBr();
+        const marker = createSelectionMarker();
+
+        para.segments.push(br, marker);
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Do not add Br after text', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const br = createBr();
+        const text = createText('test');
+        const marker = createSelectionMarker();
+
+        para.segments.push(br, text, marker);
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
                         },
                     ],
                 },

@@ -1,12 +1,13 @@
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createBr } from '../creators/createBr';
+import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
-
-const SPACE = '\u0020';
-const NONE_BREAK_SPACE = '\u00A0';
-const LEADING_SPACE_REGEX = /^\u0020+/;
-const TRAILING_SPACE_REGEX = /\u0020+$/;
+import {
+    createNormalizeSegmentContext,
+    normalizeLastTextSegment,
+    normalizeSegment,
+    normalizeTextSegments,
+} from './normalizeSegment';
 
 /**
  * @internal
@@ -14,9 +15,15 @@ const TRAILING_SPACE_REGEX = /\u0020+$/;
 export function normalizeParagraph(paragraph: ContentModelParagraph) {
     const segments = paragraph.segments;
 
-    if (!paragraph.isImplicit) {
-        if (segments.length == 1 && segments[0].segmentType == 'SelectionMarker') {
-            segments.push(createBr(segments[0].format));
+    if (!paragraph.isImplicit && segments.length > 0) {
+        const last = segments[segments.length - 1];
+        const secondLast = segments[segments.length - 2];
+
+        if (
+            last.segmentType == 'SelectionMarker' &&
+            (!secondLast || secondLast.segmentType == 'Br')
+        ) {
+            segments.push(createBr(last.format));
         } else if (segments.length > 1 && segments[segments.length - 1].segmentType == 'Br') {
             const noMarkerSegments = segments.filter(x => x.segmentType != 'SelectionMarker');
 
@@ -31,52 +38,24 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
         }
     }
 
-    let ignoreLeadingSpaces = true;
-
     if (!isWhiteSpacePreserved(paragraph)) {
-        let lastTextSegment: ContentModelText | undefined;
+        const context = createNormalizeSegmentContext();
 
         segments.forEach(segment => {
-            if (segment.segmentType == 'Text') {
-                lastTextSegment = segment;
-
-                const first = segment.text.substring(0, 1);
-                const last = segment.text.substr(-1);
-
-                if (first == SPACE) {
-                    // 1. Multiple leading space => single &nbsp; or empty (depends on if previous segment ends with space)
-                    segment.text = segment.text.replace(
-                        LEADING_SPACE_REGEX,
-                        ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
-                    );
-                }
-
-                if (last == SPACE) {
-                    // 2. Multiple trailing space => single space
-                    segment.text = segment.text.replace(TRAILING_SPACE_REGEX, SPACE);
-                }
-
-                ignoreLeadingSpaces = last == SPACE;
-            } else if (segment.segmentType != 'SelectionMarker') {
-                ignoreLeadingSpaces = true;
-            }
+            normalizeSegment(segment, context);
         });
 
-        segments.forEach(segment => {
-            // 3. Segment ends with &nbsp; replace it with space if the previous char is not space so that next segment can wrap
-            // Only do this for segments that is not the last one since the last space will be removed in step 4
-            if (segment.segmentType == 'Text' && segment != lastTextSegment) {
-                const text = segment.text;
+        normalizeTextSegments(context.textSegments, context.lastInlineSegment);
+        normalizeLastTextSegment(context.lastTextSegment, context.lastInlineSegment);
+    }
 
-                if (text.substr(-1) == NONE_BREAK_SPACE && text.substr(-2, 1) != SPACE) {
-                    segment.text = text.substring(0, text.length - 1) + SPACE;
-                }
-            }
-        });
+    removeEmptySegments(paragraph);
+}
 
-        if (lastTextSegment?.text.substr(-1) == SPACE) {
-            // 4. last text segment of the paragraph, remove trailing space
-            lastTextSegment.text = lastTextSegment.text.replace(TRAILING_SPACE_REGEX, '');
+function removeEmptySegments(block: ContentModelParagraph) {
+    for (let j = block.segments.length - 1; j >= 0; j--) {
+        if (isSegmentEmpty(block.segments[j])) {
+            block.segments.splice(j, 1);
         }
     }
 }

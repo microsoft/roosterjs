@@ -7,6 +7,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 import { createBr } from '../creators/createBr';
+import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { EntityOperation } from 'roosterjs-editor-types';
@@ -277,6 +278,11 @@ function deleteSegment(
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
+    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+
+    if (!preserveWhiteSpace) {
+        normalizePreviousSegment(segments, index);
+    }
 
     switch (segmentToDelete.segmentType) {
         case 'Br':
@@ -309,11 +315,15 @@ function deleteSegment(
             } else {
                 text = isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
-                if (!isWhiteSpacePreserved(paragraph)) {
+                if (!preserveWhiteSpace) {
                     text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
                 }
 
-                segmentToDelete.text = text;
+                if (text == '') {
+                    segments.splice(index, 1);
+                } else {
+                    segmentToDelete.text = text;
+                }
             }
 
             return true;
@@ -327,6 +337,23 @@ function deleteSegment(
                 // TODO: Need to revisit this
                 return false;
             }
+    }
+}
+
+function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex: number) {
+    let index = currentIndex - 1;
+
+    while (segments[index]?.segmentType == 'SelectionMarker') {
+        index--;
+    }
+
+    const segment = segments[index];
+
+    if (segment) {
+        const context = createNormalizeSegmentContext();
+
+        context.ignoreTrailingSpaces = false;
+        normalizeSegment(segment, context);
     }
 }
 
