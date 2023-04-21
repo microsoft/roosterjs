@@ -24,8 +24,10 @@ export default function domToContentModel(
     const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 
-    // For root element, use computed style as initial value of segment formats
-    parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+    if (!context.defaultFormatOnContainer) {
+        // For root element, use computed style as initial value of segment formats
+        parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+    }
 
     // Need to calculate direction (ltr or rtl), use it as initial value
     parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
