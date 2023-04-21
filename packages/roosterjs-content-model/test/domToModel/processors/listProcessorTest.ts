@@ -484,4 +484,41 @@ describe('listProcessor process metadata', () => {
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
     });
+
+    it('Context has block formats', () => {
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+        const group = createContentModelDocument();
+
+        ol.appendChild(li);
+
+        context.blockFormat.direction = 'rtl';
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        listProcessor(group, ol, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            direction: 'rtl',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
 });

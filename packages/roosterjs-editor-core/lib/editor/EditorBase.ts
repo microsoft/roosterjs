@@ -424,7 +424,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
 
     public select(
         arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-        arg2?: NodePosition | number | PositionType | TableSelection,
+        arg2?: NodePosition | number | PositionType | TableSelection | null,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {

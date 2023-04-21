@@ -18,10 +18,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const element = paragraph.cachedElement;
+    let container = paragraph.cachedElement;
 
-    if (element) {
-        refNode = reuseCachedElement(parent, element, refNode);
+    if (container) {
+        refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
             const needParagraphWrapper =
@@ -30,7 +30,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 (getObjectKeys(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
 
-            let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+            container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
             parent.insertBefore(container, refNode);
 
@@ -53,7 +53,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             };
 
             paragraph.segments.forEach(segment => {
-                context.modelHandlers.segment(doc, container, segment, context);
+                context.modelHandlers.segment(doc, container!, segment, context);
             });
 
             if (needParagraphWrapper) {
@@ -62,6 +62,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 unwrap(container);
             }
         });
+    }
+
+    if (container) {
+        context.onNodeCreated?.(paragraph, container);
     }
 
     return refNode;

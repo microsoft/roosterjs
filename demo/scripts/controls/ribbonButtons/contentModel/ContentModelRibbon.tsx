@@ -18,6 +18,7 @@ import { formatTableButton } from './formatTableButton';
 import { imageBorderColorButton } from './imageBorderColorButton';
 import { imageBorderStyleButton } from './imageBorderStyleButton';
 import { imageBorderWidthButton } from './imageBorderWidthButton';
+import { imageBorderRemoveButton } from './imageBorderRemoveButton';
 import { imageBoxShadowButton } from './imageBoxShadowButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
@@ -98,6 +99,7 @@ const buttons = [
     imageBorderColorButton,
     imageBorderWidthButton,
     imageBorderStyleButton,
+    imageBorderRemoveButton,
     changeImageButton,
     imageBoxShadowButton,
     spacingButton,

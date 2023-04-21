@@ -83,4 +83,24 @@ describe('handleSegment', () => {
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<span>test</span>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(text);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span')!.firstChild);
+    });
 });
