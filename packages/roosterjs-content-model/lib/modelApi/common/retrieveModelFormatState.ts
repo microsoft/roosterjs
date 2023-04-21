@@ -30,7 +30,13 @@ export function retrieveModelFormatState(
 
     if (pendingFormat) {
         // Pending format
-        retrieveSegmentFormat(formatState, pendingFormat, isFirst);
+        retrieveSegmentFormat(
+            formatState,
+            pendingFormat,
+            isFirst,
+            undefined /*segment*/,
+            model.format
+        );
     }
 
     iterateSelections(
@@ -56,7 +62,13 @@ export function retrieveModelFormatState(
                 segments?.forEach(segment => {
                     if (!pendingFormat) {
                         if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                            retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                            retrieveSegmentFormat(
+                                formatState,
+                                segment.format,
+                                isFirst,
+                                segment,
+                                model.format
+                            );
                         }
 
                         // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
@@ -117,7 +129,8 @@ function retrieveSegmentFormat(
     result: ContentModelFormatState,
     format: ContentModelSegmentFormat,
     isFirst: boolean,
-    segment?: ContentModelSegment
+    segment?: ContentModelSegment,
+    defaultFormat?: ContentModelSegmentFormat
 ) {
     const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
     mergeValue(result, 'isBold', isBold(format.fontWeight), isFirst);
@@ -135,12 +148,18 @@ function retrieveSegmentFormat(
     mergeValue(
         result,
         'fontName',
-        segment?.code ? segment.code.format.fontFamily : format.fontFamily,
+        (segment?.code ? segment.code.format.fontFamily : format.fontFamily) ||
+            defaultFormat?.fontFamily,
         isFirst
     );
-    mergeValue(result, 'fontSize', format.fontSize, isFirst);
-    mergeValue(result, 'backgroundColor', format.backgroundColor, isFirst);
-    mergeValue(result, 'textColor', format.textColor, isFirst);
+    mergeValue(result, 'fontSize', format.fontSize || defaultFormat?.fontSize, isFirst);
+    mergeValue(
+        result,
+        'backgroundColor',
+        format.backgroundColor || defaultFormat?.backgroundColor,
+        isFirst
+    );
+    mergeValue(result, 'textColor', format.textColor || defaultFormat?.textColor, isFirst);
 
     //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', format.lineHeight, isFirst);

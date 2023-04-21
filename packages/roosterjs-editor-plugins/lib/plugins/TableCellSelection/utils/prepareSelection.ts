@@ -9,6 +9,9 @@ import { TableCellSelectionState } from '../TableCellSelectionState';
  *  Check if the selection started in a inner table.
  */
 export function prepareSelection(state: TableCellSelectionState, editor: IEditor) {
+    if (!state.firstTable || !state.targetTable) {
+        return;
+    }
     let isNewTargetTableContained =
         state.lastTarget != state.firstTarget &&
         state.firstTable?.contains(
@@ -41,17 +44,17 @@ export function prepareSelection(state: TableCellSelectionState, editor: IEditor
             findClosestElementAncestor(state.firstTable, state.targetTable, TABLE_CELL_SELECTOR)
         );
 
-    if (isFirstTargetTableContained && state.tableSelection) {
+    if (isFirstTargetTableContained && state.tableSelection && state.targetTable) {
         while (isFirstTargetTableContained) {
             state.firstTarget = findClosestElementAncestor(
                 state.firstTable,
                 state.targetTable,
                 TABLE_CELL_SELECTOR
             );
-            state.firstTable = editor.getElementAtCursor(
-                'table',
-                state.firstTarget
-            ) as HTMLTableElement;
+            if (!state.firstTarget) {
+                return;
+            }
+            state.firstTable = getTableAtCursor(editor, state.firstTarget);
             isFirstTargetTableContained =
                 state.lastTarget != state.firstTarget &&
                 state.targetTable?.contains(

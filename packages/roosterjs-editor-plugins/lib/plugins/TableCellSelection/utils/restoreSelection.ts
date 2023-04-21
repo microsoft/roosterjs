@@ -8,6 +8,10 @@ import { updateSelection } from './updateSelection';
  * @internal
  */
 export function restoreSelection(state: TableCellSelectionState, editor: IEditor) {
+    if (!state.lastTarget || !state.firstTarget) {
+        return;
+    }
+
     if (state.firstTable) {
         editor.select(state.firstTable, null);
     }

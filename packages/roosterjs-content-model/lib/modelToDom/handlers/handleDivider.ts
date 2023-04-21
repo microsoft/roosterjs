@@ -25,6 +25,10 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
         parent.insertBefore(element, refNode);
 
         applyFormat(element, context.formatAppliers.divider, divider.format, context);
+
+        if (divider.size) {
+            element.setAttribute('size', divider.size);
+        }
     }
 
     context.onNodeCreated?.(divider, element);

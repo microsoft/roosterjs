@@ -3,14 +3,19 @@ import { VTable } from 'roosterjs-editor-dom';
 /**
  * @internal
  */
+export type Nullable<T> = T | null | undefined;
+
+/**
+ * @internal
+ */
 export interface TableCellSelectionState {
-    lastTarget: Node;
-    firstTarget: Node;
-    tableSelection: boolean;
-    startedSelection: boolean;
-    vTable: VTable;
-    firstTable: HTMLTableElement;
-    targetTable: HTMLElement;
+    lastTarget: Nullable<Node>;
+    firstTarget: Nullable<Node>;
+    tableSelection: Nullable<boolean>;
+    startedSelection: Nullable<boolean>;
+    vTable: Nullable<VTable>;
+    firstTable: Nullable<HTMLTableElement>;
+    targetTable: Nullable<HTMLElement>;
     preventKeyUp: boolean;
     mouseMoveDisposer: (() => void) | null;
 }

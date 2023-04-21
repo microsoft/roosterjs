@@ -1,10 +1,11 @@
+import { Nullable } from '../TableCellSelectionState';
 import { Position } from 'roosterjs-editor-dom';
 import { PositionType } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
-export function isAfter(node1: Node, node2: Node) {
+export function isAfter(node1: Nullable<Node>, node2: Nullable<Node>) {
     if (node1 && node2) {
         if (node2.contains(node1)) {
             const r1 = (node1 as Element).getBoundingClientRect?.();
