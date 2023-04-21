@@ -1,6 +1,6 @@
-import isPowerPointDesktopDocument from '../../../lib/plugins/Paste/sourceValidations/isPowerPointDesktopDocument';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
-import { POWERPOINT_ATTRIBUTE_VALUE } from '../pasteTestUtils';
+import isPowerPointDesktopDocument from '../../lib/pasteSourceValidations/isPowerPointDesktopDocument';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
+import { POWERPOINT_ATTRIBUTE_VALUE } from './pasteTestUtils';
 
 describe('isPowerPointDesktopDocument |', () => {
     it('Is a PPT document 1', () => {

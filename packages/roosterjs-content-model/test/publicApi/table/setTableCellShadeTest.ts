@@ -37,10 +37,13 @@ describe('setTableCellShade', () => {
 
         if (expectedTable) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith({
-                blockGroupType: 'Document',
-                blocks: [expectedTable],
-            });
+            expect(setContentModel).toHaveBeenCalledWith(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [expectedTable],
+                },
+                { onNodeCreated: undefined }
+            );
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }

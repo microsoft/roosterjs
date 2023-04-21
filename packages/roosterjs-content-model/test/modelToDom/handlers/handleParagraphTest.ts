@@ -433,4 +433,29 @@ describe('handleParagraph', () => {
         expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
         expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
     });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div></div>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+    });
 });

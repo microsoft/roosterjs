@@ -4,13 +4,14 @@ import convertPastedContentFromExcel from './excelConverter/convertPastedContent
 import convertPastedContentFromOfficeOnline from './officeOnlineConverter/convertPastedContentFromOfficeOnline';
 import convertPastedContentFromPowerPoint from './pptConverter/convertPastedContentFromPowerPoint';
 import convertPastedContentFromWord from './wordConverter/convertPastedContentFromWord';
-import getPasteSource from './sourceValidations/getPasteSource';
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { GOOGLE_SHEET_NODE_NAME } from './sourceValidations/constants';
-import { KnownSourceType } from './sourceValidations/KnownSourceType';
+import { getPasteSource } from 'roosterjs-editor-dom';
+import { KnownPasteSourceType } from 'roosterjs-editor-types';
+
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -19,7 +20,7 @@ import { KnownSourceType } from './sourceValidations/KnownSourceType';
  * 3. Content copied from Word Online or OneNote Online
  */
 export default class Paste implements EditorPlugin {
-    private editor: IEditor;
+    private editor: IEditor | null = null;
 
     /**
      * Construct a new instance of Paste class
@@ -59,33 +60,33 @@ export default class Paste implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (event.eventType == PluginEventType.BeforePaste) {
+        if (this.editor && event.eventType == PluginEventType.BeforePaste) {
             const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
 
             switch (getPasteSource(event, this.convertSingleImageBody)) {
-                case KnownSourceType.WordDesktop:
+                case KnownPasteSourceType.WordDesktop:
                     // Handle HTML copied from Word
                     convertPastedContentFromWord(event);
                     break;
-                case KnownSourceType.ExcelDesktop:
-                case KnownSourceType.ExcelOnline:
+                case KnownPasteSourceType.ExcelDesktop:
+                case KnownPasteSourceType.ExcelOnline:
                     // Handle HTML copied from Excel
                     convertPastedContentFromExcel(event, trustedHTMLHandler);
                     break;
-                case KnownSourceType.PowerPointDesktop:
+                case KnownPasteSourceType.PowerPointDesktop:
                     convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
                     break;
-                case KnownSourceType.WacComponents:
+                case KnownPasteSourceType.WacComponents:
                     convertPastedContentFromOfficeOnline(fragment);
                     break;
-                case KnownSourceType.GoogleSheets:
+                case KnownPasteSourceType.GoogleSheets:
                     sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                     break;
-                case KnownSourceType.SingleImage:
+                case KnownPasteSourceType.SingleImage:
                     convertPasteContentForSingleImage(event, trustedHTMLHandler);
                     break;
-                case KnownSourceType.Default:
+                case KnownPasteSourceType.Default:
                     convertPastedContentForLI(fragment);
                     handleLineMerge(fragment);
                     break;

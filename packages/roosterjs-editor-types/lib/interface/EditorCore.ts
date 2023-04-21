@@ -124,7 +124,8 @@ export type CreatePasteFragment = (
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
-    applyCurrentStyle: boolean
+    applyCurrentStyle: boolean,
+    pasteAsImage: boolean
 ) => DocumentFragment | null;
 
 /**
@@ -221,14 +222,14 @@ export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
  * There are a bunch of allowed combination of parameters. See IEditor.select for more details
  * @param core The editor core object
  * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
- * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection
+ * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
  * @param arg3 (optional) A Node
  * @param arg4 (optional) An offset number, or a PositionType
  */
 export type Select = (
     core: EditorCore,
     arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-    arg2?: NodePosition | number | PositionType | TableSelection,
+    arg2?: NodePosition | number | PositionType | TableSelection | null,
     arg3?: Node,
     arg4?: number | PositionType
 ) => boolean;
@@ -434,7 +435,7 @@ export interface CoreApiMap {
      * There are a bunch of allowed combination of parameters. See IEditor.select for more details
      * @param core The editor core object
      * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
-     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection
+     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
      * @param arg3 (optional) A Node
      * @param arg4 (optional) An offset number, or a PositionType
      */

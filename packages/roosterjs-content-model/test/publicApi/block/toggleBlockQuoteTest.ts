@@ -31,4 +31,23 @@ describe('toggleBlockQuote', () => {
             c: 'd',
         } as any);
     });
+
+    it('toggleBlockQuote with real format', () => {
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(toggleModelBlockQuote, 'toggleModelBlockQuote');
+
+        toggleBlockQuote(editor, { lineHeight: '2', textColor: 'red' });
+
+        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
+        expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
+            marginTop: '1em',
+            marginBottom: '1em',
+            marginLeft: '40px',
+            marginRight: '40px',
+            paddingLeft: '10px',
+            lineHeight: '2',
+            textColor: 'red',
+        } as any);
+    });
 });

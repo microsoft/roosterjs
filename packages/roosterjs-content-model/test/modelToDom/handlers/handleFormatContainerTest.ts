@@ -84,4 +84,28 @@ describe('handleFormatContainer', () => {
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
         expect(result).toBe(br);
     });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const quote = createQuote();
+        const paragraph = createParagraph();
+        const text = createText('test');
+        quote.blocks.push(paragraph);
+        paragraph.segments.push(text);
+
+        handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleFormatContainer(document, parent, quote, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<blockquote style="margin: 0px;"><div><span>test</span></div></blockquote>'
+        );
+        expect(onNodeCreated).toHaveBeenCalledTimes(3);
+        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);
+        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('blockquote'));
+    });
 });

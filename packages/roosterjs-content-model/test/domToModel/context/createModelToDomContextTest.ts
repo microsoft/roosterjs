@@ -31,6 +31,7 @@ describe('createModelToDomContext', () => {
         defaultImplicitFormatMap: defaultImplicitFormatMap,
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
+        onNodeCreated: undefined,
     };
     it('no param', () => {
         const context = createModelToDomContext();
@@ -57,6 +58,7 @@ describe('createModelToDomContext', () => {
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
         const mockedAStyle = 'a' as any;
+        const onNodeCreated = 'OnNodeCreated' as any;
         const context = createModelToDomContext(undefined, {
             formatApplierOverride: {
                 bold: mockedBoldApplier,
@@ -70,6 +72,7 @@ describe('createModelToDomContext', () => {
             defaultImplicitFormatOverride: {
                 a: mockedAStyle,
             },
+            onNodeCreated,
         });
 
         expect(context.regularSelection).toEqual({
@@ -91,5 +94,6 @@ describe('createModelToDomContext', () => {
         expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
+        expect(context.onNodeCreated).toBe(onNodeCreated);
     });
 });

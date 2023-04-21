@@ -102,20 +102,41 @@ const handleIndentationEvent = (indenting: boolean) => (
  * IndentWhenTab edit feature, provides the ability to indent current list when user press TAB
  */
 const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.RIGHT],
+    keys: [Keys.TAB],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
-    allowFunctionKeys: true,
 };
 
 /**
  * OutdentWhenShiftTab edit feature, provides the ability to outdent current list when user press Shift+TAB
  */
 const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
-    keys: Browser.isMac ? [Keys.TAB] : [Keys.TAB, Keys.LEFT],
+    keys: [Keys.TAB],
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
+};
+
+/**
+ * indentWhenAltShiftRight edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Right
+ */
+const IndentWhenAltShiftRight: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.RIGHT],
+    shouldHandleEvent: shouldHandleIndentationEvent(true),
+    handleEvent: handleIndentationEvent(true),
+    allowFunctionKeys: true,
+    defaultDisabled: Browser.isMac,
+};
+
+/**
+ * outdentWhenAltShiftLeft edit feature, provides the ability to indent or outdent current list when user press Alt+shift+Left
+ */
+const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
+    keys: [Keys.LEFT],
+    shouldHandleEvent: shouldHandleIndentationEvent(false),
+    handleEvent: handleIndentationEvent(false),
+    allowFunctionKeys: true,
+    defaultDisabled: Browser.isMac,
 };
 
 /**
@@ -630,6 +651,8 @@ export const ListFeatures: Record<
     autoNumberingList: AutoNumberingList,
     autoBulletList: AutoBulletList,
     mergeListOnBackspaceAfterList: MergeListOnBackspaceAfterList,
+    outdentWhenAltShiftLeft: OutdentWhenAltShiftLeft,
+    indentWhenAltShiftRight: IndentWhenAltShiftRight,
 };
 
 function isList(element: Node | null | undefined): element is HTMLOListElement | HTMLOListElement {

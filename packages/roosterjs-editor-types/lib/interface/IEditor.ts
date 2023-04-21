@@ -210,7 +210,12 @@ export default interface IEditor {
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
      */
-    paste(clipboardData: ClipboardData, pasteAsText?: boolean, applyCurrentFormat?: boolean): void;
+    paste(
+        clipboardData: ClipboardData,
+        pasteAsText?: boolean,
+        applyCurrentFormat?: boolean,
+        pasteAsImage?: boolean
+    ): void;
 
     //#endregion
 
@@ -312,9 +317,9 @@ export default interface IEditor {
     /**
      * Select content using the Table Selection
      * @param table to select
-     * @param coordinates first and last cell of the range
+     * @param coordinates first and last cell of the range, if null is provided will remove the selection on the table
      */
-    select(table: HTMLTableElement, coordinates: TableSelection): boolean;
+    select(table: HTMLTableElement, coordinates: TableSelection | null): boolean;
 
     /**
      * Select content SelectionRangeEx

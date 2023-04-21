@@ -1,12 +1,28 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { isGeneralSegment } from '../common/isGeneralSegment';
 
 /**
  * @internal
  */
 export type BlockAndPath = {
+    /**
+     * The sibling block
+     */
     block: ContentModelBlock;
+
+    /**
+     * Path of this sibling block
+     */
     path: ContentModelBlockGroup[];
+
+    /**
+     * If the input block is under a general segment, it is possible there are sibling segments under the same paragraph.
+     * Use this property to return the sibling sibling under the same paragraph
+     */
+    siblingSegment?: ContentModelSegment;
 };
 
 /**
@@ -45,6 +61,32 @@ export function getLeafSiblingBlock(
             }
 
             return { block: nextBlock, path: newPath };
+        } else if (isGeneralSegment(group)) {
+            // For general segment, we need to check if there is sibling segment under the same paragraph
+            // First let's find the parent paragraph of this segment
+            newPath.shift();
+
+            let segmentIndex = -1;
+            const segment = group;
+            const para = newPath[0]?.blocks.find(
+                x => x.blockType == 'Paragraph' && (segmentIndex = x.segments.indexOf(segment)) >= 0
+            ) as ContentModelParagraph;
+
+            if (para) {
+                // Now we have found the parent paragraph, so let's check if it has a sibling segment
+                const siblingSegment = para.segments[segmentIndex + (isNext ? 1 : -1)];
+
+                if (siblingSegment) {
+                    // Return this block, path and segment since we have found it
+                    return { block: para, path: newPath, siblingSegment };
+                } else {
+                    // No sibling segment, let's keep go upper level
+                    block = para;
+                }
+            } else {
+                // Parent sibling is not found (in theory this should never happen), just return null
+                break;
+            }
         } else if (group.blockGroupType != 'Document' && group.blockGroupType != 'TableCell') {
             newPath.shift();
             block = group;
