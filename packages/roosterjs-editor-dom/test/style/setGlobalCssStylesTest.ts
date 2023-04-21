@@ -17,7 +17,24 @@ describe('setGlobalCssStyles', () => {
         div.remove();
     });
 
-    it('should add a style ', () => {
+    it('Should modify existing style ', () => {
+        const styleid = 'oldStyle';
+        const css1 = '#TestClass { color: red; }';
+        const css2 = '#TestClass { color: blue; }';
+        const oldStyle = document.createElement('style');
+        oldStyle.id = styleid;
+        document.head.appendChild(oldStyle);
+        oldStyle.sheet?.insertRule(css1);
+        expect(oldStyle.sheet?.cssRules.length).toBe(1);
+        // Should add a new rule to existing style
+        setGlobalCssStyles(document, css2, styleid);
+        const styleTag = document.getElementById(styleid) as HTMLStyleElement;
+        expect(styleTag?.tagName).toBe('STYLE');
+        expect(styleTag.sheet?.cssRules.length).toBe(2);
+    });
+
+    it('Should add a new style ', () => {
+        const styleid = 'newStyle';
         const css =
             '#' +
             'editorTest' +
@@ -26,15 +43,18 @@ describe('setGlobalCssStyles', () => {
             ' { margin: -2px; border: 2px solid' +
             '#DB626C' +
             ' !important; }';
-        setGlobalCssStyles(document, css, div.id + span.id);
-        const styleTag = document.getElementById('editorTesttest');
+        // Should create a style tag with id newStyle, and the above rule
+        setGlobalCssStyles(document, css, styleid);
+        const styleTag = document.getElementById(styleid) as HTMLStyleElement;
         expect(styleTag?.tagName).toBe('STYLE');
     });
 
-    it('should not add a style ', () => {
+    it('Should not add a new style ', () => {
+        const styleid = 'noStyle';
         const css = '';
-        setGlobalCssStyles(document, css, div.id + span.id);
-        const styleTag = document.getElementById('editorTesttest');
-        expect(styleTag).toBeNull;
+        // Should no create a style tag with id noStyle
+        setGlobalCssStyles(document, css, styleid);
+        const styleTag = document.getElementById(styleid) as HTMLStyleElement;
+        expect(styleTag).toBeNull();
     });
 });
