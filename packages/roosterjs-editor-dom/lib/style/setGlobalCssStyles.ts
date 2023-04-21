@@ -7,11 +7,13 @@
  */
 
 export default function setGlobalCssStyles(doc: Document, cssRule: string, styleId: string) {
-    let styleTag = doc.getElementById(styleId) as HTMLStyleElement;
-    if (!styleTag) {
-        styleTag = doc.createElement('style');
-        styleTag.id = styleId;
-        doc.head.appendChild(styleTag);
+    if (cssRule) {
+        let styleTag = doc.getElementById(styleId) as HTMLStyleElement;
+        if (!styleTag) {
+            styleTag = doc.createElement('style');
+            styleTag.id = styleId;
+            doc.head.appendChild(styleTag);
+        }
+        styleTag.sheet?.insertRule(cssRule);
     }
-    styleTag.sheet?.insertRule(cssRule);
 }

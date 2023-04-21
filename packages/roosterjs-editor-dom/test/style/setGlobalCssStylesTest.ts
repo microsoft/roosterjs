@@ -14,10 +14,10 @@ describe('setGlobalCssStyles', () => {
 
     afterEach(() => {
         document.body.removeChild(div);
-        div = null;
+        div.remove();
     });
 
-    it('should add an style ', () => {
+    it('should add a style ', () => {
         const css =
             '#' +
             'editorTest' +
@@ -29,5 +29,12 @@ describe('setGlobalCssStyles', () => {
         setGlobalCssStyles(document, css, div.id + span.id);
         const styleTag = document.getElementById('editorTesttest');
         expect(styleTag?.tagName).toBe('STYLE');
+    });
+
+    it('should not add a style ', () => {
+        const css = '';
+        setGlobalCssStyles(document, css, div.id + span.id);
+        const styleTag = document.getElementById('editorTesttest');
+        expect(styleTag).toBeNull;
     });
 });
