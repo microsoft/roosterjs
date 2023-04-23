@@ -35,7 +35,7 @@ export default interface HtmlSanitizerOptions {
      *
      * For other unknown tags, we will respect the value of unknownTagReplacement with the same meaning
      */
-    additionalTagReplacements?: Record<string, string>;
+    additionalTagReplacements?: Record<string, string | null>;
 
     /**
      * Allowed HTML attributes in addition to default attributes, in lower case
