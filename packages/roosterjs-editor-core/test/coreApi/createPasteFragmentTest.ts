@@ -1,7 +1,7 @@
 import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions';
 import createEditorCore from './createMockEditorCore';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { createPasteFragment, transformTabCharacters } from '../../lib/coreApi/createPasteFragment';
+import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
 import { itChromeOnly, itFirefoxOnly } from '../TestHelper';
 
 describe('createPasteFragment', () => {
@@ -478,23 +478,6 @@ describe('createPasteFragment', () => {
         const html = getHTML(fragment);
         expect(html.trim()).toBe('teststring<img src="">teststring');
         expect(clipboardData.htmlFirstLevelChildTags).toEqual(['', 'IMG', '']);
-    });
-});
-
-describe('transformTabCharacters', () => {
-    it('no \t', () => {
-        const input = 'hello world';
-        expect(transformTabCharacters(input)).toBe(input);
-    });
-
-    it('1 \t', () => {
-        const input = '\tHello';
-        expect(transformTabCharacters(input)).toBe('      Hello');
-    });
-
-    it('complex', () => {
-        const input = '1\t234\t5';
-        expect(transformTabCharacters(input)).toBe('1     234   5');
     });
 });
 
