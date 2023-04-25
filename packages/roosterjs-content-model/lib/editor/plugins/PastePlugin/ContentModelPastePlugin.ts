@@ -1,7 +1,10 @@
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
+import deprecatedColorParser from './utils/deprecatedColorParser';
+import safeAssignParser from './utils/safeAssignParser';
+import sanitizeLinks from './utils/linkParser';
 import { getPasteSource } from 'roosterjs-editor-dom';
+import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
-import { wordDesktopElementProcessor } from './WordDesktopProcessor/wordDesktopElementProcessor';
 import {
     EditorPlugin,
     IEditor,
@@ -11,12 +14,17 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
- * ContentModelFormat plugins helps editor to do formatting on top of content model.
- * This includes:
- * 1. Handle pending format changes when selection is collapsed
+ * Paste plugin, handles BeforePaste event and reformat some special content, including:
+ * 1. Content copied from Word
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+
+    /**
+     * Construct a new instance of Paste class
+     * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     */
+    constructor(private unknownTagReplacement: string = 'SPAN') {}
 
     /**
      * Get name of this plugin
@@ -52,26 +60,25 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (!this.editor) {
+        if (!this.editor || event.eventType != PluginEventType.BeforePaste) {
             return;
         }
 
-        switch (event.eventType) {
-            case PluginEventType.BeforePaste:
-                const ev = event as ContentModelBeforePasteEvent;
-                if (!ev.elementProcessors) {
-                    return;
-                }
-                const pasteSource = getPasteSource(event, false);
-                switch (pasteSource) {
-                    case KnownPasteSourceType.WordDesktop:
-                        ev.elementProcessors.push(wordDesktopElementProcessor);
-                        break;
+        const ev = event as ContentModelBeforePasteEvent;
+        const pasteSource = getPasteSource(event, false);
+        switch (pasteSource) {
+            case KnownPasteSourceType.WordDesktop:
+                handleWordDesktop(ev);
+                break;
 
-                    default:
-                        break;
-                }
+            default:
                 break;
         }
+
+        safeAssignParser(ev.domToModelOption, 'segment', deprecatedColorParser);
+        safeAssignParser(ev.domToModelOption, 'segmentOnBlock', deprecatedColorParser);
+        safeAssignParser(ev.domToModelOption, 'link', sanitizeLinks);
+
+        event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
