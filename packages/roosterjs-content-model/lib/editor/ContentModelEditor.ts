@@ -25,6 +25,17 @@ export default class ContentModelEditor
         super(contentDiv, options, createContentModelEditorCore);
     }
 
+    dispose() {
+        const { contentDiv, originalContainerFormat, defaultFormatOnContainer } = this.getCore();
+
+        if (defaultFormatOnContainer) {
+            contentDiv.style.setProperty('font-family', originalContainerFormat.fontFamily || null);
+            contentDiv.style.setProperty('font-size', originalContainerFormat.fontSize || null);
+        }
+
+        super.dispose();
+    }
+
     /**
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
