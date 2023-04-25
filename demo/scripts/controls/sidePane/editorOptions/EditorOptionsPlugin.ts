@@ -22,7 +22,7 @@ const initialState: BuildInPluginState = {
         contextMenu: true,
         autoFormat: true,
         contentModelFormat: true,
-        contentModelEdit: false,
+        contentModelEdit: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
@@ -36,6 +36,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.VariableBasedDarkColor,
         ExperimentalFeatures.ReusableContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
+        ExperimentalFeatures.DefaultFormatOnContainer,
     ],
     isRtl: false,
 };

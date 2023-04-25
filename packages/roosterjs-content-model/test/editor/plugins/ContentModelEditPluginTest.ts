@@ -6,9 +6,12 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
+    let cacheContentModel: jasmine.Spy;
 
     beforeEach(() => {
-        editor = ({} as any) as IContentModelEditor;
+        cacheContentModel = jasmine.createSpy('cacheContentModel');
+
+        editor = ({ cacheContentModel } as any) as IContentModelEditor;
     });
 
     describe('onPluginEvent', () => {

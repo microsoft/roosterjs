@@ -82,12 +82,21 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                                 this.triggeredEntityEvents
                             );
                             break;
+
+                        default:
+                            this.editor.cacheContentModel(null);
+                            break;
                     }
                 }
 
                 if (this.triggeredEntityEvents.length > 0) {
                     this.triggeredEntityEvents = [];
                 }
+            } else if (
+                event.eventType == PluginEventType.ContentChanged ||
+                event.eventType == PluginEventType.MouseUp
+            ) {
+                this.editor.cacheContentModel(null);
             }
         }
     }
