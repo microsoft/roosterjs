@@ -63,50 +63,6 @@ describe('formatContainerProcessor', () => {
         });
     });
 
-    it('BLOCKQUOTE with other style', () => {
-        const doc = createContentModelDocument();
-        const quote = document.createElement('blockquote');
-
-        quote.style.marginTop = '0';
-        quote.style.marginBottom = '0';
-        quote.style.color = 'red';
-        quote.appendChild(document.createTextNode('test'));
-
-        formatContainerProcessor(doc, quote, context);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    format: {
-                        marginRight: '40px',
-                        marginLeft: '40px',
-                        textColor: 'red',
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                    },
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    format: {},
-                                    text: 'test',
-                                },
-                            ],
-                            format: {},
-                            isImplicit: true,
-                        },
-                    ],
-                },
-            ],
-        });
-    });
-
     it('BLOCKQUOTE with margin and border', () => {
         const doc = createContentModelDocument();
         const quote = document.createElement('blockquote');
@@ -220,17 +176,15 @@ describe('formatContainerProcessor', () => {
         const childProcessor = jasmine
             .createSpy('childProcessor')
             .and.callFake((group, element, context) => {
-                expect(context.blockFormat).toEqual({
-                    backgroundColor: 'red',
-                });
+                expect(context.blockFormat).toEqual({});
                 expect(context.segmentFormat).toEqual({
                     fontSize: '20px',
+                    textColor: 'blue',
                 });
             });
 
         quote.style.color = 'blue';
         quote.style.borderLeft = 'solid 1px black';
-        context.blockFormat.backgroundColor = 'red';
         context.segmentFormat.textColor = 'green';
         context.segmentFormat.fontSize = '20px';
         context.elementProcessors.child = childProcessor;
@@ -251,8 +205,6 @@ describe('formatContainerProcessor', () => {
                         marginBottom: '1em',
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
                     },
                 },
             ],

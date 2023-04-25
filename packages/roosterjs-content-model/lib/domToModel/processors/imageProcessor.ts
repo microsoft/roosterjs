@@ -19,7 +19,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
         context,
         {
             segment: isBlock ? 'shallowCloneForBlock' : 'shallowClone',
-            paragraph: isBlock ? 'empty' : 'shallowClone',
+            paragraph: 'shallowClone',
         },
         () => {
             const imageFormat: ContentModelImageFormat = context.segmentFormat;

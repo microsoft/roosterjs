@@ -35,6 +35,10 @@ export function createDomToModelContext(
         code: {
             format: {},
         },
+        blockDecorator: {
+            format: {},
+            tagName: '',
+        },
 
         elementProcessors: {
             ...defaultProcessorMap,
@@ -57,6 +61,10 @@ export function createDomToModelContext(
 
     if (options?.alwaysNormalizeTable) {
         context.alwaysNormalizeTable = true;
+    }
+
+    if (options?.allowCacheElement) {
+        context.allowCacheElement = true;
     }
 
     const range = options?.selectionRange;
