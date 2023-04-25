@@ -64,7 +64,7 @@ export function handleKeyDownEvent(
                 handleKeySelectionInsideTable(event, state, editor);
             } else if (state.tableSelection) {
                 if (state.firstTable) {
-                    editor.select(state.firstTable, undefined);
+                    editor.select(state.firstTable, null /* coordinates */);
                 }
                 state.tableSelection = false;
             }
