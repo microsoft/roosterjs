@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">75% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>3/4</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
@@ -104,7 +104,12 @@
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
 <a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L48'></a><a href='#L48'>48</a>
+<a name='L49'></a><a href='#L49'>49</a>
+<a name='L50'></a><a href='#L50'>50</a>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -114,6 +119,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -127,29 +133,33 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">13x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">13x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">17x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { computedSegmentFormatHandler } from '../formatHandlers/segment/computedSegmentFormatHandler';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
@@ -160,6 +170,7 @@ import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 &nbsp;
 /**
@@ -170,29 +181,33 @@ import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHa
  * @returns A ContentModelDocument object that contains all the models created from the give root element
  */
 export default function domToContentModel(
-    root: HTMLElement,
+    root: HTMLElement | DocumentFragment,
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
     const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (!context.defaultFormatOnContainer) {
-        // For root element, use computed style as initial value of segment formats
-        parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+    if (safeInstanceOf(root, 'DocumentFragment')) {
+        context.elementProcessors.child(model, root, context);
+    } else {
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (!context.defaultFormatOnContainer) {
+            // For root element, use computed style as initial value of segment formats
+            parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+        }
+&nbsp;
+        // Need to calculate direction (ltr or rtl), use it as initial value
+        parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
+&nbsp;
+        // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
+        parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
+&nbsp;
+        const processor = option.includeRoot
+            ? context.elementProcessors.element
+            : context.elementProcessors.child;
+&nbsp;
+        processor(model, root, context);
     }
-&nbsp;
-    // Need to calculate direction (ltr or rtl), use it as initial value
-    parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
-&nbsp;
-    // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
-    parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
-&nbsp;
-    const processor = option.includeRoot
-        ? context.elementProcessors.element
-        : context.elementProcessors.child;
-&nbsp;
-    processor(model, root, context);
 &nbsp;
     normalizeContentModel(model);
 &nbsp;
@@ -205,7 +220,7 @@ export default function domToContentModel(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Apr 25 2023 19:05:00 GMT+0000 (Coordinated Universal Time)
+                at Tue Apr 25 2023 22:52:08 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
