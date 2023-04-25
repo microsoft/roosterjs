@@ -13,7 +13,7 @@ export function restoreSelection(state: TableCellSelectionState, editor: IEditor
     }
 
     if (state.firstTable) {
-        editor.select(state.firstTable, null);
+        editor.select(state.firstTable, undefined);
     }
     state.tableSelection = false;
     const isBeginAboveEnd = isAfter(state.firstTarget, state.lastTarget);
