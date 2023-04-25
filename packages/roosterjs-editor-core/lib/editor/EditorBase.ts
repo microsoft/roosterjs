@@ -332,8 +332,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     public paste(
         clipboardData: ClipboardData,
         pasteAsText: boolean = false,
-        applyCurrentFormat: boolean = false,
-        pasteAsImage: boolean = false
+        applyCurrentFormat: boolean = false
     ) {
         const core = this.getCore();
         if (!clipboardData) {
@@ -356,8 +355,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             clipboardData,
             pos,
             pasteAsText,
-            applyCurrentFormat,
-            pasteAsImage
+            applyCurrentFormat
         );
         if (fragment) {
             this.addUndoSnapshot(() => {
