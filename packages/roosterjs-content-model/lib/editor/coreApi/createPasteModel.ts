@@ -28,19 +28,13 @@ export const createPasteModel: CreatePasteModel = (
         event
     );
 
-    return domToContentModel(fragment, core.api.createEditorContext(core), {
-        processorOverride: {
-            element: (group, element, context) => {
-                const wasHandled =
-                    event.elementProcessors.length > 0 &&
-                    event.elementProcessors.some(p => p(group, element, context));
+    const model = domToContentModel(
+        fragment,
+        core.api.createEditorContext(core),
+        event.domToModelOption
+    );
 
-                if (!wasHandled) {
-                    context.defaultElementProcessors.element(group, element, context);
-                }
-            },
-        },
-    });
+    return model;
 };
 
 function createBeforePasteEvent(
@@ -60,6 +54,6 @@ function createBeforePasteEvent(
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
-        elementProcessors: [],
+        domToModelOption: {},
     };
 }

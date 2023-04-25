@@ -2,10 +2,10 @@ import { addBlock } from '../../../../modelApi/common/addBlock';
 import { ContentModelBlockGroup } from '../../../../publicTypes/group/ContentModelBlockGroup';
 import { createListItem } from '../../../../modelApi/creators/createListItem';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
+import { ElementProcessor } from 'roosterjs-content-model/lib/publicTypes';
 import { getStyles, safeInstanceOf } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 import { parseFormat } from '../../../../domToModel/utils/parseFormat';
-import { PasteElementProcessor } from '../../../../publicTypes/event/PasteElementProcessor';
 
 const MSO_COMMENT_ANCHOR_HREF_REGEX = /#_msocom_/;
 const MSO_SPECIAL_CHARACTER = 'mso-special-character';
@@ -15,13 +15,18 @@ const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 
-export const wordDesktopElementProcessor: PasteElementProcessor<HTMLElement> = (
+export const wordDesktopElementProcessor: ElementProcessor<HTMLElement> = (
     group,
     element,
     context
 ) => {
     const styles = getStyles(element);
-    return processWordList(styles, group, element, context) || processWordCommand(styles, element);
+    const wasHandled =
+        processWordList(styles, group, element, context) || processWordCommand(styles, element);
+
+    if (!wasHandled) {
+        context.defaultElementProcessors.element(group, element, context);
+    }
 };
 
 function processWordCommand(styles: Record<string, string>, element: HTMLElement) {
@@ -77,7 +82,6 @@ function processWordList(
         addBlock(group, listItem);
         return true;
     }
-
     return false;
 }
 

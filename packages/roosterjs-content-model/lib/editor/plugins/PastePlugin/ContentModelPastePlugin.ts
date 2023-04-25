@@ -1,5 +1,7 @@
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { getPasteSource } from 'roosterjs-editor-dom';
+import { getPasteSource, safeInstanceOf } from 'roosterjs-editor-dom';
+import { handleExcelOnline } from './handleExcelOnline';
+import { handleWacComponents } from './handleWacComponents';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import { wordDesktopElementProcessor } from './WordDesktopProcessor/wordDesktopElementProcessor';
 import {
@@ -10,6 +12,34 @@ import {
     PluginEventType,
 } from 'roosterjs-editor-types';
 
+const WAC_CLASSES = [
+    'BulletListStyle',
+    'OutlineElement',
+    'NumberListStyle',
+    'OutlineElement',
+    'WACImageContainer',
+    'ListContainerWrapper',
+    'BulletListStyle',
+    'NumberListStyle',
+    'WACImageContainer',
+    'Superscript',
+];
+const deprecatedColorParser = (
+    format: import('c:/Users/bvalverde/Desktop/Newfolder/roosterjs/packages/roosterjs-content-model/lib/index').ContentModelSegmentFormat,
+    element: HTMLElement,
+    _context: import('c:/Users/bvalverde/Desktop/Newfolder/roosterjs/packages/roosterjs-content-model/lib/index').DomToModelContext,
+    defaultStyles: Readonly<Partial<CSSStyleDeclaration>>
+): void => {
+    console.log(element);
+    if (DeprecatedColorList.indexOf(element.style.backgroundColor) > -1) {
+        format.backgroundColor = defaultStyles.backgroundColor;
+        element.style.backgroundColor = defaultStyles.backgroundColor ?? '';
+    }
+    if (DeprecatedColorList.indexOf(element.style.color) > -1) {
+        format.textColor = defaultStyles.color;
+        element.style.color = defaultStyles.color ?? '';
+    }
+};
 /**
  * ContentModelFormat plugins helps editor to do formatting on top of content model.
  * This includes:
@@ -17,6 +47,12 @@ import {
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+
+    /**
+     * Construct a new instance of Paste class
+     * @param unknownTagReplacement Replace solution of unknown tags, default behavior is to replace with SPAN
+     */
+    constructor(private unknownTagReplacement: string = 'SPAN') {}
 
     /**
      * Get name of this plugin
@@ -52,26 +88,118 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
      * @param event The event to handle:
      */
     onPluginEvent(event: PluginEvent) {
-        if (!this.editor) {
+        if (!this.editor || event.eventType != PluginEventType.BeforePaste) {
             return;
         }
 
-        switch (event.eventType) {
-            case PluginEventType.BeforePaste:
-                const ev = event as ContentModelBeforePasteEvent;
-                if (!ev.elementProcessors) {
-                    return;
-                }
-                const pasteSource = getPasteSource(event, false);
-                switch (pasteSource) {
-                    case KnownPasteSourceType.WordDesktop:
-                        ev.elementProcessors.push(wordDesktopElementProcessor);
-                        break;
+        const ev = event as ContentModelBeforePasteEvent;
+        if (!ev.domToModelOption.processorOverride) {
+            ev.domToModelOption.processorOverride = {};
+        }
+        const pasteSource = getPasteSource(event, false);
+        switch (pasteSource) {
+            case KnownPasteSourceType.WordDesktop:
+                ev.domToModelOption.processorOverride.element = wordDesktopElementProcessor;
+                break;
+            case KnownPasteSourceType.ExcelOnline:
+                handleExcelOnline(ev);
+                break;
+            case KnownPasteSourceType.WacComponents:
+                event.sanitizingOption.additionalAllowedCssClasses.push(...WAC_CLASSES);
 
-                    default:
-                        break;
-                }
+                handleWacComponents(ev);
+                break;
+
+            default:
                 break;
         }
+        sanitizeHtmlColorsFromPastedContent(ev);
+        sanitizeLinks(ev);
+
+        event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
+}
+
+/**
+ * @internal
+ * List of deprecated colors that should be removed
+ */
+
+export const DeprecatedColorList: string[] = [
+    'activeborder',
+    'activecaption',
+    'appworkspace',
+    'background',
+    'buttonhighlight',
+    'buttonshadow',
+    'captiontext',
+    'inactiveborder',
+    'inactivecaption',
+    'inactivecaptiontext',
+    'infobackground',
+    'infotext',
+    'menu',
+    'menutext',
+    'scrollbar',
+    'threeddarkshadow',
+    'threedface',
+    'threedhighlight',
+    'threedlightshadow',
+    'threedfhadow',
+    'window',
+    'windowframe',
+    'windowtext',
+];
+function sanitizeHtmlColorsFromPastedContent(ev: ContentModelBeforePasteEvent) {
+    if (!ev.domToModelOption.additionalFormatParsers) {
+        ev.domToModelOption.additionalFormatParsers = {};
+    }
+    if (!ev.domToModelOption.additionalFormatParsers.segment) {
+        ev.domToModelOption.additionalFormatParsers.segment = [];
+    }
+    if (!ev.domToModelOption.additionalFormatParsers.segmentOnBlock) {
+        ev.domToModelOption.additionalFormatParsers.segmentOnBlock = [];
+    }
+    ev.domToModelOption.additionalFormatParsers.segment.push(deprecatedColorParser);
+    ev.domToModelOption.additionalFormatParsers.segmentOnBlock.push(deprecatedColorParser);
+}
+
+const HTTP = 'http:';
+const HTTPS = 'https:';
+const NOTES = 'notes:';
+
+function sanitizeLinks(ev: ContentModelBeforePasteEvent) {
+    if (!ev.domToModelOption.additionalFormatParsers) {
+        ev.domToModelOption.additionalFormatParsers = {};
+    }
+    if (!ev.domToModelOption.additionalFormatParsers.link) {
+        ev.domToModelOption.additionalFormatParsers.link = [];
+    }
+
+    ev.domToModelOption.additionalFormatParsers.link.push(
+        (format, element, context, defaultStyle) => {
+            if (!safeInstanceOf(element, 'HTMLAnchorElement')) {
+                return;
+            }
+
+            let url: URL | undefined;
+            try {
+                url = new URL(element.href);
+            } catch {
+                url = undefined;
+            }
+
+            if (
+                !url ||
+                !(
+                    url.protocol === HTTP ||
+                    url.protocol === HTTPS ||
+                    url.protocol === NOTES
+                ) /* whitelist Notes protocol */
+            ) {
+                element.removeAttribute('href');
+                format.href = '';
+            }
+        }
+    );
 }
