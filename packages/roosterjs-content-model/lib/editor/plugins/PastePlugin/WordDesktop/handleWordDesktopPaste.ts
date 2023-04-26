@@ -77,7 +77,7 @@ function listLevelParser(
     context: DomToModelContext,
     defaultStyle: Readonly<Partial<CSSStyleDeclaration>>
 ): void {
-    if (element.style.marginLeft === '0.5in') {
+    if (element.style.marginLeft != '') {
         format.marginLeft = defaultStyle.marginLeft;
     }
 
