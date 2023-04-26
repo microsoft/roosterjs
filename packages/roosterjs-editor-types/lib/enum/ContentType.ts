@@ -26,4 +26,9 @@ export const enum ContentType {
      * HTML content type
      */
     HTML = 'text/html',
+
+    /**
+     * RTF content type
+     */
+    RTF = 'text/rtf',
 }
