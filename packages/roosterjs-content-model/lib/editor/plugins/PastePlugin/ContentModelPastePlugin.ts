@@ -1,6 +1,6 @@
+import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import deprecatedColorParser from './utils/deprecatedColorParser';
-import safeAssignParser from './utils/safeAssignParser';
 import sanitizeLinks from './utils/linkParser';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
@@ -16,6 +16,7 @@ import {
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
  * 1. Content copied from Word
+ * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
@@ -75,9 +76,9 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                 break;
         }
 
-        safeAssignParser(ev.domToModelOption, 'segment', deprecatedColorParser);
-        safeAssignParser(ev.domToModelOption, 'segmentOnBlock', deprecatedColorParser);
-        safeAssignParser(ev.domToModelOption, 'link', sanitizeLinks);
+        addParser(ev.domToModelOption, 'segment', deprecatedColorParser);
+        addParser(ev.domToModelOption, 'segmentOnBlock', deprecatedColorParser);
+        addParser(ev.domToModelOption, 'link', sanitizeLinks);
 
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }

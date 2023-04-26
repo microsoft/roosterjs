@@ -1,5 +1,5 @@
+import * as addParser from '../../../lib/editor/plugins/PastePlugin/utils/addParser';
 import * as getPasteSource from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
-import * as safeAssignParser from '../../../lib/editor/plugins/PastePlugin/utils/safeAssignParser';
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import deprecatedColorParser from '../../../lib/editor/plugins/PastePlugin/utils/deprecatedColorParser';
@@ -52,10 +52,10 @@ describe('Paste', () => {
             );
         });
 
-        it('WordDesktop', () => {
+        it('Default', () => {
             spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.Default);
             spyOn(WordDesktopFile, 'handleWordDesktop');
-            spyOn(safeAssignParser, 'default').and.callThrough();
+            spyOn(addParser, 'default').and.callThrough();
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);

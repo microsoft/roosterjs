@@ -8,7 +8,7 @@ import {
 /**
  * @internal
  */
-export default function safeAssignParser<TKey extends keyof FormatParsersPerCategory>(
+export default function addParser<TKey extends keyof FormatParsersPerCategory>(
     domToModelOption: DomToModelOption,
     entry: TKey,
     additionalFormatParsers: FormatParser<ContentModelFormatMap[TKey]>

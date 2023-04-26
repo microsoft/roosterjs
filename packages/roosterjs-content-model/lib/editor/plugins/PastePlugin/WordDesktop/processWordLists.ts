@@ -29,24 +29,30 @@ export function processWordList(
     const wordListStyle = styles[MSO_LIST] || '';
     const { listFormat } = context;
 
-    // If the element contains Ignore style, do not process it.
+    // If the element contains Ignore style, do not process it,
+    // Usually this element contains the fake bullet used in Word Desktop.
     if (wordListStyle.toLowerCase() === MSO_LIST_IGNORE) {
         return true;
     }
 
     const listProps = wordListStyle.split(' ');
+    // Try get the list metadata from word, which follows this format: l1 level1 lfo2
+    // If we are able to get the level property means we can process this element to be a list
     let level = listProps[1] && parseInt(listProps[1].substr('level'.length));
     if (wordListStyle && group && typeof level === 'number') {
+        // Retrieve the Fake bullet on the element and also the list type
         const fakeBullet = getFakeBulletText(element);
         const listType = getFakeBulletTagName(fakeBullet);
 
+        // Create the new level of the list item and parse the format
         const newLevel: ContentModelListItemLevelFormat = {
             listType,
             startNumberOverride: listType == 'OL' ? parseInt(fakeBullet) || 1 : undefined,
         };
-
         parseFormat(element, context.formatParsers.listLevel, newLevel, context);
 
+        // If the list format is in a different level, update the arraw so we get the new item
+        // To be in the same level as the provided level metadata.
         if (level > listFormat.levels.length) {
             while (level != listFormat.levels.length) {
                 listFormat.levels.push(newLevel);
@@ -70,6 +76,9 @@ export function processWordList(
     return false;
 }
 
+/**
+ * Check whether the string is a fake bullet from word Desktop
+ */
 function isFakeBullet(fakeBullet: string): boolean {
     return ['o', '·', '§', '-'].indexOf(fakeBullet) >= 0;
 }

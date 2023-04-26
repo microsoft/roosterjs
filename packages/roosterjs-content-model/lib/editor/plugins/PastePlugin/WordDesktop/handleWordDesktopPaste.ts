@@ -1,5 +1,5 @@
+import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import safeAssignParser from '../utils/safeAssignParser';
 import { ContentModelBlockFormat } from '../../../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
@@ -10,13 +10,21 @@ import { getStyles } from 'roosterjs-editor-dom';
 import { processWordCommand } from './processWordCommand';
 import { processWordList } from './processWordLists';
 
+const PERCENTAGE_REGEX = /%/;
+const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
+
+/**
+ * @internal
+ * Handles Pasted content when source is Word Desktop
+ * @param ev ContentModelBeforePasteEvent
+ */
 export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
-    safeAssignProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
-    safeAssignParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
-    safeAssignParser(ev.domToModelOption, 'listLevel', listLevelParser);
+    setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
+    addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
+    addParser(ev.domToModelOption, 'listLevel', listLevelParser);
 }
 
-function safeAssignProcessor<TKey extends keyof ElementProcessorMap>(
+function setProcessor<TKey extends keyof ElementProcessorMap>(
     domToModelOption: DomToModelOption,
     entry: TKey,
     processorOverride: Partial<ElementProcessorMap>[TKey]
@@ -28,22 +36,23 @@ function safeAssignProcessor<TKey extends keyof ElementProcessorMap>(
     domToModelOption.processorOverride[entry] = processorOverride;
 }
 
+/**
+ * @internal
+ * Exported only for unit test
+ */
 export const wordDesktopElementProcessor: ElementProcessor<HTMLElement> = (
     group,
     element,
     context
 ) => {
     const styles = getStyles(element);
-    const wasHandled =
-        processWordList(styles, group, element, context) || processWordCommand(styles, element);
-
-    if (!wasHandled) {
+    // Process Word Lists or Word Commands, otherwise use the default processor on this element.
+    if (
+        !(processWordList(styles, group, element, context) || processWordCommand(styles, element))
+    ) {
         context.defaultElementProcessors.element(group, element, context);
     }
 };
-
-const PERCENTAGE_REGEX = /%/;
-const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
 
 function removeNonValidLineHeight(
     format: ContentModelBlockFormat,
@@ -61,6 +70,7 @@ function removeNonValidLineHeight(
         format.lineHeight = defaultStyle.lineHeight;
     }
 }
+
 function listLevelParser(
     format: ContentModelListItemLevelFormat,
     element: HTMLElement,
