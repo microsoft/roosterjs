@@ -133,4 +133,14 @@ export interface ContentModelEditorCore extends EditorCore {
      * Whether adding delimiter for entity is allowed
      */
     addDelimiterForEntity: boolean;
+
+    /**
+     * Apply default format to editor container
+     */
+    defaultFormatOnContainer: boolean;
+
+    /**
+     * Original format on container DIV
+     */
+    originalContainerFormat: ContentModelSegmentFormat;
 }

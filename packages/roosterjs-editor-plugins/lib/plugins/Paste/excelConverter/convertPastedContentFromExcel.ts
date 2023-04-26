@@ -17,9 +17,9 @@ export default function convertPastedContentFromExcel(
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
-    const fragmentHTML = fragment.firstElementChild?.outerHTML ?? clipboardData.html;
-    const html = fragmentHTML ? excelHandler(fragmentHTML, htmlBefore) : undefined;
-    if (html && fragmentHTML != html) {
+    const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
+
+    if (html && clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
         moveChildNodes(fragment, doc?.body);
     }

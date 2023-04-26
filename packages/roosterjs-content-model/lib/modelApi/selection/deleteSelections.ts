@@ -7,9 +7,11 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 import { createBr } from '../creators/createBr';
+import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { isWhiteSpacePreserved } from '../common/isWhiteSpacePreserved';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import {
     iterateSelections,
@@ -137,7 +139,7 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
                             );
                         } else {
                             context.isChanged =
-                                deleteSegment(block.segments, segment, isForward, onDeleteEntity) ||
+                                deleteSegment(block, segment, isForward, onDeleteEntity) ||
                                 context.isChanged;
                         }
                     });
@@ -189,7 +191,12 @@ const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
         let blockToDelete: BlockAndPath | null;
 
         if (segmentToDelete) {
-            context.isChanged = deleteSegment(segments, segmentToDelete, isForward, onDeleteEntity);
+            context.isChanged = deleteSegment(
+                paragraph,
+                segmentToDelete,
+                isForward,
+                onDeleteEntity
+            );
         } else if ((blockToDelete = getLeafSiblingBlock(path, paragraph, isForward))) {
             const { block, path, siblingSegment } = blockToDelete;
 
@@ -197,7 +204,7 @@ const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
                 if (siblingSegment) {
                     // When selection is under general segment, need to check if it has a sibling sibling, and delete from it
                     context.isChanged = deleteSegment(
-                        block.segments,
+                        block,
                         siblingSegment,
                         isForward,
                         onDeleteEntity
@@ -264,12 +271,18 @@ function fixupBr(segments: ContentModelSegment[]) {
 }
 
 function deleteSegment(
-    segments: ContentModelSegment[],
+    paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
     isForward: boolean,
     onDeleteEntity: OnDeleteEntity
 ): boolean {
+    const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
+    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+
+    if (!preserveWhiteSpace) {
+        normalizePreviousSegment(segments, index);
+    }
 
     switch (segmentToDelete.segmentType) {
         case 'Br':
@@ -300,9 +313,17 @@ function deleteSegment(
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
             } else {
-                segmentToDelete.text = isForward
-                    ? text.substring(1)
-                    : text.substring(0, text.length - 1);
+                text = isForward ? text.substring(1) : text.substring(0, text.length - 1);
+
+                if (!preserveWhiteSpace) {
+                    text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
+                }
+
+                if (text == '') {
+                    segments.splice(index, 1);
+                } else {
+                    segmentToDelete.text = text;
+                }
             }
 
             return true;
@@ -316,6 +337,23 @@ function deleteSegment(
                 // TODO: Need to revisit this
                 return false;
             }
+    }
+}
+
+function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex: number) {
+    let index = currentIndex - 1;
+
+    while (segments[index]?.segmentType == 'SelectionMarker') {
+        index--;
+    }
+
+    const segment = segments[index];
+
+    if (segment) {
+        const context = createNormalizeSegmentContext();
+
+        context.ignoreTrailingSpaces = false;
+        normalizeSegment(segment, context);
     }
 }
 
