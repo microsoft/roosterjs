@@ -31,6 +31,7 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -59,6 +60,7 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -92,6 +94,7 @@ describe('formatContainerProcessor', () => {
                         borderLeft: '1px solid black',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -166,6 +169,7 @@ describe('formatContainerProcessor', () => {
                         borderLeft: '2px solid black',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -207,6 +211,7 @@ describe('formatContainerProcessor', () => {
                         borderLeft: '1px solid black',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
 
@@ -252,6 +257,19 @@ describe('formatContainerProcessor', () => {
                         whiteSpace: 'pre',
                         direction: 'rtl',
                     },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {
+                        backgroundColor: 'red',
+                        textAlign: 'center',
+                        isTextAlignFromAttr: true,
+                        lineHeight: '2',
+                        whiteSpace: 'pre',
+                        direction: 'rtl',
+                    },
+                    isImplicit: true,
                 },
             ],
         });

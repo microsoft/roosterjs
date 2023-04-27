@@ -150,6 +150,7 @@ describe('knownElementProcessor', () => {
                     },
                     blocks: [],
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -318,6 +319,7 @@ describe('knownElementProcessor', () => {
                     tagName: 'div',
                     blocks: [],
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -345,6 +347,7 @@ describe('knownElementProcessor', () => {
                     },
                     tagName: 'div',
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });

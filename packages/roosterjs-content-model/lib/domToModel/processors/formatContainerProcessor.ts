@@ -59,16 +59,16 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
             // For DIV container that only has one paragraph child, container style can be merged into paragraph
             // and no need to have this container
             const firstChild = formatContainer.blocks[0];
-            const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;
 
             Object.assign(firstChild.format, formatContainer.format);
             setParagraphNotImplicit(firstChild);
             addBlock(group, firstChild);
-            addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
         } else {
             addBlock(group, formatContainer);
         }
     });
+
+    addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
 };
 
 function shouldFallbackToParagraph(formatContainer: ContentModelFormatContainer) {

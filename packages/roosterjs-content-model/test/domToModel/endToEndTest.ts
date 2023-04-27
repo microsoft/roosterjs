@@ -1178,4 +1178,44 @@ describe('End to end test for DOM => Model', () => {
             '<div style="margin-left: 40px;">aaa</div><div style="margin: 0px 50px 0px 90px;">bbb</div>'
         );
     });
+
+    it('text after format container', () => {
+        runTest(
+            '<div align="center" style="background-color: red;">test1</div>test2',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test1',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            textAlign: 'center',
+                            isTextAlignFromAttr: true,
+                            backgroundColor: 'red',
+                        },
+                        isImplicit: false,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test2',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div align="center" style="background-color: red;">test1</div>test2'
+        );
+    });
 });
