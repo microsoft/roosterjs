@@ -7,6 +7,7 @@ import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 
 /**
@@ -17,29 +18,33 @@ import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHa
  * @returns A ContentModelDocument object that contains all the models created from the give root element
  */
 export default function domToContentModel(
-    root: HTMLElement,
+    root: HTMLElement | DocumentFragment,
     editorContext: EditorContext,
     option: DomToModelOption
 ): ContentModelDocument {
     const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 
-    if (!context.defaultFormatOnContainer) {
-        // For root element, use computed style as initial value of segment formats
-        parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+    if (safeInstanceOf(root, 'DocumentFragment')) {
+        context.elementProcessors.child(model, root, context);
+    } else {
+        if (!context.defaultFormatOnContainer) {
+            // For root element, use computed style as initial value of segment formats
+            parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
+        }
+
+        // Need to calculate direction (ltr or rtl), use it as initial value
+        parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
+
+        // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
+        parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
+
+        const processor = option.includeRoot
+            ? context.elementProcessors.element
+            : context.elementProcessors.child;
+
+        processor(model, root, context);
     }
-
-    // Need to calculate direction (ltr or rtl), use it as initial value
-    parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
-
-    // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
-    parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
-
-    const processor = option.includeRoot
-        ? context.elementProcessors.element
-        : context.elementProcessors.child;
-
-    processor(model, root, context);
 
     normalizeContentModel(model);
 
