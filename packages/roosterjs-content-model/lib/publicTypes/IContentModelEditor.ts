@@ -54,6 +54,12 @@ export interface DomToModelOption {
      * @default false
      */
     alwaysNormalizeTable?: boolean;
+
+    /**
+     * Whether put the source element into Content Model when possible.
+     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
+     */
+    allowCacheElement?: boolean;
 }
 
 /**

@@ -18,7 +18,7 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
         context,
         {
             segment: 'shallowCloneForBlock',
-            paragraph: 'shallowCopyInherit',
+            paragraph: 'shallowClone',
         },
         () => {
             const level: ContentModelListItemLevelFormat = { ...context.blockFormat };
