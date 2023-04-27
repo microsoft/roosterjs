@@ -172,4 +172,30 @@ describe('handleEntity', () => {
         expect(result).toBe(br);
         expect(context.regularSelection.current.segment).toBe(span.nextSibling);
     });
+
+    it('With onNodeCreated', () => {
+        const entityDiv = document.createElement('div');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id: 'entity_1',
+            type: 'entity',
+            isReadonly: true,
+            wrapper: entityDiv,
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const parent = document.createElement('div');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleEntity(document, parent, entityModel, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
+        );
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(entityModel);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+    });
 });

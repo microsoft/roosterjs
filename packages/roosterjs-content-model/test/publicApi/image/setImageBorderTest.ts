@@ -12,7 +12,7 @@ describe('setImageBorder', () => {
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number,
-        border: Border,
+        border: Border | null,
         borderRadius?: string
     ) {
         segmentTestCommon(
@@ -301,6 +301,48 @@ describe('setImageBorder', () => {
             },
             1,
             { color: 'red', style: 'groove', width: '10pt' },
+            '5px'
+        );
+    });
+
+    it('Doc with selection and image - remove border', () => {
+        const doc = createContentModelDocument();
+        const img = createImage('test', {
+            borderBottom: '1px solid red',
+            borderLeft: '1px solid red',
+            borderRight: '1px solid red',
+            borderTop: '1px solid red',
+        });
+
+        img.isSelected = true;
+
+        addSegment(doc, img);
+
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Image',
+                                src: 'test',
+                                isSelected: true,
+                                dataset: {},
+                                format: {
+                                    borderRadius: '5px',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            null /* remove */,
             '5px'
         );
     });

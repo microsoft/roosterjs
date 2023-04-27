@@ -31,4 +31,9 @@ export interface EditorContext {
      * Whether to handle delimiters in Content Model
      */
     addDelimiterForEntity?: boolean;
+
+    /**
+     * Apply default format to editor container
+     */
+    defaultFormatOnContainer?: boolean;
 }

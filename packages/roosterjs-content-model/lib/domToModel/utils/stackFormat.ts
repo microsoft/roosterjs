@@ -1,7 +1,7 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
+import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getObjectKeys } from 'roosterjs-editor-dom';
@@ -11,7 +11,8 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
  */
 export interface StackFormatOptions {
     segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
-    paragraph?: 'shallowClone' | 'shallowCopyInherit' | 'empty';
+    paragraph?: 'shallowClone' | 'empty';
+    blockDecorator?: 'empty';
     link?: 'linkDefault' | 'empty';
     code?: 'codeDefault' | 'empty';
 }
@@ -25,15 +26,6 @@ export interface StackFormatOptions {
 // </span>
 const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
 
-const CopiedStylesForBlockInherit: (keyof ContentModelBlockFormat)[] = [
-    'backgroundColor',
-    'direction',
-    'textAlign',
-    'isTextAlignFromAttr',
-    'lineHeight',
-    'whiteSpace',
-];
-
 /**
  * @internal
  */
@@ -42,14 +34,21 @@ export function stackFormat(
     options: StackFormatOptions,
     callback: () => void
 ) {
-    const { segmentFormat, blockFormat, link: linkFormat, code: codeFormat } = context;
-    const { segment, paragraph, link, code } = options;
+    const {
+        segmentFormat,
+        blockFormat,
+        link: linkFormat,
+        code: codeFormat,
+        blockDecorator: decoratorFormat,
+    } = context;
+    const { segment, paragraph, link, code, blockDecorator } = options;
 
     try {
         context.segmentFormat = stackFormatInternal(segmentFormat, segment);
         context.blockFormat = stackFormatInternal(blockFormat, paragraph);
         context.link = stackLinkInternal(linkFormat, link);
         context.code = stackCodeInternal(codeFormat, code);
+        context.blockDecorator = stackDecoratorInternal(decoratorFormat, blockDecorator);
 
         callback();
     } finally {
@@ -57,6 +56,7 @@ export function stackFormat(
         context.blockFormat = blockFormat;
         context.link = linkFormat;
         context.code = codeFormat;
+        context.blockDecorator = decoratorFormat;
     }
 }
 
@@ -98,9 +98,24 @@ function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 
     }
 }
 
+function stackDecoratorInternal(
+    format: ContentModelParagraphDecorator,
+    decorator?: 'decoratorDefault' | 'empty'
+) {
+    switch (decorator) {
+        case 'empty':
+            return {
+                format: {},
+                tagName: '',
+            };
+        default:
+            return format;
+    }
+}
+
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCopyInherit' | 'empty'
+    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'empty'
 ): T | {} {
     switch (processType) {
         case 'empty':
@@ -114,12 +129,8 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
 
             getObjectKeys(format).forEach(key => {
                 if (
-                    (processType == 'shallowCloneForBlock' &&
-                        SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
-                            0) ||
-                    (processType == 'shallowCopyInherit' &&
-                        CopiedStylesForBlockInherit.indexOf(key as keyof ContentModelBlockFormat) <
-                            0)
+                    processType == 'shallowCloneForBlock' &&
+                    SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >= 0
                 ) {
                     delete result[key];
                 }

@@ -1,7 +1,7 @@
-import isGoogleSheetDocument from '../../../lib/plugins/Paste/sourceValidations/isGoogleSheetDocument';
-import { getSourceInputParams } from '../../../lib/plugins/Paste/sourceValidations/getPasteSource';
-import { getWacElement } from '../pasteTestUtils';
-import { GOOGLE_SHEET_NODE_NAME } from '../../../lib/plugins/Paste/sourceValidations/constants';
+import isGoogleSheetDocument from '../../lib/pasteSourceValidations/isGoogleSheetDocument';
+import { getSourceInputParams } from '../../lib/pasteSourceValidations/getPasteSource';
+import { getWacElement } from './pasteTestUtils';
+import { GOOGLE_SHEET_NODE_NAME } from '../../lib/pasteSourceValidations/constants';
 
 describe('isGoogleSheetDocument |', () => {
     it('Is from Google Sheets', () => {

@@ -1,27 +1,26 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createFormatContainer } from '../../modelApi/creators/createFormatContainer';
+import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { getObjectKeys } from 'roosterjs-editor-dom';
-import { knownElementProcessor } from './knownElementProcessor';
+import { getDefaultStyle } from '../utils/getDefaultStyle';
+import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
+import { PaddingFormat } from '../../publicTypes/format/formatParts/PaddingFormat';
 import { parseFormat } from '../utils/parseFormat';
+import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
 
-// This only used for generate a full list of segment format key, so the values can be just null since we will never use them
-const RequiredSegmentFormat: Required<ContentModelSegmentFormat> = {
-    backgroundColor: null!,
-    fontFamily: null!,
-    fontSize: null!,
-    fontWeight: null!,
-    italic: null!,
-    lineHeight: null!,
-    strikethrough: null!,
-    superOrSubScriptSequence: null!,
-    textColor: null!,
-    underline: null!,
-};
-const AllSegmentFormatKeys = getObjectKeys(RequiredSegmentFormat);
+/**
+ * @internal
+ */
+export const ContextStyles: (keyof (MarginFormat & PaddingFormat))[] = [
+    'marginLeft',
+    'marginRight',
+    'paddingLeft',
+    'paddingRight',
+];
 
 /**
  * @internal
@@ -31,50 +30,54 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
     element,
     context
 ) => {
-    const tagName = element.tagName.toLowerCase();
+    stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
+        parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+        parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
 
-    if (tagName == 'pre' || tagName == 'blockquote') {
-        stackFormat(
-            context,
-            {
-                paragraph: 'shallowCopyInherit',
-                segment: 'shallowCloneForBlock',
-            },
-            () => {
-                const format: ContentModelBlockFormat & ContentModelSegmentFormat = {
-                    ...context.blockFormat,
-                };
+        const format: ContentModelBlockFormat & ContentModelSegmentFormat = {
+            ...context.blockFormat,
+        };
 
-                parseFormat(element, context.formatParsers.block, format, context);
-                parseFormat(element, context.formatParsers.segmentOnBlock, format, context);
+        parseFormat(element, context.formatParsers.container, format, context);
 
-                const container = createFormatContainer(tagName, format);
+        const tagName =
+            getDefaultStyle(element, context).display == 'block'
+                ? element.tagName.toLowerCase()
+                : 'div';
+        const formatContainer = createFormatContainer(tagName, format);
 
-                addBlock(group, container);
+        // It is possible to inherit margin left/right styles from parent DIV or other containers,
+        // since we are going into a deeper level of format container now,
+        // the container will render these styles so no need to keep them in context format
+        ContextStyles.forEach(style => {
+            delete context.blockFormat[style];
+        });
 
-                // These inline formats are overridden by quote, and will be applied onto BLOCKQUOTE element
-                // So no need to pass them down into segments.
-                // And when toggle blockquote (unwrap the quote model), no need to modify the inline format of segments
-                AllSegmentFormatKeys.forEach(key => {
-                    if (format[key] !== undefined) {
-                        delete context.segmentFormat[key];
-                    }
-                });
+        context.elementProcessors.child(formatContainer, element, context);
 
-                context.elementProcessors.child(container, element, context);
-            }
-        );
-    }
+        if (shouldFallbackToParagraph(formatContainer)) {
+            // For DIV container that only has one paragraph child, container style can be merged into paragraph
+            // and no need to have this container
+            const firstChild = formatContainer.blocks[0];
+
+            Object.assign(firstChild.format, formatContainer.format);
+            setParagraphNotImplicit(firstChild);
+            addBlock(group, firstChild);
+        } else {
+            addBlock(group, formatContainer);
+        }
+    });
+
+    addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
 };
 
-/**
- * @internal
- */
-export const quoteProcessor: ElementProcessor<HTMLQuoteElement> = (group, element, context) => {
-    const processor =
-        element.style.borderLeft || element.style.borderRight
-            ? formatContainerProcessor
-            : knownElementProcessor;
+function shouldFallbackToParagraph(formatContainer: ContentModelFormatContainer) {
+    const firstChild = formatContainer.blocks[0];
 
-    processor(group, element, context);
-};
+    return (
+        formatContainer.tagName == 'div' &&
+        formatContainer.blocks.length == 1 &&
+        firstChild.blockType == 'Paragraph' &&
+        firstChild.isImplicit
+    );
+}

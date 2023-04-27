@@ -5,6 +5,7 @@ import {
     DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 import {
     DefaultStyleMap,
@@ -53,6 +54,12 @@ export interface DomToModelOption {
      * @default false
      */
     alwaysNormalizeTable?: boolean;
+
+    /**
+     * Whether put the source element into Content Model when possible.
+     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
+     */
+    allowCacheElement?: boolean;
 }
 
 /**
@@ -78,6 +85,13 @@ export interface ModelToDomOption {
      * Overrides default element styles
      */
     defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
+
+    /**
+     * An optional callback that will be called when a DOM node is created
+     * @param modelElement The related Content Model element
+     * @param node The node created for this model element
+     */
+    onNodeCreated?: OnNodeCreated;
 }
 
 /**

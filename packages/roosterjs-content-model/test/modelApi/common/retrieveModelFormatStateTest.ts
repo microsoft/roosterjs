@@ -668,4 +668,67 @@ describe('retrieveModelFormatState', () => {
             imageFormat: undefined,
         });
     });
+
+    it('With default format but no format in body', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        para.segments.push(marker);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [marker]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontName: 'Arial',
+            fontSize: '12px',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
+
+    it('With default format and other different format', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2', { fontFamily: 'Tahoma', fontSize: '12px' });
+        para.segments.push(text1, text2);
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontSize: '12px',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
 });

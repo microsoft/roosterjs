@@ -86,7 +86,7 @@ export { EditorContext } from './context/EditorContext';
 export {
     DomToModelListFormat,
     DomToModelFormatContext,
-    DomToModelSegmentDecoratorContext,
+    DomToModelDecoratorContext,
 } from './context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,
@@ -123,6 +123,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 export { ElementProcessor } from './context/ElementProcessor';
 export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
@@ -139,4 +140,7 @@ export {
     CreateEditorContext,
     ContentModelCoreApiMap,
     ContentModelEditorCore,
+    CreatePasteModel,
 } from './ContentModelEditorCore';
+
+export { default as ContentModelBeforePasteEvent } from './event/ContentModelBeforePasteEvent';

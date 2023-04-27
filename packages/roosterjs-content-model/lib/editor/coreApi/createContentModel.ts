@@ -1,6 +1,10 @@
 import domToContentModel from '../../domToModel/domToContentModel';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { CreateContentModel } from '../../publicTypes/ContentModelEditorCore';
+import { DomToModelOption } from '../../publicTypes/IContentModelEditor';
+import {
+    ContentModelEditorCore,
+    CreateContentModel,
+} from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -15,13 +19,23 @@ export const createContentModel: CreateContentModel = (core, option) => {
         cachedModel = cloneModel(cachedModel);
     }
 
-    return (
-        cachedModel ||
-        domToContentModel(core.contentDiv, core.api.createEditorContext(core), {
-            selectionRange: core.api.getSelectionRangeEx(core),
-            alwaysNormalizeTable: true,
-            ...core.defaultDomToModelOptions,
-            ...(option || {}),
-        })
-    );
+    return cachedModel || internalCreateContentModel(core, option);
 };
+
+function internalCreateContentModel(
+    core: ContentModelEditorCore,
+    option: DomToModelOption | undefined
+) {
+    const context: DomToModelOption = {
+        selectionRange: core.api.getSelectionRangeEx(core),
+        alwaysNormalizeTable: true,
+        ...core.defaultDomToModelOptions,
+        ...(option || {}),
+    };
+
+    if (core.reuseModel) {
+        context.allowCacheElement = true;
+    }
+
+    return domToContentModel(core.contentDiv, core.api.createEditorContext(core), context);
+}
