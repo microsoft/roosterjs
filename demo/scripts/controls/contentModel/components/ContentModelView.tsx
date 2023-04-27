@@ -86,6 +86,7 @@ export function ContentModelView(props: {
                     div.style.width = rect.width + 'px';
                     div.style.height = rect.height + 'px';
                     div.style.border = 'solid 2px #8888ff';
+                    div.style.boxSizing = 'border-box';
                     doc.body.appendChild(div);
 
                     highlightBorder.current = div;
