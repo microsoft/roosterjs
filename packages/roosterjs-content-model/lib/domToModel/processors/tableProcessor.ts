@@ -45,6 +45,9 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
         addBlock(group, table);
 
+        // HTML align attribute will not impact content inside table
+        delete context.blockFormat.htmlAlign;
+
         const columnPositions: number[] = [0];
         const rowPositions: number[] = [0];
         const zoomScale = context.zoomScaleFormat.zoomScale || 1;

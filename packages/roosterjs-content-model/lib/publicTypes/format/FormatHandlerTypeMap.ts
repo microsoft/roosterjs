@@ -152,6 +152,11 @@ export interface FormatHandlerTypeMap {
     superOrSubScript: SuperOrSubScriptFormat;
 
     /**
+     * Format for DirectionFormat and MarginFormat for Table only
+     */
+    tableDirAndMargin: DirectionFormat & MarginFormat;
+
+    /**
      * Format for SpacingFormat
      */
     tableSpacing: SpacingFormat;
