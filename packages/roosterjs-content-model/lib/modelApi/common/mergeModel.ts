@@ -94,6 +94,7 @@ function mergeParagraph(
 
     if (segmentIndex >= 0) {
         newParagraph.segments.splice(segmentIndex, 0, ...newPara.segments);
+        newParagraph.format = { ...newParagraph.format, ...newPara.format };
     }
 }
 

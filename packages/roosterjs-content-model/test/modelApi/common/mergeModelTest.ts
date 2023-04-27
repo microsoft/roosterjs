@@ -8,6 +8,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { deleteSelection } from '../../../lib/modelApi/selection/deleteSelections';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 
 describe('mergeModel', () => {
@@ -1324,6 +1325,85 @@ describe('mergeModel', () => {
                         },
                     ],
                     format: {},
+                },
+            ],
+        });
+    });
+
+    it('merge format of paragraphs after the first one', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const mark = createSelectionMarker();
+        sourceModel.blocks.push(createParagraph());
+
+        const para1 = createParagraph();
+        para1.format = {
+            marginBottom: '0px',
+            marginRight: '88px',
+        };
+        para1.segments;
+        const text1 = createText('test1', { textColor: 'red' });
+        const text2 = createText('test2', { textColor: 'green' });
+
+        const para2 = createParagraph();
+        para2.format = {
+            marginLeft: '22px',
+            marginTop: '48px',
+        };
+        const text3 = createText('test3', { textColor: 'blue' });
+        const text4 = createText('test4', { textColor: 'yellow' });
+
+        text2.isSelected = true;
+
+        para1.segments.push(text1, text2, createSelectionMarker());
+        para2.segments.push(text3, text4);
+
+        majorModel.blocks.push(para1);
+        sourceModel.blocks.push(para2);
+
+        mergeModel(majorModel, sourceModel, {
+            insertPosition: deleteSelection(majorModel).insertPoint!,
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: { textColor: 'red' },
+                        },
+                    ],
+                    format: { marginBottom: '0px', marginRight: '88px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test3',
+                            format: { textColor: 'blue' },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test4',
+                            format: { textColor: 'yellow' },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: { textColor: 'green' },
+                        },
+                    ],
+                    format: {
+                        marginBottom: '0px',
+                        marginRight: '88px',
+                        marginLeft: '22px',
+                        marginTop: '48px',
+                    },
                 },
             ],
         });
