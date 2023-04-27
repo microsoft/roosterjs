@@ -95,6 +95,7 @@ export default class ContentModelEditor
             super.paste(clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
             return;
         }
+
         const core = this.getCore();
         if (!clipboardData) {
             return;
