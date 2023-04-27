@@ -28,6 +28,7 @@ describe('convertPastedContentFromWord', () => {
             {
                 ...event.domToModelOption,
                 includeRoot: true,
+                allowCacheElement: false,
             }
         );
         if (expectedModel) {
@@ -544,9 +545,6 @@ describe('convertPastedContentFromWord', () => {
             div.innerHTML = html;
             moveChildNodes(fragment, div);
 
-            const table = fragment.querySelector('#t1') as HTMLTableElement;
-            const td = fragment.querySelector('#td1') as HTMLTableCellElement;
-
             runTest(undefined, undefined, {
                 blockGroupType: 'Document',
                 blocks: [
@@ -558,12 +556,10 @@ describe('convertPastedContentFromWord', () => {
                         widths: [],
                         heights: [],
                         dataset: {},
-                        cachedElement: table,
                         cells: [
                             [
                                 {
                                     blockGroupType: 'TableCell',
-                                    cachedElement: td,
                                     blocks: [
                                         Object({
                                             blockType: 'BlockGroup',
