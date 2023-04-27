@@ -629,8 +629,7 @@ describe('tableProcessor', () => {
         } as any) as HTMLTableElement;
 
         context.blockFormat.backgroundColor = 'red';
-        context.blockFormat.textAlign = 'center';
-        context.blockFormat.isTextAlignFromAttr = true;
+        context.blockFormat.htmlAlign = 'center';
         context.blockFormat.lineHeight = '2';
         context.blockFormat.whiteSpace = 'pre';
         context.blockFormat.direction = 'rtl';
@@ -644,8 +643,7 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     format: {
                         backgroundColor: 'red',
-                        textAlign: 'center',
-                        isTextAlignFromAttr: true,
+                        htmlAlign: 'center',
                         lineHeight: '2',
                         whiteSpace: 'pre',
                         direction: 'rtl',
@@ -657,6 +655,119 @@ describe('tableProcessor', () => {
                     cachedElement: mockedTable,
                 },
             ],
+        });
+    });
+
+    it('Table with center align and align in context', () => {
+        context.blockFormat.htmlAlign = 'center';
+
+        const table = document.createElement('table');
+        const group = createContentModelDocument();
+
+        table.align = 'right';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [],
+                    format: {
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                        htmlAlign: 'end',
+                    },
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('Table does not apply margin alignment when there is text align in context', () => {
+        context.blockFormat.htmlAlign = 'center';
+        context.blockFormat.textAlign = 'end';
+
+        const table = document.createElement('table');
+        const group = createContentModelDocument();
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [],
+                    format: {
+                        textAlign: 'end',
+                    },
+                    widths: [],
+                    heights: [],
+                    dataset: {},
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('Html align should be deleted from context after process table', () => {
+        context.blockFormat.htmlAlign = 'center';
+
+        const text = document.createTextNode('test');
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+        const group = createContentModelDocument();
+
+        td.appendChild(text);
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                isHeader: false,
+                                spanAbove: false,
+                                spanLeft: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                    },
+                    widths: [100],
+                    heights: [200],
+                    dataset: {},
+                    cachedElement: table,
+                },
+            ],
+        });
+
+        expect(context.blockFormat).toEqual({
+            htmlAlign: 'center',
         });
     });
 });
