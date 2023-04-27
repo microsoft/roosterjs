@@ -226,8 +226,7 @@ describe('formatContainerProcessor', () => {
         quote.style.borderLeft = 'solid 1px black';
 
         context.blockFormat.backgroundColor = 'red';
-        context.blockFormat.textAlign = 'center';
-        context.blockFormat.isTextAlignFromAttr = true;
+        context.blockFormat.htmlAlign = 'center';
         context.blockFormat.lineHeight = '2';
         context.blockFormat.whiteSpace = 'pre';
         context.blockFormat.direction = 'rtl';
@@ -251,8 +250,7 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
                         backgroundColor: 'red',
-                        textAlign: 'center',
-                        isTextAlignFromAttr: true,
+                        htmlAlign: 'center',
                         lineHeight: '2',
                         whiteSpace: 'pre',
                         direction: 'rtl',
@@ -263,8 +261,7 @@ describe('formatContainerProcessor', () => {
                     segments: [],
                     format: {
                         backgroundColor: 'red',
-                        textAlign: 'center',
-                        isTextAlignFromAttr: true,
+                        htmlAlign: 'center',
                         lineHeight: '2',
                         whiteSpace: 'pre',
                         direction: 'rtl',
