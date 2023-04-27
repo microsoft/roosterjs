@@ -125,6 +125,16 @@ export const defaultStyleMap: DefaultStyleMap = {
     ul: blockElement,
 };
 
+/**
+ * @internal
+ */
+export const enum PseudoTagNames {
+    childOfPre = 'pre *', // This value is not a CSS selector, it just to tell this will impact elements under PRE tag. Any unique value here can work actually
+}
+
+/**
+ * @internal
+ */
 export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     a: {
         underline: true,
@@ -171,5 +181,12 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
         whiteSpace: 'pre',
         marginTop: '1em',
         marginBottom: '1em',
+    },
+
+    // For PRE tag, the following styles will be included from the PRE tag.
+    // Adding this implicit style here so no need to generate these style for child elements
+    [PseudoTagNames.childOfPre]: {
+        fontFamily: 'monospace',
+        whiteSpace: 'pre',
     },
 };

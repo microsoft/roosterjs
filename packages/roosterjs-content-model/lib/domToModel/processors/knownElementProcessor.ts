@@ -1,158 +1,99 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
-import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
-import { createDivider } from '../../modelApi/creators/createDivider';
+import { ContextStyles, formatContainerProcessor } from './formatContainerProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
-import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { extractBorderValues } from '../../domUtils/borderValues';
+import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+
+const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
+    'marginBottom',
+    'marginTop',
+    'paddingBottom',
+    'paddingTop',
+    'borderTopWidth',
+    'borderBottomWidth',
+    'borderLeftWidth',
+    'borderRightWidth',
+];
+const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
 
 /**
  * @internal
  */
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
-    const isLink = element.tagName == 'A' && element.hasAttribute('href');
-    const isCode = element.tagName == 'CODE';
 
-    stackFormat(
-        context,
-        {
-            segment: isBlock ? 'shallowCloneForBlock' : 'shallowClone',
-            paragraph: 'shallowClone',
-        },
-        () => {
-            let topDivider: ContentModelDivider | undefined;
-            let bottomDivider: ContentModelDivider | undefined;
+    if (isBlock && shouldUseFormatContainer(element, context)) {
+        formatContainerProcessor(group, element, context);
+    } else if (isBlock) {
+        const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;
 
-            if (isBlock) {
-                parseFormat(element, context.formatParsers.block, context.blockFormat, context);
-                parseFormat(
-                    element,
-                    context.formatParsers.segmentOnBlock,
-                    context.segmentFormat,
-                    context
-                );
+        stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
+            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
 
-                let decorator: ContentModelParagraphDecorator | undefined;
+            const format = { ...context.blockFormat };
 
-                switch (element.tagName) {
-                    case 'P':
-                    case 'H1':
-                    case 'H2':
-                    case 'H3':
-                    case 'H4':
-                    case 'H5':
-                    case 'H6':
-                        decorator = createParagraphDecorator(
-                            element.tagName,
-                            context.segmentFormat
-                        );
-                        break;
-                    default:
-                        topDivider = tryCreateDivider(context.blockFormat, true /*isTop*/);
-                        bottomDivider = tryCreateDivider(context.blockFormat, false /*isBottom*/);
+            parseFormat(element, context.formatParsers.container, format, context);
+            parseFormat(
+                element,
+                context.formatParsers.segmentOnBlock,
+                context.segmentFormat,
+                context
+            );
 
-                        break;
+            ContextStyles.forEach(style => {
+                if (format[style]) {
+                    context.blockFormat[style] = format[style];
                 }
+            });
 
-                const paragraph = createParagraph(
-                    false /*isImplicit*/,
-                    context.blockFormat,
-                    decorator
-                );
+            const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
 
-                if (topDivider) {
-                    if (context.isInSelection) {
-                        topDivider.isSelected = true;
-                    }
+            addBlock(group, paragraph);
 
-                    addBlock(group, topDivider);
-                }
+            context.elementProcessors.child(group, element, context);
+        });
 
-                addBlock(group, paragraph);
-            } else {
-                parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
-            }
-
-            if (isCode) {
-                stackFormat(context, { code: 'codeDefault' }, () => {
-                    parseFormat(element, context.formatParsers.code, context.code.format, context);
-
-                    context.elementProcessors.child(group, element, context);
-                });
-            } else if (isLink) {
-                stackFormat(context, { link: 'linkDefault' }, () => {
-                    parseFormat(element, context.formatParsers.link, context.link.format, context);
-                    parseFormat(
-                        element,
-                        context.formatParsers.dataset,
-                        context.link.dataset,
-                        context
-                    );
-
-                    context.elementProcessors.child(group, element, context);
-                });
-            } else {
-                context.elementProcessors.child(group, element, context);
-            }
-
-            if (bottomDivider) {
-                if (context.isInSelection) {
-                    bottomDivider.isSelected = true;
-                }
-
-                addBlock(group, bottomDivider);
-            }
+        if (isBlock) {
+            addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
         }
-    );
+    } else {
+        stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () => {
+            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
-    if (isBlock) {
-        addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
+            context.elementProcessors.child(group, element, context);
+        });
     }
 };
 
-function tryCreateDivider(
-    format: ContentModelBlockFormat,
-    isTop: boolean
-): ContentModelDivider | undefined {
-    const marginName: keyof ContentModelBlockFormat = isTop ? 'marginTop' : 'marginBottom';
-    const paddingName: keyof ContentModelBlockFormat = isTop ? 'paddingTop' : 'paddingBottom';
-    const borderName: keyof ContentModelBlockFormat = isTop ? 'borderTop' : 'borderBottom';
-
-    const marginNumber = parseInt(format[marginName] || '');
-    const paddingNumber = parseInt(format[paddingName] || '');
-    const borderString = format[borderName];
-
-    let result: ContentModelDivider | undefined;
-
-    if (marginNumber > 0 || paddingNumber > 0 || borderString) {
-        result = createDivider('div');
-
-        if (marginNumber > 0) {
-            result.format[marginName] = format[marginName];
-        }
-
-        if (paddingNumber > 0) {
-            result.format[paddingName] = format[paddingName];
-        }
-
-        if (borderString) {
-            const border = extractBorderValues(borderString);
-
-            if (border.style && border.style != 'none') {
-                result.format[borderName] = borderString;
-            }
-        }
+function shouldUseFormatContainer(element: HTMLElement, context: DomToModelContext) {
+    // For those tags that we know we should not use format container, just return false
+    if (ByPassFormatContainerTags.indexOf(element.tagName.toLowerCase()) >= 0) {
+        return false;
     }
 
-    delete format[marginName];
-    delete format[paddingName];
-    delete format[borderName];
+    const style = element.style;
+    const defaultStyle = getDefaultStyle(element, context);
 
-    return result;
+    const bgcolor = style.getPropertyValue('background-color');
+
+    // For block element with background, we need to use format container
+    if (bgcolor && bgcolor != 'transparent') {
+        return true;
+    }
+
+    // For block element with positive value of border width or top/bottom margin/padding,
+    // we need to use format container
+    if (
+        FormatContainerTriggerStyles.some(
+            key => parseInt((style[key] as string) || (defaultStyle[key] as string) || '') > 0
+        )
+    ) {
+        return true;
+    }
+
+    return false;
 }

@@ -86,7 +86,7 @@ export { EditorContext } from './context/EditorContext';
 export {
     DomToModelListFormat,
     DomToModelFormatContext,
-    DomToModelSegmentDecoratorContext,
+    DomToModelDecoratorContext,
 } from './context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,

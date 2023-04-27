@@ -240,7 +240,6 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
-                                cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
                             },
                             {
                                 blockGroupType: 'TableCell',
@@ -263,7 +262,6 @@ describe('reducedModelChildProcessor', () => {
                                 spanAbove: false,
                                 isHeader: false,
                                 dataset: {},
-                                cachedElement: div.querySelector('#td2') as HTMLTableCellElement,
                             },
                         ],
                     ],
@@ -271,7 +269,6 @@ describe('reducedModelChildProcessor', () => {
                     widths: [],
                     heights: [],
                     dataset: {},
-                    cachedElement: div.querySelector('.tb1') as HTMLTableElement,
                 },
             ],
         });

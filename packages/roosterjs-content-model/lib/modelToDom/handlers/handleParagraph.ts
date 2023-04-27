@@ -36,6 +36,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
             if (needParagraphWrapper) {
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
             }
 
             if (paragraph.decorator) {

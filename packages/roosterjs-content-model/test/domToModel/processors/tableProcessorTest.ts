@@ -19,6 +19,7 @@ describe('tableProcessor', () => {
             processorOverride: {
                 child: childProcessor,
             },
+            allowCacheElement: true,
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
@@ -270,6 +271,8 @@ describe('tableProcessor with format', () => {
     beforeEach(() => {
         context = createDomToModelContext();
 
+        context.allowCacheElement = true;
+
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
             height: 200,
@@ -500,6 +503,7 @@ describe('tableProcessor', () => {
             processorOverride: {
                 child: childProcessor,
             },
+            allowCacheElement: true,
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
