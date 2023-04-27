@@ -182,7 +182,12 @@ describe('directionFormatHandler.apply', () => {
         format.textAlign = 'end';
         format.htmlAlign = 'start';
         directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div align="left" style="text-align: right;"></div>');
+
+        const result = [
+            '<div align="left" style="text-align: right;"></div>',
+            '<div style="text-align: right;" align="left"></div>',
+        ];
+        expect(result.indexOf(div.outerHTML) >= 0).toBeTrue();
     });
 
     it('Align start - list', () => {

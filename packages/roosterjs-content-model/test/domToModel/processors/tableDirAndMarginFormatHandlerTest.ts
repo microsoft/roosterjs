@@ -223,8 +223,10 @@ describe('tableDirAndMarginFormatHandler.apply', () => {
 
         tableDirAndMarginFormatHandler.apply(format, table, context);
 
-        expect(table.outerHTML).toBe(
-            '<table align="left" style="direction: rtl; text-align: center; margin-left: 40px;"></table>'
-        );
+        const results = [
+            '<table align="left" style="direction: rtl; text-align: center; margin-left: 40px;"></table>',
+            '<table style="direction: rtl; text-align: center; margin-left: 40px;" align="left"></table>',
+        ];
+        expect(results.indexOf(table.outerHTML) >= 0).toBeTrue();
     });
 });
