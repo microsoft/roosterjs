@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">65.22% </span>
+                <span class="strong">61.22% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/46</span>
+                <span class='fraction'>30/49</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50% </span>
+                <span class="strong">46.88% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/30</span>
+                <span class='fraction'>15/32</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">62.79% </span>
+                <span class="strong">58.7% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/43</span>
+                <span class='fraction'>27/46</span>
             </div>
         
             
@@ -185,14 +185,29 @@
 <a name='L126'></a><a href='#L126'>126</a>
 <a name='L127'></a><a href='#L127'>127</a>
 <a name='L128'></a><a href='#L128'>128</a>
-<a name='L129'></a><a href='#L129'>129</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L129'></a><a href='#L129'>129</a>
+<a name='L130'></a><a href='#L130'>130</a>
+<a name='L131'></a><a href='#L131'>131</a>
+<a name='L132'></a><a href='#L132'>132</a>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -279,6 +294,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -313,14 +333,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ChangeSource, ClipboardData, GetContentMode } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
 import { mergeModel } from '../modelApi/common/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ClipboardData,
+    ExperimentalFeatures,
+    GetContentMode,
+} from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -401,6 +426,11 @@ export default class ContentModelEditor
 <span class="cstat-no" title="statement not covered" >        applyCurrentFormat: boolean = false,</span>
 <span class="cstat-no" title="statement not covered" >        pasteAsImage: boolean = false</span>
     ) {
+<span class="cstat-no" title="statement not covered" >        if (!this.isFeatureEnabled(ExperimentalFeatures.ContentModelPaste)) {</span>
+<span class="cstat-no" title="statement not covered" >            super.paste(clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);</span>
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+&nbsp;
         const core = <span class="cstat-no" title="statement not covered" >this.getCore();</span>
 <span class="cstat-no" title="statement not covered" >        if (!clipboardData) {</span>
 <span class="cstat-no" title="statement not covered" >            return;</span>
@@ -448,7 +478,7 @@ export default class ContentModelEditor
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Apr 27 2023 19:52:15 GMT+0000 (Coordinated Universal Time)
+                at Thu Apr 27 2023 22:37:31 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
