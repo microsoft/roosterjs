@@ -149,6 +149,7 @@ export {
     CreateEditorContext,
     ContentModelCoreApiMap,
     ContentModelEditorCore,
+    CreatePasteModel,
 } from './ContentModelEditorCore';
 
 export { default as ContentModelBeforePasteEvent } from './event/ContentModelBeforePasteEvent';

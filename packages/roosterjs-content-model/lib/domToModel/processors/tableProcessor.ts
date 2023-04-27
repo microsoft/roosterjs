@@ -52,9 +52,9 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
             addBlock(group, table);
 
-            const columnPositions: number[] = [0];
-            const rowPositions: number[] = [0];
-            const zoomScale = context.zoomScaleFormat.zoomScale || 1;
+        const columnPositions: number[] = [0];
+        const rowPositions: number[] = [0];
+        const zoomScale = context.zoomScaleFormat.zoomScale || 1;
 
             for (let row = 0; row < tableElement.rows.length; row++) {
                 const tr = tableElement.rows[row];
@@ -239,7 +239,14 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 }
             });
         }
-    );
+
+        table.widths = calcSizes(columnPositions);
+        table.heights = calcSizes(rowPositions);
+
+        if (context.alwaysNormalizeTable) {
+            normalizeTable(table);
+        }
+    });
 };
 
 function calcSizes(positions: number[]): number[] {

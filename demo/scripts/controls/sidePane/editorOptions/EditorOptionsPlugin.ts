@@ -31,6 +31,7 @@ const initialState: BuildInPluginState = {
     experimentalFeatures: [
         ExperimentalFeatures.AutoFormatList,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
+        ExperimentalFeatures.DefaultFormatOnContainer,
     ],
     isRtl: false,
 };

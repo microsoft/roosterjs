@@ -273,7 +273,6 @@ describe('reducedModelChildProcessor', () => {
                     format: {},
                     widths: [],
                     dataset: {},
-                    cachedElement: div.querySelector('.tb1') as HTMLTableElement,
                 },
             ],
         });

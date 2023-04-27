@@ -2,6 +2,7 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
+import { EntityOperation, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -281,6 +282,67 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+
+        it('Default prevented', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.DELETE, defaultPrevented: true } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+        });
+
+        it('Trigger entity event first', () => {
+            const plugin = new ContentModelEditPlugin();
+            const wrapper = 'WRAPPER' as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.EntityOperation,
+                operation: EntityOperation.Overwrite,
+                rawEvent: {
+                    type: 'keydown',
+                } as any,
+                entity: wrapper,
+            });
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: { which: Keys.DELETE } as any,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(1);
+            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, { which: Keys.DELETE } as any, [
+                {
+                    eventType: PluginEventType.EntityOperation,
+                    operation: EntityOperation.Overwrite,
+                    rawEvent: {
+                        type: 'keydown',
+                    } as any,
+                    entity: wrapper,
+                },
+            ]);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: { which: Keys.DELETE } as any,
+            });
+
+            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(2);
+            expect(handleDeleteKeySpy).toHaveBeenCalledWith(
+                editor,
+                { which: Keys.DELETE } as any,
+                []
+            );
         });
     });
 });

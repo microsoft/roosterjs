@@ -2,7 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
-import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
+import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';

@@ -3,6 +3,15 @@ import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
+import { mergeModel } from '../modelApi/common/mergeModel';
+import { Position } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ClipboardData,
+    ExperimentalFeatures,
+    GetContentMode,
+} from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -24,6 +33,17 @@ export default class ContentModelEditor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
+    }
+
+    dispose() {
+        const { contentDiv, originalContainerFormat, defaultFormatOnContainer } = this.getCore();
+
+        if (defaultFormatOnContainer) {
+            contentDiv.style.setProperty('font-family', originalContainerFormat.fontFamily || null);
+            contentDiv.style.setProperty('font-size', originalContainerFormat.fontSize || null);
+        }
+
+        super.dispose();
     }
 
     /**

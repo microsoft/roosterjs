@@ -167,13 +167,19 @@ describe('handleDivider', () => {
                 display: 'inline-block',
                 width: '98%',
             },
+            size: '2',
         };
 
         const parent = document.createElement('div');
 
         handleDivider(document, parent, hr, context, null);
 
-        expect(parent.innerHTML).toBe('<hr style="display: inline-block; width: 98%;">');
+        expect(
+            [
+                '<hr size="2" style="display: inline-block; width: 98%;">',
+                '<hr style="display: inline-block; width: 98%;" size="2">',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
         expect(hr.cachedElement).toBe(parent.firstChild as HTMLElement);
     });
 
@@ -237,5 +243,23 @@ describe('handleDivider', () => {
         expect(hr.cachedElement).toBe(hrNode);
         expect(parent.firstChild).toBe(hrNode);
         expect(result).toBe(br);
+    });
+
+    it('With onNodeCreated', () => {
+        const hr: ContentModelDivider = {
+            blockType: 'Divider',
+            tagName: 'hr',
+            format: {},
+        };
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const parent = document.createElement('div');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleDivider(document, parent, hr, context, null);
+
+        expect(parent.innerHTML).toBe('<hr>');
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(hr);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('hr'));
     });
 });

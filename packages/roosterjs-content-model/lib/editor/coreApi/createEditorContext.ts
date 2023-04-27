@@ -10,5 +10,6 @@ export const createEditorContext: CreateEditorContext = core => {
         defaultFormat: core.defaultFormat,
         darkColorHandler: core.darkColorHandler,
         addDelimiterForEntity: core.addDelimiterForEntity,
+        defaultFormatOnContainer: core.defaultFormatOnContainer,
     };
 };

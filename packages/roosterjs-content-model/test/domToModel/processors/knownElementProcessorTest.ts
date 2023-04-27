@@ -824,11 +824,8 @@ describe('knownElementProcessor', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
 
-        context.defaultStyles.div = {
-            marginTop: '20px',
-            marginBottom: '40px',
-            display: 'block',
-        };
+        div.style.marginTop = '20px';
+        div.style.marginBottom = '40px';
 
         knownElementProcessor(group, div, context);
 
@@ -836,27 +833,57 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
                     tagName: 'div',
                     format: {
                         marginTop: '20px',
+                        marginBottom: '40px',
                     },
+                    blocks: [],
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('BLOCKQUOTE with other style', () => {
+        const doc = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+
+        quote.style.marginTop = '0';
+        quote.style.marginBottom = '0';
+        quote.style.color = 'red';
+        quote.appendChild(document.createTextNode('test'));
+
+        knownElementProcessor(doc, quote, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                textColor: 'red',
+                            },
+                            text: 'test',
+                        },
+                    ],
                 },
                 {
                     blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                },
-                {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: { marginBottom: '40px' },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
                     isImplicit: true,
+                    format: {},
+                    segments: [],
                 },
             ],
         });

@@ -1,4 +1,3 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
@@ -31,15 +30,6 @@ const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = [
     'marginRight',
     'paddingLeft',
     'paddingRight',
-];
-
-const CopiedStylesForBlockInherit: (keyof ContentModelBlockFormat)[] = [
-    'backgroundColor',
-    'direction',
-    'textAlign',
-    'isTextAlignFromAttr',
-    'lineHeight',
-    'whiteSpace',
 ];
 
 /**
@@ -171,6 +161,21 @@ function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 
             };
         default:
             return codeFormat;
+    }
+}
+
+function stackDecoratorInternal(
+    format: ContentModelParagraphDecorator,
+    decorator?: 'decoratorDefault' | 'empty'
+) {
+    switch (decorator) {
+        case 'empty':
+            return {
+                format: {},
+                tagName: '',
+            };
+        default:
+            return format;
     }
 }
 

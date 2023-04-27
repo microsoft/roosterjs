@@ -181,9 +181,7 @@ describe('formatContainerProcessor', () => {
         const childProcessor = jasmine
             .createSpy('childProcessor')
             .and.callFake((group, element, context) => {
-                expect(context.blockFormat).toEqual({
-                    backgroundColor: 'red',
-                });
+                expect(context.blockFormat).toEqual({});
                 expect(context.segmentFormat).toEqual({
                     fontSize: '20px',
                     textColor: 'blue',
