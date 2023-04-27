@@ -26,6 +26,7 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
         'Add read entities around read only entities to handle browser edge cases.',
     [ExperimentalFeatures.DefaultFormatOnContainer]: 'Apply default format on editor container',
+    [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
 };
 
 export default class ExperimentalFeaturesPane extends React.Component<
