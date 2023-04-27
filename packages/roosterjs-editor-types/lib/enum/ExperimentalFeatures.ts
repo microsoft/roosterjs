@@ -157,4 +157,9 @@ export const enum ExperimentalFeatures {
      * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
      */
     InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
 }
