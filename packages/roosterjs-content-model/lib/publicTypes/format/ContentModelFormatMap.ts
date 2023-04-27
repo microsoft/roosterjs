@@ -98,4 +98,9 @@ export interface ContentModelFormatMap {
      * Format type for divider
      */
     divider: ContentModelDividerFormat;
+
+    /**
+     * Format type for format container
+     */
+    container: ContentModelBlockFormat & ContentModelSegmentFormat;
 }

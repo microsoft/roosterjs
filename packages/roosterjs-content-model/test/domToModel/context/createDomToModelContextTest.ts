@@ -42,6 +42,10 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
             ...contextOptions,
         });
     });
@@ -67,6 +71,10 @@ describe('createDomToModelContext', () => {
             },
             code: {
                 format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
             },
             ...contextOptions,
         });
@@ -111,6 +119,10 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
             selectionRootNode: mockNode,
             ...contextOptions,
         });
@@ -150,6 +162,10 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
             selectionRootNode: mockTable,
             ...contextOptions,
         });
@@ -177,6 +193,10 @@ describe('createDomToModelContext', () => {
             },
             code: {
                 format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
             },
             isInSelection: false,
             imageSelection: {
@@ -220,6 +240,10 @@ describe('createDomToModelContext', () => {
             code: {
                 format: {},
             },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
             ...contextOptions,
         });
     });
@@ -256,6 +280,10 @@ describe('createDomToModelContext', () => {
             },
             code: {
                 format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
             },
             listFormat,
             ...contextOptions,
