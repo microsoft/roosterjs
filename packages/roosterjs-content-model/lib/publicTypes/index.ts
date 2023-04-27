@@ -64,6 +64,7 @@ export { ContentModelFormatBase } from './format/ContentModelFormatBase';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
+export { LetterSpacingFormat } from './format/formatParts/LetterSpacingFormat';
 export { LineHeightFormat } from './format/formatParts/LineHeightFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
 export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
