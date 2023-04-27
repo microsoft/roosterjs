@@ -285,4 +285,34 @@ describe('Normalize text that contains space', () => {
             ],
         });
     });
+
+    it('Remove last space after image', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const image = createImage('test');
+        const text = createText('  ');
+
+        para.segments.push(image, text);
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Image',
+                            src: 'test',
+                            dataset: {},
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

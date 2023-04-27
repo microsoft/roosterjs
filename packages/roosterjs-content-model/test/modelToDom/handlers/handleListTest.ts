@@ -358,6 +358,28 @@ describe('handleList', () => {
             ],
         });
     });
+
+    it('List with margin and padding', () => {
+        const listItem = createListItem([
+            {
+                listType: 'UL',
+                marginLeft: '1px',
+                marginRight: '2px',
+                marginTop: '3px',
+                marginBottom: '4px',
+                paddingLeft: '5px',
+                paddingRight: '6px',
+                paddingTop: '7px',
+                paddingBottom: '8px',
+            },
+        ]);
+
+        handleList(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ul style="flex-direction: column; display: flex; margin: 3px 2px 4px 1px; padding: 7px 6px 8px 5px;"></ul></div>'
+        );
+    });
 });
 
 describe('handleList without format handlers', () => {

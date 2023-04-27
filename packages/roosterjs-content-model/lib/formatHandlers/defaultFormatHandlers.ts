@@ -107,8 +107,15 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
+    listItemElement: ['direction', 'lineHeight', 'margin'],
+    listLevel: [
+        'listType',
+        'listLevelThread',
+        'listLevelMetadata',
+        'direction',
+        'margin',
+        'padding',
+    ],
     segment: [...sharedSegmentFormats, 'backgroundColor', 'lineHeight'],
     segmentOnBlock: sharedSegmentFormats,
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],

@@ -65,7 +65,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -103,7 +106,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -116,7 +122,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="flex-direction: column; display: flex; margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="flex-direction: column; display: flex; margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
 

@@ -1,5 +1,6 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import { hasSpacesOnly } from 'roosterjs-content-model/lib/domUtils/hasSpacesOnly';
 
 const SPACE = '\u0020';
 const NONE_BREAK_SPACE = '\u00A0';
@@ -64,20 +65,22 @@ export function normalizeSegment(segment: ContentModelSegment, context: Normaliz
             const first = segment.text.substring(0, 1);
             const last = segment.text.substr(-1);
 
-            if (first == SPACE) {
-                // 1. Multiple leading space => single &nbsp; or empty (depends on if previous segment ends with space)
-                segment.text = segment.text.replace(
-                    LEADING_SPACE_REGEX,
-                    context.ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
-                );
-            }
+            if (!hasSpacesOnly(segment.text)) {
+                if (first == SPACE) {
+                    // 1. Multiple leading space => single &nbsp; or empty (depends on if previous segment ends with space)
+                    segment.text = segment.text.replace(
+                        LEADING_SPACE_REGEX,
+                        context.ignoreLeadingSpaces ? '' : NONE_BREAK_SPACE
+                    );
+                }
 
-            if (last == SPACE) {
-                // 2. Multiple trailing space => single space
-                segment.text = segment.text.replace(
-                    TRAILING_SPACE_REGEX,
-                    context.ignoreTrailingSpaces ? SPACE : NONE_BREAK_SPACE
-                );
+                if (last == SPACE) {
+                    // 2. Multiple trailing space => single space
+                    segment.text = segment.text.replace(
+                        TRAILING_SPACE_REGEX,
+                        context.ignoreTrailingSpaces ? SPACE : NONE_BREAK_SPACE
+                    );
+                }
             }
 
             context.ignoreLeadingSpaces = last == SPACE;
