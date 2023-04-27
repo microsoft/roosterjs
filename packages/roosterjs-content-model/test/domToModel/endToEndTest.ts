@@ -1,6 +1,8 @@
+import * as createGeneralBlock from '../../lib/modelApi/creators/createGeneralBlock';
 import contentModelToDom from '../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelGeneralBlock } from '../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
 
 describe('End to end test for DOM => Model', () => {
@@ -1201,8 +1203,7 @@ describe('End to end test for DOM => Model', () => {
                             },
                         ],
                         format: {
-                            textAlign: 'center',
-                            isTextAlignFromAttr: true,
+                            htmlAlign: 'center',
                             backgroundColor: 'red',
                         },
                         isImplicit: false,
@@ -1224,5 +1225,104 @@ describe('End to end test for DOM => Model', () => {
             '<div align="center" style="background-color: red;">test1</div>test2',
             '<div style="background-color: red;" align="center">test1</div>test2'
         );
+    });
+
+    it('Center', () => {
+        const cloneNodeSpy = jasmine
+            .createSpy('cloneNode')
+            .and.returnValue(document.createElement('center'));
+        const mockedElement = {
+            name: 'ELEMENT',
+            cloneNode: cloneNodeSpy,
+        } as any;
+        const mockedGeneral: ContentModelGeneralBlock = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: mockedElement,
+            blocks: [],
+            format: {},
+        };
+
+        const createGeneralBlockSpy = spyOn(
+            createGeneralBlock,
+            'createGeneralBlock'
+        ).and.returnValue(mockedGeneral);
+
+        runTest(
+            '<center>test1<table><tr><td>test2</td></tr></table><div align="right">test3</div></center>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'General',
+                        format: {},
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'test1',
+                                    },
+                                ],
+                            },
+                            {
+                                blockType: 'Table',
+                                format: {},
+                                cells: [
+                                    [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    format: {},
+                                                    isImplicit: true,
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'Text',
+                                                            format: {},
+                                                            text: 'test2',
+                                                        },
+                                                    ],
+                                                },
+                                            ],
+                                            format: {},
+                                            spanLeft: false,
+                                            spanAbove: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                        },
+                                    ],
+                                ],
+                                widths: [],
+                                heights: [],
+                                dataset: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                format: { htmlAlign: 'end' },
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'test3',
+                                    },
+                                ],
+                            },
+                        ],
+                        element: mockedElement,
+                    },
+                ],
+            },
+            '<center>test1<table><tbody><tr><td>test2</td></tr></tbody></table><div align="right">test3</div></center>'
+        );
+
+        expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
+        expect(cloneNodeSpy).toHaveBeenCalledTimes(1);
     });
 });
