@@ -64,7 +64,7 @@ export function handleKeyDownEvent(
                 handleKeySelectionInsideTable(event, state, editor);
             } else if (state.tableSelection) {
                 if (state.firstTable) {
-                    editor.select(state.firstTable, null);
+                    editor.select(state.firstTable, null /* coordinates */);
                 }
                 state.tableSelection = false;
             }
@@ -90,51 +90,70 @@ function handleKeySelectionInsideTable(
 
     updateSelection(editor, state.firstTarget, 0);
     state.vTable = state.vTable || new VTable(state.firstTable as HTMLTableElement);
+
+    const firstCell = getCellCoordinates(state.vTable, state.firstTarget as Element);
+    const lastCell = getNextTD(event, editor, state);
+
+    if (!firstCell || !lastCell) {
+        return;
+    }
     state.vTable.selection = {
-        firstCell: getCellCoordinates(state.vTable, state.firstTarget as Element),
-        lastCell: getNextTD(event, editor, state),
+        firstCell,
+        lastCell,
     };
 
     const { selection } = state.vTable;
 
     if (
         !selection.lastCell ||
-        selection.lastCell.y > state.vTable.cells.length - 1 ||
+        (state.vTable.cells && selection.lastCell.y > state.vTable.cells.length - 1) ||
         selection.lastCell.y == -1
     ) {
         //When selection is moving from inside of a table to outside
         state.lastTarget = editor.getElementAtCursor(
             TABLE_CELL_SELECTOR + ',div',
-            state.firstTable
+            state.firstTable ?? undefined
         );
         if (safeInstanceOf(state.lastTarget, 'HTMLTableCellElement')) {
             prepareSelection(state, editor);
         } else {
-            const position = new Position(
-                state.targetTable,
-                selection.lastCell.y == null || selection.lastCell.y == -1
-                    ? PositionType.Before
-                    : PositionType.After
-            );
+            const position =
+                state.targetTable &&
+                new Position(
+                    state.targetTable,
+                    selection.lastCell.y == null || selection.lastCell.y == -1
+                        ? PositionType.Before
+                        : PositionType.After
+                );
 
-            const sel = editor.getDocument().defaultView.getSelection();
-            const { anchorNode, anchorOffset } = sel;
-            editor.select(sel.getRangeAt(0));
-            sel.setBaseAndExtent(anchorNode, anchorOffset, position.node, position.offset);
-            state.lastTarget = position.node;
-            event.rawEvent.preventDefault();
-            return;
+            const sel = editor.getDocument().defaultView?.getSelection();
+            const { anchorNode, anchorOffset } = sel || {};
+            if (
+                sel &&
+                anchorNode &&
+                anchorOffset != undefined &&
+                anchorOffset != null &&
+                position
+            ) {
+                editor.select(sel.getRangeAt(0));
+                sel.setBaseAndExtent(anchorNode, anchorOffset, position.node, position.offset);
+                state.lastTarget = position.node;
+                event.rawEvent.preventDefault();
+                return;
+            }
         }
     }
 
     selectTable(editor, state);
 
     const isBeginAboveEnd = isAfter(state.firstTarget, state.lastTarget);
-    const targetPosition = new Position(
-        state.lastTarget,
-        isBeginAboveEnd ? PositionType.Begin : PositionType.End
-    );
-    updateSelection(editor, targetPosition.node, targetPosition.offset);
+    if (state.lastTarget) {
+        const targetPosition = new Position(
+            state.lastTarget,
+            isBeginAboveEnd ? PositionType.Begin : PositionType.End
+        );
+        updateSelection(editor, targetPosition.node, targetPosition.offset);
+    }
 
     state.tableSelection = true;
     event.rawEvent.preventDefault();
@@ -144,13 +163,14 @@ function getNextTD(
     event: PluginKeyDownEvent,
     editor: IEditor,
     state: TableCellSelectionState
-): Coordinates {
-    state.lastTarget = editor.getElementAtCursor(TABLE_CELL_SELECTOR, state.lastTarget);
+): Coordinates | undefined {
+    state.lastTarget =
+        state.lastTarget && editor.getElementAtCursor(TABLE_CELL_SELECTOR, state.lastTarget);
 
-    if (safeInstanceOf(state.lastTarget, 'HTMLTableCellElement')) {
+    if (safeInstanceOf(state.lastTarget, 'HTMLTableCellElement') && state.vTable?.cells) {
         let coordinates = getCellCoordinates(state.vTable, state.lastTarget);
 
-        if (state.tableSelection) {
+        if (state.tableSelection && coordinates) {
             switch (event.rawEvent.which) {
                 case Keys.RIGHT:
                     coordinates.x += state.lastTarget.colSpan;
@@ -175,12 +195,12 @@ function getNextTD(
             }
         }
 
-        if (coordinates.y >= 0 && coordinates.x >= 0) {
+        if (coordinates && coordinates.y >= 0 && coordinates.x >= 0) {
             state.lastTarget = state.vTable.getTd(coordinates.y, coordinates.x);
         }
         return coordinates;
     }
-    return null;
+    return undefined;
 }
 
 function shouldConvertToTableSelection(state: TableCellSelectionState, editor: IEditor) {

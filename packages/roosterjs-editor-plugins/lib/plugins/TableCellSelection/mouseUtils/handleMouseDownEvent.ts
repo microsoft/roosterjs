@@ -26,13 +26,15 @@ export function handleMouseDownEvent(
 ) {
     const { which, shiftKey } = event.rawEvent;
 
-    if (which == RIGHT_CLICK && state.tableSelection) {
+    const td = editor.getElementAtCursor(TABLE_CELL_SELECTOR);
+    if (which == RIGHT_CLICK && state.tableSelection && state.vTable && td) {
         //If the user is right clicking To open context menu
-        const td = editor.getElementAtCursor(TABLE_CELL_SELECTOR);
         const coord = getCellCoordinates(state.vTable, td);
         if (coord) {
-            const { firstCell, lastCell } = normalizeTableSelection(state.vTable);
+            const { firstCell, lastCell } = normalizeTableSelection(state.vTable) || {};
             if (
+                firstCell &&
+                lastCell &&
                 coord.y >= firstCell.y &&
                 coord.y <= lastCell.y &&
                 coord.x >= firstCell.x &&
@@ -42,8 +44,8 @@ export function handleMouseDownEvent(
                 state.lastTarget = state.vTable.getCell(lastCell.y, lastCell.x).td;
 
                 if (state.firstTarget && state.lastTarget) {
-                    const selection = editor.getDocument().defaultView.getSelection();
-                    selection.setBaseAndExtent(state.firstTarget, 0, state.lastTarget, 0);
+                    const selection = editor.getDocument().defaultView?.getSelection();
+                    selection?.setBaseAndExtent(state.firstTarget, 0, state.lastTarget, 0);
                     selectTable(editor, state);
                 }
 
@@ -73,9 +75,9 @@ export function handleMouseDownEvent(
 
     if (which == LEFT_CLICK && shiftKey) {
         editor.runAsync(editor => {
-            const sel = editor.getDocument().defaultView.getSelection();
-            const first = getCellAtCursor(editor, sel.anchorNode);
-            const last = getCellAtCursor(editor, sel.focusNode);
+            const sel = editor.getDocument().defaultView?.getSelection();
+            const first = getCellAtCursor(editor, sel?.anchorNode);
+            const last = getCellAtCursor(editor, sel?.focusNode);
             const firstTable = getTableAtCursor(editor, first);
             const targetTable = getTableAtCursor(editor, first);
             if (
@@ -87,6 +89,9 @@ export function handleMouseDownEvent(
                 const firstCord = getCellCoordinates(state.vTable, first);
                 const lastCord = getCellCoordinates(state.vTable, last);
 
+                if (!firstCord || !lastCord) {
+                    return;
+                }
                 state.vTable.selection = {
                     firstCell: firstCord,
                     lastCell: lastCord,
@@ -119,7 +124,11 @@ function onMouseMove(state: TableCellSelectionState, editor: IEditor) {
 
         //If already in table selection and the new target is contained in the last target cell, no need to
         //Apply selection styles again.
-        if (state.tableSelection && contains(state.lastTarget, event.target as Node, true)) {
+        if (
+            state.tableSelection &&
+            state.firstTarget &&
+            contains(state.lastTarget, event.target as Node, true)
+        ) {
             updateSelection(editor, state.firstTarget, 0);
             event.preventDefault();
             return;
@@ -141,10 +150,11 @@ function onMouseMove(state: TableCellSelectionState, editor: IEditor) {
         // Is a DIV that only contains a Table
         // If the event target is not contained in the editor.
         if (
-            (state.lastTarget.lastChild == state.lastTarget.firstChild &&
+            state.lastTarget &&
+            ((state.lastTarget.lastChild == state.lastTarget.firstChild &&
                 getTagOfNode(state.lastTarget.lastChild) == 'TABLE' &&
                 getTagOfNode(state.lastTarget) == 'DIV') ||
-            !editor.contains(state.lastTarget)
+                !editor.contains(state.lastTarget))
         ) {
             event.preventDefault();
             return;
@@ -165,7 +175,7 @@ function onMouseMove(state: TableCellSelectionState, editor: IEditor) {
             restoreSelection(state, editor);
         }
 
-        if (state.tableSelection) {
+        if (state.tableSelection && state.firstTarget) {
             updateSelection(editor, state.firstTarget, 0);
             event.preventDefault();
         }
@@ -180,7 +190,12 @@ export function selectionInsideTableMouseMove(
     state: TableCellSelectionState,
     editor: IEditor
 ) {
-    if (state.lastTarget != state.firstTarget) {
+    if (
+        state.firstTarget &&
+        state.firstTable &&
+        state.lastTarget != state.firstTarget &&
+        state.lastTarget
+    ) {
         updateSelection(editor, state.firstTarget, 0);
         if (
             state.firstTable != state.targetTable &&
@@ -191,25 +206,40 @@ export function selectionInsideTableMouseMove(
             state.firstTarget = editor.getElementAtCursor(TABLE_CELL_SELECTOR, state.lastTarget);
         }
 
-        if (state.firstTable) {
+        if (state.firstTable && state.firstTarget) {
             state.tableSelection = true;
 
             state.vTable = state.vTable || new VTable(state.firstTable);
+
+            const firstCell = getCellCoordinates(state.vTable, state.firstTarget);
+            const lastCell = getCellCoordinates(state.vTable, state.lastTarget);
+
+            if (!firstCell || !lastCell) {
+                return;
+            }
+
             state.vTable.selection = {
-                firstCell: getCellCoordinates(state.vTable, state.firstTarget),
-                lastCell: getCellCoordinates(state.vTable, state.lastTarget),
+                firstCell,
+                lastCell,
             };
             selectTable(editor, state);
         }
 
         event.preventDefault();
-    } else if (state.lastTarget == state.firstTarget && state.tableSelection) {
+    } else if (
+        state.lastTarget == state.firstTarget &&
+        state.tableSelection &&
+        state.firstTable &&
+        state.firstTarget
+    ) {
         state.vTable = new VTable(state.firstTable);
         const cell = getCellCoordinates(state.vTable, state.firstTarget);
-        state.vTable.selection = {
-            firstCell: cell,
-            lastCell: cell,
-        };
+        if (cell) {
+            state.vTable.selection = {
+                firstCell: cell,
+                lastCell: cell,
+            };
+        }
 
         selectTable(editor, state);
     }
