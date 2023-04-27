@@ -1,6 +1,7 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
+import { ContentModelListItemLevelFormat } from '../../../lib/publicTypes/format/ContentModelListItemLevelFormat';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
@@ -419,5 +420,42 @@ describe('handleListItem without format handler', () => {
             context
         );
         expect(result).toBe(br);
+    });
+
+    it('With onNodeCreated', () => {
+        const listLevel0: ContentModelListItemLevelFormat = {
+            listType: 'OL',
+        };
+        const listItem: ContentModelListItem = {
+            blockType: 'BlockGroup',
+            blockGroupType: 'ListItem',
+            blocks: [],
+            format: {},
+            formatHolder: {
+                segmentType: 'SelectionMarker',
+                format: {},
+                isSelected: true,
+            },
+            levels: [listLevel0],
+        };
+        const parent = document.createElement('div');
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(
+            [
+                '<ol start="1" style="flex-direction: column; display: flex;"><li></li></ol>',
+                '<ol style="flex-direction: column; display: flex;" start="1"><li></li></ol>',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
+        expect(onNodeCreated).toHaveBeenCalledTimes(2);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listLevel0);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
+        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listItem);
+        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('li'));
     });
 });

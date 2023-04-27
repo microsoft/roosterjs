@@ -1,7 +1,7 @@
 import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { DomToModelSegmentDecoratorContext } from '../../publicTypes/context/DomToModelFormatContext';
+import { DomToModelDecoratorContext } from '../../publicTypes/context/DomToModelFormatContext';
 
 /**
  * @internal
@@ -29,10 +29,7 @@ export function addCode(segment: ContentModelSegment, code: ContentModelCode) {
 /**
  * @internal
  */
-export function addDecorators(
-    segment: ContentModelSegment,
-    context: DomToModelSegmentDecoratorContext
-) {
+export function addDecorators(segment: ContentModelSegment, context: DomToModelDecoratorContext) {
     addLink(segment, context.link);
     addCode(segment, context.code);
 }

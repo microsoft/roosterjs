@@ -190,7 +190,7 @@ const ALLOWED_CSS_CLASSES: string[] = [];
  * @internal
  */
 export function getTagReplacement(
-    additionalReplacements: Record<string, string> | undefined
+    additionalReplacements: Record<string, string | null> | undefined
 ): Record<string, string | null> {
     const result = { ...HTML_TAG_REPLACEMENT };
     const replacements = additionalReplacements || {};

@@ -101,6 +101,7 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
             alwaysNormalizeTable: true,
+            allowCacheElement: true,
         });
         expect(model).toBe(mockedModel);
     });

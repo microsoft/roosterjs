@@ -239,10 +239,10 @@ describe('End to end test for DOM => Model', () => {
                                     {
                                         segmentType: 'Text',
                                         text: 'cc\ndd',
-                                        format: {},
+                                        format: { fontFamily: 'monospace' },
                                     },
                                 ],
-                                format: {},
+                                format: { whiteSpace: 'pre' },
                                 isImplicit: true,
                             },
                         ],
@@ -250,40 +250,36 @@ describe('End to end test for DOM => Model', () => {
                             marginTop: '1em',
                             marginBottom: '1em',
                             whiteSpace: 'pre',
-                            fontFamily: 'monospace',
                         },
                     },
                     {
-                        blockType: 'Divider',
-                        tagName: 'div',
-                        format: {
-                            marginTop: '1em',
-                        },
-                    },
-                    {
-                        blockType: 'Paragraph',
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'ee',
-                                format: {},
-                            },
-                        ],
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
                         format: {
                             marginRight: '40px',
                             marginLeft: '40px',
-                        },
-                    },
-                    {
-                        blockType: 'Divider',
-                        tagName: 'div',
-                        format: {
+                            marginTop: '1em',
                             marginBottom: '1em',
                         },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                isImplicit: true,
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'ee',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
                     },
                 ],
             },
-            '<div style="white-space: pre;">aa\nbb</div><pre>cc\ndd</pre><div style="margin-top: 1em;"></div><div style="margin-right: 40px; margin-left: 40px;">ee</div><div style="margin-bottom: 1em;"></div>'
+            '<div style="white-space: pre;">aa\nbb</div><pre><div>cc\ndd</div></pre><blockquote>ee</blockquote>'
         );
     });
 
@@ -301,17 +297,16 @@ describe('End to end test for DOM => Model', () => {
                             marginTop: '1em',
                             marginBottom: '1em',
                             whiteSpace: 'pre',
-                            fontFamily: 'monospace',
                         },
                         blocks: [
                             {
                                 blockType: 'Paragraph',
-                                format: {},
+                                format: { whiteSpace: 'pre' },
                                 segments: [
                                     {
                                         segmentType: 'Text',
                                         text: 'test1',
-                                        format: {},
+                                        format: { fontFamily: 'monospace' },
                                     },
                                 ],
                                 isImplicit: true,
@@ -326,17 +321,16 @@ describe('End to end test for DOM => Model', () => {
                             marginTop: '1em',
                             marginBottom: '1em',
                             whiteSpace: 'pre',
-                            fontFamily: 'monospace',
                         },
                         blocks: [
                             {
                                 blockType: 'Paragraph',
-                                format: {},
+                                format: { whiteSpace: 'pre' },
                                 segments: [
                                     {
                                         segmentType: 'Text',
                                         text: 'test2',
-                                        format: {},
+                                        format: { fontFamily: 'monospace' },
                                     },
                                 ],
                                 isImplicit: true,
@@ -345,7 +339,884 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<pre>test1</pre><pre>test2</pre>'
+            '<pre><div>test1</div></pre><pre><div>test2</div></pre>'
+        );
+    });
+
+    it('Block under styled inline', () => {
+        runTest(
+            '<b style="background-color:red">aa<div>bb</div>cc</b>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa',
+                                format: {
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bb',
+                                format: {
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'cc',
+                                format: {
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<span style="background-color: red;"><b>aa</b></span><div><b>bb</b></div><span style="background-color: red;"><b>cc</b></span>'
+        );
+    });
+
+    it('Table under styled inline', () => {
+        runTest(
+            '<b style="background-color:red">aa<table><tr><td>bb</td></tr></table>cc</b>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa',
+                                format: {
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Table',
+                        cells: [
+                            [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'bb',
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        ],
+                        format: {},
+                        widths: [],
+                        heights: [],
+                        dataset: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'cc',
+                                format: {
+                                    fontWeight: 'bold',
+                                    backgroundColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<span style="background-color: red;"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
+        );
+    });
+
+    it('Table under styled block', () => {
+        runTest(
+            '<b style="background-color:red; display: block">aa<table><tr><td>bb</td></tr></table>cc</b>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aa',
+                                        format: {
+                                            fontWeight: 'bold',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                            {
+                                blockType: 'Table',
+                                cells: [
+                                    [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            blocks: [
+                                                {
+                                                    blockType: 'Paragraph',
+                                                    segments: [
+                                                        {
+                                                            segmentType: 'Text',
+                                                            text: 'bb',
+                                                            format: {
+                                                                fontWeight: 'bold',
+                                                            },
+                                                        },
+                                                    ],
+                                                    format: {},
+                                                    isImplicit: true,
+                                                },
+                                            ],
+                                            format: {},
+                                            spanLeft: false,
+                                            spanAbove: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                        },
+                                    ],
+                                ],
+                                format: {},
+                                widths: [],
+                                heights: [],
+                                dataset: {},
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'cc',
+                                        format: {
+                                            fontWeight: 'bold',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            backgroundColor: 'red',
+                        },
+                    },
+                ],
+            },
+            '<div style="background-color: red;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
+        );
+    });
+
+    it('Blockquote with margins', () => {
+        runTest(
+            '<blockquote style="margin: 20px">aa</blockquote><blockquote style="margin: 0 20px">aa</blockquote>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aa',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            marginTop: '20px',
+                            marginRight: '20px',
+                            marginBottom: '20px',
+                            marginLeft: '20px',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '0px',
+                            marginRight: '20px',
+                            marginBottom: '0px',
+                            marginLeft: '20px',
+                        },
+                    },
+                ],
+            },
+            '<blockquote style="margin: 20px;">aa</blockquote><div style="margin: 0px 20px;">aa</div>'
+        );
+    });
+
+    it('margin on paragraph', () => {
+        runTest(
+            '<b style="display:block; margin: 20px">aa</b>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa',
+                                format: {
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginTop: '20px',
+                            marginRight: '20px',
+                            marginBottom: '20px',
+                            marginLeft: '20px',
+                        },
+                        isImplicit: false,
+                    },
+                ],
+            },
+            '<div style="margin: 20px;"><b>aa</b></div>'
+        );
+    });
+
+    it('Multiple P tag', () => {
+        runTest(
+            '<p>aaa</p><p>bbb</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            '<p>aaa</p><p>bbb</p>'
+        );
+    });
+
+    it('P tags with margin', () => {
+        runTest(
+            '<p style="margin: 0">aaa</p><p style="margin: 0">bbb</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginTop: '0px',
+                            marginRight: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                        },
+                        decorator: {
+                            tagName: 'p',
+                            format: {},
+                        },
+                    },
+                ],
+            },
+            '<p style="margin: 0px;">aaa</p><p style="margin: 0px;">bbb</p>'
+        );
+    });
+
+    it('Headers', () => {
+        runTest(
+            '<h1>aa</h1><h2>bb</h2><h3 style="margin: 50px">cc</h3>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aa',
+                                format: {
+                                    fontSize: '2em',
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {},
+                        decorator: {
+                            tagName: 'h1',
+                            format: {
+                                fontSize: '2em',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bb',
+                                format: {
+                                    fontSize: '1.5em',
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {},
+                        decorator: {
+                            tagName: 'h2',
+                            format: {
+                                fontSize: '1.5em',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'cc',
+                                format: {
+                                    fontSize: '1.17em',
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginTop: '50px',
+                            marginRight: '50px',
+                            marginBottom: '50px',
+                            marginLeft: '50px',
+                        },
+                        decorator: {
+                            tagName: 'h3',
+                            format: {
+                                fontSize: '1.17em',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    },
+                ],
+            },
+            '<h1>aa</h1><h2>bb</h2><h3 style="margin: 50px;">cc</h3>'
+        );
+    });
+
+    it('PREs', () => {
+        runTest(
+            '<pre>aaa\nbbb</pre><pre style="font-size: 20px">aaa\nbb</pre>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aaa\nbbb',
+                                        format: {
+                                            fontFamily: 'monospace',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    whiteSpace: 'pre',
+                                },
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            whiteSpace: 'pre',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'aaa\nbb',
+                                        format: {
+                                            fontFamily: 'monospace',
+                                            fontSize: '20px',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    whiteSpace: 'pre',
+                                },
+                                isImplicit: true,
+                            },
+                        ],
+                        format: {
+                            whiteSpace: 'pre',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                    },
+                ],
+            },
+            '<pre><div>aaa\nbbb</div></pre><pre><div><span style="font-size: 20px;">aaa\nbb</span></div></pre>'
+        );
+    });
+
+    it('Code and Link', () => {
+        runTest(
+            '<div>aaa<code>bbb</code>ccc</div><div>aaa<a href="#">bbb</a>ccc</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                                code: {
+                                    format: {
+                                        fontFamily: 'monospace',
+                                    },
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'ccc',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: '#',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'ccc',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            '<div>aaa<code>bbb</code>ccc</div><div>aaa<a href="#">bbb</a>ccc</div>'
+        );
+    });
+
+    it('BlockQuotes', () => {
+        runTest(
+            '<div style="color:red"><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); border-left: 3px solid rgb(200, 200, 200); padding-left: 10px;"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div><div>aaaa</div><blockquote style="color: rgb(102, 102, 102); margin: 0 40px"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">bbbbbb</span></div></blockquote><div>cccc</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaaa',
+                                format: {
+                                    textColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'blockquote',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'bbbbbb',
+                                        format: {
+                                            fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                                            fontSize: '12pt',
+                                            textColor: 'rgb(102, 102, 102)',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            borderLeft: '3px solid rgb(200, 200, 200)',
+                            marginTop: '1em',
+                            marginRight: '40px',
+                            marginBottom: '1em',
+                            marginLeft: '40px',
+                            paddingLeft: '10px',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'cccc',
+                                format: {
+                                    textColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaaa',
+                                format: {
+                                    textColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bbbbbb',
+                                format: {
+                                    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
+                                    fontSize: '12pt',
+                                    textColor: 'rgb(102, 102, 102)',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginRight: '40px',
+                            marginLeft: '40px',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'cccc',
+                                format: {
+                                    textColor: 'red',
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            '<div><span style="color: red;">aaaa</span></div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div></blockquote><div><span style="color: red;">cccc</span></div><div><span style="color: red;">aaaa</span></div><div style="margin-right: 40px; margin-left: 40px;"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div><div><span style="color: red;">cccc</span></div>'
+        );
+    });
+
+    it('margin left and format container', () => {
+        runTest(
+            '<div style="margin-left: 40px">aaa<pre><div>bbb</div></pre>ccc</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginLeft: '40px',
+                        },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'pre',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'bbb',
+                                        format: {
+                                            fontFamily: 'monospace',
+                                        },
+                                    },
+                                ],
+                                format: {
+                                    whiteSpace: 'pre',
+                                },
+                            },
+                        ],
+                        format: {
+                            whiteSpace: 'pre',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                            marginLeft: '40px',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'ccc',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginLeft: '40px',
+                        },
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div style="margin-left: 40px;">aaa</div><pre style="margin-left: 40px;"><div>bbb</div></pre><div style="margin-left: 40px;">ccc</div>'
+        );
+    });
+
+    it('nested margin left', () => {
+        runTest(
+            '<div style="margin-left: 40px">aaa<div style="margin: 0 50px">bbb</div></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaa',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginLeft: '40px',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'bbb',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            marginLeft: '90px',
+                            marginTop: '0px',
+                            marginRight: '50px',
+                            marginBottom: '0px',
+                        },
+                    },
+                ],
+            },
+            '<div style="margin-left: 40px;">aaa</div><div style="margin: 0px 50px 0px 90px;">bbb</div>'
+        );
+    });
+
+    it('text after format container', () => {
+        runTest(
+            '<div align="center" style="background-color: red;">test1</div>test2',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test1',
+                                format: {},
+                            },
+                        ],
+                        format: {
+                            textAlign: 'center',
+                            isTextAlignFromAttr: true,
+                            backgroundColor: 'red',
+                        },
+                        isImplicit: false,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test2',
+                                format: {},
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div align="center" style="background-color: red;">test1</div>test2',
+            '<div style="background-color: red;" align="center">test1</div>test2'
         );
     });
 });

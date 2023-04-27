@@ -144,6 +144,11 @@ export const enum ExperimentalFeatures {
     ReusableContentModel = 'ReusableContentModel',
 
     /**
+     * Apply default format on editor container
+     */
+    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
+
+    /**
      * Delete table with Backspace key with the whole was selected with table selector
      */
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
@@ -152,4 +157,9 @@ export const enum ExperimentalFeatures {
      * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
      */
     InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
 }

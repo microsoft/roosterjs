@@ -1,5 +1,7 @@
-import { WAC_IDENTIFY_SELECTOR } from './constants';
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
+
+const WAC_IDENTIFY_SELECTOR =
+    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
 
 /**
  * @internal

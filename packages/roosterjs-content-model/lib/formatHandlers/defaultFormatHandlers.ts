@@ -80,36 +80,37 @@ const defaultFormatHandlerMap: FormatHandlers = {
     wordBreak: wordBreakFormatHandler,
 };
 
-const blockFormatHandlers: (keyof FormatHandlerTypeMap)[] = [
-    'backgroundColor',
+const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'superOrSubScript',
+    'strike',
+    'fontFamily',
+    'fontSize',
+    'underline',
+    'italic',
+    'bold',
+    'textColor',
+];
+const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
-    'margin',
-    'padding',
     'lineHeight',
     'whiteSpace',
+];
+const sharedContainerFormats: (keyof FormatHandlerTypeMap)[] = [
+    'backgroundColor',
+    'margin',
+    'padding',
     'border',
 ];
 
 const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
-    block: blockFormatHandlers,
+    block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction'],
+    listItemElement: ['direction', 'lineHeight'],
     listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
-    segment: [
-        'superOrSubScript',
-        'strike',
-        'fontFamily',
-        'fontSize',
-        'underline',
-        'italic',
-        'bold',
-        'textColor',
-        'backgroundColor',
-        'lineHeight',
-    ],
-    segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
+    segment: [...sharedSegmentFormats, 'backgroundColor', 'lineHeight'],
+    segmentOnBlock: sharedSegmentFormats,
     segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
     tableCell: [
         'border',
@@ -127,7 +128,8 @@ const defaultFormatKeysPerCategory: {
     link: ['link', 'textColor', 'underline'],
     code: ['fontFamily'],
     dataset: ['dataset'],
-    divider: [...blockFormatHandlers, 'display', 'size'],
+    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size'],
+    container: sharedContainerFormats,
 };
 
 /**
