@@ -21,26 +21,26 @@ describe('directionFormatHandler.parse', () => {
 
     function runTest(
         element: HTMLElement,
-        textAlignCssValue: string | null,
-        textAlignAttrValue: string | null,
+        textAlignValue: string | null,
+        htmlAlignValue: string | null,
         directionCssValue: string | null,
         directionAttrVAlue: string | null,
-        expectedAlignValue: 'start' | 'center' | 'end' | undefined,
+        expectedTextAlignValue: 'start' | 'center' | 'end' | undefined,
         expectedDirectionValue: 'ltr' | 'rtl' | undefined,
-        expectedIsAlignFromAttr: boolean | undefined
+        expectedHtmlAlignValue: 'start' | 'center' | 'end' | undefined
     ) {
-        if (textAlignCssValue && element.tagName !== 'li') {
-            element.style.textAlign = textAlignCssValue;
+        if (textAlignValue && element.tagName !== 'li') {
+            element.style.textAlign = textAlignValue;
         }
 
-        if (textAlignCssValue && element.tagName === 'li') {
-            element.style.alignSelf = textAlignCssValue;
+        if (textAlignValue && element.tagName === 'li') {
+            element.style.alignSelf = textAlignValue;
             element.style.display = 'flex';
             element.style.flexDirection = 'column';
         }
 
-        if (textAlignAttrValue) {
-            element.setAttribute('align', textAlignAttrValue);
+        if (htmlAlignValue) {
+            element.setAttribute('align', htmlAlignValue);
         }
 
         if (directionCssValue) {
@@ -53,9 +53,9 @@ describe('directionFormatHandler.parse', () => {
 
         directionFormatHandler.parse(format, element, context, {});
 
-        expect(format.textAlign).toBe(expectedAlignValue);
+        expect(format.textAlign).toBe(expectedTextAlignValue);
         expect(format.direction).toBe(expectedDirectionValue);
-        expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
+        expect(format.htmlAlign).toBe(expectedHtmlAlignValue);
     }
 
     it('No alignment, no direction', () => {
@@ -84,11 +84,11 @@ describe('directionFormatHandler.parse', () => {
     });
 
     it('Align in attribute', () => {
-        runTest(div, null, 'left', null, null, 'start', undefined, true);
+        runTest(div, null, 'left', null, null, undefined, undefined, 'start');
     });
 
     it('Align in both CSS and attribute', () => {
-        runTest(div, 'left', 'right', null, null, 'start', undefined, undefined);
+        runTest(div, 'left', 'right', null, null, 'start', undefined, 'end');
     });
 
     it('LTR', () => {
@@ -180,9 +180,9 @@ describe('directionFormatHandler.apply', () => {
 
     it('Align right in attr', () => {
         format.textAlign = 'end';
-        format.isTextAlignFromAttr = true;
+        format.htmlAlign = 'start';
         directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div align="right"></div>');
+        expect(div.outerHTML).toBe('<div align="left" style="text-align: right;"></div>');
     });
 
     it('Align start - list', () => {
