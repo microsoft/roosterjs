@@ -1215,7 +1215,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div align="center" style="background-color: red;">test1</div>test2'
+            '<div align="center" style="background-color: red;">test1</div>test2',
+            '<div style="background-color: red;" align="center">test1</div>test2'
         );
     });
 });
