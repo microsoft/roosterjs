@@ -167,6 +167,11 @@ export interface FormatHandlerTypeMap {
     textColor: TextColorFormat;
 
     /**
+     * Format for TextColorFormat, for Table Cell only
+     */
+    textColorOnTableCell: TextColorFormat;
+
+    /**
      * Format for UnderlineFormat
      */
     underline: UnderlineFormat;
