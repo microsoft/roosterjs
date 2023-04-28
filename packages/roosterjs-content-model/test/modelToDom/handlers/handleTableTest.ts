@@ -454,9 +454,12 @@ describe('handleTable', () => {
 
         handleTable(document, parent, table, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>'
-        );
+        expect(
+            [
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
     });
 
     it('With cached TD, do not apply table cell related styles', () => {
