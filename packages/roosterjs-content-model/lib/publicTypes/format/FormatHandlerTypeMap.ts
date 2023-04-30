@@ -10,6 +10,7 @@ import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
@@ -90,6 +91,11 @@ export interface FormatHandlerTypeMap {
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LetterSpacingFormat
+     */
+    letterSpacing: LetterSpacingFormat;
 
     /**
      * Format for LineHeightFormat
