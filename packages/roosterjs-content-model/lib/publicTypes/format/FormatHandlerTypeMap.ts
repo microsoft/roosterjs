@@ -14,6 +14,7 @@ import { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
+import { ListStylePositionFormat } from './formatParts/ListStylePositionFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -126,6 +127,11 @@ export interface FormatHandlerTypeMap {
      * Format for ListThreadFormat (used by list level)
      */
     listLevelThread: ListThreadFormat;
+
+    /**
+     * Format for ListStylePositionFormat (used by list level)
+     */
+    listStylePosition: ListStylePositionFormat;
 
     /**
      * Format for ListTypeFormat
