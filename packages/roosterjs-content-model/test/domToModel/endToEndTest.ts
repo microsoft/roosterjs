@@ -1325,4 +1325,81 @@ describe('End to end test for DOM => Model', () => {
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
         expect(cloneNodeSpy).toHaveBeenCalledTimes(1);
     });
+
+    it('html align overwrite text align from context', () => {
+        runTest(
+            '<div style="text-align:center">aaa<div align=right>bbb<div>ccc</div>ddd</div>eee</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: { textAlign: 'center' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'aaa',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'bbb',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'ccc',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'ddd',
+                            },
+                        ],
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'center',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'eee',
+                            },
+                        ],
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div style="text-align: center;">aaa</div><div align="right">bbb</div><div align="right">ccc</div><div align="right">ddd</div><div style="text-align: center;">eee</div>'
+        );
+    });
 });
