@@ -1,6 +1,8 @@
 import { addBlock } from '../../modelApi/common/addBlock';
+import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
+import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
@@ -90,76 +92,79 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         }
                     }
 
-                    for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
-                        for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
-                            const hasTd = colSpan == 1 && rowSpan == 1;
-                            const cell = createTableCell(
-                                colSpan > 1,
-                                rowSpan > 1,
-                                td.tagName == 'TH'
+                    stackFormat(
+                        context,
+                        { paragraph: 'shallowClone', segment: 'shallowClone' },
+                        () => {
+                            parseFormat(
+                                td,
+                                context.formatParsers.block,
+                                context.blockFormat,
+                                context
+                            );
+                            parseFormat(
+                                td,
+                                context.formatParsers.segmentOnTableCell,
+                                context.segmentFormat,
+                                context
                             );
 
-                            table.cells[row + rowSpan - 1][targetCol] = cell;
+                            const cellFormat: ContentModelTableCellFormat = {
+                                ...context.blockFormat,
+                            };
+                            const dataset: DatasetFormat = {};
 
-                            if (hasTd) {
-                                if (context.allowCacheElement) {
-                                    cell.cachedElement = td;
-                                }
+                            parseFormat(td, context.formatParsers.tableCell, cellFormat, context);
+                            parseFormat(td, context.formatParsers.tableBorder, cellFormat, context);
+                            parseFormat(td, context.formatParsers.dataset, dataset, context);
 
-                                stackFormat(context, { segment: 'shallowClone' }, () => {
-                                    parseFormat(
-                                        td,
-                                        context.formatParsers.tableCell,
-                                        cell.format,
-                                        context
-                                    );
-                                    parseFormat(
-                                        td,
-                                        context.formatParsers.segmentOnTableCell,
-                                        context.segmentFormat,
-                                        context
-                                    );
-                                    parseFormat(
-                                        td,
-                                        context.formatParsers.dataset,
-                                        cell.dataset,
-                                        context
-                                    );
-                                    parseFormat(
-                                        td,
-                                        context.formatParsers.tableBorder,
-                                        cell.format,
-                                        context
+                            for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
+                                for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                                    const hasTd = colSpan == 1 && rowSpan == 1;
+                                    const cell = createTableCell(
+                                        colSpan > 1,
+                                        rowSpan > 1,
+                                        td.tagName == 'TH',
+                                        cellFormat
                                     );
 
-                                    const { listParent, levels } = context.listFormat;
+                                    cell.dataset = { ...dataset };
+                                    table.cells[row + rowSpan - 1][targetCol] = cell;
 
-                                    context.listFormat.listParent = undefined;
-                                    context.listFormat.levels = [];
+                                    if (hasTd) {
+                                        if (context.allowCacheElement) {
+                                            cell.cachedElement = td;
+                                        }
 
-                                    try {
-                                        context.elementProcessors.child(cell, td, context);
-                                    } finally {
-                                        context.listFormat.listParent = listParent;
-                                        context.listFormat.levels = levels;
+                                        const { listParent, levels } = context.listFormat;
+
+                                        context.listFormat.listParent = undefined;
+                                        context.listFormat.levels = [];
+
+                                        try {
+                                            context.elementProcessors.child(cell, td, context);
+                                        } finally {
+                                            context.listFormat.listParent = listParent;
+                                            context.listFormat.levels = levels;
+                                        }
                                     }
-                                });
-                            }
 
-                            const hasSelectionAfterCell = context.isInSelection;
+                                    const hasSelectionAfterCell = context.isInSelection;
 
-                            if (
-                                (hasSelectionBeforeCell && hasSelectionAfterCell) ||
-                                (hasTableSelection &&
-                                    row >= firstCell.y &&
-                                    row <= lastCell.y &&
-                                    targetCol >= firstCell.x &&
-                                    targetCol <= lastCell.x)
-                            ) {
-                                cell.isSelected = true;
+                                    if (
+                                        (hasSelectionBeforeCell && hasSelectionAfterCell) ||
+                                        (hasTableSelection &&
+                                            row >= firstCell.y &&
+                                            row <= lastCell.y &&
+                                            targetCol >= firstCell.x &&
+                                            targetCol <= lastCell.x)
+                                    ) {
+                                        cell.isSelected = true;
+                                    }
+                                }
                             }
                         }
-                    }
+                    );
                 }
             });
         }

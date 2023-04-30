@@ -105,6 +105,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
                 if (!cell.cachedElement) {
                     cell.cachedElement = td;
+                    applyFormat(td, context.formatAppliers.block, cell.format, context);
                     applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
                     applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
                     applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);

@@ -313,7 +313,7 @@ describe('tableProcessor with format', () => {
         tableProcessor(doc, table, context);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(3);
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(11);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(12);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -816,7 +816,9 @@ describe('tableProcessor', () => {
                                 spanAbove: false,
                                 spanLeft: false,
                                 isHeader: false,
-                                format: {},
+                                format: {
+                                    lineHeight: '2',
+                                },
                                 dataset: {},
                                 blocks: [
                                     {
@@ -925,6 +927,120 @@ describe('tableProcessor', () => {
                                 blockGroupType: 'TableCell',
                                 format: { useBorderBox: true },
                                 blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('block format on TD is respected', () => {
+        const group = createContentModelDocument();
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        td.style.lineHeight = '2';
+        td.style.whiteSpace = 'pre';
+        td.style.direction = 'rtl';
+        td.style.textAlign = 'right';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: {
+                                    lineHeight: '2',
+                                    whiteSpace: 'pre',
+                                    direction: 'rtl',
+                                    textAlign: 'start',
+                                },
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('segment format on TD is respected', () => {
+        const group = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        td.appendChild(text);
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        td.style.color = 'red';
+        td.style.fontFamily = 'Arial';
+        td.style.fontWeight = 'bold';
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: { textColor: 'red' },
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        format: {},
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                format: {
+                                                    fontFamily: 'Arial',
+                                                    fontWeight: 'bold',
+                                                },
+                                                text: 'test',
+                                            },
+                                        ],
+                                    },
+                                ],
                                 spanAbove: false,
                                 spanLeft: false,
                                 isHeader: false,

@@ -482,4 +482,25 @@ describe('handleTable', () => {
 
         expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
     });
+
+    it('Block format on TD is respected', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+
+        cell.format.lineHeight = '2';
+        cell.format.whiteSpace = 'pre';
+        cell.format.direction = 'rtl';
+        cell.format.textAlign = 'start';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 100px; height: 200px; direction: rtl; text-align: right; line-height: 2; white-space: pre;"></td></tr></tbody></table>'
+        );
+    });
 });
