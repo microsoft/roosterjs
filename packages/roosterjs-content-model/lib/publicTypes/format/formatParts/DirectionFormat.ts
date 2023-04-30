@@ -10,10 +10,10 @@ export type DirectionFormat = {
     /**
      * Horizontal alignment, from CSS "text-align"
      */
-    textAlign?: 'start' | 'center' | 'end';
+    textAlign?: 'start' | 'center' | 'end' | 'justify' | 'initial';
 
     /**
      * Horizontal alignment, from HTML attribute "align"
      */
-    htmlAlign?: 'start' | 'center' | 'end';
+    htmlAlign?: 'start' | 'center' | 'end' | 'justify' | 'initial';
 };
