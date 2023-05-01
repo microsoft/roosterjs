@@ -1,21 +1,27 @@
 import * as createGeneralBlock from '../../lib/modelApi/creators/createGeneralBlock';
 import contentModelToDom from '../../lib/modelToDom/contentModelToDom';
+import DarkColorHandlerImpl from '../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import domToContentModel from '../../lib/domToModel/domToContentModel';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelGeneralBlock } from '../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
 
 describe('End to end test for DOM => Model', () => {
+    let context: EditorContext;
+
+    beforeEach(() => {
+        context = {
+            isDarkMode: false,
+            darkColorHandler: new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s),
+        };
+    });
+
     function runTest(
         html: string,
         expectedModel: ContentModelDocument,
         expectedHtml: string,
         expectedHTMLFirefox?: string
     ) {
-        const context: EditorContext = {
-            isDarkMode: false,
-        };
-
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 

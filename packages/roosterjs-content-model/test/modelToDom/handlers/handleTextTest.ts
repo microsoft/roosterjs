@@ -1,4 +1,5 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
+import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
@@ -31,6 +32,7 @@ describe('handleSegment', () => {
             text: 'test',
             format: { textColor: 'red' },
         };
+        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         handleText(document, parent, text, context);
 
