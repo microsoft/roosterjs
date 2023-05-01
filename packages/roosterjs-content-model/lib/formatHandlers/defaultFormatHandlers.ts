@@ -14,6 +14,7 @@ import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHan
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
@@ -61,6 +62,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     fontSize: fontSizeFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
+    letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
     listItemMetadata: listItemMetadataFormatHandler,
@@ -83,6 +85,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
 };
 
 const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'letterSpacing',
     'superOrSubScript',
     'strike',
     'fontFamily',
