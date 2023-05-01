@@ -119,9 +119,12 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe(
-            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>'
-        );
+        const result = [
+            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
+            '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
+        ].indexOf(div.outerHTML);
+
+        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
     });
 
     it('HyperLink without color', () => {

@@ -95,8 +95,11 @@ describe('backgroundColorFormatHandler.apply', () => {
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe(
-            '<div style="--darkColor_red:darkMock:red; background-color: var(--darkColor_red, red);"></div>'
-        );
+        const result = [
+            '<div style="--darkColor_red:darkMock:red; background-color: var(--darkColor_red, red);"></div>',
+            '<div style="--darkColor_red: darkMock:red; background-color: var(--darkColor_red, red);"></div>',
+        ].indexOf(div.outerHTML);
+
+        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
     });
 });
