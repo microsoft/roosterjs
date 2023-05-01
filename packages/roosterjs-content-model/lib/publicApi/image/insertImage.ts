@@ -1,4 +1,4 @@
-import { addSegment } from 'roosterjs-content-model/lib/modelApi/common/addSegment';
+import { addSegment } from '../../modelApi/common/addSegment';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createImage } from '../../modelApi/creators/createImage';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
