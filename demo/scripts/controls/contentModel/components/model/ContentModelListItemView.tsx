@@ -11,6 +11,7 @@ import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFo
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import {
@@ -29,10 +30,12 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ...ListMetadataFormatRenderers,
     ...DirectionFormatRenderers,
     MarginFormatRenderer,
+    PaddingFormatRenderer,
 ];
 const ListItemFormatRenderers: FormatRenderer<ContentModelListItemFormat>[] = [
     ...DirectionFormatRenderers,
     LineHeightFormatRenderer,
+    MarginFormatRenderer,
 ];
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,
