@@ -27,8 +27,6 @@ export function setPendingFormat(
 
     holder.format = format;
     holder.position = position;
-
-    console.log('apply format' + JSON.stringify(format));
 }
 
 /**
