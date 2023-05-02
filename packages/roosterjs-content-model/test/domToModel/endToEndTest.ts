@@ -67,7 +67,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -105,7 +108,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -118,7 +124,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="flex-direction: column; display: flex; margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
 
@@ -206,8 +212,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ol start="1" style="flex-direction: column; display: flex;"><li>1</li><ol start="1" style="flex-direction: column; display: flex;"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
-            '<ol style="flex-direction: column; display: flex;" start="1"><li>1</li><ol style="flex-direction: column; display: flex;" start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
+            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
         );
     });
 

@@ -24,10 +24,10 @@ describe('directionFormatHandler.parse', () => {
         textAlignValue: string | null,
         htmlAlignValue: string | null,
         directionCssValue: string | null,
-        directionAttrVAlue: string | null,
-        expectedTextAlignValue: 'start' | 'center' | 'end' | undefined,
+        directionAttrValue: string | null,
+        expectedTextAlignValue: 'start' | 'center' | 'end' | 'justify' | 'initial' | undefined,
         expectedDirectionValue: 'ltr' | 'rtl' | undefined,
-        expectedHtmlAlignValue: 'start' | 'center' | 'end' | undefined
+        expectedHtmlAlignValue: 'start' | 'center' | 'end' | 'justify' | 'initial' | undefined
     ) {
         if (textAlignValue && element.tagName !== 'li') {
             element.style.textAlign = textAlignValue;
@@ -47,8 +47,8 @@ describe('directionFormatHandler.parse', () => {
             element.style.direction = directionCssValue;
         }
 
-        if (directionAttrVAlue) {
-            element.setAttribute('dir', directionAttrVAlue);
+        if (directionAttrValue) {
+            element.setAttribute('dir', directionAttrValue);
         }
 
         directionFormatHandler.parse(format, element, context, {});
@@ -117,6 +117,16 @@ describe('directionFormatHandler.parse', () => {
         expect(format).toEqual({
             textAlign: 'center',
         });
+    });
+
+    it('Align in HTML attr, overwrite textAlign from format', () => {
+        format.textAlign = 'center';
+
+        runTest(div, null, 'right', null, null, undefined, undefined, 'end');
+    });
+
+    it('Align=justify', () => {
+        runTest(div, 'justify', null, null, null, 'justify', undefined, undefined);
     });
 });
 
@@ -193,18 +203,58 @@ describe('directionFormatHandler.apply', () => {
     it('Align start - list', () => {
         format.textAlign = 'start';
         directionFormatHandler.apply(format, li, context);
-        expect(li.outerHTML).toBe('<li style="align-self: start;"></li>');
+        expect(li.outerHTML).toBe('<li style="text-align: left;"></li>');
     });
 
     it('Align center - list', () => {
         format.textAlign = 'center';
         directionFormatHandler.apply(format, li, context);
-        expect(li.outerHTML).toBe('<li style="align-self: center;"></li>');
+        expect(li.outerHTML).toBe('<li style="text-align: center;"></li>');
     });
 
     it('Align right - list', () => {
         format.textAlign = 'end';
         directionFormatHandler.apply(format, li, context);
-        expect(li.outerHTML).toBe('<li style="align-self: end;"></li>');
+        expect(li.outerHTML).toBe('<li style="text-align: right;"></li>');
+    });
+
+    it('Align start - list with OL parent', () => {
+        const ol = document.createElement('ol');
+        ol.appendChild(li);
+
+        format.textAlign = 'start';
+        directionFormatHandler.apply(format, li, context);
+        expect(ol.outerHTML).toBe(
+            '<ol style="flex-direction: column; display: flex;"><li style="align-self: start;"></li></ol>'
+        );
+    });
+
+    it('Align center - list with OL parent', () => {
+        const ol = document.createElement('ol');
+        ol.appendChild(li);
+        format.textAlign = 'center';
+        directionFormatHandler.apply(format, li, context);
+        expect(ol.outerHTML).toBe(
+            '<ol style="flex-direction: column; display: flex;"><li style="align-self: center;"></li></ol>'
+        );
+    });
+
+    it('Align right - list with OL parent', () => {
+        const ol = document.createElement('ol');
+        ol.appendChild(li);
+
+        format.textAlign = 'end';
+        directionFormatHandler.apply(format, li, context);
+        expect(ol.outerHTML).toBe(
+            '<ol style="flex-direction: column; display: flex;"><li style="align-self: end;"></li></ol>'
+        );
+    });
+
+    it('Align justify', () => {
+        format.textAlign = 'justify';
+        directionFormatHandler.apply(format, div, context);
+
+        const result = ['<div style="text-align: justify;"></div>'];
+        expect(result.indexOf(div.outerHTML) >= 0).toBeTrue();
     });
 });

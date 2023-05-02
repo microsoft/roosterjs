@@ -14,6 +14,14 @@ const ResultMap = {
         ltr: 'right',
         rtl: 'left',
     },
+    initial: {
+        ltr: 'initial',
+        rtl: 'initial',
+    },
+    justify: {
+        ltr: 'justify',
+        rtl: 'justify',
+    },
 };
 
 /**
@@ -39,12 +47,13 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
         }
 
-        if (alignFromCss) {
-            format.textAlign = calcAlign(alignFromCss, format.direction);
-        }
-
         if (alignFromAttr) {
             format.htmlAlign = calcAlign(alignFromAttr, format.direction);
+            delete format.textAlign;
+        }
+
+        if (alignFromCss) {
+            format.textAlign = calcAlign(alignFromCss, format.direction);
         }
     },
     apply: (format, element) => {
@@ -55,8 +64,13 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
         const dir: 'ltr' | 'rtl' = format.direction == 'rtl' ? 'rtl' : 'ltr';
 
         if (format.textAlign) {
-            if (element.tagName == 'LI') {
+            const parent = element.parentElement;
+            const parentTag = parent?.tagName;
+
+            if (element.tagName == 'LI' && parent && (parentTag == 'OL' || parentTag == 'UL')) {
                 element.style.alignSelf = format.textAlign;
+                element.parentElement.style.flexDirection = 'column';
+                element.parentElement.style.display = 'flex';
             } else {
                 element.style.textAlign = ResultMap[format.textAlign][dir];
             }
@@ -64,11 +78,6 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
 
         if (format.htmlAlign) {
             element.setAttribute('align', ResultMap[format.htmlAlign][dir]);
-        }
-
-        if (element.tagName == 'OL' || element.tagName == 'UL') {
-            element.style.flexDirection = 'column';
-            element.style.display = 'flex';
         }
     },
 };
@@ -86,6 +95,10 @@ function calcAlign(align: string, dir?: 'ltr' | 'rtl') {
 
         case 'start':
         case 'end':
+            return align;
+
+        case 'justify':
+        case 'initial':
             return align;
 
         default:
