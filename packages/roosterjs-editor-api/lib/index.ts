@@ -31,6 +31,7 @@ export { default as toggleStrikethrough } from './format/toggleStrikethrough';
 export { default as toggleSubscript } from './format/toggleSubscript';
 export { default as toggleSuperscript } from './format/toggleSuperscript';
 export { default as toggleUnderline } from './format/toggleUnderline';
+export { default as toggleHeading } from './format/toggleHeading';
 export { default as toggleHeader } from './format/toggleHeader';
 export { default as applyCellShading } from './table/applyCellShading';
 
