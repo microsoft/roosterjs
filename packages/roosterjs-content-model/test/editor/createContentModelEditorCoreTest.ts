@@ -1,4 +1,5 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
@@ -41,7 +42,11 @@ describe('createContentModelEditorCore', () => {
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
@@ -89,7 +94,13 @@ describe('createContentModelEditorCore', () => {
         const options = { defaultDomToModelOptions, defaultModelToDomOptions };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
 
         expect(core).toEqual({
             lifecycle: {
@@ -145,7 +156,11 @@ describe('createContentModelEditorCore', () => {
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
@@ -200,7 +215,11 @@ describe('createContentModelEditorCore', () => {
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
@@ -249,7 +268,11 @@ describe('createContentModelEditorCore', () => {
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
@@ -323,7 +346,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
@@ -374,7 +401,13 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const options = { defaultDomToModelOptions, defaultModelToDomOptions };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
 
         expect(core).toEqual({
             lifecycle: {
@@ -433,7 +466,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
@@ -488,7 +525,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [
@@ -543,7 +584,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [
@@ -597,7 +642,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         contentDiv.style.fontFamily = 'AAAA';
         contentDiv.style.fontSize = 'BBBB';
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
