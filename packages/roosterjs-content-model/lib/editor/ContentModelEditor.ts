@@ -67,6 +67,15 @@ export default class ContentModelEditor
     }
 
     /**
+     * Creates an editor context to be used when doing
+     */
+    createEditorContext() {
+        const core = this.getCore();
+
+        return core.api.createEditorContext(core);
+    }
+
+    /**
      * Cache a content model object. Next time when format with content model, we can reuse it.
      * @param model
      */
