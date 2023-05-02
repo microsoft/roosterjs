@@ -1,4 +1,5 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
+import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
@@ -119,6 +120,11 @@ export interface IContentModelEditor extends IEditor {
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null): void;
+
+    /**
+     * Get default format as ContenetModelSegmentFormat
+     */
+    getContentModelDefaultFormat(): ContentModelSegmentFormat;
 }
 
 /**

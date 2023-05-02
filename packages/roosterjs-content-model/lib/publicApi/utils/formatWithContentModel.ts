@@ -69,7 +69,7 @@ export function formatWithContentModel(
     const model = editor.createContentModel(domToModelOption);
 
     if (callback(model)) {
-        const callback = () => {
+        const writeCallback = () => {
             editor.focus();
             if (model) {
                 editor.setContentModel(model, { onNodeCreated });
@@ -88,14 +88,14 @@ export function formatWithContentModel(
         };
 
         if (skipUndoSnapshot) {
-            callback();
+            writeCallback();
 
             if (changeSource) {
                 editor.triggerContentChangedEvent(changeSource, getChangeData?.());
             }
         } else {
             editor.addUndoSnapshot(
-                callback,
+                writeCallback,
                 changeSource || ChangeSource.Format,
                 false /*canUndoByBackspace*/,
                 {

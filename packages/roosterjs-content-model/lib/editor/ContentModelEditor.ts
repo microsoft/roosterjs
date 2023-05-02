@@ -1,5 +1,6 @@
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
@@ -76,6 +77,12 @@ export default class ContentModelEditor
         if (core.reuseModel && !core.lifecycle.shadowEditFragment) {
             core.cachedModel = model || undefined;
         }
+    }
+
+    getContentModelDefaultFormat(): ContentModelSegmentFormat {
+        const core = this.getCore();
+
+        return core.defaultFormat;
     }
 
     /**
