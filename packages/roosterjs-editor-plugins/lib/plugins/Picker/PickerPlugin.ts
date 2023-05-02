@@ -502,10 +502,13 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 } else {
                     this.editor.select(replacementNode, PositionType.After);
                 }
+
+                return true;
             } else {
-                this.editor.deleteNode(nodeBeforeCursor);
+                // Select the node then let browser delete it
+                this.editor.select(nodeBeforeCursor);
+                return false;
             }
-            return true;
         }
         return false;
     }
