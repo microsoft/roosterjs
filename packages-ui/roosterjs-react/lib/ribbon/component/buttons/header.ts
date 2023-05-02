@@ -1,7 +1,7 @@
 import RibbonButton from '../../type/RibbonButton';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { HeaderButtonStringKey } from '../../type/RibbonButtonStringKeys';
-import { toggleHeader } from 'roosterjs-editor-api';
+import { toggleHeading } from 'roosterjs-editor-api';
 
 const headers: Partial<Record<HeaderButtonStringKey, string>> = {
     buttonNameHeader1: 'Header 1',
@@ -34,9 +34,9 @@ export const header: RibbonButton<HeaderButtonStringKey> = {
         const index = getObjectKeys(headers).indexOf(key) + 1;
 
         if (index > 6) {
-            toggleHeader(editor, 0);
+            toggleHeading(editor, 0);
         } else if (index > 0) {
-            toggleHeader(editor, index);
+            toggleHeading(editor, index);
         }
     },
 };
