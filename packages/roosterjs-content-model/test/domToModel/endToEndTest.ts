@@ -1402,4 +1402,31 @@ describe('End to end test for DOM => Model', () => {
             '<div style="text-align: center;">aaa</div><div align="right">bbb</div><div align="right">ccc</div><div align="right">ddd</div><div style="text-align: center;">eee</div>'
         );
     });
+
+    it('SUB needs to be put inside S or U if any', () => {
+        runTest(
+            '<div><s><u><sub>test</sub></u></s></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    strikethrough: true,
+                                    underline: true,
+                                    superOrSubScriptSequence: 'sub',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<div><sub><u><s>test</s></u></sub></div>'
+        );
+    });
 });
