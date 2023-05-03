@@ -36,6 +36,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleBackspaceKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -51,6 +52,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
             expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
@@ -66,6 +68,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
             expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Default prevented', () => {
@@ -73,7 +76,6 @@ describe('ContentModelEditPlugin', () => {
             const rawEvent = { which: Keys.DELETE, defaultPrevented: true } as any;
 
             plugin.initialize(editor);
-
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent,
@@ -81,6 +83,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
             expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Trigger entity event first', () => {
@@ -127,6 +130,7 @@ describe('ContentModelEditPlugin', () => {
                 { which: Keys.DELETE } as any,
                 []
             );
+            expect(cacheContentModel).not.toHaveBeenCalled();
         });
     });
 });
