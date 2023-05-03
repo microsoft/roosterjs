@@ -1,3 +1,5 @@
+import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
+import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
@@ -26,9 +28,18 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
-    const core = createEditorCore(contentDiv, options) as ContentModelEditorCore;
+    const modifiedOptions: ContentModelEditorOptions = {
+        ...options,
+        plugins: [
+            ...(options.plugins || []),
+            new ContentModelFormatPlugin(),
+            new ContentModelEditPlugin(),
+        ],
+    };
 
-    promoteToContentModelEditorCore(core, options);
+    const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
+
+    promoteToContentModelEditorCore(core, modifiedOptions);
 
     return core;
 };
