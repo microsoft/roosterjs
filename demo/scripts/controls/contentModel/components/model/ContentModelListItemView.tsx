@@ -8,6 +8,7 @@ import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
+import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
@@ -31,6 +32,7 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ...DirectionFormatRenderers,
     MarginFormatRenderer,
     PaddingFormatRenderer,
+    ListStylePositionFormatRenderer,
 ];
 const ListItemFormatRenderers: FormatRenderer<ContentModelListItemFormat>[] = [
     ...DirectionFormatRenderers,
