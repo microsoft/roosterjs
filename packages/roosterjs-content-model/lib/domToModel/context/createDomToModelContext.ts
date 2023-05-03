@@ -58,10 +58,6 @@ export function createDomToModelContext(
         defaultFormatParsers: defaultFormatParsers,
     };
 
-    if (options?.alwaysNormalizeTable) {
-        context.alwaysNormalizeTable = true;
-    }
-
     if (options?.allowCacheElement) {
         context.allowCacheElement = true;
     }

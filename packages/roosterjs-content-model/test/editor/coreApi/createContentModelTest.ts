@@ -47,7 +47,6 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
-            alwaysNormalizeTable: true,
         });
         expect(model).toBe(mockedModel);
     });
@@ -64,7 +63,6 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
-            alwaysNormalizeTable: true,
             ...defaultOption,
         });
         expect(model).toBe(mockedModel);
@@ -82,7 +80,6 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
-            alwaysNormalizeTable: true,
             ...additionalOption,
         });
         expect(model).toBe(mockedModel);
@@ -100,7 +97,6 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
-            alwaysNormalizeTable: true,
             allowCacheElement: true,
         });
         expect(model).toBe(mockedModel);
