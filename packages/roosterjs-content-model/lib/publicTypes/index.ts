@@ -67,6 +67,7 @@ export { DisplayFormat } from './format/formatParts/DisplayFormat';
 export { LetterSpacingFormat } from './format/formatParts/LetterSpacingFormat';
 export { LineHeightFormat } from './format/formatParts/LineHeightFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
+export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
 export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './format/formatParts/ListMetadataFormat';

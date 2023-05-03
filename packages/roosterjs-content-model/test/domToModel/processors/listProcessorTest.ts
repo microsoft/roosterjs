@@ -170,7 +170,7 @@ describe('listProcessor', () => {
         expect(pushSpy).toHaveBeenCalledWith({ listType: 'UL' });
     });
 
-    it('list has margin and padding', () => {
+    it('list has margin, padding, and style position', () => {
         const ol = document.createElement('ol');
         const li = document.createElement('li');
         const group = createContentModelDocument();
@@ -181,6 +181,7 @@ describe('listProcessor', () => {
 
         ol.style.margin = '1px';
         ol.style.padding = '2px';
+        ol.style.listStylePosition = 'inside';
 
         listProcessor(group, ol, context);
 
@@ -202,6 +203,7 @@ describe('listProcessor', () => {
                             paddingRight: '2px',
                             paddingBottom: '2px',
                             paddingLeft: '2px',
+                            listStylePosition: 'inside',
                         },
                     ],
                     formatHolder: {
