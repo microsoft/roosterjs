@@ -1,4 +1,5 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -12,6 +13,7 @@ describe('handleTable', () => {
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
         context = createModelToDomContext();
+        context.darkColorHandler = new DarkColorHandlerImpl(null!, s => 'darkMock: ' + s);
     });
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
