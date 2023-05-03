@@ -40,11 +40,7 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
                 isWholeTableSelected(new VTable(selection.table), selection.coordinates)
             ) {
                 alignTable(selection, alignment);
-            } else if (
-                elementAtCursor &&
-                isList(elementAtCursor) &&
-                editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
-            ) {
+            } else if (elementAtCursor && isList(elementAtCursor)) {
                 alignList(editor, alignment);
             } else {
                 alignText(editor, alignment);

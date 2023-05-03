@@ -30,7 +30,6 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
-        ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.DefaultFormatInSpan,
         ExperimentalFeatures.AutoFormatList,
         ExperimentalFeatures.VariableBasedDarkColor,

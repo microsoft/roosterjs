@@ -90,11 +90,11 @@ const defaultFormatHandlerMap: FormatHandlers = {
 
 const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
-    'superOrSubScript',
     'strike',
     'fontFamily',
     'fontSize',
     'underline',
+    'superOrSubScript',
     'italic',
     'bold',
 ];
