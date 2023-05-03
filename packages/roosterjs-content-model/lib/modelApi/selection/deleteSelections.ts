@@ -8,7 +8,7 @@ import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity'
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
-import { ContentModelTable } from '../../publicTypes';
+import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createBr } from '../creators/createBr';
 import { createContentModelDocument } from '../creators/createContentModelDocument';
 import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
