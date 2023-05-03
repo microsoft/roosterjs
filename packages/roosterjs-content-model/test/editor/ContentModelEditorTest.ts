@@ -36,7 +36,6 @@ describe('ContentModelEditor', () => {
                 areAllCollapsed: true,
                 ranges: [],
             },
-            alwaysNormalizeTable: true,
         });
     });
 

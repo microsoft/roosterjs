@@ -40,9 +40,14 @@ export interface ContentModelFormatMap {
     segmentOnTableCell: ContentModelSegmentFormat;
 
     /**
-     * Format type for table
+     * Format type for table, except alignment related styles
      */
     table: ContentModelTableFormat;
+
+    /**
+     * Format type for table, only handle alignment related styles
+     */
+    tableAlign: ContentModelTableFormat;
 
     /**
      * Format type for tableCell
