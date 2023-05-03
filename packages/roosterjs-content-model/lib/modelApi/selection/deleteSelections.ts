@@ -156,7 +156,6 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model, dele
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
-
                 context.isChanged =
                     deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
                     context.isChanged;
@@ -281,12 +280,10 @@ function saveDeletedElements(
 
         addBlock(deleteResult, newBlock);
     } else if (tableContext) {
-        // Delete a whole table cell
-        const { table } = tableContext;
-
         const isInserted = tableContext == context.lastTableContext;
-
         if (!isInserted) {
+            const { table } = tableContext;
+
             const deletedTable = cloneBlock(table) as ContentModelTable;
             deletedTable.cells = deletedTable.cells.map(row =>
                 row.filter(cell => !!cell.isSelected)
@@ -405,6 +402,7 @@ function deleteBlock(
     replacement?: ContentModelBlock
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
+
     switch (blockToDelete.blockType) {
         case 'Table':
         case 'Divider':
