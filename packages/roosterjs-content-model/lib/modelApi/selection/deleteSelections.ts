@@ -1,4 +1,6 @@
+import { addBlock } from '../common/addBlock';
 import { BlockAndPath, getLeafSiblingBlock } from '../block/getLeafSiblingBlock';
+import { cloneBlock } from '../common/cloneModel';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
@@ -6,7 +8,9 @@ import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity'
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
+import { ContentModelTable } from '../../publicTypes';
 import { createBr } from '../creators/createBr';
+import { createContentModelDocument } from '../creators/createContentModelDocument';
 import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
@@ -52,6 +56,7 @@ export interface DeleteSelectionOptions {
 export interface DeleteSelectionResult {
     insertPoint: InsertPoint | null;
     isChanged: boolean;
+    deletedModel: ContentModelDocument;
 }
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
@@ -84,21 +89,23 @@ export function deleteSelection(
         ...(options || {}),
     };
     const context: DeleteSelectionContext = { isChanged: false };
+    const deletedModel = createContentModelDocument();
 
-    DeleteSelectionSteps.forEach(step => step(context, fullOptions, model));
+    DeleteSelectionSteps.forEach(step => step(context, fullOptions, model, deletedModel));
 
-    return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
+    return { insertPoint: context.insertPoint || null, isChanged: context.isChanged, deletedModel };
 }
 
 type DeleteSelectionStep = (
     context: DeleteSelectionContext,
     options: Required<DeleteSelectionOptions>,
-    model: ContentModelDocument
+    model: ContentModelDocument,
+    deleteResult: ContentModelDocument
 ) => void;
 
 // Step 1: iterate the model and find all selected content if any, delete them, and keep/create an insert point
 // at the first deleted position so that we know where to put cursor to after delete
-const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
+const deleteSelectionStep1: DeleteSelectionStep = (context, options, model, deleteResult) => {
     const { onDeleteEntity, direction } = options;
     const isForward = direction == 'forward';
 
@@ -110,6 +117,8 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
             let paragraph = createParagraph(true /*implicit*/);
             let markerFormat = model.format;
             let insertMarkerIndex = 0;
+
+            saveDeletedElements(block, context, tableContext, deleteResult);
 
             if (segments) {
                 // Delete segments inside a paragraph
@@ -147,6 +156,7 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
+
                 context.isChanged =
                     deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
                     context.isChanged;
@@ -161,6 +171,7 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
 
                 delete cell.cachedElement;
                 context.isChanged = true;
+                context.lastTableContext = tableContext;
             }
 
             if (!context.insertPoint) {
@@ -255,6 +266,35 @@ const DeleteSelectionSteps: DeleteSelectionStep[] = [
     deleteSelectionStep2,
     deleteSelectionStep3,
 ];
+
+function saveDeletedElements(
+    block: ContentModelBlock | undefined,
+    context: DeleteSelectionContext,
+    tableContext: TableSelectionContext | undefined,
+    deleteResult: ContentModelDocument
+) {
+    if (block) {
+        const newBlock = cloneBlock(block);
+        if (newBlock.blockType == 'Paragraph') {
+            newBlock.segments = newBlock.segments.filter(segment => !!segment.isSelected);
+        }
+
+        addBlock(deleteResult, newBlock);
+    } else if (tableContext) {
+        // Delete a whole table cell
+        const { table } = tableContext;
+
+        const isInserted = tableContext == context.lastTableContext;
+
+        if (!isInserted) {
+            const deletedTable = cloneBlock(table) as ContentModelTable;
+            deletedTable.cells = deletedTable.cells.map(row =>
+                row.filter(cell => !!cell.isSelected)
+            );
+            addBlock(deleteResult, deletedTable);
+        }
+    }
+}
 
 /**
  * If the last segment is BR, remove it for now. We may add it back later when normalize model.
@@ -365,7 +405,6 @@ function deleteBlock(
     replacement?: ContentModelBlock
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
-
     switch (blockToDelete.blockType) {
         case 'Table':
         case 'Divider':
