@@ -1,6 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { moveChildNodes } from 'roosterjs-editor-dom';
@@ -34,10 +35,11 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         parent.insertBefore(tableNode, refNode);
 
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
     }
 
-    applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
+    applyFormat(tableNode, context.formatAppliers.tableAlign, table.format, context);
 
     context.onNodeCreated?.(table, tableNode);
 
@@ -76,14 +78,6 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
                 tr.appendChild(td);
 
-                if (!cell.cachedElement) {
-                    cell.cachedElement = td;
-                    applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
-                    applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
-                }
-
-                applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
-
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
@@ -96,15 +90,25 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                     width += table.widths[col + colSpan];
                 }
 
-                td.style.width = width + 'px';
-                td.style.height = height + 'px';
-
                 if (rowSpan > 1) {
                     td.rowSpan = rowSpan;
                 }
 
                 if (colSpan > 1) {
                     td.colSpan = colSpan;
+                }
+
+                if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
+                    td.style.width = width + 'px';
+                    td.style.height = height + 'px';
+                }
+
+                if (!cell.cachedElement) {
+                    cell.cachedElement = td;
+                    applyFormat(td, context.formatAppliers.block, cell.format, context);
+                    applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
+                    applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
+                    applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
                 }
 
                 context.modelHandlers.blockGroupChildren(doc, td, cell, context);
