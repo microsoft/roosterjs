@@ -1,3 +1,4 @@
+import * as ContentModelCopyPastePlugin from '../../lib/editor/plugins/ContentModelCopyPastePlugin';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
@@ -6,7 +7,6 @@ import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
-
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
 
 describe('createContentModelEditorCore', () => {

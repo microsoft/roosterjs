@@ -1,3 +1,4 @@
+import ContentModelCopyPastePlugin from './plugins/ContentModelCopyPastePlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
@@ -26,9 +27,17 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
-    const core = createEditorCore(contentDiv, options) as ContentModelEditorCore;
+    const modifiedOptions: ContentModelEditorOptions = {
+        ...options,
+        corePluginOverride: {
+            ...(options.corePluginOverride || {}),
+            copyPaste: new ContentModelCopyPastePlugin(options),
+        },
+    };
 
-    promoteToContentModelEditorCore(core, options);
+    const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
+
+    promoteToContentModelEditorCore(core, modifiedOptions);
 
     return core;
 };
@@ -59,14 +68,15 @@ function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
         ...(cmCore.lifecycle.defaultFormat || {}),
     };
     cmCore.defaultFormat = getDefaultSegmentFormat(cmCore);
-    cmCore.originalContainerFormat = {};
 
     if (cmCore.defaultFormatOnContainer) {
         const { contentDiv, defaultFormat } = cmCore;
         const { fontFamily, fontSize } = defaultFormat;
 
-        cmCore.originalContainerFormat.fontFamily = contentDiv.style.fontFamily;
-        cmCore.originalContainerFormat.fontSize = contentDiv.style.fontSize;
+        cmCore.originalContainerFormat = {
+            fontFamily: contentDiv.style.fontFamily,
+            fontSize: contentDiv.style.fontSize,
+        };
 
         if (fontFamily) {
             contentDiv.style.fontFamily = fontFamily;
