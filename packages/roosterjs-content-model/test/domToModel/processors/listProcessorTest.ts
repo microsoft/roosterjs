@@ -169,6 +169,51 @@ describe('listProcessor', () => {
 
         expect(pushSpy).toHaveBeenCalledWith({ listType: 'UL' });
     });
+
+    it('list has margin and padding', () => {
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+        const group = createContentModelDocument();
+
+        ol.appendChild(li);
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        ol.style.margin = '1px';
+        ol.style.padding = '2px';
+
+        listProcessor(group, ol, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            marginTop: '1px',
+                            marginRight: '1px',
+                            marginBottom: '1px',
+                            marginLeft: '1px',
+                            paddingTop: '2px',
+                            paddingRight: '2px',
+                            paddingBottom: '2px',
+                            paddingLeft: '2px',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
 });
 
 describe('listProcessor without format handlers', () => {

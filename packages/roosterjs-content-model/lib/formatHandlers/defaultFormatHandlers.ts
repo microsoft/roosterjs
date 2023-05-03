@@ -30,6 +30,7 @@ import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatH
 import { tableDirAndMarginFormatHandler } from './table/tableDirAndMarginFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
+import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -78,6 +79,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     tableDirAndMargin: tableDirAndMarginFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textColor: textColorFormatHandler,
+    textColorOnTableCell: textColorOnTableCellFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -86,14 +88,13 @@ const defaultFormatHandlerMap: FormatHandlers = {
 
 const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
-    'superOrSubScript',
     'strike',
     'fontFamily',
     'fontSize',
     'underline',
+    'superOrSubScript',
     'italic',
     'bold',
-    'textColor',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
@@ -112,21 +113,21 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
-    segment: [...sharedSegmentFormats, 'backgroundColor', 'lineHeight'],
-    segmentOnBlock: sharedSegmentFormats,
-    segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
-    tableCell: [
-        'border',
-        'backgroundColor',
-        'padding',
+    listItemElement: ['direction', 'lineHeight', 'margin'],
+    listLevel: [
+        'listType',
+        'listLevelThread',
+        'listLevelMetadata',
         'direction',
-        'verticalAlign',
-        'wordBreak',
-        'textColor',
+        'margin',
+        'padding',
     ],
-    table: ['id', 'border', 'backgroundColor', 'display', 'tableDirAndMargin'],
+    segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
+    segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
+    tableCell: ['border', 'backgroundColor', 'padding', 'verticalAlign', 'wordBreak', 'textColor'],
+    table: ['id', 'border', 'backgroundColor', 'display'],
+    tableAlign: ['tableDirAndMargin'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
