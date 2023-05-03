@@ -67,7 +67,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -105,7 +108,10 @@ describe('End to end test for DOM => Model', () => {
                                 marginBottom: '0in',
                             },
                         ],
-                        format: {},
+                        format: {
+                            marginRight: '0in',
+                            marginLeft: '0in',
+                        },
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             format: {
@@ -118,7 +124,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="flex-direction: column; display: flex; margin-bottom: 0in;"><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
         );
     });
 
@@ -206,8 +212,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ol start="1" style="flex-direction: column; display: flex;"><li>1</li><ol start="1" style="flex-direction: column; display: flex;"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
-            '<ol style="flex-direction: column; display: flex;" start="1"><li>1</li><ol style="flex-direction: column; display: flex;" start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
+            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>',
+            '<ol start="1"><li>1</li><ol start="1"><li style="list-style-type: lower-alpha;">a</li></ol><li style="display: block;">b</li><li>2</li></ol>'
         );
     });
 
@@ -1318,6 +1324,83 @@ describe('End to end test for DOM => Model', () => {
 
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
         expect(cloneNodeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('html align overwrite text align from context', () => {
+        runTest(
+            '<div style="text-align:center">aaa<div align=right>bbb<div>ccc</div>ddd</div>eee</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: { textAlign: 'center' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'aaa',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'bbb',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'ccc',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'ddd',
+                            },
+                        ],
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'center',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'eee',
+                            },
+                        ],
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div style="text-align: center;">aaa</div><div align="right">bbb</div><div align="right">ccc</div><div align="right">ddd</div><div style="text-align: center;">eee</div>'
+        );
     });
 
     it('SUB needs to be put inside S or U if any', () => {

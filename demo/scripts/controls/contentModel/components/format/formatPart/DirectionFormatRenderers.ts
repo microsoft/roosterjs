@@ -8,7 +8,10 @@ export const DirectionFormatRenderers = [
         format => format.direction,
         (format, value) => (format.direction = value)
     ),
-    createDropDownFormatRenderer<DirectionFormat, 'start' | 'center' | 'end'>(
+    createDropDownFormatRenderer<
+        DirectionFormat,
+        'start' | 'center' | 'end' | 'justify' | 'initial'
+    >(
         'Text align',
         ['start', 'center', 'end'],
         format => format.textAlign,

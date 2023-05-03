@@ -100,17 +100,18 @@ export const enum ExperimentalFeatures {
      */
     ImageSelection = 'ImageSelection',
 
+    /**
+     * @deprecated this feature is always enabled
+     * Align list elements elements to left, center and right using setAlignment API
+     */
+    ListItemAlignment = 'ListItemAlignment',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Align list elements elements to left, center and right using setAlignment API
-     */
-    ListItemAlignment = 'ListItemAlignment',
 
     /**
      * Trigger formatting by a especial characters. Ex: (A), 1. i).
