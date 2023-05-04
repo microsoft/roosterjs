@@ -13,6 +13,20 @@ const WORD_ONLINE_IDENTIFYING_SELECTOR =
 export const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 // const IMAGE_CONTAINER_ELEMENT_CLASS_NAME = 'WACImageContainer';
 
+const EMPTY_TEXT_RUN = 'EmptyTextRun';
+const END_OF_PARAGRAPH = 'EOP';
+
+const CLASSES_TO_KEEP = [
+    'BulletListStyle',
+    'OutlineElement',
+    'NumberListStyle',
+    'WACImageContainer',
+    'ListContainerWrapper',
+    'BulletListStyle',
+    END_OF_PARAGRAPH,
+    EMPTY_TEXT_RUN,
+];
+
 const wacSubSuperParser = (
     format: ContentModelSegmentFormat,
     element: HTMLElement,
@@ -31,17 +45,20 @@ const wacElementProcessor = (
     element: HTMLElement,
     context: DomToModelContext
 ): void => {
-    if (matchesSelector(element, WAC_IDENTIFY_SELECTOR) && false) {
+    if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
     }
 
-    if (element.classList.contains(LIST_CONTAINER_ELEMENT_CLASS_NAME) && false) {
+    if (element.classList.contains(LIST_CONTAINER_ELEMENT_CLASS_NAME)) {
         context.elementProcessors.child(group, element, context);
         return;
     }
 
-    if (element.classList.contains('EmptyTextRun') || element.classList.contains('EOP')) {
+    if (
+        element.classList.contains(END_OF_PARAGRAPH) &&
+        element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)
+    ) {
         return;
     }
 
@@ -59,6 +76,8 @@ const wacLiElementProcessor = (
         const lastblock = listParent.blocks[listParent.blocks.length - 1];
         if (lastblock.blockType == 'BlockGroup' && lastblock.blockGroupType == 'ListItem') {
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
+
+            lastblock.format.marginLeft;
 
             // Get item level from 'data-aria-level' attribute
             let level = parseInt(element.getAttribute('data-aria-level') ?? '');
@@ -80,14 +99,24 @@ const wacLiElementProcessor = (
  * @param ev ContentModelBeforePasteEvent
  */
 export function handleWacComponentsPaste(ev: ContentModelBeforePasteEvent) {
+    ev.domToModelOption.allowCacheElement = false;
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', (format, element, context) => {
         if (element.style.display === 'block') {
             format.displayForDummyItem = undefined;
         }
+
+        format.marginLeft = undefined;
+    });
+    addParser(ev.domToModelOption, 'block', (format, element, context) => {
+        format.marginBottom = undefined;
+        format.marginLeft = undefined;
+        format.marginRight = undefined;
+        format.marginTop = undefined;
     });
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
+    ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
 }
 
 /**
