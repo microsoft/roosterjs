@@ -1,6 +1,7 @@
 import { BorderFormat } from './formatParts/BorderFormat';
 import { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import { DisplayFormat } from './formatParts/DisplayFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
@@ -15,4 +16,5 @@ export type ContentModelImageFormat = ContentModelSegmentFormat &
     MarginFormat &
     PaddingFormat &
     BorderFormat &
-    BoxShadowFormat;
+    BoxShadowFormat &
+    DisplayFormat;

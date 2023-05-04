@@ -1,6 +1,7 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
+import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
@@ -45,6 +46,9 @@ describe('createContentModelEditorCore', () => {
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -97,6 +101,9 @@ describe('createContentModelEditorCore', () => {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
 
         expect(core).toEqual({
@@ -155,6 +162,9 @@ describe('createContentModelEditorCore', () => {
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -212,6 +222,9 @@ describe('createContentModelEditorCore', () => {
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -263,6 +276,9 @@ describe('createContentModelEditorCore', () => {
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -339,6 +355,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -394,6 +413,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             defaultDomToModelOptions,
             defaultModelToDomOptions,
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
 
         expect(core).toEqual({
@@ -455,6 +477,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -512,6 +537,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -569,6 +597,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
@@ -625,6 +656,9 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+            },
         });
         expect(core).toEqual({
             lifecycle: {
