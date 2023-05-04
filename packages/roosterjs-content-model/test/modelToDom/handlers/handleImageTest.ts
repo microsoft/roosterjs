@@ -157,4 +157,20 @@ describe('handleSegment', () => {
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('img'));
     });
+
+    it('With display: block', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { display: 'block' },
+            dataset: {},
+        };
+        const parent = document.createElement('div');
+
+        handleImage(document, parent, segment, context);
+
+        expect(parent.innerHTML).toBe(
+            '<span><img src="http://test.com/test" style="display: block;"></span>'
+        );
+    });
 });
