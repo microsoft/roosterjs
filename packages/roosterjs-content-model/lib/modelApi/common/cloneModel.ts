@@ -36,9 +36,6 @@ export function cloneModel(model: ContentModelDocument): ContentModelDocument {
     return newModel;
 }
 
-/**
- * @internal
- */
 function cloneBlock(block: ContentModelBlock): ContentModelBlock {
     switch (block.blockType) {
         case 'BlockGroup':

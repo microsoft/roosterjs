@@ -87,8 +87,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     allowCacheElement: false,
                 });
 
-                const result = deleteSelection(model);
-                const copyCutModel = result.deletedModel;
+                deleteSelection(model);
 
                 const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
                 const selectionAfterPaste = contentModelToDom(
