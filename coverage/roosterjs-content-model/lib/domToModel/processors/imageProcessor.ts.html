@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.14% </span>
+                <span class="strong">96.3% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/35</span>
+                <span class='fraction'>26/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.44% </span>
+                <span class="strong">91.67% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/18</span>
+                <span class='fraction'>11/12</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.06% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/34</span>
+                <span class='fraction'>25/26</span>
             </div>
         
             
@@ -100,34 +100,11 @@
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a>
-<a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a>
-<a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a>
-<a name='L56'></a><a href='#L56'>56</a>
-<a name='L57'></a><a href='#L57'>57</a>
-<a name='L58'></a><a href='#L58'>58</a>
-<a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -136,14 +113,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
@@ -172,25 +141,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from '../../modelApi/common/addBlock';
-import { addDecorators } from '../../modelApi/common/addDecorators';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
 import { createImage } from '../../modelApi/creators/createImage';
-import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 &nbsp;
@@ -198,53 +155,36 @@ import { stackFormat } from '../utils/stackFormat';
  * @internal
  */
 export const imageProcessor: ElementProcessor&lt;HTMLImageElement&gt; = (group, element, context) =&gt; {
-    const isBlock = isBlockElement(element, context);
+    stackFormat(context, { segment: 'shallowClone' }, () =&gt; {
+        const imageFormat: ContentModelImageFormat = context.segmentFormat;
 &nbsp;
-    stackFormat(
-        context,
-        {
-            segment: isBlock ? 'shallowCloneForBlock' : 'shallowClone',
-            paragraph: 'shallowClone',
-        },
-        () =&gt; {
-            const imageFormat: ContentModelImageFormat = context.segmentFormat;
+        parseFormat(element, context.formatParsers.segment, imageFormat, context);
+        parseFormat(element, context.formatParsers.image, imageFormat, context);
+        parseFormat(element, context.formatParsers.block, context.blockFormat, context);
 &nbsp;
-            parseFormat(element, context.formatParsers.segment, imageFormat, context);
-            parseFormat(element, context.formatParsers.image, imageFormat, context);
-            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+        const image = createImage(element.src, imageFormat);
+        const alt = element.alt;
+        const title = element.title;
 &nbsp;
-            const image = createImage(element.src, imageFormat);
-            const alt = element.alt;
-            const title = element.title;
+        parseFormat(element, context.formatParsers.dataset, image.dataset, context);
+        addDecorators(image, context);
 &nbsp;
-            parseFormat(element, context.formatParsers.dataset, image.dataset, context);
-            addDecorators(image, context);
-&nbsp;
-            if (alt) {
-                image.alt = alt;
-            }
-            <span class="missing-if-branch" title="if path not taken" >I</span>if (title) {
-<span class="cstat-no" title="statement not covered" >                image.title = title;</span>
-            }
-            if (context.isInSelection) {
-                image.isSelected = true;
-            }
-            if (context.imageSelection?.image == element) {
-                image.isSelectedAsImageSelection = true;
-                image.isSelected = true;
-            }
-&nbsp;
-            if (isBlock) {
-                addBlock(group, createParagraph(false /*isImplicit*/, context.blockFormat));
-            }
-&nbsp;
-            addSegment(group, image);
+        if (alt) {
+            image.alt = alt;
         }
-    );
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (title) {
+<span class="cstat-no" title="statement not covered" >            image.title = title;</span>
+        }
+        if (context.isInSelection) {
+            image.isSelected = true;
+        }
+        if (context.imageSelection?.image == element) {
+            image.isSelectedAsImageSelection = true;
+            image.isSelected = true;
+        }
 &nbsp;
-    if (isBlock) {
-        addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
-    }
+        addSegment(group, image);
+    });
 };
 &nbsp;</pre></td></tr></table></pre>
 
@@ -253,7 +193,7 @@ export const imageProcessor: ElementProcessor&lt;HTMLImageElement&gt; = (group, 
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 04 2023 13:27:49 GMT+0000 (Coordinated Universal Time)
+                at Thu May 04 2023 22:42:26 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
