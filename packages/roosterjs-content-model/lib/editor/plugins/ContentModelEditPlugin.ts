@@ -64,7 +64,10 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                 // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
                 this.triggeredEntityEvents.push(event);
             } else if (event.eventType == PluginEventType.KeyDown) {
-                if (!event.rawEvent.defaultPrevented) {
+                if (event.rawEvent.defaultPrevented) {
+                    // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
+                    this.editor.cacheContentModel(null /*model*/);
+                } else {
                     // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
                     switch (event.rawEvent.which) {
                         case Keys.BACKSPACE:
