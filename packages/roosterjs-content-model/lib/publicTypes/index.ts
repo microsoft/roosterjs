@@ -42,6 +42,7 @@ export { ContentModelWithFormat } from './format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './format/ContentModelWithDataset';
 export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
 export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkFormat';
+export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
 
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
@@ -64,8 +65,10 @@ export { ContentModelFormatBase } from './format/ContentModelFormatBase';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
+export { LetterSpacingFormat } from './format/formatParts/LetterSpacingFormat';
 export { LineHeightFormat } from './format/formatParts/LineHeightFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
+export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
 export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './format/formatParts/ListMetadataFormat';

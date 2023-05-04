@@ -8,9 +8,11 @@ import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
+import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import {
@@ -29,10 +31,13 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ...ListMetadataFormatRenderers,
     ...DirectionFormatRenderers,
     MarginFormatRenderer,
+    PaddingFormatRenderer,
+    ListStylePositionFormatRenderer,
 ];
 const ListItemFormatRenderers: FormatRenderer<ContentModelListItemFormat>[] = [
     ...DirectionFormatRenderers,
     LineHeightFormatRenderer,
+    MarginFormatRenderer,
 ];
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,

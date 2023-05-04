@@ -28,7 +28,6 @@ function internalCreateContentModel(
 ) {
     const context: DomToModelOption = {
         selectionRange: core.api.getSelectionRangeEx(core),
-        alwaysNormalizeTable: true,
         ...core.defaultDomToModelOptions,
         ...(option || {}),
     };

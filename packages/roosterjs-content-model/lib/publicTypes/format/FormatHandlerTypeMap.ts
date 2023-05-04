@@ -10,9 +10,11 @@ import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
+import { ListStylePositionFormat } from './formatParts/ListStylePositionFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -92,6 +94,11 @@ export interface FormatHandlerTypeMap {
     italic: ItalicFormat;
 
     /**
+     * Format for LetterSpacingFormat
+     */
+    letterSpacing: LetterSpacingFormat;
+
+    /**
      * Format for LineHeightFormat
      */
     lineHeight: LineHeightFormat;
@@ -120,6 +127,11 @@ export interface FormatHandlerTypeMap {
      * Format for ListThreadFormat (used by list level)
      */
     listLevelThread: ListThreadFormat;
+
+    /**
+     * Format for ListStylePositionFormat (used by list level)
+     */
+    listStylePosition: ListStylePositionFormat;
 
     /**
      * Format for ListTypeFormat
@@ -165,6 +177,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextColorFormat
      */
     textColor: TextColorFormat;
+
+    /**
+     * Format for TextColorFormat, for Table Cell only
+     */
+    textColorOnTableCell: TextColorFormat;
 
     /**
      * Format for UnderlineFormat

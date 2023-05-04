@@ -205,6 +205,8 @@ export default class VList {
             item.writeBack(listStack, this.rootList, shouldReuseAllAncestorListElements);
             const topList = listStack[1];
 
+            item.applyListStyle(this.rootList, start);
+
             if (safeInstanceOf(topList, 'HTMLOListElement')) {
                 if (lastList != topList) {
                     if (start == 1) {
@@ -218,8 +220,6 @@ export default class VList {
                     start++;
                 }
             }
-            const itemIndex = this.getListItemIndex(item.getNode());
-            item.applyListStyle(this.rootList, itemIndex);
 
             lastList = topList;
         });

@@ -1,6 +1,7 @@
 import * as getBoundingClientRect from '../../../lib/domToModel/utils/getBoundingClientRect';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import * as stackFormat from '../../../lib/domToModel/utils/stackFormat';
+import { childProcessor as originalChildProcessor } from '../../../lib/domToModel/processors/childProcessor';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -311,8 +312,8 @@ describe('tableProcessor with format', () => {
 
         tableProcessor(doc, table, context);
 
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(6);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(3);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(12);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -377,6 +378,9 @@ describe('tableProcessor with format', () => {
             tagName: 'table',
             rows: [
                 {
+                    tagName: 'tr',
+                    style: {},
+                    getAttribute: () => '',
                     cells: [mockedTd],
                 },
             ],
@@ -425,6 +429,9 @@ describe('tableProcessor with format', () => {
             tagName: 'table',
             rows: [
                 {
+                    tagName: 'tr',
+                    style: {},
+                    getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
@@ -463,6 +470,9 @@ describe('tableProcessor with format', () => {
             tagName: 'table',
             rows: [
                 {
+                    tagName: 'tr',
+                    style: {},
+                    getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
@@ -532,6 +542,9 @@ describe('tableProcessor', () => {
             tagName: 'table',
             rows: [
                 {
+                    tagName: 'tr',
+                    style: {},
+                    getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
@@ -573,6 +586,9 @@ describe('tableProcessor', () => {
             tagName: 'table',
             rows: [
                 {
+                    tagName: 'tr',
+                    style: {},
+                    getAttribute: () => '',
                     cells: [mockedTd],
                 },
             ],
@@ -768,6 +784,278 @@ describe('tableProcessor', () => {
 
         expect(context.blockFormat).toEqual({
             htmlAlign: 'center',
+        });
+    });
+
+    it('Style on TR node should be respected', () => {
+        const group = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        childProcessor.and.callFake(originalChildProcessor);
+        td.appendChild(text);
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        tr.style.fontSize = '20px';
+        tr.style.lineHeight = '2';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                format: {
+                                    lineHeight: '2',
+                                },
+                                dataset: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        format: { lineHeight: '2' },
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                format: { fontSize: '20px' },
+                                                text: 'test',
+                                            },
+                                        ],
+                                    },
+                                ],
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('align attribute from context is respected', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+
+        context.blockFormat.htmlAlign = 'center';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [],
+                    format: {
+                        marginLeft: 'auto',
+                        marginRight: 'auto',
+                    },
+                    dataset: {},
+                    widths: [],
+                    heights: [],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('border styles from table is respected', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+
+        table.style.boxSizing = 'border-box';
+        table.style.borderCollapse = 'collapse';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    dataset: {},
+                    widths: [],
+                    heights: [],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('border styles from td is respected', () => {
+        const group = createContentModelDocument();
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        td.style.boxSizing = 'border-box';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: { useBorderBox: true },
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('block format on TD is respected', () => {
+        const group = createContentModelDocument();
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        td.style.lineHeight = '2';
+        td.style.whiteSpace = 'pre';
+        td.style.direction = 'rtl';
+        td.style.textAlign = 'right';
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: {
+                                    lineHeight: '2',
+                                    whiteSpace: 'pre',
+                                    direction: 'rtl',
+                                    textAlign: 'start',
+                                },
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
+    it('segment format on TD is respected', () => {
+        const group = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const td = document.createElement('td');
+        const tr = document.createElement('tr');
+        const table = document.createElement('table');
+
+        td.appendChild(text);
+        tr.appendChild(td);
+        table.appendChild(tr);
+
+        td.style.color = 'red';
+        td.style.fontFamily = 'Arial';
+        td.style.fontWeight = 'bold';
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: { textColor: 'red' },
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        format: {},
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                format: {
+                                                    fontFamily: 'Arial',
+                                                    fontWeight: 'bold',
+                                                },
+                                                text: 'test',
+                                            },
+                                        ],
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
         });
     });
 });

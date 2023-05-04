@@ -326,4 +326,181 @@ describe('handleTable', () => {
         expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell2);
         expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('td'));
     });
+
+    it('With cached TABLE element, do not apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.cells[0].push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+        table.cachedElement = document.createElement('table');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Without cached TABLE element, apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.cells[0].push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('With cached TABLE element, apply margin', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.cells[0].push(createTableCell());
+        table.format.marginLeft = 'auto';
+        table.format.marginRight = 'auto';
+        table.cachedElement = document.createElement('table');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TABLE element, apply margin', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.cells[0].push(createTableCell());
+        table.format.marginLeft = 'auto';
+        table.format.marginRight = 'auto';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('With cached TD, do not apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('With cached TD and allow useBorderBox and has metadata, still apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+        cell.cachedElement = document.createElement('td');
+        cell.format.useBorderBox = true;
+        table.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table data-editing-info="{}"><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(
+            [
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
+    });
+
+    it('With cached TD, do not apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Block format on TD is respected', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.cells[0].push(cell);
+        table.widths.push(100);
+        table.heights.push(200);
+
+        cell.format.lineHeight = '2';
+        cell.format.whiteSpace = 'pre';
+        cell.format.direction = 'rtl';
+        cell.format.textAlign = 'start';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 100px; height: 200px; direction: rtl; text-align: right; line-height: 2; white-space: pre;"></td></tr></tbody></table>'
+        );
+    });
 });
