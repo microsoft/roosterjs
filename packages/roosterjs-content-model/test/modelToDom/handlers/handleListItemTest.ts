@@ -218,6 +218,44 @@ describe('handleListItem', () => {
         );
         expect(paragraph.isImplicit).toBeFalse();
     });
+
+    it('list item with alignment', () => {
+        const parent = document.createElement('div');
+        const listItem = createListItem([
+            {
+                listType: 'OL',
+            },
+        ]);
+
+        listItem.format.textAlign = 'center';
+
+        handleListItem(document, parent, listItem, context, null);
+
+        expect(parent.outerHTML).toBe(
+            '<div><ol start="1" style="flex-direction: column; display: flex;"><li style="align-self: center;"></li></ol></div>'
+        );
+        expect(context.listFormat).toEqual({
+            threadItemCounts: [1],
+            nodeStack: [
+                {
+                    node: parent,
+                },
+                {
+                    node: parent.firstChild as HTMLOListElement,
+                    listType: 'OL',
+                },
+            ],
+        });
+        expect(handleList).toHaveBeenCalledTimes(1);
+        expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            parent.firstChild?.firstChild as HTMLLIElement,
+            listItem,
+            context
+        );
+    });
 });
 
 describe('handleListItem without format handler', () => {

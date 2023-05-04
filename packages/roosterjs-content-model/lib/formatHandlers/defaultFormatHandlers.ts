@@ -12,6 +12,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
@@ -28,8 +29,8 @@ import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
-import { tableDirAndMarginFormatHandler } from './table/tableDirAndMarginFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
+import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
@@ -62,6 +63,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     display: displayFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
+    htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
@@ -78,8 +80,8 @@ const defaultFormatHandlerMap: FormatHandlers = {
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
-    tableDirAndMargin: tableDirAndMarginFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
+    textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     underline: underlineFormatHandler,
@@ -100,6 +102,7 @@ const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
+    'textAlign',
     'lineHeight',
     'whiteSpace',
 ];
@@ -115,12 +118,13 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight', 'margin'],
+    listItemElement: ['direction', 'textAlign', 'lineHeight', 'margin'],
     listLevel: [
         'listType',
         'listLevelThread',
         'listLevelMetadata',
         'direction',
+        'textAlign',
         'margin',
         'padding',
         'listStylePosition',
@@ -128,17 +132,24 @@ const defaultFormatKeysPerCategory: {
     segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
     segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
-    tableCell: ['border', 'backgroundColor', 'padding', 'verticalAlign', 'wordBreak', 'textColor'],
-    table: ['id', 'border', 'backgroundColor', 'display'],
-    tableAlign: ['tableDirAndMargin'],
+    tableCell: [
+        'border',
+        'backgroundColor',
+        'padding',
+        'verticalAlign',
+        'wordBreak',
+        'textColor',
+        'htmlAlign',
+    ],
+    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
     link: ['link', 'textColor', 'underline'],
     code: ['fontFamily'],
     dataset: ['dataset'],
-    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size'],
-    container: sharedContainerFormats,
+    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
+    container: [...sharedContainerFormats, 'htmlAlign'],
 };
 
 /**
