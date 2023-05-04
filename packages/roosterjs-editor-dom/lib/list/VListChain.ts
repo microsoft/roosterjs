@@ -110,7 +110,13 @@ export default class VListChain {
 
         for (let i = 0; i < lists.length; i++) {
             const list = lists[i];
-            list.start = list.start > 1 ? list.start : lastNumber + 1;
+
+            //If there is a list chain sequence, ensure the list chain keep increasing correctly
+            if (list.start > 1) {
+                list.start = list.start === lastNumber ? lastNumber + 1 : list.start;
+            } else {
+                list.start = lastNumber + 1;
+            }
 
             const vlist = new VList(list);
             lastNumber = vlist.getLastItemNumber() || 0;

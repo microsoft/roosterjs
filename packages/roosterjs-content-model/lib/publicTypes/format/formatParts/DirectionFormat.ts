@@ -8,12 +8,12 @@ export type DirectionFormat = {
     direction?: 'ltr' | 'rtl';
 
     /**
-     * Horizontal alignment
+     * Horizontal alignment, from CSS "text-align"
      */
-    textAlign?: 'start' | 'center' | 'end';
+    textAlign?: 'start' | 'center' | 'end' | 'justify' | 'initial';
 
     /**
-     * Whether the text align value comes from attribute rather than CSS
+     * Horizontal alignment, from HTML attribute "align"
      */
-    isTextAlignFromAttr?: boolean;
+    htmlAlign?: 'start' | 'center' | 'end' | 'justify' | 'initial';
 };

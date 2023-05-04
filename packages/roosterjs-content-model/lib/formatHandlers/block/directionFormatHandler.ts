@@ -14,6 +14,14 @@ const ResultMap = {
         ltr: 'right',
         rtl: 'left',
     },
+    initial: {
+        ltr: 'initial',
+        rtl: 'initial',
+    },
+    justify: {
+        ltr: 'justify',
+        rtl: 'justify',
+    },
 };
 
 /**
@@ -23,41 +31,29 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
     parse: (format, element, _, defaultStyle) => {
         const dir = element.style.direction || element.dir || defaultStyle.direction;
         const alignFromAttr = element.getAttribute('align');
-        const textAlign = element.style.textAlign || alignFromAttr || defaultStyle.textAlign;
-        const alignSelf = element.style.alignSelf;
-        const isLI = element.tagName === 'li';
-        const isFlex =
-            element.parentElement &&
-            element.parentElement.style.display === 'flex' &&
-            element.style.flexDirection === 'column';
-        const shouldApplyAlignSelf = isLI && isFlex;
-        const align = shouldApplyAlignSelf ? alignSelf : textAlign;
+        let alignFromCss = element.style.textAlign || defaultStyle.textAlign;
+
+        if (
+            element.tagName == 'LI' &&
+            element.parentElement?.style.display === 'flex' &&
+            element.parentElement.style.flexDirection === 'column' &&
+            element.style.alignSelf
+        ) {
+            // For LI element with flex style applied, we use its "align-self" style value instead since LI has a different implementation for align
+            alignFromCss = element.style.alignSelf;
+        }
 
         if (dir) {
             format.direction = dir == 'rtl' ? 'rtl' : 'ltr';
         }
 
-        switch (align) {
-            case 'center':
-                format.textAlign = 'center';
-                break;
-
-            case 'left':
-                format.textAlign = dir == 'rtl' ? 'end' : 'start';
-                break;
-
-            case 'right':
-                format.textAlign = dir == 'rtl' ? 'start' : 'end';
-                break;
-
-            case 'start':
-            case 'end':
-                format.textAlign = align;
-                break;
+        if (alignFromAttr) {
+            format.htmlAlign = calcAlign(alignFromAttr, format.direction);
+            delete format.textAlign;
         }
 
-        if (alignFromAttr && !element.style.textAlign) {
-            format.isTextAlignFromAttr = true;
+        if (alignFromCss) {
+            format.textAlign = calcAlign(alignFromCss, format.direction);
         }
     },
     apply: (format, element) => {
@@ -65,21 +61,47 @@ export const directionFormatHandler: FormatHandler<DirectionFormat> = {
             element.style.direction = format.direction;
         }
 
-        if (format.textAlign) {
-            const value = ResultMap[format.textAlign][format.direction == 'rtl' ? 'rtl' : 'ltr'];
+        const dir: 'ltr' | 'rtl' = format.direction == 'rtl' ? 'rtl' : 'ltr';
 
-            if (format.isTextAlignFromAttr) {
-                element.setAttribute('align', value);
-            } else if (element.tagName === 'LI') {
+        if (format.textAlign) {
+            const parent = element.parentElement;
+            const parentTag = parent?.tagName;
+
+            if (element.tagName == 'LI' && parent && (parentTag == 'OL' || parentTag == 'UL')) {
                 element.style.alignSelf = format.textAlign;
+                element.parentElement.style.flexDirection = 'column';
+                element.parentElement.style.display = 'flex';
             } else {
-                element.style.textAlign = value;
+                element.style.textAlign = ResultMap[format.textAlign][dir];
             }
         }
 
-        if (element.tagName == 'OL' || element.tagName == 'UL') {
-            element.style.flexDirection = 'column';
-            element.style.display = 'flex';
+        if (format.htmlAlign) {
+            element.setAttribute('align', ResultMap[format.htmlAlign][dir]);
         }
     },
 };
+
+function calcAlign(align: string, dir?: 'ltr' | 'rtl') {
+    switch (align) {
+        case 'center':
+            return 'center';
+
+        case 'left':
+            return dir == 'rtl' ? 'end' : 'start';
+
+        case 'right':
+            return dir == 'rtl' ? 'start' : 'end';
+
+        case 'start':
+        case 'end':
+            return align;
+
+        case 'justify':
+        case 'initial':
+            return align;
+
+        default:
+            return undefined;
+    }
+}
