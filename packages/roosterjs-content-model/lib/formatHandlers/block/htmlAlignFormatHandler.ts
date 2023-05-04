@@ -3,7 +3,7 @@ import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionF
 import { directionFormatHandler } from './directionFormatHandler';
 import { FormatHandler } from '../FormatHandler';
 import { HtmlAlignFormat } from '../../publicTypes/format/formatParts/HtmlAlignFormat';
-import { TextAlignFormat } from 'roosterjs-content-model/lib/publicTypes';
+import { TextAlignFormat } from '../../publicTypes/format/formatParts/TextAlignFormat';
 
 /**
  * @internal
