@@ -6,6 +6,9 @@ import HtmlSanitizer from '../htmlSanitizer/HtmlSanitizer';
 import moveChildNodes from '../utils/moveChildNodes';
 import toArray from '../jsUtils/toArray';
 import wrap from '../utils/wrap';
+import { EXCEL_DESKTOP_ATTRIBUTE_NAME } from '../pasteSourceValidations/constants';
+import { PROG_ID_NAME } from '../pasteSourceValidations/constants';
+
 import {
     BeforePasteEvent,
     ClipboardData,
@@ -40,7 +43,7 @@ export default function createFragmentFromClipboardData(
     pasteAsImage: boolean,
     event: BeforePasteEvent
 ) {
-    const { fragment, sanitizingOption } = event;
+    const { fragment, sanitizingOption, htmlAttributes } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
     let doc: Document | undefined = rawHtml
@@ -106,6 +109,10 @@ export default function createFragmentFromClipboardData(
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
+        // If the fragment is pasted as image, the excel attributes are not needed anymore, so remove it to avoid treat the fragment as a excel table.
+        if (pasteAsImage) {
+            removeExcelHtmlAttributes(htmlAttributes);
+        }
     } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
         moveChildNodes(fragment, doc?.body);
 
@@ -192,4 +199,9 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
 
 function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
     toArray(node.querySelectorAll('style')).forEach(callback);
+}
+
+function removeExcelHtmlAttributes(htmlAttributes: Record<string, string>) {
+    htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] = '';
+    htmlAttributes[PROG_ID_NAME] = '';
 }
