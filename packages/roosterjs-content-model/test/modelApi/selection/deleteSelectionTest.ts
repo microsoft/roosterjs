@@ -38,7 +38,6 @@ describe('deleteSelection - selectionOnly', () => {
 
         expect(result.isChanged).toBeFalse();
         expect(result.insertPoint).toBeNull();
-        expect(result.deletedModel).toEqual({ blockGroupType: 'Document', blocks: [] });
     });
 
     it('Single selection marker', () => {
@@ -75,24 +74,6 @@ describe('deleteSelection - selectionOnly', () => {
                             isSelected: true,
                         },
                     ],
-                },
-            ],
-        });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        {
-                            isSelected: true,
-                            segmentType: 'SelectionMarker',
-                            format: Object({ fontSize: '10px' }),
-                        },
-                    ],
-                    blockType: 'Paragraph',
-                    format: Object({}),
                 },
             ],
         });
@@ -133,25 +114,6 @@ describe('deleteSelection - selectionOnly', () => {
                             isSelected: true,
                         },
                     ],
-                },
-            ],
-        });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        {
-                            text: 'test1',
-                            segmentType: 'Text',
-                            isSelected: true,
-                            format: Object({ fontSize: '10px' }),
-                        },
-                    ],
-                    blockType: 'Paragraph',
-                    format: Object({}),
                 },
             ],
         });
@@ -214,39 +176,6 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
         });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                Object({
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        Object({
-                            text: 'test1',
-                            segmentType: 'Text',
-                            isSelected: true,
-                            format: Object({ fontSize: '11px' }),
-                        }),
-                    ],
-                    blockType: 'Paragraph',
-                    format: Object({}),
-                }),
-                Object({
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        Object({
-                            text: 'test2',
-                            segmentType: 'Text',
-                            isSelected: true,
-                            format: Object({ fontSize: '12px' }),
-                        }),
-                    ],
-                    blockType: 'Paragraph',
-                    format: Object({}),
-                }),
-            ],
-        });
     });
 
     it('Divider selection', () => {
@@ -294,18 +223,6 @@ describe('deleteSelection - selectionOnly', () => {
                         },
                     ],
                     isImplicit: false,
-                },
-            ],
-        });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    isSelected: true,
-                    tagName: 'div',
-                    cachedElement: undefined,
-                    blockType: 'Divider',
-                    format: {},
                 },
             ],
         });
@@ -376,25 +293,6 @@ describe('deleteSelection - selectionOnly', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [],
-                },
-            ],
-        });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    isSelected: true,
-                    tagName: 'div',
-                    cachedElement: undefined,
-                    blockType: 'Divider',
-                    format: {},
-                },
-                {
-                    isSelected: true,
-                    tagName: 'hr',
-                    cachedElement: undefined,
-                    blockType: 'Divider',
-                    format: {},
                 },
             ],
         });
@@ -497,34 +395,6 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
         });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                cachedElement: undefined,
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                dataset: {},
-                            },
-                        ],
-                    ],
-                    blockType: 'Table',
-                    format: {},
-                    dataset: {},
-                },
-            ],
-        });
     });
 
     it('All table cell selection', () => {
@@ -579,34 +449,6 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
         });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                cachedElement: undefined,
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                dataset: {},
-                            },
-                        ],
-                    ],
-                    blockType: 'Table',
-                    format: {},
-                    dataset: {},
-                },
-            ],
-        });
     });
 
     it('Entity selection, no callback', () => {
@@ -656,21 +498,6 @@ describe('deleteSelection - selectionOnly', () => {
                         },
                     ],
                     isImplicit: false,
-                },
-            ],
-        });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    wrapper: 'WRAPPER' as any,
-                    isReadonly: true,
-                    type: undefined,
-                    id: undefined,
-                    blockType: 'Entity',
-                    format: {},
-                    segmentType: 'Entity',
-                    isSelected: true,
                 },
             ],
         });
@@ -729,21 +556,6 @@ describe('deleteSelection - selectionOnly', () => {
         });
 
         expect(onDeleteEntity).toHaveBeenCalledWith(entity, EntityOperation.Overwrite);
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    wrapper: 'WRAPPER' as any,
-                    isReadonly: true,
-                    type: undefined,
-                    id: undefined,
-                    blockType: 'Entity',
-                    format: Object({}),
-                    segmentType: 'Entity',
-                    isSelected: true,
-                },
-            ],
-        });
     });
 
     it('Entity selection, callback returns true', () => {
@@ -797,21 +609,6 @@ describe('deleteSelection - selectionOnly', () => {
         });
 
         expect(onDeleteEntity).toHaveBeenCalledWith(entity, EntityOperation.Overwrite);
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    wrapper: 'WRAPPER' as any,
-                    isReadonly: true,
-                    type: undefined,
-                    id: undefined,
-                    blockType: 'Entity',
-                    format: Object({}),
-                    segmentType: 'Entity',
-                    isSelected: true,
-                },
-            ],
-        });
     });
 
     it('delete with default format', () => {
@@ -855,18 +652,6 @@ describe('deleteSelection - selectionOnly', () => {
             ],
             format: { fontSize: '10pt' },
         });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    isSelected: true,
-                    tagName: 'div',
-                    cachedElement: undefined,
-                    blockType: 'Divider',
-                    format: {},
-                },
-            ],
-        });
     });
 
     it('delete with general block', () => {
@@ -904,19 +689,6 @@ describe('deleteSelection - selectionOnly', () => {
                     format: {},
                     segments: [marker],
                     isImplicit: false,
-                },
-            ],
-        });
-
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    element: null as any,
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'General',
-                    blocks: [],
                 },
             ],
         });
@@ -968,26 +740,6 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
         });
-
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    isSelected: true,
-                    tagName: 'div',
-                    cachedElement: undefined,
-                    blockType: 'Divider',
-                    format: {},
-                },
-                {
-                    element: null as any,
-                    blockType: 'BlockGroup',
-                    format: {},
-                    blockGroupType: 'General',
-                    blocks: [],
-                },
-            ],
-        });
     });
 
     it('delete with general segment', () => {
@@ -1025,29 +777,6 @@ describe('deleteSelection - selectionOnly', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [marker],
-                },
-            ],
-        });
-
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        {
-                            element: null as any,
-                            blockType: 'BlockGroup',
-                            format: {},
-                            blockGroupType: 'General',
-                            blocks: [],
-                            segmentType: 'General',
-                            isSelected: true,
-                        },
-                    ],
-                    blockType: 'Paragraph',
-                    format: {},
                 },
             ],
         });
@@ -1093,34 +822,6 @@ describe('deleteSelection - selectionOnly', () => {
                 },
             ],
         });
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        {
-                            element: null,
-                            blockType: 'BlockGroup',
-                            format: {},
-                            blockGroupType: 'General',
-                            blocks: [],
-                            segmentType: 'General',
-                            isSelected: true,
-                        },
-                        {
-                            text: 'test',
-                            segmentType: 'Text',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    blockType: 'Paragraph',
-                    format: {},
-                },
-            ],
-        });
     });
 
     it('Normalize spaces before deleted segment', () => {
@@ -1159,30 +860,6 @@ describe('deleteSelection - selectionOnly', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [{ segmentType: 'Text', text: 'test\u00A0', format: {} }, marker],
-                },
-            ],
-        });
-
-        expect(result.deletedModel).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    cachedElement: undefined,
-                    isImplicit: undefined,
-                    segments: [
-                        {
-                            src: 'test',
-                            alt: undefined,
-                            title: undefined,
-                            isSelectedAsImageSelection: undefined,
-                            segmentType: 'Image',
-                            isSelected: true,
-                            format: {},
-                            dataset: {},
-                        },
-                    ],
-                    blockType: 'Paragraph',
-                    format: {},
                 },
             ],
         });
