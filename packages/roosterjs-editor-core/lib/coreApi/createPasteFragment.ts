@@ -72,13 +72,13 @@ function createBeforePasteEvent(
 }
 
 function getPasteType(pasteAsText: boolean, applyCurrentStyle: boolean, pasteAsImage: boolean) {
-    if (!pasteAsImage && !applyCurrentStyle && !pasteAsText) {
-        return PasteType.Normal;
-    } else if (pasteAsText) {
+    if (pasteAsText) {
         return PasteType.AsPlainText;
     } else if (applyCurrentStyle) {
         return PasteType.MergeFormat;
-    } else {
+    } else if (pasteAsImage) {
         return PasteType.AsImage;
+    } else {
+        return PasteType.Normal;
     }
 }

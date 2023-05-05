@@ -43,7 +43,7 @@ export interface BeforePasteEventData {
     /**
      * Paste type option (as plain text, merge format, normal, as image)
      */
-    readonly pasteType?: PasteType | CompatiblePasteType;
+    readonly pasteType: PasteType | CompatiblePasteType;
 }
 
 /**

@@ -66,11 +66,7 @@ export default class Paste implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (
-            this.editor &&
-            event.eventType == PluginEventType.BeforePaste &&
-            (event.pasteType === PasteType.Normal || event.pasteType === PasteType.MergeFormat)
-        ) {
+        if (this.editor && event.eventType == PluginEventType.BeforePaste) {
             const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
 
@@ -81,8 +77,13 @@ export default class Paste implements EditorPlugin {
                     break;
                 case KnownPasteSourceType.ExcelDesktop:
                 case KnownPasteSourceType.ExcelOnline:
-                    // Handle HTML copied from Excel
-                    convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    if (
+                        event.pasteType === PasteType.Normal ||
+                        event.pasteType === PasteType.MergeFormat
+                    ) {
+                        // Handle HTML copied from Excel
+                        convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    }
                     break;
                 case KnownPasteSourceType.PowerPointDesktop:
                     convertPastedContentFromPowerPoint(event, trustedHTMLHandler);

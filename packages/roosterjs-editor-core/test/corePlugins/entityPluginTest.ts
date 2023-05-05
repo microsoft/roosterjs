@@ -2,11 +2,6 @@ import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import {
-    createDefaultHtmlSanitizerOptions,
-    moveChildNodes,
-    createElement,
-} from 'roosterjs-editor-dom';
-import {
     ChangeSource,
     EntityClasses,
     EntityOperation,
@@ -14,10 +9,16 @@ import {
     EntityPluginState,
     IEditor,
     Keys,
+    PasteType,
     PluginEventType,
     PluginKeyboardEvent,
     QueryScope,
 } from 'roosterjs-editor-types';
+import {
+    createDefaultHtmlSanitizerOptions,
+    moveChildNodes,
+    createElement,
+} from 'roosterjs-editor-dom';
 
 describe('EntityPlugin', () => {
     let plugin: EntityPlugin;
@@ -217,6 +218,7 @@ describe('EntityPlugin', () => {
                 htmlBefore: '',
                 htmlAfter: '',
                 htmlAttributes: {},
+                pasteType: PasteType.Normal,
             })
         );
 
