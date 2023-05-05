@@ -10,6 +10,7 @@ import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
+import { ContentModelPastePlugin } from 'roosterjs-content-model';
 import {
     createContextMenuPlugin,
     createImageEditMenuProvider,
@@ -55,6 +56,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
+        contentModelPaste: pluginList.contentModelPaste ? new ContentModelPastePlugin() : null,
     };
 
     return Object.values(plugins);
