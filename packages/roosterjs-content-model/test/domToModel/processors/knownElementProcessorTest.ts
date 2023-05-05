@@ -352,6 +352,81 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.width = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        width: '100px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.maxWidth = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        maxWidth: '100px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with padding left', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.paddingLeft = '10px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        paddingLeft: '10px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
     it('BLOCKQUOTE used for indent', () => {
         const group = createContentModelDocument();
         const quote = document.createElement('blockquote');
@@ -421,6 +496,42 @@ describe('knownElementProcessor', () => {
                             isSelected: true,
                         },
                     ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Paragraph with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test1'));
+        div.style.fontSize = '0px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                fontSize: '0px',
+                            },
+                            text: 'test1',
+                        },
+                    ],
+                    zeroFontSize: true,
                 },
                 {
                     blockType: 'Paragraph',

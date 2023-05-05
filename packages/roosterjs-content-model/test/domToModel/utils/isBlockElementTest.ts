@@ -112,4 +112,14 @@ describe('isBlockElement', () => {
         const result = isBlockElement(span, context);
         expect(result).toBeFalse();
     });
+
+    it('display = flex', () => {
+        const div = document.createElement('div');
+        div.style.display = 'flex';
+
+        context = createDomToModelContext(undefined);
+
+        const result = isBlockElement(div, context);
+        expect(result).toBeTrue();
+    });
 });

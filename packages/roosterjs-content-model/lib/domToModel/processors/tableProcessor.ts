@@ -59,6 +59,23 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const tr = tableElement.rows[row];
 
             stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
+                const parent = tr.parentElement;
+                const parentTag = parent?.tagName;
+
+                if (
+                    parent &&
+                    (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
+                ) {
+                    // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
+                    parseFormat(parent, context.formatParsers.block, context.blockFormat, context);
+                    parseFormat(
+                        parent,
+                        context.formatParsers.segmentOnBlock,
+                        context.segmentFormat,
+                        context
+                    );
+                }
+
                 parseFormat(tr, context.formatParsers.block, context.blockFormat, context);
                 parseFormat(
                     tr,

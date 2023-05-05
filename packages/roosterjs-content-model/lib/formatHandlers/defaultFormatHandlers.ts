@@ -115,7 +115,7 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight', 'margin'],
+    listItemElement: [...sharedBlockFormats, 'direction', 'lineHeight', 'margin'],
     listLevel: [
         'listType',
         'listLevelThread',
@@ -134,11 +134,11 @@ const defaultFormatKeysPerCategory: {
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
-    link: ['link', 'textColor', 'underline', 'display'],
+    link: ['link', 'textColor', 'underline', 'display', 'margin', 'padding'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size'],
-    container: sharedContainerFormats,
+    container: [...sharedContainerFormats, 'size'],
 };
 
 /**

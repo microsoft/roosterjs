@@ -114,4 +114,51 @@ describe('linkProcessor', () => {
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });
     });
+
+    it('margin and padding on link', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+        a.style.margin = '10px';
+        a.style.padding = '20px';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: {
+                                    href: '/test',
+                                    underline: true,
+                                    marginTop: '10px',
+                                    marginBottom: '10px',
+                                    marginLeft: '10px',
+                                    marginRight: '10px',
+                                    paddingTop: '20px',
+                                    paddingBottom: '20px',
+                                    paddingLeft: '20px',
+                                    paddingRight: '20px',
+                                },
+                                dataset: {},
+                            },
+                            text: 'test',
+                        },
+                    ],
+                    isImplicit: true,
+                },
+            ],
+        });
+        expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
 });
