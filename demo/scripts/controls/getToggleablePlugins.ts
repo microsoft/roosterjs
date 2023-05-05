@@ -10,11 +10,7 @@ import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
-import {
-    ContentModelEditPlugin,
-    ContentModelFormatPlugin,
-    ContentModelPastePlugin,
-} from 'roosterjs-content-model';
+import { ContentModelPastePlugin } from 'roosterjs-content-model';
 import {
     createContextMenuPlugin,
     createImageEditMenuProvider,
