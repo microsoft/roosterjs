@@ -230,6 +230,11 @@ const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
             } else {
                 context.isChanged = deleteBlock(path[0].blocks, block, isForward, onDeleteEntity);
             }
+        } else {
+            // We have nothing to delete, in this case we don't want browser handle it as well.
+            // Because when Backspace on an empty document, it will also delete the only DIV and SPAN element, causes
+            // editor is really empty. We don't want that happen. So the handling should stop here.
+            context.isChanged = true;
         }
     }
 };

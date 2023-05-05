@@ -142,11 +142,13 @@ describe('imageProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
+                    isImplicit: true,
                     segments: [
                         {
                             segmentType: 'Image',
                             format: {
                                 id: 'id1',
+                                display: 'block',
                             },
                             src: '',
                             isSelected: true,
@@ -154,12 +156,6 @@ describe('imageProcessor', () => {
                             dataset: {},
                         },
                     ],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
                 },
             ],
         });

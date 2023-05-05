@@ -19,6 +19,7 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
     [ExperimentalFeatures.ReusableContentModel]:
         'Reuse existing DOM structure if possible when convert Content Model back to DOM tree',
+    [ExperimentalFeatures.EditWithContentModel]: 'Handle keyboard edit event with Content Model',
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
