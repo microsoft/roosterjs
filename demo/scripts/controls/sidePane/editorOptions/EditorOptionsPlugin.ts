@@ -21,6 +21,7 @@ const initialState: BuildInPluginState = {
         tableEditMenu: true,
         contextMenu: true,
         autoFormat: true,
+        contentModelPaste: false,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
