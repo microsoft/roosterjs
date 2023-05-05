@@ -4,6 +4,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     EditorPlugin,
     EntityOperationEvent,
+    ExperimentalFeatures,
     IEditor,
     Keys,
     PluginEvent,
@@ -19,6 +20,7 @@ import {
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
     private triggeredEntityEvents: EntityOperationEvent[] = [];
+    private editWithContentModel = false;
 
     /**
      * Get name of this plugin
@@ -36,6 +38,9 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
+        this.editWithContentModel = this.editor.isFeatureEnabled(
+            ExperimentalFeatures.EditWithContentModel
+        );
     }
 
     /**
@@ -64,10 +69,10 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                 // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
                 this.triggeredEntityEvents.push(event);
             } else if (event.eventType == PluginEventType.KeyDown) {
-                if (event.rawEvent.defaultPrevented) {
+                if (!this.editWithContentModel || event.rawEvent.defaultPrevented) {
                     // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
                     this.editor.cacheContentModel(null /*model*/);
-                } else {
+                } else if (!event.rawEvent.defaultPrevented) {
                     // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
                     switch (event.rawEvent.which) {
                         case Keys.BACKSPACE:

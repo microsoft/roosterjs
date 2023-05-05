@@ -1,4 +1,6 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
+import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
@@ -43,6 +45,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -97,6 +100,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -157,6 +161,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -216,6 +221,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -269,6 +275,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -347,6 +354,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -404,6 +412,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -467,6 +476,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -526,6 +536,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -585,6 +596,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
@@ -643,6 +655,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         contentDiv.style.fontSize = 'BBBB';
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
             },
