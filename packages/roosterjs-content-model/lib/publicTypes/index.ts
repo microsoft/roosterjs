@@ -52,6 +52,8 @@ export { IdFormat } from './format/formatParts/IdFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { SpacingFormat } from './format/formatParts/SpacingFormat';
 export { DirectionFormat } from './format/formatParts/DirectionFormat';
+export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { TextColorFormat } from './format/formatParts/TextColorFormat';
 export { FontSizeFormat } from './format/formatParts/FontSizeFormat';
 export { FontFamilyFormat } from './format/formatParts/FontFamilyFormat';
