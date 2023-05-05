@@ -7,7 +7,13 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    EditorPlugin,
+    IEditor,
+    PasteType,
+    PluginEvent,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { KnownPasteSourceType } from 'roosterjs-editor-types';
 
@@ -72,7 +78,9 @@ export default class Paste implements EditorPlugin {
                 case KnownPasteSourceType.ExcelDesktop:
                 case KnownPasteSourceType.ExcelOnline:
                     // Handle HTML copied from Excel
-                    convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    if (event.pasteType !== PasteType.AsImage) {
+                        convertPastedContentFromExcel(event, trustedHTMLHandler);
+                    }
                     break;
                 case KnownPasteSourceType.PowerPointDesktop:
                     convertPastedContentFromPowerPoint(event, trustedHTMLHandler);

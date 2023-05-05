@@ -397,6 +397,7 @@ describe('createPasteFragment', () => {
                     metaName1: 'metaContent1',
                     metaName2: 'metaContent2',
                 },
+                pasteType: 0,
             },
             true
         );

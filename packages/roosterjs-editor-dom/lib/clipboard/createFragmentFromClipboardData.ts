@@ -6,8 +6,6 @@ import HtmlSanitizer from '../htmlSanitizer/HtmlSanitizer';
 import moveChildNodes from '../utils/moveChildNodes';
 import toArray from '../jsUtils/toArray';
 import wrap from '../utils/wrap';
-import { EXCEL_DESKTOP_ATTRIBUTE_NAME } from '../pasteSourceValidations/constants';
-import { PROG_ID_NAME } from '../pasteSourceValidations/constants';
 
 import {
     BeforePasteEvent,
@@ -15,6 +13,7 @@ import {
     DefaultFormat,
     EditorCore,
     NodePosition,
+    PasteType,
 } from 'roosterjs-editor-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
@@ -43,7 +42,7 @@ export default function createFragmentFromClipboardData(
     pasteAsImage: boolean,
     event: BeforePasteEvent
 ) {
-    const { fragment, sanitizingOption, htmlAttributes } = event;
+    const { fragment, sanitizingOption } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
     const document = core.contentDiv.ownerDocument;
     let doc: Document | undefined = rawHtml
@@ -109,10 +108,7 @@ export default function createFragmentFromClipboardData(
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
-        // If the fragment is pasted as image, the excel attributes are not needed anymore, so remove it to avoid treat the fragment as a excel table.
-        if (pasteAsImage) {
-            removeExcelHtmlAttributes(htmlAttributes);
-        }
+        event.pasteType = pasteAsImage ? PasteType.AsImage : PasteType.Normal;
     } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
         moveChildNodes(fragment, doc?.body);
 
@@ -120,6 +116,8 @@ export default function createFragmentFromClipboardData(
             const format = getCurrentFormat(core, position.node);
             applyTextStyle(fragment, node => applyFormat(node, format));
         }
+
+        event.pasteType = applyCurrentStyle ? PasteType.MergeFormat : PasteType.Normal;
     } else if (text) {
         // Paste text
         text.split('\n').forEach((line, index, lines) => {
@@ -150,6 +148,8 @@ export default function createFragmentFromClipboardData(
                 fragment.appendChild(textNode);
             }
         });
+
+        event.pasteType = PasteType.AsPlainText;
     }
 
     // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
@@ -199,9 +199,4 @@ function getCurrentFormat(core: EditorCore, node: Node): DefaultFormat {
 
 function processStyles(node: ParentNode, callback: (style: HTMLStyleElement) => void) {
     toArray(node.querySelectorAll('style')).forEach(callback);
-}
-
-function removeExcelHtmlAttributes(htmlAttributes: Record<string, string>) {
-    htmlAttributes[EXCEL_DESKTOP_ATTRIBUTE_NAME] = '';
-    htmlAttributes[PROG_ID_NAME] = '';
 }
