@@ -7,6 +7,8 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
+import { getPasteSource } from 'roosterjs-editor-dom';
+import { KnownPasteSourceType } from 'roosterjs-editor-types';
 import {
     EditorPlugin,
     IEditor,
@@ -14,8 +16,6 @@ import {
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { getPasteSource } from 'roosterjs-editor-dom';
-import { KnownPasteSourceType } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
@@ -66,7 +66,11 @@ export default class Paste implements EditorPlugin {
      * @param event PluginEvent object
      */
     onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == PluginEventType.BeforePaste) {
+        if (
+            this.editor &&
+            event.eventType == PluginEventType.BeforePaste &&
+            (event.pasteType === PasteType.Normal || event.pasteType === PasteType.MergeFormat)
+        ) {
             const { fragment, sanitizingOption } = event;
             const trustedHTMLHandler = this.editor.getTrustedHTMLHandler();
 
@@ -78,9 +82,7 @@ export default class Paste implements EditorPlugin {
                 case KnownPasteSourceType.ExcelDesktop:
                 case KnownPasteSourceType.ExcelOnline:
                     // Handle HTML copied from Excel
-                    if (event.pasteType !== PasteType.AsImage) {
-                        convertPastedContentFromExcel(event, trustedHTMLHandler);
-                    }
+                    convertPastedContentFromExcel(event, trustedHTMLHandler);
                     break;
                 case KnownPasteSourceType.PowerPointDesktop:
                     convertPastedContentFromPowerPoint(event, trustedHTMLHandler);

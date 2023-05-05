@@ -13,7 +13,6 @@ import {
     DefaultFormat,
     EditorCore,
     NodePosition,
-    PasteType,
 } from 'roosterjs-editor-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
@@ -108,7 +107,6 @@ export default function createFragmentFromClipboardData(
         img.style.maxWidth = '100%';
         img.src = imageDataUri;
         fragment.appendChild(img);
-        event.pasteType = pasteAsImage ? PasteType.AsImage : PasteType.Normal;
     } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
         moveChildNodes(fragment, doc?.body);
 
@@ -116,8 +114,6 @@ export default function createFragmentFromClipboardData(
             const format = getCurrentFormat(core, position.node);
             applyTextStyle(fragment, node => applyFormat(node, format));
         }
-
-        event.pasteType = applyCurrentStyle ? PasteType.MergeFormat : PasteType.Normal;
     } else if (text) {
         // Paste text
         text.split('\n').forEach((line, index, lines) => {
@@ -148,8 +144,6 @@ export default function createFragmentFromClipboardData(
                 fragment.appendChild(textNode);
             }
         });
-
-        event.pasteType = PasteType.AsPlainText;
     }
 
     // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste

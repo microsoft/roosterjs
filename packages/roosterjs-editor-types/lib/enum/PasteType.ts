@@ -3,7 +3,7 @@
  */
 export const enum PasteType {
     /**
-     * Simple paste with not content change
+     * Default paste behavior
      */
     Normal,
 
@@ -18,7 +18,7 @@ export const enum PasteType {
     MergeFormat,
 
     /**
-     * Paste the content as image element
+     * If there is a image uri in the clipboard, paste the content as image element
      */
     AsImage,
 }
