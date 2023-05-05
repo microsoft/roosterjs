@@ -60,8 +60,6 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 ? createTableEditMenuProvider()
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
-        contentModelFormat: pluginList.contentModelFormat ? new ContentModelFormatPlugin() : null,
-        contentModelEdit: pluginList.contentModelEdit ? new ContentModelEditPlugin() : null,
         contentModelPaste: pluginList.contentModelPaste ? new ContentModelPastePlugin() : null,
     };
 

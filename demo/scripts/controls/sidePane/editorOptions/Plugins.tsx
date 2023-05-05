@@ -61,14 +61,6 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         'Show customized context menu for special cases'
                     )}
                     {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
-                    {this.renderPluginItem(
-                        'contentModelFormat',
-                        'Handle pending format using Content Model'
-                    )}
-                    {this.renderPluginItem(
-                        'contentModelEdit',
-                        'Handle keyboard edit event using Content Model'
-                    )}
                     {this.renderPluginItem('contentModelPaste', 'Paste Plugin using content model')}
                 </tbody>
             </table>
