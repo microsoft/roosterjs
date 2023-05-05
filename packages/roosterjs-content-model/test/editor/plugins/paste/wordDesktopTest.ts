@@ -769,7 +769,7 @@ describe('convertPastedContentFromWord', () => {
     });
 });
 
-function createBeforePasteEventMock(fragment: DocumentFragment) {
+export function createBeforePasteEventMock(fragment: DocumentFragment) {
     return ({
         eventType: PluginEventType.BeforePaste,
         clipboardData: <ClipboardData>{},

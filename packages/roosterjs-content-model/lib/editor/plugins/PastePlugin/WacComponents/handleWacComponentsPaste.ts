@@ -5,19 +5,20 @@ import { ContentModelSegmentFormat } from 'roosterjs-content-model/lib/publicTyp
 import { DomToModelContext } from 'roosterjs-content-model/lib/publicTypes/context/DomToModelContext';
 import { matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
+import {
+    ContentModelListItemLevelFormat,
+    ElementProcessor,
+    FormatParser,
+} from 'roosterjs-content-model/lib/publicTypes';
 
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
-const WORD_ONLINE_IDENTIFYING_SELECTOR =
-    'div.ListContainerWrapper>ul[class^="BulletListStyle"],div.ListContainerWrapper>ol[class^="NumberListStyle"],span.WACImageContainer > img';
 export const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
-// const IMAGE_CONTAINER_ELEMENT_CLASS_NAME = 'WACImageContainer';
 
 const EMPTY_TEXT_RUN = 'EmptyTextRun';
 const END_OF_PARAGRAPH = 'EOP';
 
 const CLASSES_TO_KEEP = [
-    'BulletListStyle',
     'OutlineElement',
     'NumberListStyle',
     'WACImageContainer',
@@ -27,7 +28,11 @@ const CLASSES_TO_KEEP = [
     EMPTY_TEXT_RUN,
 ];
 
-const wacSubSuperParser = (
+/**
+ * Wac components do not use sub and super tags, instead only add vertical align to a span.
+ * This parser normalize the content for content model
+ */
+const wacSubSuperParser: FormatParser<ContentModelSegmentFormat> = (
     format: ContentModelSegmentFormat,
     element: HTMLElement,
     context: DomToModelContext
@@ -40,7 +45,16 @@ const wacSubSuperParser = (
         format.superOrSubScriptSequence = 'sub';
     }
 };
-const wacElementProcessor = (
+
+/**
+ * This processor does:
+ * 1) Remove the display and margin of the element.
+ * 2) When an element should be ignored but should handle the child elements call the default child processor.
+ * 3) Removes the End of Paragraph element to avoid empty lines, we should only remove this if the previous element of the EOP is an EmptyTextRun
+ * 4) Finally call the default processor.
+ * @returns
+ */
+const wacElementProcessor: ElementProcessor<HTMLElement> = (
     group: ContentModelBlockGroup,
     element: HTMLElement,
     context: DomToModelContext
@@ -64,7 +78,11 @@ const wacElementProcessor = (
 
     context.defaultElementProcessors.element(group, element, context);
 };
-const wacLiElementProcessor = (
+
+/**
+ * This processor calls the default list processor and then sets the correct list level and list bullet.
+ */
+const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
     group: ContentModelBlockGroup,
     element: HTMLLIElement,
     context: DomToModelContext
@@ -93,35 +111,83 @@ const wacLiElementProcessor = (
         }
     }
 };
+
+/**
+ * This parsers does:
+ * 1) Sets the display for dummy item to undefined when the current style is block.
+ * 2) Removes the Margin Left
+ */
+const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
+    format: ContentModelListItemLevelFormat,
+    element: HTMLElement
+): void => {
+    if (element.style.display === 'block') {
+        format.displayForDummyItem = undefined;
+    }
+
+    format.marginLeft = undefined;
+};
+
+/**
+ * Wac usually adds padding to lists which is unwanted so remove it.
+ */
+const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
+    format: ContentModelListItemLevelFormat
+): void => {
+    format.paddingLeft = undefined;
+};
 /**
  * @internal
- * Handles Pasted content when source is Word Desktop
+ * Convert pasted content from Office Online
+ * Once it is known that the document is from WAC
+ * We need to remove the display property and margin from all the list item
  * @param ev ContentModelBeforePasteEvent
  */
 export function handleWacComponentsPaste(ev: ContentModelBeforePasteEvent) {
     ev.domToModelOption.allowCacheElement = false;
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
-    addParser(ev.domToModelOption, 'listItem', (format, element, context) => {
-        if (element.style.display === 'block') {
-            format.displayForDummyItem = undefined;
-        }
+    addParser(ev.domToModelOption, 'listItem', wacListItemParser);
+    addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
 
-        format.marginLeft = undefined;
-    });
-    addParser(ev.domToModelOption, 'block', (format, element, context) => {
-        format.marginBottom = undefined;
-        format.marginLeft = undefined;
-        format.marginRight = undefined;
-        format.marginTop = undefined;
-    });
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
+    setProcessor(ev.domToModelOption, 'ol', wacListProcessor);
+    setProcessor(ev.domToModelOption, 'ul', wacListProcessor);
     ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
 }
 
 /**
- * @internal
+ * List items from word have this format when using List items:
+ * @example
+        <div>
+           <ol></ol>
+        </div>
+        <div>
+           <ol></ol>
+        </div>
+        <div>
+           <ol></ol>
+        </div>
+ *  Due to this the div between each of the lists we need to restore the list context to use the previous list,
+ *  otherwise it could create a new list instead under the same list element
  */
-export function isWordOnlineWithList(fragment: DocumentFragment): boolean {
-    return !!(fragment && fragment.querySelector(WORD_ONLINE_IDENTIFYING_SELECTOR));
-}
+const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = (
+    group: ContentModelBlockGroup,
+    element: HTMLOListElement | HTMLUListElement,
+    context: DomToModelContext
+): void => {
+    const lastBlock = group.blocks[group.blocks.length - 1];
+    if (lastBlock.blockType === 'BlockGroup' && lastBlock.blockGroupType == 'ListItem') {
+        context.listFormat = {
+            threadItemCounts: [],
+            levels: lastBlock.levels,
+            listParent: group,
+        };
+    }
+
+    if (element.tagName.toUpperCase() === 'OL') {
+        context.defaultElementProcessors.ol?.(group, element as HTMLOListElement, context);
+    } else {
+        context.defaultElementProcessors.ul?.(group, element as HTMLUListElement, context);
+    }
+};
