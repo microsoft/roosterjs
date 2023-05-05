@@ -6,6 +6,10 @@ import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentMode
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSelectionMarker } from '../../../lib/publicTypes/segment/ContentModelSelectionMarker';
 import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
+import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('applyPendingFormat', () => {
@@ -246,6 +250,65 @@ describe('applyPendingFormat', () => {
                             segmentType: 'Text',
                             text: 'abc',
                             format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
+    it('Implicit paragraph', () => {
+        const editor = ({} as any) as IContentModelEditor;
+        const text = createText('test');
+        const marker = createSelectionMarker();
+        const paragraph = createParagraph(true /*isImplicit*/);
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(text, marker);
+        model.blocks.push(paragraph);
+
+        spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
+            fontSize: '10px',
+        });
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_, apiName, callback) => {
+                expect(apiName).toEqual('applyPendingFormat');
+                callback(model);
+            }
+        );
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
+            callback([model], undefined, paragraph, [marker]);
+            return false;
+        });
+
+        applyPendingFormat(editor, 't');
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: false,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'tes',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 't',
+                            format: {
+                                fontSize: '10px',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {
+                                fontSize: '10px',
+                            },
                             isSelected: true,
                         },
                     ],

@@ -163,7 +163,7 @@ describe('ContentModelFormatPlugin', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: true,
+                        isImplicit: false,
                         segments: [
                             {
                                 segmentType: 'Text',
@@ -230,7 +230,7 @@ describe('ContentModelFormatPlugin', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: true,
+                        isImplicit: false,
                         segments: [
                             {
                                 segmentType: 'Text',
