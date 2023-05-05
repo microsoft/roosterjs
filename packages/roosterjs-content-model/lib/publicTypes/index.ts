@@ -9,6 +9,7 @@ export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './group/ContentModelDocument';
 export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
 export { ContentModelListItem } from './group/ContentModelListItem';
+export { ContentModelTableRow } from './block/ContentModelTableRow';
 export { ContentModelTableCell } from './group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './group/ContentModelBlockGroup';

@@ -2,7 +2,7 @@ import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat'
 import { BorderKeys } from '../../formatHandlers/common/borderFormatHandler';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
@@ -31,7 +31,7 @@ export function applyTableFormat(
     newFormat?: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
-    const { cells } = table;
+    const { rows } = table;
 
     updateTableMetadata(table, format => {
         const effectiveMetadata = {
@@ -40,40 +40,37 @@ export function applyTableFormat(
             ...(newFormat || {}),
         };
 
-        const bgColorOverrides = updateBgColorOverrides(cells, !keepCellShade);
+        const bgColorOverrides = updateBgColorOverrides(rows, !keepCellShade);
 
         delete table.cachedElement;
 
-        clearCache(cells);
-        formatBorders(cells, effectiveMetadata);
-        formatBackgroundColors(cells, effectiveMetadata, bgColorOverrides);
-        setFirstColumnFormat(cells, effectiveMetadata, bgColorOverrides);
-        setHeaderRowFormat(cells, effectiveMetadata, bgColorOverrides);
+        clearCache(rows);
+        formatBorders(rows, effectiveMetadata);
+        formatBackgroundColors(rows, effectiveMetadata, bgColorOverrides);
+        setFirstColumnFormat(rows, effectiveMetadata, bgColorOverrides);
+        setHeaderRowFormat(rows, effectiveMetadata, bgColorOverrides);
 
         return effectiveMetadata;
     });
 }
 
-function clearCache(cells: ContentModelTableCell[][]) {
-    cells.forEach(row => {
-        row.forEach(cell => {
+function clearCache(rows: ContentModelTableRow[]) {
+    rows.forEach(row => {
+        row.cells.forEach(cell => {
             delete cell.cachedElement;
         });
     });
 }
 
-function updateBgColorOverrides(
-    cells: ContentModelTableCell[][],
-    forceClear: boolean
-): boolean[][] {
+function updateBgColorOverrides(rows: ContentModelTableRow[], forceClear: boolean): boolean[][] {
     const result: boolean[][] = [];
 
-    cells.forEach(row => {
+    rows.forEach(row => {
         const currentRow: boolean[] = [];
 
         result.push(currentRow);
 
-        row.forEach(cell => {
+        row.cells.forEach(cell => {
             updateTableCellMetadata(cell, metadata => {
                 if (metadata && forceClear) {
                     currentRow.push(false);
@@ -149,16 +146,16 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
     [TableBorderFormat.CLEAR]: () => [true, true, true, true],
 };
 
-function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFormat) {
-    cells.forEach((row, rowIndex) => {
-        row.forEach((cell, cellIndex) => {
+function formatBorders(rows: ContentModelTableRow[], format: TableMetadataFormat) {
+    rows.forEach((row, rowIndex) => {
+        row.cells.forEach((cell, cellIndex) => {
             const transparentBorderMatrix = BorderFormatters[
                 format.tableBorderFormat as TableBorderFormat
             ]({
                 firstRow: rowIndex === 0,
-                lastRow: rowIndex === cells.length - 1,
+                lastRow: rowIndex === rows.length - 1,
                 firstColumn: cellIndex === 0,
-                lastColumn: cellIndex === row.length - 1,
+                lastColumn: cellIndex === row.cells.length - 1,
             });
 
             const formatColor = [
@@ -182,14 +179,14 @@ function formatBorders(cells: ContentModelTableCell[][], format: TableMetadataFo
 }
 
 function formatBackgroundColors(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     format: TableMetadataFormat,
     bgColorOverrides: boolean[][]
 ) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
 
-    cells.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
+    rows.forEach((row, rowIndex) => {
+        row.cells.forEach((cell, colIndex) => {
             if (!bgColorOverrides[rowIndex][colIndex]) {
                 const color =
                     hasBandedRows || hasBandedColumns
@@ -206,12 +203,12 @@ function formatBackgroundColors(
 }
 
 function setFirstColumnFormat(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     format: Partial<TableMetadataFormat>,
     bgColorOverrides: boolean[][]
 ) {
-    cells.forEach((row, rowIndex) => {
-        row.forEach((cell, cellIndex) => {
+    rows.forEach((row, rowIndex) => {
+        row.cells.forEach((cell, cellIndex) => {
             if (format.hasFirstColumn && cellIndex === 0) {
                 cell.isHeader = true;
 
@@ -220,7 +217,7 @@ function setFirstColumnFormat(
                     setTableCellBackgroundColor(cell, null /*color*/);
                 }
 
-                if (rowIndex !== cells.length - 1 && rowIndex !== 0) {
+                if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
                     setBorderColor(cell.format, 'borderBottom');
                 }
             } else {
@@ -231,13 +228,13 @@ function setFirstColumnFormat(
 }
 
 function setHeaderRowFormat(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     format: TableMetadataFormat,
     bgColorOverrides: boolean[][]
 ) {
     const rowIndex = 0;
 
-    cells[rowIndex]?.forEach((cell, cellIndex) => {
+    rows[rowIndex]?.cells.forEach((cell, cellIndex) => {
         cell.isHeader = format.hasHeaderRow;
 
         if (format.hasHeaderRow && format.headerRowColor) {

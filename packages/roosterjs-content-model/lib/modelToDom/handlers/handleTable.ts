@@ -46,8 +46,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 
-    for (let row = 0; row < table.cells.length; row++) {
-        if (table.cells[row].length == 0) {
+    for (let row = 0; row < table.rows.length; row++) {
+        if (table.rows[row].cells.length == 0) {
             // Skip empty row
             continue;
         }
@@ -55,8 +55,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         const tr = doc.createElement('tr');
         tbody.appendChild(tr);
 
-        for (let col = 0; col < table.cells[row].length; col++) {
-            const cell = table.cells[row][col];
+        for (let col = 0; col < table.rows[row].cells.length; col++) {
+            const cell = table.rows[row].cells[col];
 
             if (cell.isSelected) {
                 context.tableSelection = context.tableSelection || {
@@ -81,12 +81,12 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
-                let height = table.heights[row];
+                let height = table.rows[row].height;
 
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
-                    height += table.heights[row + rowSpan];
+                for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
+                    height += table.rows[row + rowSpan].height;
                 }
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                for (; table.rows[row].cells[col + colSpan]?.spanLeft; colSpan++) {
                     width += table.widths[col + colSpan];
                 }
 
@@ -99,8 +99,13 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
 
                 if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
-                    td.style.width = width + 'px';
-                    td.style.height = height + 'px';
+                    if (width > 0) {
+                        td.style.width = width + 'px';
+                    }
+
+                    if (height > 0) {
+                        td.style.height = height + 'px';
+                    }
                 }
 
                 if (!cell.cachedElement) {

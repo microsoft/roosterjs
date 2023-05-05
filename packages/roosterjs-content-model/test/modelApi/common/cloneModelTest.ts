@@ -136,45 +136,48 @@ describe('cloneModel', () => {
                     cachedElement: document.createElement('table'),
                     dataset: { a: 'b' },
                     format: { backgroundColor: 'red' },
-                    heights: [1, 2, 3, 4, 5],
                     widths: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                cachedElement: document.createElement('td'),
-                                dataset: { c: 'd', e: 'f' },
-                                format: { direction: 'ltr' },
-                                isHeader: false,
-                                isSelected: false,
-                                spanAbove: true,
-                                spanLeft: false,
-                                blocks: [
-                                    {
-                                        blockType: 'Divider',
-                                        tagName: 'div',
-                                        format: {},
-                                    },
-                                ],
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                cachedElement: document.createElement('th'),
-                                dataset: { g: 'h', i: 'j' },
-                                format: { direction: 'rtl' },
-                                isHeader: true,
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: true,
-                                blocks: [
-                                    {
-                                        blockType: 'Divider',
-                                        tagName: 'hr',
-                                        format: {},
-                                    },
-                                ],
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 10,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    cachedElement: document.createElement('td'),
+                                    dataset: { c: 'd', e: 'f' },
+                                    format: { direction: 'ltr' },
+                                    isHeader: false,
+                                    isSelected: false,
+                                    spanAbove: true,
+                                    spanLeft: false,
+                                    blocks: [
+                                        {
+                                            blockType: 'Divider',
+                                            tagName: 'div',
+                                            format: {},
+                                        },
+                                    ],
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    cachedElement: document.createElement('th'),
+                                    dataset: { g: 'h', i: 'j' },
+                                    format: { direction: 'rtl' },
+                                    isHeader: true,
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: true,
+                                    blocks: [
+                                        {
+                                            blockType: 'Divider',
+                                            tagName: 'hr',
+                                            format: {},
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
                     ],
                 },
             ],

@@ -24,10 +24,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [],
+                rows: [],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -38,10 +37,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[], []],
+                rows: [
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -52,10 +53,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
@@ -70,13 +70,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [tdModel3, tdModel4],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -89,10 +88,13 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[tdModel1], [], [tdModel2]],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1] },
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [tdModel2] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -106,13 +108,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, createTableCell(2, 1, false)],
-                    [tdModel2, tdModel3],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, createTableCell(2, 1, false)] },
+                    { format: {}, height: 0, cells: [tdModel2, tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -126,13 +127,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [createTableCell(1, 2, false), tdModel3],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 2, false), tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -143,13 +143,20 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [createTableCell(1, 1, false), createTableCell(2, 1, false)],
-                    [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 1, false), createTableCell(2, 1, false)],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
@@ -167,26 +174,37 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 2, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                        createTableCell(1, 2, false),
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 2, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                            createTableCell(1, 2, false),
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody>' +
@@ -201,10 +219,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
+                rows: [
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, true)] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, false)] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
@@ -221,10 +241,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             context,
@@ -249,10 +268,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             context,
@@ -283,10 +301,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[cell]],
+                rows: [{ format: {}, height: 0, cells: [cell] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
                 cachedElement: table,
             },
@@ -306,8 +323,8 @@ describe('handleTable', () => {
         const tableCell2 = createTableCell();
         const table = createTable(2);
 
-        table.cells[0].push(tableCell1);
-        table.cells[1].push(tableCell2);
+        table.rows[0].cells.push(tableCell1);
+        table.rows[1].cells.push(tableCell2);
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
@@ -331,7 +348,7 @@ describe('handleTable', () => {
         const parent = document.createElement('div');
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         table.format.useBorderBox = true;
         table.format.borderCollapse = true;
         table.cachedElement = document.createElement('table');
@@ -345,7 +362,7 @@ describe('handleTable', () => {
         const parent = document.createElement('div');
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         table.format.useBorderBox = true;
         table.format.borderCollapse = true;
 
@@ -360,7 +377,7 @@ describe('handleTable', () => {
         const parent = document.createElement('div');
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         table.format.marginLeft = 'auto';
         table.format.marginRight = 'auto';
         table.cachedElement = document.createElement('table');
@@ -376,7 +393,7 @@ describe('handleTable', () => {
         const parent = document.createElement('div');
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         table.format.marginLeft = 'auto';
         table.format.marginRight = 'auto';
 
@@ -392,9 +409,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
 
         handleTable(document, parent, table, context, null);
 
@@ -408,9 +425,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
         cell.cachedElement = document.createElement('td');
 
         handleTable(document, parent, table, context, null);
@@ -423,9 +440,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
         cell.cachedElement = document.createElement('td');
         cell.format.useBorderBox = true;
         table.dataset.editingInfo = '{}';
@@ -442,9 +459,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
 
         cell.format.backgroundColor = 'red';
         cell.format.textColor = 'blue';
@@ -467,9 +484,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
 
         cell.format.backgroundColor = 'red';
         cell.format.textColor = 'blue';
@@ -488,9 +505,9 @@ describe('handleTable', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         table.widths.push(100);
-        table.heights.push(200);
+        table.rows[0].height = 200;
 
         cell.format.lineHeight = '2';
         cell.format.whiteSpace = 'pre';

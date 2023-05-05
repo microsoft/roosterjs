@@ -68,7 +68,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 );
 
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                    for (; table.cells[row][targetCol]; targetCol++) {}
+                    for (; table.rows[row].cells[targetCol]; targetCol++) {}
 
                     const td = tr.cells[sourceCol];
                     const hasSelectionBeforeCell = context.isInSelection;
@@ -129,7 +129,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     );
 
                                     cell.dataset = { ...dataset };
-                                    table.cells[row + rowSpan - 1][targetCol] = cell;
+                                    table.rows[row + rowSpan - 1].cells[targetCol] = cell;
 
                                     if (hasTd) {
                                         if (context.allowCacheElement) {
@@ -170,7 +170,14 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         }
 
         table.widths = calcSizes(columnPositions);
-        table.heights = calcSizes(rowPositions);
+
+        const heights = calcSizes(rowPositions);
+
+        table.rows.forEach((row, i) => {
+            if (heights[i] > 0) {
+                row.height = heights[i];
+            }
+        });
     });
 };
 
