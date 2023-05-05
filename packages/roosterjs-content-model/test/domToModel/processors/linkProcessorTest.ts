@@ -79,4 +79,39 @@ describe('linkProcessor', () => {
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });
     });
+
+    it('Anchor element with display: block', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.href = '/test';
+        a.textContent = 'test';
+        a.style.display = 'block';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            link: {
+                                format: { href: '/test', underline: true, display: 'block' },
+                                dataset: {},
+                            },
+                            text: 'test',
+                        },
+                    ],
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+        expect(context.link).toEqual({ format: {}, dataset: {} });
+    });
 });

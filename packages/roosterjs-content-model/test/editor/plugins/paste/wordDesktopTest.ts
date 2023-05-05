@@ -28,6 +28,7 @@ describe('convertPastedContentFromWord', () => {
             {
                 ...event.domToModelOption,
                 includeRoot: true,
+                allowCacheElement: false,
             }
         );
         if (expectedModel) {
@@ -244,7 +245,10 @@ describe('convertPastedContentFromWord', () => {
                             isSelected: true,
                             format: {},
                         },
-                        format: {},
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -318,7 +322,10 @@ describe('convertPastedContentFromWord', () => {
                             isSelected: true,
                             format: {},
                         },
-                        format: {},
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -398,7 +405,10 @@ describe('convertPastedContentFromWord', () => {
                             isSelected: true,
                             format: {},
                         },
-                        format: {},
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -483,7 +493,10 @@ describe('convertPastedContentFromWord', () => {
                             isSelected: true,
                             format: {},
                         },
-                        format: {},
+                        format: {
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
                     },
                     {
                         blockType: 'BlockGroup',
@@ -544,215 +557,216 @@ describe('convertPastedContentFromWord', () => {
             div.innerHTML = html;
             moveChildNodes(fragment, div);
 
-            const table = fragment.querySelector('#t1') as HTMLTableElement;
-            const td = fragment.querySelector('#td1') as HTMLTableCellElement;
-
             runTest(undefined, undefined, {
                 blockGroupType: 'Document',
                 blocks: [
                     {
                         blockType: 'Table',
-                        format: {
-                            id: 't1',
-                        },
-                        widths: [],
-                        heights: [],
-                        dataset: {},
-                        cachedElement: table,
                         cells: [
                             [
                                 {
                                     blockGroupType: 'TableCell',
-                                    cachedElement: td,
                                     blocks: [
-                                        Object({
+                                        {
                                             blockType: 'BlockGroup',
                                             blockGroupType: 'ListItem',
                                             blocks: [
-                                                Object({
+                                                {
                                                     blockType: 'Paragraph',
                                                     segments: [
-                                                        Object({
+                                                        {
                                                             segmentType: 'Text',
                                                             text: 'test1',
-                                                            format: Object({}),
-                                                        }),
+                                                            format: {},
+                                                        },
                                                     ],
-                                                    format: Object({}),
+                                                    format: {},
                                                     isImplicit: true,
-                                                }),
+                                                },
                                             ],
                                             levels: [
-                                                Object({
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
+                                                },
                                             ],
-                                            formatHolder: Object({
+                                            formatHolder: {
                                                 segmentType: 'SelectionMarker',
                                                 isSelected: true,
-                                                format: Object({}),
-                                            }),
-                                            format: Object({}),
-                                        }),
-                                        Object({
+                                                format: {},
+                                            },
+                                            format: {
+                                                marginTop: '1em',
+                                                marginBottom: '1em',
+                                            },
+                                        },
+                                        {
                                             blockType: 'BlockGroup',
                                             blockGroupType: 'ListItem',
                                             blocks: [
-                                                Object({
+                                                {
                                                     blockType: 'Paragraph',
                                                     segments: [
-                                                        Object({
+                                                        {
                                                             segmentType: 'Text',
                                                             text: 'test2',
-                                                            format: Object({}),
-                                                        }),
+                                                            format: {},
+                                                        },
                                                     ],
-                                                    format: Object({}),
+                                                    format: {},
                                                     isImplicit: true,
-                                                }),
+                                                },
                                             ],
                                             levels: [
-                                                Object({
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
+                                                },
                                             ],
-                                            formatHolder: Object({
+                                            formatHolder: {
                                                 segmentType: 'SelectionMarker',
                                                 isSelected: true,
-                                                format: Object({}),
-                                            }),
-                                            format: Object({}),
-                                        }),
-                                        Object({
+                                                format: {},
+                                            },
+                                            format: {
+                                                marginTop: '1em',
+                                                marginBottom: '1em',
+                                            },
+                                        },
+                                        {
                                             blockType: 'BlockGroup',
                                             blockGroupType: 'ListItem',
                                             blocks: [
-                                                Object({
+                                                {
                                                     blockType: 'Paragraph',
                                                     segments: [
-                                                        Object({
+                                                        {
                                                             segmentType: 'Text',
                                                             text: 'test2',
-                                                            format: Object({}),
-                                                        }),
+                                                            format: {},
+                                                        },
                                                     ],
-                                                    format: Object({}),
+                                                    format: {},
                                                     isImplicit: true,
-                                                }),
+                                                },
                                             ],
                                             levels: [
-                                                Object({
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
+                                                },
                                             ],
-                                            formatHolder: Object({
+                                            formatHolder: {
                                                 segmentType: 'SelectionMarker',
                                                 isSelected: true,
-                                                format: Object({}),
-                                            }),
-                                            format: Object({}),
-                                        }),
-                                        Object({
+                                                format: {},
+                                            },
+                                            format: {
+                                                marginTop: '1em',
+                                                marginBottom: '1em',
+                                            },
+                                        },
+                                        {
                                             blockType: 'BlockGroup',
                                             blockGroupType: 'ListItem',
                                             blocks: [
-                                                Object({
+                                                {
                                                     blockType: 'Paragraph',
                                                     segments: [
-                                                        Object({
+                                                        {
                                                             segmentType: 'Text',
                                                             text: 'test2',
-                                                            format: Object({}),
-                                                        }),
+                                                            format: {},
+                                                        },
                                                     ],
-                                                    format: Object({}),
+                                                    format: {},
                                                     isImplicit: true,
-                                                }),
+                                                },
                                             ],
                                             levels: [
-                                                Object({
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
-                                                Object({
+                                                },
+                                                {
                                                     listType: 'UL',
                                                     startNumberOverride: undefined,
                                                     marginTop: '1em',
                                                     marginBottom: undefined,
-                                                }),
+                                                },
                                             ],
-                                            formatHolder: Object({
+                                            formatHolder: {
                                                 segmentType: 'SelectionMarker',
                                                 isSelected: true,
-                                                format: Object({}),
-                                            }),
-                                            format: Object({}),
-                                        }),
+                                                format: {},
+                                            },
+                                            format: {
+                                                marginTop: '1em',
+                                                marginBottom: '1em',
+                                            },
+                                        },
                                     ],
                                     format: {},
                                     spanLeft: false,
@@ -762,6 +776,12 @@ describe('convertPastedContentFromWord', () => {
                                 },
                             ],
                         ],
+                        dataset: {},
+                        format: {
+                            id: 't1',
+                        },
+                        widths: [],
+                        heights: [],
                     },
                 ],
             });
@@ -769,7 +789,7 @@ describe('convertPastedContentFromWord', () => {
     });
 });
 
-export function createBeforePasteEventMock(fragment: DocumentFragment) {
+function createBeforePasteEventMock(fragment: DocumentFragment) {
     return ({
         eventType: PluginEventType.BeforePaste,
         clipboardData: <ClipboardData>{},

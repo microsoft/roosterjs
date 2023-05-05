@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';
@@ -47,6 +48,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
                             );
 
                             block.segments.splice(index, 0, newText);
+                            setParagraphNotImplicit(block);
                             isChanged = true;
                         }
                     }

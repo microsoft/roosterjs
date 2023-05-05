@@ -161,4 +161,28 @@ describe('handleSegmentDecorator', () => {
         expect(onNodeCreated.calls.argsFor(1)[0]).toBe(segment.code);
         expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('code'));
     });
+
+    it('link with display: block', () => {
+        const link: ContentModelLink = {
+            format: {
+                href: 'http://test.com/test',
+                underline: true,
+                display: 'block',
+            },
+            dataset: {},
+        };
+
+        runTest(link, undefined, '<a href="http://test.com/test" style="display: block;">test</a>');
+    });
+
+    it('code with display: block', () => {
+        const code: ContentModelCode = {
+            format: {
+                fontFamily: 'monospace',
+                display: 'block',
+            },
+        };
+
+        runTest(undefined, code, '<code style="display: block;">test</code>');
+    });
 });

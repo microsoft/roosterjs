@@ -1,5 +1,7 @@
+import { ContentModelHyperLinkFormat } from '../../../../publicTypes/format/ContentModelHyperLinkFormat';
 import { ContentModelSegmentFormat } from '../../../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
+import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 
 const DeprecatedColorList: string[] = [
     'activeborder',
@@ -27,7 +29,7 @@ const DeprecatedColorList: string[] = [
     'windowtext',
 ];
 
-const deprecatedColorParser = (
+const deprecatedColorParser: FormatParser<ContentModelHyperLinkFormat> = (
     format: ContentModelSegmentFormat,
     element: HTMLElement,
     context: DomToModelContext,
