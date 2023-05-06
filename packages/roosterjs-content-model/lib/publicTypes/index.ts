@@ -44,6 +44,7 @@ export { ContentModelWithDataset } from './format/ContentModelWithDataset';
 export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
 export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkFormat';
 export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
+export { ContentModelFormatContainerFormat } from './format/ContentModelFormatContainerFormat';
 
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';

@@ -128,6 +128,18 @@ describe('isEmpty', () => {
         expect(result).toBeTrue();
     });
 
+    it('FormatContainer with DIV', () => {
+        const result = isEmpty({
+            blockType: 'BlockGroup',
+            blockGroupType: 'FormatContainer',
+            tagName: 'div',
+            format: {},
+            blocks: [],
+        });
+
+        expect(result).toBeFalse();
+    });
+
     it('Empty list item', () => {
         const result = isEmpty({
             blockType: 'BlockGroup',

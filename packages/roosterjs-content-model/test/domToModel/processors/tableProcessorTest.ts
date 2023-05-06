@@ -936,6 +936,68 @@ describe('tableProcessor', () => {
         });
     });
 
+    it('table has format on TBODY', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tbody = document.createElement('tbody');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        td.appendChild(document.createTextNode('test'));
+        tr.appendChild(td);
+        tbody.appendChild(tr);
+        table.appendChild(tbody);
+
+        tbody.style.fontSize = '12px';
+
+        childProcessor.and.callFake(originalChildProcessor);
+
+        tableProcessor(group, table, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                format: {},
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        isImplicit: true,
+                                        format: {},
+                                        segments: [
+                                            {
+                                                segmentType: 'Text',
+                                                format: {
+                                                    fontSize: '12px',
+                                                },
+                                                text: 'test',
+                                            },
+                                        ],
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {},
+                    dataset: {},
+                    widths: [100],
+                    heights: [200],
+                    cachedElement: table,
+                },
+            ],
+        });
+    });
+
     it('Make sure block format and HTML align is parsed', () => {
         const group = createContentModelDocument();
         const table = document.createElement('table');
