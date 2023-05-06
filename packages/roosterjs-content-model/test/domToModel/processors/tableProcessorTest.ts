@@ -645,7 +645,6 @@ describe('tableProcessor', () => {
         } as any) as HTMLTableElement;
 
         context.blockFormat.backgroundColor = 'red';
-        context.blockFormat.htmlAlign = 'center';
         context.blockFormat.lineHeight = '2';
         context.blockFormat.whiteSpace = 'pre';
         context.blockFormat.direction = 'rtl';
@@ -659,7 +658,6 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     format: {
                         backgroundColor: 'red',
-                        htmlAlign: 'center',
                         lineHeight: '2',
                         whiteSpace: 'pre',
                         direction: 'rtl',
@@ -671,119 +669,6 @@ describe('tableProcessor', () => {
                     cachedElement: mockedTable,
                 },
             ],
-        });
-    });
-
-    it('Table with center align and align in context', () => {
-        context.blockFormat.htmlAlign = 'center';
-
-        const table = document.createElement('table');
-        const group = createContentModelDocument();
-
-        table.align = 'right';
-
-        tableProcessor(group, table, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    cells: [],
-                    format: {
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                        htmlAlign: 'end',
-                    },
-                    widths: [],
-                    heights: [],
-                    dataset: {},
-                    cachedElement: table,
-                },
-            ],
-        });
-    });
-
-    it('Table does not apply margin alignment when there is text align in context', () => {
-        context.blockFormat.htmlAlign = 'center';
-        context.blockFormat.textAlign = 'end';
-
-        const table = document.createElement('table');
-        const group = createContentModelDocument();
-
-        tableProcessor(group, table, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    cells: [],
-                    format: {
-                        textAlign: 'end',
-                    },
-                    widths: [],
-                    heights: [],
-                    dataset: {},
-                    cachedElement: table,
-                },
-            ],
-        });
-    });
-
-    it('Html align should be deleted from context after process table', () => {
-        context.blockFormat.htmlAlign = 'center';
-
-        const text = document.createTextNode('test');
-        const td = document.createElement('td');
-        const tr = document.createElement('tr');
-        const table = document.createElement('table');
-        const group = createContentModelDocument();
-
-        td.appendChild(text);
-        tr.appendChild(td);
-        table.appendChild(tr);
-
-        childProcessor.and.callFake(() => {
-            expect(context.blockFormat).toEqual({});
-        });
-
-        tableProcessor(group, table, context);
-
-        expect(childProcessor).toHaveBeenCalledTimes(1);
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                isHeader: false,
-                                spanAbove: false,
-                                spanLeft: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
-                    ],
-                    format: {
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                    },
-                    widths: [100],
-                    heights: [200],
-                    dataset: {},
-                    cachedElement: table,
-                },
-            ],
-        });
-
-        expect(context.blockFormat).toEqual({
-            htmlAlign: 'center',
         });
     });
 
@@ -842,33 +727,6 @@ describe('tableProcessor', () => {
                     dataset: {},
                     widths: [100],
                     heights: [200],
-                    cachedElement: table,
-                },
-            ],
-        });
-    });
-
-    it('align attribute from context is respected', () => {
-        const group = createContentModelDocument();
-        const table = document.createElement('table');
-
-        context.blockFormat.htmlAlign = 'center';
-
-        tableProcessor(group, table, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Table',
-                    cells: [],
-                    format: {
-                        marginLeft: 'auto',
-                        marginRight: 'auto',
-                    },
-                    dataset: {},
-                    widths: [],
-                    heights: [],
                     cachedElement: table,
                 },
             ],
@@ -1118,6 +976,190 @@ describe('tableProcessor', () => {
                     cachedElement: table,
                 },
             ],
+        });
+    });
+
+    it('Make sure block format and HTML align is parsed', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        table.dir = 'rtl';
+        table.style.lineHeight = '2';
+        table.style.textAlign = 'center';
+        table.style.whiteSpace = 'pre';
+
+        td.dir = 'ltr';
+        td.style.lineHeight = '1';
+        td.style.textAlign = 'left';
+        td.style.whiteSpace = 'normal';
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({
+                direction: 'ltr',
+                textAlign: 'start',
+                lineHeight: '1',
+                whiteSpace: 'normal',
+            });
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100],
+                    heights: [200],
+                    dataset: {},
+                    cachedElement: table,
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    direction: 'ltr',
+                                    textAlign: 'start',
+                                    lineHeight: '1',
+                                    whiteSpace: 'normal',
+                                },
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {
+                        direction: 'rtl',
+                        textAlign: 'center',
+                        lineHeight: '2',
+                        whiteSpace: 'pre',
+                    },
+                },
+            ],
+        });
+
+        expect(context.blockFormat).toEqual({});
+    });
+
+    it('Respect html align on table', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        table.align = 'center';
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+
+        context.blockFormat.textAlign = 'end';
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100],
+                    heights: [200],
+                    dataset: {},
+                    cachedElement: table,
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {},
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {
+                        htmlAlign: 'center',
+                    },
+                },
+            ],
+        });
+
+        expect(context.blockFormat).toEqual({
+            textAlign: 'end',
+        });
+    });
+
+    it('Respect html align on td', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        td.align = 'center';
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+
+        context.blockFormat.textAlign = 'end';
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100],
+                    heights: [200],
+                    dataset: {},
+                    cachedElement: table,
+                    cells: [
+                        [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                format: {
+                                    htmlAlign: 'center',
+                                },
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                dataset: {},
+                                cachedElement: td,
+                            },
+                        ],
+                    ],
+                    format: {
+                        textAlign: 'end',
+                    },
+                },
+            ],
+        });
+
+        expect(context.blockFormat).toEqual({
+            textAlign: 'end',
         });
     });
 });

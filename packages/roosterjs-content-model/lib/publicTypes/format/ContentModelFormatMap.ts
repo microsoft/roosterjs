@@ -46,11 +46,6 @@ export interface ContentModelFormatMap {
     table: ContentModelTableFormat;
 
     /**
-     * Format type for table, only handle alignment related styles
-     */
-    tableAlign: ContentModelTableFormat;
-
-    /**
      * Format type for tableCell
      */
     tableCell: ContentModelTableCellFormat;

@@ -542,4 +542,34 @@ describe('knownElementProcessor', () => {
             ],
         });
     });
+
+    it('div with align attribute, need to use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.align = 'center';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    format: {
+                        htmlAlign: 'center',
+                    },
+                    blocks: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

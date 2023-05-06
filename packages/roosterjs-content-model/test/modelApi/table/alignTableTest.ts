@@ -67,6 +67,8 @@ describe('alignTable', () => {
         expect(table.format).toEqual({
             marginRight: '',
             marginLeft: 'auto',
+            textAlign: 'start',
+            htmlAlign: 'end',
         });
         expect(table.cachedElement).toBeUndefined();
     });
