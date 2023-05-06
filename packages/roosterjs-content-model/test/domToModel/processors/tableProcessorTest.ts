@@ -959,39 +959,42 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        isImplicit: true,
-                                        format: {},
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                format: {
-                                                    fontSize: '12px',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            isImplicit: true,
+                                            format: {},
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    format: {
+                                                        fontSize: '12px',
+                                                    },
+                                                    text: 'test',
                                                 },
-                                                text: 'test',
-                                            },
-                                        ],
-                                    },
-                                ],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                                            ],
+                                        },
+                                    ],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
