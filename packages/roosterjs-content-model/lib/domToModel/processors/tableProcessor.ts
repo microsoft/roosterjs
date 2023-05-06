@@ -28,6 +28,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     context
 ) => {
     stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
+        parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
+
         const table = createTable(tableElement.rows.length, context.blockFormat);
         const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
         const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
@@ -37,7 +39,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         }
 
         parseFormat(tableElement, context.formatParsers.table, table.format, context);
-        parseFormat(tableElement, context.formatParsers.tableAlign, table.format, context);
         parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);
         parseFormat(
             tableElement,
@@ -47,9 +48,6 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         );
         parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
         addBlock(group, table);
-
-        // HTML align attribute will not impact content inside table
-        delete context.blockFormat.htmlAlign;
 
         const columnPositions: number[] = [0];
         const rowPositions: number[] = [0];

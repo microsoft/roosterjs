@@ -8,6 +8,7 @@ import { DirectionFormat } from './formatParts/DirectionFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
+import { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
 import { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
@@ -23,6 +24,7 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
+import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -82,6 +84,11 @@ export interface FormatHandlerTypeMap {
      * Format for FontSizeFormat
      */
     fontSize: FontSizeFormat;
+
+    /**
+     * Format for HtmlAlignFormat
+     */
+    htmlAlign: HtmlAlignFormat;
 
     /**
      * Format for IdFormat
@@ -164,14 +171,14 @@ export interface FormatHandlerTypeMap {
     superOrSubScript: SuperOrSubScriptFormat;
 
     /**
-     * Format for DirectionFormat and MarginFormat for Table only
-     */
-    tableDirAndMargin: DirectionFormat & MarginFormat;
-
-    /**
      * Format for SpacingFormat
      */
     tableSpacing: SpacingFormat;
+
+    /**
+     * Format for TextAlignFormat
+     */
+    textAlign: TextAlignFormat;
 
     /**
      * Format for TextColorFormat
