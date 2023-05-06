@@ -43,11 +43,12 @@ describe('tableProcessor', () => {
     }
 
     it('Process a regular 1*1 table', () => {
-        runTest('<table class="tb1"><tr><td id="td1"></td></tr></table>', div => {
+        runTest('<table class="tb1"><tr id="tr1"><td id="td1"></td></tr></table>', div => {
             return {
                 blockType: 'Table',
                 rows: [
                     {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [
@@ -74,7 +75,7 @@ describe('tableProcessor', () => {
 
     it('Process a regular 2*2 table', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td id="td1"></td><td id="td2"></td></tr><tr><td id="td3"></td><td id="td4"></td></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td id="td1"></td><td id="td2"></td></tr><tr id="tr2"><td id="td3"></td><td id="td4"></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
         const tdModel2 = createTableCell(1, 1, false);
         const tdModel3 = createTableCell(1, 1, false);
@@ -89,8 +90,18 @@ describe('tableProcessor', () => {
             return {
                 blockType: 'Table',
                 rows: [
-                    { format: {}, height: 200, cells: [tdModel1, tdModel2] },
-                    { format: {}, height: 200, cells: [tdModel3, tdModel4] },
+                    {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel1, tdModel2],
+                    },
+                    {
+                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel3, tdModel4],
+                    },
                 ],
                 format: {},
                 widths: [100, 100],
@@ -102,7 +113,7 @@ describe('tableProcessor', () => {
 
     it('Process a 2*2 table with merged cell', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td id="td1"></td><td id="td2"></td></tr><tr><td colspan="2" id="td3"></td></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td id="td1"></td><td id="td2"></td></tr><tr id="tr2"><td colspan="2" id="td3"></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
         const tdModel2 = createTableCell(1, 1, false);
         const tdModel3 = createTableCell(1, 1, false);
@@ -116,8 +127,18 @@ describe('tableProcessor', () => {
             return {
                 blockType: 'Table',
                 rows: [
-                    { format: {}, height: 200, cells: [tdModel1, tdModel2] },
-                    { format: {}, height: 200, cells: [tdModel3, tdModel4] },
+                    {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel1, tdModel2],
+                    },
+                    {
+                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel3, tdModel4],
+                    },
                 ],
                 format: {},
                 widths: [100, 100],
@@ -129,7 +150,7 @@ describe('tableProcessor', () => {
 
     it('Process a 2*2 table with all cells merged', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td colspan="2" rowspan="2" id="td1"></td></tr><tr></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td colspan="2" rowspan="2" id="td1"></td></tr><tr id="tr2"></tr></table>';
 
         runTest(tableHTML, div => {
             const tdModel1 = createTableCell(1, 1, false);
@@ -138,8 +159,14 @@ describe('tableProcessor', () => {
             return {
                 blockType: 'Table',
                 rows: [
-                    { format: {}, height: 200, cells: [tdModel1, createTableCell(2, 1, false)] },
                     {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel1, createTableCell(2, 1, false)],
+                    },
+                    {
+                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
                         format: {},
                         height: 0,
                         cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
@@ -154,7 +181,7 @@ describe('tableProcessor', () => {
     });
 
     it('Process a 1*1 table with text content', () => {
-        const tableHTML = '<table class="tb1"><tr><td id="td1">test</td></tr></table>';
+        const tableHTML = '<table class="tb1"><tr id="tr1"><td id="td1">test</td></tr></table>';
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
@@ -162,7 +189,14 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                rows: [{ format: {}, height: 200, cells: [tdModel] }],
+                rows: [
+                    {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel],
+                    },
+                ],
                 format: {},
                 widths: [100],
                 dataset: {},
@@ -175,7 +209,7 @@ describe('tableProcessor', () => {
 
     it('Process a 1*2 table with element content', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td id="td1"><span>test</span></td><td id="td2"><span>test</span></td></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td id="td1"><span>test</span></td><td id="td2"><span>test</span></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
         const tdModel2 = createTableCell(1, 1, false);
 
@@ -185,7 +219,14 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                rows: [{ format: {}, height: 200, cells: [tdModel1, tdModel2] }],
+                rows: [
+                    {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel1, tdModel2],
+                    },
+                ],
                 format: {},
                 widths: [100, 100],
                 dataset: {},
@@ -198,7 +239,7 @@ describe('tableProcessor', () => {
 
     it('Process a 1*2 table with element content in merged cell', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td colspan="2" id="td1"><span>test</span></td></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td colspan="2" id="td1"><span>test</span></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
         const tdModel2 = createTableCell(2, 1, false);
 
@@ -207,7 +248,14 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                rows: [{ format: {}, height: 200, cells: [tdModel1, tdModel2] }],
+                rows: [
+                    {
+                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                        format: {},
+                        height: 200,
+                        cells: [tdModel1, tdModel2],
+                    },
+                ],
                 format: {},
                 widths: [100, 0],
                 dataset: {},
@@ -220,7 +268,7 @@ describe('tableProcessor', () => {
 
     it('Process table with selection', () => {
         const tableHTML =
-            '<table class="tb1"><tr><td id="td1"></td><td id="td2"></td></tr><tr><td id="td3"></td><td id="td4"></td></tr></table>';
+            '<table class="tb1"><tr id="tr1"><td id="td1"></td><td id="td2"></td></tr><tr id="tr2"><td id="td3"></td><td id="td4"></td></tr></table>';
         const tdModel1 = createTableCell(1, 1, false);
         const tdModel2 = createTableCell(1, 1, false);
         const tdModel3 = createTableCell(1, 1, false);
@@ -253,8 +301,18 @@ describe('tableProcessor', () => {
         expect(doc.blocks[0]).toEqual({
             blockType: 'Table',
             rows: [
-                { format: {}, height: 200, cells: [tdModel1, tdModel2] },
-                { format: {}, height: 200, cells: [tdModel3, tdModel4] },
+                {
+                    cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
+                    format: {},
+                    height: 200,
+                    cells: [tdModel1, tdModel2],
+                },
+                {
+                    cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
+                    format: {},
+                    height: 200,
+                    cells: [tdModel3, tdModel4],
+                },
             ],
             format: {},
             widths: [100, 100],
@@ -313,16 +371,16 @@ describe('tableProcessor with format', () => {
         tableProcessor(doc, table, context);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(3);
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(12);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(13);
         expect(context.segmentFormat).toEqual({ a: 'b' } as any);
         expect(doc).toEqual({
             blockGroupType: 'Document',
-
             blocks: [
                 {
                     blockType: 'Table',
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -377,16 +435,15 @@ describe('tableProcessor with format', () => {
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableCellElement;
+        const mockedTr = {
+            tagName: 'tr',
+            style: {},
+            getAttribute: () => '',
+            cells: [mockedTd],
+        };
         const mockedTable = ({
             tagName: 'table',
-            rows: [
-                {
-                    tagName: 'tr',
-                    style: {},
-                    getAttribute: () => '',
-                    cells: [mockedTd],
-                },
-            ],
+            rows: [mockedTr],
             style: {},
             dataset: {},
             getAttribute: () => '',
@@ -399,7 +456,6 @@ describe('tableProcessor with format', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-
             blocks: [
                 {
                     blockType: 'Table',
@@ -407,6 +463,7 @@ describe('tableProcessor with format', () => {
                     format: {},
                     rows: [
                         {
+                            cachedElement: mockedTr as any,
                             format: {},
                             height: 100,
                             cells: [
@@ -588,16 +645,15 @@ describe('tableProcessor', () => {
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableCellElement;
+        const mockedTr = ({
+            tagName: 'tr',
+            style: {},
+            getAttribute: () => '',
+            cells: [mockedTd],
+        } as any) as HTMLTableRowElement;
         const mockedTable = ({
             tagName: 'table',
-            rows: [
-                {
-                    tagName: 'tr',
-                    style: {},
-                    getAttribute: () => '',
-                    cells: [mockedTd],
-                },
-            ],
+            rows: [mockedTr],
             style: {},
             dataset: {},
             getAttribute: () => '',
@@ -619,6 +675,7 @@ describe('tableProcessor', () => {
                     widths: [100],
                     rows: [
                         {
+                            cachedElement: mockedTr,
                             format: {},
                             height: 200,
                             cells: [
@@ -704,6 +761,7 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -791,6 +849,7 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -839,6 +898,7 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -897,6 +957,7 @@ describe('tableProcessor', () => {
                         {
                             format: {},
                             height: 200,
+                            cachedElement: tr,
                             cells: [
                                 {
                                     blockGroupType: 'TableCell',
@@ -961,6 +1022,7 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1042,6 +1104,7 @@ describe('tableProcessor', () => {
                     cachedElement: table,
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1106,6 +1169,7 @@ describe('tableProcessor', () => {
                     cachedElement: table,
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1164,6 +1228,7 @@ describe('tableProcessor', () => {
                     cachedElement: table,
                     rows: [
                         {
+                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [

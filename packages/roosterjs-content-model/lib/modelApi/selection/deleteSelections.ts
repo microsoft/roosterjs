@@ -153,13 +153,15 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
-                const cell = table.rows[rowIndex].cells[colIndex];
+                const row = table.rows[rowIndex];
+                const cell = row.cells[colIndex];
 
                 path = [cell, ...path];
                 paragraph.segments.push(createBr(model.format));
                 cell.blocks = [paragraph];
 
                 delete cell.cachedElement;
+                delete row.cachedElement;
                 context.isChanged = true;
             }
 

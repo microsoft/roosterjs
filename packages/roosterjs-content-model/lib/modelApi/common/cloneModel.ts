@@ -192,11 +192,12 @@ function cloneTable(table: ContentModelTable): ContentModelTable {
 }
 
 function cloneTableRow(row: ContentModelTableRow): ContentModelTableRow {
-    const { height, cells } = row;
+    const { height, cells, cachedElement } = row;
 
     return Object.assign(
         {
             height,
+            cachedElement,
             cells: cells.map(cloneTableCell),
         },
         cloneModelWithFormat(row)

@@ -20,6 +20,8 @@ export function mergeTableCells(table: ContentModelTable) {
                     delete cell.cachedElement;
                 }
             }
+
+            delete table.rows[rowIndex].cachedElement;
         }
     }
 }

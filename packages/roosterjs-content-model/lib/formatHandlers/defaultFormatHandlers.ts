@@ -141,6 +141,7 @@ const defaultFormatKeysPerCategory: {
         'textColor',
         'htmlAlign',
     ],
+    tableRow: ['backgroundColor'],
     table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],

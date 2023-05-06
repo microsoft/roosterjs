@@ -55,6 +55,13 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
         for (let row = 0; row < tableElement.rows.length; row++) {
             const tr = tableElement.rows[row];
+            const tableRow = table.rows[row];
+
+            if (context.allowCacheElement) {
+                tableRow.cachedElement = tr;
+            }
+
+            parseFormat(tr, context.formatParsers.tableRow, tableRow.format, context);
 
             stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
                 const parent = tr.parentElement;
@@ -83,7 +90,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 );
 
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                    for (; table.rows[row].cells[targetCol]; targetCol++) {}
+                    for (; tableRow.cells[targetCol]; targetCol++) {}
 
                     const td = tr.cells[sourceCol];
                     const hasSelectionBeforeCell = context.isInSelection;
