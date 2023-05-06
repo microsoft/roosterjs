@@ -1,9 +1,9 @@
 import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
+import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../../../lib/publicTypes';
 import { createBeforePasteEventMock } from './wordDesktopTest';
 import { handleWacComponentsPaste } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/handleWacComponentsPaste';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -1139,10 +1139,10 @@ describe('wordOnlineHandler', () => {
                                             paddingRight: '0px',
                                             paddingBottom: '0px',
                                             paddingLeft: '0px',
-                                            borderTop: '',
-                                            borderRight: '',
-                                            borderBottom: '',
-                                            borderLeft: '',
+                                            borderTop: Browser.isFirefox ? 'medium none' : '',
+                                            borderRight: Browser.isFirefox ? 'medium none' : '',
+                                            borderBottom: Browser.isFirefox ? 'medium none' : '',
+                                            borderLeft: Browser.isFirefox ? 'medium none' : '',
                                         }),
                                         dataset: Object({}),
                                         alt:
