@@ -95,5 +95,15 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
         return true;
     }
 
+    // For margin left/right with value "auto", we need to use format container
+    if (style.marginLeft == 'auto' || style.marginRight == 'auto') {
+        return true;
+    }
+
+    // For element with "align" attribute, we need to use format container
+    if (element.getAttribute('align')) {
+        return true;
+    }
+
     return false;
 }

@@ -1315,6 +1315,7 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 blockType: 'Paragraph',
                                 format: { htmlAlign: 'end' },
+                                isImplicit: false,
                                 segments: [
                                     {
                                         segmentType: 'Text',
@@ -1353,44 +1354,49 @@ describe('End to end test for DOM => Model', () => {
                         ],
                     },
                     {
-                        blockType: 'Paragraph',
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
                         format: {
                             htmlAlign: 'end',
                         },
-                        segments: [
+                        blocks: [
                             {
-                                segmentType: 'Text',
+                                blockType: 'Paragraph',
                                 format: {},
-                                text: 'bbb',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'bbb',
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'ccc',
+                                    },
+                                ],
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'ddd',
+                                    },
+                                ],
+                                isImplicit: true,
                             },
                         ],
-                    },
-                    {
-                        blockType: 'Paragraph',
-                        format: {
-                            htmlAlign: 'end',
-                        },
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: {},
-                                text: 'ccc',
-                            },
-                        ],
-                    },
-                    {
-                        blockType: 'Paragraph',
-                        format: {
-                            htmlAlign: 'end',
-                        },
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                format: {},
-                                text: 'ddd',
-                            },
-                        ],
-                        isImplicit: true,
                     },
                     {
                         blockType: 'Paragraph',
@@ -1408,7 +1414,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div style="text-align: center;">aaa</div><div align="right">bbb</div><div align="right">ccc</div><div align="right">ddd</div><div style="text-align: center;">eee</div>'
+            '<div style="text-align: center;">aaa</div><div align="right">bbb<div>ccc</div>ddd</div><div style="text-align: center;">eee</div>'
         );
     });
 
@@ -1436,6 +1442,51 @@ describe('End to end test for DOM => Model', () => {
                 ],
             },
             '<div><sub><u><s>test</s></u></sub></div>'
+        );
+    });
+
+    it('Table with margin under "align=center"', () => {
+        runTest(
+            '<div align="center"><table style="margin: 0"><tr><td></td></tr></table></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        format: { htmlAlign: 'center' },
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Table',
+                                format: {
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                    marginRight: '0px',
+                                    marginTop: '0px',
+                                },
+                                widths: [],
+                                heights: [],
+                                dataset: {},
+                                cells: [
+                                    [
+                                        {
+                                            blockGroupType: 'TableCell',
+                                            format: {},
+                                            spanAbove: false,
+                                            spanLeft: false,
+                                            isHeader: false,
+                                            dataset: {},
+                                            blocks: [],
+                                        },
+                                    ],
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
 });

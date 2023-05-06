@@ -34,12 +34,11 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         table.cachedElement = tableNode;
         parent.insertBefore(tableNode, refNode);
 
+        applyFormat(tableNode, context.formatAppliers.block, table.format, context);
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);
         applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
     }
-
-    applyFormat(tableNode, context.formatAppliers.tableAlign, table.format, context);
 
     context.onNodeCreated?.(table, tableNode);
 

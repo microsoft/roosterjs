@@ -373,22 +373,6 @@ describe('handleTable', () => {
         );
     });
 
-    it('With cached TABLE element, apply margin', () => {
-        const parent = document.createElement('div');
-        const table = createTable(1);
-
-        table.rows[0].cells.push(createTableCell());
-        table.format.marginLeft = 'auto';
-        table.format.marginRight = 'auto';
-        table.cachedElement = document.createElement('table');
-
-        handleTable(document, parent, table, context, null);
-
-        expect(parent.innerHTML).toBe(
-            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
-        );
-    });
-
     it('Without cached TABLE element, apply margin', () => {
         const parent = document.createElement('div');
         const table = createTable(1);
@@ -500,24 +484,29 @@ describe('handleTable', () => {
         expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
     });
 
-    it('Block format on TD is respected', () => {
+    it('Block format on TABLE and TD is respected', () => {
         const parent = document.createElement('div');
-        const table = createTable(1);
-        const cell = createTableCell();
+        const table = createTable(1, {
+            whiteSpace: 'pre',
+            lineHeight: '2',
+            textAlign: 'center',
+            direction: 'rtl',
+        });
+        const cell = createTableCell(false, false, false, {
+            whiteSpace: 'normal',
+            lineHeight: '1',
+            textAlign: 'start',
+            direction: 'ltr',
+        });
 
         table.rows[0].cells.push(cell);
         table.widths.push(100);
         table.rows[0].height = 200;
 
-        cell.format.lineHeight = '2';
-        cell.format.whiteSpace = 'pre';
-        cell.format.direction = 'rtl';
-        cell.format.textAlign = 'start';
-
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<table><tbody><tr><td style="width: 100px; height: 200px; direction: rtl; text-align: right; line-height: 2; white-space: pre;"></td></tr></tbody></table>'
+            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
         );
     });
 });
