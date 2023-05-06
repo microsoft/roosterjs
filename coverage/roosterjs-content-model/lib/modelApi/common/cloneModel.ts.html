@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.32% </span>
+                <span class="strong">88.06% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>56/62</span>
+                <span class='fraction'>59/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">86.36% </span>
+                <span class="strong">80.77% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>19/22</span>
+                <span class='fraction'>21/26</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.32% </span>
+                <span class="strong">88.06% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>56/62</span>
+                <span class='fraction'>59/67</span>
             </div>
         
             
@@ -314,7 +314,16 @@
 <a name='L255'></a><a href='#L255'>255</a>
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
-<a name='L258'></a><a href='#L258'>258</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -480,6 +489,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -516,12 +529,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -733,6 +751,10 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
         cloneModelWithFormat(paragraph)
     );
 &nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (paragraph.zeroFontSize) {
+<span class="cstat-no" title="statement not covered" >        newParagraph.zeroFontSize = true;</span>
+    }
+&nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (decorator) {
 <span class="cstat-no" title="statement not covered" >        newParagraph.decorator = Object.assign(</span>
             {
@@ -773,12 +795,17 @@ function cloneTableCell(cell: ContentModelTableCell): ContentModelTableCell {
 &nbsp;
 function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
     const { tagName, cachedElement } = container;
-&nbsp;
-    return Object.assign(
+    const newContainer: ContentModelFormatContainer = Object.assign(
         { tagName, cachedElement },
         cloneBlockBase(container),
         cloneBlockGroupBase(container)
     );
+&nbsp;
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (container.zeroFontSize) {
+<span class="cstat-no" title="statement not covered" >        newContainer.zeroFontSize = true;</span>
+    }
+&nbsp;
+    return newContainer;
 }
 &nbsp;
 function cloneListItem(item: ContentModelListItem): ContentModelListItem {
@@ -835,7 +862,7 @@ function cloneText(textSegment: ContentModelText): ContentModelText {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat May 06 2023 00:04:06 GMT+0000 (Coordinated Universal Time)
+                at Sat May 06 2023 04:51:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
