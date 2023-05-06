@@ -1466,20 +1466,23 @@ describe('End to end test for DOM => Model', () => {
                                     marginTop: '0px',
                                 },
                                 widths: [],
-                                heights: [],
                                 dataset: {},
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            format: {},
-                                            spanAbove: false,
-                                            spanLeft: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                            blocks: [],
-                                        },
-                                    ],
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                format: {},
+                                                spanAbove: false,
+                                                spanLeft: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                                blocks: [],
+                                            },
+                                        ],
+                                    },
                                 ],
                             },
                         ],

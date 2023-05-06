@@ -973,27 +973,30 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    lineHeight: '1',
-                                    whiteSpace: 'normal',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        direction: 'ltr',
+                                        textAlign: 'start',
+                                        lineHeight: '1',
+                                        whiteSpace: 'normal',
+                                    },
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
                                 },
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {
                         direction: 'rtl',
@@ -1034,22 +1037,25 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {
                         htmlAlign: 'center',
@@ -1089,24 +1095,27 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    htmlAlign: 'center',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        htmlAlign: 'center',
+                                    },
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
                                 },
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {
                         textAlign: 'end',
