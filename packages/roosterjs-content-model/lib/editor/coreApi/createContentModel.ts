@@ -32,7 +32,7 @@ function internalCreateContentModel(
         ...(option || {}),
     };
 
-    if (core.reuseModel && option?.allowCacheElement === false) {
+    if (core.reuseModel && option?.allowCacheElement !== false) {
         context.allowCacheElement = true;
     }
 

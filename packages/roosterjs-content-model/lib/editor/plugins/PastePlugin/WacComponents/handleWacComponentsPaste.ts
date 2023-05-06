@@ -1,15 +1,13 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { ContentModelBlockGroup } from 'roosterjs-content-model/lib/publicTypes/group/ContentModelBlockGroup';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelSegmentFormat';
-import { DomToModelContext } from 'roosterjs-content-model/lib/publicTypes/context/DomToModelContext';
-import { matchesSelector } from 'roosterjs-editor-dom';
+import { ContentModelBlockGroup } from '../../../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
+import { ContentModelSegmentFormat } from '../../../../publicTypes/format/ContentModelSegmentFormat';
+import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
+import { ElementProcessor } from '../../../../publicTypes/context/ElementProcessor';
+import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
+import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 import { setProcessor } from '../utils/setProcessor';
-import {
-    ContentModelListItemLevelFormat,
-    ElementProcessor,
-    FormatParser,
-} from 'roosterjs-content-model/lib/publicTypes';
 
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
@@ -34,8 +32,7 @@ const CLASSES_TO_KEEP = [
  */
 const wacSubSuperParser: FormatParser<ContentModelSegmentFormat> = (
     format: ContentModelSegmentFormat,
-    element: HTMLElement,
-    context: DomToModelContext
+    element: HTMLElement
 ): void => {
     const verticalAlign = element.style.verticalAlign;
     if (verticalAlign === 'super') {
@@ -92,21 +89,24 @@ const wacLiElementProcessor: ElementProcessor<HTMLLIElement> = (
     const listParent = listFormat.listParent;
     if (listParent) {
         const lastblock = listParent.blocks[listParent.blocks.length - 1];
-        if (lastblock.blockType == 'BlockGroup' && lastblock.blockGroupType == 'ListItem') {
+        if (
+            lastblock.blockType == 'BlockGroup' &&
+            lastblock.blockGroupType == 'ListItem' &&
+            context.listFormat.listParent !== lastblock
+        ) {
             const currentLevel = lastblock.levels[lastblock.levels.length - 1];
-
-            lastblock.format.marginLeft;
 
             // Get item level from 'data-aria-level' attribute
             let level = parseInt(element.getAttribute('data-aria-level') ?? '');
-
-            if (level > lastblock.levels.length) {
-                while (level != lastblock.levels.length) {
-                    lastblock.levels.push(currentLevel);
+            if (level > 0) {
+                if (level > lastblock.levels.length) {
+                    while (level != lastblock.levels.length) {
+                        lastblock.levels.push(currentLevel);
+                    }
+                } else {
+                    lastblock.levels.splice(level, lastblock.levels.length - 1);
+                    lastblock.levels[level - 1] = currentLevel;
                 }
-            } else {
-                lastblock.levels.splice(level, lastblock.levels.length - 1);
-                lastblock.levels[level - 1] = currentLevel;
             }
         }
     }
@@ -134,6 +134,7 @@ const wacListItemParser: FormatParser<ContentModelListItemLevelFormat> = (
 const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format: ContentModelListItemLevelFormat
 ): void => {
+    format.marginLeft = undefined;
     format.paddingLeft = undefined;
 };
 /**
@@ -177,14 +178,24 @@ const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = 
     context: DomToModelContext
 ): void => {
     const lastBlock = group.blocks[group.blocks.length - 1];
-    if (lastBlock.blockType === 'BlockGroup' && lastBlock.blockGroupType == 'ListItem') {
-        context.listFormat = {
-            threadItemCounts: [],
-            levels: lastBlock.levels,
-            listParent: group,
-        };
+    const isWrappedInContainer = findClosestElementAncestor(
+        element,
+        undefined,
+        `.${LIST_CONTAINER_ELEMENT_CLASS_NAME}`
+    );
+    if (
+        isWrappedInContainer?.previousElementSibling?.classList.contains(
+            LIST_CONTAINER_ELEMENT_CLASS_NAME
+        )
+    ) {
+        if (lastBlock?.blockType === 'BlockGroup' && lastBlock.blockGroupType == 'ListItem') {
+            context.listFormat = {
+                threadItemCounts: [],
+                levels: lastBlock.levels,
+                listParent: group,
+            };
+        }
     }
-
     if (element.tagName.toUpperCase() === 'OL') {
         context.defaultElementProcessors.ol?.(group, element as HTMLOListElement, context);
     } else {
