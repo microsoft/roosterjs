@@ -900,7 +900,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, { direction: 'forward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2172,7 +2172,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, { direction: 'forward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2481,7 +2481,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, { direction: 'backward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -3752,7 +3752,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, { direction: 'backward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
 
         expect(result.insertPoint).toEqual({
             marker: marker,

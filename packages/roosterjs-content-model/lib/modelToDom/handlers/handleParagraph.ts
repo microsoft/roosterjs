@@ -48,6 +48,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 );
             }
 
+            if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
+                container.style.fontSize = '0';
+            }
+
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
                 segment: null,

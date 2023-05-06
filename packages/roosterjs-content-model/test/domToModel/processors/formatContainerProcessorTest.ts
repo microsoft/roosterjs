@@ -273,4 +273,63 @@ describe('formatContainerProcessor', () => {
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
     });
+
+    it('formatContainer with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [],
+                    zeroFontSize: true,
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('formatContainer with zero font size and single paragraph child', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontSize: '0px' },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: false,
+                    zeroFontSize: true,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
 });

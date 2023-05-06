@@ -146,6 +146,11 @@ export const enum ExperimentalFeatures {
     ReusableContentModel = 'ReusableContentModel',
 
     /**
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
+
+    /**
      * Apply default format on editor container
      */
     DefaultFormatOnContainer = 'DefaultFormatOnContainer',

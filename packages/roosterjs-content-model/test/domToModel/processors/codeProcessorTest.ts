@@ -76,4 +76,40 @@ describe('codeProcessor', () => {
         });
         expect(context.code).toEqual({ format: {} });
     });
+
+    it('Code with display:block', () => {
+        const group = createContentModelDocument();
+        const code = document.createElement('code');
+
+        code.appendChild(document.createTextNode('test'));
+        code.style.display = 'block';
+
+        codeProcessor(group, code, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                            code: {
+                                format: {
+                                    fontFamily: 'monospace',
+                                    display: 'block',
+                                },
+                            },
+                        },
+                    ],
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+        expect(context.code).toEqual({ format: {} });
+    });
 });

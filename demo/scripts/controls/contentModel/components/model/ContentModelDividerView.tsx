@@ -3,7 +3,7 @@ import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundCo
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelDivider, ContentModelDividerFormat } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
-import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
+import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
@@ -17,7 +17,7 @@ import { WhiteSpaceFormatRenderer } from '../format/formatPart/WhiteSpaceFormatR
 const styles = require('./ContentModelDividerView.scss');
 const DividerFormatRenders: FormatRenderer<ContentModelDividerFormat>[] = [
     BackgroundColorFormatRenderer,
-    ...DirectionFormatRenderers,
+    DirectionFormatRenderer,
     MarginFormatRenderer,
     PaddingFormatRenderer,
     LineHeightFormatRenderer,

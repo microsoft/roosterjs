@@ -1,13 +1,12 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
 
 /**
  * @internal
  */
 export function createFormatContainer(
     tag: string,
-    format?: ContentModelBlockFormat & ContentModelSegmentFormat
+    format?: ContentModelFormatContainerFormat
 ): ContentModelFormatContainer {
     return {
         blockType: 'BlockGroup',
