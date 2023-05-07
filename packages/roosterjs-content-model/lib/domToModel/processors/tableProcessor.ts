@@ -29,7 +29,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 ) => {
     stackFormat(
         context,
-        { segment: 'shallowCloneForBlock', paragraph: 'shallowCloneForTable' },
+        { segment: 'shallowCloneForBlock', paragraph: 'shallowCloneForGroup' },
         () => {
             parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
 

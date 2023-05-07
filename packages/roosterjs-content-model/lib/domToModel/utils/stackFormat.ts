@@ -12,7 +12,7 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
  */
 export interface StackFormatOptions {
     segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
-    paragraph?: 'shallowClone' | 'shallowCloneForTable' | 'empty';
+    paragraph?: 'shallowClone' | 'shallowCloneForGroup' | 'empty';
     blockDecorator?: 'empty';
     link?: 'linkDefault' | 'empty';
     code?: 'codeDefault' | 'empty';
@@ -26,7 +26,12 @@ export interface StackFormatOptions {
 //   <div>line 2</div>  <---------------------- not in red here
 // </span>
 const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
-const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = ['marginLeft', 'marginRight'];
+const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = [
+    'marginLeft',
+    'marginRight',
+    'paddingLeft',
+    'paddingRight',
+];
 
 /**
  * @internal
@@ -117,7 +122,7 @@ function stackDecoratorInternal(
 
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForTable' | 'empty'
+    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForGroup' | 'empty'
 ): T | {} {
     switch (processType) {
         case 'empty':
@@ -134,7 +139,7 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
                     (processType == 'shallowCloneForBlock' &&
                         SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
                             0) ||
-                    (processType == 'shallowCloneForTable' &&
+                    (processType == 'shallowCloneForGroup' &&
                         SkippedStylesForTable.indexOf(key as keyof ContentModelBlockFormat) >= 0)
                 ) {
                     delete result[key];

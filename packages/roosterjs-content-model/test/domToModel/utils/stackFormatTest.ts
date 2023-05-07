@@ -94,7 +94,7 @@ describe('stackFormat', () => {
         });
     });
 
-    it('shallowCloneForTable', () => {
+    it('shallowCloneForGroup', () => {
         const context = createDomToModelContext();
 
         context.blockFormat = {
@@ -103,7 +103,7 @@ describe('stackFormat', () => {
             marginRight: '20px',
         };
 
-        stackFormat(context, { paragraph: 'shallowCloneForTable' }, () => {
+        stackFormat(context, { paragraph: 'shallowCloneForGroup' }, () => {
             expect(context.blockFormat).toEqual({
                 lineHeight: '2',
             });
