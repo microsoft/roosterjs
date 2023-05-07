@@ -1,3 +1,4 @@
+import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -96,7 +97,7 @@ describe('linkProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
+                    format: { display: 'block' } as ContentModelBlockFormat,
                     segments: [
                         {
                             segmentType: 'Text',
@@ -115,7 +116,7 @@ describe('linkProcessor', () => {
         expect(context.link).toEqual({ format: {}, dataset: {} });
     });
 
-    it('margin and padding on link', () => {
+    it('margin, padding and background color on link', () => {
         const group = createContentModelDocument();
         const a = document.createElement('a');
 
@@ -123,6 +124,7 @@ describe('linkProcessor', () => {
         a.textContent = 'test';
         a.style.margin = '10px';
         a.style.padding = '20px';
+        a.style.backgroundColor = 'red';
 
         linkProcessor(group, a, context);
 
@@ -136,7 +138,7 @@ describe('linkProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { backgroundColor: 'red' },
                             link: {
                                 format: {
                                     href: '/test',
@@ -149,6 +151,7 @@ describe('linkProcessor', () => {
                                     paddingBottom: '20px',
                                     paddingLeft: '20px',
                                     paddingRight: '20px',
+                                    backgroundColor: 'red',
                                 },
                                 dataset: {},
                             },

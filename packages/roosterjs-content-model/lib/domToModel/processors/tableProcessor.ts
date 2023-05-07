@@ -27,180 +27,208 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     tableElement,
     context
 ) => {
-    stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
-        parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
+    stackFormat(
+        context,
+        { segment: 'shallowCloneForBlock', paragraph: 'shallowCloneForTable' },
+        () => {
+            parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
 
-        const table = createTable(tableElement.rows.length, context.blockFormat);
-        const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
-        const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
-
-        if (context.allowCacheElement) {
-            table.cachedElement = tableElement;
-        }
-
-        parseFormat(tableElement, context.formatParsers.table, table.format, context);
-        parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);
-        parseFormat(
-            tableElement,
-            context.formatParsers.segmentOnBlock,
-            context.segmentFormat,
-            context
-        );
-        parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
-        addBlock(group, table);
-
-        const columnPositions: number[] = [0];
-        const rowPositions: number[] = [0];
-        const zoomScale = context.zoomScaleFormat.zoomScale || 1;
-
-        for (let row = 0; row < tableElement.rows.length; row++) {
-            const tr = tableElement.rows[row];
-            const tableRow = table.rows[row];
+            const table = createTable(tableElement.rows.length, context.blockFormat);
+            const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
+            const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
             if (context.allowCacheElement) {
-                tableRow.cachedElement = tr;
+                table.cachedElement = tableElement;
             }
 
-            parseFormat(tr, context.formatParsers.tableRow, tableRow.format, context);
+            parseFormat(tableElement, context.formatParsers.table, table.format, context);
+            parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);
+            parseFormat(
+                tableElement,
+                context.formatParsers.segmentOnBlock,
+                context.segmentFormat,
+                context
+            );
+            parseFormat(tableElement, context.formatParsers.dataset, table.dataset, context);
+            addBlock(group, table);
 
-            stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
-                const parent = tr.parentElement;
-                const parentTag = parent?.tagName;
+            const columnPositions: number[] = [0];
+            const rowPositions: number[] = [0];
+            const zoomScale = context.zoomScaleFormat.zoomScale || 1;
 
-                if (
-                    parent &&
-                    (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
-                ) {
-                    // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
-                    parseFormat(parent, context.formatParsers.block, context.blockFormat, context);
+            for (let row = 0; row < tableElement.rows.length; row++) {
+                const tr = tableElement.rows[row];
+                const tableRow = table.rows[row];
+
+                if (context.allowCacheElement) {
+                    tableRow.cachedElement = tr;
+                }
+
+                parseFormat(tr, context.formatParsers.tableRow, tableRow.format, context);
+
+                stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
+                    const parent = tr.parentElement;
+                    const parentTag = parent?.tagName;
+
+                    if (
+                        parent &&
+                        (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
+                    ) {
+                        // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
+                        parseFormat(
+                            parent,
+                            context.formatParsers.block,
+                            context.blockFormat,
+                            context
+                        );
+                        parseFormat(
+                            parent,
+                            context.formatParsers.segmentOnBlock,
+                            context.segmentFormat,
+                            context
+                        );
+                    }
+
+                    parseFormat(tr, context.formatParsers.block, context.blockFormat, context);
                     parseFormat(
-                        parent,
+                        tr,
                         context.formatParsers.segmentOnBlock,
                         context.segmentFormat,
                         context
                     );
-                }
 
-                parseFormat(tr, context.formatParsers.block, context.blockFormat, context);
-                parseFormat(
-                    tr,
-                    context.formatParsers.segmentOnBlock,
-                    context.segmentFormat,
-                    context
-                );
+                    for (
+                        let sourceCol = 0, targetCol = 0;
+                        sourceCol < tr.cells.length;
+                        sourceCol++
+                    ) {
+                        for (; tableRow.cells[targetCol]; targetCol++) {}
 
-                for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                    for (; tableRow.cells[targetCol]; targetCol++) {}
+                        const td = tr.cells[sourceCol];
+                        const hasSelectionBeforeCell = context.isInSelection;
+                        const colEnd = targetCol + td.colSpan;
+                        const rowEnd = row + td.rowSpan;
+                        const needCalcWidth = columnPositions[colEnd] === undefined;
+                        const needCalcHeight = rowPositions[rowEnd] === undefined;
 
-                    const td = tr.cells[sourceCol];
-                    const hasSelectionBeforeCell = context.isInSelection;
-                    const colEnd = targetCol + td.colSpan;
-                    const rowEnd = row + td.rowSpan;
-                    const needCalcWidth = columnPositions[colEnd] === undefined;
-                    const needCalcHeight = rowPositions[rowEnd] === undefined;
+                        if (needCalcWidth || needCalcHeight) {
+                            const rect = getBoundingClientRect(td);
 
-                    if (needCalcWidth || needCalcHeight) {
-                        const rect = getBoundingClientRect(td);
+                            if (rect.width > 0 || rect.height > 0) {
+                                if (needCalcWidth) {
+                                    columnPositions[colEnd] =
+                                        columnPositions[targetCol] + rect.width / zoomScale;
+                                }
 
-                        if (rect.width > 0 || rect.height > 0) {
-                            if (needCalcWidth) {
-                                columnPositions[colEnd] =
-                                    columnPositions[targetCol] + rect.width / zoomScale;
-                            }
-
-                            if (needCalcHeight) {
-                                rowPositions[rowEnd] = rowPositions[row] + rect.height / zoomScale;
-                            }
-                        }
-                    }
-
-                    stackFormat(
-                        context,
-                        { paragraph: 'shallowClone', segment: 'shallowClone' },
-                        () => {
-                            parseFormat(
-                                td,
-                                context.formatParsers.block,
-                                context.blockFormat,
-                                context
-                            );
-                            parseFormat(
-                                td,
-                                context.formatParsers.segmentOnTableCell,
-                                context.segmentFormat,
-                                context
-                            );
-
-                            const cellFormat: ContentModelTableCellFormat = {
-                                ...context.blockFormat,
-                            };
-                            const dataset: DatasetFormat = {};
-
-                            parseFormat(td, context.formatParsers.tableCell, cellFormat, context);
-                            parseFormat(td, context.formatParsers.tableBorder, cellFormat, context);
-                            parseFormat(td, context.formatParsers.dataset, dataset, context);
-
-                            for (let colSpan = 1; colSpan <= td.colSpan; colSpan++, targetCol++) {
-                                for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
-                                    const hasTd = colSpan == 1 && rowSpan == 1;
-                                    const cell = createTableCell(
-                                        colSpan > 1,
-                                        rowSpan > 1,
-                                        td.tagName == 'TH',
-                                        cellFormat
-                                    );
-
-                                    cell.dataset = { ...dataset };
-                                    table.rows[row + rowSpan - 1].cells[targetCol] = cell;
-
-                                    if (hasTd) {
-                                        if (context.allowCacheElement) {
-                                            cell.cachedElement = td;
-                                        }
-
-                                        const { listParent, levels } = context.listFormat;
-
-                                        context.listFormat.listParent = undefined;
-                                        context.listFormat.levels = [];
-
-                                        try {
-                                            context.elementProcessors.child(cell, td, context);
-                                        } finally {
-                                            context.listFormat.listParent = listParent;
-                                            context.listFormat.levels = levels;
-                                        }
-                                    }
-
-                                    const hasSelectionAfterCell = context.isInSelection;
-
-                                    if (
-                                        (hasSelectionBeforeCell && hasSelectionAfterCell) ||
-                                        (hasTableSelection &&
-                                            row >= firstCell.y &&
-                                            row <= lastCell.y &&
-                                            targetCol >= firstCell.x &&
-                                            targetCol <= lastCell.x)
-                                    ) {
-                                        cell.isSelected = true;
-                                    }
+                                if (needCalcHeight) {
+                                    rowPositions[rowEnd] =
+                                        rowPositions[row] + rect.height / zoomScale;
                                 }
                             }
                         }
-                    );
+
+                        stackFormat(
+                            context,
+                            { paragraph: 'shallowClone', segment: 'shallowClone' },
+                            () => {
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.block,
+                                    context.blockFormat,
+                                    context
+                                );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.segmentOnTableCell,
+                                    context.segmentFormat,
+                                    context
+                                );
+
+                                const cellFormat: ContentModelTableCellFormat = {
+                                    ...context.blockFormat,
+                                };
+                                const dataset: DatasetFormat = {};
+
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.tableCell,
+                                    cellFormat,
+                                    context
+                                );
+                                parseFormat(
+                                    td,
+                                    context.formatParsers.tableBorder,
+                                    cellFormat,
+                                    context
+                                );
+                                parseFormat(td, context.formatParsers.dataset, dataset, context);
+
+                                for (
+                                    let colSpan = 1;
+                                    colSpan <= td.colSpan;
+                                    colSpan++, targetCol++
+                                ) {
+                                    for (let rowSpan = 1; rowSpan <= td.rowSpan; rowSpan++) {
+                                        const hasTd = colSpan == 1 && rowSpan == 1;
+                                        const cell = createTableCell(
+                                            colSpan > 1,
+                                            rowSpan > 1,
+                                            td.tagName == 'TH',
+                                            cellFormat
+                                        );
+
+                                        cell.dataset = { ...dataset };
+                                        table.rows[row + rowSpan - 1].cells[targetCol] = cell;
+
+                                        if (hasTd) {
+                                            if (context.allowCacheElement) {
+                                                cell.cachedElement = td;
+                                            }
+
+                                            const { listParent, levels } = context.listFormat;
+
+                                            context.listFormat.listParent = undefined;
+                                            context.listFormat.levels = [];
+
+                                            try {
+                                                context.elementProcessors.child(cell, td, context);
+                                            } finally {
+                                                context.listFormat.listParent = listParent;
+                                                context.listFormat.levels = levels;
+                                            }
+                                        }
+
+                                        const hasSelectionAfterCell = context.isInSelection;
+
+                                        if (
+                                            (hasSelectionBeforeCell && hasSelectionAfterCell) ||
+                                            (hasTableSelection &&
+                                                row >= firstCell.y &&
+                                                row <= lastCell.y &&
+                                                targetCol >= firstCell.x &&
+                                                targetCol <= lastCell.x)
+                                        ) {
+                                            cell.isSelected = true;
+                                        }
+                                    }
+                                }
+                            }
+                        );
+                    }
+                });
+            }
+
+            table.widths = calcSizes(columnPositions);
+
+            const heights = calcSizes(rowPositions);
+
+            table.rows.forEach((row, i) => {
+                if (heights[i] > 0) {
+                    row.height = heights[i];
                 }
             });
         }
-
-        table.widths = calcSizes(columnPositions);
-
-        const heights = calcSizes(rowPositions);
-
-        table.rows.forEach((row, i) => {
-            if (heights[i] > 0) {
-                row.height = heights[i];
-            }
-        });
-    });
+    );
 };
 
 function calcSizes(positions: number[]): number[] {

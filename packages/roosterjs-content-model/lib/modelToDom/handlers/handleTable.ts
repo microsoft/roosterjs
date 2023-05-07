@@ -62,6 +62,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
         }
 
+        context.onNodeCreated?.(tableRow, tr);
+
         for (let col = 0; col < tableRow.cells.length; col++) {
             const cell = tableRow.cells[col];
 

@@ -1,3 +1,4 @@
+import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -10,6 +11,7 @@ import { UnderlineFormat } from './formatParts/UnderlineFormat';
  */
 export type ContentModelHyperLinkFormat = LinkFormat &
     TextColorFormat &
+    BackgroundColorFormat &
     UnderlineFormat &
     DisplayFormat &
     MarginFormat &

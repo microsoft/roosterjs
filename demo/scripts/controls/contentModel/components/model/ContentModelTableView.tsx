@@ -2,8 +2,7 @@ import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
-import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
-import { ContentModelTableRow, updateTableMetadata } from 'roosterjs-content-model';
+import { ContentModelTableRowView } from './ContentModelTableRowView';
 import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
@@ -13,6 +12,7 @@ import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer'
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
+import { updateTableMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelTable,
@@ -44,7 +44,7 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
                     ))}
                 </div>
                 {table.rows.map((row, i) => (
-                    <TableRowView row={row} index={i} />
+                    <ContentModelTableRowView row={row} key={i} />
                 ))}
             </>
         );
@@ -97,34 +97,5 @@ function NumberView(props: { values: number[]; index: number }) {
             ref={textBoxRef}
             className={styles.sizeInput}
         />
-    );
-}
-
-function TableRowView(props: { row: ContentModelTableRow; index: number }) {
-    const { row, index } = props;
-    const [height, setHeight] = useProperty(row.height);
-    const textBoxRef = React.useRef<HTMLInputElement>(null);
-    const onChange = React.useCallback(() => {
-        const newValue = parseInt(textBoxRef.current.value);
-        row.height = newValue;
-        setHeight(newValue);
-    }, [row, index]);
-
-    return (
-        <div className={styles.tableRow} key={index}>
-            <div>
-                Height:
-                <input
-                    type="number"
-                    value={height}
-                    onChange={onChange}
-                    ref={textBoxRef}
-                    className={styles.sizeInput}
-                />
-            </div>
-            {row.cells.map((cell, j) => (
-                <ContentModelBlockGroupView group={cell} key={j} />
-            ))}
-        </div>
     );
 }

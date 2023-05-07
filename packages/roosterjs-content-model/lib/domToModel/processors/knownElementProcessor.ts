@@ -34,7 +34,10 @@ const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
 export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const isBlock = isBlockElement(element, context);
 
-    if (isBlock && shouldUseFormatContainer(element, context)) {
+    if (
+        (isBlock || element.style.display == 'inline-block') && // For inline-block here, we will also check if it should be represented as Format Container
+        shouldUseFormatContainer(element, context)
+    ) {
         formatContainerProcessor(group, element, context);
     } else if (isBlock) {
         const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;

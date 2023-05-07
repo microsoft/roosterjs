@@ -146,11 +146,11 @@ const defaultFormatKeysPerCategory: {
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
-    link: ['link', 'textColor', 'underline', 'display', 'margin', 'padding'],
+    link: ['link', 'textColor', 'underline', 'display', 'margin', 'padding', 'backgroundColor'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
-    container: [...sharedContainerFormats, 'htmlAlign', 'size'],
+    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
 };
 
 /**

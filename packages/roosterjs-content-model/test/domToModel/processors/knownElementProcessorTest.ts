@@ -572,4 +572,36 @@ describe('knownElementProcessor', () => {
             ],
         });
     });
+
+    it('div with align attribute and display=inline-block, need to use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.align = 'center';
+        div.style.display = 'inline-block';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    format: {
+                        htmlAlign: 'center',
+                        display: 'inline-block',
+                    },
+                    blocks: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

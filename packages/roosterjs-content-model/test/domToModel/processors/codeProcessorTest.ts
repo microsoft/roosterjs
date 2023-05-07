@@ -1,4 +1,5 @@
 import { codeProcessor } from '../../../lib/domToModel/processors/codeProcessor';
+import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -92,7 +93,7 @@ describe('codeProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
+                    format: { display: 'block' } as ContentModelBlockFormat,
                     segments: [
                         {
                             segmentType: 'Text',

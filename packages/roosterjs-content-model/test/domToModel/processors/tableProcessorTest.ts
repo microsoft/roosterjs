@@ -1258,4 +1258,58 @@ describe('tableProcessor', () => {
             textAlign: 'end',
         });
     });
+
+    it('Respect background on tr', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        tr.style.backgroundColor = 'red';
+
+        table.appendChild(tr);
+        tr.appendChild(td);
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+            expect(context.segmentFormat).toEqual({});
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100],
+                    dataset: {},
+                    cachedElement: table,
+                    rows: [
+                        {
+                            cachedElement: tr,
+                            format: {
+                                backgroundColor: 'red',
+                            },
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });

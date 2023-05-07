@@ -1,3 +1,4 @@
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
 import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
@@ -11,7 +12,7 @@ import { getObjectKeys } from 'roosterjs-editor-dom';
  */
 export interface StackFormatOptions {
     segment?: 'shallowClone' | 'shallowCloneForBlock' | 'empty';
-    paragraph?: 'shallowClone' | 'empty';
+    paragraph?: 'shallowClone' | 'shallowCloneForTable' | 'empty';
     blockDecorator?: 'empty';
     link?: 'linkDefault' | 'empty';
     code?: 'codeDefault' | 'empty';
@@ -25,6 +26,7 @@ export interface StackFormatOptions {
 //   <div>line 2</div>  <---------------------- not in red here
 // </span>
 const SkippedStylesForBlock: (keyof ContentModelSegmentFormat)[] = ['backgroundColor'];
+const SkippedStylesForTable: (keyof ContentModelBlockFormat)[] = ['marginLeft', 'marginRight'];
 
 /**
  * @internal
@@ -115,7 +117,7 @@ function stackDecoratorInternal(
 
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
-    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'empty'
+    processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForTable' | 'empty'
 ): T | {} {
     switch (processType) {
         case 'empty':
@@ -129,8 +131,11 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
 
             getObjectKeys(format).forEach(key => {
                 if (
-                    processType == 'shallowCloneForBlock' &&
-                    SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >= 0
+                    (processType == 'shallowCloneForBlock' &&
+                        SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=
+                            0) ||
+                    (processType == 'shallowCloneForTable' &&
+                        SkippedStylesForTable.indexOf(key as keyof ContentModelBlockFormat) >= 0)
                 ) {
                     delete result[key];
                 }
