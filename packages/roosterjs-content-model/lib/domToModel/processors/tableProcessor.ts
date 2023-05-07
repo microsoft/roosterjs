@@ -178,7 +178,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                         );
 
                                         cell.dataset = { ...dataset };
-                                        table.rows[row + rowSpan - 1].cells[targetCol] = cell;
+
+                                        const spannedRow = table.rows[row + rowSpan - 1];
+
+                                        if (spannedRow) {
+                                            spannedRow.cells[targetCol] = cell;
+                                        }
 
                                         if (hasTd) {
                                             if (context.allowCacheElement) {
