@@ -164,4 +164,46 @@ describe('linkProcessor', () => {
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });
     });
+
+    it('a with display=inline-block and padding, do not use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+
+        a.style.display = 'inline-block';
+        a.style.padding = '10px';
+        a.href = 'test';
+        a.textContent = 'test link';
+
+        linkProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test link',
+                            format: {},
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'test',
+                                    display: 'inline-block',
+                                    paddingTop: '10px',
+                                    paddingRight: '10px',
+                                    paddingBottom: '10px',
+                                    paddingLeft: '10px',
+                                },
+                                dataset: {},
+                            },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

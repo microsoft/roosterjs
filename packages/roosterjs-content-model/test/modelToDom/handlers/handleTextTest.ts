@@ -47,7 +47,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
+        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
     });
 
     it('Text segment with code', () => {
@@ -64,7 +64,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><code>test</code></span>');
+        expect(parent.innerHTML).toBe('<code><span>test</span></code>');
     });
 
     it('call stackFormat', () => {
@@ -79,7 +79,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
+        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });

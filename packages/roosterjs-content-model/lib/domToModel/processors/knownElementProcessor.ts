@@ -26,7 +26,7 @@ const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
     'minWidth',
     'minHeight',
 ];
-const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
+const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a'];
 
 /**
  * @internal
