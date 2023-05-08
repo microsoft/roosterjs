@@ -1,10 +1,16 @@
 import * as React from 'react';
 import { ButtonGroup } from './ButtonGroup';
 import { ContentModelJson } from './model/ContentModelJson';
-import { ContentModelWithDataset, DatasetFormat } from 'roosterjs-content-model';
 import { css } from '@fluentui/react/lib/Utilities';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { useProperty } from '../hooks/useProperty';
+import {
+    ContentModelBlockWithCache,
+    ContentModelEntity,
+    ContentModelGeneralBlock,
+    ContentModelWithDataset,
+    DatasetFormat,
+} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelView.scss');
 const MetadataKey = 'editingInfo';
@@ -36,6 +42,7 @@ export function ContentModelView(props: {
     const [bodyState, setBodyState] = useProperty<
         'collapsed' | 'children' | 'format' | 'json' | 'dataset'
     >(isExpanded ? 'children' : 'collapsed');
+    const highlightBorder = React.useRef<HTMLElement>(null);
 
     const toggleVisual = React.useCallback(() => {
         setBodyState(bodyState == 'children' ? 'collapsed' : 'children');
@@ -53,14 +60,64 @@ export function ContentModelView(props: {
         setBodyState(bodyState == 'dataset' ? 'collapsed' : 'dataset');
     }, [bodyState]);
 
+    const getCachedElement = React.useCallback(() => {
+        return (
+            (jsonSource as ContentModelBlockWithCache)?.cachedElement ||
+            (jsonSource as ContentModelGeneralBlock)?.element ||
+            (jsonSource as ContentModelEntity)?.wrapper
+        );
+    }, [jsonSource]);
+    const onMouseOver = React.useCallback(
+        (e: React.MouseEvent) => {
+            const cachedElement = getCachedElement();
+            const doc = cachedElement?.ownerDocument;
+
+            if (cachedElement && doc) {
+                onMouseOut();
+
+                const rect = cachedElement.getBoundingClientRect();
+                const div = doc.createElement('div');
+
+                if (div) {
+                    div.style.position = 'fixed';
+                    div.style.zIndex = '10000';
+                    div.style.left = rect.left + 'px';
+                    div.style.top = rect.top + 'px';
+                    div.style.width = rect.width + 'px';
+                    div.style.height = rect.height + 'px';
+                    div.style.border = 'solid 2px #8888ff';
+                    div.style.boxSizing = 'border-box';
+                    doc.body.appendChild(div);
+
+                    highlightBorder.current = div;
+                }
+
+                e.stopPropagation();
+            }
+        },
+        [getCachedElement]
+    );
+    const onMouseOut = React.useCallback(() => {
+        if (highlightBorder.current) {
+            highlightBorder.current.parentNode?.removeChild(highlightBorder.current);
+            highlightBorder.current = null;
+        }
+    }, [getCachedElement]);
+
     const dataset = (jsonSource as ContentModelWithDataset<any>).dataset;
+
+    React.useEffect(() => () => {
+        onMouseOut();
+    });
 
     return (
         <div
             className={css(styles.modelWrapper, className, {
                 [styles.childSelected]: hasSelection,
                 [styles.selected]: isSelection,
-            })}>
+            })}
+            onMouseOver={onMouseOver}
+            onMouseOut={onMouseOut}>
             <div className={styles.titleBar}>
                 <div
                     className={css(styles.title, {

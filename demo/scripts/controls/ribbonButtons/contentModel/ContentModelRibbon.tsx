@@ -6,13 +6,20 @@ import { backgroundColorButton } from './backgroundColorButton';
 import { blockQuoteButton } from './blockQuoteButton';
 import { boldButton } from './boldButton';
 import { bulletedListButton } from './bulletedListButton';
+import { changeImageButton } from './changeImageButton';
 import { clearFormatButton } from './clearFormatButton';
+import { codeButton } from './codeButton';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
+import { imageBorderColorButton } from './imageBorderColorButton';
+import { imageBorderStyleButton } from './imageBorderStyleButton';
+import { imageBorderWidthButton } from './imageBorderWidthButton';
+import { imageBorderRemoveButton } from './imageBorderRemoveButton';
+import { imageBoxShadowButton } from './imageBoxShadowButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
 import { insertImageButton } from './insertImageButton';
@@ -30,6 +37,8 @@ import { setHeaderLevelButton } from './setHeaderLevelButton';
 import { setNumberedListStyleButton } from './setNumberedListStyleButton';
 import { setTableCellShadeButton } from './setTableCellShadeButton';
 import { setTableHeaderButton } from './setTableHeaderButton';
+import { spaceAfterButton, spaceBeforeButton } from './spaceBeforeAfterButtons';
+import { spacingButton } from './spacingButton';
 import { strikethroughButton } from './strikethroughButton';
 import { subscriptButton } from './subscriptButton';
 import { superscriptButton } from './superscriptButton';
@@ -71,6 +80,7 @@ const buttons = [
     subscriptButton,
     strikethroughButton,
     setHeaderLevelButton,
+    codeButton,
     ltrButton,
     rtlButton,
     clearFormatButton,
@@ -86,6 +96,15 @@ const buttons = [
     tableSplitButton,
     tableAlignCellButton,
     tableAlignTableButton,
+    imageBorderColorButton,
+    imageBorderWidthButton,
+    imageBorderStyleButton,
+    imageBorderRemoveButton,
+    changeImageButton,
+    imageBoxShadowButton,
+    spacingButton,
+    spaceBeforeButton,
+    spaceAfterButton,
 ];
 
 export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {

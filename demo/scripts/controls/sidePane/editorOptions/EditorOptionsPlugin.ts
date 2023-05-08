@@ -21,6 +21,7 @@ const initialState: BuildInPluginState = {
         tableEditMenu: true,
         contextMenu: true,
         autoFormat: true,
+        contentModelPaste: false,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
@@ -28,10 +29,13 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
-        ExperimentalFeatures.ListItemAlignment,
         ExperimentalFeatures.DefaultFormatInSpan,
         ExperimentalFeatures.AutoFormatList,
         ExperimentalFeatures.VariableBasedDarkColor,
+        ExperimentalFeatures.ReusableContentModel,
+        ExperimentalFeatures.EditWithContentModel,
+        ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
+        ExperimentalFeatures.DefaultFormatOnContainer,
     ],
     isRtl: false,
 };

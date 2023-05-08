@@ -5,16 +5,10 @@ const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
 };
 
-export const HyperLinkColorPlaceholder = '__hyperLinkColor';
-
 /**
  * @internal
  */
 export const defaultStyleMap: DefaultStyleMap = {
-    a: {
-        textDecoration: 'underline',
-        color: HyperLinkColorPlaceholder,
-    },
     address: blockElement,
     article: blockElement,
     aside: blockElement,
@@ -33,7 +27,6 @@ export const defaultStyleMap: DefaultStyleMap = {
         display: 'block',
         textAlign: 'center',
     },
-    code: { fontFamily: 'monospace' },
     dd: blockElement,
     div: blockElement,
     dl: blockElement,
@@ -132,16 +125,28 @@ export const defaultStyleMap: DefaultStyleMap = {
     ul: blockElement,
 };
 
+/**
+ * @internal
+ */
+export const enum PseudoTagNames {
+    childOfPre = 'pre *', // This value is not a CSS selector, it just to tell this will impact elements under PRE tag. Any unique value here can work actually
+}
+
+/**
+ * @internal
+ */
 export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     a: {
         underline: true,
-        textColor: HyperLinkColorPlaceholder,
     },
     blockquote: {
         marginTop: '1em',
         marginBottom: '1em',
         marginLeft: '40px',
         marginRight: '40px',
+    },
+    code: {
+        fontFamily: 'monospace',
     },
     h1: {
         fontWeight: 'bold',
@@ -170,5 +175,18 @@ export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     p: {
         marginTop: '1em',
         marginBottom: '1em',
+    },
+    pre: {
+        fontFamily: 'monospace',
+        whiteSpace: 'pre',
+        marginTop: '1em',
+        marginBottom: '1em',
+    },
+
+    // For PRE tag, the following styles will be included from the PRE tag.
+    // Adding this implicit style here so no need to generate these style for child elements
+    [PseudoTagNames.childOfPre]: {
+        fontFamily: 'monospace',
+        whiteSpace: 'pre',
     },
 };

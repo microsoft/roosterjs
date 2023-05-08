@@ -33,4 +33,19 @@ describe('handleSegment', () => {
 
         expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
     });
+
+    it('With onNodeCreated', () => {
+        const br: ContentModelBr = {
+            segmentType: 'Br',
+            format: { textColor: 'red' },
+        };
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+        handleBr(document, parent, br, context);
+
+        expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(br);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('br'));
+    });
 });

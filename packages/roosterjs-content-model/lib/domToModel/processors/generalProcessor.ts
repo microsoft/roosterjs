@@ -1,5 +1,5 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { addLink } from '../../modelApi/common/addLink';
+import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
@@ -9,6 +9,7 @@ import { stackFormat } from '../utils/stackFormat';
 
 const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const block = createGeneralBlock(element);
+    const isSelectedBefore = context.isInSelection;
 
     stackFormat(
         context,
@@ -19,19 +20,21 @@ const generalBlockProcessor: ElementProcessor<HTMLElement> = (group, element, co
         },
         () => {
             addBlock(group, block);
+
             context.elementProcessors.child(block, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        block.isSelected = true;
+    }
 };
 
 const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const segment = createGeneralSegment(element, context.segmentFormat);
+    const isSelectedBefore = context.isInSelection;
 
-    if (context.isInSelection && !element.firstChild) {
-        segment.isSelected = true;
-    }
-
-    addLink(segment, context.link);
+    addDecorators(segment, context);
     addSegment(group, segment);
 
     stackFormat(
@@ -44,6 +47,10 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
             context.elementProcessors.child(segment, element, context);
         }
     );
+
+    if (isSelectedBefore && context.isInSelection) {
+        segment.isSelected = true;
+    }
 };
 
 /**

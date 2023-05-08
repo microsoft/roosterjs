@@ -13,6 +13,7 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
 ) => {
     const { listFormat } = context;
     const nodeStack = listFormat.nodeStack;
+    let refNode: Node | null = parent.firstChild;
 
     try {
         group.blocks.forEach((childBlock, index) => {
@@ -28,8 +29,16 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
                 listFormat.nodeStack = [];
             }
 
-            context.modelHandlers.block(doc, parent, childBlock, context);
+            refNode = context.modelHandlers.block(doc, parent, childBlock, context, refNode);
         });
+
+        // Remove all rest node if any since they don't appear in content model
+        while (refNode) {
+            const next = refNode.nextSibling;
+
+            refNode.parentNode?.removeChild(refNode);
+            refNode = next;
+        }
     } finally {
         listFormat.nodeStack = nodeStack;
     }

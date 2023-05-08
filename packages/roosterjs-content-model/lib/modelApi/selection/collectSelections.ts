@@ -8,6 +8,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { isBlockGroupOfType } from '..//common/isBlockGroupOfType';
+
 import {
     iterateSelections,
     IterateSelectionsOption,
@@ -79,7 +80,10 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 ): OperationalBlocks<T>[] {
     const result: OperationalBlocks<T>[] = [];
     const findSequence = deepFirst ? blockGroupTypes.map(type => [type]) : [blockGroupTypes];
-    const selections = collectSelections(model, { includeListFormatHolder: 'never' });
+    const selections = collectSelections(model, {
+        includeListFormatHolder: 'never',
+        contentUnderSelectedTableCell: 'ignoreForTable', // When whole table is selected, we treat the table as a single block
+    });
 
     removeUnmeaningfulSelections(selections);
 

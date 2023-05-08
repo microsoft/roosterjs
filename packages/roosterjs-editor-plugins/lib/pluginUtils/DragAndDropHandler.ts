@@ -49,5 +49,9 @@ export default interface DragAndDropHandler<TContext, TInitValue> {
      * Returns true will invoke the onSubmit callback, it means this is a meaningful dragging action, something (mostly
      * under context object) has been changed, and caller should handle this change. Otherwise, return false.
      */
-    onDragEnd?: (context: TContext, event: MouseEvent, initValue: TInitValue) => boolean;
+    onDragEnd?: (
+        context: TContext,
+        event: MouseEvent,
+        initValue: TInitValue | undefined
+    ) => boolean;
 }

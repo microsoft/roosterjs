@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { setBackgroundColor } from 'roosterjs-content-model';
 import {
     BackgroundColorButtonStringKey,

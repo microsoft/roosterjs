@@ -9,7 +9,7 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPosition } from '../selection/deleteSelections';
+import { deleteSelection, InsertPoint } from '../selection/deleteSelections';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
@@ -25,6 +25,12 @@ export interface MergeModelOption {
      * @default false
      */
     mergeTable?: boolean;
+
+    /**
+     * Use this insert position to merge instead of querying selection from target model
+     * @default undefined
+     */
+    insertPosition?: InsertPoint;
 }
 
 /**
@@ -35,7 +41,7 @@ export function mergeModel(
     source: ContentModelDocument,
     options?: MergeModelOption
 ) {
-    const insertPosition = deleteSelection(target);
+    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
 
     if (insertPosition) {
         for (let i = 0; i < source.blocks.length; i++) {
@@ -62,7 +68,7 @@ export function mergeModel(
                 case 'BlockGroup':
                     switch (block.blockGroupType) {
                         case 'General':
-                        case 'Quote':
+                        case 'FormatContainer':
                             insertBlock(insertPosition, block);
                             break;
                         case 'ListItem':
@@ -78,7 +84,7 @@ export function mergeModel(
 }
 
 function mergeParagraph(
-    markerPosition: InsertPosition,
+    markerPosition: InsertPoint,
     newPara: ContentModelParagraph,
     mergeToCurrentParagraph: boolean
 ) {
@@ -92,7 +98,7 @@ function mergeParagraph(
 }
 
 function mergeTable(
-    markerPosition: InsertPosition,
+    markerPosition: InsertPoint,
     newTable: ContentModelTable,
     source: ContentModelDocument
 ) {
@@ -100,14 +106,14 @@ function mergeTable(
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
-        for (let i = 0; i < newTable.cells.length; i++) {
-            for (let j = 0; j < newTable.cells[i].length; j++) {
-                const newCell = newTable.cells[i][j];
+        for (let i = 0; i < newTable.rows.length; i++) {
+            for (let j = 0; j < newTable.rows[i].cells.length; j++) {
+                const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= table.cells[0].length) {
-                    for (let k = 0; k < rowIndex; k++) {
-                        const leftCell = table.cells[k]?.[colIndex + j - 1];
-                        table.cells[k][colIndex + j] = createTableCell(
+                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
+                    for (let k = 0; k < table.rows.length; k++) {
+                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
+                        table.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -116,14 +122,18 @@ function mergeTable(
                     }
                 }
 
-                if (j == 0 && rowIndex + i >= table.cells.length) {
-                    if (!table.cells[rowIndex + i]) {
-                        table.cells[rowIndex + i] = [];
+                if (j == 0 && rowIndex + i >= table.rows.length) {
+                    if (!table.rows[rowIndex + i]) {
+                        table.rows[rowIndex + i] = {
+                            cells: [],
+                            format: {},
+                            height: 0,
+                        };
                     }
 
-                    for (let k = 0; k < colIndex; k++) {
-                        const aboveCell = table.cells[rowIndex + i - 1]?.[k];
-                        table.cells[rowIndex + i][k] = createTableCell(
+                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
+                        table.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -132,7 +142,7 @@ function mergeTable(
                     }
                 }
 
-                table.cells[rowIndex + i][colIndex + j] = newCell;
+                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
                     addSegment(newCell, createSelectionMarker());
@@ -140,14 +150,14 @@ function mergeTable(
             }
         }
 
-        normalizeTable(table);
+        normalizeTable(table, markerPosition.marker.format);
         applyTableFormat(table, undefined /*newFormat*/, true /*keepCellShade*/);
     } else {
         insertBlock(markerPosition, newTable);
     }
 }
 
-function mergeList(markerPosition: InsertPosition, newList: ContentModelListItem) {
+function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     splitParagraph(markerPosition);
 
     const { path, paragraph } = markerPosition;
@@ -168,7 +178,7 @@ function mergeList(markerPosition: InsertPosition, newList: ContentModelListItem
     }
 }
 
-function splitParagraph(markerPosition: InsertPosition) {
+function splitParagraph(markerPosition: InsertPoint) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
@@ -185,7 +195,7 @@ function splitParagraph(markerPosition: InsertPosition) {
     const listItemIndex = getClosestAncestorBlockGroupIndex(
         path,
         ['ListItem'],
-        ['Quote', 'TableCell']
+        ['FormatContainer', 'TableCell']
     );
     const listItem = path[listItemIndex] as ContentModelListItem;
 
@@ -213,7 +223,7 @@ function splitParagraph(markerPosition: InsertPosition) {
     return newParagraph;
 }
 
-function insertBlock(markerPosition: InsertPosition, block: ContentModelBlock) {
+function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
     const newPara = splitParagraph(markerPosition);
     const blockIndex = path[0].blocks.indexOf(newPara);

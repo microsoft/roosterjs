@@ -10,7 +10,7 @@ const NoCycleCursorMove: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.LEFT, Keys.RIGHT],
     allowFunctionKeys: true,
     shouldHandleEvent: (event, editor, ctrlOrMeta) => {
-        let range: Range;
+        let range: Range | null = null;
         let position: Position;
 
         if (

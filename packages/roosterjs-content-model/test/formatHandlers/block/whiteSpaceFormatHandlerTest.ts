@@ -51,23 +51,47 @@ describe('whiteSpaceFormatHandler.parse', () => {
 
 describe('whiteSpaceFormatHandler.apply', () => {
     let div: HTMLElement;
+    let container: HTMLElement;
     let format: WhiteSpaceFormat;
     let context: ModelToDomContext;
 
     beforeEach(() => {
+        container = document.createElement('div');
         div = document.createElement('div');
+        container.appendChild(div);
+
         format = {};
         context = createModelToDomContext();
     });
 
     it('No white space', () => {
         whiteSpaceFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div></div>');
+        expect(container.innerHTML).toBe('<div></div>');
     });
 
-    it('Has white space', () => {
+    it('Has white space: pre', () => {
         format.whiteSpace = 'pre';
         whiteSpaceFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="white-space: pre;"></div>');
+        expect(container.innerHTML).toBe('<div style="white-space: pre;"></div>');
+    });
+
+    it('Has white space: pre-wrap', () => {
+        format.whiteSpace = 'pre-wrap';
+        whiteSpaceFormatHandler.apply(format, div, context);
+        expect(container.innerHTML).toBe('<div style="white-space: pre-wrap;"></div>');
+    });
+
+    it('Has white space in implicit format', () => {
+        format.whiteSpace = 'pre';
+        context.implicitFormat.whiteSpace = 'pre';
+        whiteSpaceFormatHandler.apply(format, div, context);
+        expect(container.innerHTML).toBe('<div></div>');
+    });
+
+    it('Has different white space from implicit format', () => {
+        format.whiteSpace = 'pre';
+        context.implicitFormat.whiteSpace = 'pre-wrap';
+        whiteSpaceFormatHandler.apply(format, div, context);
+        expect(container.innerHTML).toBe('<div style="white-space: pre;"></div>');
     });
 });

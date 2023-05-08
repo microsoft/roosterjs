@@ -1,5 +1,5 @@
 import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
-import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -17,11 +17,27 @@ export default function convertPastedContentFromExcel(
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
     const { fragment, sanitizingOption, htmlBefore, clipboardData } = event;
-    const html = excelHandler(clipboardData.html, htmlBefore);
+    const html = clipboardData.html ? excelHandler(clipboardData.html, htmlBefore) : undefined;
 
-    if (clipboardData.html != html) {
+    if (html && clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
         moveChildNodes(fragment, doc?.body);
+    }
+
+    // For Excel Online
+    const firstChild = fragment.firstChild;
+    if (firstChild && firstChild.childNodes.length > 0 && getTagOfNode(firstChild) == 'DIV') {
+        const tableFound = Array.from(firstChild.childNodes).every((child: Node) => {
+            // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
+            return getTagOfNode(child) == 'META'
+                ? true
+                : getTagOfNode(child) == 'TABLE' && child == firstChild.lastChild;
+        });
+
+        // Extract Table from Div
+        if (tableFound && firstChild.lastChild) {
+            event.fragment.replaceChildren(firstChild.lastChild);
+        }
     }
 
     chainSanitizerCallback(sanitizingOption.elementCallbacks, 'TD', element => {

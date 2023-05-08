@@ -82,6 +82,60 @@ const ImageResizeMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
+const ImageRotateMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageRotate',
+    unlocalizedText: 'Rotate image',
+    subItems: {
+        menuNameImageRotateLeft: 'Left',
+        menuNameImageRotateRight: 'Right',
+    },
+    shouldShow: (_, node, imageEdit) => {
+        return (
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Rotate) &&
+            canRegenerateImage(node as HTMLImageElement)
+        );
+    },
+    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+        editor.addUndoSnapshot(() => {
+            switch (key) {
+                case 'menuNameImageRotateLeft':
+                    imageEdit?.rotateImage(node as HTMLImageElement, -Math.PI / 2);
+                    break;
+                case 'menuNameImageRotateRight':
+                    imageEdit?.rotateImage(node as HTMLImageElement, Math.PI / 2);
+                    break;
+            }
+        });
+    },
+};
+
+const ImageFlipMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageFlip',
+    unlocalizedText: 'Flip image',
+    subItems: {
+        menuNameImageRotateFlipHorizontally: 'Flip Horizontally',
+        menuNameImageRotateFlipVertically: 'Flip Vertically',
+    },
+    shouldShow: (_, node, imageEdit) => {
+        return (
+            !!imageEdit?.isOperationAllowed(ImageEditOperation.Rotate) &&
+            canRegenerateImage(node as HTMLImageElement)
+        );
+    },
+    onClick: (key, editor, node, strings, uiUtilities, imageEdit) => {
+        editor.addUndoSnapshot(() => {
+            switch (key) {
+                case 'menuNameImageRotateFlipHorizontally':
+                    imageEdit?.flipImage(node as HTMLImageElement, 'horizontal');
+                    break;
+                case 'menuNameImageRotateFlipVertically':
+                    imageEdit?.flipImage(node as HTMLImageElement, 'vertical');
+                    break;
+            }
+        });
+    },
+};
+
 const ImageCropMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageCrop',
     unlocalizedText: 'Crop image',
@@ -123,7 +177,14 @@ export default function createImageEditMenuProvider(
 ): EditorPlugin {
     return createContextMenuProvider<ImageEditMenuItemStringKey, ImageEdit>(
         'imageEdit',
-        [ImageAltTextMenuItem, ImageResizeMenuItem, ImageCropMenuItem, ImageRemoveMenuItem],
+        [
+            ImageAltTextMenuItem,
+            ImageResizeMenuItem,
+            ImageCropMenuItem,
+            ImageRemoveMenuItem,
+            ImageRotateMenuItem,
+            ImageFlipMenuItem,
+        ],
         strings,
         shouldShowImageEditItems,
         imageEditPlugin

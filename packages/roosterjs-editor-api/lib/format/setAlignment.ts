@@ -36,13 +36,11 @@ export default function setAlignment(editor: IEditor, alignment: Alignment | Com
 
             if (
                 isATable &&
+                selection.coordinates &&
                 isWholeTableSelected(new VTable(selection.table), selection.coordinates)
             ) {
                 alignTable(selection, alignment);
-            } else if (
-                isList(elementAtCursor) &&
-                editor.isFeatureEnabled(ExperimentalFeatures.ListItemAlignment)
-            ) {
+            } else if (elementAtCursor && isList(elementAtCursor)) {
                 alignList(editor, alignment);
             } else {
                 alignText(editor, alignment);
@@ -98,7 +96,9 @@ function alignText(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
 
     if (elements.length == 0) {
         const node = editor.getElementAtCursor();
-        normalizeBlockquote(node);
+        if (node) {
+            normalizeBlockquote(node);
+        }
     }
 }
 
@@ -117,7 +117,9 @@ function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
             );
             const startNode = blocks[0].getStartNode();
             const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
-            vList.setAlignment(start, end, alignment);
+            if (start && end) {
+                vList?.setAlignment(start, end, alignment);
+            }
         },
         undefined /* beforeRunCallback */,
         'alignList'

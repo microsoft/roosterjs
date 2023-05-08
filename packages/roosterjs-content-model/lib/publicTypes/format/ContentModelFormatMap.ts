@@ -1,12 +1,15 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
+import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
+import { ContentModelListItemFormat } from './ContentModelListItemFormat';
 import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
 import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
 import { ContentModelTableFormat } from './ContentModelTableFormat';
 import { DatasetFormat } from './formatParts/DatasetFormat';
-import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
+import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 
 /**
  * A map from Content Model format name to its combined format type
@@ -38,7 +41,7 @@ export interface ContentModelFormatMap {
     segmentOnTableCell: ContentModelSegmentFormat;
 
     /**
-     * Format type for table
+     * Format type for table, except alignment related styles
      */
     table: ContentModelTableFormat;
 
@@ -46,6 +49,21 @@ export interface ContentModelFormatMap {
      * Format type for tableCell
      */
     tableCell: ContentModelTableCellFormat;
+
+    /**
+     * Format type for table border
+     */
+    tableBorder: ContentModelTableFormat;
+
+    /**
+     * Format type for tableCell border
+     */
+    tableCellBorder: ContentModelTableCellFormat;
+
+    /**
+     * Format type for li element
+     */
+    listItemElement: ContentModelListItemFormat;
 
     /**
      * Format type for listItem
@@ -65,7 +83,12 @@ export interface ContentModelFormatMap {
     /**
      * Format type for link
      */
-    link: LinkFormat;
+    link: ContentModelHyperLinkFormat;
+
+    /**
+     * Format type for code
+     */
+    code: FontFamilyFormat;
 
     /**
      * Format type for dataset
@@ -76,4 +99,9 @@ export interface ContentModelFormatMap {
      * Format type for divider
      */
     divider: ContentModelDividerFormat;
+
+    /**
+     * Format type for format container
+     */
+    container: ContentModelFormatContainerFormat;
 }

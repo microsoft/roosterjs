@@ -1,6 +1,7 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelTableCell } from '../group/ContentModelTableCell';
+import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
+import { ContentModelTableRow } from './ContentModelTableRow';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';
 
@@ -9,19 +10,15 @@ import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';
  */
 export interface ContentModelTable
     extends ContentModelBlockBase<'Table', ContentModelTableFormat>,
-        ContentModelWithDataset<TableMetadataFormat> {
+        ContentModelWithDataset<TableMetadataFormat>,
+        ContentModelBlockWithCache<HTMLTableElement> {
     /**
      * Widths of each column
      */
     widths: number[];
 
     /**
-     * Heights of each row
-     */
-    heights: number[];
-
-    /**
      * Cells of this table
      */
-    cells: ContentModelTableCell[][];
+    rows: ContentModelTableRow[];
 }

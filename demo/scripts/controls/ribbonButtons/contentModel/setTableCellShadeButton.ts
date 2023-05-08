@@ -1,4 +1,4 @@
-import isContentModelEditor from '../../editor/isContentModelEditor';
+import { isContentModelEditor } from 'roosterjs-content-model';
 import { setTableCellShade } from 'roosterjs-content-model';
 import {
     BackgroundColorKeys,
@@ -17,7 +17,7 @@ export const setTableCellShadeButton: RibbonButton<
 > = {
     dropDownMenu: {
         ...originalBackgroundColorButton.dropDownMenu,
-        allowLivePreview: false,
+        allowLivePreview: true,
     },
     key: 'ribbonButtonSetTableCellShade',
     unlocalizedText: 'Set table shade color',

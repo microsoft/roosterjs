@@ -18,6 +18,10 @@ export const hrProcessor: ElementProcessor<HTMLHRElement> = (group, element, con
 
             const hr = createDivider('hr', context.blockFormat);
 
+            if (element.size) {
+                hr.size = element.size;
+            }
+
             if (context.isInSelection) {
                 hr.isSelected = true;
             }

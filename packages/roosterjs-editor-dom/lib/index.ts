@@ -4,6 +4,13 @@ export { default as getFirstLastBlockElement } from './blockElements/getFirstLas
 export { default as ContentTraverser } from './contentTraverser/ContentTraverser';
 export { default as PositionContentSearcher } from './contentTraverser/PositionContentSearcher';
 
+export {
+    default as addDelimiters,
+    addDelimiterAfter,
+    addDelimiterBefore,
+} from './delimiter/addDelimiters';
+export { default as getDelimiterFromElement } from './delimiter/getDelimiterFromElement';
+
 export { default as getInlineElementAtNode } from './inlineElements/getInlineElementAtNode';
 export { default as ImageInlineElement } from './inlineElements/ImageInlineElement';
 export { default as LinkInlineElement } from './inlineElements/LinkInlineElement';
@@ -14,6 +21,7 @@ export { default as applyTextStyle } from './inlineElements/applyTextStyle';
 export { default as extractClipboardEvent } from './clipboard/extractClipboardEvent';
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
+export { default as createFragmentFromClipboardData } from './clipboard/createFragmentFromClipboardData';
 
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
@@ -50,6 +58,7 @@ export { default as createElement, KnownCreateElementData } from './utils/create
 export { default as moveChildNodes } from './utils/moveChildNodes';
 export { default as getIntersectedRect } from './utils/getIntersectedRect';
 export { default as isNodeAfter } from './utils/isNodeAfter';
+export { default as parseColor } from './utils/parseColor';
 
 export { default as VTable } from './table/VTable';
 export { default as isWholeTableSelected } from './table/isWholeTableSelected';
@@ -137,3 +146,5 @@ export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
 export { default as arrayPush } from './jsUtils/arrayPush';
 export { default as getObjectKeys } from './jsUtils/getObjectKeys';
 export { default as toArray } from './jsUtils/toArray';
+
+export { default as getPasteSource } from './pasteSourceValidations/getPasteSource';

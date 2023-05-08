@@ -1,5 +1,6 @@
 import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -117,6 +118,62 @@ describe('normalizeContentModel', () => {
         });
     });
 
+    it('Normalize paragraph with multiple BRs', () => {
+        const model = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const br1 = createBr();
+        const marker = createSelectionMarker();
+        const br2 = createBr();
+        const br3 = createBr();
+        const br4 = createBr();
+
+        para1.segments.push(br1, marker, br2);
+        para2.segments.push(br3, br4);
+        model.blocks.push(para1, para2);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
+
     it('Do not normalize implicit paragraph', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(true /*isImplicit*/);
@@ -175,7 +232,7 @@ describe('normalizeContentModel', () => {
 
         para.segments.push(text);
         cell.blocks.push(para);
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
         normalizeContentModel(model);
@@ -186,22 +243,50 @@ describe('normalizeContentModel', () => {
                 {
                     blockType: 'Table',
                     format: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     widths: [],
-                    heights: [],
                     dataset: {},
+                },
+            ],
+        });
+    });
+
+    it('Normalize list item without level', () => {
+        const model = createContentModelDocument();
+        const listItem = createListItem([]);
+        const para = createParagraph(true /*isImplicit*/);
+        const text = createText('test');
+
+        para.segments.push(text);
+        listItem.blocks.push(para);
+        model.blocks.push(listItem);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text],
+                    format: {},
+                    isImplicit: false,
                 },
             ],
         });

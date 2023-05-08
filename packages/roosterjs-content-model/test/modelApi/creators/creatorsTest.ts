@@ -5,6 +5,7 @@ import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createEntity } from '../../../lib/modelApi/creators/createEntity';
+import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
@@ -24,6 +25,20 @@ describe('Creators', () => {
         expect(result).toEqual({
             blockGroupType: 'Document',
             blocks: [],
+        });
+    });
+
+    it('createContentModelDocument with default format', () => {
+        const result = createContentModelDocument({
+            fontSize: '10pt',
+        });
+
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [],
+            format: {
+                fontSize: '10pt',
+            },
         });
     });
 
@@ -165,10 +180,12 @@ describe('Creators', () => {
 
         expect(tableModel).toEqual({
             blockType: 'Table',
-            cells: [[], []],
+            rows: [
+                { format: {}, height: 0, cells: [] },
+                { format: {}, height: 0, cells: [] },
+            ],
             format: {},
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -362,10 +379,10 @@ describe('Creators', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [],
             format: {},
-            quoteSegmentFormat: {},
         });
     });
 
@@ -376,10 +393,24 @@ describe('Creators', () => {
 
         expect(quote).toEqual({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             blocks: [],
             format: { borderLeft: 'solid 1px black' },
-            quoteSegmentFormat: {},
+        });
+    });
+
+    it('createFormatContainer with format', () => {
+        const quote = createFormatContainer('pre', {
+            borderLeft: 'solid 1px black',
+        });
+
+        expect(quote).toEqual({
+            blockType: 'BlockGroup',
+            blockGroupType: 'FormatContainer',
+            tagName: 'pre',
+            blocks: [],
+            format: { borderLeft: 'solid 1px black' },
         });
     });
 

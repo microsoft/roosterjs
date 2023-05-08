@@ -19,4 +19,7 @@ export const handleBr: ContentModelHandler<ContentModelBr> = (
 
     context.regularSelection.current.segment = br;
     applyFormat(element, context.formatAppliers.segment, segment.format, context);
+
+    context.modelHandlers.segmentDecorator(doc, br, segment, context);
+    context.onNodeCreated?.(segment, br);
 };

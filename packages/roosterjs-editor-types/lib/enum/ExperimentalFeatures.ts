@@ -2,6 +2,8 @@
  * Experimental feature flags
  */
 export const enum ExperimentalFeatures {
+    // #region Graduated and deprecated features.
+    // These features will be removed in next major release
     /**
      * @deprecated This feature is always enabled
      */
@@ -66,25 +68,10 @@ export const enum ExperimentalFeatures {
     TableAlignment = 'TableAlignment',
 
     /**
-     * Provide additional Tab Key Features. Requires Text Features Content Editable Features
-     */
-    TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
      * @deprecated this feature is always enabled
      * Provide a circular resize handles that adaptive the number od handles to the size of the image
      */
     AdaptiveHandlesResizer = 'AdaptiveHandlesResizer',
-
-    /**
-     * Align list elements elements to left, center and right using setAlignment API
-     */
-    ListItemAlignment = 'ListItemAlignment',
-
-    /**
-     * Trigger formatting by a especial characters. Ex: (A), 1. i).
-     */
-    AutoFormatList = 'AutoFormatList',
 
     /**
      * @deprecated this feature is always disabled
@@ -114,6 +101,24 @@ export const enum ExperimentalFeatures {
     ImageSelection = 'ImageSelection',
 
     /**
+     * @deprecated this feature is always enabled
+     * Align list elements elements to left, center and right using setAlignment API
+     */
+    ListItemAlignment = 'ListItemAlignment',
+
+    //#endregion
+
+    /**
+     * Provide additional Tab Key Features. Requires Text Features Content Editable Features
+     */
+    TabKeyTextFeatures = 'TabKeyTextFeatures',
+
+    /**
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
+    /**
      * With this feature enabled, when writing back a list item we will re-use all
      * ancestor list elements, even if they don't match the types currently in the
      * listTypes array for that item. The only list that we will ensure is correct
@@ -133,4 +138,34 @@ export const enum ExperimentalFeatures {
      * if you need them work for dark mode
      */
     VariableBasedDarkColor = 'VariableBasedDarkColor',
+
+    /**
+     * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
+     */
+    ReusableContentModel = 'ReusableContentModel',
+
+    /**
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
+
+    /**
+     * Apply default format on editor container
+     */
+    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
+
+    /**
+     * Delete table with Backspace key with the whole was selected with table selector
+     */
+    DeleteTableWithBackspace = 'DeleteTableWithBackspace',
+
+    /**
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
 }

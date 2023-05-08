@@ -1,6 +1,7 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
@@ -15,7 +16,7 @@ describe('handleTable', () => {
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
         const div = document.createElement('div');
-        handleTable(document, div, model, context);
+        handleTable(document, div, model, context, null);
         expect(div.innerHTML).toBe(expectedInnerHTML);
     }
 
@@ -23,10 +24,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [],
+                rows: [],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -37,10 +37,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[], []],
+                rows: [
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -51,10 +53,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
@@ -62,17 +63,19 @@ describe('handleTable', () => {
     });
 
     it('Regular 2 * 2 table', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
+        const tdModel4 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel, tdModel],
-                    [tdModel, tdModel],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -80,14 +83,18 @@ describe('handleTable', () => {
     });
 
     it('3 * 1 table with empty row', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [[tdModel], [], [tdModel]],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1] },
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [tdModel2] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -95,17 +102,18 @@ describe('handleTable', () => {
     });
 
     it('Table with spanLeft cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel, createTableCell(2, 1, false)],
-                    [tdModel, tdModel],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, createTableCell(2, 1, false)] },
+                    { format: {}, height: 0, cells: [tdModel2, tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -113,17 +121,18 @@ describe('handleTable', () => {
     });
 
     it('Table with spanAbove cell', () => {
-        const tdModel = createTableCell(1, 1, false);
+        const tdModel1 = createTableCell(1, 1, false);
+        const tdModel2 = createTableCell(1, 1, false);
+        const tdModel3 = createTableCell(1, 1, false);
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel, tdModel],
-                    [createTableCell(1, 2, false), tdModel],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 2, false), tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -134,13 +143,20 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [createTableCell(1, 1, false), createTableCell(2, 1, false)],
-                    [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 1, false), createTableCell(2, 1, false)],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
@@ -158,26 +174,37 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 2, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                        createTableCell(1, 2, false),
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 2, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                            createTableCell(1, 2, false),
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody>' +
@@ -192,10 +219,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
+                rows: [
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, true)] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, false)] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
@@ -212,13 +241,13 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
-            context
+            context,
+            null
         );
 
         expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
@@ -226,5 +255,258 @@ describe('handleTable', () => {
         const table = div.firstChild as HTMLTableElement;
         expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
         expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
+    });
+
+    it('Regular 1 * 1 table with refNode', () => {
+        const div = document.createElement('div');
+        const br = document.createElement('br');
+
+        div.appendChild(br);
+
+        const result = handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
+                format: {},
+                widths: [],
+                dataset: {},
+            },
+            context,
+            br
+        );
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table><br>');
+        expect(result).toBe(br);
+    });
+
+    it('Regular 1 * 1 table with refNode and cached element', () => {
+        const div = document.createElement('div');
+        const table = document.createElement('table');
+        const br = document.createElement('br');
+        const td = document.createElement('td');
+
+        table.id = 't1';
+        td.id = 'd1';
+
+        div.appendChild(table);
+        div.appendChild(br);
+
+        const cell = createTableCell(1, 1, false);
+        cell.cachedElement = td;
+
+        const result = handleTable(
+            document,
+            div,
+            {
+                blockType: 'Table',
+                rows: [{ format: {}, height: 0, cells: [cell] }],
+                format: {},
+                widths: [],
+                dataset: {},
+                cachedElement: table,
+            },
+            context,
+            table
+        );
+
+        expect(div.innerHTML).toBe(
+            '<table id="t1"><tbody><tr><td id="d1"></td></tr></tbody></table><br>'
+        );
+        expect(result).toBe(br);
+    });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const tableCell1 = createTableCell(false, false, true);
+        const tableCell2 = createTableCell();
+        const table = createTable(2);
+
+        table.rows[0].cells.push(tableCell1);
+        table.rows[1].cells.push(tableCell2);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
+        );
+        expect(onNodeCreated).toHaveBeenCalledTimes(3);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(table);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('table'));
+        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(tableCell1);
+        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('th'));
+        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell2);
+        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('td'));
+    });
+
+    it('With cached TABLE element, do not apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+        table.cachedElement = document.createElement('table');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Without cached TABLE element, apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TABLE element, apply margin', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.marginLeft = 'auto';
+        table.format.marginRight = 'auto';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('With cached TD, do not apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('With cached TD and allow useBorderBox and has metadata, still apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+        cell.cachedElement = document.createElement('td');
+        cell.format.useBorderBox = true;
+        table.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table data-editing-info="{}"><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(
+            [
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
+    });
+
+    it('With cached TD, do not apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Block format on TABLE and TD is respected', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {
+            whiteSpace: 'pre',
+            lineHeight: '2',
+            textAlign: 'center',
+            direction: 'rtl',
+        });
+        const cell = createTableCell(false, false, false, {
+            whiteSpace: 'normal',
+            lineHeight: '1',
+            textAlign: 'start',
+            direction: 'ltr',
+        });
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
+        );
     });
 });

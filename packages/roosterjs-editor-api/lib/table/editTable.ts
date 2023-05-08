@@ -25,15 +25,22 @@ export default function editTable(
                 editor.transformToDarkColor(vtable.table);
 
                 editor.focus();
-                let cellToSelect = calculateCellToSelect(operation, vtable.row, vtable.col);
-                editor.select(
-                    vtable.getCell(cellToSelect.newRow, cellToSelect.newCol).td,
-                    PositionType.Begin
-                );
+                if (isUndefined(vtable.row) || isUndefined(vtable.col)) {
+                    return;
+                }
+                let { newCol, newRow } = calculateCellToSelect(operation, vtable.row, vtable.col);
+                const newTd = vtable.getCell(newRow, newCol).td;
+                if (newTd) {
+                    editor.select(newTd, PositionType.Begin);
+                }
             },
             'editTable'
         );
     }
+}
+
+function isUndefined(n: number | undefined): n is undefined {
+    return n == undefined;
 }
 
 function calculateCellToSelect(
@@ -69,6 +76,6 @@ function calculateCellToSelect(
 function saveTableSelection(editor: IEditor, vtable: VTable) {
     const selection = editor.getSelectionRangeEx();
     if (selection && selection.type === SelectionRangeTypes.TableSelection) {
-        vtable.selection = selection.coordinates;
+        vtable.selection = selection.coordinates ?? null;
     }
 }

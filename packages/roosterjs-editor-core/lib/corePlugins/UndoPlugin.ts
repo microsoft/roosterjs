@@ -1,13 +1,14 @@
 import {
+    ChangeSource,
+    ContentChangedEvent,
     EditorOptions,
     IEditor,
     Keys,
     PluginEvent,
     PluginEventType,
     PluginWithState,
-    UndoPluginState,
-    ChangeSource,
     Snapshot,
+    UndoPluginState,
     UndoSnapshotsService,
 } from 'roosterjs-editor-types';
 import {
@@ -121,15 +122,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.addUndoSnapshot();
                 break;
             case PluginEventType.ContentChanged:
-                if (
-                    !(
-                        this.state.isRestoring ||
-                        event.source == ChangeSource.SwitchToDarkMode ||
-                        event.source == ChangeSource.SwitchToLightMode
-                    )
-                ) {
-                    this.clearRedoForInput();
-                }
+                this.onContentChanged(event);
                 break;
         }
     }
@@ -199,6 +192,30 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         this.lastKeyPress = evt.which;
     }
 
+    private onContentChanged(event: ContentChangedEvent) {
+        if (event.source == ChangeSource.Keyboard) {
+            if (Number.isInteger(event.data)) {
+                // For keyboard event (triggered from Content Model), we can get its keycode from event.data
+                // And when user is keep pressing the same key, mark editor with "hasNewContent" so that next time user
+                // do some other action or press a different key, we will add undo snapshot
+                if (event.data != this.lastKeyPress) {
+                    this.addUndoSnapshot();
+                }
+
+                this.lastKeyPress = event.data;
+                this.state.hasNewContent = true;
+            }
+        } else if (
+            !(
+                this.state.isRestoring ||
+                event.source == ChangeSource.SwitchToDarkMode ||
+                event.source == ChangeSource.SwitchToLightMode
+            )
+        ) {
+            this.clearRedoForInput();
+        }
+    }
+
     private clearRedoForInput() {
         this.state.snapshotsService.clearRedo();
         this.lastKeyPress = 0;
@@ -241,7 +258,7 @@ function createUndoSnapshotServiceBridge(
         ? {
               canMove: (delta: number) => service.canMove(delta),
               move: (delta: number): Snapshot | null =>
-                  (html = service.move(delta)) ? { html, metadata: null } : null,
+                  (html = service.move(delta)) ? { html, metadata: null, knownColors: [] } : null,
               addSnapshot: (snapshot: Snapshot, isAutoCompleteSnapshot: boolean) =>
                   service.addSnapshot(
                       snapshot.html +

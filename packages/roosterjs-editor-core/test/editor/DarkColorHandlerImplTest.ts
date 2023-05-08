@@ -65,6 +65,42 @@ describe('DarkColorHandlerImpl.parseColorValue', () => {
             darkModeColor: 'ee',
         });
     });
+
+    function runDarkTest(input: string, expectedOutput: ColorKeyAndValue) {
+        const result = handler.parseColorValue(input, true);
+
+        expect(result).toEqual(expectedOutput);
+    }
+
+    it('simple color in dark mode', () => {
+        runDarkTest('aa', {
+            key: undefined,
+            lightModeColor: '',
+            darkModeColor: undefined,
+        });
+    });
+
+    it('var color in dark mode', () => {
+        runDarkTest('var(--aa, bb)', {
+            key: '--aa',
+            lightModeColor: 'bb',
+            darkModeColor: undefined,
+        });
+    });
+
+    it('known simple color in dark mode', () => {
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: '#ff0000',
+                darkModeColor: '#00ffff',
+            },
+        };
+        runDarkTest('#00ffff', {
+            key: undefined,
+            lightModeColor: '#ff0000',
+            darkModeColor: '#00ffff',
+        });
+    });
 });
 
 describe('DarkColorHandlerImpl.registerColor', () => {
@@ -232,5 +268,96 @@ describe('DarkColorHandlerImpl.reset', () => {
         expect(removeProperty).toHaveBeenCalledTimes(2);
         expect(removeProperty).toHaveBeenCalledWith('--aa');
         expect(removeProperty).toHaveBeenCalledWith('--dd');
+    });
+});
+
+describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
+    it('Not found', () => {
+        const div = ({} as any) as HTMLElement;
+        const handler = new DarkColorHandlerImpl(div, null!);
+
+        const result = handler.findLightColorFromDarkColor('#010203');
+
+        expect(result).toEqual(null);
+    });
+
+    it('Found: HEX to RGB', () => {
+        const div = ({} as any) as HTMLElement;
+        const handler = new DarkColorHandlerImpl(div, null!);
+
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: 'bb',
+                darkModeColor: 'rgb(4,5,6)',
+            },
+            '--aa': {
+                lightModeColor: 'aa',
+                darkModeColor: 'rgb(1,2,3)',
+            },
+        };
+
+        const result = handler.findLightColorFromDarkColor('#010203');
+
+        expect(result).toEqual('aa');
+    });
+
+    it('Found: HEX to HEX', () => {
+        const div = ({} as any) as HTMLElement;
+        const handler = new DarkColorHandlerImpl(div, null!);
+
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: 'bb',
+                darkModeColor: 'rgb(4,5,6)',
+            },
+            '--aa': {
+                lightModeColor: 'aa',
+                darkModeColor: '#010203',
+            },
+        };
+
+        const result = handler.findLightColorFromDarkColor('#010203');
+
+        expect(result).toEqual('aa');
+    });
+
+    it('Found: RGB to HEX', () => {
+        const div = ({} as any) as HTMLElement;
+        const handler = new DarkColorHandlerImpl(div, null!);
+
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: 'bb',
+                darkModeColor: 'rgb(4,5,6)',
+            },
+            '--aa': {
+                lightModeColor: 'aa',
+                darkModeColor: '#010203',
+            },
+        };
+
+        const result = handler.findLightColorFromDarkColor('rgb(1,2,3)');
+
+        expect(result).toEqual('aa');
+    });
+
+    it('Found: RGB to RGB', () => {
+        const div = ({} as any) as HTMLElement;
+        const handler = new DarkColorHandlerImpl(div, null!);
+
+        (handler as any).knownColors = {
+            '--bb': {
+                lightModeColor: 'bb',
+                darkModeColor: 'rgb(4,5,6)',
+            },
+            '--aa': {
+                lightModeColor: 'aa',
+                darkModeColor: 'rgb(1, 2, 3)',
+            },
+        };
+
+        const result = handler.findLightColorFromDarkColor('rgb(1,2,3)');
+
+        expect(result).toEqual('aa');
     });
 });

@@ -1,3 +1,4 @@
+import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import getSegmentFormat from '../../../lib/publicApi/format/getSegmentFormat';
 import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -8,8 +9,8 @@ import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 import {
     DomToModelOption,
-    IExperimentalContentModelEditor,
-} from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+    IContentModelEditor,
+} from '../../../lib/publicTypes/IContentModelEditor';
 
 const selectedNodeId = 'Selected';
 
@@ -19,6 +20,8 @@ describe('getSegmentFormat', () => {
         pendingFormat: ContentModelSegmentFormat | null,
         expectedFormat: ContentModelSegmentFormat | null
     ) {
+        spyOn(getPendingFormat, 'getPendingFormat').and.returnValue(pendingFormat);
+
         const editor = ({
             getUndoState: () => ({
                 canUndo: false,
@@ -26,8 +29,7 @@ describe('getSegmentFormat', () => {
             }),
             isDarkMode: () => false,
             getZoomScale: () => 1,
-            getPendingFormat: () => pendingFormat,
-            createContentModel: (root: Node, options: DomToModelOption) => {
+            createContentModel: (options: DomToModelOption) => {
                 const model = createContentModelDocument();
                 const editorDiv = document.createElement('div');
 
@@ -62,7 +64,7 @@ describe('getSegmentFormat', () => {
 
                 return model;
             },
-        } as any) as IExperimentalContentModelEditor;
+        } as any) as IContentModelEditor;
         const result = getSegmentFormat(editor);
 
         expect(result).toEqual(expectedFormat);

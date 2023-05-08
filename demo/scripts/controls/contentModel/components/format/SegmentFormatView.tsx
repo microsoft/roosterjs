@@ -5,6 +5,8 @@ import { FontFamilyFormatRenderer } from './formatPart/FontFamilyFormatRenderer'
 import { FontSizeFormatRenderer } from './formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from './utils/FormatRenderer';
 import { FormatView } from './FormatView';
+import { LetterSpacingFormatRenderer } from './formatPart/LetterSpacingFormatRenderer';
+import { LineHeightFormatRenderer } from './formatPart/LineHeightFormatRenderer';
 import { TextColorFormatRenderer } from './formatPart/TextColorFormatRenderer';
 import {
     BoldFormatRenderer,
@@ -24,6 +26,8 @@ const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     UnderlineFormatRenderer,
     StrikeFormatRenderer,
     SuperOrSubScriptFormatRenderer,
+    LineHeightFormatRenderer,
+    LetterSpacingFormatRenderer,
 ];
 
 export function SegmentFormatView(props: { format: ContentModelSegmentFormat }) {

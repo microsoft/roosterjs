@@ -1,8 +1,11 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import { ContentModelCode } from '../decorator/ContentModelCode';
 import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import { ZoomScaleFormat } from '../format/formatParts/ZoomScaleFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List
@@ -44,14 +47,33 @@ export interface DomToModelFormatContext {
     listFormat: DomToModelListFormat;
 
     /**
+     * Zoom scale of the content
+     */
+    zoomScaleFormat: ZoomScaleFormat;
+
+    /**
+     * Whether put the source element into Content Model when possible.
+     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
+     */
+    allowCacheElement?: boolean;
+}
+
+/**
+ * Represents decorator info used by DOM to Content Model conversion
+ */
+export interface DomToModelDecoratorContext {
+    /**
      * Context of hyper link info
      */
     link: ContentModelLink;
 
     /**
-     * When process table, whether we should always normalize it.
-     * This can help persist the size of table that is not created from Content Model
-     * @default false
+     * Context of code info
      */
-    alwaysNormalizeTable?: boolean;
+    code: ContentModelCode;
+
+    /**
+     * Context for paragraph decorator
+     */
+    blockDecorator: ContentModelParagraphDecorator;
 }

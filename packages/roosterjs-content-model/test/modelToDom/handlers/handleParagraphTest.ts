@@ -3,9 +3,12 @@ import { ContentModelHandler } from '../../../lib/publicTypes/context/ContentMod
 import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagraph';
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
+import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
@@ -27,10 +30,11 @@ describe('handleParagraph', () => {
         expectedInnerHTML: string,
         expectedCreateSegmentFromContentCalledTimes: number
     ) {
-        handleParagraph(document, parent, paragraph, context);
+        handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleSegment).toHaveBeenCalledTimes(expectedCreateSegmentFromContentCalledTimes);
+        expect(paragraph.cachedElement).toBe((parent.firstChild as HTMLElement) || undefined);
     }
 
     it('Handle empty explicit paragraph', () => {
@@ -364,8 +368,131 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
-        expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(1)[1]).toBe(null);
+    });
+
+    it('Handle paragraph with refNode', () => {
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        const br = document.createElement('br');
+
+        const result = parent.appendChild(br);
+
+        handleParagraph(document, parent, paragraph, context, br);
+
+        expect(parent.innerHTML).toBe('<div></div><br>');
+        expect(paragraph.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(result).toBe(br);
+    });
+
+    it('Handle paragraph with PRE', () => {
+        const segment1 = createText('test1');
+        const segment2 = createText('test2');
+        const para1 = createParagraph(false, { whiteSpace: 'pre' });
+        const para2 = createParagraph(false, { whiteSpace: 'pre' });
+        const br = document.createElement('br');
+
+        para1.segments.push(segment1);
+        para2.segments.push(segment2);
+
+        parent.appendChild(br);
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, para1, context, br);
+        handleParagraph(document, parent, para2, context, br);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="white-space: pre;"><span>test1</span></div><div style="white-space: pre;"><span>test2</span></div><br>'
+        );
+        expect(para1.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(para1.cachedElement?.outerHTML).toBe(
+            '<div style="white-space: pre;"><span>test1</span></div>'
+        );
+        expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
+        expect(para2.cachedElement?.outerHTML).toBe(
+            '<div style="white-space: pre;"><span>test2</span></div>'
+        );
+
+        optimize(parent, 2);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="white-space: pre;">test1</div><div style="white-space: pre;">test2</div><br>'
+        );
+        expect(para1.cachedElement).toBe(parent.firstChild as HTMLElement);
+        expect(para1.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test1</div>');
+        expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
+        expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
+    });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div></div>');
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+    });
+
+    it('With zeroFontSize = true and no text segment', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+            zeroFontSize: true,
+        };
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div style="font-size: 0px;"></div>');
+    });
+
+    it('With zeroFontSize = true and has text segment', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: {},
+                    text: 'test',
+                },
+            ],
+            format: {},
+            zeroFontSize: true,
+        };
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div></div>');
     });
 });

@@ -1,18 +1,26 @@
 import { applyFormat } from '../utils/applyFormat';
-import { commitEntity, createEntityPlaceholder, getObjectKeys } from 'roosterjs-editor-dom';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { Entity } from 'roosterjs-editor-types';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
+import {
+    addDelimiters,
+    commitEntity,
+    getObjectKeys,
+    isBlockElement,
+    wrap,
+} from 'roosterjs-editor-dom';
 
 /**
  * @internal
  */
-export const handleEntity: ContentModelHandler<ContentModelEntity> = (
+export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     doc: Document,
     parent: Node,
     entityModel: ContentModelEntity,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
     const { wrapper, id, type, isReadonly, format } = entityModel;
     const entity: Entity | null =
@@ -24,30 +32,28 @@ export const handleEntity: ContentModelHandler<ContentModelEntity> = (
                   isReadonly: !!isReadonly,
               }
             : null;
+    const isInlineEntity = !isBlockElement(wrapper);
 
     if (entity) {
         // Commit the entity attributes in case there is any change
         commitEntity(wrapper, entity.type, entity.isReadonly, entity.id);
     }
 
-    if (getObjectKeys(format).length > 0) {
-        const span = doc.createElement('span');
+    refNode = reuseCachedElement(parent, wrapper, refNode);
 
-        parent.appendChild(span);
+    if (isInlineEntity && getObjectKeys(format).length > 0) {
+        const span = wrap(wrapper, 'span');
+
         applyFormat(span, context.formatAppliers.segment, format, context);
-        parent = span;
     }
 
-    if (context.doNotReuseEntityDom || !entity) {
-        parent.appendChild(wrapper);
-    } else {
-        // Create a comment as placeholder and insert into DOM tree.
-        // If the entity DOM can be reused, the original DOM node will be preserved without any change
-        // so that in case there is something that is sensitive to its DOM path (e.g. IFRAME), no need to cause it reloaded.
-        // For entity that is not directly under root, later we will replace the comment with its original DOM node
-        parent.appendChild(createEntityPlaceholder(entity));
+    if (context.addDelimiterForEntity && isInlineEntity && isReadonly) {
+        const [after] = addDelimiters(wrapper);
 
-        // Save the entity DOM wrapper node and its placeholder into context so that later we know how to handle it
-        context.entities[entity.id] = wrapper;
+        context.regularSelection.current.segment = after;
     }
+
+    context.onNodeCreated?.(entityModel, wrapper);
+
+    return refNode;
 };

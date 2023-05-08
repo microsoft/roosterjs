@@ -1,3 +1,4 @@
+import ModeIndependentColor from './ModeIndependentColor';
 import { ContentMetadata } from './ContentMetadata';
 
 /**
@@ -18,4 +19,9 @@ export default interface Snapshot {
      * Entity map, from entity id to its DOM wrapper element, to allow reusing existing DOM element when undo/redo
      */
     entities?: Record<string, HTMLElement>;
+
+    /**
+     * Known colors for dark mode
+     */
+    knownColors: Readonly<ModeIndependentColor>[];
 }

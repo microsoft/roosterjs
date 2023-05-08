@@ -8,9 +8,9 @@ export type ContentModelBlockGroupType =
     | 'Document'
 
     /**
-     * Represents a Quote element
+     * Represents a FormatContainer
      */
-    | 'Quote'
+    | 'FormatContainer'
 
     /**
      * Represents a list item (LI) element

@@ -99,6 +99,10 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
+                            marginLeft: undefined,
+                            marginRight: undefined,
+                            paddingLeft: undefined,
+                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -145,6 +149,10 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
+                            marginLeft: undefined,
+                            marginRight: undefined,
+                            paddingLeft: undefined,
+                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -254,6 +262,10 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
+                            marginLeft: undefined,
+                            marginRight: undefined,
+                            paddingLeft: undefined,
+                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -268,6 +280,10 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
+                            marginLeft: undefined,
+                            marginRight: undefined,
+                            paddingLeft: undefined,
+                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -369,6 +385,10 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
+                            marginLeft: undefined,
+                            marginRight: undefined,
+                            paddingLeft: undefined,
+                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -392,6 +412,125 @@ describe('setDirection', () => {
                                 segmentType: 'Text',
                                 text: 'test',
                                 format: {},
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
+
+    it('Swap margin and padding when direction changes', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '10px',
+                            marginRight: '20px',
+                            paddingLeft: '30px',
+                            paddingRight: '40px',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'rtl',
+                            marginLeft: '20px',
+                            marginRight: '10px',
+                            paddingLeft: '40px',
+                            paddingRight: '30px',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
+
+    it('Do not swap margin and padding when direction is not changed', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '10px',
+                            marginRight: '20px',
+                            paddingLeft: '30px',
+                            paddingRight: '40px',
+                            direction: 'rtl',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            direction: 'rtl',
+                            marginLeft: '10px',
+                            marginRight: '20px',
+                            paddingLeft: '30px',
+                            paddingRight: '40px',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {},
+                                isSelected: true,
                             },
                         ],
                     },

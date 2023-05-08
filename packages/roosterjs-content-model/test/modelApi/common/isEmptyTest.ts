@@ -47,9 +47,8 @@ describe('isEmpty', () => {
         const result = isEmpty({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -60,9 +59,12 @@ describe('isEmpty', () => {
         const result = isEmpty({
             blockType: 'Table',
             format: {},
-            cells: [[], [], []],
+            rows: [
+                { format: {}, height: 0, cells: [] },
+                { format: {}, height: 0, cells: [] },
+                { format: {}, height: 0, cells: [] },
+            ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -73,20 +75,23 @@ describe('isEmpty', () => {
         const result = isEmpty({
             blockType: 'Table',
             format: {},
-            cells: [
-                [
-                    {
-                        blockGroupType: 'TableCell',
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        blocks: [],
-                        dataset: {},
-                    },
-                ],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            blocks: [],
+                            dataset: {},
+                        },
+                    ],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -96,10 +101,10 @@ describe('isEmpty', () => {
     it('Empty quote', () => {
         const result = isEmpty({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             format: {},
             blocks: [],
-            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();
@@ -108,7 +113,8 @@ describe('isEmpty', () => {
     it('Quote has empty block', () => {
         const result = isEmpty({
             blockType: 'BlockGroup',
-            blockGroupType: 'Quote',
+            blockGroupType: 'FormatContainer',
+            tagName: 'blockquote',
             format: {},
             blocks: [
                 {
@@ -117,10 +123,21 @@ describe('isEmpty', () => {
                     segments: [],
                 },
             ],
-            quoteSegmentFormat: {},
         });
 
         expect(result).toBeTrue();
+    });
+
+    it('FormatContainer with DIV', () => {
+        const result = isEmpty({
+            blockType: 'BlockGroup',
+            blockGroupType: 'FormatContainer',
+            tagName: 'div',
+            format: {},
+            blocks: [],
+        });
+
+        expect(result).toBeFalse();
     });
 
     it('Empty list item', () => {

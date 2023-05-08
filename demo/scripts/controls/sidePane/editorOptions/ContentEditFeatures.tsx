@@ -48,6 +48,15 @@ const EditFeatureDescriptionMap: Record<keyof ContentEditFeatureSettings, string
     autoNumberingList:
         'When press space after an number, a letter or roman number followed by ), ., -, or between parenthesis in an empty line, toggle numbering',
     mergeListOnBackspaceAfterList: 'When backspacing between lists, merge the lists',
+    deleteTableWithBackspace: 'Delete table with backspace key with whole table is selected',
+    moveBetweenDelimitersFeature:
+        'Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys',
+    removeEntityBetweenDelimiters:
+        'When using BACKSPACE or DELETE in a Readonly inline entity delimeter, trigger a Entity Operation',
+    removeCodeWhenEnterOnEmptyLine: 'Remove code line when enter on empty line',
+    removeCodeWhenBackspaceOnEmptyFirstLine: 'Remove code line when backspace on empty first line',
+    indentWhenAltShiftRight: 'Indent list item using Alt + Shift + Right',
+    outdentWhenAltShiftLeft: 'Outdent list item using Alt + Shift + Left',
 };
 
 export interface ContentEditFeaturessProps {
