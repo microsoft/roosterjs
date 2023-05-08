@@ -99,7 +99,7 @@ export default class PendingFormatStatePlugin
                     this.editor.insertNode(this.state.pendableFormatSpan);
                     this.editor.select(
                         this.state.pendableFormatSpan,
-                        PositionType.Before,
+                        PositionType.Begin,
                         this.state.pendableFormatSpan,
                         PositionType.End
                     );

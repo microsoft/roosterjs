@@ -1,22 +1,26 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 
 /**
  * @internal
  */
-export function createTable(rowCount: number): ContentModelTable {
-    const rows: ContentModelTableCell[][] = [];
+export function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
+    const rows: ContentModelTableRow[] = [];
 
     for (let i = 0; i < rowCount; i++) {
-        rows.push([]);
+        rows.push({
+            height: 0,
+            format: {},
+            cells: [],
+        });
     }
 
     return {
         blockType: 'Table',
-        cells: rows,
-        format: {},
+        rows,
+        format: { ...(format || {}) },
         widths: [],
-        heights: [],
         dataset: {},
     };
 }

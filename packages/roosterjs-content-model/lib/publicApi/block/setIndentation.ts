@@ -1,5 +1,5 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 
 /**
@@ -9,11 +9,16 @@ import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
  * @param length The length of pixel to indent/outdent @default 40
  */
 export default function setIndentation(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     indentation: 'indent' | 'outdent',
     length?: number
 ) {
-    formatWithContentModel(editor, 'setIndentation', model =>
-        setModelIndentation(model, indentation, length)
+    formatWithContentModel(
+        editor,
+        'setIndentation',
+        model => setModelIndentation(model, indentation, length),
+        {
+            preservePendingFormat: true,
+        }
     );
 }

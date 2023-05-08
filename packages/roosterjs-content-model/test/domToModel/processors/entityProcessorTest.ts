@@ -156,4 +156,45 @@ describe('entityProcessor', () => {
             ],
         });
     });
+
+    it('Clear format for block entity', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        commitEntity(div, 'entity', true, 'entity_1');
+        context.isInSelection = true;
+        context.segmentFormat = {
+            fontFamily: 'Arial',
+            fontSize: '10px',
+        };
+        context.blockFormat = {
+            lineHeight: '20px',
+        };
+
+        entityProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {},
+                    id: 'entity_1',
+                    type: 'entity',
+                    isReadonly: true,
+                    wrapper: div,
+                    isSelected: true,
+                },
+            ],
+        });
+
+        expect(context.segmentFormat).toEqual({
+            fontFamily: 'Arial',
+            fontSize: '10px',
+        });
+        expect(context.blockFormat).toEqual({
+            lineHeight: '20px',
+        });
+    });
 });

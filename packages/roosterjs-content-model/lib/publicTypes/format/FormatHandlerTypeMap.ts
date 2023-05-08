@@ -2,16 +2,20 @@ import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
 import { BoldFormat } from './formatParts/BoldFormat';
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { BorderFormat } from './formatParts/BorderFormat';
+import { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import { DatasetFormat } from './formatParts/DatasetFormat';
 import { DirectionFormat } from './formatParts/DirectionFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
 import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import { FontSizeFormat } from './formatParts/FontSizeFormat';
+import { HtmlAlignFormat } from './formatParts/HtmlAlignFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { ItalicFormat } from './formatParts/ItalicFormat';
+import { LetterSpacingFormat } from './formatParts/LetterSpacingFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { ListMetadataFormat } from './formatParts/ListMetadataFormat';
+import { ListStylePositionFormat } from './formatParts/ListStylePositionFormat';
 import { ListThreadFormat } from './formatParts/ListThreadFormat';
 import { ListTypeFormat } from './formatParts/ListTypeFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
@@ -20,6 +24,7 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
+import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
@@ -51,6 +56,11 @@ export interface FormatHandlerTypeMap {
     borderBox: BorderBoxFormat;
 
     /**
+     * Format for BoxShadowFormat
+     */
+    boxShadow: BoxShadowFormat;
+
+    /**
      * Format for DatasetFormat
      */
     dataset: DatasetFormat;
@@ -76,6 +86,11 @@ export interface FormatHandlerTypeMap {
     fontSize: FontSizeFormat;
 
     /**
+     * Format for HtmlAlignFormat
+     */
+    htmlAlign: HtmlAlignFormat;
+
+    /**
      * Format for IdFormat
      */
     id: IdFormat;
@@ -84,6 +99,11 @@ export interface FormatHandlerTypeMap {
      * Format for ItalicFormat
      */
     italic: ItalicFormat;
+
+    /**
+     * Format for LetterSpacingFormat
+     */
+    letterSpacing: LetterSpacingFormat;
 
     /**
      * Format for LineHeightFormat
@@ -114,6 +134,11 @@ export interface FormatHandlerTypeMap {
      * Format for ListThreadFormat (used by list level)
      */
     listLevelThread: ListThreadFormat;
+
+    /**
+     * Format for ListStylePositionFormat (used by list level)
+     */
+    listStylePosition: ListStylePositionFormat;
 
     /**
      * Format for ListTypeFormat
@@ -151,9 +176,19 @@ export interface FormatHandlerTypeMap {
     tableSpacing: SpacingFormat;
 
     /**
+     * Format for TextAlignFormat
+     */
+    textAlign: TextAlignFormat;
+
+    /**
      * Format for TextColorFormat
      */
     textColor: TextColorFormat;
+
+    /**
+     * Format for TextColorFormat, for Table Cell only
+     */
+    textColorOnTableCell: TextColorFormat;
 
     /**
      * Format for UnderlineFormat

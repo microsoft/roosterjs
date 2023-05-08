@@ -1,7 +1,7 @@
 import { ContentModelDocument } from './ContentModelDocument';
+import { ContentModelFormatContainer } from './ContentModelFormatContainer';
 import { ContentModelGeneralBlock } from './ContentModelGeneralBlock';
 import { ContentModelListItem } from './ContentModelListItem';
-import { ContentModelQuote } from './ContentModelQuote';
 import { ContentModelTableCell } from './ContentModelTableCell';
 
 /**
@@ -9,7 +9,7 @@ import { ContentModelTableCell } from './ContentModelTableCell';
  */
 export type ContentModelBlockGroup =
     | ContentModelDocument
-    | ContentModelQuote
+    | ContentModelFormatContainer
     | ContentModelListItem
     | ContentModelTableCell
     | ContentModelGeneralBlock;

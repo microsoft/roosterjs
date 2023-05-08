@@ -1,15 +1,13 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
+import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelQuote } from '../../publicTypes/group/ContentModelQuote';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import { TypeOfBlockGroup } from '../common/getClosestAncestorBlockGroupIndex';
 import { unwrapBlock } from '../common/unwrapBlock';
 import { wrapBlockStep1, WrapBlockStep1Result, wrapBlockStep2 } from '../common/wrapBlock';
 
@@ -18,41 +16,28 @@ import { wrapBlockStep1, WrapBlockStep1Result, wrapBlockStep2 } from '../common/
  */
 export function toggleModelBlockQuote(
     model: ContentModelDocument,
-    quoteFormat: ContentModelBlockFormat,
-    segmentFormat: ContentModelSegmentFormat
+    format: ContentModelFormatContainerFormat
 ): boolean {
-    const paragraphOfQuote = getOperationalBlocks<ContentModelQuote | ContentModelListItem>(
-        model,
-        ['Quote', 'ListItem'],
-        ['TableCell'],
-        true /*deepFirst*/
-    );
+    const paragraphOfQuote = getOperationalBlocks<
+        ContentModelFormatContainer | ContentModelListItem
+    >(model, ['FormatContainer', 'ListItem'], ['TableCell'], true /*deepFirst*/);
 
-    if (
-        areAllOperationalBlocksOfGroupType<
-            ContentModelQuote | ContentModelListItem,
-            ContentModelQuote
-        >(paragraphOfQuote, 'Quote')
-    ) {
+    if (areAllBlockQuotes(paragraphOfQuote)) {
         // All selections are already in quote, we need to unquote them
         paragraphOfQuote.forEach(({ block, parent }) => {
             unwrapBlock(parent, block);
         });
     } else {
-        const step1Results: WrapBlockStep1Result<ContentModelQuote>[] = [];
-        const creator = () => createQuote(quoteFormat, segmentFormat);
+        const step1Results: WrapBlockStep1Result<ContentModelFormatContainer>[] = [];
+        const creator = () => createQuote(format);
         const canMerge = (
             target: ContentModelBlock,
-            current?: ContentModelQuote
-        ): target is ContentModelQuote =>
-            canMergeQuote(
-                target,
-                current?.format || quoteFormat,
-                current?.quoteSegmentFormat || segmentFormat
-            );
+            current?: ContentModelFormatContainer
+        ): target is ContentModelFormatContainer =>
+            canMergeQuote(target, current?.format || format);
 
         paragraphOfQuote.forEach(({ block, parent }) => {
-            if (isBlockGroupOfType<ContentModelQuote>(block, 'Quote')) {
+            if (isQuote(block)) {
                 // Already in quote, no op
             } else {
                 wrapBlockStep1(step1Results, parent, block, creator, canMerge);
@@ -67,24 +52,20 @@ export function toggleModelBlockQuote(
 
 function canMergeQuote(
     target: ContentModelBlock,
-    quoteFormat: ContentModelBlockFormat,
-    segmentFormat: ContentModelSegmentFormat
-): target is ContentModelQuote {
+    format: ContentModelFormatContainerFormat
+): target is ContentModelFormatContainer {
+    return isQuote(target) && areSameFormats(format, target.format);
+}
+
+function isQuote(block: ContentModelBlock): block is ContentModelFormatContainer {
     return (
-        isBlockGroupOfType<ContentModelQuote>(target, 'Quote') &&
-        areSameFormats(quoteFormat, target.format) &&
-        areSameFormats(segmentFormat, target.quoteSegmentFormat)
+        isBlockGroupOfType<ContentModelFormatContainer>(block, 'FormatContainer') &&
+        block.tagName == 'blockquote'
     );
 }
 
-function areAllOperationalBlocksOfGroupType<
-    SourceType extends ContentModelBlockGroup,
-    ResultType extends SourceType
->(
-    blockAndParents: OperationalBlocks<SourceType>[],
-    type: TypeOfBlockGroup<ResultType>
-): blockAndParents is { block: ResultType; parent: ContentModelBlockGroup }[] {
-    return blockAndParents.every(blockAndParent =>
-        isBlockGroupOfType<ResultType>(blockAndParent.block, type)
-    );
+function areAllBlockQuotes(
+    blockAndParents: OperationalBlocks<ContentModelFormatContainer | ContentModelListItem>[]
+): blockAndParents is { block: ContentModelFormatContainer; parent: ContentModelBlockGroup }[] {
+    return blockAndParents.every(blockAndParent => isQuote(blockAndParent.block));
 }

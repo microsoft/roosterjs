@@ -3,7 +3,6 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { DirectionFormat } from '../../../lib/publicTypes/format/formatParts/DirectionFormat';
 import { directionFormatHandler } from '../../../lib/formatHandlers/block/directionFormatHandler';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { getDefaultStyle } from '../../../lib/domToModel/utils/getDefaultStyle';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
 describe('directionFormatHandler.parse', () => {
@@ -18,35 +17,22 @@ describe('directionFormatHandler.parse', () => {
     });
 
     function runTest(
-        textAlignCssValue: string | null,
-        textAlignAttrValue: string | null,
+        element: HTMLElement,
         directionCssValue: string | null,
-        directionAttrVAlue: string | null,
-        expectedAlignValue: 'start' | 'center' | 'end' | undefined,
-        expectedDirectionValue: 'ltr' | 'rtl' | undefined,
-        expectedIsAlignFromAttr: boolean | undefined
+        directionAttrValue: string | null,
+        expectedDirectionValue: 'ltr' | 'rtl' | undefined
     ) {
-        if (textAlignCssValue) {
-            div.style.textAlign = textAlignCssValue;
-        }
-
-        if (textAlignAttrValue) {
-            div.setAttribute('align', textAlignAttrValue);
-        }
-
         if (directionCssValue) {
-            div.style.direction = directionCssValue;
+            element.style.direction = directionCssValue;
         }
 
-        if (directionAttrVAlue) {
-            div.setAttribute('dir', directionAttrVAlue);
+        if (directionAttrValue) {
+            element.setAttribute('dir', directionAttrValue);
         }
 
-        directionFormatHandler.parse(format, div, context, {});
+        directionFormatHandler.parse(format, element, context, {});
 
-        expect(format.textAlign).toBe(expectedAlignValue);
         expect(format.direction).toBe(expectedDirectionValue);
-        expect(format.isTextAlignFromAttr).toBe(expectedIsAlignFromAttr);
     }
 
     it('No alignment, no direction', () => {
@@ -55,56 +41,20 @@ describe('directionFormatHandler.parse', () => {
     });
 
     it('Direction in CSS', () => {
-        runTest(null, null, 'rtl', null, undefined, 'rtl', undefined);
+        runTest(div, 'rtl', null, 'rtl');
     });
 
     it('Direction in attribute', () => {
-        runTest(null, null, null, 'rtl', undefined, 'rtl', undefined);
+        runTest(div, null, 'rtl', 'rtl');
     });
 
     it('Direction in both', () => {
-        runTest(null, null, 'ltr', 'rtl', undefined, 'ltr', undefined);
+        runTest(div, 'ltr', 'rtl', 'ltr');
     });
 
-    it('Align in CSS', () => {
-        runTest('left', null, null, null, 'start', undefined, undefined);
-    });
-
-    it('Align in attribute', () => {
-        runTest(null, 'left', null, null, 'start', undefined, true);
-    });
-
-    it('Align in both CSS and attribute', () => {
-        runTest('left', 'right', null, null, 'start', undefined, undefined);
-    });
-
-    it('LTR', () => {
-        runTest('left', null, null, null, 'start', undefined, undefined);
-        runTest('center', null, null, null, 'center', undefined, undefined);
-        runTest('right', null, null, null, 'end', undefined, undefined);
-        runTest('start', null, null, null, 'start', undefined, undefined);
-        runTest('end', null, null, null, 'end', undefined, undefined);
-    });
-
-    it('RTL', () => {
-        context.isRightToLeft = true;
-
-        runTest('left', null, 'rtl', null, 'end', 'rtl', undefined);
-        runTest('center', null, 'rtl', null, 'center', 'rtl', undefined);
-        runTest('right', null, 'rtl', null, 'start', 'rtl', undefined);
-        runTest('start', null, 'rtl', null, 'start', 'rtl', undefined);
-        runTest('end', null, 'rtl', null, 'end', 'rtl', undefined);
-    });
-
-    it('Center tag', () => {
-        const center = document.createElement('center');
-        const defaultStyle = getDefaultStyle(center, context);
-
-        directionFormatHandler.parse(format, center, context, defaultStyle);
-
-        expect(format).toEqual({
-            textAlign: 'center',
-        });
+    it('Already has dir', () => {
+        format.direction = 'rtl';
+        runTest(div, 'ltr', null, 'ltr');
     });
 });
 
@@ -124,50 +74,9 @@ describe('directionFormatHandler.apply', () => {
         expect(div.outerHTML).toBe('<div></div>');
     });
 
-    it('No direction start', () => {
-        format.textAlign = 'start';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="text-align: left;"></div>');
-    });
-
     it('LTR start', () => {
-        format.textAlign = 'start';
         format.direction = 'ltr';
         directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr; text-align: left;"></div>');
-    });
-
-    it('LTR end', () => {
-        format.textAlign = 'end';
-        format.direction = 'ltr';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: ltr; text-align: right;"></div>');
-    });
-
-    it('RTL start', () => {
-        format.textAlign = 'start';
-        format.direction = 'rtl';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: rtl; text-align: right;"></div>');
-    });
-
-    it('RTL end', () => {
-        format.textAlign = 'end';
-        format.direction = 'rtl';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="direction: rtl; text-align: left;"></div>');
-    });
-
-    it('Center', () => {
-        format.textAlign = 'center';
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div style="text-align: center;"></div>');
-    });
-
-    it('Align right in attr', () => {
-        format.textAlign = 'end';
-        format.isTextAlignFromAttr = true;
-        directionFormatHandler.apply(format, div, context);
-        expect(div.outerHTML).toBe('<div align="right"></div>');
+        expect(div.outerHTML).toBe('<div style="direction: ltr;"></div>');
     });
 });

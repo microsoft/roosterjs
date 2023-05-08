@@ -104,6 +104,100 @@ describe('clearModelFormat', () => {
         expect(tables).toEqual([]);
     });
 
+    it('Model with link', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false);
+        const text1 = createText('test1');
+
+        text1.link = {
+            dataset: {},
+            format: {
+                href: 'test',
+                textColor: 'red',
+            },
+        };
+        text1.isSelected = true;
+
+        para.segments.push(text1);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                            link: {
+                                dataset: {},
+                                format: {
+                                    href: 'test',
+                                },
+                            },
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([text1]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with code', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false);
+        const text1 = createText('test1');
+
+        text1.code = {
+            format: {
+                fontFamily: 'monospace',
+            },
+        };
+        text1.isSelected = true;
+
+        para.segments.push(text1);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test1',
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([text1]);
+        expect(tables).toEqual([]);
+    });
+
     it('Model with text selection in whole paragraph', () => {
         const model = createContentModelDocument();
         const para = createParagraph(false, { lineHeight: '10px' });
@@ -146,7 +240,7 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[model], para]]);
-        expect(segments).toEqual([text1, text2, text1, text2]);
+        expect(segments).toEqual([text1, text2]);
         expect(tables).toEqual([]);
     });
 
@@ -171,16 +265,16 @@ describe('clearModelFormat', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: {},
+                    format: { lineHeight: '10px' },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'red' },
                             text: 'test1',
                         },
                         {
                             segmentType: 'Text',
-                            format: {},
+                            format: { textColor: 'green' },
                             text: 'test2',
                         },
                         {
@@ -193,7 +287,135 @@ describe('clearModelFormat', () => {
             ],
         });
         expect(blocks).toEqual([[[model], para]]);
-        expect(segments).toEqual([marker, text1, text2, marker]);
+        expect(segments).toEqual([marker]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with collapsed selection inside word', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const text1 = createText('test1', { textColor: 'red' });
+        const text2 = createText(' test2', { textColor: 'green' });
+        const marker = createSelectionMarker();
+        const text3 = createText('test3', { textColor: 'blue' });
+
+        para.segments.push(text1, text2, marker, text3);
+        model.blocks.push(para);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
+                            format: {
+                                textColor: 'red',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: ' ',
+                            format: {
+                                textColor: 'green',
+                            },
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test2',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test3',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        lineHeight: '10px',
+                    },
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[model], para]]);
+        expect(segments).toEqual([
+            {
+                segmentType: 'Text',
+                text: 'test2',
+                format: {},
+            },
+            marker,
+            text3,
+        ]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with collapsed selection under list', () => {
+        const model = createContentModelDocument();
+        const list = createListItem([
+            {
+                listType: 'OL',
+            },
+        ]);
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        list.blocks.push(para);
+        model.blocks.push(list);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    isSelected: true,
+                                    format: {},
+                                },
+                            ],
+                            format: {
+                                lineHeight: '10px',
+                            },
+                        },
+                    ],
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[list, model], para]]);
+        expect(segments).toEqual([marker]);
         expect(tables).toEqual([]);
     });
 
@@ -293,8 +515,69 @@ describe('clearModelFormat', () => {
                 format: {},
                 isSelected: true,
             },
-            text,
         ]);
+        expect(tables).toEqual([]);
+    });
+
+    it('Model with selection under list, has defaultSegmentFormat', () => {
+        const model = createContentModelDocument({
+            fontSize: '10px',
+        });
+        const list = createListItem([{ listType: 'OL' }], { fontSize: '20px' });
+        const para = createParagraph(false, { lineHeight: '10px' });
+        const text = createText('test', { textColor: 'green' });
+
+        text.isSelected = true;
+
+        para.segments.push(text);
+        list.blocks.push(para);
+        model.blocks.push(list);
+
+        const blocks: any[] = [];
+        const segments: any[] = [];
+        const tables: any[] = [];
+
+        clearModelFormat(model, blocks, segments, tables);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            format: {
+                fontSize: '10px',
+            },
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    levels: [],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {
+                            fontSize: '20px',
+                        },
+                        isSelected: true,
+                    },
+                    format: {},
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {
+                                        fontSize: '10px',
+                                    },
+                                    text: 'test',
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(blocks).toEqual([[[list, model], para]]);
+        expect(segments).toEqual([text]);
         expect(tables).toEqual([]);
     });
 
@@ -334,9 +617,9 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { lineHeight: '25px' },
-                    quoteSegmentFormat: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -359,12 +642,12 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     blocks: [],
                     format: {
                         lineHeight: '25px',
                     },
-                    quoteSegmentFormat: {},
                 },
                 {
                     blockType: 'Paragraph',
@@ -380,9 +663,9 @@ describe('clearModelFormat', () => {
                 },
                 {
                     blockType: 'BlockGroup',
-                    blockGroupType: 'Quote',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'blockquote',
                     format: { lineHeight: '25px' },
-                    quoteSegmentFormat: {},
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -402,7 +685,7 @@ describe('clearModelFormat', () => {
             [[quote, model], para3],
             [[quote, model], para4],
         ]);
-        expect(segments).toEqual([text3, text4, text4, text3]);
+        expect(segments).toEqual([text3, text4]);
         expect(tables).toEqual([]);
     });
 
@@ -419,7 +702,7 @@ describe('clearModelFormat', () => {
         cell1.isSelected = true;
         cell2.isSelected = true;
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         const blocks: any[] = [];
@@ -439,42 +722,45 @@ describe('clearModelFormat', () => {
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                     },
                     widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {
-                                    useBorderBox: undefined,
-                                    borderTop: '1px solid #ABABAB',
-                                    borderRight: '1px solid #ABABAB',
-                                    borderBottom: '1px solid #ABABAB',
-                                    borderLeft: '1px solid #ABABAB',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: undefined,
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                 },
-                                dataset: {},
-                                blocks: [],
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {
-                                    useBorderBox: undefined,
-                                    borderTop: '1px solid #ABABAB',
-                                    borderRight: '1px solid #ABABAB',
-                                    borderBottom: '1px solid #ABABAB',
-                                    borderLeft: '1px solid #ABABAB',
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: undefined,
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                 },
-                                dataset: {},
-                                blocks: [],
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                 },
             ],

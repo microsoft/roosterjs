@@ -2,6 +2,7 @@ import UndoPlugin from '../../lib/corePlugins/UndoPlugin';
 import { itChromeOnly } from '../TestHelper';
 import { Position } from 'roosterjs-editor-dom';
 import {
+    ChangeSource,
     IEditor,
     Keys,
     PluginEventType,
@@ -444,24 +445,54 @@ describe('UndoPlugin', () => {
     });
 
     it('can undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
         expect(state.snapshotsService.canUndoAutoComplete()).toBeTrue();
     });
 
     it('cannot undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 4', metadata: null, knownColors: [] },
+            false
+        );
         expect(state.snapshotsService.canUndoAutoComplete()).toBeFalse();
     });
 
     it('Backspace trigger undo when can undo autoComplete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -486,9 +517,18 @@ describe('UndoPlugin', () => {
     });
 
     it('Other key does not trigger undo auto complete', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -514,9 +554,18 @@ describe('UndoPlugin', () => {
     });
 
     it('Another undo snapshot is added, cannot undo autocomplete any more', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -526,7 +575,10 @@ describe('UndoPlugin', () => {
         editor.getSelectionRange = () => range;
         editor.getFocusedPosition = () => pos;
         editor.addUndoSnapshot = () =>
-            state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+            state.snapshotsService.addSnapshot(
+                { html: 'snapshot 4', metadata: null, knownColors: [] },
+                false
+            );
         state.autoCompletePosition = pos;
 
         plugin.onPluginEvent({
@@ -545,7 +597,10 @@ describe('UndoPlugin', () => {
     });
 
     it('Position changed, cannot undo autocomplete for Backspace', () => {
-        state.snapshotsService.addSnapshot({ html: 'snapshot 1', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 1', metadata: null, knownColors: [] },
+            false
+        );
 
         const undo = jasmine.createSpy('undo');
         const preventDefault = jasmine.createSpy('preventDefault');
@@ -559,7 +614,10 @@ describe('UndoPlugin', () => {
 
         editor.getFocusedPosition = () => pos2;
         editor.addUndoSnapshot = () =>
-            state.snapshotsService.addSnapshot({ html: 'snapshot 4', metadata: null }, false);
+            state.snapshotsService.addSnapshot(
+                { html: 'snapshot 4', metadata: null, knownColors: [] },
+                false
+            );
 
         // Press backspace first time, to let plugin remember last pressed key
         plugin.onPluginEvent({
@@ -570,8 +628,14 @@ describe('UndoPlugin', () => {
             }),
         });
 
-        state.snapshotsService.addSnapshot({ html: 'snapshot 2', metadata: null }, true);
-        state.snapshotsService.addSnapshot({ html: 'snapshot 3', metadata: null }, false);
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 2', metadata: null, knownColors: [] },
+            true
+        );
+        state.snapshotsService.addSnapshot(
+            { html: 'snapshot 3', metadata: null, knownColors: [] },
+            false
+        );
         state.autoCompletePosition = pos;
 
         plugin.onPluginEvent({
@@ -611,6 +675,7 @@ describe('UndoPlugin', () => {
                     start: [1],
                     end: [2],
                 },
+                knownColors: [],
             },
             false
         );
@@ -627,7 +692,7 @@ describe('UndoPlugin', () => {
         expect(canUndoAutoComplete).toHaveBeenCalled();
 
         expect(canMoveResult).toBe(true);
-        expect(moveResult).toEqual({ html: 'test', metadata: null });
+        expect(moveResult).toEqual({ html: 'test', metadata: null, knownColors: [] });
         expect(canUndoAutoCompleteResult).toBe(true);
     });
 
@@ -733,5 +798,75 @@ describe('UndoPlugin', () => {
         expect(addSnapshot2).not.toHaveBeenCalled();
         expect(clearRedo2).not.toHaveBeenCalled();
         expect(canUndoAutoComplete2).not.toHaveBeenCalled();
+    });
+
+    it('Handle ContentChanged event with Keyboard source', () => {
+        const canMove1 = jasmine.createSpy('canMove');
+        const move1 = jasmine.createSpy('move');
+        const addSnapshot1 = jasmine.createSpy('addSnapshot');
+        const clearRedo1 = jasmine.createSpy('clearRedo');
+        const canUndoAutoComplete1 = jasmine.createSpy('canUndoAutoComplete');
+        const addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+        const plugin = new UndoPlugin({
+            undoMetadataSnapshotService: {
+                canMove: canMove1,
+                move: move1,
+                addSnapshot: addSnapshot1,
+                clearRedo: clearRedo1,
+                canUndoAutoComplete: canUndoAutoComplete1,
+            },
+        });
+
+        const mockedEditor = ({
+            isInIME: () => false,
+            addUndoSnapshot,
+        } as any) as IEditor;
+        (<any>plugin).lastKeyPress = 1;
+
+        plugin.initialize(mockedEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            data: Keys.DELETE,
+            source: ChangeSource.Keyboard,
+        });
+
+        expect((<any>plugin).lastKeyPress).toBe(Keys.DELETE);
+        expect(addSnapshot1).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+    });
+
+    it('Handle ContentChanged event with Keyboard source and same key code', () => {
+        const canMove1 = jasmine.createSpy('canMove');
+        const move1 = jasmine.createSpy('move');
+        const addSnapshot1 = jasmine.createSpy('addSnapshot');
+        const clearRedo1 = jasmine.createSpy('clearRedo');
+        const canUndoAutoComplete1 = jasmine.createSpy('canUndoAutoComplete');
+        const addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+        const plugin = new UndoPlugin({
+            undoMetadataSnapshotService: {
+                canMove: canMove1,
+                move: move1,
+                addSnapshot: addSnapshot1,
+                clearRedo: clearRedo1,
+                canUndoAutoComplete: canUndoAutoComplete1,
+            },
+        });
+
+        const mockedEditor = ({
+            isInIME: () => false,
+            addUndoSnapshot,
+        } as any) as IEditor;
+        (<any>plugin).lastKeyPress = Keys.DELETE;
+
+        plugin.initialize(mockedEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            data: Keys.DELETE,
+            source: ChangeSource.Keyboard,
+        });
+
+        expect((<any>plugin).lastKeyPress).toBe(Keys.DELETE);
+        expect(addSnapshot1).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 });

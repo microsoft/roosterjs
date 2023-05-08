@@ -1,8 +1,8 @@
 import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions';
 import createEditorCore from './createMockEditorCore';
-import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { createPasteFragment, transformTabCharacters } from '../../lib/coreApi/createPasteFragment';
-import { itFirefoxOnly } from '../TestHelper';
+import { ClipboardData, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
+import { itChromeOnly, itFirefoxOnly } from '../TestHelper';
 
 describe('createPasteFragment', () => {
     let div: HTMLDivElement;
@@ -18,7 +18,7 @@ describe('createPasteFragment', () => {
 
     it('null input', () => {
         const core = createEditorCore(div, {});
-        const fragment = createPasteFragment(core, null, null, false, false);
+        const fragment = createPasteFragment(core, null, null, false, false, false);
         expect(fragment).toBeNull();
     });
 
@@ -38,7 +38,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('This is a test');
     });
@@ -59,7 +59,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('This is a test<br>this is line 2');
     });
@@ -80,7 +80,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('This is a test<div>this is line 2</div>this is line 3');
     });
@@ -101,7 +101,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<br>this is line 2');
     });
@@ -122,7 +122,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('this is line 1<br>');
     });
@@ -143,7 +143,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<div>this is line 2</div>this is line 3');
     });
@@ -164,7 +164,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('this is line 1<div><br></div>this is line 3');
     });
@@ -185,7 +185,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('this is line 1<div>this is line 2</div>');
     });
@@ -206,7 +206,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, true, false);
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('This is a test<div>this is line 2</div>this is line 3');
     });
@@ -227,7 +227,7 @@ describe('createPasteFragment', () => {
             imageDataUri: 'test',
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<img style="max-width:100%" src="test">');
     });
@@ -248,7 +248,7 @@ describe('createPasteFragment', () => {
             imageDataUri: 'test',
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('test');
     });
@@ -269,9 +269,51 @@ describe('createPasteFragment', () => {
             imageDataUri: 'test',
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, true, false);
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('');
+    });
+
+    itChromeOnly('create image fragment', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: '',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: 'test',
+            customValues: {},
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, true);
+        const html = getHTML(fragment);
+        expect(html).toBe('<img src="test" style="max-width:100%">');
+    });
+
+    itFirefoxOnly('create image fragment', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+        const clipboardData: ClipboardData = {
+            types: [],
+            text: '',
+            rawHtml: null,
+            image: null,
+            snapshotBeforePaste: null,
+            imageDataUri: 'test',
+            customValues: {},
+        };
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, true);
+        const html = getHTML(fragment);
+        expect(html).toBe('<img style="max-width:100%" src="test">');
     });
 
     it('html input, html output', () => {
@@ -290,7 +332,7 @@ describe('createPasteFragment', () => {
             imageDataUri: 'test',
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<div>test html</div>');
     });
@@ -311,7 +353,7 @@ describe('createPasteFragment', () => {
             imageDataUri: 'test',
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, true, false);
+        const fragment = createPasteFragment(core, clipboardData, null, true, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('test text');
     });
@@ -338,7 +380,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
 
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
@@ -355,6 +397,7 @@ describe('createPasteFragment', () => {
                     metaName1: 'metaContent1',
                     metaName2: 'metaContent2',
                 },
+                pasteType: PasteType.Normal,
             },
             true
         );
@@ -382,7 +425,7 @@ describe('createPasteFragment', () => {
             imageDataUri: null,
             customValues: {},
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
 
         expect(getHTML(fragment)).toBe('<div>test</div>');
         expect(sanitizingOption.additionalGlobalStyleNodes.length).toBe(2);
@@ -410,7 +453,7 @@ describe('createPasteFragment', () => {
             customValues: {},
             imageDataUri: null,
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html).toBe('<img src="">');
         expect(clipboardData.htmlFirstLevelChildTags).toEqual(['IMG']);
@@ -432,27 +475,10 @@ describe('createPasteFragment', () => {
             customValues: {},
             imageDataUri: null,
         };
-        const fragment = createPasteFragment(core, clipboardData, null, false, false);
+        const fragment = createPasteFragment(core, clipboardData, null, false, false, false);
         const html = getHTML(fragment);
         expect(html.trim()).toBe('teststring<img src="">teststring');
         expect(clipboardData.htmlFirstLevelChildTags).toEqual(['', 'IMG', '']);
-    });
-});
-
-describe('transformTabCharacters', () => {
-    it('no \t', () => {
-        const input = 'hello world';
-        expect(transformTabCharacters(input)).toBe(input);
-    });
-
-    it('1 \t', () => {
-        const input = '\tHello';
-        expect(transformTabCharacters(input)).toBe('      Hello');
-    });
-
-    it('complex', () => {
-        const input = '1\t234\t5';
-        expect(transformTabCharacters(input)).toBe('1     234   5');
     });
 });
 

@@ -169,6 +169,28 @@ describe('getColor with darkColorHandler', () => {
         expect(parseColorValue).toHaveBeenCalledTimes(1);
         expect(parseColorValue).toHaveBeenCalledWith('red');
     });
+
+    it('get color from FONT tag in dark mode', () => {
+        const parseColorValue = jasmine.createSpy().and.returnValue({
+            lightModeColor: 'green',
+        });
+        const findLightColorFromDarkColor = jasmine.createSpy().and.returnValue('red');
+        const darkColorHandler = ({
+            parseColorValue,
+            findLightColorFromDarkColor,
+        } as any) as DarkColorHandler;
+        const font = document.createElement('font');
+
+        font.color = '#112233';
+
+        const color = getColor(font, false, darkColorHandler, true);
+
+        expect(color).toBe('green');
+        expect(parseColorValue).toHaveBeenCalledTimes(1);
+        expect(parseColorValue).toHaveBeenCalledWith('red');
+        expect(findLightColorFromDarkColor).toHaveBeenCalledTimes(1);
+        expect(findLightColorFromDarkColor).toHaveBeenCalledWith('#112233');
+    });
 });
 
 describe('setColor', () => {

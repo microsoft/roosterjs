@@ -165,7 +165,6 @@ const DEFAULT_STYLE_VALUES: { [name: string]: string } = {
     'outline-style': 'none',
     'outline-width': '0px',
     overflow: 'visible',
-    'text-decoration': 'none',
     '-webkit-text-stroke-width': '0px',
     'word-wrap': 'break-word',
     'margin-left': '0px',
@@ -191,7 +190,7 @@ const ALLOWED_CSS_CLASSES: string[] = [];
  * @internal
  */
 export function getTagReplacement(
-    additionalReplacements: Record<string, string> | undefined
+    additionalReplacements: Record<string, string | null> | undefined
 ): Record<string, string | null> {
     const result = { ...HTML_TAG_REPLACEMENT };
     const replacements = additionalReplacements || {};

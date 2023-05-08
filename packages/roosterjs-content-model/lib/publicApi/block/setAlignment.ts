@@ -1,23 +1,6 @@
-import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
-
-const ResultMap: Record<
-    'left' | 'center' | 'right',
-    Record<'ltr' | 'rtl', 'start' | 'center' | 'end'>
-> = {
-    left: {
-        ltr: 'start',
-        rtl: 'end',
-    },
-    center: {
-        ltr: 'center',
-        rtl: 'center',
-    },
-    right: {
-        ltr: 'end',
-        rtl: 'start',
-    },
-};
+import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
 
 /**
  * Set text alignment of selected paragraphs
@@ -25,11 +8,8 @@ const ResultMap: Record<
  * @param alignment Alignment value: left, center or right
  */
 export default function setAlignment(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
-    formatParagraphWithContentModel(editor, 'setAlignment', para => {
-        para.format.textAlign =
-            ResultMap[alignment][para.format.direction == 'rtl' ? 'rtl' : 'ltr'];
-    });
+    formatWithContentModel(editor, 'setAlignment', model => setModelAlignment(model, alignment));
 }

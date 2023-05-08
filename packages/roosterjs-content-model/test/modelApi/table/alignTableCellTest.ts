@@ -16,21 +16,42 @@ describe('alignTableCell', () => {
         expectedFormat: ContentModelTableCellFormat
     ) {
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[1].push(createTableCell(1, 1, false));
-        table.cells[1].push(createTableCell(1, 1, false));
-        table.cells[1].push(createTableCell(1, 1, false));
-        table.cells[0][1].isSelected = true;
-        table.cells[0][2].isSelected = true;
-        table.cells[1][1].isSelected = true;
-        table.cells[1][2].isSelected = true;
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[1].cells.push(createTableCell(1, 1, false));
+        table.rows[1].cells.push(createTableCell(1, 1, false));
+        table.rows[1].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells[1].isSelected = true;
+        table.rows[0].cells[2].isSelected = true;
+        table.rows[1].cells[1].isSelected = true;
+        table.rows[1].cells[2].isSelected = true;
+
+        table.rows[0].cells[0].cachedElement = {} as any;
+        table.rows[0].cells[1].cachedElement = {} as any;
+        table.rows[0].cells[2].cachedElement = {} as any;
+        table.rows[1].cells[0].cachedElement = {} as any;
+        table.rows[1].cells[1].cachedElement = {} as any;
+        table.rows[1].cells[2].cachedElement = {} as any;
 
         alignTableCell(table, operation);
 
-        expect(table.cells[0].map(c => c.format)).toEqual([{}, expectedFormat, expectedFormat]);
-        expect(table.cells[1].map(c => c.format)).toEqual([{}, expectedFormat, expectedFormat]);
+        expect(table.rows[0].cells.map(c => c.format)).toEqual([
+            {},
+            expectedFormat,
+            expectedFormat,
+        ]);
+        expect(table.rows[1].cells.map(c => c.format)).toEqual([
+            {},
+            expectedFormat,
+            expectedFormat,
+        ]);
+        expect(table.rows[0].cells[0].cachedElement).toEqual({} as any);
+        expect(table.rows[0].cells[1].cachedElement).toBeUndefined();
+        expect(table.rows[0].cells[2].cachedElement).toBeUndefined();
+        expect(table.rows[1].cells[0].cachedElement).toEqual({} as any);
+        expect(table.rows[1].cells[1].cachedElement).toBeUndefined();
+        expect(table.rows[1].cells[2].cachedElement).toBeUndefined();
     }
 
     it('empty table', () => {
@@ -41,9 +62,8 @@ describe('alignTableCell', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });

@@ -1,51 +1,77 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
+
+const DefaultParagraphTag = 'div';
 
 /**
  * @internal
  */
-export const handleParagraph: ContentModelHandler<ContentModelParagraph> = (
+export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = (
     doc: Document,
     parent: Node,
     paragraph: ContentModelParagraph,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
-    let container: HTMLElement;
+    let container = paragraph.cachedElement;
 
-    stackFormat(context, paragraph.decorator?.tagName || null, () => {
-        if (paragraph.decorator) {
-            const { tagName, format } = paragraph.decorator;
+    if (container) {
+        refNode = reuseCachedElement(parent, container, refNode);
+    } else {
+        stackFormat(context, paragraph.decorator?.tagName || null, () => {
+            const needParagraphWrapper =
+                !paragraph.isImplicit ||
+                !!paragraph.decorator ||
+                (getObjectKeys(paragraph.format).length > 0 &&
+                    paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
 
-            container = doc.createElement(tagName);
+            container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
-            parent.appendChild(container);
+            parent.insertBefore(container, refNode);
 
-            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-            applyFormat(container, context.formatAppliers.segmentOnBlock, format, context);
-        } else if (
-            !paragraph.isImplicit ||
-            (getObjectKeys(paragraph.format).length > 0 &&
-                paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'))
-        ) {
-            container = doc.createElement('div');
-            parent.appendChild(container);
+            if (needParagraphWrapper) {
+                applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+            }
 
-            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-        } else {
-            container = parent as HTMLElement;
-        }
+            if (paragraph.decorator) {
+                applyFormat(
+                    container,
+                    context.formatAppliers.segmentOnBlock,
+                    paragraph.decorator.format,
+                    context
+                );
+            }
 
-        context.regularSelection.current = {
-            block: container,
-            segment: null,
-        };
+            if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
+                container.style.fontSize = '0';
+            }
 
-        paragraph.segments.forEach(segment => {
-            context.modelHandlers.segment(doc, container, segment, context);
+            context.regularSelection.current = {
+                block: needParagraphWrapper ? container : container.parentNode,
+                segment: null,
+            };
+
+            paragraph.segments.forEach(segment => {
+                context.modelHandlers.segment(doc, container!, segment, context);
+            });
+
+            if (needParagraphWrapper) {
+                paragraph.cachedElement = container;
+            } else {
+                unwrap(container);
+            }
         });
-    });
+    }
+
+    if (container) {
+        context.onNodeCreated?.(paragraph, container);
+    }
+
+    return refNode;
 };

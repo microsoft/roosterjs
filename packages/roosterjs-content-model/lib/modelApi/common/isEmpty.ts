@@ -11,7 +11,7 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
             return block.segments.length == 0;
 
         case 'Table':
-            return block.cells.every(row => row.length == 0);
+            return block.rows.every(row => row.cells.length == 0);
 
         case 'BlockGroup':
             return isBlockGroupEmpty(block);
@@ -29,7 +29,10 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
  */
 export function isBlockGroupEmpty(group: ContentModelBlockGroup): boolean {
     switch (group.blockGroupType) {
-        case 'Quote':
+        case 'FormatContainer':
+            // Format Container of DIV is a container for style, so we always treat it as not empty
+            return group.tagName == 'div' ? false : group.blocks.every(isBlockEmpty);
+
         case 'ListItem':
             return group.blocks.every(isBlockEmpty);
 

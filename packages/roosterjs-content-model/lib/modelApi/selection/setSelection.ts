@@ -1,9 +1,9 @@
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { Coordinates } from 'roosterjs-editor-types';
+import { isGeneralSegment } from '../common/isGeneralSegment';
 import { Selectable } from '../../publicTypes/selection/Selectable';
 
 /**
@@ -104,17 +104,17 @@ function setSelectionToTable(
     const endCo = end ? findCell(table, end) : startCo;
 
     if (!isInSelection && startCo && endCo) {
-        for (let row = 0; row < table.cells.length; row++) {
-            for (let col = 0; col < table.cells[row].length; col++) {
+        for (let row = 0; row < table.rows.length; row++) {
+            for (let col = 0; col < table.rows[row].cells.length; col++) {
                 const isSelected =
                     row >= startCo.y && row <= endCo.y && col >= startCo.x && col <= endCo.x;
 
-                setIsSelected(table.cells[row][col], isSelected);
+                setIsSelected(table.rows[row].cells[col], isSelected);
             }
         }
     } else {
-        table.cells.forEach(row =>
-            row.forEach(cell => {
+        table.rows.forEach(row =>
+            row.cells.forEach(cell => {
                 isInSelection = setSelectionToBlockGroup(cell, isInSelection, start, end);
             })
         );
@@ -128,9 +128,9 @@ function findCell(table: ContentModelTable, cell: Selectable | null): Coordinate
     let y = -1;
 
     if (cell) {
-        for (let row = 0; y < 0 && row < table.cells.length; row++) {
-            for (let col = 0; x < 0 && col < table.cells[row].length; col++) {
-                if (table.cells[row][col] == cell) {
+        for (let row = 0; y < 0 && row < table.rows.length; row++) {
+            for (let col = 0; x < 0 && col < table.rows[row].cells.length; col++) {
+                if (table.rows[row].cells[col] == cell) {
                     x = col;
                     y = row;
                 }
@@ -174,13 +174,6 @@ function setSelectionToSegment(
             setIsSelected(segment, isInSelection);
             return isInSelection;
     }
-}
-
-function isGeneralSegment(group: ContentModelBlockGroup): group is ContentModelGeneralSegment {
-    return (
-        group.blockGroupType == 'General' &&
-        (<ContentModelGeneralSegment>group).segmentType == 'General'
-    );
 }
 
 function setIsSelected(selectable: Selectable, value: boolean) {

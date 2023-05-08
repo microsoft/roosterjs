@@ -2,7 +2,6 @@ import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
-import { HyperLinkColorPlaceholder } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { knownElementProcessor } from '../../../lib/domToModel/processors/knownElementProcessor';
 
 describe('knownElementProcessor', () => {
@@ -38,7 +37,7 @@ describe('knownElementProcessor', () => {
             ],
         });
 
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(2);
+        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(3);
         expect(parseFormat.parseFormat).toHaveBeenCalledWith(
             div,
             context.formatParsers.block,
@@ -129,214 +128,12 @@ describe('knownElementProcessor', () => {
         });
     });
 
-    it('Header with text content and format', () => {
-        const group = createContentModelDocument();
-        const h1 = document.createElement('h1');
-
-        h1.appendChild(document.createTextNode('test'));
-        h1.style.fontFamily = 'Test';
-
-        knownElementProcessor(group, h1, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    decorator: {
-                        tagName: 'h1',
-                        format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
-                    },
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: { fontWeight: 'bold', fontFamily: 'Test', fontSize: '2em' },
-                            text: 'test',
-                        },
-                    ],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                },
-            ],
-        });
-    });
-
-    it('Header with non-bold text', () => {
-        const group = createContentModelDocument();
-        const h1 = document.createElement('h1');
-        const span = document.createElement('span');
-
-        span.style.fontWeight = 'normal';
-        span.appendChild(document.createTextNode('test'));
-
-        h1.appendChild(span);
-
-        knownElementProcessor(group, h1, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    decorator: {
-                        tagName: 'h1',
-                        format: { fontWeight: 'bold', fontSize: '2em' },
-                    },
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: { fontWeight: 'normal', fontSize: '2em' },
-                            text: 'test',
-                        },
-                    ],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                },
-            ],
-        });
-    });
-
-    it('Simple Anchor element', () => {
-        const group = createContentModelDocument();
-        const a = document.createElement('a');
-
-        a.href = '/test';
-        a.textContent = 'test';
-
-        knownElementProcessor(group, a, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
-                            link: { format: { href: '/test' }, dataset: {} },
-                            text: 'test',
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(context.link).toEqual({ format: {}, dataset: {} });
-    });
-
-    it('Anchor element with dataset', () => {
-        const group = createContentModelDocument();
-        const a = document.createElement('a');
-
-        a.href = '/test';
-        a.textContent = 'test';
-        a.dataset.a = 'b';
-        a.dataset.c = 'd';
-
-        knownElementProcessor(group, a, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                underline: true,
-                                textColor: HyperLinkColorPlaceholder,
-                            },
-                            link: {
-                                format: { href: '/test' },
-                                dataset: {
-                                    a: 'b',
-                                    c: 'd',
-                                },
-                            },
-                            text: 'test',
-                        },
-                    ],
-                },
-            ],
-        });
-        expect(context.link).toEqual({ format: {}, dataset: {} });
-    });
-
-    it('P tag', () => {
-        const group = createContentModelDocument();
-        const p = document.createElement('p');
-
-        spyOn(parseFormat, 'parseFormat');
-
-        knownElementProcessor(group, p, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    decorator: {
-                        tagName: 'p',
-                        format: {},
-                    },
-                    segments: [],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                },
-            ],
-        });
-
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(2);
-        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
-            p,
-            context.formatParsers.block,
-            context.blockFormat,
-            context
-        );
-        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
-            p,
-            context.formatParsers.segmentOnBlock,
-            context.segmentFormat,
-            context
-        );
-    });
-
     it('Div with top margin', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
 
-        context.defaultStyles.div = {
-            marginTop: '20px',
-            marginBottom: '40px',
-            display: 'block',
-        };
+        div.style.marginTop = '20px';
+        div.style.marginBottom = '40px';
 
         knownElementProcessor(group, div, context);
 
@@ -344,27 +141,57 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
                     tagName: 'div',
                     format: {
                         marginTop: '20px',
+                        marginBottom: '40px',
                     },
+                    blocks: [],
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('BLOCKQUOTE with other style', () => {
+        const doc = createContentModelDocument();
+        const quote = document.createElement('blockquote');
+
+        quote.style.marginTop = '0';
+        quote.style.marginBottom = '0';
+        quote.style.color = 'red';
+        quote.appendChild(document.createTextNode('test'));
+
+        knownElementProcessor(doc, quote, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {
+                        marginRight: '40px',
+                        marginLeft: '40px',
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                textColor: 'red',
+                            },
+                            text: 'test',
+                        },
+                    ],
                 },
                 {
                     blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                },
-                {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: { marginBottom: '40px' },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
                     isImplicit: true,
+                    format: {},
+                    segments: [],
                 },
             ],
         });
@@ -386,6 +213,8 @@ describe('knownElementProcessor', () => {
                     format: {
                         marginLeft: '0px',
                         marginRight: '0px',
+                        marginTop: '0px',
+                        marginBottom: '0px',
                     },
                     segments: [],
                 },
@@ -479,31 +308,18 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        paddingTop: '20px',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
                     format: {
                         paddingLeft: '0px',
                         paddingRight: '0px',
+                        paddingTop: '20px',
+                        paddingBottom: '40px',
                     },
-                    segments: [],
-                },
-                {
-                    blockType: 'Divider',
                     tagName: 'div',
-                    format: { paddingBottom: '40px' },
+                    blocks: [],
                 },
-                {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
-                    isImplicit: true,
-                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -520,31 +336,93 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        borderTop: '1px solid black',
-                    },
-                },
-                {
-                    blockType: 'Paragraph',
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
                     format: {
                         borderLeft: '1px solid black',
                         borderRight: '1px solid black',
+                        borderTop: '1px solid black',
+                        borderBottom: '1px solid black',
                     },
-                    segments: [],
-                },
-                {
-                    blockType: 'Divider',
                     tagName: 'div',
-                    format: { borderBottom: '1px solid black' },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.width = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
                 {
-                    blockType: 'Paragraph',
-                    segments: [],
-                    format: {},
-                    isImplicit: true,
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        width: '100px',
+                    },
+                    tagName: 'div',
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.maxWidth = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        maxWidth: '100px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with padding left', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.paddingLeft = '10px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        paddingLeft: '10px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -552,6 +430,9 @@ describe('knownElementProcessor', () => {
     it('BLOCKQUOTE used for indent', () => {
         const group = createContentModelDocument();
         const quote = document.createElement('blockquote');
+
+        quote.style.marginTop = '0';
+        quote.style.marginBottom = '0';
         quote.appendChild(document.createTextNode('test1'));
 
         knownElementProcessor(group, quote, context);
@@ -560,17 +441,12 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        marginTop: '1em',
-                    },
-                },
-                {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
                         marginRight: '40px',
+                        marginTop: '0px',
+                        marginBottom: '0px',
                     },
                     segments: [
                         {
@@ -579,13 +455,6 @@ describe('knownElementProcessor', () => {
                             text: 'test1',
                         },
                     ],
-                },
-                {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        marginBottom: '1em',
-                    },
                 },
                 {
                     blockType: 'Paragraph',
@@ -600,6 +469,9 @@ describe('knownElementProcessor', () => {
     it('BLOCKQUOTE used for indent with selection', () => {
         const group = createContentModelDocument();
         const quote = document.createElement('blockquote');
+
+        quote.style.marginTop = '0';
+        quote.style.marginBottom = '0';
         quote.appendChild(document.createTextNode('test1'));
 
         context.isInSelection = true;
@@ -609,18 +481,12 @@ describe('knownElementProcessor', () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    blockType: 'Divider',
-                    tagName: 'div',
-                    format: {
-                        marginTop: '1em',
-                    },
-                    isSelected: true,
-                },
-                {
                     blockType: 'Paragraph',
                     format: {
                         marginLeft: '40px',
                         marginRight: '40px',
+                        marginTop: '0px',
+                        marginBottom: '0px',
                     },
                     segments: [
                         {
@@ -632,12 +498,70 @@ describe('knownElementProcessor', () => {
                     ],
                 },
                 {
-                    blockType: 'Divider',
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('Paragraph with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test1'));
+        div.style.fontSize = '0px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                fontSize: '0px',
+                            },
+                            text: 'test1',
+                        },
+                    ],
+                    zeroFontSize: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('div with align attribute, need to use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.align = 'center';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
                     tagName: 'div',
                     format: {
-                        marginBottom: '1em',
+                        htmlAlign: 'center',
                     },
-                    isSelected: true,
+                    blocks: [],
                 },
                 {
                     blockType: 'Paragraph',

@@ -60,6 +60,16 @@ export interface ElementBasedFormatState {
     isBlockQuote?: boolean;
 
     /**
+     * Whether the text is in Code element
+     */
+    isCodeInline?: boolean;
+
+    /**
+     * Whether the text is in Code block
+     */
+    isCodeBlock?: boolean;
+
+    /**
      * Whether unlink command can be called to the text
      */
     canUnlink?: boolean;
@@ -133,6 +143,31 @@ export interface StyleBasedFormatState {
      * Mode independent background color for dark mode
      */
     textColors?: ModeIndependentColor;
+
+    /**
+     * Line height
+     */
+    lineHeight?: string;
+
+    /**
+     * Margin Top
+     */
+    marginTop?: string;
+
+    /**
+     * Margin Bottom
+     */
+    marginBottom?: string;
+
+    /**
+     * Text Align
+     */
+    textAlign?: string;
+
+    /**
+     * Direction of the element ('ltr' or 'rtl')
+     */
+    direction?: string;
 }
 
 /**

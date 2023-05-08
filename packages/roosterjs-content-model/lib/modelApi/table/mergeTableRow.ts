@@ -21,14 +21,14 @@ export function mergeTableRow(
     if (sel) {
         const mergingRowIndex = mergeAbove ? sel.firstRow : sel.lastRow + 1;
 
-        if (mergingRowIndex > 0 && mergingRowIndex < table.cells.length) {
+        if (mergingRowIndex > 0 && mergingRowIndex < table.rows.length) {
             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
-                const cell = table.cells[mergingRowIndex][colIndex];
+                const cell = table.rows[mergingRowIndex].cells[colIndex];
 
                 if (
                     cell &&
                     canMergeCells(
-                        table.cells,
+                        table.rows,
                         mergingRowIndex - 1,
                         colIndex,
                         mergingRowIndex,
@@ -39,13 +39,18 @@ export function mergeTableRow(
 
                     let newSelectedRow = mergingRowIndex;
 
-                    while (table.cells[newSelectedRow]?.[colIndex]?.spanAbove) {
+                    while (table.rows[newSelectedRow]?.cells[colIndex]?.spanAbove) {
+                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
                         newSelectedRow--;
                     }
 
-                    if (table.cells[newSelectedRow]?.[colIndex]) {
-                        table.cells[newSelectedRow][colIndex].isSelected = true;
+                    if (table.rows[newSelectedRow]?.cells[colIndex]) {
+                        table.rows[newSelectedRow].cells[colIndex].isSelected = true;
+
+                        delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
                     }
+
+                    delete cell.cachedElement;
                 }
             }
         }

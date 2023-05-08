@@ -4,7 +4,7 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import { updateListMetadata } from '../../modelApi/metadata/updateListMetadata';
+import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 
 /**
  * @internal
@@ -14,15 +14,16 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
     element,
     context
 ) => {
-    const level: ContentModelListItemLevelFormat = {};
-    const { listFormat } = context;
-
     stackFormat(
         context,
         {
             segment: 'shallowCloneForBlock',
+            paragraph: 'shallowClone',
         },
         () => {
+            const level: ContentModelListItemLevelFormat = { ...context.blockFormat };
+            const { listFormat } = context;
+
             processMetadata(element, context, level);
             parseFormat(element, context.formatParsers.listLevel, level, context);
             parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);

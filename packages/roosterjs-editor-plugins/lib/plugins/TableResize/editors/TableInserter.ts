@@ -108,7 +108,7 @@ function getInsertElementData(
     backgroundColor: string
 ): CreateElementData {
     const inserterColor = isDark ? INSERTER_COLOR_DARK_MODE : INSERTER_COLOR;
-    const outerDivStyle = `position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 10px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${backgroundColor}`;
+    const outerDivStyle = `position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 8px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${backgroundColor}`;
     const leftOrRight = isRTL ? 'right' : 'left';
     const childBaseStyles = `position: absolute; box-sizing: border-box; background-color: ${backgroundColor};`;
     const childInfo: CreateElementData = {

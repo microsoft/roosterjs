@@ -74,17 +74,9 @@ describe('underlineFormatHandler.parse', () => {
         });
     });
 
-    it('Hyperlink', () => {
-        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
-
-        expect(format).toEqual({
-            underline: true,
-        });
-    });
-
     it('Hyperlink without underline', () => {
         div.style.textDecoration = 'none';
-        underlineFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+        underlineFormatHandler.parse(format, div, context, {});
 
         expect(format).toEqual({});
     });

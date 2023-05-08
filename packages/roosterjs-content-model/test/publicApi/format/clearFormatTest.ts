@@ -3,11 +3,11 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
 import clearFormat from '../../../lib/publicApi/format/clearFormat';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('clearFormat', () => {
     it('Clear format', () => {
-        const editor = ({} as any) as IExperimentalContentModelEditor;
+        const editor = ({} as any) as IContentModelEditor;
         const model = ('Model' as any) as ContentModelDocument;
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -22,13 +22,7 @@ describe('clearFormat', () => {
         clearFormat(editor);
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(clearModelFormat.clearModelFormat).toHaveBeenCalledTimes(1);
-        expect(clearModelFormat.clearModelFormat).toHaveBeenCalledWith(
-            model,
-            [],
-            [],
-            [],
-            undefined
-        );
+        expect(clearModelFormat.clearModelFormat).toHaveBeenCalledWith(model, [], [], []);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledTimes(1);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(model);
     });

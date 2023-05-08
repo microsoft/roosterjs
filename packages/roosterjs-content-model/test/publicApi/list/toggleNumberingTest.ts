@@ -1,11 +1,10 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { IExperimentalContentModelEditor } from '../../../lib/publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('toggleNumbering', () => {
-    let editor = ({} as any) as IExperimentalContentModelEditor;
+    let editor = ({} as any) as IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
@@ -25,9 +24,9 @@ describe('toggleNumbering', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-            getPendingFormat: (): ContentModelSegmentFormat | null => null,
-            setPendingFormat: () => {},
-        } as any) as IExperimentalContentModelEditor;
+            getCustomData: () => ({}),
+            getFocusedPosition: () => ({}),
+        } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);
     });

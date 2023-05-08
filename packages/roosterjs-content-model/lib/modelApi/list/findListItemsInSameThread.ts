@@ -44,8 +44,8 @@ function findListItems(group: ContentModelBlockGroup, result: (ContentModelListI
             case 'Table':
                 pushNullIfNecessary(result);
 
-                block.cells.forEach(row =>
-                    row.forEach(cell => {
+                block.rows.forEach(row =>
+                    row.cells.forEach(cell => {
                         findListItems(cell, result);
                     })
                 );

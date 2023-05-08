@@ -1,14 +1,14 @@
-import { addLink } from '../../modelApi/common/addLink';
+import { addLink } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
-import { HyperLinkColorPlaceholder } from '../../formatHandlers/utils/defaultStyles';
-import { IExperimentalContentModelEditor } from '../../publicTypes/IExperimentalContentModelEditor';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 
 // Regex matching Uri scheme
@@ -32,7 +32,7 @@ const FTP_REGEX = /^ftp\./i;
  * If not specified and there wasn't a link, the link url will be used as display text.
  */
 export default function insertLink(
-    editor: IExperimentalContentModelEditor,
+    editor: IContentModelEditor,
     link: string,
     anchorTitle?: string,
     displayText?: string,
@@ -47,43 +47,67 @@ export default function insertLink(
                 href: linkData ? linkData.normalizedUrl : applyLinkPrefix(url),
                 anchorTitle,
                 target,
+                underline: true,
             },
         };
 
-        formatWithContentModel(editor, 'insertLink', model => {
-            const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
-            const originalText = segments
-                .map(x => (x.segmentType == 'Text' ? x.text : ''))
-                .join('');
-            const text = displayText || originalText || (linkData ? linkData.originalUrl : url);
+        const links: ContentModelLink[] = [];
+        let anchorNode: Node | undefined;
 
-            if (
-                segments.every(x => x.segmentType == 'SelectionMarker') ||
-                (!!text && text != originalText)
-            ) {
-                const segment = createText(text, segments[0]?.format);
-                const doc = createContentModelDocument();
+        formatWithContentModel(
+            editor,
+            'insertLink',
+            model => {
+                const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+                const originalText = segments
+                    .map(x => (x.segmentType == 'Text' ? x.text : ''))
+                    .join('');
+                const text = displayText || originalText || '';
 
-                addLink(segment, link);
-                addSegment(doc, segment);
-                updateLinkSegmentFormat(segment.format);
+                if (
+                    segments.some(x => x.segmentType != 'SelectionMarker') &&
+                    originalText == text
+                ) {
+                    segments.forEach(x => {
+                        addLink(x, link);
 
-                mergeModel(model, doc);
-            } else if (text == originalText || !text) {
-                segments.forEach(x => {
-                    addLink(x, link);
-                    updateLinkSegmentFormat(x.format);
-                });
+                        if (x.link) {
+                            links.push(x.link);
+                        }
+                    });
+                } else if (
+                    segments.every(x => x.segmentType == 'SelectionMarker') ||
+                    (!!text && text != originalText)
+                ) {
+                    const segment = createText(text || (linkData ? linkData.originalUrl : url), {
+                        ...(segments[0]?.format || {}),
+                        ...(getPendingFormat(editor) || {}),
+                    });
+                    const doc = createContentModelDocument();
+
+                    addLink(segment, link);
+                    addSegment(doc, segment);
+
+                    if (segment.link) {
+                        links.push(segment.link);
+                    }
+
+                    mergeModel(model, doc);
+                }
+
+                return segments.length > 0;
+            },
+            {
+                changeSource: ChangeSource.CreateLink,
+                onNodeCreated: (modelElement, node) => {
+                    if (!anchorNode && links.indexOf(modelElement as ContentModelLink) >= 0) {
+                        anchorNode = node;
+                    }
+                },
+                getChangeData: () => anchorNode,
             }
-
-            return segments.length > 0;
-        });
+        );
     }
-}
-
-function updateLinkSegmentFormat(format: ContentModelSegmentFormat) {
-    format.underline = true;
-    format.textColor = HyperLinkColorPlaceholder;
 }
 
 // TODO: This is copied from original code. We may need to integrate this logic into matchLink() later.

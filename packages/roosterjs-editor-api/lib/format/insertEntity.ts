@@ -1,5 +1,6 @@
 import commitListChains from '../utils/commitListChains';
 import {
+    addDelimiters,
     commitEntity,
     getEntityFromElement,
     getEntitySelector,
@@ -11,6 +12,7 @@ import {
     ChangeSource,
     ContentPosition,
     Entity,
+    ExperimentalFeatures,
     IEditor,
     NodePosition,
     PositionType,
@@ -52,7 +54,7 @@ export default function insertEntity(
     commitEntity(wrapper, type, isReadonly);
 
     if (!editor.contains(wrapper)) {
-        let currentRange: Range;
+        let currentRange: Range | null = null;
         let contentPosition:
             | ContentPosition.Begin
             | ContentPosition.End
@@ -106,10 +108,21 @@ export default function insertEntity(
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
         const br = editor.getDocument().createElement('BR');
-        wrapper.parentNode.insertBefore(br, wrapper.nextSibling);
+        wrapper.parentNode?.insertBefore(br, wrapper.nextSibling);
     }
 
-    const entity = getEntityFromElement(wrapper);
+    const entity = getEntityFromElement(wrapper)!;
+    if (
+        !isBlock &&
+        isReadonly &&
+        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+    ) {
+        addDelimiters(entity.wrapper);
+        if (entity.wrapper.nextElementSibling) {
+            editor.select(new Position(entity.wrapper.nextElementSibling, PositionType.After));
+        }
+    }
+
     editor.triggerContentChangedEvent(ChangeSource.InsertEntity, entity);
 
     return entity;

@@ -2,11 +2,6 @@ import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import {
-    createDefaultHtmlSanitizerOptions,
-    moveChildNodes,
-    createElement,
-} from 'roosterjs-editor-dom';
-import {
     ChangeSource,
     EntityClasses,
     EntityOperation,
@@ -14,10 +9,16 @@ import {
     EntityPluginState,
     IEditor,
     Keys,
+    PasteType,
     PluginEventType,
     PluginKeyboardEvent,
     QueryScope,
 } from 'roosterjs-editor-types';
+import {
+    createDefaultHtmlSanitizerOptions,
+    moveChildNodes,
+    createElement,
+} from 'roosterjs-editor-dom';
 
 describe('EntityPlugin', () => {
     let plugin: EntityPlugin;
@@ -34,6 +35,7 @@ describe('EntityPlugin', () => {
             getElementAtCursor: (selector: string, node: Node) => node,
             addContentEditFeature: () => {},
             triggerPluginEvent,
+            isFeatureEnabled: () => false,
         });
         plugin.initialize(editor);
     });
@@ -216,6 +218,7 @@ describe('EntityPlugin', () => {
                 htmlBefore: '',
                 htmlAfter: '',
                 htmlAttributes: {},
+                pasteType: PasteType.Normal,
             })
         );
 
@@ -419,6 +422,7 @@ describe('Shadow DOM Entity', () => {
             getDocument: () => document,
             queryElements: () => [entity1, entity2],
             addContentEditFeature: () => {},
+            isFeatureEnabled: () => false,
         };
         const state = plugin.getState();
         const textNode = document.createTextNode('text');
@@ -453,6 +457,7 @@ describe('Shadow DOM Entity', () => {
             queryElements: () => <HTMLElement[]>[],
             contains: () => false,
             addContentEditFeature: () => {},
+            isFeatureEnabled: () => false,
         };
 
         state.knownEntityElements.push(entity1);
@@ -496,6 +501,7 @@ describe('Shadow DOM Entity', () => {
             contains: (node: Node) => node == entity1,
             addContentEditFeature: () => {},
             getDocument: () => document,
+            isFeatureEnabled: () => false,
         };
 
         plugin.initialize(editor);
@@ -543,6 +549,7 @@ describe('Shadow DOM Entity', () => {
             contains: (node: Node) => node == entity1,
             addContentEditFeature: () => {},
             getDocument: () => document,
+            isFeatureEnabled: () => false,
         };
 
         plugin.initialize(editor);
@@ -586,6 +593,7 @@ describe('Shadow DOM Entity', () => {
             },
             addContentEditFeature: () => {},
             getDocument: () => document,
+            isFeatureEnabled: () => false,
         };
 
         plugin.initialize(editor);
@@ -640,6 +648,7 @@ describe('Shadow DOM Entity', () => {
             contains: (node: Node) => node == entity2,
             getDocument: () => document,
             addContentEditFeature: () => {},
+            isFeatureEnabled: () => false,
         };
 
         plugin.initialize(editor);
@@ -687,6 +696,7 @@ describe('Shadow DOM Entity', () => {
             contains: () => false,
             runAsync: (callback: Function) => callback(),
             addContentEditFeature: () => {},
+            isFeatureEnabled: () => false,
         };
 
         state.knownEntityElements.push(entity1);
@@ -722,6 +732,7 @@ describe('Shadow DOM Entity', () => {
                 node == entity1 || node == entity2 || node == entity3 || node == entity4,
             addContentEditFeature: () => {},
             getDocument: () => document,
+            isFeatureEnabled: () => false,
         };
 
         commitEntity.default(entity1, 'TEST', false, 'Test');

@@ -1,4 +1,8 @@
 import {
+    inlineEntityOnPluginEvent,
+    normalizeDelimitersInEditor,
+} from './utils/inlineEntityOnPluginEvent';
+import {
     Browser,
     commitEntity,
     getEntityFromElement,
@@ -11,6 +15,7 @@ import {
     createRange,
     moveChildNodes,
     getObjectKeys,
+    isBlockElement,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -21,6 +26,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
+    ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
     Keys,
@@ -154,6 +160,10 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 this.handleEntityOperationEvent(event);
                 break;
         }
+
+        if (this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
+            inlineEntityOnPluginEvent(event, this.editor);
+        }
     }
 
     private handleContextMenuEvent(event: UIEvent) {
@@ -221,6 +231,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     }
 
     private handleContentChangedEvent(event?: ContentChangedEvent) {
+        let shouldNormalizeDelimiters: boolean = false;
         // 1. find removed entities
         for (let i = this.state.knownEntityElements.length - 1; i >= 0; i--) {
             const element = this.state.knownEntityElements[i];
@@ -229,6 +240,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
                 if (element.shadowRoot) {
                     this.triggerEvent(element, EntityOperation.RemoveShadowRoot);
+                }
+
+                if (
+                    !shouldNormalizeDelimiters &&
+                    !element.isContentEditable &&
+                    !isBlockElement(element)
+                ) {
+                    shouldNormalizeDelimiters = true;
                 }
             }
         }
@@ -255,6 +274,13 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.triggerEvent(this.state.shadowEntityCache[id], EntityOperation.Overwrite);
             delete this.state.shadowEntityCache[id];
         });
+
+        if (
+            shouldNormalizeDelimiters &&
+            this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
+        ) {
+            normalizeDelimitersInEditor(this.editor);
+        }
     }
 
     private handleEntityOperationEvent(event: EntityOperationEvent) {

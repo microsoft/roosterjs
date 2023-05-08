@@ -1,6 +1,7 @@
 import {
     changeElementTag,
     ContentTraverser,
+    findClosestElementAncestor,
     getBlockElementAtNode,
     getNextLeafSibling,
     getPreviousLeafSibling,
@@ -41,18 +42,20 @@ function processBlock(block: { start: Node; end: Node }) {
     const { start, end } = block;
 
     if (start == end && getTagOfNode(start) == 'DIV') {
-        const node = changeElementTag(start as HTMLElement, 'SPAN');
+        const node = changeElementTag(start as HTMLElement, 'SPAN') as Node;
         block.start = node;
         block.end = node;
 
-        if (getTagOfNode(node.lastChild) == 'BR') {
+        if (node && node.lastChild && getTagOfNode(node.lastChild) == 'BR') {
             node.removeChild(node.lastChild);
         }
     } else if (getTagOfNode(end) == 'BR') {
-        const node = end.ownerDocument.createTextNode('');
-        end.parentNode?.insertBefore(node, end);
-        block.end = node;
-        end.parentNode?.removeChild(end);
+        const node = end.ownerDocument?.createTextNode('');
+        if (node) {
+            end.parentNode?.insertBefore(node, end);
+            block.end = node;
+            end.parentNode?.removeChild(end);
+        }
     }
 }
 
@@ -85,7 +88,10 @@ function checkAndAddBr(
         // If the first block and the last block are Siblings, add a BR before so the only two
         // lines that are being pasted are not merged.
         const previousSibling = getPreviousLeafSibling(root, block.start);
-        if (firstBlock.end.contains(previousSibling)) {
+        if (
+            firstBlock.end.contains(previousSibling) &&
+            !findClosestElementAncestor(block.start, root, 'li')
+        ) {
             const br = block.start.ownerDocument?.createElement('br');
             if (br) {
                 block.start.parentNode?.insertBefore(br, block.start);

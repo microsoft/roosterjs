@@ -4,6 +4,7 @@ import DarkColorHandler from './DarkColorHandler';
 import EditorPlugin from './EditorPlugin';
 import NodePosition from './NodePosition';
 import Rect from './Rect';
+import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
@@ -15,6 +16,7 @@ import { InsertOption } from './InsertOption';
 import { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import { PluginEvent } from '../event/PluginEvent';
 import { PluginState } from './CorePlugins';
+import { PositionType } from '../enum/PositionType';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TableSelectionRange } from './SelectionRangeEx';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
@@ -122,7 +124,8 @@ export type CreatePasteFragment = (
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
-    applyCurrentStyle: boolean
+    applyCurrentStyle: boolean,
+    pasteAsImage: boolean
 ) => DocumentFragment | null;
 
 /**
@@ -215,6 +218,23 @@ export type InsertNode = (core: EditorCore, node: Node, option: InsertOption | n
 export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
 
 /**
+ * Select content according to the given information.
+ * There are a bunch of allowed combination of parameters. See IEditor.select for more details
+ * @param core The editor core object
+ * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
+ * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
+ * @param arg3 (optional) A Node
+ * @param arg4 (optional) An offset number, or a PositionType
+ */
+export type Select = (
+    core: EditorCore,
+    arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
+    arg2?: NodePosition | number | PositionType | TableSelection | null,
+    arg3?: Node,
+    arg4?: number | PositionType
+) => boolean;
+
+/**
  * Change the editor selection to the given range
  * @param core The EditorCore object
  * @param range The range to select
@@ -254,6 +274,7 @@ export type SwitchShadowEdit = (core: EditorCore, isOn: boolean) => void;
  * @param direction To specify the transform direction, light to dark, or dark to light
  * @param forceTransform By default this function will only work when editor core is in dark mode.
  * Pass true to this value to force do color transformation even editor core is in light mode
+ * @param fromDarkModel Whether the given content is already in dark mode
  */
 export type TransformColor = (
     core: EditorCore,
@@ -261,7 +282,8 @@ export type TransformColor = (
     includeSelf: boolean,
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
-    forceTransform?: boolean
+    forceTransform?: boolean,
+    fromDarkMode?: boolean
 ) => void;
 
 /**
@@ -409,6 +431,17 @@ export interface CoreApiMap {
     restoreUndoSnapshot: RestoreUndoSnapshot;
 
     /**
+     * Select content according to the given information.
+     * There are a bunch of allowed combination of parameters. See IEditor.select for more details
+     * @param core The editor core object
+     * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
+     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
+     * @param arg3 (optional) A Node
+     * @param arg4 (optional) An offset number, or a PositionType
+     */
+    select: Select;
+
+    /**
      * Change the editor selection to the given range
      * @param core The EditorCore object
      * @param range The range to select
@@ -443,6 +476,7 @@ export interface CoreApiMap {
      * @param direction To specify the transform direction, light to dark, or dark to light
      * @param forceTransform By default this function will only work when editor core is in dark mode.
      * Pass true to this value to force do color transformation even editor core is in light mode
+     * @param fromDarkModel Whether the given content is already in dark mode
      */
     transformColor: TransformColor;
 

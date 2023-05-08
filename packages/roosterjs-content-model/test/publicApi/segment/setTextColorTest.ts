@@ -360,4 +360,107 @@ describe('setTextColor', () => {
             null
         );
     });
+
+    it('Set color with link', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                link: {
+                                    format: {},
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    textColor: 'red',
+                                },
+                                link: {
+                                    format: {
+                                        textColor: 'red',
+                                    },
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
+
+    it('Remove color with link', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    textColor: 'red',
+                                },
+                                link: {
+                                    format: { textColor: 'red' },
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                link: {
+                                    format: {},
+                                    dataset: {},
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            null
+        );
+    });
 });

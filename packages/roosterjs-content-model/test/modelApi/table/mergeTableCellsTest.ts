@@ -1,3 +1,4 @@
+import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { mergeTableCells } from '../../../lib/modelApi/table/mergeTableCells';
@@ -11,9 +12,8 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -27,20 +27,27 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[1].cells.push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
 
         mergeTableCells(table);
 
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[0], cells[1]],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[2], cells[3]],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -59,20 +66,27 @@ describe('mergeTableCells', () => {
 
         cells[0].isSelected = true;
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         mergeTableCells(table);
 
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[0], cells[1]],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[2], cells[3]],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -90,8 +104,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -101,12 +115,19 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[0], cells[1]],
+                },
+                {
+                    format: {},
+                    height: 0,
+                    cells: [cells[2], cells[3]],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -124,8 +145,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[2].isSelected = true;
@@ -135,12 +156,11 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -158,8 +178,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[3].isSelected = true;
@@ -169,17 +189,63 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
         expect(cells.map(c => c.spanLeft)).toEqual([false, true, false, true]);
         expect(cells.map(c => c.spanAbove)).toEqual([false, false, true, true]);
+    });
+
+    it('table with both selection and cached elements', () => {
+        const table = createTable(3);
+        const cells: ContentModelTableCell[] = [];
+
+        for (let i = 0; i < 9; i++) {
+            const cell = createTableCell(false, false, false, { backgroundColor: i.toString() });
+
+            cell.cachedElement = {} as any;
+            cells.push(cell);
+        }
+
+        table.rows[0].cells.push(cells[0], cells[1], cells[2]);
+        table.rows[1].cells.push(cells[3], cells[4], cells[5]);
+        table.rows[2].cells.push(cells[6], cells[7], cells[8]);
+        table.cachedElement = {} as any;
+
+        cells[0].isSelected = true;
+        cells[4].isSelected = true;
+
+        mergeTableCells(table);
+
+        expect(table).toEqual({
+            blockType: 'Table',
+            format: {},
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1], cells[2]] },
+                { format: {}, height: 0, cells: [cells[3], cells[4], cells[5]] },
+                { format: {}, height: 0, cells: [cells[6], cells[7], cells[8]] },
+            ],
+            widths: [],
+            dataset: {},
+            cachedElement: {} as any,
+        });
+
+        expect(cells.map(c => c.cachedElement)).toEqual([
+            undefined,
+            undefined,
+            {} as any,
+            undefined,
+            undefined,
+            {} as any,
+            {} as any,
+            {} as any,
+            {} as any,
+        ]);
     });
 
     it('table cells that cannot be merged - 1', () => {
@@ -192,8 +258,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[2].isSelected = true;
@@ -203,12 +269,11 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -226,8 +291,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -237,12 +302,11 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -260,8 +324,8 @@ describe('mergeTableCells', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         cells[0].isSelected = true;
         cells[3].isSelected = true;
@@ -271,12 +335,11 @@ describe('mergeTableCells', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 

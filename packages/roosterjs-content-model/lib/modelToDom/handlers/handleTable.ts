@@ -1,33 +1,52 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { moveChildNodes } from 'roosterjs-editor-dom';
+import { reuseCachedElement } from '../utils/reuseCachedElement';
 
 /**
  * @internal
  */
-export const handleTable: ContentModelHandler<ContentModelTable> = (
+export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     doc: Document,
     parent: Node,
     table: ContentModelTable,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    refNode: Node | null
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
-        return;
+        return refNode;
     }
 
-    const tableNode = doc.createElement('table');
-    parent.appendChild(tableNode);
-    applyFormat(tableNode, context.formatAppliers.table, table.format, context);
-    applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+    let tableNode = table.cachedElement;
+
+    if (tableNode) {
+        refNode = reuseCachedElement(parent, tableNode, refNode);
+
+        moveChildNodes(tableNode);
+    } else {
+        tableNode = doc.createElement('table');
+
+        table.cachedElement = tableNode;
+        parent.insertBefore(tableNode, refNode);
+
+        applyFormat(tableNode, context.formatAppliers.block, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.table, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.tableBorder, table.format, context);
+        applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
+    }
+
+    context.onNodeCreated?.(table, tableNode);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 
-    for (let row = 0; row < table.cells.length; row++) {
-        if (table.cells[row].length == 0) {
+    for (let row = 0; row < table.rows.length; row++) {
+        if (table.rows[row].cells.length == 0) {
             // Skip empty row
             continue;
         }
@@ -35,8 +54,8 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
         const tr = doc.createElement('tr');
         tbody.appendChild(tr);
 
-        for (let col = 0; col < table.cells[row].length; col++) {
-            const cell = table.cells[row][col];
+        for (let col = 0; col < table.rows[row].cells.length; col++) {
+            const cell = table.rows[row].cells[col];
 
             if (cell.isSelected) {
                 context.tableSelection = context.tableSelection || {
@@ -54,25 +73,21 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
-                const td = doc.createElement(cell.isHeader ? 'th' : 'td');
+                let td = cell.cachedElement || doc.createElement(cell.isHeader ? 'th' : 'td');
+
                 tr.appendChild(td);
-                applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
-                applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
 
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
-                let height = table.heights[row];
+                let height = table.rows[row].height;
 
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
-                    height += table.heights[row + rowSpan];
+                for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
+                    height += table.rows[row + rowSpan].height;
                 }
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                for (; table.rows[row].cells[col + colSpan]?.spanLeft; colSpan++) {
                     width += table.widths[col + colSpan];
                 }
-
-                td.style.width = width + 'px';
-                td.style.height = height + 'px';
 
                 if (rowSpan > 1) {
                     td.rowSpan = rowSpan;
@@ -82,8 +97,30 @@ export const handleTable: ContentModelHandler<ContentModelTable> = (
                     td.colSpan = colSpan;
                 }
 
-                context.modelHandlers.blockGroup(doc, td, cell, context);
+                if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
+                    if (width > 0) {
+                        td.style.width = width + 'px';
+                    }
+
+                    if (height > 0) {
+                        td.style.height = height + 'px';
+                    }
+                }
+
+                if (!cell.cachedElement) {
+                    cell.cachedElement = td;
+                    applyFormat(td, context.formatAppliers.block, cell.format, context);
+                    applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
+                    applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);
+                    applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
+                }
+
+                context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+
+                context.onNodeCreated?.(cell, td);
             }
         }
     }
+
+    return refNode;
 };
