@@ -897,7 +897,7 @@ describe('wordOnlineHandler', () => {
         it('does not have BulletListStyle or NumberListStyle but has no ListContainerWrapper', () => {
             runTest(
                 '<div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
-                '<ul><li>A</li><ul><li style="list-style-type: circle;">B</li><ul style="margin-right: 0px;"><li style="list-style-type: square;"><div style="margin-right: 0px; margin-left: 0px;">C</div></li></ul></ul></ul>'
+                '<ul><li>A</li><ul><li style="list-style-type: circle;">B</li><ul style="margin-right: 0px;"><li style="margin-right: 0px; margin-left: 0px; list-style-type: square;">C</li></ul></ul></ul>'
             );
         });
 
@@ -1114,13 +1114,13 @@ describe('wordOnlineHandler', () => {
                     {
                         blockGroupType: 'Document',
                         blocks: [
-                            Object({
+                            {
                                 blockType: 'Paragraph',
                                 segments: [
-                                    Object({
+                                    {
                                         segmentType: 'Image',
                                         src: 'http://localhost:9876/www.microsoft.com',
-                                        format: Object({
+                                        format: {
                                             letterSpacing: 'normal',
                                             fontFamily:
                                                 '"Segoe UI", "Segoe UI Web", Arial, Verdana, sans-serif',
@@ -1143,15 +1143,34 @@ describe('wordOnlineHandler', () => {
                                             borderRight: Browser.isFirefox ? 'medium none' : '',
                                             borderBottom: Browser.isFirefox ? 'medium none' : '',
                                             borderLeft: Browser.isFirefox ? 'medium none' : '',
-                                        }),
-                                        dataset: Object({}),
+                                        },
+                                        dataset: {},
                                         alt:
                                             'Graphical user interface, text, application Description automatically generated',
-                                    }),
+                                    },
                                 ],
-                                format: Object({}),
+                                format: {},
                                 isImplicit: true,
-                            }),
+                            },
+                            {
+                                blockType: 'BlockGroup',
+                                blockGroupType: 'FormatContainer',
+                                tagName: 'div',
+                                blocks: [],
+                                format: {
+                                    whiteSpace: 'pre',
+                                    marginTop: '0px',
+                                    marginRight: '0px',
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                    paddingTop: '0px',
+                                    paddingRight: '0px',
+                                    paddingBottom: '0px',
+                                    paddingLeft: '0px',
+                                    width: '264px',
+                                    height: '96px',
+                                },
+                            },
                         ],
                     }
                 );
