@@ -46,6 +46,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -76,6 +77,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -124,6 +126,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockNode,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -167,6 +170,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockTable,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -204,6 +208,7 @@ describe('createDomToModelContext', () => {
             },
             listFormat,
             selectionRootNode: mockImage,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -244,6 +249,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -286,6 +292,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             listFormat,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });

@@ -57,9 +57,8 @@ export function createDomToModelContext(
 
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
+        allowCacheElement: !options?.disableCacheElement,
     };
-
-    context.allowCacheElement = !options?.disableCacheElement;
 
     const range = options?.selectionRange;
     let selectionRoot: Node | undefined;
