@@ -32,3 +32,4 @@ export { SelectionRangeTypes } from './SelectionRangeTypes';
 export { NumberingListType } from './NumberingListType';
 export { BulletListType } from './BulletListType';
 export { DefinitionType } from './DefinitionType';
+export { PasteType } from './PasteType';

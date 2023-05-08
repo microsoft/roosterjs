@@ -1,5 +1,10 @@
-import { BeforePasteEvent, ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
+import {
+    BeforePasteEvent,
+    ClipboardData,
+    PasteType,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 export const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
 export const POWERPOINT_ATTRIBUTE_VALUE = 'PowerPoint.Slide';
@@ -14,6 +19,7 @@ export const getPasteEvent = (): BeforePasteEvent => {
         htmlBefore: '',
         htmlAfter: '',
         htmlAttributes: {},
+        pasteType: PasteType.Normal,
     };
 };
 

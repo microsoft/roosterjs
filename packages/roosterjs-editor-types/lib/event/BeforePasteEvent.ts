@@ -2,6 +2,8 @@ import BasePluginEvent from './BasePluginEvent';
 import ClipboardData from '../interface/ClipboardData';
 import HtmlSanitizerOptions from '../interface/HtmlSanitizerOptions';
 import { PluginEventType } from '../enum/PluginEventType';
+import type { CompatiblePasteType } from '../compatibleEnum/PasteType';
+import type { PasteType } from '../enum/PasteType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**
@@ -37,6 +39,11 @@ export interface BeforePasteEventData {
      * Attributes of the root "HTML" tag
      */
     htmlAttributes: Record<string, string>;
+
+    /**
+     * Paste type option (as plain text, merge format, normal, as image)
+     */
+    readonly pasteType: PasteType | CompatiblePasteType;
 }
 
 /**
