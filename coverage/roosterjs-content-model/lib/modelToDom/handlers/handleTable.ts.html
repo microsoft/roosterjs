@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">92.54% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>60/65</span>
+                <span class='fraction'>62/67</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90.2% </span>
+                <span class="strong">90.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>46/51</span>
+                <span class='fraction'>50/55</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.94% </span>
+                <span class="strong">92.19% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>57/62</span>
+                <span class='fraction'>59/64</span>
             </div>
         
             
@@ -178,7 +178,12 @@
 <a name='L119'></a><a href='#L119'>119</a>
 <a name='L120'></a><a href='#L120'>120</a>
 <a name='L121'></a><a href='#L121'>121</a>
-<a name='L122'></a><a href='#L122'>122</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L122'></a><a href='#L122'>122</a>
+<a name='L123'></a><a href='#L123'>123</a>
+<a name='L124'></a><a href='#L124'>124</a>
+<a name='L125'></a><a href='#L125'>125</a>
+<a name='L126'></a><a href='#L126'>126</a>
+<a name='L127'></a><a href='#L127'>127</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -279,7 +284,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">37x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
@@ -346,8 +356,8 @@ export const handleTable: ContentModelBlockHandler&lt;ContentModelTable&gt; = (
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 &nbsp;
-    for (let row = 0; row &lt; table.cells.length; row++) {
-        if (table.cells[row].length == 0) {
+    for (let row = 0; row &lt; table.rows.length; row++) {
+        if (table.rows[row].cells.length == 0) {
             // Skip empty row
             continue;
         }
@@ -355,8 +365,8 @@ export const handleTable: ContentModelBlockHandler&lt;ContentModelTable&gt; = (
         const tr = doc.createElement('tr');
         tbody.appendChild(tr);
 &nbsp;
-        for (let col = 0; col &lt; table.cells[row].length; col++) {
-            const cell = table.cells[row][col];
+        for (let col = 0; col &lt; table.rows[row].cells.length; col++) {
+            const cell = table.rows[row].cells[col];
 &nbsp;
             <span class="missing-if-branch" title="if path not taken" >I</span>if (cell.isSelected) {
 <span class="cstat-no" title="statement not covered" >                context.tableSelection = context.tableSelection || {</span>
@@ -381,12 +391,12 @@ export const handleTable: ContentModelBlockHandler&lt;ContentModelTable&gt; = (
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
-                let height = table.heights[row];
+                let height = table.rows[row].height;
 &nbsp;
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
-                    height += table.heights[row + rowSpan];
+                for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
+                    height += table.rows[row + rowSpan].height;
                 }
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                for (; table.rows[row].cells[col + colSpan]?.spanLeft; colSpan++) {
                     width += table.widths[col + colSpan];
                 }
 &nbsp;
@@ -399,8 +409,13 @@ export const handleTable: ContentModelBlockHandler&lt;ContentModelTable&gt; = (
                 }
 &nbsp;
                 if (!cell.cachedElement || (cell.format.useBorderBox &amp;&amp; hasMetadata(table))) {
-                    td.style.width = width + 'px';
-                    td.style.height = height + 'px';
+                    if (width &gt; 0) {
+                        td.style.width = width + 'px';
+                    }
+&nbsp;
+                    if (height &gt; 0) {
+                        td.style.height = height + 'px';
+                    }
                 }
 &nbsp;
                 if (!cell.cachedElement) {
@@ -427,7 +442,7 @@ export const handleTable: ContentModelBlockHandler&lt;ContentModelTable&gt; = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 08 2023 15:00:42 GMT+0000 (Coordinated Universal Time)
+                at Mon May 08 2023 15:42:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

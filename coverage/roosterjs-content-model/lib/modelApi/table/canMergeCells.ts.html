@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">91.3% </span>
+                <span class="strong">90% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>42/46</span>
+                <span class='fraction'>45/50</span>
             </div>
         
             
@@ -125,7 +125,8 @@
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
 <a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -145,6 +146,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">87x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -193,13 +195,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">70x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 &nbsp;
 /**
  * @internal
  */
 export function canMergeCells(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     firstRow: number,
     firstCol: number,
     lastRow: number,
@@ -207,26 +209,27 @@ export function canMergeCells(
 ): boolean {
     const noSpanAbove =
         firstCol == lastCol ||
-        cells[firstRow].every(
+        rows[firstRow].cells.every(
             (cell, colIndex) =&gt; colIndex &lt; firstCol || colIndex &gt; lastCol || !cell.spanAbove
         );
     const noSpanLeft =
         firstRow == lastRow ||
-        cells.every(
-            (row, rowIndex) =&gt; rowIndex &lt; firstRow || rowIndex &gt; lastRow || !row[firstCol].spanLeft
+        rows.every(
+            (row, rowIndex) =&gt;
+                rowIndex &lt; firstRow || rowIndex &gt; lastRow || !row.cells[firstCol].spanLeft
         );
 &nbsp;
-    const noDifferentBelowSpan = cells[lastRow]
+    const noDifferentBelowSpan = rows[lastRow].cells
         .map((_, colIndex) =&gt;
             colIndex &gt;= firstCol &amp;&amp; colIndex &lt;= lastCol
-                ? getBelowSpanCount(cells, lastRow, colIndex)
+                ? getBelowSpanCount(rows, lastRow, colIndex)
                 : -1
         )
         .every((x, _, a) =&gt; x &lt; 0 || x == a[firstCol]);
-    const noDifferentRightSpan = cells
+    const noDifferentRightSpan = rows
         .map((_, rowIndex) =&gt;
             rowIndex &gt;= firstRow &amp;&amp; rowIndex &lt;= lastRow
-                ? getRightSpanCount(cells, rowIndex, lastCol)
+                ? getRightSpanCount(rows, rowIndex, lastCol)
                 : -1
         )
         .every((x, _, a) =&gt; x &lt; 0 || x == a[firstRow]);
@@ -234,11 +237,11 @@ export function canMergeCells(
     return noSpanAbove &amp;&amp; noSpanLeft &amp;&amp; noDifferentBelowSpan &amp;&amp; noDifferentRightSpan;
 }
 &nbsp;
-function getBelowSpanCount(cells: ContentModelTableCell[][], rowIndex: number, colIndex: number) {
+function getBelowSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
     let spanCount = 0;
 &nbsp;
-    for (let row = rowIndex + 1; row &lt; cells.length; row++) {
-        if (cells[row][colIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>panAbove) {
+    for (let row = rowIndex + 1; row &lt; rows.length; row++) {
+        if (rows[row]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[colIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>panAbove) {
             spanCount++;
         } else {
             break;
@@ -248,11 +251,11 @@ function getBelowSpanCount(cells: ContentModelTableCell[][], rowIndex: number, c
     return spanCount;
 }
 &nbsp;
-function getRightSpanCount(cells: ContentModelTableCell[][], rowIndex: number, colIndex: number) {
+function getRightSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
     let spanCount = 0;
 &nbsp;
-    for (let col = colIndex + 1; col &lt; cells[rowIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength; col++) {
-        if (cells[rowIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.[c</span>ol]<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>panLeft) {
+    for (let col = colIndex + 1; col &lt; rows[rowIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells.length; col++) {
+        if (rows[rowIndex]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[col]<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>panLeft) {
             spanCount++;
         } else {
             break;
@@ -268,7 +271,7 @@ function getRightSpanCount(cells: ContentModelTableCell[][], rowIndex: number, c
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 08 2023 15:00:42 GMT+0000 (Coordinated Universal Time)
+                at Mon May 08 2023 15:42:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

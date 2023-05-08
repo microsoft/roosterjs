@@ -287,7 +287,11 @@
 <a name='L228'></a><a href='#L228'>228</a>
 <a name='L229'></a><a href='#L229'>229</a>
 <a name='L230'></a><a href='#L230'>230</a>
-<a name='L231'></a><a href='#L231'>231</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L231'></a><a href='#L231'>231</a>
+<a name='L232'></a><a href='#L232'>232</a>
+<a name='L233'></a><a href='#L233'>233</a>
+<a name='L234'></a><a href='#L234'>234</a>
+<a name='L235'></a><a href='#L235'>235</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -414,6 +418,10 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -625,14 +633,14 @@ function mergeTable(
 &nbsp;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (tableContext &amp;&amp; source.blocks.length == 1 &amp;&amp; source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
-        for (let i = 0; i &lt; newTable.cells.length; i++) {
-            for (let j = 0; j &lt; newTable.cells[i].length; j++) {
-                const newCell = newTable.cells[i][j];
+        for (let i = 0; i &lt; newTable.rows.length; i++) {
+            for (let j = 0; j &lt; newTable.rows[i].cells.length; j++) {
+                const newCell = newTable.rows[i].cells[j];
 &nbsp;
-                if (i == 0 &amp;&amp; colIndex + j &gt;= table.cells[0].length) {
-                    for (let k = 0; k &lt; table.cells.length; k++) {
-                        const leftCell = table.cells[k]<span class="branch-0 cbranch-no" title="branch not covered" >?.[c</span>olIndex + j - 1];
-                        table.cells[k][colIndex + j] = createTableCell(
+                if (i == 0 &amp;&amp; colIndex + j &gt;= table.rows[0].cells.length) {
+                    for (let k = 0; k &lt; table.rows.length; k++) {
+                        const leftCell = table.rows[k]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[colIndex + j - 1];
+                        table.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>sHeader,
@@ -641,14 +649,18 @@ function mergeTable(
                     }
                 }
 &nbsp;
-                if (j == 0 &amp;&amp; rowIndex + i &gt;= table.cells.length) {
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (!table.cells[rowIndex + i]) {
-                        table.cells[rowIndex + i] = [];
+                if (j == 0 &amp;&amp; rowIndex + i &gt;= table.rows.length) {
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (!table.rows[rowIndex + i]) {
+                        table.rows[rowIndex + i] = {
+                            cells: [],
+                            format: {},
+                            height: 0,
+                        };
                     }
 &nbsp;
-                    for (let k = 0; k &lt; table.cells[rowIndex].length; k++) {
-                        const aboveCell = table.cells[rowIndex + i - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.[k</span>];
-                        table.cells[rowIndex + i][k] = createTableCell(
+                    for (let k = 0; k &lt; table.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = table.rows[rowIndex + i - 1]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ells[k];
+                        table.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -657,7 +669,7 @@ function mergeTable(
                     }
                 }
 &nbsp;
-                table.cells[rowIndex + i][colIndex + j] = newCell;
+                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 &nbsp;
                 if (i == 0 &amp;&amp; j == 0) {
                     addSegment(newCell, createSelectionMarker());
@@ -754,7 +766,7 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon May 08 2023 15:00:42 GMT+0000 (Coordinated Universal Time)
+                at Mon May 08 2023 15:42:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
