@@ -139,7 +139,7 @@ describe('wordOnlineHandler', () => {
             {
                 ...event.domToModelOption,
                 includeRoot: true,
-                allowCacheElement: false,
+                disableCacheElement: true,
             }
         );
         if (expectedModel) {

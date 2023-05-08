@@ -59,8 +59,8 @@ export function createDomToModelContext(
         defaultFormatParsers: defaultFormatParsers,
     };
 
-    if (options?.allowCacheElement) {
-        context.allowCacheElement = true;
+    if (typeof options?.disableCacheElement == 'boolean') {
+        context.disableCacheElement = options?.disableCacheElement;
     }
 
     const range = options?.selectionRange;

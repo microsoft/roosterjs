@@ -32,8 +32,8 @@ function internalCreateContentModel(
         ...(option || {}),
     };
 
-    if (core.reuseModel && option?.allowCacheElement !== false) {
-        context.allowCacheElement = true;
+    if (core.reuseModel && !option?.disableCacheElement) {
+        context.disableCacheElement = false;
     }
 
     return domToContentModel(core.contentDiv, core.api.createEditorContext(core), context);
