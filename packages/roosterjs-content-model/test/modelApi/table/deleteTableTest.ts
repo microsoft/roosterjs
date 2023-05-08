@@ -9,7 +9,7 @@ describe('deleteTable', () => {
 
         deleteTable(table);
 
-        expect(table.cells).toEqual([]);
+        expect(table.rows).toEqual([]);
         expect(table.cachedElement).toBeUndefined();
     });
 });

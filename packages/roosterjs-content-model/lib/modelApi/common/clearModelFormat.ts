@@ -111,7 +111,7 @@ function clearTableCellFormat(
 ) {
     if (tableContext) {
         const { table, colIndex, rowIndex, isWholeTableSelected } = tableContext;
-        const cell = table.cells[rowIndex][colIndex];
+        const cell = table.rows[rowIndex].cells[colIndex];
 
         if (cell.isSelected) {
             updateTableCellMetadata(cell, () => null);

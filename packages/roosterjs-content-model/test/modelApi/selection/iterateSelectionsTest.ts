@@ -155,7 +155,7 @@ describe('iterateSelections', () => {
         para2.segments.push(text2);
 
         cell.blocks.push(para1);
-        table.cells = [[cell]];
+        table.rows = [{ format: {}, height: 0, cells: [cell] }];
 
         group.blocks.push(table);
         group.blocks.push(para2);
@@ -194,7 +194,7 @@ describe('iterateSelections', () => {
         listItem.blocks.push(para1);
         quote.blocks.push(listItem);
         cell.blocks.push(quote);
-        table.cells = [[cell]];
+        table.rows = [{ format: {}, height: 0, cells: [cell] }];
 
         group.blocks.push(table);
         group.blocks.push(para2);
@@ -243,7 +243,7 @@ describe('iterateSelections', () => {
 
         cell1.blocks.push(para1);
         cell1.blocks.push(para2);
-        table.cells = [[cell1, cell2]];
+        table.rows = [{ format: {}, height: 0, cells: [cell1, cell2] }];
 
         group.blocks.push(table);
 
@@ -302,7 +302,7 @@ describe('iterateSelections', () => {
 
         cell1.blocks.push(para1);
         cell1.blocks.push(para2);
-        table.cells = [[cell1, cell2]];
+        table.rows = [{ format: {}, height: 0, cells: [cell1, cell2] }];
 
         group.blocks.push(table);
 
@@ -341,7 +341,7 @@ describe('iterateSelections', () => {
 
         cell1.blocks.push(para1);
         cell1.blocks.push(para2);
-        table.cells = [[cell1, cell2]];
+        table.rows = [{ format: {}, height: 0, cells: [cell1, cell2] }];
 
         group.blocks.push(table);
 
@@ -403,7 +403,7 @@ describe('iterateSelections', () => {
 
         cell1.blocks.push(para1);
         cell2.blocks.push(para2);
-        table.cells = [[cell1, cell2]];
+        table.rows = [{ format: {}, height: 0, cells: [cell1, cell2] }];
 
         group.blocks.push(table);
 
@@ -1160,7 +1160,7 @@ describe('iterateSelections', () => {
         text.isSelected = true;
 
         para.segments.push(text);
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         group.blocks.push(table);
         group.blocks.push(para);
 
@@ -1189,7 +1189,7 @@ describe('iterateSelections', () => {
         cell2.isSelected = true;
         cell3.isSelected = true;
 
-        table.cells[0].push(cell1, cell2, cell3);
+        table.rows[0].cells.push(cell1, cell2, cell3);
         group.blocks.push(table);
 
         const newCallback = jasmine
@@ -1198,7 +1198,7 @@ describe('iterateSelections', () => {
                 if (tableContext) {
                     const { table, colIndex, rowIndex } = tableContext;
 
-                    if (table.cells[rowIndex][colIndex] == cell2) {
+                    if (table.rows[rowIndex].cells[colIndex] == cell2) {
                         return true;
                     }
                 }

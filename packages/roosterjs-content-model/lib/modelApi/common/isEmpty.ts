@@ -11,7 +11,7 @@ export function isBlockEmpty(block: ContentModelBlock): boolean {
             return block.segments.length == 0;
 
         case 'Table':
-            return block.cells.every(row => row.length == 0);
+            return block.rows.every(row => row.cells.length == 0);
 
         case 'BlockGroup':
             return isBlockGroupEmpty(block);

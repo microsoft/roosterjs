@@ -44,9 +44,8 @@ describe('hasSelectionInBlock', () => {
         const block: ContentModelBlock = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         };
 
@@ -59,20 +58,23 @@ describe('hasSelectionInBlock', () => {
         const block: ContentModelBlock = {
             blockType: 'Table',
             format: {},
-            cells: [
-                [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [],
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        dataset: {},
-                    },
-                ],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            dataset: {},
+                        },
+                    ],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         };
 
@@ -85,29 +87,32 @@ describe('hasSelectionInBlock', () => {
         const block: ContentModelBlock = {
             blockType: 'Table',
             format: {},
-            cells: [
-                [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [],
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        dataset: {},
-                    },
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [],
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        isSelected: true,
-                        dataset: {},
-                    },
-                ],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            dataset: {},
+                        },
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            isSelected: true,
+                            dataset: {},
+                        },
+                    ],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         };
 
@@ -120,32 +125,35 @@ describe('hasSelectionInBlock', () => {
         const block: ContentModelBlock = {
             blockType: 'Table',
             format: {},
-            cells: [
-                [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [
-                            {
-                                blockType: 'Paragraph',
-                                segments: [
-                                    {
-                                        segmentType: 'Br',
-                                        isSelected: true,
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                            },
-                        ],
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        dataset: {},
-                    },
-                ],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Br',
+                                            isSelected: true,
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            dataset: {},
+                        },
+                    ],
+                },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         };
 

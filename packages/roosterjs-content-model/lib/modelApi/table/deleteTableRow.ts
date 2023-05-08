@@ -9,17 +9,16 @@ export function deleteTableRow(table: ContentModelTable) {
     const sel = getSelectedCells(table);
 
     if (sel) {
-        table.cells[sel.firstRow].forEach((cell, colIndex) => {
-            const cellInNextRow = table.cells[sel.lastRow + 1]?.[colIndex];
+        table.rows[sel.firstRow].cells.forEach((cell, colIndex) => {
+            const cellInNextRow = table.rows[sel.lastRow + 1]?.cells[colIndex];
 
             if (cellInNextRow) {
                 cellInNextRow.spanAbove = cellInNextRow.spanAbove && cell.spanAbove;
             }
         });
 
-        table.cells.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
-        table.heights.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
+        table.rows.splice(sel.firstRow, sel.lastRow - sel.firstRow + 1);
 
-        collapseTableSelection(table.cells, sel);
+        collapseTableSelection(table.rows, sel);
     }
 }

@@ -215,7 +215,7 @@ describe('getLeafSiblingBlock', () => {
         const model = createContentModelDocument();
 
         cell.blocks.push(block1, block2, block3);
-        table.cells.push([cell]);
+        table.rows.push({ cells: [cell], format: {}, height: 0 });
         model.blocks.push(table);
 
         const resultBefore = getLeafSiblingBlock([cell, model], block2, false);
@@ -244,7 +244,7 @@ describe('getLeafSiblingBlock', () => {
         cell1.blocks.push(block1);
         cell2.blocks.push(block2);
         cell3.blocks.push(block3);
-        table.cells.push([cell1, cell2, cell3]);
+        table.rows.push({ cells: [cell1, cell2, cell3], format: {}, height: 0 });
         model.blocks.push(table);
 
         const resultBefore = getLeafSiblingBlock([cell2, model], block2, false);
@@ -266,8 +266,8 @@ describe('getLeafSiblingBlock', () => {
 
         cell1.blocks.push(block1);
         cell2.blocks.push(block3);
-        table1.cells.push([cell1]);
-        table2.cells.push([cell2]);
+        table1.rows.push({ cells: [cell1], format: {}, height: 0 });
+        table2.rows.push({ cells: [cell2], format: {}, height: 0 });
         model.blocks.push(table1, block2, table2);
 
         const resultBefore = getLeafSiblingBlock([model], block2, false);

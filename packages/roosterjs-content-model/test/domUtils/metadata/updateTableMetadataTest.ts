@@ -8,9 +8,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         };
         const callback = jasmine.createSpy('callback').and.returnValue(null);
@@ -21,9 +20,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -32,9 +30,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: '',
             },
@@ -47,9 +44,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -71,9 +67,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -86,9 +81,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -112,9 +106,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -130,9 +123,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -156,9 +148,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -179,9 +170,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -205,9 +195,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -220,9 +209,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -236,9 +224,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -251,9 +238,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -280,9 +266,8 @@ describe('updateTableMetadata', () => {
         const table: ContentModelTable = {
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(tableFormat),
             },
@@ -295,9 +280,8 @@ describe('updateTableMetadata', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {
                 editingInfo: JSON.stringify(validFormat),
             },
