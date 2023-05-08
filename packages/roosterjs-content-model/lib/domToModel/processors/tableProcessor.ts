@@ -34,7 +34,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
         const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
 
-        if (!context.disableCacheElement) {
+        if (context.allowCacheElement) {
             table.cachedElement = tableElement;
         }
 
@@ -147,7 +147,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     table.rows[row + rowSpan - 1].cells[targetCol] = cell;
 
                                     if (hasTd) {
-                                        if (!context.disableCacheElement) {
+                                        if (context.allowCacheElement) {
                                             cell.cachedElement = td;
                                         }
 

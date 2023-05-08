@@ -272,7 +272,7 @@ describe('tableProcessor with format', () => {
     beforeEach(() => {
         context = createDomToModelContext();
 
-        context.disableCacheElement = false;
+        context.allowCacheElement = true;
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
