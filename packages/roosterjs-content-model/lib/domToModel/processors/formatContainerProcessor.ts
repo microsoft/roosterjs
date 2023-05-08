@@ -1,7 +1,7 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { createFormatContainer } from '../../modelApi/creators/createFormatContainer';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -34,7 +34,7 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
         parseFormat(element, context.formatParsers.block, context.blockFormat, context);
         parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
 
-        const format: ContentModelBlockFormat & ContentModelSegmentFormat = {
+        const format: ContentModelFormatContainerFormat = {
             ...context.blockFormat,
         };
 
@@ -55,14 +55,22 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
 
         context.elementProcessors.child(formatContainer, element, context);
 
+        if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
+            formatContainer.zeroFontSize = true;
+        }
+
         if (shouldFallbackToParagraph(formatContainer)) {
             // For DIV container that only has one paragraph child, container style can be merged into paragraph
             // and no need to have this container
-            const firstChild = formatContainer.blocks[0];
+            const paragraph = formatContainer.blocks[0] as ContentModelParagraph;
 
-            Object.assign(firstChild.format, formatContainer.format);
-            setParagraphNotImplicit(firstChild);
-            addBlock(group, firstChild);
+            if (formatContainer.zeroFontSize) {
+                paragraph.zeroFontSize = true;
+            }
+
+            Object.assign(paragraph.format, formatContainer.format);
+            setParagraphNotImplicit(paragraph);
+            addBlock(group, paragraph);
         } else {
             addBlock(group, formatContainer);
         }

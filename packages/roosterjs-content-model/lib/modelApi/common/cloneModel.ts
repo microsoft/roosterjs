@@ -160,6 +160,10 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
         cloneModelWithFormat(paragraph)
     );
 
+    if (paragraph.zeroFontSize) {
+        newParagraph.zeroFontSize = true;
+    }
+
     if (decorator) {
         newParagraph.decorator = Object.assign(
             {
@@ -200,12 +204,17 @@ function cloneTableCell(cell: ContentModelTableCell): ContentModelTableCell {
 
 function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
     const { tagName, cachedElement } = container;
-
-    return Object.assign(
+    const newContainer: ContentModelFormatContainer = Object.assign(
         { tagName, cachedElement },
         cloneBlockBase(container),
         cloneBlockGroupBase(container)
     );
+
+    if (container.zeroFontSize) {
+        newContainer.zeroFontSize = true;
+    }
+
+    return newContainer;
 }
 
 function cloneListItem(item: ContentModelListItem): ContentModelListItem {

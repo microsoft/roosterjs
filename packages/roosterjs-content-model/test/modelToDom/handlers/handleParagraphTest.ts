@@ -458,4 +458,41 @@ describe('handleParagraph', () => {
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
+
+    it('With zeroFontSize = true and no text segment', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Br',
+                    format: {},
+                },
+            ],
+            format: {},
+            zeroFontSize: true,
+        };
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div style="font-size: 0px;"></div>');
+    });
+
+    it('With zeroFontSize = true and has text segment', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: {},
+                    text: 'test',
+                },
+            ],
+            format: {},
+            zeroFontSize: true,
+        };
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div></div>');
+    });
 });
