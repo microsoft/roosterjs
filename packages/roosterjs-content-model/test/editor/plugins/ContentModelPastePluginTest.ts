@@ -1,9 +1,9 @@
 import * as addParser from '../../../lib/editor/plugins/PastePlugin/utils/addParser';
 import * as getPasteSource from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
+import ContentModelBeforePasteEvent from '../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import deprecatedColorParser from '../../../lib/editor/plugins/PastePlugin/utils/deprecatedColorParser';
-import { ContentModelBeforePasteEvent } from '../../../lib/publicTypes';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { KnownPasteSourceType, PluginEventType } from 'roosterjs-editor-types';
 

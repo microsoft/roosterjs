@@ -10,9 +10,8 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -20,9 +19,8 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -30,15 +28,14 @@ describe('insertTableRow', () => {
     it('table without selection', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
-        table.cells[0].push(cell1);
+        table.rows[0].cells.push(cell1);
 
         insertTableRow(table, TableOperation.InsertAbove);
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1]],
+            rows: [{ format: {}, height: 0, cells: [cell1] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -46,9 +43,8 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1]],
+            rows: [{ format: {}, height: 0, cells: [cell1] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -57,9 +53,9 @@ describe('insertTableRow', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
         cell1.isSelected = true;
-        table.cells[0].push(cell1);
+        table.rows[0].cells.push(cell1);
         table.widths = [100];
-        table.heights = [200];
+        table.rows[0].height = 200;
 
         const cell2 = { ...cell1 };
         delete cell2.isSelected;
@@ -68,9 +64,11 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2], [cell1]],
+            rows: [
+                { format: {}, height: 200, cells: [cell2] },
+                { format: {}, height: 200, cells: [cell1] },
+            ],
             widths: [100],
-            heights: [200, 200],
             dataset: {},
         });
 
@@ -78,9 +76,12 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2], [cell1], [cell2]],
+            rows: [
+                { format: {}, height: 200, cells: [cell2] },
+                { format: {}, height: 200, cells: [cell1] },
+                { format: {}, height: 200, cells: [cell2] },
+            ],
             widths: [100],
-            heights: [200, 200, 200],
             dataset: {},
         });
     });
@@ -91,10 +92,11 @@ describe('insertTableRow', () => {
         const cell2 = createTableCell(false, false, true);
         cell1.isSelected = true;
         cell2.isSelected = true;
-        table.cells[0].push(cell1);
-        table.cells[1].push(cell2);
+        table.rows[0].cells.push(cell1);
+        table.rows[1].cells.push(cell2);
         table.widths = [100];
-        table.heights = [200, 300];
+        table.rows[0].height = 200;
+        table.rows[1].height = 300;
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -106,9 +108,13 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell3], [cell3], [cell1], [cell2]],
+            rows: [
+                { format: {}, height: 200, cells: [cell3] },
+                { format: {}, height: 200, cells: [cell3] },
+                { format: {}, height: 200, cells: [cell1] },
+                { format: {}, height: 300, cells: [cell2] },
+            ],
             widths: [100],
-            heights: [200, 200, 200, 300],
             dataset: {},
         });
 
@@ -116,9 +122,15 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell3], [cell3], [cell1], [cell2], [cell4], [cell4]],
+            rows: [
+                { format: {}, height: 200, cells: [cell3] },
+                { format: {}, height: 200, cells: [cell3] },
+                { format: {}, height: 200, cells: [cell1] },
+                { format: {}, height: 300, cells: [cell2] },
+                { format: {}, height: 300, cells: [cell4] },
+                { format: {}, height: 300, cells: [cell4] },
+            ],
             widths: [100],
-            heights: [200, 200, 200, 300, 300, 300],
             dataset: {},
         });
     });
@@ -130,9 +142,9 @@ describe('insertTableRow', () => {
 
         cell1.isSelected = true;
         cell2.isSelected = true;
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         table.widths = [100, 200];
-        table.heights = [300];
+        table.rows[0].height = 300;
 
         const cell3 = { ...cell1 };
         delete cell3.isSelected;
@@ -144,12 +156,11 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cell3, cell4],
-                [cell1, cell2],
+            rows: [
+                { format: {}, height: 300, cells: [cell3, cell4] },
+                { format: {}, height: 300, cells: [cell1, cell2] },
             ],
             widths: [100, 200],
-            heights: [300, 300],
             dataset: {},
         });
 
@@ -157,13 +168,12 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cell3, cell4],
-                [cell1, cell2],
-                [cell3, cell4],
+            rows: [
+                { format: {}, height: 300, cells: [cell3, cell4] },
+                { format: {}, height: 300, cells: [cell1, cell2] },
+                { format: {}, height: 300, cells: [cell3, cell4] },
             ],
             widths: [100, 200],
-            heights: [300, 300, 300],
             dataset: {},
         });
     });
@@ -185,12 +195,15 @@ describe('insertTableRow', () => {
 
         cell5.isSelected = true;
         cell9.isSelected = true;
-        table.cells[0].push(cell1, cell2, cell3);
-        table.cells[1].push(cell4, cell5, cell6);
-        table.cells[2].push(cell7, cell8, cell9);
-        table.cells[3].push(cell10, cell11, cell12);
+        table.rows[0].cells.push(cell1, cell2, cell3);
+        table.rows[1].cells.push(cell4, cell5, cell6);
+        table.rows[2].cells.push(cell7, cell8, cell9);
+        table.rows[3].cells.push(cell10, cell11, cell12);
         table.widths = [100, 200, 300];
-        table.heights = [400, 500, 600, 700];
+        table.rows[0].height = 400;
+        table.rows[1].height = 500;
+        table.rows[2].height = 600;
+        table.rows[3].height = 700;
 
         const cell5Clone = { ...cell5 };
         const cell9Clone = { ...cell9 };
@@ -201,16 +214,15 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cell1, cell2, cell3],
-                [cell4, cell5Clone, cell6],
-                [cell4, cell5Clone, cell6],
-                [cell4, cell5, cell6],
-                [cell7, cell8, cell9],
-                [cell10, cell11, cell12],
+            rows: [
+                { format: {}, height: 400, cells: [cell1, cell2, cell3] },
+                { format: {}, height: 500, cells: [cell4, cell5Clone, cell6] },
+                { format: {}, height: 500, cells: [cell4, cell5Clone, cell6] },
+                { format: {}, height: 500, cells: [cell4, cell5, cell6] },
+                { format: {}, height: 600, cells: [cell7, cell8, cell9] },
+                { format: {}, height: 700, cells: [cell10, cell11, cell12] },
             ],
             widths: [100, 200, 300],
-            heights: [400, 500, 500, 500, 600, 700],
             dataset: {},
         });
 
@@ -218,18 +230,17 @@ describe('insertTableRow', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cell1, cell2, cell3],
-                [cell4, cell5Clone, cell6],
-                [cell4, cell5Clone, cell6],
-                [cell4, cell5, cell6],
-                [cell7, cell8, cell9],
-                [cell7, cell8, cell9Clone],
-                [cell7, cell8, cell9Clone],
-                [cell10, cell11, cell12],
+            rows: [
+                { format: {}, height: 400, cells: [cell1, cell2, cell3] },
+                { format: {}, height: 500, cells: [cell4, cell5Clone, cell6] },
+                { format: {}, height: 500, cells: [cell4, cell5Clone, cell6] },
+                { format: {}, height: 500, cells: [cell4, cell5, cell6] },
+                { format: {}, height: 600, cells: [cell7, cell8, cell9] },
+                { format: {}, height: 600, cells: [cell7, cell8, cell9Clone] },
+                { format: {}, height: 600, cells: [cell7, cell8, cell9Clone] },
+                { format: {}, height: 700, cells: [cell10, cell11, cell12] },
             ],
             widths: [100, 200, 300],
-            heights: [400, 500, 500, 500, 600, 600, 600, 700],
             dataset: {},
         });
     });

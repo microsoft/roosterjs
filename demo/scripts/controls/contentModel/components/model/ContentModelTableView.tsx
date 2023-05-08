@@ -3,6 +3,7 @@ import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundCo
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
+import { ContentModelTableRow, updateTableMetadata } from 'roosterjs-content-model';
 import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
@@ -12,7 +13,6 @@ import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer'
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
-import { updateTableMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelTable,
@@ -43,18 +43,8 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
                         <NumberView values={table.widths} index={index} key={index} />
                     ))}
                 </div>
-                <div>
-                    Heights:
-                    {table.heights.map((_, index) => (
-                        <NumberView values={table.heights} index={index} key={index} />
-                    ))}
-                </div>
-                {table.cells.map((row, i) => (
-                    <div className={styles.tableRow} key={i}>
-                        {row.map((cell, j) => (
-                            <ContentModelBlockGroupView group={cell} key={j} />
-                        ))}
-                    </div>
+                {table.rows.map((row, i) => (
+                    <TableRowView row={row} index={i} />
                 ))}
             </>
         );
@@ -77,7 +67,7 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
     return (
         <ContentModelView
             title="Table"
-            subTitle={`${table.cells.length} x ${table.cells[0]?.length || 0}`}
+            subTitle={`${table.rows.length} x ${table.rows[0]?.cells.length || 0}`}
             isExpanded={true}
             className={styles.modelTable}
             hasSelection={hasSelectionInBlock(table)}
@@ -107,5 +97,34 @@ function NumberView(props: { values: number[]; index: number }) {
             ref={textBoxRef}
             className={styles.sizeInput}
         />
+    );
+}
+
+function TableRowView(props: { row: ContentModelTableRow; index: number }) {
+    const { row, index } = props;
+    const [height, setHeight] = useProperty(row.height);
+    const textBoxRef = React.useRef<HTMLInputElement>(null);
+    const onChange = React.useCallback(() => {
+        const newValue = parseInt(textBoxRef.current.value);
+        row.height = newValue;
+        setHeight(newValue);
+    }, [row, index]);
+
+    return (
+        <div className={styles.tableRow} key={index}>
+            <div>
+                Height:
+                <input
+                    type="number"
+                    value={height}
+                    onChange={onChange}
+                    ref={textBoxRef}
+                    className={styles.sizeInput}
+                />
+            </div>
+            {row.cells.map((cell, j) => (
+                <ContentModelBlockGroupView group={cell} key={j} />
+            ))}
+        </div>
     );
 }

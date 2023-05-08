@@ -12,7 +12,7 @@ export default function hasSelectionInBlock(block: ContentModelBlock): boolean {
             return block.segments.some(hasSelectionInSegment);
 
         case 'Table':
-            return block.cells.some(row => row.some(hasSelectionInBlockGroup));
+            return block.rows.some(row => row.cells.some(hasSelectionInBlockGroup));
 
         case 'BlockGroup':
             return hasSelectionInBlockGroup(block);

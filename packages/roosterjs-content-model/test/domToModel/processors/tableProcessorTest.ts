@@ -46,23 +46,26 @@ describe('tableProcessor', () => {
         runTest('<table class="tb1"><tr><td id="td1"></td></tr></table>', div => {
             return {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            spanAbove: false,
-                            spanLeft: false,
-                            isHeader: false,
-                            blocks: [],
-                            format: {},
-                            dataset: {},
-                            cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
-                        },
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 200,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                spanAbove: false,
+                                spanLeft: false,
+                                isHeader: false,
+                                blocks: [],
+                                format: {},
+                                dataset: {},
+                                cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [100],
-                heights: [200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -85,13 +88,12 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [tdModel3, tdModel4],
+                rows: [
+                    { format: {}, height: 200, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 200, cells: [tdModel3, tdModel4] },
                 ],
                 format: {},
                 widths: [100, 100],
-                heights: [200, 200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -113,13 +115,12 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [tdModel3, tdModel4],
+                rows: [
+                    { format: {}, height: 200, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 200, cells: [tdModel3, tdModel4] },
                 ],
                 format: {},
                 widths: [100, 100],
-                heights: [200, 200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -136,13 +137,16 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, createTableCell(2, 1, false)],
-                    [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                rows: [
+                    { format: {}, height: 200, cells: [tdModel1, createTableCell(2, 1, false)] },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                    },
                 ],
                 format: {},
                 widths: [100, 0],
-                heights: [200, 0],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -158,10 +162,9 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [[tdModel]],
+                rows: [{ format: {}, height: 200, cells: [tdModel] }],
                 format: {},
                 widths: [100],
-                heights: [200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -182,10 +185,9 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [[tdModel1, tdModel2]],
+                rows: [{ format: {}, height: 200, cells: [tdModel1, tdModel2] }],
                 format: {},
                 widths: [100, 100],
-                heights: [200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -205,10 +207,9 @@ describe('tableProcessor', () => {
 
             return {
                 blockType: 'Table',
-                cells: [[tdModel1, tdModel2]],
+                rows: [{ format: {}, height: 200, cells: [tdModel1, tdModel2] }],
                 format: {},
                 widths: [100, 0],
-                heights: [200],
                 dataset: {},
                 cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
@@ -251,13 +252,12 @@ describe('tableProcessor', () => {
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Table',
-            cells: [
-                [tdModel1, tdModel2],
-                [tdModel3, tdModel4],
+            rows: [
+                { format: {}, height: 200, cells: [tdModel1, tdModel2] },
+                { format: {}, height: 200, cells: [tdModel3, tdModel4] },
             ],
             format: {},
             widths: [100, 100],
-            heights: [200, 200],
             dataset: {},
             cachedElement: div.querySelector('.tb1') as HTMLTableElement,
         });
@@ -321,40 +321,43 @@ describe('tableProcessor with format', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        isImplicit: true,
-                                        segments: [
-                                            {
-                                                segmentType: 'Br',
-                                                format: {
-                                                    a: 'b',
-                                                    format2: 'tableSegment',
-                                                    format4: 'tdSegment',
-                                                } as any,
-                                            },
-                                        ],
-                                        format: {},
-                                    },
-                                ],
-                                cachedElement: td,
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                format: {
-                                    format3: 'td',
-                                } as any,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            isImplicit: true,
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {
+                                                        a: 'b',
+                                                        format2: 'tableSegment',
+                                                        format4: 'tdSegment',
+                                                    } as any,
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    cachedElement: td,
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    format: {
+                                        format3: 'td',
+                                    } as any,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     widths: [100],
-                    heights: [200],
                     format: {
                         format1: 'table',
                     } as any,
@@ -401,21 +404,24 @@ describe('tableProcessor with format', () => {
                 {
                     blockType: 'Table',
                     widths: [50],
-                    heights: [100],
                     format: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: mockedTd,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 100,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: mockedTd,
+                                },
+                            ],
+                        },
                     ],
                     dataset: {},
                     cachedElement: mockedTable,
@@ -611,22 +617,25 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    textColor: 'red',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        textColor: 'red',
+                                    },
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: mockedTd,
                                 },
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: mockedTd,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     cachedElement: mockedTable,
                 },
@@ -664,8 +673,7 @@ describe('tableProcessor', () => {
                     },
                     dataset: {},
                     widths: [],
-                    heights: [],
-                    cells: [],
+                    rows: [],
                     cachedElement: mockedTable,
                 },
             ],
@@ -694,39 +702,42 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                format: {
-                                    lineHeight: '2',
-                                },
-                                dataset: {},
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        isImplicit: true,
-                                        format: { lineHeight: '2' },
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                format: { fontSize: '20px' },
-                                                text: 'test',
-                                            },
-                                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    format: {
+                                        lineHeight: '2',
                                     },
-                                ],
-                                cachedElement: td,
-                            },
-                        ],
+                                    dataset: {},
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            isImplicit: true,
+                                            format: { lineHeight: '2' },
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    format: { fontSize: '20px' },
+                                                    text: 'test',
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
@@ -747,14 +758,13 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [],
+                    rows: [],
                     format: {
                         useBorderBox: true,
                         borderCollapse: true,
                     },
                     dataset: {},
                     widths: [],
-                    heights: [],
                     cachedElement: table,
                 },
             ],
@@ -779,24 +789,27 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: { useBorderBox: true },
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: { useBorderBox: true },
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
@@ -824,29 +837,32 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {
-                                    lineHeight: '2',
-                                    whiteSpace: 'pre',
-                                    direction: 'rtl',
-                                    textAlign: 'start',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        lineHeight: '2',
+                                        whiteSpace: 'pre',
+                                        direction: 'rtl',
+                                        textAlign: 'start',
+                                    },
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
                                 },
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
@@ -877,40 +893,43 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: { textColor: 'red' },
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        isImplicit: true,
-                                        format: {},
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                format: {
-                                                    fontFamily: 'Arial',
-                                                    fontWeight: 'bold',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: { textColor: 'red' },
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            isImplicit: true,
+                                            format: {},
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    format: {
+                                                        fontFamily: 'Arial',
+                                                        fontWeight: 'bold',
+                                                    },
+                                                    text: 'test',
                                                 },
-                                                text: 'test',
-                                            },
-                                        ],
-                                    },
-                                ],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                                            ],
+                                        },
+                                    ],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
@@ -940,39 +959,42 @@ describe('tableProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        isImplicit: true,
-                                        format: {},
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                format: {
-                                                    fontSize: '12px',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            isImplicit: true,
+                                            format: {},
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    format: {
+                                                        fontSize: '12px',
+                                                    },
+                                                    text: 'test',
                                                 },
-                                                text: 'test',
-                                            },
-                                        ],
-                                    },
-                                ],
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                                            ],
+                                        },
+                                    ],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     dataset: {},
                     widths: [100],
-                    heights: [200],
                     cachedElement: table,
                 },
             ],
@@ -1016,27 +1038,30 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    direction: 'ltr',
-                                    textAlign: 'start',
-                                    lineHeight: '1',
-                                    whiteSpace: 'normal',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        direction: 'ltr',
+                                        textAlign: 'start',
+                                        lineHeight: '1',
+                                        whiteSpace: 'normal',
+                                    },
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
                                 },
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {
                         direction: 'rtl',
@@ -1077,22 +1102,25 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
+                                },
+                            ],
+                        },
                     ],
                     format: {
                         htmlAlign: 'center',
@@ -1132,24 +1160,27 @@ describe('tableProcessor', () => {
                 {
                     blockType: 'Table',
                     widths: [100],
-                    heights: [200],
                     dataset: {},
                     cachedElement: table,
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    htmlAlign: 'center',
+                    rows: [
+                        {
+                            format: {},
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        htmlAlign: 'center',
+                                    },
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    cachedElement: td,
                                 },
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                                cachedElement: td,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {
                         textAlign: 'end',
