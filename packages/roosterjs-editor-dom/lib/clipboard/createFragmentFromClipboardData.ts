@@ -6,7 +6,6 @@ import HtmlSanitizer from '../htmlSanitizer/HtmlSanitizer';
 import moveChildNodes from '../utils/moveChildNodes';
 import toArray from '../jsUtils/toArray';
 import wrap from '../utils/wrap';
-
 import {
     BeforePasteEvent,
     ClipboardData,
