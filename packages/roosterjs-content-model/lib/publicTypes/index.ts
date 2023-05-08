@@ -9,6 +9,7 @@ export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './group/ContentModelDocument';
 export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
 export { ContentModelListItem } from './group/ContentModelListItem';
+export { ContentModelTableRow } from './block/ContentModelTableRow';
 export { ContentModelTableCell } from './group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './group/ContentModelBlockGroup';
@@ -43,6 +44,7 @@ export { ContentModelWithDataset } from './format/ContentModelWithDataset';
 export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
 export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkFormat';
 export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
+export { ContentModelFormatContainerFormat } from './format/ContentModelFormatContainerFormat';
 
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';

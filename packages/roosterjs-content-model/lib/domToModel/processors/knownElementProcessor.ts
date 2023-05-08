@@ -13,10 +13,18 @@ const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
     'marginTop',
     'paddingBottom',
     'paddingTop',
+    'paddingLeft',
+    'paddingRight',
     'borderTopWidth',
     'borderBottomWidth',
     'borderLeftWidth',
     'borderRightWidth',
+    'width',
+    'height',
+    'maxWidth',
+    'maxHeight',
+    'minWidth',
+    'minHeight',
 ];
 const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p'];
 
@@ -52,8 +60,11 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
 
             const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
 
-            addBlock(group, paragraph);
+            if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
+                paragraph.zeroFontSize = true;
+            }
 
+            addBlock(group, paragraph);
             context.elementProcessors.child(group, element, context);
         });
 

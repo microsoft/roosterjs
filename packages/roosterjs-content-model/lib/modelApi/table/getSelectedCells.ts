@@ -21,8 +21,8 @@ export function getSelectedCells(table: ContentModelTable): TableSelectionCoordi
     let lastCol = -1;
     let hasSelection = false;
 
-    table.cells.forEach((row, rowIndex) =>
-        row.forEach((cell, colIndex) => {
+    table.rows.forEach((row, rowIndex) =>
+        row.cells.forEach((cell, colIndex) => {
             if (hasSelectionInBlockGroup(cell)) {
                 hasSelection = true;
 

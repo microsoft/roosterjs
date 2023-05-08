@@ -210,7 +210,9 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Conten
     const tableFormat = updateTableMetadata(tableContext.table);
 
     result.isInTable = true;
-    result.tableHasHeader = tableContext.table.cells.some(row => row.some(cell => cell.isHeader));
+    result.tableHasHeader = tableContext.table.rows.some(row =>
+        row.cells.some(cell => cell.isHeader)
+    );
 
     if (tableFormat) {
         result.tableFormat = tableFormat;

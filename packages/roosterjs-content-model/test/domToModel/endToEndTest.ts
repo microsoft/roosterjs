@@ -431,37 +431,40 @@ describe('End to end test for DOM => Model', () => {
                     },
                     {
                         blockType: 'Table',
-                        cells: [
-                            [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'bb',
-                                                    format: {
-                                                        fontWeight: 'bold',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'bb',
+                                                        format: {
+                                                            fontWeight: 'bold',
+                                                        },
                                                     },
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
+                                                ],
+                                                format: {},
+                                                isImplicit: true,
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
                         ],
                         format: {},
                         widths: [],
-                        heights: [],
                         dataset: {},
                     },
                     {
@@ -512,37 +515,40 @@ describe('End to end test for DOM => Model', () => {
                             },
                             {
                                 blockType: 'Table',
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'bb',
-                                                            format: {
-                                                                fontWeight: 'bold',
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'bb',
+                                                                format: {
+                                                                    fontWeight: 'bold',
+                                                                },
                                                             },
-                                                        },
-                                                    ],
-                                                    format: {},
-                                                    isImplicit: true,
-                                                },
-                                            ],
-                                            format: {},
-                                            spanLeft: false,
-                                            spanAbove: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                        },
-                                    ],
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
                                 ],
                                 format: {},
                                 widths: [],
-                                heights: [],
                                 dataset: {},
                             },
                             {
@@ -1275,34 +1281,37 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 blockType: 'Table',
                                 format: {},
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    format: {},
-                                                    isImplicit: true,
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            format: {},
-                                                            text: 'test2',
-                                                        },
-                                                    ],
-                                                },
-                                            ],
-                                            format: {},
-                                            spanLeft: false,
-                                            spanAbove: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                        },
-                                    ],
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        format: {},
+                                                        isImplicit: true,
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                format: {},
+                                                                text: 'test2',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
                                 ],
                                 widths: [],
-                                heights: [],
                                 dataset: {},
                             },
                             {
@@ -1459,20 +1468,23 @@ describe('End to end test for DOM => Model', () => {
                                     marginTop: '0px',
                                 },
                                 widths: [],
-                                heights: [],
                                 dataset: {},
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            format: {},
-                                            spanAbove: false,
-                                            spanLeft: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                            blocks: [],
-                                        },
-                                    ],
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                format: {},
+                                                spanAbove: false,
+                                                spanLeft: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                                blocks: [],
+                                            },
+                                        ],
+                                    },
                                 ],
                             },
                         ],

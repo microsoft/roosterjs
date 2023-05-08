@@ -39,7 +39,7 @@ export default function insertTable(
                 insertPosition,
             });
 
-            const firstBlock = table.cells[0]?.[0]?.blocks[0];
+            const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
 
             if (firstBlock?.blockType == 'Paragraph') {
                 const marker = createSelectionMarker(firstBlock.segments[0]?.format);

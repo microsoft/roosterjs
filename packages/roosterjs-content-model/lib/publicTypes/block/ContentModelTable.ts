@@ -1,7 +1,7 @@
 import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
-import { ContentModelTableCell } from '../group/ContentModelTableCell';
 import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
+import { ContentModelTableRow } from './ContentModelTableRow';
 import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
 import { TableMetadataFormat } from '../format/formatParts/TableMetadataFormat';
 
@@ -18,12 +18,7 @@ export interface ContentModelTable
     widths: number[];
 
     /**
-     * Heights of each row
-     */
-    heights: number[];
-
-    /**
      * Cells of this table
      */
-    cells: ContentModelTableCell[][];
+    rows: ContentModelTableRow[];
 }

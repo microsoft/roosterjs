@@ -1,6 +1,12 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
-import { ClipboardData, EditorCore, NodePosition, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ClipboardData,
+    EditorCore,
+    NodePosition,
+    PasteType,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import { ContentModelEditorCore, CreatePasteModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     createDefaultHtmlSanitizerOptions,
@@ -25,7 +31,8 @@ export const createPasteModel: CreatePasteModel = (
     applyCurrentStyle: boolean,
     pasteAsImage: boolean = false
 ) => {
-    const event = createBeforePasteEvent(core, clipboardData);
+    const pasteType = getPasteType(pasteAsText, applyCurrentStyle, pasteAsImage);
+    const event = createBeforePasteEvent(core, clipboardData, pasteType);
 
     const fragment = createFragmentFromClipboardData(
         core,
@@ -49,7 +56,8 @@ export const createPasteModel: CreatePasteModel = (
  */
 export function createBeforePasteEvent(
     core: EditorCore,
-    clipboardData: ClipboardData
+    clipboardData: ClipboardData,
+    pasteType: PasteType
 ): ContentModelBeforePasteEvent {
     const options = createDefaultHtmlSanitizerOptions();
 
@@ -65,5 +73,18 @@ export function createBeforePasteEvent(
         htmlAfter: '',
         htmlAttributes: {},
         domToModelOption: {},
+        pasteType: pasteType,
     };
+}
+
+function getPasteType(pasteAsText: boolean, applyCurrentStyle: boolean, pasteAsImage: boolean) {
+    if (pasteAsText) {
+        return PasteType.AsPlainText;
+    } else if (applyCurrentStyle) {
+        return PasteType.MergeFormat;
+    } else if (pasteAsImage) {
+        return PasteType.AsImage;
+    } else {
+        return PasteType.Normal;
+    }
 }

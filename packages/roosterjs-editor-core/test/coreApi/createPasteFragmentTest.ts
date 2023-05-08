@@ -1,6 +1,6 @@
 import * as createDefaultHtmlSanitizerOptions from 'roosterjs-editor-dom/lib/htmlSanitizer/createDefaultHtmlSanitizerOptions';
 import createEditorCore from './createMockEditorCore';
-import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
+import { ClipboardData, PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { createPasteFragment } from '../../lib/coreApi/createPasteFragment';
 import { itChromeOnly, itFirefoxOnly } from '../TestHelper';
 
@@ -397,6 +397,7 @@ describe('createPasteFragment', () => {
                     metaName1: 'metaContent1',
                     metaName2: 'metaContent2',
                 },
+                pasteType: PasteType.Normal,
             },
             true
         );

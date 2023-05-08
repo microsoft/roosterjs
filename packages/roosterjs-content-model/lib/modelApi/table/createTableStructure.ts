@@ -16,11 +16,11 @@ export function createTableStructure(
 
     addBlock(parent, table);
 
-    table.cells.forEach(row => {
+    table.rows.forEach(row => {
         for (let i = 0; i < columns; i++) {
             const cell = createTableCell();
 
-            row.push(cell);
+            row.cells.push(cell);
         }
     });
 

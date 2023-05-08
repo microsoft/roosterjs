@@ -1,6 +1,7 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
+import { ContentModelTableRow } from '../../../lib/publicTypes/block/ContentModelTableRow';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
 
@@ -18,33 +19,32 @@ describe('applyTableFormat', () => {
         };
     }
 
-    function createRow(count: number): ContentModelTableCell[] {
-        const cells: ContentModelTableCell[] = [];
+    function createRow(count: number): ContentModelTableRow {
+        const row: ContentModelTableRow = { format: {}, height: 0, cells: [] };
 
         for (let i = 0; i < count; i++) {
-            cells.push(createCell());
+            row.cells.push(createCell());
         }
 
-        return cells;
+        return row;
     }
 
-    function createCells(row: number, column: number): ContentModelTableCell[][] {
-        const cells: ContentModelTableCell[][] = [];
+    function createRows(row: number, column: number): ContentModelTableRow[] {
+        const rows: ContentModelTableRow[] = [];
 
         for (let i = 0; i < row; i++) {
-            cells.push(createRow(column));
+            rows.push(createRow(column));
         }
 
-        return cells;
+        return rows;
     }
 
     function createTable(row: number, column: number): ContentModelTable {
         return {
             blockType: 'Table',
-            cells: createCells(row, column),
+            rows: createRows(row, column),
             format: {},
             widths: [0],
-            heights: [0],
             dataset: {},
             cachedElement: {} as any,
         };
@@ -63,7 +63,7 @@ describe('applyTableFormat', () => {
 
         for (let row = 0; row < 3; row++) {
             for (let col = 0; col < 4; col++) {
-                const cell = table.cells[row][col];
+                const cell = table.rows[row].cells[col];
                 expect(cell.format.backgroundColor).toBe(
                     exportedBackgroundColors[row][col],
                     `BackgroundColor Row=${row} Col=${col}`
@@ -453,25 +453,25 @@ describe('applyTableFormat', () => {
 
     it('Has bgColorOverride', () => {
         const table = createTable(1, 1);
-        table.cells[0][0].format.backgroundColor = 'red';
+        table.rows[0].cells[0].format.backgroundColor = 'red';
 
         applyTableFormat(table, {
             bgColorEven: 'green',
         });
 
-        expect(table.cells[0][0].format.backgroundColor).toBe('green');
-        expect(table.cells[0][0].dataset.editingInfo).toBeUndefined();
+        expect(table.rows[0].cells[0].format.backgroundColor).toBe('green');
+        expect(table.rows[0].cells[0].dataset.editingInfo).toBeUndefined();
 
-        table.cells[0][0].dataset.editingInfo = '{"bgColorOverride":true}';
+        table.rows[0].cells[0].dataset.editingInfo = '{"bgColorOverride":true}';
 
         applyTableFormat(table, {
             bgColorEven: 'blue',
         });
 
-        expect(table.cells[0][0].format.backgroundColor).toBe('blue');
-        expect(table.cells[0][0].dataset.editingInfo).toBe('{}');
+        expect(table.rows[0].cells[0].format.backgroundColor).toBe('blue');
+        expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{}');
 
-        table.cells[0][0].dataset.editingInfo = '{"bgColorOverride":true}';
+        table.rows[0].cells[0].dataset.editingInfo = '{"bgColorOverride":true}';
 
         applyTableFormat(
             table,
@@ -481,7 +481,7 @@ describe('applyTableFormat', () => {
             true
         );
 
-        expect(table.cells[0][0].format.backgroundColor).toBe('blue');
-        expect(table.cells[0][0].dataset.editingInfo).toBe('{"bgColorOverride":true}');
+        expect(table.rows[0].cells[0].format.backgroundColor).toBe('blue');
+        expect(table.rows[0].cells[0].dataset.editingInfo).toBe('{"bgColorOverride":true}');
     });
 });

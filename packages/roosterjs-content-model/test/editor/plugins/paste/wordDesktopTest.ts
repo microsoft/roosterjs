@@ -1,7 +1,8 @@
+import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelBeforePasteEvent, ContentModelDocument } from '../../../../lib/publicTypes';
+import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
 import { handleWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 
@@ -563,226 +564,229 @@ describe('convertPastedContentFromWord', () => {
                 blocks: [
                     {
                         blockType: 'Table',
-                        cells: [
-                            [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'BlockGroup',
-                                            blockGroupType: 'ListItem',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'test1',
-                                                            format: {},
-                                                        },
-                                                    ],
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'BlockGroup',
+                                                blockGroupType: 'ListItem',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'test1',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                levels: [
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                ],
+                                                formatHolder: {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
                                                     format: {},
-                                                    isImplicit: true,
                                                 },
-                                            ],
-                                            levels: [
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
+                                                format: {
                                                     marginTop: '1em',
-                                                    marginBottom: undefined,
+                                                    marginBottom: '1em',
                                                 },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                            ],
-                                            formatHolder: {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
                                             },
-                                            format: {
-                                                marginTop: '1em',
-                                                marginBottom: '1em',
-                                            },
-                                        },
-                                        {
-                                            blockType: 'BlockGroup',
-                                            blockGroupType: 'ListItem',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'test2',
-                                                            format: {},
-                                                        },
-                                                    ],
+                                            {
+                                                blockType: 'BlockGroup',
+                                                blockGroupType: 'ListItem',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'test2',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                levels: [
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                ],
+                                                formatHolder: {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
                                                     format: {},
-                                                    isImplicit: true,
                                                 },
-                                            ],
-                                            levels: [
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
+                                                format: {
                                                     marginTop: '1em',
-                                                    marginBottom: undefined,
+                                                    marginBottom: '1em',
                                                 },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                            ],
-                                            formatHolder: {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
                                             },
-                                            format: {
-                                                marginTop: '1em',
-                                                marginBottom: '1em',
-                                            },
-                                        },
-                                        {
-                                            blockType: 'BlockGroup',
-                                            blockGroupType: 'ListItem',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'test2',
-                                                            format: {},
-                                                        },
-                                                    ],
+                                            {
+                                                blockType: 'BlockGroup',
+                                                blockGroupType: 'ListItem',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'test2',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                levels: [
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                ],
+                                                formatHolder: {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
                                                     format: {},
-                                                    isImplicit: true,
                                                 },
-                                            ],
-                                            levels: [
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
+                                                format: {
                                                     marginTop: '1em',
-                                                    marginBottom: undefined,
+                                                    marginBottom: '1em',
                                                 },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                            ],
-                                            formatHolder: {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
                                             },
-                                            format: {
-                                                marginTop: '1em',
-                                                marginBottom: '1em',
-                                            },
-                                        },
-                                        {
-                                            blockType: 'BlockGroup',
-                                            blockGroupType: 'ListItem',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'test2',
-                                                            format: {},
-                                                        },
-                                                    ],
+                                            {
+                                                blockType: 'BlockGroup',
+                                                blockGroupType: 'ListItem',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'test2',
+                                                                format: {},
+                                                            },
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                levels: [
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                    {
+                                                        listType: 'UL',
+                                                        startNumberOverride: undefined,
+                                                        marginTop: '1em',
+                                                        marginBottom: undefined,
+                                                    },
+                                                ],
+                                                formatHolder: {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
                                                     format: {},
-                                                    isImplicit: true,
                                                 },
-                                            ],
-                                            levels: [
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
+                                                format: {
                                                     marginTop: '1em',
-                                                    marginBottom: undefined,
+                                                    marginBottom: '1em',
                                                 },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                                {
-                                                    listType: 'UL',
-                                                    startNumberOverride: undefined,
-                                                    marginTop: '1em',
-                                                    marginBottom: undefined,
-                                                },
-                                            ],
-                                            formatHolder: {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
                                             },
-                                            format: {
-                                                marginTop: '1em',
-                                                marginBottom: '1em',
-                                            },
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
                         ],
                         dataset: {},
                         format: {
                             id: 't1',
                         },
                         widths: [],
-                        heights: [],
                     },
                 ],
             });

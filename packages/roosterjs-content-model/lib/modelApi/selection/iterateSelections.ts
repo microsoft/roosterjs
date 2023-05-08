@@ -139,19 +139,21 @@ function internalIterateSelections(
                 break;
 
             case 'Table':
-                const cells = block.cells;
-                const isWholeTableSelected = cells.every(row => row.every(cell => cell.isSelected));
+                const rows = block.rows;
+                const isWholeTableSelected = rows.every(row =>
+                    row.cells.every(cell => cell.isSelected)
+                );
 
                 if (contentUnderSelectedTableCell != 'include' && isWholeTableSelected) {
                     if (callback(path, table, block)) {
                         return true;
                     }
                 } else {
-                    for (let rowIndex = 0; rowIndex < cells.length; rowIndex++) {
-                        const row = cells[rowIndex];
+                    for (let rowIndex = 0; rowIndex < rows.length; rowIndex++) {
+                        const row = rows[rowIndex];
 
-                        for (let colIndex = 0; colIndex < row.length; colIndex++) {
-                            const cell = row[colIndex];
+                        for (let colIndex = 0; colIndex < row.cells.length; colIndex++) {
+                            const cell = row.cells[colIndex];
                             if (!cell) {
                                 continue;
                             }

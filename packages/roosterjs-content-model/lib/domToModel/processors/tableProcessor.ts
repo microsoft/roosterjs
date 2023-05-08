@@ -57,6 +57,23 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             const tr = tableElement.rows[row];
 
             stackFormat(context, { paragraph: 'shallowClone', segment: 'shallowClone' }, () => {
+                const parent = tr.parentElement;
+                const parentTag = parent?.tagName;
+
+                if (
+                    parent &&
+                    (parentTag == 'TBODY' || parentTag == 'THEAD' || parentTag == 'TFOOT')
+                ) {
+                    // If there is TBODY around TR, retrieve format from TBODY first, in case some format are declared there
+                    parseFormat(parent, context.formatParsers.block, context.blockFormat, context);
+                    parseFormat(
+                        parent,
+                        context.formatParsers.segmentOnBlock,
+                        context.segmentFormat,
+                        context
+                    );
+                }
+
                 parseFormat(tr, context.formatParsers.block, context.blockFormat, context);
                 parseFormat(
                     tr,
@@ -66,7 +83,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 );
 
                 for (let sourceCol = 0, targetCol = 0; sourceCol < tr.cells.length; sourceCol++) {
-                    for (; table.cells[row][targetCol]; targetCol++) {}
+                    for (; table.rows[row].cells[targetCol]; targetCol++) {}
 
                     const td = tr.cells[sourceCol];
                     const hasSelectionBeforeCell = context.isInSelection;
@@ -127,7 +144,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                     );
 
                                     cell.dataset = { ...dataset };
-                                    table.cells[row + rowSpan - 1][targetCol] = cell;
+                                    table.rows[row + rowSpan - 1].cells[targetCol] = cell;
 
                                     if (hasTd) {
                                         if (!context.disableCacheElement) {
@@ -168,7 +185,14 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
         }
 
         table.widths = calcSizes(columnPositions);
-        table.heights = calcSizes(rowPositions);
+
+        const heights = calcSizes(rowPositions);
+
+        table.rows.forEach((row, i) => {
+            if (heights[i] > 0) {
+                row.height = heights[i];
+            }
+        });
     });
 };
 

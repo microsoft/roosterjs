@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
 import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemFormat } from './ContentModelListItemFormat';
@@ -102,5 +103,5 @@ export interface ContentModelFormatMap {
     /**
      * Format type for format container
      */
-    container: ContentModelBlockFormat & ContentModelSegmentFormat;
+    container: ContentModelFormatContainerFormat;
 }

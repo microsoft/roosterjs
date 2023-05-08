@@ -42,7 +42,7 @@ export function alignTableCell(
 
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
-                const cell = table.cells[rowIndex]?.[colIndex];
+                const cell = table.rows[rowIndex]?.cells[colIndex];
                 const format = cell?.format;
 
                 if (format) {

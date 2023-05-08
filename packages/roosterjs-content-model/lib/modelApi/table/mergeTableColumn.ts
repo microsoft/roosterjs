@@ -21,14 +21,14 @@ export function mergeTableColumn(
     if (sel) {
         const mergingColIndex = mergeLeft ? sel.firstCol : sel.lastCol + 1;
 
-        if (mergingColIndex > 0 && mergingColIndex < table.cells[0].length) {
+        if (mergingColIndex > 0 && mergingColIndex < table.rows[0].cells.length) {
             for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
-                const cell = table.cells[rowIndex]?.[mergingColIndex];
+                const cell = table.rows[rowIndex]?.cells[mergingColIndex];
 
                 if (
                     cell &&
                     canMergeCells(
-                        table.cells,
+                        table.rows,
                         rowIndex,
                         mergingColIndex - 1,
                         rowIndex,
@@ -39,15 +39,15 @@ export function mergeTableColumn(
 
                     let newSelectedCol = mergingColIndex;
 
-                    while (table.cells[rowIndex]?.[newSelectedCol]?.spanLeft) {
-                        delete table.cells[rowIndex][newSelectedCol].cachedElement;
+                    while (table.rows[rowIndex]?.cells[newSelectedCol]?.spanLeft) {
+                        delete table.rows[rowIndex].cells[newSelectedCol].cachedElement;
                         newSelectedCol--;
                     }
 
-                    if (table.cells[rowIndex]?.[newSelectedCol]) {
-                        table.cells[rowIndex][newSelectedCol].isSelected = true;
+                    if (table.rows[rowIndex]?.cells[newSelectedCol]) {
+                        table.rows[rowIndex].cells[newSelectedCol].isSelected = true;
 
-                        delete table.cells[rowIndex][newSelectedCol].cachedElement;
+                        delete table.rows[rowIndex].cells[newSelectedCol].cachedElement;
                     }
 
                     delete cell.cachedElement;
