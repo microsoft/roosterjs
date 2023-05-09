@@ -1,3 +1,4 @@
+import * as formatContainerProcessor from '../../../lib/domToModel/processors/formatContainerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -603,5 +604,37 @@ describe('knownElementProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('A with inline-block, do not use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+        const formatContainerSpy = spyOn(formatContainerProcessor, 'formatContainerProcessor');
+
+        a.href = '#';
+        a.style.display = 'inline-block';
+        a.textContent = 'test';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+
+        expect(formatContainerSpy).not.toHaveBeenCalled();
     });
 });

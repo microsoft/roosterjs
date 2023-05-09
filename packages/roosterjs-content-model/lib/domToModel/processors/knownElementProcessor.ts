@@ -26,7 +26,8 @@ const FormatContainerTriggerStyles: (keyof CSSStyleDeclaration)[] = [
     'minWidth',
     'minHeight',
 ];
-const ByPassFormatContainerTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'p', 'a'];
+const ByPassFormatContainerTags = ['H1', 'H2', 'H3', 'H4', 'H5', 'H6', 'P', 'A'];
+const SegmentDecoratorTags = ['A', 'CODE'];
 
 /**
  * @internal
@@ -41,6 +42,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         formatContainerProcessor(group, element, context);
     } else if (isBlock) {
         const decorator = context.blockDecorator.tagName ? context.blockDecorator : undefined;
+        const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;
 
         stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
             parseFormat(element, context.formatParsers.block, context.blockFormat, context);
@@ -61,17 +63,20 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 }
             });
 
-            const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
+            if (!isSegmentDecorator) {
+                const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
 
-            if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
-                paragraph.zeroFontSize = true;
+                if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
+                    paragraph.zeroFontSize = true;
+                }
+
+                addBlock(group, paragraph);
             }
 
-            addBlock(group, paragraph);
             context.elementProcessors.child(group, element, context);
         });
 
-        if (isBlock) {
+        if (isBlock && !isSegmentDecorator) {
             addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
         }
     } else {
@@ -85,7 +90,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
 
 function shouldUseFormatContainer(element: HTMLElement, context: DomToModelContext) {
     // For those tags that we know we should not use format container, just return false
-    if (ByPassFormatContainerTags.indexOf(element.tagName.toLowerCase()) >= 0) {
+    if (ByPassFormatContainerTags.indexOf(element.tagName) >= 0) {
         return false;
     }
 

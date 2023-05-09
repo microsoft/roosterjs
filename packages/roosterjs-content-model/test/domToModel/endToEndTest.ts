@@ -1495,4 +1495,38 @@ describe('End to end test for DOM => Model', () => {
             '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
+
+    it('A with display:block', () => {
+        runTest(
+            '<a href="#" style="display:block;color:red">test</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { textColor: 'red' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: '#',
+                                        textColor: 'red',
+                                        display: 'block',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<a href="#" style="color: red; display: block;"><span style="color: red;">test</span></a>',
+            '<a style="color: red; display: block;"><span style="color: red;" href="#">test</span></a>'
+        );
+    });
 });

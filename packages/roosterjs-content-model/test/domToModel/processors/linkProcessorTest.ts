@@ -1,4 +1,3 @@
-import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -97,7 +96,8 @@ describe('linkProcessor', () => {
             blocks: [
                 {
                     blockType: 'Paragraph',
-                    format: { display: 'block' } as ContentModelBlockFormat,
+                    format: {},
+                    isImplicit: true,
                     segments: [
                         {
                             segmentType: 'Text',
@@ -110,7 +110,6 @@ describe('linkProcessor', () => {
                         },
                     ],
                 },
-                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
         expect(context.link).toEqual({ format: {}, dataset: {} });

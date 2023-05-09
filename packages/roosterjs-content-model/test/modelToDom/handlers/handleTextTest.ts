@@ -103,4 +103,24 @@ describe('handleSegment', () => {
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(text);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span')!.firstChild);
     });
+
+    it('Link is outside of SPAN', () => {
+        const parent = document.createElement('div');
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { fontSize: '12px' },
+            link: {
+                format: {
+                    href: '#',
+                    underline: true,
+                },
+                dataset: {},
+            },
+        };
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<a href="#"><span style="font-size: 12px;">test</span></a>');
+    });
 });
