@@ -1506,7 +1506,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div align="center"><table data-editing-info="{}" style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
+            '<div align="center"><table data-editing-info="{}" style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>',
+            '<div align="center"><table style="margin: 0px;" data-editing-info="{}"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
 
