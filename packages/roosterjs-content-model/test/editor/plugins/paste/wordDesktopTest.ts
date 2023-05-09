@@ -547,7 +547,7 @@ describe('convertPastedContentFromWord', () => {
 
         it('Complex list inside a Table cell', () => {
             const html =
-                '<table id="t1"><td id="td1">' +
+                '<table id="t1" data-editing-info="{}"><td id="td1">' +
                 createListElementFromWord('p', 'test1', 'l1 level4 lfo2') +
                 createListElementFromWord('p', 'test2', 'l1 level3 lfo2') +
                 createListElementFromWord('p', 'test2', 'l1 level2 lfo2') +
@@ -781,7 +781,9 @@ describe('convertPastedContentFromWord', () => {
                                 ],
                             },
                         ],
-                        dataset: {},
+                        dataset: {
+                            editingInfo: '{}',
+                        },
                         format: {
                             id: 't1',
                         },

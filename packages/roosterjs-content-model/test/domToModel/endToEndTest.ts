@@ -415,7 +415,7 @@ describe('End to end test for DOM => Model', () => {
 
     it('Table under styled inline', () => {
         runTest(
-            '<b style="background-color:red">aa<table><tr><td>bb</td></tr></table>cc</b>',
+            '<b style="background-color:red">aa<table data-editing-info="{}"><tr><td>bb</td></tr></table>cc</b>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -470,7 +470,9 @@ describe('End to end test for DOM => Model', () => {
                         ],
                         format: {},
                         widths: [],
-                        dataset: {},
+                        dataset: {
+                            editingInfo: '{}',
+                        },
                     },
                     {
                         blockType: 'Paragraph',
@@ -489,13 +491,13 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<span style="background-color: red;"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
+            '<span style="background-color: red;"><b>aa</b></span><table data-editing-info="{}"><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
         );
     });
 
     it('Table under styled block', () => {
         runTest(
-            '<b style="background-color:red; display: block">aa<table><tr><td>bb</td></tr></table>cc</b>',
+            '<b style="background-color:red; display: block">aa<table data-editing-info="{}"><tr><td>bb</td></tr></table>cc</b>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -554,7 +556,9 @@ describe('End to end test for DOM => Model', () => {
                                 ],
                                 format: {},
                                 widths: [],
-                                dataset: {},
+                                dataset: {
+                                    editingInfo: '{}',
+                                },
                             },
                             {
                                 blockType: 'Paragraph',
@@ -578,7 +582,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div style="background-color: red; display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
+            '<div style="background-color: red; display: block;"><b>aa</b><table data-editing-info="{}"><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
         );
     });
 
@@ -1264,7 +1268,7 @@ describe('End to end test for DOM => Model', () => {
         ).and.returnValue(mockedGeneral);
 
         runTest(
-            '<center>test1<table><tr><td>test2</td></tr></table><div align="right">test3</div></center>',
+            '<center>test1<table data-editing-info="{}"><tr><td>test2</td></tr></table><div align="right">test3</div></center>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -1319,7 +1323,9 @@ describe('End to end test for DOM => Model', () => {
                                     },
                                 ],
                                 widths: [],
-                                dataset: {},
+                                dataset: {
+                                    editingInfo: '{}',
+                                },
                             },
                             {
                                 blockType: 'Paragraph',
@@ -1338,7 +1344,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<center>test1<table><tbody><tr><td>test2</td></tr></tbody></table><div align="right">test3</div></center>'
+            '<center>test1<table data-editing-info="{}"><tbody><tr><td>test2</td></tr></tbody></table><div align="right">test3</div></center>'
         );
 
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
@@ -1456,7 +1462,7 @@ describe('End to end test for DOM => Model', () => {
 
     it('Table with margin under "align=center"', () => {
         runTest(
-            '<div align="center"><table style="margin: 0"><tr><td></td></tr></table></div>',
+            '<div align="center"><table style="margin: 0" data-editing-info="{}"><tr><td></td></tr></table></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -1475,7 +1481,9 @@ describe('End to end test for DOM => Model', () => {
                                     marginTop: '0px',
                                 },
                                 widths: [],
-                                dataset: {},
+                                dataset: {
+                                    editingInfo: '{}',
+                                },
                                 rows: [
                                     {
                                         format: {},
@@ -1498,7 +1506,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
+            '<div align="center"><table data-editing-info="{}" style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
 
