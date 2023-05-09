@@ -27,7 +27,7 @@ describe('setDirection()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text" style="font-size: 12pt; font-family: Calibri, Arial, Helvetica, sans-serif; color: rgb(0, 0, 0); text-align: right;" dir="rtl">text</div>'
+            '<div id="text" style="font-size: 12pt; font-family: Calibri, Arial, Helvetica, sans-serif; text-align: right; color: rgb(0, 0, 0);" dir="rtl">text</div>'
         );
     });
 });

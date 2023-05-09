@@ -1,3 +1,4 @@
+import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { BackgroundColorFormat } from '../../../lib/publicTypes/format/formatParts/BackgroundColorFormat';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -51,39 +52,6 @@ describe('backgroundColorFormatHandler.parse', () => {
         expect(format.backgroundColor).toBe('red');
     });
 
-    it('Dark mode color with ogsb', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogsb = 'blue';
-        div.dataset.ogsc = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogab', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogab = 'blue';
-        div.dataset.ogac = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogsb and ogab', () => {
-        context.isDarkMode = true;
-        div.style.backgroundColor = 'red';
-        div.dataset.ogab = 'blue';
-        div.dataset.ogsb = 'green';
-
-        backgroundColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.backgroundColor).toBe('green');
-    });
-
     it('Color from element overwrite default style', () => {
         div.style.backgroundColor = 'red';
 
@@ -113,6 +81,7 @@ describe('backgroundColorFormatHandler.apply', () => {
 
     it('Simple color', () => {
         format.backgroundColor = 'red';
+        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
 
         backgroundColorFormatHandler.apply(format, div, context);
 
@@ -122,10 +91,15 @@ describe('backgroundColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.backgroundColor = 'red';
         context.isDarkMode = true;
-        context.getDarkColor = () => 'green';
+        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div data-ogsb="red" style="background-color: green;"></div>');
+        const result = [
+            '<div style="--darkColor_red:darkMock:red; background-color: var(--darkColor_red, red);"></div>',
+            '<div style="--darkColor_red: darkMock:red; background-color: var(--darkColor_red, red);"></div>',
+        ].indexOf(div.outerHTML);
+
+        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
     });
 });

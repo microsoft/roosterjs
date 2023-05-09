@@ -16,7 +16,6 @@ export function createDomToModelContext(
     const context: DomToModelContext = {
         ...(editorContext || {
             isDarkMode: false,
-            getDarkColor: undefined,
         }),
 
         blockFormat: {},
