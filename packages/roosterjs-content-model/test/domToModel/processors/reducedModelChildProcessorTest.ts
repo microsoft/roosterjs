@@ -217,57 +217,60 @@ describe('reducedModelChildProcessor', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'test1',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'test2',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'test1',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'test2',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],

@@ -45,17 +45,27 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 
-    for (let row = 0; row < table.cells.length; row++) {
-        if (table.cells[row].length == 0) {
+    for (let row = 0; row < table.rows.length; row++) {
+        const tableRow = table.rows[row];
+
+        if (tableRow.cells.length == 0) {
             // Skip empty row
             continue;
         }
 
-        const tr = doc.createElement('tr');
+        const tr = tableRow.cachedElement || doc.createElement('tr');
         tbody.appendChild(tr);
+        moveChildNodes(tr);
 
-        for (let col = 0; col < table.cells[row].length; col++) {
-            const cell = table.cells[row][col];
+        if (!tableRow.cachedElement) {
+            tableRow.cachedElement = tr;
+            applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
+        }
+
+        context.onNodeCreated?.(tableRow, tr);
+
+        for (let col = 0; col < tableRow.cells.length; col++) {
+            const cell = tableRow.cells[col];
 
             if (cell.isSelected) {
                 context.tableSelection = context.tableSelection || {
@@ -80,12 +90,12 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
-                let height = table.heights[row];
+                let height = tableRow.height;
 
-                for (; table.cells[row + rowSpan]?.[col]?.spanAbove; rowSpan++) {
-                    height += table.heights[row + rowSpan];
+                for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
+                    height += table.rows[row + rowSpan].height;
                 }
-                for (; table.cells[row][col + colSpan]?.spanLeft; colSpan++) {
+                for (; tableRow.cells[col + colSpan]?.spanLeft; colSpan++) {
                     width += table.widths[col + colSpan];
                 }
 
@@ -98,8 +108,13 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
 
                 if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
-                    td.style.width = width + 'px';
-                    td.style.height = height + 'px';
+                    if (width > 0) {
+                        td.style.width = width + 'px';
+                    }
+
+                    if (height > 0) {
+                        td.style.height = height + 'px';
+                    }
                 }
 
                 if (!cell.cachedElement) {

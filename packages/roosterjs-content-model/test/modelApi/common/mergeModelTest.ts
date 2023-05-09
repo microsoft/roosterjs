@@ -726,7 +726,7 @@ describe('mergeModel', () => {
 
         newPara1.segments.push(newText1);
         newCell1.blocks.push(newPara1);
-        newTable1.cells[0].push(newCell1);
+        newTable1.rows[0].cells.push(newCell1);
 
         sourceModel.blocks.push(newTable1);
 
@@ -737,34 +737,37 @@ describe('mergeModel', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                text: 'newText1',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'newText1',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -801,9 +804,9 @@ describe('mergeModel', () => {
         para1.segments.push(text1);
         text1.isSelected = true;
         cell22.blocks.push(para1);
-        table1.cells = [
-            [cell11, cell12],
-            [cell21, cell22],
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell11, cell12] },
+            { format: {}, height: 0, cells: [cell21, cell22] },
         ];
 
         majorModel.blocks.push(table1);
@@ -818,9 +821,9 @@ describe('mergeModel', () => {
 
         newPara1.segments.push(newText1);
         newCell12.blocks.push(newPara1);
-        newTable1.cells = [
-            [newCell11, newCell12],
-            [newCell21, newCell22],
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
         ];
 
         sourceModel.blocks.push(newTable1);
@@ -836,51 +839,61 @@ describe('mergeModel', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [cell11, cell12],
-                        [
-                            cell21,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Table',
-                                        format: {},
-                                        widths: [],
-                                        heights: [],
-                                        dataset: {},
-                                        cells: [
-                                            [newCell11, newCell12],
-                                            [newCell21, newCell22],
-                                        ],
-                                    },
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                format: {},
-                                                isSelected: true,
-                                            },
-                                            {
-                                                segmentType: 'Br',
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        { format: {}, height: 0, cells: [cell11, cell12] },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell21,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Table',
+                                            format: {},
+                                            widths: [],
+                                            dataset: {},
+                                            rows: [
+                                                {
+                                                    format: {},
+                                                    height: 0,
+                                                    cells: [newCell11, newCell12],
+                                                },
+                                                {
+                                                    format: {},
+                                                    height: 0,
+                                                    cells: [newCell21, newCell22],
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    format: {},
+                                                    isSelected: true,
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],
@@ -906,11 +919,11 @@ describe('mergeModel', () => {
         para1.segments.push(text1);
         text1.isSelected = true;
         cell12.blocks.push(para1);
-        table1.cells = [
-            [cell01, cell02],
-            [cell11, cell12],
-            [cell21, cell22],
-            [cell31, cell32],
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02] },
+            { format: {}, height: 0, cells: [cell11, cell12] },
+            { format: {}, height: 0, cells: [cell21, cell22] },
+            { format: {}, height: 0, cells: [cell31, cell32] },
         ];
 
         majorModel.blocks.push(table1);
@@ -925,9 +938,9 @@ describe('mergeModel', () => {
 
         newPara1.segments.push(newText1);
         newCell12.blocks.push(newPara1);
-        newTable1.cells = [
-            [newCell11, newCell12],
-            [newCell21, newCell22],
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
         ];
 
         sourceModel.blocks.push(newTable1);
@@ -945,70 +958,81 @@ describe('mergeModel', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            cell01,
-                            cell02,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '02',
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
-                        [
-                            cell11,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell01,
+                                cell02,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '02',
                                     },
-                                ],
-                                format: {
-                                    backgroundColor: 'n11',
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            newCell12,
-                        ],
-                        [cell21, newCell21, newCell22],
-                        [
-                            cell31,
-                            cell32,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '32',
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell11,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        backgroundColor: 'n11',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                                newCell12,
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [cell21, newCell21, newCell22] },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell31,
+                                cell32,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '32',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],
@@ -1034,9 +1058,9 @@ describe('mergeModel', () => {
         para1.segments.push(text1);
         text1.isSelected = true;
         cell12.blocks.push(para1);
-        table1.cells = [
-            [cell01, cell02, cell03, cell04],
-            [cell11, cell12, cell13, cell14],
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02, cell03, cell04] },
+            { format: {}, height: 0, cells: [cell11, cell12, cell13, cell14] },
         ];
 
         majorModel.blocks.push(table1);
@@ -1051,9 +1075,9 @@ describe('mergeModel', () => {
 
         newPara1.segments.push(newText1);
         newCell12.blocks.push(newPara1);
-        newTable1.cells = [
-            [newCell11, newCell12],
-            [newCell21, newCell22],
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
         ];
 
         sourceModel.blocks.push(newTable1);
@@ -1071,67 +1095,74 @@ describe('mergeModel', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [cell01, cell02, cell03, cell04],
-                        [
-                            cell11,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
+                    rows: [
+                        { format: {}, height: 0, cells: [cell01, cell02, cell03, cell04] },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell11,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        backgroundColor: 'n11',
                                     },
-                                ],
-                                format: {
-                                    backgroundColor: 'n11',
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            newCell12,
-                            cell14,
-                        ],
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '11',
+                                newCell12,
+                                cell14,
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '11',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            newCell21,
-                            newCell22,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '14',
+                                newCell21,
+                                newCell22,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '14',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],
@@ -1153,9 +1184,9 @@ describe('mergeModel', () => {
         para1.segments.push(text1);
         text1.isSelected = true;
         cell12.blocks.push(para1);
-        table1.cells = [
-            [cell01, cell02],
-            [cell11, cell12],
+        table1.rows = [
+            { format: {}, height: 0, cells: [cell01, cell02] },
+            { format: {}, height: 0, cells: [cell11, cell12] },
         ];
 
         majorModel.blocks.push(table1);
@@ -1170,9 +1201,9 @@ describe('mergeModel', () => {
 
         newPara1.segments.push(newText1);
         newCell12.blocks.push(newPara1);
-        newTable1.cells = [
-            [newCell11, newCell12],
-            [newCell21, newCell22],
+        newTable1.rows = [
+            { format: {}, height: 0, cells: [newCell11, newCell12] },
+            { format: {}, height: 0, cells: [newCell21, newCell22] },
         ];
 
         sourceModel.blocks.push(newTable1);
@@ -1190,69 +1221,80 @@ describe('mergeModel', () => {
             blocks: [
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            cell01,
-                            cell02,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '02',
-                                },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
-                        [
-                            cell11,
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                isSelected: true,
-                                                format: {},
-                                            },
-                                        ],
-                                        format: {},
-                                        isImplicit: true,
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell01,
+                                cell02,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '02',
                                     },
-                                ],
-                                format: {
-                                    backgroundColor: 'n11',
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            newCell12,
-                        ],
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {
-                                    backgroundColor: '11',
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                cell11,
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    isSelected: true,
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        backgroundColor: 'n11',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                            newCell21,
-                            newCell22,
-                        ],
+                                newCell12,
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {
+                                        backgroundColor: '11',
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                newCell21,
+                                newCell22,
+                            ],
+                        },
                     ],
                     format: {},
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],

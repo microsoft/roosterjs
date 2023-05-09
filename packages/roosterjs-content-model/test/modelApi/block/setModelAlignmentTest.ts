@@ -211,8 +211,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
 
@@ -231,7 +231,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'left');
 
@@ -258,37 +258,40 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: '',
                         marginRight: 'auto',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -321,8 +324,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
 
@@ -341,7 +344,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'center');
 
@@ -366,37 +369,40 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: 'auto',
                         marginRight: 'auto',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -429,8 +435,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
 
@@ -449,7 +455,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'right');
 
@@ -474,37 +480,40 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: 'auto',
                         marginRight: '',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -537,8 +546,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
         para1.segments.push(text1);
@@ -559,7 +568,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'left');
 
@@ -587,30 +596,34 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: 'auto',
@@ -618,7 +631,6 @@ describe('align left', () => {
                         direction: 'rtl',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -652,8 +664,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
         para1.segments.push(text1);
@@ -674,7 +686,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'center');
 
@@ -702,30 +714,34 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: 'auto',
@@ -733,7 +749,6 @@ describe('align left', () => {
                         direction: 'rtl',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {
@@ -767,8 +782,8 @@ describe('align left', () => {
         const text4 = createText('test4');
         const listItem = createListItem([{ listType: 'OL' }]);
         const table = createTable(2);
-        table.cells[0].push(createTableCell(1, 1, false));
-        table.cells[0].push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
+        table.rows[0].cells.push(createTableCell(1, 1, false));
         const para4 = createParagraph();
         para4.segments.push(text4);
         para1.segments.push(text1);
@@ -790,7 +805,7 @@ describe('align left', () => {
         text2.isSelected = true;
         text3.isSelected = true;
         text4.isSelected = true;
-        table.cells.every(row => row.every(cell => (cell.isSelected = true)));
+        table.rows.every(row => row.cells.every(cell => (cell.isSelected = true)));
 
         const result = setModelAlignment(group, 'right');
 
@@ -818,30 +833,34 @@ describe('align left', () => {
                 },
                 {
                     blockType: 'Table',
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                spanAbove: false,
-                                spanLeft: false,
-                                format: {},
-                                dataset: {},
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
-                        [],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    format: {},
+                                    dataset: {},
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                        { format: {}, height: 0, cells: [] },
                     ],
                     format: {
                         marginLeft: '',
@@ -849,7 +868,6 @@ describe('align left', () => {
                         direction: 'rtl',
                     },
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
                 {

@@ -232,7 +232,7 @@ describe('normalizeContentModel', () => {
 
         para.segments.push(text);
         cell.blocks.push(para);
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
         normalizeContentModel(model);
@@ -243,21 +243,24 @@ describe('normalizeContentModel', () => {
                 {
                     blockType: 'Table',
                     format: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [],
-                                format: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                dataset: {},
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
                     ],
                     widths: [],
-                    heights: [],
                     dataset: {},
                 },
             ],

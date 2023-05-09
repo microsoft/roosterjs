@@ -325,7 +325,7 @@ describe('setSelection', () => {
         const table = createTable(1);
         const cell = createTableCell();
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
 
         model.blocks.push(table);
 
@@ -337,22 +337,25 @@ describe('setSelection', () => {
                     blockType: 'Table',
                     format: {},
                     dataset: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [],
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [],
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                            ],
+                        },
                     ],
                     widths: [],
-                    heights: [],
                 },
             ],
         });
@@ -366,8 +369,8 @@ describe('setSelection', () => {
         const cell21 = createTableCell();
         const cell22 = createTableCell();
 
-        table.cells[0].push(cell11, cell12);
-        table.cells[1].push(cell21, cell22);
+        table.rows[0].cells.push(cell11, cell12);
+        table.rows[1].cells.push(cell21, cell22);
 
         model.blocks.push(table);
 
@@ -379,52 +382,59 @@ describe('setSelection', () => {
                     blockType: 'Table',
                     format: {},
                     dataset: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [],
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [],
-                                isHeader: false,
-                            },
-                        ],
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [],
-                                isHeader: false,
-                                isSelected: true,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [],
-                                isHeader: false,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [],
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [],
+                                    isHeader: false,
+                                },
+                            ],
+                        },
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [],
+                                    isHeader: false,
+                                    isSelected: true,
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [],
+                                    isHeader: false,
+                                },
+                            ],
+                        },
                     ],
                     widths: [],
-                    heights: [],
                 },
             ],
         });
@@ -445,7 +455,7 @@ describe('setSelection', () => {
         para2.segments.push(text2);
         para3.segments.push(text3);
         cell.blocks.push(para2);
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
 
         model.blocks.push(para1, table, para3);
 
@@ -469,34 +479,37 @@ describe('setSelection', () => {
                     blockType: 'Table',
                     format: {},
                     dataset: {},
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        format: {},
-                                        segments: [
-                                            {
-                                                segmentType: 'Text',
-                                                format: {},
-                                                text: 'test2',
-                                                isSelected: true,
-                                            },
-                                        ],
-                                    },
-                                ],
-                                isHeader: false,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    format: {},
+                                                    text: 'test2',
+                                                    isSelected: true,
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    isHeader: false,
+                                },
+                            ],
+                        },
                     ],
                     widths: [],
-                    heights: [],
                 },
                 {
                     blockType: 'Paragraph',

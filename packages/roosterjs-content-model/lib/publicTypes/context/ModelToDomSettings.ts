@@ -17,6 +17,7 @@ import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../block/ContentModelTable';
+import { ContentModelTableRow } from '../block/ContentModelTableRow';
 import { ContentModelText } from '../segment/ContentModelText';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import { ModelToDomContext } from './ModelToDomContext';
@@ -146,7 +147,8 @@ export type OnNodeCreated = (
         | ContentModelBlockGroup
         | ContentModelSegment
         | ContentModelDecorator
-        | ContentModelListItemLevelFormat,
+        | ContentModelListItemLevelFormat
+        | ContentModelTableRow,
     node: Node
 ) => void;
 
