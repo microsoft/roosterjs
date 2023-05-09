@@ -198,6 +198,7 @@ describe('handleSegmentDecorator', () => {
             },
             dataset: {},
         };
+        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         runTest(
             link,
