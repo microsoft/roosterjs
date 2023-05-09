@@ -52,6 +52,8 @@ export function mergeTableColumn(
 
                     delete cell.cachedElement;
                 }
+
+                delete table.rows[rowIndex].cachedElement;
             }
         }
     }

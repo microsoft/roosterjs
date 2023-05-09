@@ -12,7 +12,6 @@ import {
 
 const editorContext: EditorContext = {
     isDarkMode: false,
-    getDarkColor: () => '',
     darkColorHandler: undefined,
 };
 

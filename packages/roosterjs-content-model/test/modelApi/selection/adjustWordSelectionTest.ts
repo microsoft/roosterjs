@@ -781,4 +781,102 @@ describe('adjustWordSelection', () => {
             });
         });
     });
+
+    describe('With decorator', () => {
+        it('With link', () => {
+            runTest(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'This is a te',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'st',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'te',
+                        link: {
+                            dataset: {},
+                            format: { href: 'test' },
+                        },
+                    },
+                    { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'st',
+                        link: { dataset: {}, format: { href: 'test' } },
+                    },
+                ],
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'This is a ',
+                                    format: {},
+                                    link: {
+                                        format: { href: 'test' },
+                                        dataset: {},
+                                    },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'te',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'st',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                }
+            );
+        });
+    });
 });

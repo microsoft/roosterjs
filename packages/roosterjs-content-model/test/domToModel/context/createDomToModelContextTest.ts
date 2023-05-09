@@ -12,7 +12,6 @@ import {
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
-        getDarkColor: undefined,
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -54,7 +53,6 @@ describe('createDomToModelContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
-            getDarkColor: () => '',
         };
 
         const context = createDomToModelContext(editorContext);
@@ -214,12 +212,9 @@ describe('createDomToModelContext', () => {
     });
 
     it('with base parameters and wrong selection 1', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -232,7 +227,6 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},
@@ -255,12 +249,9 @@ describe('createDomToModelContext', () => {
     });
 
     it('with base parameters and wrong selection 2', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -275,7 +266,6 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},

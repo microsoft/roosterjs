@@ -73,7 +73,7 @@ describe('setContent', () => {
         expect(div.innerHTML).toBe('<div>test</div>');
 
         const range = core.domEvent.selectionRange;
-        const textNode = div.firstChild.firstChild;
+        const textNode = div.firstChild!.firstChild;
         expect(range.startContainer).toBe(textNode);
         expect(range.endContainer).toBe(textNode);
         expect(range.startOffset).toBe(1);
@@ -82,17 +82,13 @@ describe('setContent', () => {
 
     it('dark mode', () => {
         const triggerEvent = jasmine.createSpy();
-        const onExternalContentTransform = jasmine.createSpy();
         const core = createEditorCore(div, {
             coreApiOverride: { triggerEvent },
             inDarkMode: true,
-            onExternalContentTransform,
         });
         div.innerHTML = 'test';
         setContent(core, '<div>test</div>', true);
         expect(div.innerHTML).toBe('<div>test</div>');
-        expect(onExternalContentTransform).toHaveBeenCalledTimes(1);
-        expect(onExternalContentTransform).toHaveBeenCalledWith(div.firstChild);
         expect(triggerEvent).toHaveBeenCalledWith(
             core,
             {

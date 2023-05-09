@@ -597,9 +597,9 @@ export default interface IEditor {
     transformToDarkColor(node: Node): void;
 
     /**
-     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     * Get a darkColorHandler object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler | null;
+    getDarkColorHandler(): DarkColorHandler;
 
     /**
      * Make the editor in "Shadow Edit" mode.
