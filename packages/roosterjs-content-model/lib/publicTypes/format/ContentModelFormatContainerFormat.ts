@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import { DisplayFormat } from './formatParts/DisplayFormat';
 import { SizeFormat } from './formatParts/SizeFormat';
 
 /**
@@ -7,4 +8,5 @@ import { SizeFormat } from './formatParts/SizeFormat';
  */
 export type ContentModelFormatContainerFormat = ContentModelBlockFormat &
     ContentModelSegmentFormat &
-    SizeFormat;
+    SizeFormat &
+    DisplayFormat;

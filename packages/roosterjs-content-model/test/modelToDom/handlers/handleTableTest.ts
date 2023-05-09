@@ -335,13 +335,19 @@ describe('handleTable', () => {
         expect(parent.innerHTML).toBe(
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
-        expect(onNodeCreated).toHaveBeenCalledTimes(3);
+        const tableNode = parent.querySelector('table') as HTMLTableElement;
+
+        expect(onNodeCreated).toHaveBeenCalledTimes(5);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(table);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('table'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(tableCell1);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('th'));
-        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell2);
-        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('td'));
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(tableNode);
+        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(table.rows[0]);
+        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(tableNode.rows[0]);
+        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell1);
+        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('th'));
+        expect(onNodeCreated.calls.argsFor(3)[0]).toBe(table.rows[1]);
+        expect(onNodeCreated.calls.argsFor(3)[1]).toBe(tableNode.rows[1]);
+        expect(onNodeCreated.calls.argsFor(4)[0]).toBe(tableCell2);
+        expect(onNodeCreated.calls.argsFor(4)[1]).toBe(parent.querySelector('td'));
     });
 
     it('With cached TABLE element, do not apply border styles', () => {
@@ -508,5 +514,35 @@ describe('handleTable', () => {
         expect(parent.innerHTML).toBe(
             '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
         );
+    });
+
+    it('TR has background color', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {});
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.rows[0].format.backgroundColor = 'red';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr style="background-color: red;"><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('TR has cached element', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {});
+        const cell = createTableCell();
+        const tr = document.createElement('tr');
+
+        tr.id = 'tr1';
+        table.rows[0].cells.push(cell);
+        table.rows[0].cachedElement = tr;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr id="tr1"><td></td></tr></tbody></table>');
     });
 });

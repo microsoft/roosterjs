@@ -93,4 +93,28 @@ describe('stackFormat', () => {
             },
         });
     });
+
+    it('shallowCloneForGroup', () => {
+        const context = createDomToModelContext();
+
+        context.blockFormat = {
+            lineHeight: '2',
+            marginLeft: '10px',
+            marginRight: '20px',
+        };
+
+        stackFormat(context, { paragraph: 'shallowCloneForGroup' }, () => {
+            expect(context.blockFormat).toEqual({
+                lineHeight: '2',
+            });
+
+            context.blockFormat.lineHeight = '3';
+        });
+
+        expect(context.blockFormat).toEqual({
+            lineHeight: '2',
+            marginLeft: '10px',
+            marginRight: '20px',
+        });
+    });
 });
