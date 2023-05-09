@@ -46,16 +46,26 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     tableNode.appendChild(tbody);
 
     for (let row = 0; row < table.rows.length; row++) {
-        if (table.rows[row].cells.length == 0) {
+        const tableRow = table.rows[row];
+
+        if (tableRow.cells.length == 0) {
             // Skip empty row
             continue;
         }
 
-        const tr = doc.createElement('tr');
+        const tr = tableRow.cachedElement || doc.createElement('tr');
         tbody.appendChild(tr);
+        moveChildNodes(tr);
 
-        for (let col = 0; col < table.rows[row].cells.length; col++) {
-            const cell = table.rows[row].cells[col];
+        if (!tableRow.cachedElement) {
+            tableRow.cachedElement = tr;
+            applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
+        }
+
+        context.onNodeCreated?.(tableRow, tr);
+
+        for (let col = 0; col < tableRow.cells.length; col++) {
+            const cell = tableRow.cells[col];
 
             if (cell.isSelected) {
                 context.tableSelection = context.tableSelection || {
@@ -80,12 +90,12 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 let rowSpan = 1;
                 let colSpan = 1;
                 let width = table.widths[col];
-                let height = table.rows[row].height;
+                let height = tableRow.height;
 
                 for (; table.rows[row + rowSpan]?.cells[col]?.spanAbove; rowSpan++) {
                     height += table.rows[row + rowSpan].height;
                 }
-                for (; table.rows[row].cells[col + colSpan]?.spanLeft; colSpan++) {
+                for (; tableRow.cells[col + colSpan]?.spanLeft; colSpan++) {
                     width += table.widths[col + colSpan];
                 }
 

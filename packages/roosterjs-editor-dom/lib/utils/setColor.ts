@@ -1,9 +1,5 @@
 import parseColor from './parseColor';
-import {
-    DarkColorHandler,
-    DarkModeDatasetNames,
-    ModeIndependentColor,
-} from 'roosterjs-editor-types';
+import { DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';
@@ -19,7 +15,6 @@ const enum ColorTones {
 const DARK_COLORS_LIGHTNESS = 20;
 //If the value of the lightness is more than 80, the color is bright
 const BRIGHT_COLORS_LIGHTNESS = 80;
-const TRANSPARENT_COLOR = 'transparent';
 
 /**
  * Set text color or background color to the given element
@@ -28,7 +23,8 @@ const TRANSPARENT_COLOR = 'transparent';
  * @param isBackgroundColor Whether set background color or text color
  * @param isDarkMode Whether current mode is dark mode. @default false
  * @param shouldAdaptTheFontColor Whether the font color needs to be adapted to be visible in a dark or bright background color. @default false
- * @param darkColorHandler An optional dark color handler object. When it is passed, we will use this handler to do variable-based dark color instead of original dataset base dark color
+ * @param darkColorHandler A dark color handler object. This is now required.
+ * We keep it optional only for backward compatibility. If it is not passed, color will not be set.
  */
 export default function setColor(
     element: HTMLElement,
@@ -51,24 +47,6 @@ export default function setColor(
             );
 
             element.style.setProperty(cssName, colorValue);
-        } else {
-            element.style.setProperty(
-                cssName,
-                (isDarkMode
-                    ? modeIndependentColor?.darkModeColor
-                    : modeIndependentColor?.lightModeColor) || colorString
-            );
-
-            if (element.dataset) {
-                const dataSetName = isBackgroundColor
-                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                    : DarkModeDatasetNames.OriginalStyleColor;
-                if (!isDarkMode || color == TRANSPARENT_COLOR) {
-                    delete element.dataset[dataSetName];
-                } else if (modeIndependentColor) {
-                    element.dataset[dataSetName] = modeIndependentColor.lightModeColor;
-                }
-            }
         }
 
         if (isBackgroundColor && shouldAdaptTheFontColor) {
@@ -87,7 +65,8 @@ export default function setColor(
  * @param element The element that contains text.
  * @param lightModeBackgroundColor Existing background color in light mode
  * @param isDarkMode Whether the content is in dark mode
- * @param darkColorHandler An optional dark color handler object. When it is passed, we will use this handler to do variable-based dark color instead of original dataset base dark color
+ * @param darkColorHandler A dark color handler object.  This is now required.
+ * We keep it optional only for backward compatibility. If it is not passed, color will not be set.
  */
 function adaptFontColorToBackgroundColor(
     element: HTMLElement,
@@ -98,7 +77,9 @@ function adaptFontColorToBackgroundColor(
     if (!lightModeBackgroundColor || lightModeBackgroundColor === TRANSPARENT) {
         return;
     }
+
     const isADarkOrBrightOrNone = isADarkOrBrightColor(lightModeBackgroundColor!);
+
     switch (isADarkOrBrightOrNone) {
         case ColorTones.DARK:
             const fontForDark: ModeIndependentColor = {

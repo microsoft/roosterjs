@@ -20,6 +20,8 @@ export function splitTableCellVertically(table: ContentModelTable) {
                 delete cell.cachedElement;
             });
 
+            delete row.cachedElement;
+
             if (
                 belowRow?.cells.every(
                     (belowCell, colIndex) =>
@@ -32,6 +34,8 @@ export function splitTableCellVertically(table: ContentModelTable) {
                         delete belowCell.cachedElement;
                     }
                 });
+
+                delete belowRow.cachedElement;
             } else {
                 const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
                 const newRow: ContentModelTableRow = {

@@ -1,3 +1,4 @@
+import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelCode } from '../../../lib/publicTypes/decorator/ContentModelCode';
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
 import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
@@ -55,6 +56,8 @@ describe('handleSegmentDecorator', () => {
             },
             dataset: {},
         };
+
+        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         runTest(link, undefined, '<a href="http://test.com/test" style="color: red;">test</a>');
     });
@@ -184,5 +187,23 @@ describe('handleSegmentDecorator', () => {
         };
 
         runTest(undefined, code, '<code style="display: block;">test</code>');
+    });
+
+    it('link with background color', () => {
+        const link: ContentModelLink = {
+            format: {
+                href: 'http://test.com/test',
+                underline: true,
+                backgroundColor: 'red',
+            },
+            dataset: {},
+        };
+        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
+
+        runTest(
+            link,
+            undefined,
+            '<a href="http://test.com/test" style="background-color: red;">test</a>'
+        );
     });
 });

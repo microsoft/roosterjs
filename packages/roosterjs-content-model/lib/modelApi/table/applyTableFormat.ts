@@ -59,6 +59,8 @@ function clearCache(rows: ContentModelTableRow[]) {
         row.cells.forEach(cell => {
             delete cell.cachedElement;
         });
+
+        delete row.cachedElement;
     });
 }
 

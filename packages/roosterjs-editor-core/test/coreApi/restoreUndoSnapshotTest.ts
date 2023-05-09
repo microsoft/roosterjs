@@ -22,6 +22,7 @@ describe('restoreUndoSnapshot', () => {
         const move = jasmine.createSpy('move').and.returnValue(<any>{
             html,
             metadata,
+            knownColors: [],
         });
 
         const core = createEditorCore(div!, {
@@ -49,6 +50,7 @@ describe('restoreUndoSnapshot', () => {
         const move = jasmine.createSpy('move').and.returnValue(<any>{
             html,
             metadata,
+            knownColors: [],
         });
 
         const core = createEditorCore(div!, {

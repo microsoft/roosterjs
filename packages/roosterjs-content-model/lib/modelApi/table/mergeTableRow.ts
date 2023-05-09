@@ -41,6 +41,7 @@ export function mergeTableRow(
 
                     while (table.rows[newSelectedRow]?.cells[colIndex]?.spanAbove) {
                         delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
+                        delete table.rows[newSelectedRow].cachedElement;
                         newSelectedRow--;
                     }
 
@@ -48,6 +49,7 @@ export function mergeTableRow(
                         table.rows[newSelectedRow].cells[colIndex].isSelected = true;
 
                         delete table.rows[newSelectedRow].cells[colIndex].cachedElement;
+                        delete table.rows[newSelectedRow].cachedElement;
                     }
 
                     delete cell.cachedElement;

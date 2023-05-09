@@ -28,8 +28,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
                 format.textColor,
                 false /*isBackground*/,
                 context.darkColorHandler,
-                context.isDarkMode,
-                context.getDarkColor
+                context.isDarkMode
             );
         }
     },
