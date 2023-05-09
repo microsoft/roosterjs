@@ -328,7 +328,7 @@ describe('VListChain.commit', () => {
                 );
                 vList.writeBack();
             },
-            '<ol><li>item1</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="2"><li>item3</li></ol>'
+            '<ol><li>item1</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="3"><li>item3</li></ol>'
         );
     });
 
@@ -345,20 +345,20 @@ describe('VListChain.commit', () => {
                 );
                 vList.writeBack();
             },
-            '<ol><li>item1</li></ol><ol><li>itemA</li><li>itemB</li><li>itemC</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="2"><li>item3</li></ol>'
+            '<ol><li>item1</li></ol><ol><li>itemA</li><li>itemB</li><li>itemC</li></ol><ol start="2"><li id="div1">item2</li></ol><ol start="3"><li>item3</li></ol>'
         );
     });
 
     it('Add a new list item', () => {
         runTest(
-            '<ol id="ol1"><li>item1</li></ol><ol start="2"><li>item3</li></ol>',
+            '<ol id="ol1"><li>item1</li></ol><ol start="3"><li>item3</li></ol>',
             chains => {
                 const ol1 = document.getElementById('ol1');
                 const li = document.createElement('li');
                 li.innerHTML = 'item2';
                 ol1.appendChild(li);
             },
-            '<ol id="ol1"><li>item1</li><li>item2</li></ol><ol start="2"><li>item3</li></ol>'
+            '<ol id="ol1"><li>item1</li><li>item2</li></ol><ol start="3"><li>item3</li></ol>'
         );
     });
 

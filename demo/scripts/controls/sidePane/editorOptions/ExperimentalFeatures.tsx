@@ -10,8 +10,6 @@ export interface ExperimentalFeaturesProps {
 
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
-    [ExperimentalFeatures.ListItemAlignment]:
-        'Align list elements elements to left, center and right using setAlignment API',
     [ExperimentalFeatures.AutoFormatList]:
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
@@ -21,6 +19,7 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.VariableBasedDarkColor]: 'Use variable-based color for dark mode',
     [ExperimentalFeatures.ReusableContentModel]:
         'Reuse existing DOM structure if possible when convert Content Model back to DOM tree',
+    [ExperimentalFeatures.EditWithContentModel]: 'Handle keyboard edit event with Content Model',
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:

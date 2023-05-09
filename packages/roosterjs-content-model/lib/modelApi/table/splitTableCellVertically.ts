@@ -1,4 +1,5 @@
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { createTableCell } from '../creators/createTableCell';
 import { getSelectedCells } from './getSelectedCells';
 
@@ -12,47 +13,54 @@ export function splitTableCellVertically(table: ContentModelTable) {
 
     if (sel) {
         for (let rowIndex = sel.lastRow; rowIndex >= sel.firstRow; rowIndex--) {
-            const row = table.cells[rowIndex];
-            const belowRow = table.cells[rowIndex + 1];
+            const row = table.rows[rowIndex];
+            const belowRow = table.rows[rowIndex + 1];
 
-            row.forEach(cell => {
+            row.cells.forEach(cell => {
                 delete cell.cachedElement;
             });
 
+            delete row.cachedElement;
+
             if (
-                belowRow?.every(
+                belowRow?.cells.every(
                     (belowCell, colIndex) =>
                         colIndex < sel.firstCol || colIndex > sel.lastCol || belowCell.spanAbove
                 )
             ) {
-                belowRow.forEach((belowCell, colIndex) => {
+                belowRow.cells.forEach((belowCell, colIndex) => {
                     if (colIndex >= sel.firstCol && colIndex <= sel.lastCol) {
                         belowCell.spanAbove = false;
                         delete belowCell.cachedElement;
                     }
                 });
+
+                delete belowRow.cachedElement;
             } else {
-                const newRow = row.map((cell, colIndex) => {
-                    const newCell = createTableCell(
-                        cell.spanLeft,
-                        cell.spanAbove,
-                        cell.isHeader,
-                        cell.format
-                    );
+                const newHeight = Math.max((row.height /= 2), MIN_HEIGHT);
+                const newRow: ContentModelTableRow = {
+                    format: { ...row.format },
+                    height: newHeight,
+                    cells: row.cells.map((cell, colIndex) => {
+                        const newCell = createTableCell(
+                            cell.spanLeft,
+                            cell.spanAbove,
+                            cell.isHeader,
+                            cell.format
+                        );
 
-                    if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
-                        newCell.spanAbove = true;
-                    } else {
-                        newCell.isSelected = cell.isSelected;
-                    }
+                        if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
+                            newCell.spanAbove = true;
+                        } else {
+                            newCell.isSelected = cell.isSelected;
+                        }
 
-                    return newCell;
-                });
+                        return newCell;
+                    }),
+                };
 
-                table.cells.splice(rowIndex + 1, 0, newRow);
-
-                const newHeight = Math.max((table.heights[rowIndex] /= 2), MIN_HEIGHT);
-                table.heights.splice(rowIndex, 1, newHeight, newHeight);
+                row.height = newHeight;
+                table.rows.splice(rowIndex + 1, 0, newRow);
             }
         }
     }

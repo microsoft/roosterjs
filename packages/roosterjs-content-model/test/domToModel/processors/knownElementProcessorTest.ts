@@ -1,3 +1,4 @@
+import * as formatContainerProcessor from '../../../lib/domToModel/processors/formatContainerProcessor';
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
@@ -352,6 +353,81 @@ describe('knownElementProcessor', () => {
         });
     });
 
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.width = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        width: '100px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with width', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.maxWidth = '100px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        maxWidth: '100px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('DIV with padding left', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.paddingLeft = '10px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    blocks: [],
+                    format: {
+                        paddingLeft: '10px',
+                    },
+                    tagName: 'div',
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
     it('BLOCKQUOTE used for indent', () => {
         const group = createContentModelDocument();
         const quote = document.createElement('blockquote');
@@ -430,5 +506,135 @@ describe('knownElementProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Paragraph with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test1'));
+        div.style.fontSize = '0px';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {
+                                fontSize: '0px',
+                            },
+                            text: 'test1',
+                        },
+                    ],
+                    zeroFontSize: true,
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('div with align attribute, need to use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.align = 'center';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    format: {
+                        htmlAlign: 'center',
+                    },
+                    blocks: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('div with align attribute and display=inline-block, need to use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.align = 'center';
+        div.style.display = 'inline-block';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    format: {
+                        htmlAlign: 'center',
+                        display: 'inline-block',
+                    },
+                    blocks: [],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('A with inline-block, do not use FormatContainer', () => {
+        const group = createContentModelDocument();
+        const a = document.createElement('a');
+        const formatContainerSpy = spyOn(formatContainerProcessor, 'formatContainerProcessor');
+
+        a.href = '#';
+        a.style.display = 'inline-block';
+        a.textContent = 'test';
+
+        knownElementProcessor(group, a, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: true,
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+
+        expect(formatContainerSpy).not.toHaveBeenCalled();
     });
 });

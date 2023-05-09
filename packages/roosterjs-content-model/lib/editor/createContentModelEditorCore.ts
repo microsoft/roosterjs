@@ -1,4 +1,7 @@
 import ContentModelCopyPastePlugin from './plugins/ContentModelCopyPastePlugin';
+import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
+import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
+import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
@@ -29,8 +32,14 @@ export const createContentModelEditorCore: CoreCreator<
 > = (contentDiv, options) => {
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
+        plugins: [
+            ...(options.plugins || []),
+            new ContentModelFormatPlugin(),
+            new ContentModelEditPlugin(),
+        ],
         corePluginOverride: {
             ...(options.corePluginOverride || {}),
+            typeInContainer: new ContentModelTypeInContainerPlugin(),
             copyPaste: new ContentModelCopyPastePlugin(options),
         },
     };

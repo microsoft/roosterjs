@@ -100,17 +100,18 @@ export const enum ExperimentalFeatures {
      */
     ImageSelection = 'ImageSelection',
 
+    /**
+     * @deprecated this feature is always enabled
+     * Align list elements elements to left, center and right using setAlignment API
+     */
+    ListItemAlignment = 'ListItemAlignment',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Align list elements elements to left, center and right using setAlignment API
-     */
-    ListItemAlignment = 'ListItemAlignment',
 
     /**
      * Trigger formatting by a especial characters. Ex: (A), 1. i).
@@ -142,6 +143,11 @@ export const enum ExperimentalFeatures {
      * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
      */
     ReusableContentModel = 'ReusableContentModel',
+
+    /**
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
 
     /**
      * Apply default format on editor container

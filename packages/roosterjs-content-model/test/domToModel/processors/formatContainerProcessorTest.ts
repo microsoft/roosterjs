@@ -1,3 +1,4 @@
+import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -272,5 +273,97 @@ describe('formatContainerProcessor', () => {
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('formatContainer with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [],
+                    zeroFontSize: true,
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('formatContainer with zero font size and single paragraph child', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontSize: '0px' },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: false,
+                    zeroFontSize: true,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('formatContainer with max-width and display:inline-block', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.display = 'inline-block';
+        div.style.maxWidth = '50%';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        maxWidth: '50%',
+                        display: 'inline-block',
+                    } as ContentModelBlockFormat,
+                    isImplicit: false,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
     });
 });

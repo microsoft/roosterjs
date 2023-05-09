@@ -1,6 +1,7 @@
 import * as createGeneralBlock from '../../lib/modelApi/creators/createGeneralBlock';
 import contentModelToDom from '../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../lib/domToModel/domToContentModel';
+import { ContentModelBlockFormat } from '../../lib/publicTypes/format/ContentModelBlockFormat';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelGeneralBlock } from '../../lib/publicTypes/group/ContentModelGeneralBlock';
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
@@ -429,37 +430,40 @@ describe('End to end test for DOM => Model', () => {
                     },
                     {
                         blockType: 'Table',
-                        cells: [
-                            [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                {
-                                                    segmentType: 'Text',
-                                                    text: 'bb',
-                                                    format: {
-                                                        fontWeight: 'bold',
+                        rows: [
+                            {
+                                format: {},
+                                height: 0,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'bb',
+                                                        format: {
+                                                            fontWeight: 'bold',
+                                                        },
                                                     },
-                                                },
-                                            ],
-                                            format: {},
-                                            isImplicit: true,
-                                        },
-                                    ],
-                                    format: {},
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
+                                                ],
+                                                format: {},
+                                                isImplicit: true,
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
+                                    },
+                                ],
+                            },
                         ],
                         format: {},
                         widths: [],
-                        heights: [],
                         dataset: {},
                     },
                     {
@@ -510,37 +514,40 @@ describe('End to end test for DOM => Model', () => {
                             },
                             {
                                 blockType: 'Table',
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            text: 'bb',
-                                                            format: {
-                                                                fontWeight: 'bold',
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                text: 'bb',
+                                                                format: {
+                                                                    fontWeight: 'bold',
+                                                                },
                                                             },
-                                                        },
-                                                    ],
-                                                    format: {},
-                                                    isImplicit: true,
-                                                },
-                                            ],
-                                            format: {},
-                                            spanLeft: false,
-                                            spanAbove: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                        },
-                                    ],
+                                                        ],
+                                                        format: {},
+                                                        isImplicit: true,
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
                                 ],
                                 format: {},
                                 widths: [],
-                                heights: [],
                                 dataset: {},
                             },
                             {
@@ -560,11 +567,12 @@ describe('End to end test for DOM => Model', () => {
                         ],
                         format: {
                             backgroundColor: 'red',
+                            display: 'block',
                         },
                     },
                 ],
             },
-            '<div style="background-color: red;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
+            '<div style="background-color: red; display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
         );
     });
 
@@ -643,12 +651,13 @@ describe('End to end test for DOM => Model', () => {
                             marginRight: '20px',
                             marginBottom: '20px',
                             marginLeft: '20px',
-                        },
+                            display: 'block',
+                        } as ContentModelBlockFormat,
                         isImplicit: false,
                     },
                 ],
             },
-            '<div style="margin: 20px;"><b>aa</b></div>'
+            '<div style="margin: 20px; display: block;"><b>aa</b></div>'
         );
     });
 
@@ -1273,39 +1282,43 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 blockType: 'Table',
                                 format: {},
-                                cells: [
-                                    [
-                                        {
-                                            blockGroupType: 'TableCell',
-                                            blocks: [
-                                                {
-                                                    blockType: 'Paragraph',
-                                                    format: {},
-                                                    isImplicit: true,
-                                                    segments: [
-                                                        {
-                                                            segmentType: 'Text',
-                                                            format: {},
-                                                            text: 'test2',
-                                                        },
-                                                    ],
-                                                },
-                                            ],
-                                            format: {},
-                                            spanLeft: false,
-                                            spanAbove: false,
-                                            isHeader: false,
-                                            dataset: {},
-                                        },
-                                    ],
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                blocks: [
+                                                    {
+                                                        blockType: 'Paragraph',
+                                                        format: {},
+                                                        isImplicit: true,
+                                                        segments: [
+                                                            {
+                                                                segmentType: 'Text',
+                                                                format: {},
+                                                                text: 'test2',
+                                                            },
+                                                        ],
+                                                    },
+                                                ],
+                                                format: {},
+                                                spanLeft: false,
+                                                spanAbove: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                            },
+                                        ],
+                                    },
                                 ],
                                 widths: [],
-                                heights: [],
                                 dataset: {},
                             },
                             {
                                 blockType: 'Paragraph',
                                 format: { htmlAlign: 'end' },
+                                isImplicit: false,
                                 segments: [
                                     {
                                         segmentType: 'Text',
@@ -1324,6 +1337,88 @@ describe('End to end test for DOM => Model', () => {
 
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
         expect(cloneNodeSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('html align overwrite text align from context', () => {
+        runTest(
+            '<div style="text-align:center">aaa<div align=right>bbb<div>ccc</div>ddd</div>eee</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: { textAlign: 'center' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'aaa',
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        tagName: 'div',
+                        format: {
+                            htmlAlign: 'end',
+                        },
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'bbb',
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'ccc',
+                                    },
+                                ],
+                            },
+                            {
+                                blockType: 'Paragraph',
+                                format: {},
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        format: {},
+                                        text: 'ddd',
+                                    },
+                                ],
+                                isImplicit: true,
+                            },
+                        ],
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            textAlign: 'center',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'eee',
+                            },
+                        ],
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<div style="text-align: center;">aaa</div><div align="right">bbb<div>ccc</div>ddd</div><div style="text-align: center;">eee</div>'
+        );
     });
 
     it('SUB needs to be put inside S or U if any', () => {
@@ -1350,6 +1445,88 @@ describe('End to end test for DOM => Model', () => {
                 ],
             },
             '<div><sub><u><s>test</s></u></sub></div>'
+        );
+    });
+
+    it('Table with margin under "align=center"', () => {
+        runTest(
+            '<div align="center"><table style="margin: 0"><tr><td></td></tr></table></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'FormatContainer',
+                        format: { htmlAlign: 'center' },
+                        tagName: 'div',
+                        blocks: [
+                            {
+                                blockType: 'Table',
+                                format: {
+                                    marginBottom: '0px',
+                                    marginLeft: '0px',
+                                    marginRight: '0px',
+                                    marginTop: '0px',
+                                },
+                                widths: [],
+                                dataset: {},
+                                rows: [
+                                    {
+                                        format: {},
+                                        height: 0,
+                                        cells: [
+                                            {
+                                                blockGroupType: 'TableCell',
+                                                format: {},
+                                                spanAbove: false,
+                                                spanLeft: false,
+                                                isHeader: false,
+                                                dataset: {},
+                                                blocks: [],
+                                            },
+                                        ],
+                                    },
+                                ],
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
+        );
+    });
+
+    it('A with display:block', () => {
+        runTest(
+            '<a href="#" style="display:block;color:red">test</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        isImplicit: true,
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { textColor: 'red' },
+                                link: {
+                                    format: {
+                                        underline: true,
+                                        href: '#',
+                                        textColor: 'red',
+                                        display: 'block',
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            '<a href="#" style="color: red; display: block;"><span style="color: red;">test</span></a>',
+            '<a style="color: red; display: block;"><span style="color: red;" href="#">test</span></a>'
         );
     });
 });

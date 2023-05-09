@@ -12,6 +12,7 @@ import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
 import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
@@ -21,15 +22,17 @@ import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHand
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
+import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './paragraph/marginFormatHandler';
 import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
-import { tableDirAndMarginFormatHandler } from './table/tableDirAndMarginFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
+import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
+import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -60,6 +63,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     display: displayFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
+    htmlAlign: htmlAlignFormatHandler,
     id: idFormatHandler,
     italic: italicFormatHandler,
     letterSpacing: letterSpacingFormatHandler,
@@ -69,15 +73,17 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listItemThread: listItemThreadFormatHandler,
     listLevelMetadata: listLevelMetadataFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
+    listStylePosition: listStylePositionFormatHandler,
     listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
-    tableDirAndMargin: tableDirAndMarginFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
+    textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
+    textColorOnTableCell: textColorOnTableCellFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -93,10 +99,10 @@ const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'superOrSubScript',
     'italic',
     'bold',
-    'textColor',
 ];
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
+    'textAlign',
     'lineHeight',
     'whiteSpace',
 ];
@@ -112,36 +118,50 @@ const defaultFormatKeysPerCategory: {
 } = {
     block: sharedBlockFormats,
     listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight', 'margin'],
+    listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
     listLevel: [
         'listType',
         'listLevelThread',
         'listLevelMetadata',
         'direction',
+        'textAlign',
         'margin',
         'padding',
+        'listStylePosition',
     ],
-    segment: [...sharedSegmentFormats, 'backgroundColor', 'lineHeight'],
-    segmentOnBlock: sharedSegmentFormats,
-    segmentOnTableCell: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold'],
+    segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
+    segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
     tableCell: [
         'border',
         'backgroundColor',
         'padding',
-        'direction',
         'verticalAlign',
         'wordBreak',
         'textColor',
+        'htmlAlign',
     ],
-    table: ['id', 'border', 'backgroundColor', 'display', 'tableDirAndMargin'],
+    tableRow: ['backgroundColor'],
+    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow'],
-    link: ['link', 'textColor', 'underline'],
-    code: ['fontFamily'],
+    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
+    link: [
+        'link',
+        'textColor',
+        'underline',
+        'display',
+        'margin',
+        'padding',
+        'backgroundColor',
+        'border',
+        'size',
+        'textAlign',
+    ],
+    code: ['fontFamily', 'display'],
     dataset: ['dataset'],
-    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size'],
-    container: sharedContainerFormats,
+    divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
+    container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
 };
 
 /**

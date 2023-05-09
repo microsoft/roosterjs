@@ -1,11 +1,10 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
+import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createQuote } from '../creators/createQuote';
 import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
@@ -17,7 +16,7 @@ import { wrapBlockStep1, WrapBlockStep1Result, wrapBlockStep2 } from '../common/
  */
 export function toggleModelBlockQuote(
     model: ContentModelDocument,
-    format: ContentModelBlockFormat & ContentModelSegmentFormat
+    format: ContentModelFormatContainerFormat
 ): boolean {
     const paragraphOfQuote = getOperationalBlocks<
         ContentModelFormatContainer | ContentModelListItem
@@ -53,7 +52,7 @@ export function toggleModelBlockQuote(
 
 function canMergeQuote(
     target: ContentModelBlock,
-    format: ContentModelBlockFormat & ContentModelSegmentFormat
+    format: ContentModelFormatContainerFormat
 ): target is ContentModelFormatContainer {
     return isQuote(target) && areSameFormats(format, target.format);
 }
