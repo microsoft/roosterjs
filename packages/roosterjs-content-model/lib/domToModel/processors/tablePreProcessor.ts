@@ -5,6 +5,9 @@ import { entityProcessor } from './entityProcessor';
 import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { tableProcessor } from './tableProcessor';
 
+/**
+ * @internal
+ */
 export const tablePreProcessor: ElementProcessor<HTMLTableElement> = (group, element, context) => {
     const processor = shouldUseTableProcessor(element, context) ? tableProcessor : entityProcessor;
 
@@ -12,26 +15,21 @@ export const tablePreProcessor: ElementProcessor<HTMLTableElement> = (group, ele
 };
 
 function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelContext) {
-    if (hasMetadata(element)) {
-        return true;
-    }
+    const selectedNodes = [
+        context.imageSelection?.image,
+        context.tableSelection?.table,
+        context.regularSelection?.startContainer,
+        context.regularSelection?.endContainer,
+    ];
 
-    const selectedTable = context.tableSelection?.table;
-
-    if (selectedTable == element || contains(element, selectedTable)) {
-        return true;
-    }
-
-    if (
-        contains(
-            element,
-            context.regularSelection?.startContainer,
-            true /*treatSameNodeAsContain*/
-        ) ||
-        contains(element, context.regularSelection?.endContainer, true /*treatSameNodeAsContain*/)
-    ) {
-        return true;
-    }
-
-    return false;
+    // Treat table as a real table when:
+    // 1. It is a roosterjs table (has metadata)
+    // 2. Table is in selection
+    // 3. There is selection inside table (or whole table is selected)
+    // Otherwise, we treat the table as entity so we will not change it when write back
+    return (
+        hasMetadata(element) ||
+        context.isInSelection ||
+        selectedNodes.some(n => contains(element, n, true /*treatSameNodeAsContain*/))
+    );
 }
