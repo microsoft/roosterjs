@@ -3,6 +3,7 @@ import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentMode
 import deprecatedColorParser from './utils/deprecatedColorParser';
 import sanitizeLinks from './utils/linkParser';
 import { getPasteSource } from 'roosterjs-editor-dom';
+import { handleWacComponentsPaste } from './WacComponents/handleWacComponentsPaste';
 import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import {
@@ -73,6 +74,10 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
                 handleWordDesktop(ev);
+                break;
+
+            case KnownPasteSourceType.WacComponents:
+                handleWacComponentsPaste(ev);
                 break;
 
             default:
