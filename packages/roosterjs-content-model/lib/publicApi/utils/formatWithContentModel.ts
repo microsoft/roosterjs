@@ -1,9 +1,11 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { DomToModelOption, IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { OnNodeCreated } from '../../publicTypes/context/ModelToDomSettings';
 import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
+import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 
 /**
  * @internal
@@ -59,13 +61,18 @@ export function formatWithContentModel(
         skipUndoSnapshot,
         changeSource,
     } = options || {};
-    const domToModelOption: DomToModelOption | undefined = useReducedModel
-        ? {
-              processorOverride: {
-                  child: reducedModelChildProcessor,
-              },
-          }
-        : undefined;
+    const processorOverride: Partial<ElementProcessorMap> = {
+        table: tablePreProcessor,
+    };
+
+    if (useReducedModel) {
+        processorOverride.child = reducedModelChildProcessor;
+    }
+
+    const domToModelOption: DomToModelOption = {
+        processorOverride,
+    };
+
     const model = editor.createContentModel(domToModelOption);
 
     if (callback(model)) {

@@ -15,7 +15,7 @@ import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { linkProcessor } from '../processors/linkProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
-import { tablePreProcessor } from '../processors/tablePreProcessor';
+import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
 /**
@@ -49,7 +49,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     strong: knownElementProcessor,
     sub: knownElementProcessor,
     sup: knownElementProcessor,
-    table: tablePreProcessor,
+    table: tableProcessor,
     u: knownElementProcessor,
     ul: listProcessor,
 
