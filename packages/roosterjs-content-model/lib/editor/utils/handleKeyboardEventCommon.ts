@@ -49,6 +49,8 @@ export function handleKeyboardEventResult(
         rawEvent.preventDefault();
         normalizeContentModel(model);
 
+        // Trigger an event to let plugins know the content is about to be changed by Content Model keyboard editing.
+        // So plugins can do proper handling. e.g. UndoPlugin can decide whether take a snapshot before this change happens.
         editor.triggerPluginEvent(PluginEventType.BeforeKeyboardEditing, {
             rawEvent,
         });
