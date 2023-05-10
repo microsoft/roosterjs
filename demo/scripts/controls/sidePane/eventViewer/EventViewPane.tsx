@@ -46,6 +46,7 @@ const EventTypeMap: { [key in PluginEventType]: string } = {
     [PluginEventType.BeforeSetContent]: 'BeforeSetContent',
     [PluginEventType.ZoomChanged]: 'ZoomChanged',
     [PluginEventType.SelectionChanged]: 'SelectionChanged',
+    [PluginEventType.BeforeKeyboardEditing]: 'BeforeKeyboardEditing',
 };
 
 const EntityOperationMap: { [key in EntityOperation]: string } = {
@@ -241,6 +242,9 @@ export default class EventViewPane extends React.Component<
                         Old value={event.oldZoomScale} New value={event.newZoomScale}
                     </span>
                 );
+
+            case PluginEventType.BeforeKeyboardEditing:
+                return <span>Key code={event.rawEvent.which}</span>;
 
             default:
                 return null;
