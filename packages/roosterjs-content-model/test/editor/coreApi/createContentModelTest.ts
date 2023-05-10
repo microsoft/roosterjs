@@ -3,6 +3,7 @@ import * as domToContentModel from '../../../lib/domToModel/domToContentModel';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
 import { DomToModelOption } from '../../../lib/publicTypes/IContentModelEditor';
+import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedRange = 'RANGE' as any;
@@ -48,6 +49,9 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             ...option,
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
         });
         expect(model).toBe(mockedModel);
     });
@@ -64,6 +68,9 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
             ...defaultOption,
         });
         expect(model).toBe(mockedModel);
@@ -81,6 +88,9 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
             ...defaultOption,
             ...additionalOption,
         });
@@ -100,6 +110,9 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
             disableCacheElement: false,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
         });
         expect(model).toBe(mockedModel);
     });
