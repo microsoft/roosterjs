@@ -48,7 +48,7 @@ export interface FormatWithContentModelOptions {
 export function formatWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
-    callback: (model: ContentModelDocument) => boolean,
+    formatCallback: (model: ContentModelDocument) => boolean,
     options?: FormatWithContentModelOptions
 ) {
     const {
@@ -68,8 +68,8 @@ export function formatWithContentModel(
         : undefined;
     const model = editor.createContentModel(domToModelOption);
 
-    if (callback(model)) {
-        const callback = () => {
+    if (formatCallback(model)) {
+        const applyChangeCallback = () => {
             editor.focus();
             if (model) {
                 editor.setContentModel(model, { onNodeCreated });
@@ -88,14 +88,14 @@ export function formatWithContentModel(
         };
 
         if (skipUndoSnapshot) {
-            callback();
+            applyChangeCallback();
 
             if (changeSource) {
                 editor.triggerContentChangedEvent(changeSource, getChangeData?.());
             }
         } else {
             editor.addUndoSnapshot(
-                callback,
+                applyChangeCallback,
                 changeSource || ChangeSource.Format,
                 false /*canUndoByBackspace*/,
                 {

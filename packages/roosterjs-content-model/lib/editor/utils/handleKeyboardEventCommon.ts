@@ -48,6 +48,10 @@ export function handleKeyboardEventResult(
         // We have deleted what we need from content model, no need to let browser keep handling the event
         rawEvent.preventDefault();
         normalizeContentModel(model);
+
+        editor.triggerPluginEvent(PluginEventType.BeforeKeyboardEditing, {
+            rawEvent,
+        });
     } else {
         // We didn't delete anything from content model, so browser will handle this event and we need to clear the cache
         editor.cacheContentModel(null);
