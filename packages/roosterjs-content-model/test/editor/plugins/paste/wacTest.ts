@@ -897,7 +897,120 @@ describe('wordOnlineHandler', () => {
         it('does not have BulletListStyle or NumberListStyle but has no ListContainerWrapper', () => {
             runTest(
                 '<div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="1" class="OutlineElement Ltr BCX0 SCXW200751125">A</li></ul></div><div class="BCX0 SCXW200751125"><ul><li role="listitem" data-aria-level="2" class="OutlineElement Ltr BCX0 SCXW200751125">B</li></ul></div><div class="BCX0 SCXW200751125" style="margin: 0px;"><ul><li role="listitem" data-aria-level="3" class="OutlineElement Ltr BCX0 SCXW200751125">C</li></ul></div>',
-                '<ul><li>A</li><ul><li style="list-style-type: circle;">B</li><ul style="margin-right: 0px;"><li style="margin-right: 0px; margin-left: 0px; list-style-type: square;">C</li></ul></ul></ul>'
+                undefined,
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'A',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'UL',
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'B',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'UL',
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                                {
+                                    listType: 'UL',
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'C',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    marginLeft: undefined,
+                                    listType: 'UL',
+                                    paddingLeft: undefined,
+                                },
+                                {
+                                    marginLeft: undefined,
+                                    listType: 'UL',
+                                    paddingLeft: undefined,
+                                },
+                                {
+                                    marginLeft: undefined,
+                                    listType: 'UL',
+                                    paddingLeft: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: {},
+                        },
+                    ],
+                }
             );
         });
 
@@ -1169,6 +1282,7 @@ describe('wordOnlineHandler', () => {
                                     paddingLeft: '0px',
                                     width: '264px',
                                     height: '96px',
+                                    display: 'block',
                                 },
                             },
                         ],
