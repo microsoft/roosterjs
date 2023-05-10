@@ -125,6 +125,20 @@ function splitTextSegment(
 ) {
     const text = textSegment.text;
     const newSegment = createText(text.substring(0, found), segments[index].format);
+
+    if (textSegment.code) {
+        newSegment.code = {
+            format: { ...textSegment.code.format },
+        };
+    }
+
+    if (textSegment.link) {
+        newSegment.link = {
+            format: { ...textSegment.link.format },
+            dataset: { ...textSegment.link.dataset },
+        };
+    }
+
     textSegment.text = text.substring(found, text.length);
     segments.splice(index, 0, newSegment);
 }

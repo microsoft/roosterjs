@@ -29,7 +29,7 @@ describe('convertPastedContentFromWord', () => {
             {
                 ...event.domToModelOption,
                 includeRoot: true,
-                allowCacheElement: false,
+                disableCacheElement: true,
             }
         );
         if (expectedModel) {
@@ -554,6 +554,7 @@ describe('convertPastedContentFromWord', () => {
                 createListElementFromWord('p', 'test2', 'l1 level5 lfo2') +
                 '</td></table>';
 
+            div = document.createElement('div');
             fragment = document.createDocumentFragment();
             div.innerHTML = html;
             moveChildNodes(fragment, div);
@@ -793,7 +794,7 @@ describe('convertPastedContentFromWord', () => {
     });
 });
 
-function createBeforePasteEventMock(fragment: DocumentFragment) {
+export function createBeforePasteEventMock(fragment: DocumentFragment) {
     return ({
         eventType: PluginEventType.BeforePaste,
         clipboardData: <ClipboardData>{},

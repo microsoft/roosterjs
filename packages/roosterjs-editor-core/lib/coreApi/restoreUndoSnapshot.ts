@@ -66,15 +66,13 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
             const darkColorHandler = core.darkColorHandler;
             const isDarkModel = core.lifecycle.isDarkMode;
 
-            if (darkColorHandler) {
-                snapshot.knownColors.forEach(color => {
-                    darkColorHandler.registerColor(
-                        color.lightModeColor,
-                        isDarkModel,
-                        color.darkModeColor
-                    );
-                });
-            }
+            snapshot.knownColors.forEach(color => {
+                darkColorHandler.registerColor(
+                    color.lightModeColor,
+                    isDarkModel,
+                    color.darkModeColor
+                );
+            });
         } finally {
             core.undo.isRestoring = false;
         }

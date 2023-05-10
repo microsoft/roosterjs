@@ -37,7 +37,7 @@ export const getContent: GetContent = (
         content = root.textContent;
     } else if (mode == GetContentMode.PlainText) {
         content = getTextContent(root);
-    } else if (triggerExtractContentEvent || core.lifecycle.isDarkMode || core.darkColorHandler) {
+    } else {
         const clonedRoot = cloneNode(root);
         clonedRoot.normalize();
 
@@ -51,17 +51,15 @@ export const getContent: GetContent = (
             : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        if (core.lifecycle.isDarkMode || core.darkColorHandler) {
-            core.api.transformColor(
-                core,
-                clonedRoot,
-                false /*includeSelf*/,
-                null /*callback*/,
-                ColorTransformDirection.DarkToLight,
-                !!core.darkColorHandler,
-                core.lifecycle.isDarkMode
-            );
-        }
+        core.api.transformColor(
+            core,
+            clonedRoot,
+            false /*includeSelf*/,
+            null /*callback*/,
+            ColorTransformDirection.DarkToLight,
+            true /*forceTransform*/,
+            core.lifecycle.isDarkMode
+        );
 
         if (triggerExtractContentEvent) {
             core.api.triggerEvent(
@@ -80,13 +78,6 @@ export const getContent: GetContent = (
         } else {
             content = clonedRoot.innerHTML;
         }
-    } else {
-        content = getHtmlWithSelectionPath(
-            root,
-            includeSelectionMarker
-                ? core.api.getSelectionRange(core, true /*tryGetFromCache*/)
-                : null
-        );
     }
 
     return content ?? '';

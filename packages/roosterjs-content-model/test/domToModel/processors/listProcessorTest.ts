@@ -216,6 +216,45 @@ describe('listProcessor', () => {
             ],
         });
     });
+
+    it('list clear margin from context', () => {
+        const group = createContentModelDocument();
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+
+        ol.appendChild(li);
+        ol.style.margin = '0';
+        context.blockFormat.marginLeft = '40px';
+        childProcessor.and.callFake(originalChildProcessor);
+
+        listProcessor(group, ol, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            marginTop: '0px',
+                            marginBottom: '0px',
+                            marginLeft: '0px',
+                            marginRight: '0px',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        format: {},
+                        isSelected: true,
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
 });
 
 describe('listProcessor without format handlers', () => {

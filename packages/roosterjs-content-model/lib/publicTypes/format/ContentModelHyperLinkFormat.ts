@@ -1,7 +1,11 @@
+import { BackgroundColorFormat } from './formatParts/BackgroundColorFormat';
+import { BorderFormat } from './formatParts/BorderFormat';
 import { DisplayFormat } from './formatParts/DisplayFormat';
 import { LinkFormat } from './formatParts/LinkFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
+import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 
@@ -10,7 +14,11 @@ import { UnderlineFormat } from './formatParts/UnderlineFormat';
  */
 export type ContentModelHyperLinkFormat = LinkFormat &
     TextColorFormat &
+    BackgroundColorFormat &
     UnderlineFormat &
     DisplayFormat &
     MarginFormat &
-    PaddingFormat;
+    PaddingFormat &
+    BorderFormat &
+    SizeFormat &
+    TextAlignFormat;
