@@ -51,8 +51,21 @@ export const createEditorCore: CoreCreator<EditorCore, EditorOptions> = (content
         sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
-        darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
+        darkColorHandler: new DarkColorHandlerImpl(
+            getOnRegisterColor(contentDiv),
+            pluginState.lifecycle.getDarkColor
+        ),
     };
 
     return core;
 };
+
+function getOnRegisterColor(contentDiv: HTMLElement) {
+    return (colorKey: string, darkModeColor: string | null) => {
+        if (darkModeColor) {
+            contentDiv.style.setProperty(colorKey, darkModeColor);
+        } else {
+            contentDiv.style.removeProperty(colorKey);
+        }
+    };
+}

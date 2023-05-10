@@ -11,7 +11,10 @@ const COLOR_VAR_PREFIX = 'darkColor';
 export default class DarkColorHandlerImpl implements DarkColorHandler {
     private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
 
-    constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
+    constructor(
+        private onRegisterColor: (key: string, darkColor: string | null) => void,
+        private getDarkColor: (color: string) => string
+    ) {}
 
     /**
      * Get a copy of known colors
@@ -46,7 +49,7 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
                 darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
 
                 this.knownColors[colorKey] = { lightModeColor, darkModeColor };
-                this.contentDiv.style.setProperty(colorKey, darkModeColor);
+                this.onRegisterColor(colorKey, darkModeColor);
             }
 
             return `var(${colorKey}, ${lightModeColor})`;
@@ -59,7 +62,7 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * Reset known color record, clean up registered color variables.
      */
     reset(): void {
-        getObjectKeys(this.knownColors).forEach(key => this.contentDiv.style.removeProperty(key));
+        getObjectKeys(this.knownColors).forEach(key => this.onRegisterColor(key, null));
         this.knownColors = {};
     }
 
