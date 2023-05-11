@@ -1,9 +1,11 @@
 import commitListChains from '../utils/commitListChains';
+import getFormatState from './getFormatState';
 import {
     addDelimiters,
     applyFormat,
     commitEntity,
     createElement,
+    getComputedStyles,
     getEntityFromElement,
     getEntitySelector,
     Position,
@@ -67,6 +69,8 @@ export default function insertEntity(
     }
 
     commitEntity(wrapper, type, isReadonly);
+
+    const currentFormat = getFormatState(editor);
 
     if (!editor.contains(wrapper)) {
         let currentRange: Range | null = null;
@@ -138,13 +142,20 @@ export default function insertEntity(
 
         wrapper.parentNode?.insertBefore(newLine!, wrapper.nextSibling);
 
-        const defaultFormat = editor.getDefaultFormat();
         const formatNode = formatOnSpan ? newLine?.querySelector('span') : newLine;
 
         if (formatNode) {
             applyFormat(
                 formatNode as HTMLElement,
-                defaultFormat,
+                {
+                    backgroundColor: currentFormat.backgroundColor,
+                    textColor: currentFormat.textColor,
+                    bold: currentFormat.isBold,
+                    fontFamily: currentFormat.fontName,
+                    fontSize: currentFormat.fontSize,
+                    italic: currentFormat.isItalic,
+                    underline: currentFormat.isUnderline,
+                },
                 editor.isDarkMode(),
                 editor.getDarkColorHandler()
             );
