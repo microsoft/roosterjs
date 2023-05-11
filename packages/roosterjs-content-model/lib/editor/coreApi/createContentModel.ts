@@ -1,6 +1,7 @@
 import domToContentModel from '../../domToModel/domToContentModel';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DomToModelOption } from '../../publicTypes/IContentModelEditor';
+import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
     CreateContentModel,
@@ -30,6 +31,10 @@ function internalCreateContentModel(
         selectionRange: core.api.getSelectionRangeEx(core),
         ...core.defaultDomToModelOptions,
         ...(option || {}),
+        processorOverride: {
+            table: tablePreProcessor,
+            ...(option?.processorOverride || {}),
+        },
     };
 
     if (!core.reuseModel) {

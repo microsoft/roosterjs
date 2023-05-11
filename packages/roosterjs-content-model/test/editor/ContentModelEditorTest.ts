@@ -3,6 +3,7 @@ import * as domToContentModel from '../../lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
+import { tablePreProcessor } from '../../lib/domToModel/processors/tablePreProcessor';
 import {
     EditorPlugin,
     ExperimentalFeatures,
@@ -35,6 +36,9 @@ describe('ContentModelEditor', () => {
                 areAllCollapsed: true,
                 ranges: [],
             },
+            processorOverride: {
+                table: tablePreProcessor,
+            },
             disableCacheElement: true,
         });
     });
@@ -59,6 +63,9 @@ describe('ContentModelEditor', () => {
                 type: SelectionRangeTypes.Normal,
                 areAllCollapsed: true,
                 ranges: [],
+            },
+            processorOverride: {
+                table: tablePreProcessor,
             },
         });
     });
