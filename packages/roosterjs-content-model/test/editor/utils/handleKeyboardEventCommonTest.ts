@@ -127,15 +127,18 @@ describe('handleKeyboardEventResult', () => {
     let cacheContentModel: jasmine.Spy;
     let preventDefault: jasmine.Spy;
     let triggerContentChangedEvent: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         preventDefault = jasmine.createSpy('preventDefault');
         triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         mockedEditor = ({
             cacheContentModel,
             triggerContentChangedEvent,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
         mockedEvent = ({
             preventDefault,
@@ -155,6 +158,9 @@ describe('handleKeyboardEventResult', () => {
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
+            rawEvent: mockedEvent,
+        });
     });
 
     it('isChanged = false', () => {
@@ -165,5 +171,6 @@ describe('handleKeyboardEventResult', () => {
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
         expect(cacheContentModel).toHaveBeenCalledWith(null);
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
     });
 });

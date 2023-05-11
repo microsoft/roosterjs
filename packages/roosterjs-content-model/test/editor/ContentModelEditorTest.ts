@@ -35,6 +35,31 @@ describe('ContentModelEditor', () => {
                 areAllCollapsed: true,
                 ranges: [],
             },
+            disableCacheElement: true,
+        });
+    });
+
+    it('domToContentModel, with Reuse Content Model dont add disableCacheElement option', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div, {
+            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+        });
+
+        const mockedResult = 'Result' as any;
+
+        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
+        spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
+
+        const model = editor.createContentModel();
+
+        expect(model).toBe(mockedResult);
+        expect(domToContentModel.default).toHaveBeenCalledTimes(1);
+        expect(domToContentModel.default).toHaveBeenCalledWith(div, editorContext, {
+            selectionRange: {
+                type: SelectionRangeTypes.Normal,
+                areAllCollapsed: true,
+                ranges: [],
+            },
         });
     });
 

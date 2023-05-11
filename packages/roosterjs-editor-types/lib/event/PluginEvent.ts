@@ -1,5 +1,8 @@
 import BeforeCutCopyEvent, { CompatibleBeforeCutCopyEvent } from './BeforeCutCopyEvent';
 import BeforeDisposeEvent, { CompatibleBeforeDisposeEvent } from './BeforeDisposeEvent';
+import BeforeKeyboardEditingEvent, {
+    CompatibleBeforeKeyboardEditingEvent,
+} from './BeforeKeyboardEditingEvent';
 import BeforePasteEvent, { CompatibleBeforePasteEvent } from './BeforePasteEvent';
 import BeforeSetContentEvent, { CompatibleBeforeSetContentEvent } from './BeforeSetContentEvent';
 import ContentChangedEvent, { CompatibleContentChangedEvent } from './ContentChangedEvent';
@@ -41,6 +44,7 @@ export type PluginEvent =
     | BeforeSetContentEvent
     | ZoomChangedEvent
     | SelectionChangedEvent
+    | BeforeKeyboardEditingEvent
     | CompatibleBeforeCutCopyEvent
     | CompatibleBeforeDisposeEvent
     | CompatibleBeforePasteEvent
@@ -55,4 +59,5 @@ export type PluginEvent =
     | CompatibleEnterShadowEditEvent
     | CompatibleLeaveShadowEditEvent
     | CompatibleZoomChangedEvent
-    | CompatibleSelectionChangedEvent;
+    | CompatibleSelectionChangedEvent
+    | CompatibleBeforeKeyboardEditingEvent;
