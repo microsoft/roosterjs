@@ -1,9 +1,6 @@
-import { restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
-import { selectContentMetadata } from './utils/selectContentMetadata';
 import {
-    ChangeSource,
-    ColorTransformDirection,
     EditorCore,
+    EntityOperation,
     PluginEventType,
     RestoreUndoSnapshot,
 } from 'roosterjs-editor-types';
@@ -28,42 +25,28 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
 
     if (snapshot && snapshot.html != null) {
         try {
+            const { html, metadata, entities, entitySnapshot } = snapshot;
             core.undo.isRestoring = true;
+            core.api.setContent(
+                core,
+                html,
+                true /*triggerContentChangedEvent*/,
+                metadata ?? undefined,
+                entities
+            );
 
-            const { html, entities, metadata, entitySnapshot } = snapshot;
-            const body = new DOMParser().parseFromString(core.trustedHTMLHandler(html), 'text/html')
-                .body;
-
-            restoreContentWithEntityPlaceholder(body, core.contentDiv, entities || {});
-
-            const isDarkMode = core.lifecycle.isDarkMode;
-
-            if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
-                core.api.transformColor(
+            if (entitySnapshot) {
+                core.api.triggerEvent(
                     core,
-                    core.contentDiv,
-                    false /*includeSelf*/,
-                    null /*callback*/,
-                    isDarkMode
-                        ? ColorTransformDirection.LightToDark
-                        : ColorTransformDirection.DarkToLight,
-                    true /*forceTransform*/
+                    {
+                        eventType: PluginEventType.EntityOperation,
+                        operation: EntityOperation.UpdateEntityState,
+                        entity: entitySnapshot.entity,
+                        entityState: entitySnapshot.state,
+                    },
+                    false
                 );
             }
-
-            if (metadata) {
-                selectContentMetadata(core, metadata);
-            }
-
-            core.api.triggerEvent(
-                core,
-                {
-                    eventType: PluginEventType.ContentChanged,
-                    source: entitySnapshot ? ChangeSource.UndoEntity : ChangeSource.Undo,
-                    data: entitySnapshot,
-                },
-                false
-            );
 
             const darkColorHandler = core.darkColorHandler;
             const isDarkModel = core.lifecycle.isDarkMode;

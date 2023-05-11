@@ -91,7 +91,8 @@ export default interface EditorCore extends PluginState {
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
+ * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
+ * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
@@ -257,7 +258,8 @@ export type SetContent = (
     core: EditorCore,
     content: string,
     triggerContentChangedEvent: boolean,
-    metadata?: ContentMetadata
+    metadata?: ContentMetadata,
+    entities?: Record<string, HTMLElement>
 ) => void;
 
 /**
@@ -332,7 +334,9 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
+     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
+     * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
+     * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
      */
     addUndoSnapshot: AddUndoSnapshot;
 

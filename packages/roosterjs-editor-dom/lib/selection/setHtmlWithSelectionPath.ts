@@ -1,6 +1,7 @@
 import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import validate from '../metadata/validate';
+import { restoreContentWithEntityPlaceholder } from '../entity/entityPlaceholderUtils';
 import {
     createArrayDefinition,
     createBooleanDefinition,
@@ -78,14 +79,23 @@ export default function setHtmlWithSelectionPath(
 export function setHtmlWithMetadata(
     rootNode: HTMLElement,
     html: string,
-    trustedHTMLHandler?: TrustedHTMLHandler
+    trustedHTMLHandler?: TrustedHTMLHandler,
+    entities?: Record<string, HTMLElement>
 ): ContentMetadata | undefined {
     if (!rootNode) {
         return undefined;
     }
 
     html = html || '';
-    rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
+    html = trustedHTMLHandler?.(html) || html;
+
+    if (entities) {
+        const body = new DOMParser().parseFromString(html, 'text/html').body;
+
+        restoreContentWithEntityPlaceholder(body, rootNode, entities);
+    } else {
+        rootNode.innerHTML = html;
+    }
 
     const potentialMetadataComment = rootNode.lastChild;
 

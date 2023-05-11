@@ -7,11 +7,9 @@ import {
     setMetadata,
 } from 'roosterjs-editor-dom';
 import {
-    ChangeSource,
     EditorPlugin,
     Entity,
     EntityOperation,
-    EntitySnapshot,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -86,26 +84,14 @@ export default class SampleEntityPlugin implements EditorPlugin {
                     }
 
                     break;
-            }
-        } else if (
-            event.eventType == PluginEventType.ContentChanged &&
-            event.source == ChangeSource.UndoEntity
-        ) {
-            const entitySnapshot = event.data as EntitySnapshot;
 
-            if (entitySnapshot?.type == EntityType) {
-                const wrapper = this.editor.queryElements(
-                    getEntitySelector(entitySnapshot.type, entitySnapshot.id)
-                )[0];
-
-                if (wrapper) {
-                    const entity = getEntityFromElement(wrapper);
-
-                    if (entity) {
-                        setMetadata(entity.wrapper, entitySnapshot.stateInfo as EntityMetadata);
-                        this.updateEntity(entity);
+                case EntityOperation.UpdateEntityState:
+                    if (event.entityState) {
+                        setMetadata(event.entity.wrapper, event.entityState as EntityMetadata);
+                        this.updateEntity(event.entity);
                     }
-                }
+
+                    break;
             }
         }
     }
@@ -140,10 +126,7 @@ export default class SampleEntityPlugin implements EditorPlugin {
 
         if (entity) {
             this.updateEntity(entity, 1);
-            this.editor.addUndoSnapshotForEntity(
-                entity,
-                getMetadata<EntityMetadata>(entity.wrapper)
-            );
+            this.editor.addEntityUndoSnapshot(entity, getMetadata<EntityMetadata>(entity.wrapper));
         }
     };
 }

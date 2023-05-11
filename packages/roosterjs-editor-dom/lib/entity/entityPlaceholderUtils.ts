@@ -1,19 +1,19 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity, EntityClasses, NodeType } from 'roosterjs-editor-types';
+import { Entity, NodeType } from 'roosterjs-editor-types';
 
-const EntityPlaceholderSelector = '.' + EntityClasses.ENTITY_PLACEHOLDER;
+const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
 
 /**
+ * @deprecated
  * Create a placeholder comment node for entity
  * @param entity The entity to create placeholder from
  * @returns A placeholder comment node as
  */
 export function createEntityPlaceholder(entity: Entity): HTMLElement {
-    const placeholder = entity.wrapper.ownerDocument.createElement('span');
+    const placeholder = entity.wrapper.ownerDocument.createElement(EntityPlaceHolderTagName);
     placeholder.id = entity.id;
-    placeholder.className = EntityClasses.ENTITY_PLACEHOLDER;
 
     return placeholder;
 }
@@ -31,8 +31,7 @@ export function createEntityPlaceholder(entity: Entity): HTMLElement {
  */
 export function moveContentWithEntityPlaceholders(
     root: HTMLDivElement,
-    entities: Record<string, HTMLElement>,
-    clone?: boolean
+    entities: Record<string, HTMLElement>
 ) {
     const entitySelector = getEntitySelector();
     const fragment = root.ownerDocument.createDocumentFragment();
@@ -55,13 +54,7 @@ export function moveContentWithEntityPlaceholders(
                         wrapper.parentNode?.replaceChild(placeholder, wrapper);
                     }
                 });
-
-                if (clone) {
-                    nodeToAppend = child.cloneNode(true /*deep*/);
-                }
             }
-        } else if (clone) {
-            nodeToAppend = child.cloneNode(true /*deep*/);
         }
 
         fragment.appendChild(nodeToAppend);
@@ -86,14 +79,14 @@ export function restoreContentWithEntityPlaceholder(
     insertClonedNode?: boolean
 ) {
     let anchor = target.firstChild;
-    entities = entities || {};
+
+    const entitySelector = getEntitySelector();
 
     for (let current = source.firstChild; current; ) {
-        let wrapper: HTMLElement | null = null;
         const next = current.nextSibling;
-        const id = tryGetIdFromEntityPlaceholder(current);
+        const wrapper = tryGetWrapperFromEntityPlaceholder(entities, current);
 
-        if (id && (wrapper = entities[(<HTMLElement>current).id])) {
+        if (wrapper) {
             anchor = removeUntil(anchor, wrapper);
 
             if (anchor) {
@@ -106,8 +99,8 @@ export function restoreContentWithEntityPlaceholder(
             target.insertBefore(nodeToInsert, anchor);
 
             if (safeInstanceOf(nodeToInsert, 'HTMLElement')) {
-                nodeToInsert.querySelectorAll(EntityPlaceholderSelector).forEach(placeholder => {
-                    wrapper = entities![placeholder.id];
+                nodeToInsert.querySelectorAll(entitySelector).forEach(placeholder => {
+                    const wrapper = tryGetWrapperFromEntityPlaceholder(entities, placeholder);
 
                     if (wrapper) {
                         placeholder.parentNode?.replaceChild(wrapper, placeholder);
@@ -131,17 +124,17 @@ function removeUntil(anchor: ChildNode | null, nodeToStop?: HTMLElement) {
     return anchor;
 }
 
-function tryGetIdFromEntityPlaceholder(node: Node): string | null {
-    return node.nodeType == NodeType.Element &&
-        (<HTMLElement>node).className == EntityClasses.ENTITY_PLACEHOLDER
-        ? (<HTMLElement>node).id
-        : null;
+function tryGetWrapperFromEntityPlaceholder(
+    entities: Record<string, HTMLElement> | null,
+    node: Node
+): HTMLElement | null {
+    const id = node.nodeType == NodeType.Element && getEntityFromElement(node as HTMLElement)?.id;
+
+    return (id && entities?.[id]) || null;
 }
 
 function getPlaceholder(entity: Entity, entities: Record<string, HTMLElement>) {
-    const placeholder = createEntityPlaceholder(entity);
-
     entities[entity.id] = entity.wrapper;
 
-    return placeholder;
+    return entity.wrapper.cloneNode(true /*deep*/);
 }

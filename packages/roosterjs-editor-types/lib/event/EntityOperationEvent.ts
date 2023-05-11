@@ -25,6 +25,12 @@ export interface EntityOperationEventData {
     rawEvent?: Event;
 
     /**
+     * For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
+     * For other operation types, it is not used
+     */
+    entityState?: Object;
+
+    /**
      * A document fragment for entity based on Shadow DOM. This property is only available for NewEntity operation.
      * Putting DOM nodes under this fragment will cause a shadow root to be attached to the entity wrapper
      * with these DOM nodes under it.

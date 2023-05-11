@@ -611,14 +611,17 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         );
     }
 
-    public addUndoSnapshotForEntity(entity: Entity, stateInfo: Object): void {
+    /**
+     * Add undo snapshot for entity. This is normally triggered by a plugin that handles entity state.
+     * @param entity The entity that the state belong to
+     * @param state The state of this entity to store into undo snapshot
+     */
+    public addEntityUndoSnapshot(entity: Entity, state: Object): void {
         const core = this.getCore();
-        const { id, type } = entity;
 
         core.api.addUndoSnapshot(core, null, null, false, undefined, {
-            id,
-            type,
-            stateInfo,
+            entity,
+            state,
         });
     }
 

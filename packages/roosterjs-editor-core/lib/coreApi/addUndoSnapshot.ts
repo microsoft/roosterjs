@@ -1,6 +1,7 @@
 import {
+    getEntityFromElement,
+    getEntitySelector,
     getSelectionPath,
-    moveContentWithEntityPlaceholders,
     Position,
 } from 'roosterjs-editor-dom';
 import {
@@ -26,7 +27,8 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param formatApiName Optional parameter to provide the ContentChangeEvent which FormatApi was invoked.
+ * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
+ * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
@@ -94,25 +96,25 @@ function addUndoSnapshotInternal(
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
         const entities: Record<string, HTMLElement> = {};
-        const fragment = moveContentWithEntityPlaceholders(
-            core.contentDiv,
-            entities,
-            true /*clone*/
-        );
-        const div = core.contentDiv.ownerDocument.createElement('div');
 
-        div.appendChild(fragment);
+        core.contentDiv.querySelectorAll(getEntitySelector()).forEach(wrapper => {
+            const entity = getEntityFromElement(wrapper as HTMLElement);
+
+            if (entity) {
+                entities[entity.id] = entity.wrapper;
+            }
+        });
 
         core.undo.snapshotsService.addSnapshot(
             {
-                html: div.innerHTML,
-                entities,
+                html: core.contentDiv.innerHTML,
                 metadata,
                 knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
+                entities,
                 entitySnapshot,
             },
             canUndoByBackspace,
-            !!entitySnapshot
+            !!entitySnapshot /*force*/
         );
         core.undo.hasNewContent = false;
     }

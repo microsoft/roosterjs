@@ -69,4 +69,10 @@ export const enum EntityOperation {
      * Plugins can handle this event to do any necessary clean up for shadow root
      */
     RemoveShadowRoot,
+
+    /**
+     * Notify plugins that a new entity state need to be updated to an entity.
+     * This is normally happened when user undo/redo the content with an entity snapshot added by a plugin that handles entity
+     */
+    UpdateEntityState,
 }
