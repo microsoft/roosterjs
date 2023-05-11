@@ -5,7 +5,6 @@ import {
     applyFormat,
     commitEntity,
     createElement,
-    getComputedStyles,
     getEntityFromElement,
     getEntitySelector,
     Position,
