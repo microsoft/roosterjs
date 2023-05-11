@@ -1,4 +1,4 @@
-import { EntityClasses, NodeType } from 'roosterjs-editor-types/lib';
+import { EntityClasses, NodeType } from 'roosterjs-editor-types';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { mergeNode } from './mergeNode';
 import { removeUnnecessarySpan } from './removeUnnecessarySpan';
