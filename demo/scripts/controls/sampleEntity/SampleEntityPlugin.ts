@@ -50,7 +50,10 @@ export default class SampleEntityPlugin implements EditorPlugin {
                 insertEntity(this.editor, EntityType, entityNode, true, true);
             });
             event.rawEvent.preventDefault();
-        } else if (event.eventType == PluginEventType.EntityOperation) {
+        } else if (
+            event.eventType == PluginEventType.EntityOperation &&
+            event.entity.type == EntityType
+        ) {
             switch (event.operation) {
                 case EntityOperation.NewEntity:
                     {
@@ -90,7 +93,7 @@ export default class SampleEntityPlugin implements EditorPlugin {
         ) {
             const entitySnapshot = event.data as EntitySnapshot;
 
-            if (entitySnapshot) {
+            if (entitySnapshot?.type == EntityType) {
                 const wrapper = this.editor.queryElements(
                     getEntitySelector(entitySnapshot.type, entitySnapshot.id)
                 )[0];
