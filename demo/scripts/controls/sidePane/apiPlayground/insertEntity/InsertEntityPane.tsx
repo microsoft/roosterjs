@@ -54,15 +54,16 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     <label htmlFor="styleBlock">Block</label>
                 </div>
                 <div>
-                    Readonly: <input type="checkbox" ref={this.isReadonly} />
+                    <input id="readonly" type="checkbox" ref={this.isReadonly} />
+                    <label htmlFor="readonly">Readonly </label>
                 </div>
                 <div>
-                    Force insert at root of region:
-                    <input type="checkbox" ref={this.insertAtRoot} />
+                    <input id="insertAtRoot" type="checkbox" ref={this.insertAtRoot} />
+                    <label htmlFor="insertAtRoot">Force insert at root of region</label>
                 </div>
                 <div>
-                    Focus after entity
-                    <input type="checkbox" ref={this.focusAfterEntity} />
+                    <input id="focusAfterEntity" type="checkbox" ref={this.focusAfterEntity} />
+                    <label htmlFor="focusAfterEntity">Focus after entity</label>
                 </div>
                 <div>
                     <button onClick={this.insertEntity}>Insert Entity</button>
