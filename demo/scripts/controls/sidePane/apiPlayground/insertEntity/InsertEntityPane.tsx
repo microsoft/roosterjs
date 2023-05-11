@@ -19,6 +19,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
     private styleBlock = React.createRef<HTMLInputElement>();
     private isReadonly = React.createRef<HTMLInputElement>();
     private insertAtRoot = React.createRef<HTMLInputElement>();
+    private focusAfterEntity = React.createRef<HTMLInputElement>();
 
     constructor(props: ApiPaneProps) {
         super(props);
@@ -48,16 +49,21 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                         ref={this.styleInline}
                         id="styleInline"
                     />
-                    <label htmlFor="styleInline">Inline</label>{' '}
+                    <label htmlFor="styleInline">Inline</label>
                     <input type="radio" name="entityStyle" ref={this.styleBlock} id="styleBlock" />
                     <label htmlFor="styleBlock">Block</label>
                 </div>
                 <div>
-                    Readonly: <input type="checkbox" ref={this.isReadonly} />
+                    <input id="readonly" type="checkbox" ref={this.isReadonly} />
+                    <label htmlFor="readonly">Readonly </label>
                 </div>
                 <div>
-                    Force insert at root of region:{' '}
-                    <input type="checkbox" ref={this.insertAtRoot} />
+                    <input id="insertAtRoot" type="checkbox" ref={this.insertAtRoot} />
+                    <label htmlFor="insertAtRoot">Force insert at root of region</label>
+                </div>
+                <div>
+                    <input id="focusAfterEntity" type="checkbox" ref={this.focusAfterEntity} />
+                    <label htmlFor="focusAfterEntity">Focus after entity</label>
                 </div>
                 <div>
                     <button onClick={this.insertEntity}>Insert Entity</button>
@@ -83,6 +89,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
         const isBlock = this.styleBlock.current.checked;
         const isReadonly = this.isReadonly.current.checked;
         const insertAtRoot = this.insertAtRoot.current.checked;
+        const focusAfterEntity = this.focusAfterEntity.current.checked;
 
         if (node) {
             const editor = this.props.getEditor();
@@ -95,7 +102,8 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     isBlock,
                     isReadonly,
                     undefined /*position*/,
-                    insertAtRoot
+                    insertAtRoot,
+                    focusAfterEntity
                 );
             });
         }
