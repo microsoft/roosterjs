@@ -163,7 +163,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<p style="margin-top: 0px; margin-bottom: 0px;"><span>test</span></p>',
+            '<p style="margin-top: 0px; margin-bottom: 0px;">test</p>',
             1
         );
     });
@@ -187,7 +187,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<p><span>test</span></p>',
+            '<p>test</p>',
             1
         );
     });
@@ -211,7 +211,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1><span>test</span></h1>',
+            '<h1>test</h1>',
             1
         );
     });
@@ -235,7 +235,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1 style="font-size: 20px;"><span>test</span></h1>',
+            '<h1 style="font-size: 20px;">test</h1>',
             1
         );
     });
@@ -259,7 +259,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1 style="font-weight: normal;"><span>test</span></h1>',
+            '<h1 style="font-weight: normal;">test</h1>',
             1
         );
     });
@@ -290,7 +290,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1><span>test 1</span><span style="font-weight: normal;">test 2</span></h1>',
+            '<h1>test 1<span style="font-weight: normal;">test 2</span></h1>',
             2
         );
     });
@@ -315,7 +315,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1><span><i>test</i></span></h1>',
+            '<h1><i>test</i></h1>',
             1
         );
     });
@@ -338,7 +338,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<div style="text-align: center;"><span>test</span></div>',
+            '<div style="text-align: center;">test</div>',
             1
         );
     });
@@ -364,7 +364,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1><span>test</span></h1>',
+            '<h1>test</h1>',
             1
         );
 
@@ -412,18 +412,14 @@ describe('handleParagraph', () => {
         handleParagraph(document, parent, para2, context, br);
 
         expect(parent.innerHTML).toBe(
-            '<div style="white-space: pre;"><span>test1</span></div><div style="white-space: pre;"><span>test2</span></div><br>'
+            '<div style="white-space: pre;">test1</div><div style="white-space: pre;">test2</div><br>'
         );
         expect(para1.cachedElement).toBe(parent.firstChild as HTMLElement);
-        expect(para1.cachedElement?.outerHTML).toBe(
-            '<div style="white-space: pre;"><span>test1</span></div>'
-        );
+        expect(para1.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test1</div>');
         expect(para2.cachedElement).toBe(parent.firstChild?.nextSibling as HTMLElement);
-        expect(para2.cachedElement?.outerHTML).toBe(
-            '<div style="white-space: pre;"><span>test2</span></div>'
-        );
+        expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
 
-        optimize(parent, 2);
+        optimize(parent);
 
         expect(parent.innerHTML).toBe(
             '<div style="white-space: pre;">test1</div><div style="white-space: pre;">test2</div><br>'
