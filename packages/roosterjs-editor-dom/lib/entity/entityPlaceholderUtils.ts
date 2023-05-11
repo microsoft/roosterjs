@@ -1,10 +1,9 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
-import getTagOfNode from '../utils/getTagOfNode';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity } from 'roosterjs-editor-types';
+import { Entity, EntityClasses, NodeType } from 'roosterjs-editor-types';
 
-const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
+const EntityPlaceholderSelector = '.' + EntityClasses.ENTITY_PLACEHOLDER;
 
 /**
  * Create a placeholder comment node for entity
@@ -12,8 +11,9 @@ const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
  * @returns A placeholder comment node as
  */
 export function createEntityPlaceholder(entity: Entity): HTMLElement {
-    const placeholder = entity.wrapper.ownerDocument.createElement(EntityPlaceHolderTagName);
+    const placeholder = entity.wrapper.ownerDocument.createElement('span');
     placeholder.id = entity.id;
+    placeholder.className = EntityClasses.ENTITY_PLACEHOLDER;
 
     return placeholder;
 }
@@ -31,7 +31,8 @@ export function createEntityPlaceholder(entity: Entity): HTMLElement {
  */
 export function moveContentWithEntityPlaceholders(
     root: HTMLDivElement,
-    entities: Record<string, HTMLElement>
+    entities: Record<string, HTMLElement>,
+    clone?: boolean
 ) {
     const entitySelector = getEntitySelector();
     const fragment = root.ownerDocument.createDocumentFragment();
@@ -54,7 +55,13 @@ export function moveContentWithEntityPlaceholders(
                         wrapper.parentNode?.replaceChild(placeholder, wrapper);
                     }
                 });
+
+                if (clone) {
+                    nodeToAppend = child.cloneNode(true /*deep*/);
+                }
             }
+        } else if (clone) {
+            nodeToAppend = child.cloneNode(true /*deep*/);
         }
 
         fragment.appendChild(nodeToAppend);
@@ -73,7 +80,7 @@ export function moveContentWithEntityPlaceholders(
  * @param insertClonedNode When pass true, merge with a cloned copy of the nodes from source fragment rather than the nodes themselves @default false
  */
 export function restoreContentWithEntityPlaceholder(
-    source: DocumentFragment,
+    source: ParentNode,
     target: HTMLElement,
     entities: Record<string, HTMLElement> | null,
     insertClonedNode?: boolean
@@ -99,7 +106,7 @@ export function restoreContentWithEntityPlaceholder(
             target.insertBefore(nodeToInsert, anchor);
 
             if (safeInstanceOf(nodeToInsert, 'HTMLElement')) {
-                nodeToInsert.querySelectorAll(EntityPlaceHolderTagName).forEach(placeholder => {
+                nodeToInsert.querySelectorAll(EntityPlaceholderSelector).forEach(placeholder => {
                     wrapper = entities![placeholder.id];
 
                     if (wrapper) {
@@ -125,7 +132,10 @@ function removeUntil(anchor: ChildNode | null, nodeToStop?: HTMLElement) {
 }
 
 function tryGetIdFromEntityPlaceholder(node: Node): string | null {
-    return getTagOfNode(node) == EntityPlaceHolderTagName ? (<HTMLElement>node).id : null;
+    return node.nodeType == NodeType.Element &&
+        (<HTMLElement>node).className == EntityClasses.ENTITY_PLACEHOLDER
+        ? (<HTMLElement>node).id
+        : null;
 }
 
 function getPlaceholder(entity: Entity, entities: Record<string, HTMLElement>) {

@@ -79,14 +79,15 @@ export default function addSnapshot<T>(
 export function addSnapshotV2(
     snapshots: Snapshots<Snapshot>,
     snapshot: Snapshot,
-    isAutoCompleteSnapshot: boolean
+    isAutoCompleteSnapshot: boolean,
+    force?: boolean
 ) {
     addSnapshot(
         snapshots,
         snapshot,
         isAutoCompleteSnapshot,
         s => s.html?.length || 0,
-        compareSnapshots
+        force ? returnFalse : compareSnapshots
     );
 }
 
@@ -96,4 +97,8 @@ function compareSnapshots(s1: Snapshot, s2: Snapshot) {
 
 function defaultCompare<T>(s1: T, s2: T) {
     return s1 == s2;
+}
+
+function returnFalse() {
+    return false;
 }

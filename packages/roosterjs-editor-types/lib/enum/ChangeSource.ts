@@ -68,4 +68,8 @@ export const enum ChangeSource {
      * Data of this event will be the key code number
      */
     Keyboard = 'Keyboard',
+
+    Undo = 'Undo',
+
+    UndoEntity = 'UndoEntity',
 }

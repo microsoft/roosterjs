@@ -10,6 +10,7 @@ import FormatPainterPlugin from './contentModel/plugins/FormatPainterPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
+import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
@@ -128,6 +129,7 @@ class MainPane extends MainPaneBase {
     private updateContentPlugin: UpdateContentPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
     private formatPainterPlugin: FormatPainterPlugin;
+    private sampleEntityPlugin: SampleEntityPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
 
@@ -150,6 +152,7 @@ class MainPane extends MainPaneBase {
         this.emojiPlugin = createEmojiPlugin();
         this.updateContentPlugin = createUpdateContentPlugin(UpdateMode.OnDispose, this.onUpdate);
         this.formatPainterPlugin = new FormatPainterPlugin();
+        this.sampleEntityPlugin = new SampleEntityPlugin();
         this.mainWindowButtons = getButtons([
             ...AllButtonKeys,
             darkMode,
@@ -437,6 +440,7 @@ class MainPane extends MainPaneBase {
             this.pasteOptionPlugin,
             this.emojiPlugin,
             this.formatPainterPlugin,
+            this.sampleEntityPlugin,
         ];
 
         if (this.state.showSidePane || this.state.popoutWindow) {

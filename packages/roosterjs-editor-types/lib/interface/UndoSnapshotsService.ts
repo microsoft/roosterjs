@@ -20,7 +20,7 @@ export default interface UndoSnapshotsService<T = string> {
      * Add a new undo snapshot
      * @param snapshot The snapshot to add
      */
-    addSnapshot(snapshot: T, isAutoCompleteSnapshot: boolean): void;
+    addSnapshot(snapshot: T, isAutoCompleteSnapshot: boolean, force?: boolean): void;
 
     /**
      * Clear all undo snapshots after the current one

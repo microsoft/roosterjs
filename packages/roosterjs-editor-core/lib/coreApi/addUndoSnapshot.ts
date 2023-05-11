@@ -1,4 +1,8 @@
-import { getSelectionPath, Position } from 'roosterjs-editor-dom';
+import {
+    getSelectionPath,
+    moveContentWithEntityPlaceholders,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -6,6 +10,7 @@ import {
     ContentChangedEvent,
     ContentMetadata,
     EditorCore,
+    EntitySnapshot,
     NodePosition,
     PluginEventType,
     SelectionRangeEx,
@@ -28,7 +33,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
     changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData
+    additionalData?: ContentChangedData,
+    entitySnapshot?: EntitySnapshot
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
@@ -37,7 +43,7 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     if (!isNested) {
         undoState.isNested = true;
 
-        addUndoSnapshotInternal(core, canUndoByBackspace);
+        addUndoSnapshotInternal(core, canUndoByBackspace, entitySnapshot);
     }
 
     try {
@@ -78,19 +84,35 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     }
 };
 
-function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) {
+function addUndoSnapshotInternal(
+    core: EditorCore,
+    canUndoByBackspace: boolean,
+    entitySnapshot?: EntitySnapshot
+) {
     if (!core.lifecycle.shadowEditFragment) {
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
+        const entities: Record<string, HTMLElement> = {};
+        const fragment = moveContentWithEntityPlaceholders(
+            core.contentDiv,
+            entities,
+            true /*clone*/
+        );
+        const div = core.contentDiv.ownerDocument.createElement('div');
+
+        div.appendChild(fragment);
 
         core.undo.snapshotsService.addSnapshot(
             {
-                html: core.contentDiv.innerHTML,
+                html: div.innerHTML,
+                entities,
                 metadata,
                 knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
+                entitySnapshot,
             },
-            canUndoByBackspace
+            canUndoByBackspace,
+            !!entitySnapshot
         );
         core.undo.hasNewContent = false;
     }

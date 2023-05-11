@@ -1,4 +1,12 @@
-import { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
+import { restoreContentWithEntityPlaceholder } from 'roosterjs-editor-dom';
+import { selectContentMetadata } from './utils/selectContentMetadata';
+import {
+    ChangeSource,
+    ColorTransformDirection,
+    EditorCore,
+    PluginEventType,
+    RestoreUndoSnapshot,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -21,11 +29,40 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
     if (snapshot && snapshot.html != null) {
         try {
             core.undo.isRestoring = true;
-            core.api.setContent(
+
+            const { html, entities, metadata, entitySnapshot } = snapshot;
+            const body = new DOMParser().parseFromString(core.trustedHTMLHandler(html), 'text/html')
+                .body;
+
+            restoreContentWithEntityPlaceholder(body, core.contentDiv, entities || {});
+
+            const isDarkMode = core.lifecycle.isDarkMode;
+
+            if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
+                core.api.transformColor(
+                    core,
+                    core.contentDiv,
+                    false /*includeSelf*/,
+                    null /*callback*/,
+                    isDarkMode
+                        ? ColorTransformDirection.LightToDark
+                        : ColorTransformDirection.DarkToLight,
+                    true /*forceTransform*/
+                );
+            }
+
+            if (metadata) {
+                selectContentMetadata(core, metadata);
+            }
+
+            core.api.triggerEvent(
                 core,
-                snapshot.html,
-                true /*triggerContentChangedEvent*/,
-                snapshot.metadata ?? undefined
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    source: entitySnapshot ? ChangeSource.UndoEntity : ChangeSource.Undo,
+                    data: entitySnapshot,
+                },
+                false
             );
 
             const darkColorHandler = core.darkColorHandler;

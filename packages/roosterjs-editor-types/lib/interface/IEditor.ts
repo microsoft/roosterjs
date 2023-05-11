@@ -3,6 +3,7 @@ import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import DarkColorHandler from './DarkColorHandler';
 import DefaultFormat from './DefaultFormat';
+import Entity from './Entity';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
@@ -440,6 +441,13 @@ export default interface IEditor {
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ): void;
+
+    /**
+     * Add undo snapshot for entity
+     * @param entity
+     * @param stateInfo
+     */
+    addUndoSnapshotForEntity(entity: Entity, stateInfo: Object): void;
 
     /**
      * Whether there is an available undo/redo snapshot

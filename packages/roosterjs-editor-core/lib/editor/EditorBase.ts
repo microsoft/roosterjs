@@ -13,6 +13,7 @@ import {
     EditorCore,
     EditorOptions,
     EditorUndoState,
+    Entity,
     ExperimentalFeatures,
     GenericContentEditFeature,
     GetContentMode,
@@ -608,6 +609,17 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             canUndoByBackspace ?? false,
             additionalData
         );
+    }
+
+    public addUndoSnapshotForEntity(entity: Entity, stateInfo: Object): void {
+        const core = this.getCore();
+        const { id, type } = entity;
+
+        core.api.addUndoSnapshot(core, null, null, false, undefined, {
+            id,
+            type,
+            stateInfo,
+        });
     }
 
     /**

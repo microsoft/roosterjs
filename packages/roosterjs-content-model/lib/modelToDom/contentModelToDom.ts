@@ -6,7 +6,6 @@ import { isNodeOfType } from '../domUtils/isNodeOfType';
 import { ModelToDomBlockAndSegmentNode } from '../publicTypes/context/ModelToDomSelectionContext';
 import { ModelToDomContext } from '../publicTypes/context/ModelToDomContext';
 import { ModelToDomOption } from '../publicTypes/IContentModelEditor';
-import { optimize } from './optimizers/optimize';
 import {
     NodePosition,
     NodeType,
@@ -38,8 +37,6 @@ export default function contentModelToDom(
     const modelToDomContext = createModelToDomContext(editorContext, option);
 
     modelToDomContext.modelHandlers.blockGroupChildren(doc, root, model, modelToDomContext);
-
-    optimize(root, 2 /*optimizeLevel*/);
 
     const range = extractSelectionRange(modelToDomContext);
 

@@ -10,6 +10,7 @@ import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
+import { EntitySnapshot } from './Snapshot';
 import { GetContentMode } from '../enum/GetContentMode';
 import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
@@ -97,7 +98,8 @@ export type AddUndoSnapshot = (
     callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
     changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData
+    additionalData?: ContentChangedData,
+    entitySnapshot?: EntitySnapshot
 ) => void;
 
 /**

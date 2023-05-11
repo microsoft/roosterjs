@@ -21,4 +21,9 @@ export const enum EntityClasses {
      * Class name to specify if the entity is readonly
      */
     ENTITY_READONLY_PREFIX = '_EReadonly_',
+
+    /**
+     * Class name to specify a placeholder of entity
+     */
+    ENTITY_PLACEHOLDER = '_EPlaceholder_',
 }
