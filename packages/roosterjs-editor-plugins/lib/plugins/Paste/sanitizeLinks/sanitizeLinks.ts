@@ -24,7 +24,7 @@ function validateLink(link: string, htmlElement: HTMLElement) {
         url = undefined;
     }
 
-    /* whitelist Notes protocol */
+    /* whitelist supported protocols */
     if (url && SUPPORTED_PROTOCOLS.indexOf(url.protocol) > -1) {
         return link;
     }

@@ -33,7 +33,7 @@ describe('sanitizeLinks', () => {
     }
 
     it('sanitize anchor', () => {
-        runTest('<a href="file://text.txt"></a>', '<a></a>');
+        runTest('<a href="/text.txt"></a>', '<a></a>');
     });
 
     it('not sanitize anchor', () => {
