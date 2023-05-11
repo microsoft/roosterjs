@@ -53,6 +53,20 @@ describe('sanitizeLinks', () => {
             '<div><a href="https://microsoft.github.io/"></a></div>'
         );
     });
+
+    it('not sanitize onenote link', () => {
+        runTest(
+            '<div><a href="onenote:https://microsoft.github.io/"></a></div>',
+            '<div><a href="onenote:https://microsoft.github.io/"></a></div>'
+        );
+    });
+
+    it('not sanitize mailto link', () => {
+        runTest(
+            '<div><a href="mailto:email@outlook.com"></a></div>',
+            '<div><a href="mailto:email@outlook.com"></a></div>'
+        );
+    });
 });
 
 function createBeforePasteEventMock(fragment: DocumentFragment) {
