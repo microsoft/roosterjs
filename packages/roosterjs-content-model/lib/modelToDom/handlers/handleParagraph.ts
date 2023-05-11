@@ -62,7 +62,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 context.modelHandlers.segment(doc, container!, segment, context);
             });
 
-            optimize(container, 2 /*optimizeLevel*/);
+            optimize(container);
 
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;
