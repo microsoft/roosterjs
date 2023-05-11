@@ -800,6 +800,42 @@ describe('UndoPlugin', () => {
         expect(canUndoAutoComplete2).not.toHaveBeenCalled();
     });
 
+    it('Handle BeforeKeyboardEditing event', () => {
+        const canMove1 = jasmine.createSpy('canMove');
+        const move1 = jasmine.createSpy('move');
+        const addSnapshot1 = jasmine.createSpy('addSnapshot');
+        const clearRedo1 = jasmine.createSpy('clearRedo');
+        const canUndoAutoComplete1 = jasmine.createSpy('canUndoAutoComplete');
+        const addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+        const plugin = new UndoPlugin({
+            undoMetadataSnapshotService: {
+                canMove: canMove1,
+                move: move1,
+                addSnapshot: addSnapshot1,
+                clearRedo: clearRedo1,
+                canUndoAutoComplete: canUndoAutoComplete1,
+            },
+        });
+
+        const mockedEditor = ({
+            isInIME: () => false,
+            addUndoSnapshot,
+        } as any) as IEditor;
+        (<any>plugin).lastKeyPress = 1;
+
+        plugin.initialize(mockedEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.BeforeKeyboardEditing,
+            rawEvent: {
+                which: Keys.DELETE,
+            } as any,
+        });
+
+        expect((<any>plugin).lastKeyPress).toBe(Keys.DELETE);
+        expect(addSnapshot1).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+    });
+
     it('Handle ContentChanged event with Keyboard source', () => {
         const canMove1 = jasmine.createSpy('canMove');
         const move1 = jasmine.createSpy('move');
@@ -830,9 +866,9 @@ describe('UndoPlugin', () => {
             source: ChangeSource.Keyboard,
         });
 
-        expect((<any>plugin).lastKeyPress).toBe(Keys.DELETE);
+        expect((<any>plugin).lastKeyPress).toBe(1);
         expect(addSnapshot1).not.toHaveBeenCalled();
-        expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
     it('Handle ContentChanged event with Keyboard source and same key code', () => {

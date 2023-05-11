@@ -386,20 +386,22 @@ class MainPane extends MainPaneBase {
         return (
             <div className={styles.editorContainer}>
                 <div style={editorStyles}>
-                    <Rooster
-                        className={styles.editor}
-                        plugins={allPlugins}
-                        defaultFormat={this.state.initState.defaultFormat}
-                        inDarkMode={this.state.isDarkMode}
-                        getDarkColor={getDarkColor}
-                        experimentalFeatures={this.state.initState.experimentalFeatures}
-                        undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
-                        trustedHTMLHandler={trustedHTMLHandler}
-                        zoomScale={this.state.scale}
-                        initialContent={this.content}
-                        editorCreator={this.state.editorCreator}
-                        dir={this.state.isRtl ? 'rtl' : 'ltr'}
-                    />
+                    {this.state.editorCreator && (
+                        <Rooster
+                            className={styles.editor}
+                            plugins={allPlugins}
+                            defaultFormat={this.state.initState.defaultFormat}
+                            inDarkMode={this.state.isDarkMode}
+                            getDarkColor={getDarkColor}
+                            experimentalFeatures={this.state.initState.experimentalFeatures}
+                            undoMetadataSnapshotService={this.snapshotPlugin.getSnapshotService()}
+                            trustedHTMLHandler={trustedHTMLHandler}
+                            zoomScale={this.state.scale}
+                            initialContent={this.content}
+                            editorCreator={this.state.editorCreator}
+                            dir={this.state.isRtl ? 'rtl' : 'ltr'}
+                        />
+                    )}
                 </div>
             </div>
         );
