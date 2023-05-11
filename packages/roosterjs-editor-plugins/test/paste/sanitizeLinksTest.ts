@@ -33,7 +33,7 @@ describe('sanitizeLinks', () => {
     }
 
     it('sanitize anchor', () => {
-        runTest('<a href="/text.txt"></a>', '<a></a>');
+        runTest('<a href="file://text.txt"></a>', '<a></a>');
     });
 
     it('not sanitize anchor', () => {
@@ -51,6 +51,20 @@ describe('sanitizeLinks', () => {
         runTest(
             '<div><a href="https://microsoft.github.io/"></a></div>',
             '<div><a href="https://microsoft.github.io/"></a></div>'
+        );
+    });
+
+    it('not sanitize onenote link', () => {
+        runTest(
+            '<div><a href="onenote:https://microsoft.github.io/"></a></div>',
+            '<div><a href="onenote:https://microsoft.github.io/"></a></div>'
+        );
+    });
+
+    it('not sanitize mailto link', () => {
+        runTest(
+            '<div><a href="mailto:email@outlook.com"></a></div>',
+            '<div><a href="mailto:email@outlook.com"></a></div>'
         );
     });
 });

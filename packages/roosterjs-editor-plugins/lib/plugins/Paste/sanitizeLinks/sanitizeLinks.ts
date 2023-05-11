@@ -1,9 +1,7 @@
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
-const HTTP = 'http:';
-const HTTPS = 'https:';
-const NOTES = 'notes:';
+const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'notes:', 'mailto:', 'onenote:'];
 
 /**
  * @internal
@@ -26,12 +24,8 @@ function validateLink(link: string, htmlElement: HTMLElement) {
         url = undefined;
     }
 
-    if (
-        url &&
-        (url.protocol === HTTP ||
-            url.protocol === HTTPS ||
-            url.protocol === NOTES) /* whitelist Notes protocol */
-    ) {
+    /* whitelist Notes protocol */
+    if (url && SUPPORTED_PROTOCOLS.indexOf(url.protocol) > -1) {
         return link;
     }
     htmlElement.removeAttribute('href');
