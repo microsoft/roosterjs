@@ -8,36 +8,20 @@ describe('optimize', () => {
         spyOn(removeUnnecessarySpan, 'removeUnnecessarySpan');
     });
 
-    it('Optimize Level 0', () => {
+    it('Optimize', () => {
         const div = document.createElement('div');
-        optimize(div, 0);
-
-        expect(mergeNode.mergeNode).not.toHaveBeenCalled();
-        expect(removeUnnecessarySpan.removeUnnecessarySpan).not.toHaveBeenCalled();
-    });
-
-    it('Optimize Level 1', () => {
-        const div = document.createElement('div');
-        optimize(div, 1);
-
-        expect(mergeNode.mergeNode).toHaveBeenCalled();
-        expect(removeUnnecessarySpan.removeUnnecessarySpan).not.toHaveBeenCalled();
-    });
-
-    it('Optimize Level 2', () => {
-        const div = document.createElement('div');
-        optimize(div, 2);
+        optimize(div);
 
         expect(mergeNode.mergeNode).toHaveBeenCalled();
         expect(removeUnnecessarySpan.removeUnnecessarySpan).toHaveBeenCalled();
     });
 
-    it('Recursively optimize Level 2', () => {
+    it('Recursively optimize', () => {
         const div = document.createElement('div');
         const span = document.createElement('span');
         div.appendChild(span);
 
-        optimize(div, 2);
+        optimize(div);
 
         expect(mergeNode.mergeNode).toHaveBeenCalledTimes(2);
         expect(mergeNode.mergeNode).toHaveBeenCalledWith(div);
