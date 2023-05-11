@@ -1,5 +1,6 @@
 import * as mergeNode from '../../../lib/modelToDom/optimizers/mergeNode';
 import * as removeUnnecessarySpan from '../../../lib/modelToDom/optimizers/removeUnnecessarySpan';
+import { commitEntity } from 'roosterjs-editor-dom';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 
 describe('optimize', () => {
@@ -30,5 +31,28 @@ describe('optimize', () => {
         expect(removeUnnecessarySpan.removeUnnecessarySpan).toHaveBeenCalledTimes(2);
         expect(removeUnnecessarySpan.removeUnnecessarySpan).toHaveBeenCalledWith(div);
         expect(removeUnnecessarySpan.removeUnnecessarySpan).toHaveBeenCalledWith(span);
+    });
+});
+
+describe('real optimization', () => {
+    it('Do not optimize entity', () => {
+        const div = document.createElement('div');
+        const span1 = document.createElement('span');
+        const span2 = document.createElement('span');
+        const childSpan = document.createElement('span');
+
+        span1.textContent = 'test1';
+        childSpan.textContent = 'entity';
+        commitEntity(span2, 'test', true);
+
+        span2.appendChild(childSpan);
+        div.appendChild(span1);
+        div.appendChild(span2);
+
+        optimize(div);
+
+        expect(div.outerHTML).toBe(
+            '<div>test1<span class="_Entity _EType_test _EReadonly_1" contenteditable="false"><span>entity</span></span></div>'
+        );
     });
 });
