@@ -180,10 +180,12 @@ describe('Creators', () => {
 
         expect(tableModel).toEqual({
             blockType: 'Table',
-            cells: [[], []],
+            rows: [
+                { format: {}, height: 0, cells: [] },
+                { format: {}, height: 0, cells: [] },
+            ],
             format: {},
             widths: [],
-            heights: [],
             dataset: {},
         });
     });

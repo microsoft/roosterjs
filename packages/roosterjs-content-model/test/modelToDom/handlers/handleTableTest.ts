@@ -1,4 +1,5 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
@@ -12,6 +13,7 @@ describe('handleTable', () => {
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
         context = createModelToDomContext();
+        context.darkColorHandler = new DarkColorHandlerImpl(null!, s => 'darkMock: ' + s);
     });
 
     function runTest(model: ContentModelTable, expectedInnerHTML: string) {
@@ -24,10 +26,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [],
+                rows: [],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -38,10 +39,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[], []],
+                rows: [
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             ''
@@ -52,10 +55,9 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr></tbody></table>'
@@ -70,13 +72,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [tdModel3, tdModel4],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [tdModel3, tdModel4] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -89,10 +90,13 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[tdModel1], [], [tdModel2]],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1] },
+                    { format: {}, height: 0, cells: [] },
+                    { format: {}, height: 0, cells: [tdModel2] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -106,13 +110,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, createTableCell(2, 1, false)],
-                    [tdModel2, tdModel3],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, createTableCell(2, 1, false)] },
+                    { format: {}, height: 0, cells: [tdModel2, tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
@@ -126,13 +129,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [tdModel1, tdModel2],
-                    [createTableCell(1, 2, false), tdModel3],
+                rows: [
+                    { format: {}, height: 0, cells: [tdModel1, tdModel2] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 2, false), tdModel3] },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
@@ -143,13 +145,20 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [createTableCell(1, 1, false), createTableCell(2, 1, false)],
-                    [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 1, false), createTableCell(2, 1, false)],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
@@ -167,26 +176,37 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 2, false),
-                        createTableCell(1, 1, false),
-                        createTableCell(1, 1, false),
-                    ],
-                    [
-                        createTableCell(1, 1, false),
-                        createTableCell(2, 1, false),
-                        createTableCell(1, 2, false),
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 2, false),
+                            createTableCell(1, 1, false),
+                            createTableCell(1, 1, false),
+                        ],
+                    },
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            createTableCell(1, 1, false),
+                            createTableCell(2, 1, false),
+                            createTableCell(1, 2, false),
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody>' +
@@ -201,10 +221,12 @@ describe('handleTable', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, true)], [createTableCell(1, 1, false)]],
+                rows: [
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, true)] },
+                    { format: {}, height: 0, cells: [createTableCell(1, 1, false)] },
+                ],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
@@ -221,10 +243,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             context,
@@ -249,10 +270,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[createTableCell(1, 1, false)]],
+                rows: [{ format: {}, height: 0, cells: [createTableCell(1, 1, false)] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
             },
             context,
@@ -283,10 +303,9 @@ describe('handleTable', () => {
             div,
             {
                 blockType: 'Table',
-                cells: [[cell]],
+                rows: [{ format: {}, height: 0, cells: [cell] }],
                 format: {},
                 widths: [],
-                heights: [],
                 dataset: {},
                 cachedElement: table,
             },
@@ -306,8 +325,8 @@ describe('handleTable', () => {
         const tableCell2 = createTableCell();
         const table = createTable(2);
 
-        table.cells[0].push(tableCell1);
-        table.cells[1].push(tableCell2);
+        table.rows[0].cells.push(tableCell1);
+        table.rows[1].cells.push(tableCell2);
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
@@ -318,12 +337,214 @@ describe('handleTable', () => {
         expect(parent.innerHTML).toBe(
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
-        expect(onNodeCreated).toHaveBeenCalledTimes(3);
+        const tableNode = parent.querySelector('table') as HTMLTableElement;
+
+        expect(onNodeCreated).toHaveBeenCalledTimes(5);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(table);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('table'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(tableCell1);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('th'));
-        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell2);
-        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('td'));
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(tableNode);
+        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(table.rows[0]);
+        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(tableNode.rows[0]);
+        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell1);
+        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('th'));
+        expect(onNodeCreated.calls.argsFor(3)[0]).toBe(table.rows[1]);
+        expect(onNodeCreated.calls.argsFor(3)[1]).toBe(tableNode.rows[1]);
+        expect(onNodeCreated.calls.argsFor(4)[0]).toBe(tableCell2);
+        expect(onNodeCreated.calls.argsFor(4)[1]).toBe(parent.querySelector('td'));
+    });
+
+    it('With cached TABLE element, do not apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+        table.cachedElement = document.createElement('table');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Without cached TABLE element, apply border styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.useBorderBox = true;
+        table.format.borderCollapse = true;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TABLE element, apply margin', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+
+        table.rows[0].cells.push(createTableCell());
+        table.format.marginLeft = 'auto';
+        table.format.marginRight = 'auto';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('With cached TD, do not apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('With cached TD and allow useBorderBox and has metadata, still apply width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+        cell.cachedElement = document.createElement('td');
+        cell.format.useBorderBox = true;
+        table.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table data-editing-info="{}"><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('Without cached TD, apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(
+            [
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
+            ].indexOf(parent.innerHTML) >= 0
+        ).toBeTrue();
+    });
+
+    it('With cached TD, do not apply table cell related styles', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1);
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        cell.format.backgroundColor = 'red';
+        cell.format.textColor = 'blue';
+        cell.format.wordBreak = 'break-all';
+        cell.format.useBorderBox = true;
+        cell.dataset.editingInfo = '{}';
+        cell.cachedElement = document.createElement('td');
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+    });
+
+    it('Block format on TABLE and TD is respected', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {
+            whiteSpace: 'pre',
+            lineHeight: '2',
+            textAlign: 'center',
+            direction: 'rtl',
+        });
+        const cell = createTableCell(false, false, false, {
+            whiteSpace: 'normal',
+            lineHeight: '1',
+            textAlign: 'start',
+            direction: 'ltr',
+        });
+
+        table.rows[0].cells.push(cell);
+        table.widths.push(100);
+        table.rows[0].height = 200;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
+        );
+    });
+
+    it('TR has background color', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {});
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+        table.rows[0].format.backgroundColor = 'red';
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr style="background-color: red;"><td></td></tr></tbody></table>'
+        );
+    });
+
+    it('TR has cached element', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {});
+        const cell = createTableCell();
+        const tr = document.createElement('tr');
+
+        tr.id = 'tr1';
+        table.rows[0].cells.push(cell);
+        table.rows[0].cachedElement = tr;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe('<table><tbody><tr id="tr1"><td></td></tr></tbody></table>');
     });
 });

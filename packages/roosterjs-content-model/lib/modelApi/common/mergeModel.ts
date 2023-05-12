@@ -106,14 +106,14 @@ function mergeTable(
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
-        for (let i = 0; i < newTable.cells.length; i++) {
-            for (let j = 0; j < newTable.cells[i].length; j++) {
-                const newCell = newTable.cells[i][j];
+        for (let i = 0; i < newTable.rows.length; i++) {
+            for (let j = 0; j < newTable.rows[i].cells.length; j++) {
+                const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= table.cells[0].length) {
-                    for (let k = 0; k < table.cells.length; k++) {
-                        const leftCell = table.cells[k]?.[colIndex + j - 1];
-                        table.cells[k][colIndex + j] = createTableCell(
+                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
+                    for (let k = 0; k < table.rows.length; k++) {
+                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
+                        table.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -122,14 +122,18 @@ function mergeTable(
                     }
                 }
 
-                if (j == 0 && rowIndex + i >= table.cells.length) {
-                    if (!table.cells[rowIndex + i]) {
-                        table.cells[rowIndex + i] = [];
+                if (j == 0 && rowIndex + i >= table.rows.length) {
+                    if (!table.rows[rowIndex + i]) {
+                        table.rows[rowIndex + i] = {
+                            cells: [],
+                            format: {},
+                            height: 0,
+                        };
                     }
 
-                    for (let k = 0; k < table.cells[rowIndex].length; k++) {
-                        const aboveCell = table.cells[rowIndex + i - 1]?.[k];
-                        table.cells[rowIndex + i][k] = createTableCell(
+                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
+                        table.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -138,7 +142,7 @@ function mergeTable(
                     }
                 }
 
-                table.cells[rowIndex + i][colIndex + j] = newCell;
+                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
                     addSegment(newCell, createSelectionMarker());

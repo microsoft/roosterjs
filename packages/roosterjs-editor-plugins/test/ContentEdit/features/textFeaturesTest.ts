@@ -520,7 +520,7 @@ describe('Text Features |', () => {
 
                         editor.select(range);
                     },
-                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>'
+                    '<div><p id="p1" style="margin: 0px 0px 15px; text-align: justify; font-family: &quot;Open Sans&quot;, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">Lorem ipsum dolort.</p><p id="p2" style="margin: 0px 0px 15px; text-align: justify; font-family: &quot;Open Sans&quot;, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">Nullam molestie iaculis .</p><br></div>'
                 );
             });
         });

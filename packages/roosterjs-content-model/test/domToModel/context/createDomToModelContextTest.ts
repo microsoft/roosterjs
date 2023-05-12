@@ -12,7 +12,6 @@ import {
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {
         isDarkMode: false,
-        getDarkColor: undefined,
     };
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
@@ -46,6 +45,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -53,7 +53,6 @@ describe('createDomToModelContext', () => {
     it('with content model context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
-            getDarkColor: () => '',
         };
 
         const context = createDomToModelContext(editorContext);
@@ -76,6 +75,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -124,6 +124,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockNode,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -167,6 +168,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockTable,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -204,17 +206,15 @@ describe('createDomToModelContext', () => {
             },
             listFormat,
             selectionRootNode: mockImage,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
 
     it('with base parameters and wrong selection 1', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -227,7 +227,6 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},
@@ -244,17 +243,15 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
 
     it('with base parameters and wrong selection 2', () => {
-        const getDarkColor = () => '';
-
         const context = createDomToModelContext(
             {
                 isDarkMode: true,
-                getDarkColor,
             },
             {
                 selectionRange: {
@@ -269,7 +266,6 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             isDarkMode: true,
-            getDarkColor: getDarkColor,
             isInSelection: false,
             blockFormat: {},
             zoomScaleFormat: {},
@@ -286,6 +282,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             listFormat,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });

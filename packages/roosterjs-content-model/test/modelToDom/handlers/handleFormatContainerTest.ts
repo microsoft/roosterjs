@@ -44,7 +44,7 @@ describe('handleFormatContainer', () => {
         handleFormatContainer(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
+            '<div><blockquote style="margin: 0px;"><div>test</div></blockquote></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -72,7 +72,7 @@ describe('handleFormatContainer', () => {
         const result = handleFormatContainer(document, parent, quote, context, br);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote><br></div>'
+            '<div><blockquote style="margin: 0px;"><div>test</div></blockquote><br></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -102,7 +102,7 @@ describe('handleFormatContainer', () => {
         handleFormatContainer(document, parent, quote, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<blockquote style="margin: 0px;"><div><span>test</span></div></blockquote>'
+            '<blockquote style="margin: 0px;"><div>test</div></blockquote>'
         );
         expect(onNodeCreated).toHaveBeenCalledTimes(3);
         expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);

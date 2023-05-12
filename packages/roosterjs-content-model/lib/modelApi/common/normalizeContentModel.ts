@@ -22,10 +22,10 @@ import { unwrapBlock } from './unwrapBlock';
                 normalizeParagraph(block);
                 break;
             case 'Table':
-                for (let r = 0; r < block.cells.length; r++) {
-                    for (let c = 0; c < block.cells[r].length; c++) {
-                        if (block.cells[r][c]) {
-                            normalizeContentModel(block.cells[r][c]);
+                for (let r = 0; r < block.rows.length; r++) {
+                    for (let c = 0; c < block.rows[r].cells.length; c++) {
+                        if (block.rows[r].cells[c]) {
+                            normalizeContentModel(block.rows[r].cells[c]);
                         }
                     }
                 }

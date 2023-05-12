@@ -39,6 +39,6 @@ export function updateMetadata<T>(
 /**
  * @internal Check if the given model has metadata
  */
-export function hasMetadata<T>(model: ContentModelWithDataset<T>): boolean {
+export function hasMetadata<T>(model: ContentModelWithDataset<T> | HTMLElement): boolean {
     return !!model.dataset[EditingInfoDatasetName];
 }

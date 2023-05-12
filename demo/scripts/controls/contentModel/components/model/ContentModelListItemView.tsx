@@ -1,16 +1,19 @@
 import * as React from 'react';
 import { ContentModelBlockView } from './ContentModelBlockView';
 import { ContentModelView } from '../ContentModelView';
-import { DirectionFormatRenderers } from '../format/formatPart/DirectionFormatRenderers';
+import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { FontFamilyFormatRenderer } from '../format/formatPart/FontFamilyFormatRenderer';
 import { FontSizeFormatRenderer } from '../format/formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
+import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { ListTypeFormatRenderer } from '../format/formatPart/ListTypeFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
+import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
+import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
 import {
@@ -27,12 +30,17 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     ListTypeFormatRenderer,
     ...ListThreadFormatRenderers,
     ...ListMetadataFormatRenderers,
-    ...DirectionFormatRenderers,
+    DirectionFormatRenderer,
+    TextAlignFormatRenderer,
     MarginFormatRenderer,
+    PaddingFormatRenderer,
+    ListStylePositionFormatRenderer,
 ];
 const ListItemFormatRenderers: FormatRenderer<ContentModelListItemFormat>[] = [
-    ...DirectionFormatRenderers,
+    DirectionFormatRenderer,
+    TextAlignFormatRenderer,
     LineHeightFormatRenderer,
+    MarginFormatRenderer,
 ];
 const ListItemFormatHolderRenderers: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,

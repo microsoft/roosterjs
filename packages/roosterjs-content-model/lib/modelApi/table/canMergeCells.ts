@@ -1,10 +1,10 @@
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 
 /**
  * @internal
  */
 export function canMergeCells(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     firstRow: number,
     firstCol: number,
     lastRow: number,
@@ -12,26 +12,27 @@ export function canMergeCells(
 ): boolean {
     const noSpanAbove =
         firstCol == lastCol ||
-        cells[firstRow].every(
+        rows[firstRow].cells.every(
             (cell, colIndex) => colIndex < firstCol || colIndex > lastCol || !cell.spanAbove
         );
     const noSpanLeft =
         firstRow == lastRow ||
-        cells.every(
-            (row, rowIndex) => rowIndex < firstRow || rowIndex > lastRow || !row[firstCol].spanLeft
+        rows.every(
+            (row, rowIndex) =>
+                rowIndex < firstRow || rowIndex > lastRow || !row.cells[firstCol].spanLeft
         );
 
-    const noDifferentBelowSpan = cells[lastRow]
+    const noDifferentBelowSpan = rows[lastRow].cells
         .map((_, colIndex) =>
             colIndex >= firstCol && colIndex <= lastCol
-                ? getBelowSpanCount(cells, lastRow, colIndex)
+                ? getBelowSpanCount(rows, lastRow, colIndex)
                 : -1
         )
         .every((x, _, a) => x < 0 || x == a[firstCol]);
-    const noDifferentRightSpan = cells
+    const noDifferentRightSpan = rows
         .map((_, rowIndex) =>
             rowIndex >= firstRow && rowIndex <= lastRow
-                ? getRightSpanCount(cells, rowIndex, lastCol)
+                ? getRightSpanCount(rows, rowIndex, lastCol)
                 : -1
         )
         .every((x, _, a) => x < 0 || x == a[firstRow]);
@@ -39,11 +40,11 @@ export function canMergeCells(
     return noSpanAbove && noSpanLeft && noDifferentBelowSpan && noDifferentRightSpan;
 }
 
-function getBelowSpanCount(cells: ContentModelTableCell[][], rowIndex: number, colIndex: number) {
+function getBelowSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
     let spanCount = 0;
 
-    for (let row = rowIndex + 1; row < cells.length; row++) {
-        if (cells[row][colIndex]?.spanAbove) {
+    for (let row = rowIndex + 1; row < rows.length; row++) {
+        if (rows[row]?.cells[colIndex]?.spanAbove) {
             spanCount++;
         } else {
             break;
@@ -53,11 +54,11 @@ function getBelowSpanCount(cells: ContentModelTableCell[][], rowIndex: number, c
     return spanCount;
 }
 
-function getRightSpanCount(cells: ContentModelTableCell[][], rowIndex: number, colIndex: number) {
+function getRightSpanCount(rows: ContentModelTableRow[], rowIndex: number, colIndex: number) {
     let spanCount = 0;
 
-    for (let col = colIndex + 1; col < cells[rowIndex]?.length; col++) {
-        if (cells[rowIndex]?.[col]?.spanLeft) {
+    for (let col = colIndex + 1; col < rows[rowIndex]?.cells.length; col++) {
+        if (rows[rowIndex]?.cells[col]?.spanLeft) {
             spanCount++;
         } else {
             break;

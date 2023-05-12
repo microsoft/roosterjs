@@ -1,4 +1,5 @@
 /**
+ * @deprecated
  * Constants string for dataset names used by dark mode
  */
 export const enum DarkModeDatasetNames {

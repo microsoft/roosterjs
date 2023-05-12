@@ -702,7 +702,7 @@ describe('clearModelFormat', () => {
         cell1.isSelected = true;
         cell2.isSelected = true;
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         const blocks: any[] = [];
@@ -722,42 +722,45 @@ describe('clearModelFormat', () => {
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                     },
                     widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {
-                                    useBorderBox: undefined,
-                                    borderTop: '1px solid #ABABAB',
-                                    borderRight: '1px solid #ABABAB',
-                                    borderBottom: '1px solid #ABABAB',
-                                    borderLeft: '1px solid #ABABAB',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: undefined,
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                 },
-                                dataset: {},
-                                blocks: [],
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {
-                                    useBorderBox: undefined,
-                                    borderTop: '1px solid #ABABAB',
-                                    borderRight: '1px solid #ABABAB',
-                                    borderBottom: '1px solid #ABABAB',
-                                    borderLeft: '1px solid #ABABAB',
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {
+                                        useBorderBox: undefined,
+                                        borderTop: '1px solid #ABABAB',
+                                        borderRight: '1px solid #ABABAB',
+                                        borderBottom: '1px solid #ABABAB',
+                                        borderLeft: '1px solid #ABABAB',
+                                    },
+                                    dataset: {},
+                                    blocks: [],
+                                    isSelected: true,
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
                                 },
-                                dataset: {},
-                                blocks: [],
-                                isSelected: true,
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                            },
-                        ],
+                            ],
+                        },
                     ],
                 },
             ],

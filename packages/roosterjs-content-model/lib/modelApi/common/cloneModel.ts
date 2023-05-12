@@ -22,6 +22,7 @@ import type { ContentModelWithDataset } from '../../publicTypes/format/ContentMo
 import type { ContentModelWithFormat } from '../../publicTypes/format/ContentModelWithFormat';
 import type { ContentModelGeneralSegment } from '../../publicTypes/segment/ContentModelGeneralSegment';
 import type { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import type { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 
 /**
  * @internal
@@ -160,6 +161,10 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
         cloneModelWithFormat(paragraph)
     );
 
+    if (paragraph.zeroFontSize) {
+        newParagraph.zeroFontSize = true;
+    }
+
     if (decorator) {
         newParagraph.decorator = Object.assign(
             {
@@ -173,17 +178,29 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
 }
 
 function cloneTable(table: ContentModelTable): ContentModelTable {
-    const { cachedElement, widths, heights, cells } = table;
+    const { cachedElement, widths, rows } = table;
 
     return Object.assign(
         {
             cachedElement,
             widths: Array.from(widths),
-            heights: Array.from(heights),
-            cells: cells.map(row => row.map(cloneTableCell)),
+            rows: rows.map(cloneTableRow),
         },
         cloneBlockBase(table),
         cloneModelWithDataset(table)
+    );
+}
+
+function cloneTableRow(row: ContentModelTableRow): ContentModelTableRow {
+    const { height, cells, cachedElement } = row;
+
+    return Object.assign(
+        {
+            height,
+            cachedElement,
+            cells: cells.map(cloneTableCell),
+        },
+        cloneModelWithFormat(row)
     );
 }
 
@@ -200,12 +217,17 @@ function cloneTableCell(cell: ContentModelTableCell): ContentModelTableCell {
 
 function cloneFormatContainer(container: ContentModelFormatContainer): ContentModelFormatContainer {
     const { tagName, cachedElement } = container;
-
-    return Object.assign(
+    const newContainer: ContentModelFormatContainer = Object.assign(
         { tagName, cachedElement },
         cloneBlockBase(container),
         cloneBlockGroupBase(container)
     );
+
+    if (container.zeroFontSize) {
+        newContainer.zeroFontSize = true;
+    }
+
+    return newContainer;
 }
 
 function cloneListItem(item: ContentModelListItem): ContentModelListItem {

@@ -94,7 +94,6 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {},
                                 dataset: {},
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'SelectionMarker',
@@ -134,7 +133,6 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {},
                                 dataset: {},
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'SelectionMarker',

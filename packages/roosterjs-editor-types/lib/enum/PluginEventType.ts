@@ -121,4 +121,11 @@ export const enum PluginEventType {
      * Editor changed the selection.
      */
     SelectionChanged = 22,
+
+    /**
+     * EXPERIMENTAL FEATURE
+     * Editor content is about to be changed by keyboard event.
+     * This is only used by Content Model editing
+     */
+    BeforeKeyboardEditing = 23,
 }
