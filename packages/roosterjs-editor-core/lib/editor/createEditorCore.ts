@@ -2,14 +2,7 @@ import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlug
 import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { isFeatureEnabled } from './isFeatureEnabled';
-import {
-    CoreCreator,
-    EditorCore,
-    EditorOptions,
-    EditorPlugin,
-    ExperimentalFeatures,
-} from 'roosterjs-editor-types';
+import { CoreCreator, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Create a new instance of Editor Core
@@ -58,12 +51,7 @@ export const createEditorCore: CoreCreator<EditorCore, EditorOptions> = (content
         sizeTransformer: options.sizeTransformer || ((size: number) => size / zoomScale),
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
-        darkColorHandler: isFeatureEnabled(
-            options.experimentalFeatures,
-            ExperimentalFeatures.VariableBasedDarkColor
-        )
-            ? new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor)
-            : undefined,
+        darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
     };
 
     return core;

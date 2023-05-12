@@ -3,6 +3,7 @@ import * as domToContentModel from '../../../lib/domToModel/domToContentModel';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
 import { DomToModelOption } from '../../../lib/publicTypes/IContentModelEditor';
+import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedRange = 'RANGE' as any;
@@ -39,20 +40,24 @@ describe('createContentModel', () => {
     });
 
     it('Not reuse model, no shadow edit', () => {
-        const option: DomToModelOption = {};
+        const option: DomToModelOption = { disableCacheElement: true };
 
         const model = createContentModel(core, option);
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
+            ...option,
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
         });
         expect(model).toBe(mockedModel);
     });
 
     it('Not reuse model, no shadow edit, with default options', () => {
-        const defaultOption = { o: 'OPTION' } as any;
+        const defaultOption = { o: 'OPTION', disableCacheElement: true } as any;
         const option: DomToModelOption = {};
 
         core.defaultDomToModelOptions = defaultOption;
@@ -63,13 +68,16 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
             ...defaultOption,
         });
         expect(model).toBe(mockedModel);
     });
 
     it('Not reuse model, no shadow edit, with default options and additional option', () => {
-        const defaultOption = { o: 'OPTION' } as any;
+        const defaultOption = { o: 'OPTION', disableCacheElement: true } as any;
         const additionalOption = { o: 'OPTION1', o2: 'OPTION2' } as any;
 
         core.defaultDomToModelOptions = defaultOption;
@@ -80,13 +88,17 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
+            ...defaultOption,
             ...additionalOption,
         });
         expect(model).toBe(mockedModel);
     });
 
     it('Reuse model, no cache, no shadow edit', () => {
-        const option: DomToModelOption = {};
+        const option: DomToModelOption = { disableCacheElement: false };
 
         core.reuseModel = true;
         core.cachedModel = undefined;
@@ -97,7 +109,10 @@ describe('createContentModel', () => {
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
             selectionRange: mockedRange,
-            allowCacheElement: true,
+            disableCacheElement: false,
+            processorOverride: {
+                table: tablePreProcessor,
+            },
         });
         expect(model).toBe(mockedModel);
     });

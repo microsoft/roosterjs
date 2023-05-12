@@ -20,7 +20,7 @@ describe('tableProcessor', () => {
             processorOverride: {
                 child: childProcessor,
             },
-            allowCacheElement: true,
+            disableCacheElement: false,
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
@@ -576,7 +576,7 @@ describe('tableProcessor', () => {
             processorOverride: {
                 child: childProcessor,
             },
-            allowCacheElement: true,
+            disableCacheElement: false,
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
