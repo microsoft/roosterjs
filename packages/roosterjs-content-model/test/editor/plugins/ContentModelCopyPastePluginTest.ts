@@ -196,14 +196,22 @@ describe('ContentModelCopyPastePlugin |', () => {
 
         it('Selection not Collapsed and table selection', () => {
             // Arrange
+            const table = document.createElement('table');
+            table.id = 'image';
+            // Arrange
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [new Range()],
                 areAllCollapsed: false,
+                coordinates: {},
+                table,
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.returnValue(selectionRangeExValue);
+            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+                div.appendChild(table);
+                return selectionRangeExValue;
+            });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
@@ -382,14 +390,21 @@ describe('ContentModelCopyPastePlugin |', () => {
 
         it('Selection not Collapsed and table selection', () => {
             // Arrange
+            const table = document.createElement('table');
+            table.id = 'image';
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [new Range()],
                 areAllCollapsed: false,
+                coordinates: {},
+                table,
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.returnValue(selectionRangeExValue);
+            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+                div.appendChild(table);
+                return selectionRangeExValue;
+            });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
