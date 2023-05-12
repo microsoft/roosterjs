@@ -181,6 +181,164 @@ describe('listItemProcessor', () => {
             ],
         });
     });
+
+    it('Move up format from only implicit paragraph to list item', () => {
+        const group = createContentModelDocument();
+        const li = document.createElement('li');
+        li.appendChild(document.createTextNode('test'));
+
+        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.listParent = group;
+        context.listFormat.threadItemCounts = [0];
+        context.blockFormat.lineHeight = '2';
+
+        listItemProcessor(group, li, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {
+                        lineHeight: '2',
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Do not move up format from non-implicit paragraph to list item', () => {
+        const group = createContentModelDocument();
+        const li = document.createElement('li');
+        const div = document.createElement('div');
+
+        div.appendChild(document.createTextNode('test'));
+        li.appendChild(div);
+
+        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.listParent = group;
+        context.listFormat.threadItemCounts = [0];
+        context.blockFormat.lineHeight = '2';
+
+        listItemProcessor(group, li, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            format: { lineHeight: '2' },
+                        },
+                        {
+                            blockType: 'Paragraph',
+                            segments: [],
+                            format: { lineHeight: '2' },
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Parse format on LI element', () => {
+        const group = createContentModelDocument();
+        const li = document.createElement('li');
+
+        li.appendChild(document.createTextNode('test'));
+        li.style.lineHeight = '2';
+
+        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.listParent = group;
+        context.listFormat.threadItemCounts = [0];
+
+        listItemProcessor(group, li, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {},
+                                },
+                            ],
+                            isImplicit: true,
+                            format: {},
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'UL',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: { lineHeight: '2' },
+                },
+            ],
+        });
+    });
 });
 
 describe('listItemProcessor without format handlers', () => {

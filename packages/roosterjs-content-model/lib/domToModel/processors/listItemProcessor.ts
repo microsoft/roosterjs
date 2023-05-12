@@ -41,6 +41,17 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
                 );
 
                 context.elementProcessors.child(listItem, element, context);
+
+                const firstChild = listItem.blocks[0];
+
+                if (
+                    listItem.blocks.length == 1 &&
+                    firstChild.blockType == 'Paragraph' &&
+                    firstChild.isImplicit
+                ) {
+                    Object.assign(listItem.format, firstChild.format);
+                    firstChild.format = {};
+                }
             }
         );
     } else {

@@ -1,5 +1,5 @@
 import { addSegment } from '../common/addSegment';
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { TableSelectionCoordinates } from '../table/getSelectedCells';
 
@@ -7,11 +7,11 @@ import { TableSelectionCoordinates } from '../table/getSelectedCells';
  * @internal
  */
 export function collapseTableSelection(
-    cells: ContentModelTableCell[][],
+    rows: ContentModelTableRow[],
     selection: TableSelectionCoordinates
 ) {
     const { firstCol, firstRow } = selection;
-    const cell = cells[firstRow]?.[firstCol];
+    const cell = rows[firstRow]?.cells[firstCol];
     if (cell) {
         addSegment(cell, createSelectionMarker());
     }

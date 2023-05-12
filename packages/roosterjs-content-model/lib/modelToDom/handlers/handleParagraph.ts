@@ -3,6 +3,7 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -48,6 +49,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 );
             }
 
+            if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
+                container.style.fontSize = '0';
+            }
+
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
                 segment: null,
@@ -56,6 +61,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             paragraph.segments.forEach(segment => {
                 context.modelHandlers.segment(doc, container!, segment, context);
             });
+
+            optimize(container);
 
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;

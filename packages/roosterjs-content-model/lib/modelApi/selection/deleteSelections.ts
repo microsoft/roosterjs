@@ -153,13 +153,15 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
-                const cell = table.cells[rowIndex][colIndex];
+                const row = table.rows[rowIndex];
+                const cell = row.cells[colIndex];
 
                 path = [cell, ...path];
                 paragraph.segments.push(createBr(model.format));
                 cell.blocks = [paragraph];
 
                 delete cell.cachedElement;
+                delete row.cachedElement;
                 context.isChanged = true;
             }
 
@@ -230,6 +232,11 @@ const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
             } else {
                 context.isChanged = deleteBlock(path[0].blocks, block, isForward, onDeleteEntity);
             }
+        } else {
+            // We have nothing to delete, in this case we don't want browser handle it as well.
+            // Because when Backspace on an empty document, it will also delete the only DIV and SPAN element, causes
+            // editor is really empty. We don't want that happen. So the handling should stop here.
+            context.isChanged = true;
         }
     }
 };

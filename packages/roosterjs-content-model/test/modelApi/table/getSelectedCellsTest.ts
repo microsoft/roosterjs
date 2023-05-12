@@ -14,8 +14,8 @@ describe('getSelectedCells', () => {
 
     it('table without selection', () => {
         const table = createTable(2);
-        table.cells[0].push(createTableCell(), createTableCell());
-        table.cells[1].push(createTableCell(), createTableCell());
+        table.rows[0].cells.push(createTableCell(), createTableCell());
+        table.rows[1].cells.push(createTableCell(), createTableCell());
         const selection = getSelectedCells(table);
 
         expect(selection).toBeNull();
@@ -23,11 +23,11 @@ describe('getSelectedCells', () => {
 
     it('table with segment selection', () => {
         const table = createTable(2);
-        table.cells[0].push(createTableCell(), createTableCell());
-        table.cells[1].push(createTableCell(), createTableCell());
+        table.rows[0].cells.push(createTableCell(), createTableCell());
+        table.rows[1].cells.push(createTableCell(), createTableCell());
         const br = createBr();
         br.isSelected = true;
-        addSegment(table.cells[1][1], br);
+        addSegment(table.rows[1].cells[1], br);
 
         const selection = getSelectedCells(table);
 
@@ -41,9 +41,9 @@ describe('getSelectedCells', () => {
 
     it('table with single cell selection', () => {
         const table = createTable(2);
-        table.cells[0].push(createTableCell(), createTableCell());
-        table.cells[1].push(createTableCell(), createTableCell());
-        table.cells[0][1].isSelected = true;
+        table.rows[0].cells.push(createTableCell(), createTableCell());
+        table.rows[1].cells.push(createTableCell(), createTableCell());
+        table.rows[0].cells[1].isSelected = true;
 
         const selection = getSelectedCells(table);
 
@@ -57,10 +57,10 @@ describe('getSelectedCells', () => {
 
     it('table with multi cell selection', () => {
         const table = createTable(2);
-        table.cells[0].push(createTableCell(), createTableCell());
-        table.cells[1].push(createTableCell(), createTableCell());
-        table.cells[0][0].isSelected = true;
-        table.cells[1][1].isSelected = true;
+        table.rows[0].cells.push(createTableCell(), createTableCell());
+        table.rows[1].cells.push(createTableCell(), createTableCell());
+        table.rows[0].cells[0].isSelected = true;
+        table.rows[1].cells[1].isSelected = true;
 
         const selection = getSelectedCells(table);
 

@@ -306,7 +306,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         cell2.isSelected = true;
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         const result = deleteSelection(model);
@@ -351,46 +351,49 @@ describe('deleteSelection - selectionOnly', () => {
                     format: {},
                     dataset: {},
                     widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                blocks: [],
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        format: {},
-                                        isImplicit: false,
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                format: {},
-                                                isSelected: true,
-                                            },
-                                            {
-                                                segmentType: 'Br',
-                                                format: {},
-                                            },
-                                        ],
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                                isSelected: true,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            isImplicit: false,
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    format: {},
+                                                    isSelected: true,
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
                     ],
                 },
             ],
@@ -404,7 +407,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         cell.isSelected = true;
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
         const result = deleteSelection(model);
@@ -900,7 +903,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, { direction: 'forward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -1250,7 +1253,7 @@ describe('deleteSelection - forward', () => {
         const br = createBr();
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         para.segments.push(marker, br);
         model.blocks.push(para, table);
 
@@ -1970,7 +1973,7 @@ describe('deleteSelection - forward', () => {
 
         cell2.isSelected = true;
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         const result = deleteSelection(model, { direction: 'forward' });
@@ -2015,46 +2018,49 @@ describe('deleteSelection - forward', () => {
                     format: {},
                     dataset: {},
                     widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                blocks: [],
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        format: {},
-                                        isImplicit: false,
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                format: {},
-                                                isSelected: true,
-                                            },
-                                            {
-                                                segmentType: 'Br',
-                                                format: {},
-                                            },
-                                        ],
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                                isSelected: true,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            isImplicit: false,
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    format: {},
+                                                    isSelected: true,
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
                     ],
                 },
             ],
@@ -2068,7 +2074,7 @@ describe('deleteSelection - forward', () => {
 
         cell.isSelected = true;
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
         const result = deleteSelection(model, { direction: 'forward' });
@@ -2172,7 +2178,7 @@ describe('deleteSelection - forward', () => {
 
         const result = deleteSelection(model, { direction: 'forward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
 
         expect(result.insertPoint).toEqual({
             marker: marker,
@@ -2481,7 +2487,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, { direction: 'backward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
             marker: {
                 segmentType: 'SelectionMarker',
@@ -2830,7 +2836,7 @@ describe('deleteSelection - backward', () => {
         const br = createBr();
         const table = createTable(1);
 
-        table.cells[0].push(createTableCell());
+        table.rows[0].cells.push(createTableCell());
         para.segments.push(marker, br);
         model.blocks.push(table, para);
 
@@ -3550,7 +3556,7 @@ describe('deleteSelection - backward', () => {
 
         cell2.isSelected = true;
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         const result = deleteSelection(model, { direction: 'backward' });
@@ -3595,46 +3601,49 @@ describe('deleteSelection - backward', () => {
                     format: {},
                     dataset: {},
                     widths: [],
-                    heights: [],
-                    cells: [
-                        [
-                            {
-                                blockGroupType: 'TableCell',
-                                format: {},
-                                dataset: {},
-                                spanAbove: false,
-                                spanLeft: false,
-                                isHeader: false,
-                                blocks: [],
-                            },
-                            {
-                                blockGroupType: 'TableCell',
-                                blocks: [
-                                    {
-                                        blockType: 'Paragraph',
-                                        format: {},
-                                        isImplicit: false,
-                                        segments: [
-                                            {
-                                                segmentType: 'SelectionMarker',
-                                                format: {},
-                                                isSelected: true,
-                                            },
-                                            {
-                                                segmentType: 'Br',
-                                                format: {},
-                                            },
-                                        ],
-                                    },
-                                ],
-                                format: {},
-                                spanLeft: false,
-                                spanAbove: false,
-                                isHeader: false,
-                                dataset: {},
-                                isSelected: true,
-                            },
-                        ],
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    format: {},
+                                    dataset: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    blocks: [],
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            format: {},
+                                            isImplicit: false,
+                                            segments: [
+                                                {
+                                                    segmentType: 'SelectionMarker',
+                                                    format: {},
+                                                    isSelected: true,
+                                                },
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
                     ],
                 },
             ],
@@ -3648,7 +3657,7 @@ describe('deleteSelection - backward', () => {
 
         cell.isSelected = true;
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
         const result = deleteSelection(model, { direction: 'backward' });
@@ -3752,7 +3761,7 @@ describe('deleteSelection - backward', () => {
 
         const result = deleteSelection(model, { direction: 'backward' });
 
-        expect(result.isChanged).toBeFalse();
+        expect(result.isChanged).toBeTrue();
 
         expect(result.insertPoint).toEqual({
             marker: marker,

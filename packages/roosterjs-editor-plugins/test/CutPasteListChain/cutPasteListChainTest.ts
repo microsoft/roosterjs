@@ -1,15 +1,16 @@
 import * as commitListChains from 'roosterjs-editor-api/lib/utils/commitListChains';
 import * as DomTestHelper from 'roosterjs-editor-dom/test/DomTestHelper';
-import { CutPasteListChain } from '../../lib/CutPasteListChain';
-import { Position, VListChain } from 'roosterjs-editor-dom';
 import {
     ClipboardData,
     IEditor,
     Keys,
+    PasteType,
     PluginEvent,
     PluginEventType,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import { CutPasteListChain } from '../../lib/CutPasteListChain';
+import { Position, VListChain } from 'roosterjs-editor-dom';
 
 describe('cutPasteListChain tests', () => {
     let editor: IEditor;
@@ -97,6 +98,7 @@ describe('cutPasteListChain tests', () => {
             htmlBefore: null,
             htmlAfter: null,
             htmlAttributes: {},
+            pasteType: PasteType.Normal,
         };
 
         return pluginEvent;

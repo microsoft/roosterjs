@@ -17,8 +17,8 @@ export default function setTableCellShade(editor: IContentModelEditor, color: st
         if (table) {
             normalizeTable(table);
 
-            table.cells.forEach(row =>
-                row.forEach(cell => {
+            table.rows.forEach(row =>
+                row.cells.forEach(cell => {
                     if (hasSelectionInBlockGroup(cell)) {
                         setTableCellBackgroundColor(cell, color, true /*isColorOverride*/);
                     }

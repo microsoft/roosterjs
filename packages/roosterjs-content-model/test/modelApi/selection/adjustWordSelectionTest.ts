@@ -621,38 +621,41 @@ describe('adjustWordSelection', () => {
                 blocks: [
                     {
                         blockType: 'Table',
-                        cells: [
-                            [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: result,
-                                            format: {},
-                                            isImplicit: true,
+                        rows: [
+                            {
+                                format: {},
+                                height: 22,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: result,
+                                                format: {},
+                                                isImplicit: true,
+                                            },
+                                        ],
+                                        format: {
+                                            borderTop: '1px solid rgb(171, 171, 171)',
+                                            borderRight: '1px solid rgb(171, 171, 171)',
+                                            borderBottom: '1px solid rgb(171, 171, 171)',
+                                            borderLeft: '1px solid rgb(171, 171, 171)',
+                                            useBorderBox: true,
                                         },
-                                    ],
-                                    format: {
-                                        borderTop: '1px solid rgb(171, 171, 171)',
-                                        borderRight: '1px solid rgb(171, 171, 171)',
-                                        borderBottom: '1px solid rgb(171, 171, 171)',
-                                        borderLeft: '1px solid rgb(171, 171, 171)',
-                                        useBorderBox: true,
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
                                     },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
+                                ],
+                            },
                         ],
                         format: {
                             useBorderBox: true,
                             borderCollapse: true,
                         },
                         widths: [120],
-                        heights: [22],
                         dataset: {
                             editingInfo:
                                 '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
@@ -675,38 +678,41 @@ describe('adjustWordSelection', () => {
                 blocks: [
                     {
                         blockType: 'Table',
-                        cells: [
-                            [
-                                {
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        {
-                                            blockType: 'Paragraph',
-                                            segments: result,
-                                            format: {},
-                                            isImplicit: true,
+                        rows: [
+                            {
+                                format: {},
+                                height: 22,
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: result,
+                                                format: {},
+                                                isImplicit: true,
+                                            },
+                                        ],
+                                        format: {
+                                            borderTop: '1px solid rgb(171, 171, 171)',
+                                            borderRight: '1px solid rgb(171, 171, 171)',
+                                            borderBottom: '1px solid rgb(171, 171, 171)',
+                                            borderLeft: '1px solid rgb(171, 171, 171)',
+                                            useBorderBox: true,
                                         },
-                                    ],
-                                    format: {
-                                        borderTop: '1px solid rgb(171, 171, 171)',
-                                        borderRight: '1px solid rgb(171, 171, 171)',
-                                        borderBottom: '1px solid rgb(171, 171, 171)',
-                                        borderLeft: '1px solid rgb(171, 171, 171)',
-                                        useBorderBox: true,
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: {},
                                     },
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: {},
-                                },
-                            ],
+                                ],
+                            },
                         ],
                         format: {
                             useBorderBox: true,
                             borderCollapse: true,
                         },
                         widths: [120],
-                        heights: [22],
                         dataset: {
                             editingInfo:
                                 '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
@@ -773,6 +779,104 @@ describe('adjustWordSelection', () => {
                     emptyBlock,
                 ],
             });
+        });
+    });
+
+    describe('With decorator', () => {
+        it('With link', () => {
+            runTest(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'This is a te',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                                defaultMarker,
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'st',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                },
+                [
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'te',
+                        link: {
+                            dataset: {},
+                            format: { href: 'test' },
+                        },
+                    },
+                    { segmentType: 'SelectionMarker', format: {}, isSelected: true },
+                    {
+                        segmentType: 'Text',
+                        format: {},
+                        text: 'st',
+                        link: { dataset: {}, format: { href: 'test' } },
+                    },
+                ],
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'This is a ',
+                                    format: {},
+                                    link: {
+                                        format: { href: 'test' },
+                                        dataset: {},
+                                    },
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'te',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'st',
+                                    link: {
+                                        dataset: {},
+                                        format: { href: 'test' },
+                                    },
+                                },
+                            ],
+                        },
+                    ],
+                }
+            );
         });
     });
 });

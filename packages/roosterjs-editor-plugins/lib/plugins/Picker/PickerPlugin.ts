@@ -480,6 +480,10 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private tryRemoveNode(event: PluginDomEvent): boolean {
         const searcher = this.editor.getContentSearcherOfCursor(event);
+        if (!searcher) {
+            return false;
+        }
+
         const inlineElementBefore = searcher.getInlineElementBefore();
         const nodeBeforeCursor = inlineElementBefore
             ? inlineElementBefore.getContainerNode()
@@ -488,6 +492,7 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         const inlineElementAfter = searcher.getInlineElementAfter();
 
         if (
+            nodeBeforeCursor &&
             nodeId &&
             nodeId.indexOf(this.pickerOptions.elementIdPrefix) == 0 &&
             (inlineElementAfter == null || !(inlineElementAfter instanceof PartialInlineElement))
@@ -502,10 +507,13 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 } else {
                     this.editor.select(replacementNode, PositionType.After);
                 }
+
+                return true;
             } else {
-                this.editor.deleteNode(nodeBeforeCursor);
+                // Select the node then let browser delete it
+                this.editor.select(nodeBeforeCursor);
+                return false;
             }
-            return true;
         }
         return false;
     }

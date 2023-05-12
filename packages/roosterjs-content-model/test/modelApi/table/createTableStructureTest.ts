@@ -10,22 +10,25 @@ describe('createTableStructure', () => {
 
         expect(doc.blocks[0]).toEqual({
             blockType: 'Table',
-            cells: [
-                [
-                    {
-                        blockGroupType: 'TableCell',
-                        blocks: [],
-                        format: {},
-                        spanAbove: false,
-                        spanLeft: false,
-                        isHeader: false,
-                        dataset: {},
-                    },
-                ],
+            rows: [
+                {
+                    format: {},
+                    height: 0,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            blocks: [],
+                            format: {},
+                            spanAbove: false,
+                            spanLeft: false,
+                            isHeader: false,
+                            dataset: {},
+                        },
+                    ],
+                },
             ],
             format: {},
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -37,7 +40,7 @@ describe('createTableStructure', () => {
 
         const table = doc.blocks[0] as ContentModelTable;
 
-        expect(table.cells.length).toBe(2);
-        expect(table.cells[0].length).toBe(3);
+        expect(table.rows.length).toBe(2);
+        expect(table.rows[0].cells.length).toBe(3);
     });
 });

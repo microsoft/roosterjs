@@ -14,11 +14,11 @@ describe('collapseTableSelection', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell();
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
 
-        collapseTableSelection(table.cells, { firstCol: 0, firstRow: 0, lastCol: 0, lastRow: 0 });
+        collapseTableSelection(table.rows, { firstCol: 0, firstRow: 0, lastCol: 0, lastRow: 0 });
 
-        expect(addSegment.addSegment).toHaveBeenCalledWith(table.cells[0][0], selectionMarker);
+        expect(addSegment.addSegment).toHaveBeenCalledWith(table.rows[0].cells[0], selectionMarker);
     });
 
     it('First cell undefined, do not collapse selection', () => {
@@ -29,9 +29,9 @@ describe('collapseTableSelection', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell();
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
 
-        collapseTableSelection(table.cells, { firstCol: 1, firstRow: 1, lastCol: 0, lastRow: 0 });
+        collapseTableSelection(table.rows, { firstCol: 1, firstRow: 1, lastCol: 0, lastRow: 0 });
 
         expect(createSelectionMarker.createSelectionMarker).not.toHaveBeenCalled();
         expect(addSegment.addSegment).not.toHaveBeenCalled();

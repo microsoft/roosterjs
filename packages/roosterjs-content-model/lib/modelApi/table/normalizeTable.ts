@@ -26,8 +26,8 @@ export function normalizeTable(
     // Make sure all first cells are not spanned
     // Make sure all inner cells are not header
     // Make sure all cells have content and width
-    table.cells.forEach((row, rowIndex) => {
-        row.forEach((cell, colIndex) => {
+    table.rows.forEach((row, rowIndex) => {
+        row.cells.forEach((cell, colIndex) => {
             if (cell.blocks.length == 0) {
                 addSegment(cell, createBr(defaultSegmentFormat));
             }
@@ -47,12 +47,12 @@ export function normalizeTable(
         });
 
         // Make sure table has correct width and height array
-        if (table.heights[rowIndex] === undefined) {
-            table.heights[rowIndex] = MIN_HEIGHT;
+        if (row.height < MIN_HEIGHT) {
+            row.height = MIN_HEIGHT;
         }
     });
 
-    const columns = Math.max(...table.cells.map(row => row.length));
+    const columns = Math.max(...table.rows.map(row => row.cells.length));
 
     for (let i = 0; i < columns; i++) {
         if (table.widths[i] === undefined) {
@@ -62,19 +62,19 @@ export function normalizeTable(
 
     // Move blocks from spanned cell to its main cell if any,
     // and remove rows/columns if all cells in it are spanned
-    const colCount = table.cells[0]?.length || 0;
+    const colCount = table.rows[0]?.cells.length || 0;
 
     for (let colIndex = colCount - 1; colIndex > 0; colIndex--) {
-        table.cells.forEach(row => {
-            const cell = row[colIndex];
-            const leftCell = row[colIndex - 1];
+        table.rows.forEach(row => {
+            const cell = row.cells[colIndex];
+            const leftCell = row.cells[colIndex - 1];
             if (cell && leftCell && cell.spanLeft) {
                 tryMoveBlocks(leftCell, cell);
             }
         });
 
-        if (table.cells.every(row => row[colIndex]?.spanLeft)) {
-            table.cells.forEach(row => row.splice(colIndex, 1));
+        if (table.rows.every(row => row.cells[colIndex]?.spanLeft)) {
+            table.rows.forEach(row => row.cells.splice(colIndex, 1));
             table.widths.splice(
                 colIndex - 1,
                 2,
@@ -83,23 +83,19 @@ export function normalizeTable(
         }
     }
 
-    for (let rowIndex = table.cells.length - 1; rowIndex > 0; rowIndex--) {
-        const row = table.cells[rowIndex];
+    for (let rowIndex = table.rows.length - 1; rowIndex > 0; rowIndex--) {
+        const row = table.rows[rowIndex];
 
-        row.forEach((cell, colIndex) => {
-            const aboveCell = table.cells[rowIndex - 1]?.[colIndex];
+        row.cells.forEach((cell, colIndex) => {
+            const aboveCell = table.rows[rowIndex - 1]?.cells[colIndex];
             if (aboveCell && cell.spanAbove) {
                 tryMoveBlocks(aboveCell, cell);
             }
         });
 
-        if (row.every(cell => cell.spanAbove)) {
-            table.cells.splice(rowIndex, 1);
-            table.heights.splice(
-                rowIndex - 1,
-                2,
-                table.heights[rowIndex - 1] + table.heights[rowIndex]
-            );
+        if (row.cells.every(cell => cell.spanAbove)) {
+            table.rows[rowIndex - 1].height += row.height;
+            table.rows.splice(rowIndex, 1);
         }
     }
 }

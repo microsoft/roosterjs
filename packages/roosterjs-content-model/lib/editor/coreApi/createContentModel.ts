@@ -1,6 +1,7 @@
 import domToContentModel from '../../domToModel/domToContentModel';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DomToModelOption } from '../../publicTypes/IContentModelEditor';
+import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
     CreateContentModel,
@@ -28,13 +29,16 @@ function internalCreateContentModel(
 ) {
     const context: DomToModelOption = {
         selectionRange: core.api.getSelectionRangeEx(core),
-        alwaysNormalizeTable: true,
         ...core.defaultDomToModelOptions,
         ...(option || {}),
+        processorOverride: {
+            table: tablePreProcessor,
+            ...(option?.processorOverride || {}),
+        },
     };
 
-    if (core.reuseModel) {
-        context.allowCacheElement = true;
+    if (!core.reuseModel) {
+        context.disableCacheElement = true;
     }
 
     return domToContentModel(core.contentDiv, core.api.createEditorContext(core), context);
