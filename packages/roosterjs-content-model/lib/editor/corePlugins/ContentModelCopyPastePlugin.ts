@@ -202,7 +202,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
             div.style.color = 'black';
         }
 
-        div.childNodes.forEach(div.removeChild);
+        div.childNodes.forEach(node => div.removeChild(node));
 
         div.style.display = '';
         div.focus();
