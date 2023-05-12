@@ -42,8 +42,6 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
     context.onNodeCreated?.(table, tableNode);
 
-    context.onNodeCreated?.(table, tableNode);
-
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
 
