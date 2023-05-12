@@ -1,4 +1,3 @@
-import ContentModelCopyPastePlugin from './plugins/ContentModelCopyPastePlugin';
 import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
@@ -9,6 +8,7 @@ import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
+import { getContentModelCopyPastePlugin } from './corePlugins/ContentModelCopyPastePlugin';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import {
@@ -40,7 +40,7 @@ export const createContentModelEditorCore: CoreCreator<
         corePluginOverride: {
             ...(options.corePluginOverride || {}),
             typeInContainer: new ContentModelTypeInContainerPlugin(),
-            copyPaste: new ContentModelCopyPastePlugin(options),
+            copyPaste: getContentModelCopyPastePlugin(options),
         },
     };
 

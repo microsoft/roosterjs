@@ -1,8 +1,8 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
-import { cloneModel } from 'roosterjs-content-model/lib/modelApi/common/cloneModel';
+import { cloneModel } from '../../modelApi/common/cloneModel';
 import { deleteSelection } from '../../modelApi/selection/deleteSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { iterateSelections } from 'roosterjs-content-model/lib/modelApi/selection/iterateSelections';
+import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     addRangeToSelection,
     createElement,
@@ -24,6 +24,14 @@ import {
     SelectionRangeTypes,
     SelectionRangeEx,
 } from 'roosterjs-editor-types';
+
+/**
+ * Only for unit test
+ * @returns
+ */
+export function getContentModelCopyPastePlugin(options: EditorOptions) {
+    return new ContentModelCopyPastePlugin(options);
+}
 
 /**
  * @internal
@@ -87,13 +95,13 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
             const selection = this.editor.getSelectionRangeEx();
             if (selection && !selection.areAllCollapsed) {
                 const model = this.editor.createContentModel({
-                    allowCacheElement: false,
+                    disableCacheElement: true,
                 });
 
                 const pasteModel = cloneModel(model);
                 if (selection.type === SelectionRangeTypes.TableSelection) {
                     iterateSelections([pasteModel], (path, tableContext) => {
-                        if (tableContext) {
+                        if (tableContext?.table) {
                             const table = tableContext?.table;
                             table.rows = table.rows
                                 .map(row => {

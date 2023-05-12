@@ -1,4 +1,4 @@
-import * as ContentModelCopyPastePlugin from '../../lib/editor/plugins/ContentModelCopyPastePlugin';
+import * as ContentModelCopyPastePluginFile from '../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
@@ -17,10 +17,16 @@ describe('createContentModelEditorCore', () => {
     let mockedCore: any;
     let contentDiv: any;
 
+    let copyPastePlugin = 'copyPastePlugin' as any;
+
     beforeEach(() => {
         contentDiv = {
             style: {},
         } as any;
+
+        spyOn(ContentModelCopyPastePluginFile, 'getContentModelCopyPastePlugin').and.returnValue(
+            copyPastePlugin
+        );
 
         mockedCore = {
             lifecycle: {
@@ -48,6 +54,7 @@ describe('createContentModelEditorCore', () => {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -103,6 +110,7 @@ describe('createContentModelEditorCore', () => {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
 
@@ -164,6 +172,7 @@ describe('createContentModelEditorCore', () => {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -224,6 +233,7 @@ describe('createContentModelEditorCore', () => {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -278,6 +288,7 @@ describe('createContentModelEditorCore', () => {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -326,10 +337,16 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
     let mockedCore: any;
     let contentDiv: any;
 
+    let copyPastePlugin = 'copyPastePlugin' as any;
+
     beforeEach(() => {
         contentDiv = {
             style: {},
         } as any;
+
+        spyOn(ContentModelCopyPastePluginFile, 'getContentModelCopyPastePlugin').and.returnValue(
+            copyPastePlugin
+        );
 
         mockedCore = {
             lifecycle: {
@@ -352,11 +369,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
     it('No additional option', () => {
         const options = {};
         const core = createContentModelEditorCore(contentDiv, options);
-
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -415,6 +432,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
 
@@ -479,6 +497,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -539,6 +558,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -599,6 +619,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
@@ -658,6 +679,7 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
             },
         });
         expect(core).toEqual({
