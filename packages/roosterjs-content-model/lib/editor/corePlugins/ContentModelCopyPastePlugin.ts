@@ -108,7 +108,6 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         return false;
                     });
                 }
-
                 const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
                 const selectionAfterPaste = contentModelToDom(
                     tempDiv.ownerDocument,
