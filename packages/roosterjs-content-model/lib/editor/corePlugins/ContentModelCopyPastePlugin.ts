@@ -1,6 +1,8 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
+import { cloneModel } from 'roosterjs-content-model/lib/modelApi/common/cloneModel';
 import { deleteSelection } from '../../modelApi/selection/deleteSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { iterateSelections } from 'roosterjs-content-model/lib/modelApi/selection/iterateSelections';
 import {
     addRangeToSelection,
     createElement,
@@ -18,8 +20,9 @@ import {
     PluginEventType,
     PluginWithState,
     KnownCreateElementDataIndex,
-    PositionType,
     ClipboardData,
+    SelectionRangeTypes,
+    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 
 /**
@@ -87,25 +90,35 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     allowCacheElement: false,
                 });
 
-                deleteSelection(model);
+                const pasteModel = cloneModel(model);
+                if (selection.type === SelectionRangeTypes.TableSelection) {
+                    iterateSelections([pasteModel], (path, tableContext) => {
+                        if (tableContext) {
+                            const table = tableContext?.table;
+                            table.rows = table.rows.map(row => {
+                                return {
+                                    ...row,
+                                    cells: row.cells.filter(cell => cell.isSelected),
+                                };
+                            });
+                            return true;
+                        }
+                        return false;
+                    });
+                }
 
                 const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
                 const selectionAfterPaste = contentModelToDom(
                     tempDiv.ownerDocument,
                     tempDiv,
-                    copyCutModel,
+                    pasteModel,
                     {
                         isDarkMode: this.editor.isDarkMode(),
                         darkColorHandler: this.editor.getDarkColorHandler(),
                     }
                 );
 
-                let newRange: Range = createRange(
-                    tempDiv,
-                    PositionType.Begin,
-                    tempDiv,
-                    PositionType.End
-                );
+                let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
                 if (newRange) {
                     const cutCopyEvent = this.editor.triggerPluginEvent(
                         PluginEventType.BeforeCutCopy,
@@ -129,6 +142,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         }
                         if (isCut) {
                             editor.addUndoSnapshot(() => {
+                                deleteSelection(model);
                                 this.editor?.setContentModel(model);
                             }, ChangeSource.Cut);
                         }
@@ -203,4 +217,27 @@ function removeContentForAndroid(editor: IContentModelEditor) {
         deleteSelection(model);
         editor.setContentModel(model);
     }
+}
+function selectionExToRange(
+    selection: SelectionRangeEx | null,
+    tempDiv: HTMLDivElement
+): Range | null {
+    if (!selection) {
+        return null;
+    }
+    let newRange: Range | null = null;
+    if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
+        const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
+        newRange = createRange(table);
+    } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+        const image = tempDiv.querySelector('#' + selection.image.id);
+
+        if (image) {
+            newRange = createRange(image);
+        }
+    } else {
+        newRange = selection.ranges[0];
+    }
+
+    return newRange;
 }
