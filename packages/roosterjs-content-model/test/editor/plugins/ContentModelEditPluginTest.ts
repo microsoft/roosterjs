@@ -2,7 +2,6 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
-import { EntityOperation, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
 import {
