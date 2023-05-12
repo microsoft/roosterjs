@@ -64,9 +64,9 @@ module.exports = function (config) {
         autoWatch: true,
 
         // to avoid DISCONNECTED messages
-        browserDisconnectTimeout: 10000, // default 2000
+        browserDisconnectTimeout: 100000, // default 2000
         browserDisconnectTolerance: 1, // default 0
-        browserNoActivityTimeout: 60000, //default 10000
+        browserNoActivityTimeout: 600000, //default 10000
 
         singleRun: true,
         captureTimeout: 60000,

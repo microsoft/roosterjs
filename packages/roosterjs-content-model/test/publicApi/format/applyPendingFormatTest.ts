@@ -47,7 +47,7 @@ describe('applyPendingFormat', () => {
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
-            return false;
+            return undefined;
         });
 
         applyPendingFormat(editor, 'c');
@@ -116,7 +116,7 @@ describe('applyPendingFormat', () => {
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
-            return false;
+            return undefined;
         });
 
         applyPendingFormat(editor, 'd');
@@ -176,7 +176,7 @@ describe('applyPendingFormat', () => {
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
-            return false;
+            return undefined;
         });
 
         applyPendingFormat(editor, 'd');
@@ -234,7 +234,7 @@ describe('applyPendingFormat', () => {
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
-            return false;
+            return undefined;
         });
 
         applyPendingFormat(editor, 'd');
@@ -279,7 +279,7 @@ describe('applyPendingFormat', () => {
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
-            return false;
+            return undefined;
         });
 
         applyPendingFormat(editor, 't');

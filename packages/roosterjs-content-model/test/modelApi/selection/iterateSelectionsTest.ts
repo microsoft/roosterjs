@@ -82,11 +82,43 @@ describe('iterateSelections', () => {
         group.blocks.push(para1);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        const result = iterateSelections([group], callback, {
+            returnSelectedContent: true,
+        });
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
         expect(callback).toHaveBeenCalledWith([group], undefined, para2, [text2]);
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                Object({
+                    blockType: 'Paragraph',
+                    segments: [
+                        Object({
+                            segmentType: 'Text',
+                            text: 'text1',
+                            format: Object({}),
+                            isSelected: true,
+                        }),
+                    ],
+                    format: Object({}),
+                }),
+                Object({
+                    blockType: 'Paragraph',
+                    segments: [
+                        Object({
+                            segmentType: 'Text',
+                            text: 'text2',
+                            format: Object({}),
+                            isSelected: true,
+                        }),
+                    ],
+                    format: Object({}),
+                }),
+            ],
+            format: {},
+        });
     });
 
     it('Group with selection inside list', () => {
@@ -107,13 +139,46 @@ describe('iterateSelections', () => {
         group.blocks.push(listItem);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        const result = iterateSelections([group], callback, {
+            returnSelectedContent: true,
+        });
 
         expect(callback).toHaveBeenCalledTimes(2);
         expect(callback).toHaveBeenCalledWith([listItem, group], undefined, para1, [text1]);
         expect(callback).toHaveBeenCalledWith([listItem, group], undefined, undefined, [
             listItem.formatHolder,
         ]);
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                Object({
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        Object({
+                            blockType: 'Paragraph',
+                            segments: [
+                                Object({
+                                    segmentType: 'Text',
+                                    text: 'text1',
+                                    format: Object({}),
+                                    isSelected: true,
+                                }),
+                            ],
+                            format: Object({}),
+                        }),
+                    ],
+                    levels: [],
+                    formatHolder: Object({
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: Object({}),
+                    }),
+                    format: Object({}),
+                }),
+            ],
+            format: {},
+        });
     });
 
     it('Group with selection inside quote', () => {
@@ -134,10 +199,39 @@ describe('iterateSelections', () => {
         group.blocks.push(quote);
         group.blocks.push(para2);
 
-        iterateSelections([group], callback);
+        const result = iterateSelections([group], callback, {
+            returnSelectedContent: true,
+        });
 
         expect(callback).toHaveBeenCalledTimes(1);
         expect(callback).toHaveBeenCalledWith([quote, group], undefined, para1, [text1]);
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                Object({
+                    blockGroupType: 'FormatContainer',
+                    blockType: 'BlockGroup',
+                    format: Object({}),
+                    tagName: Object({}),
+                    zeroFontSize: undefined,
+                    blocks: [
+                        Object({
+                            blockType: 'Paragraph',
+                            segments: [
+                                Object({
+                                    segmentType: 'Text',
+                                    text: 'text1',
+                                    format: Object({}),
+                                    isSelected: true,
+                                }),
+                            ],
+                            format: Object({}),
+                        }),
+                    ],
+                }),
+            ],
+            format: {},
+        });
     });
 
     it('Group with selection inside table', () => {
@@ -1402,6 +1496,54 @@ describe('iterateSelections', () => {
                 { blockType: 'Divider', tagName: 'hr', format: {}, isSelected: true },
                 { blockType: 'Divider', tagName: 'hr', format: {}, cachedElement: cache },
             ],
+        });
+    });
+});
+
+describe('iterateSelections return selected content', () => {
+    let callback: jasmine.Spy<IterateSelectionsCallback>;
+
+    beforeEach(() => {
+        callback = jasmine.createSpy<IterateSelectionsCallback>();
+    });
+
+    it('Group with single selection', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const text1 = createText('text1');
+        const text2 = createText('text2');
+
+        text1.isSelected = true;
+
+        para1.segments.push(text1);
+        para2.segments.push(text2);
+        group.blocks.push(para1);
+        group.blocks.push(para2);
+
+        const result = iterateSelections([group], callback, {
+            returnSelectedContent: true,
+        });
+
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith([group], undefined, para1, [text1]);
+        expect(result).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'text1',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
         });
     });
 });

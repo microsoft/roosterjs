@@ -1,8 +1,18 @@
+import { addBlock } from '../common/addBlock';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockWithCache } from '../../publicTypes/block/ContentModelBlockWithCache';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
+import { createContentModelDocument } from '../creators/createContentModelDocument';
+import { createListItem } from '../creators/createListItem';
+import { createParagraph } from '../creators/createParagraph';
+import { createTable } from '../creators/createTable';
+import { createTableCell } from '../creators/createTableCell';
+import {
+    ContentModelFormatContainer,
+    ContentModelGeneralBlock,
+} from 'roosterjs-content-model/lib/publicTypes';
 
 /**
  * @internal
@@ -46,6 +56,8 @@ export interface IterateSelectionsOption {
      * @default allSegments
      */
     includeListFormatHolder?: 'anySegment' | 'allSegments' | 'never';
+
+    returnSelectedContent?: boolean;
 }
 
 /**
@@ -59,9 +71,14 @@ export type IterateSelectionsCallback = (
     segments?: ContentModelSegment[]
 ) => void | boolean;
 
+interface SelectedModelContext {
+    current: ContentModelBlockGroup;
+    root: ContentModelBlockGroup;
+}
+
 /**
  * @internal
- * @returns True to stop iterating, otherwise keep going
+ * @returns if returnSelectedContent option is enabled, returns the selected model, else undefined
  */
 export function iterateSelections(
     path: ContentModelBlockGroup[],
@@ -80,7 +97,25 @@ export function iterateSelections(
         return callback(path, tableContext, block, segments);
     };
 
-    internalIterateSelections(path, internalCallback, option, table, treatAllAsSelect);
+    const doc = option?.returnSelectedContent
+        ? createContentModelDocument(path[0].format || {})
+        : undefined;
+
+    internalIterateSelections(
+        path,
+        internalCallback,
+        option,
+        table,
+        treatAllAsSelect,
+        doc
+            ? {
+                  root: doc,
+                  current: doc,
+              }
+            : undefined
+    );
+
+    return doc;
 }
 
 function internalIterateSelections(
@@ -88,7 +123,8 @@ function internalIterateSelections(
     callback: IterateSelectionsCallback,
     option?: IterateSelectionsOption,
     table?: TableSelectionContext,
-    treatAllAsSelect?: boolean
+    treatAllAsSelect?: boolean,
+    selectedModel?: SelectedModelContext
 ): boolean {
     const parent = path[0];
     const includeListFormatHolder = option?.includeListFormatHolder || 'allSegments';
@@ -105,6 +141,31 @@ function internalIterateSelections(
         switch (block.blockType) {
             case 'BlockGroup':
                 const newPath = [block, ...path];
+                const selectedBlock = selectedModel
+                    ? {
+                          current:
+                              block.blockGroupType == 'FormatContainer'
+                                  ? (Object.assign({
+                                        blockGroupType: block.blockGroupType,
+                                        blockType: block.blockType,
+                                        format: block.format,
+                                        tagName: block.format,
+                                        zeroFontSize: block.zeroFontSize,
+                                        blocks: [],
+                                    }) as ContentModelFormatContainer)
+                                  : block.blockGroupType == 'General'
+                                  ? (Object.assign({
+                                        blockGroupType: block.blockGroupType,
+                                        blockType: block.blockType,
+                                        format: block.format,
+                                        blocks: [],
+                                        element: block.element,
+                                        isSelected: block.isSelected,
+                                    }) as ContentModelGeneralBlock)
+                                  : createListItem(block.levels, block.format),
+                          root: selectedModel.root,
+                      }
+                    : undefined;
 
                 if (block.blockGroupType == 'General') {
                     const isSelected = treatAllAsSelect || block.isSelected;
@@ -125,16 +186,31 @@ function internalIterateSelections(
                                 callback,
                                 option,
                                 table,
-                                isSelected
+                                isSelected,
+                                selectedBlock
                             )) ||
                         (handleGeneralElement && callback(path, table, block))
                     ) {
                         return true;
                     }
-                } else if (
-                    internalIterateSelections(newPath, callback, option, table, treatAllAsSelect)
-                ) {
-                    return true;
+                } else {
+                    const shouldStopIterating = internalIterateSelections(
+                        newPath,
+                        callback,
+                        option,
+                        table,
+                        treatAllAsSelect,
+                        selectedBlock
+                    );
+
+                    if (selectedBlock?.current && selectedBlock?.current?.blocks.length > 0) {
+                        selectedModel?.current.blocks.push(selectedBlock?.current);
+                        console.log(selectedBlock.current);
+                    }
+
+                    if (shouldStopIterating) {
+                        return true;
+                    }
                 }
                 break;
 
@@ -143,8 +219,11 @@ function internalIterateSelections(
                 const isWholeTableSelected = rows.every(row =>
                     row.cells.every(cell => cell.isSelected)
                 );
+                const haveCellSelected = rows.some(row => row.cells.some(cell => cell.isSelected));
 
+                const selectedTable = createTable(block.rows.length, block.format);
                 if (contentUnderSelectedTableCell != 'include' && isWholeTableSelected) {
+                    selectedModel && addBlock(selectedModel.current, block);
                     if (callback(path, table, block)) {
                         return true;
                     }
@@ -157,6 +236,7 @@ function internalIterateSelections(
                             if (!cell) {
                                 continue;
                             }
+                            let wasHandled = false;
 
                             const newTable: TableSelectionContext = {
                                 table: block,
@@ -165,9 +245,20 @@ function internalIterateSelections(
                                 isWholeTableSelected,
                             };
 
-                            if (cell.isSelected && callback(path, newTable)) {
-                                return true;
+                            if (cell.isSelected) {
+                                selectedTable.rows[rowIndex].cells.push(cell);
+                                wasHandled = true;
+                                if (callback(path, newTable)) {
+                                    return true;
+                                }
                             }
+
+                            const selectedCell = createTableCell(
+                                cell.spanLeft,
+                                cell.spanAbove,
+                                cell.isHeader,
+                                cell.format
+                            );
 
                             if (
                                 !cell.isSelected ||
@@ -176,30 +267,63 @@ function internalIterateSelections(
                                 const newPath = [cell, ...path];
                                 const isSelected = treatAllAsSelect || cell.isSelected;
 
-                                if (
-                                    internalIterateSelections(
-                                        newPath,
-                                        callback,
-                                        option,
-                                        newTable,
-                                        isSelected
-                                    )
-                                ) {
+                                const stopIterating = internalIterateSelections(
+                                    newPath,
+                                    callback,
+                                    option,
+                                    newTable,
+                                    isSelected,
+                                    selectedModel
+                                        ? {
+                                              root: selectedModel.root,
+                                              current: selectedCell,
+                                          }
+                                        : undefined
+                                );
+
+                                if (selectedCell.blocks.length > 0 && !wasHandled) {
+                                    if (
+                                        !haveCellSelected &&
+                                        selectedModel &&
+                                        !blockContainsSelection(parent.blocks[i + 1])
+                                    ) {
+                                        selectedCell.blocks.forEach(b => {
+                                            addBlock(selectedModel.root, b);
+                                        });
+                                    } else {
+                                        selectedTable.rows[rowIndex].cells.push(selectedCell);
+                                    }
+                                }
+
+                                if (stopIterating) {
                                     return true;
                                 }
                             }
                         }
                     }
                 }
+                if (
+                    selectedTable &&
+                    selectedModel &&
+                    (haveCellSelected || blockContainsSelection(parent.blocks[i + 1]))
+                ) {
+                    addBlock(selectedModel.current, selectedTable);
+                }
 
                 break;
 
             case 'Paragraph':
                 const segments: ContentModelSegment[] = [];
+                const selectedPara = createParagraph(
+                    block.isImplicit,
+                    block.format,
+                    block.decorator
+                );
 
                 for (let i = 0; i < block.segments.length; i++) {
                     const segment = block.segments[i];
                     const isSelected = treatAllAsSelect || segment.isSelected;
+                    selectedPara.segments.push(segment);
 
                     if (segment.segmentType == 'General') {
                         const handleGeneralContent =
@@ -239,15 +363,24 @@ function internalIterateSelections(
                     }
                 }
 
-                if (segments.length > 0 && callback(path, table, block, segments)) {
-                    return true;
+                if (segments.length > 0) {
+                    selectedPara.segments = segments;
+                    selectedModel && addBlock(selectedModel.current, selectedPara);
+
+                    if (callback(path, table, block, segments)) {
+                        return true;
+                    }
                 }
                 break;
 
             case 'Divider':
             case 'Entity':
-                if ((treatAllAsSelect || block.isSelected) && callback(path, table, block)) {
-                    return true;
+                if (treatAllAsSelect || block.isSelected) {
+                    selectedModel && addBlock(selectedModel.current, block);
+
+                    if (callback(path, table, block)) {
+                        return true;
+                    }
                 }
 
                 break;
@@ -266,4 +399,18 @@ function internalIterateSelections(
     }
 
     return false;
+}
+function blockContainsSelection(arg0: ContentModelBlock): boolean {
+    let haveSelection = false;
+
+    if (arg0?.blockType == 'BlockGroup') {
+        iterateSelections([arg0 as ContentModelBlockGroup], () => {
+            haveSelection = true;
+            return true; //stopIterating
+        });
+    } else if (arg0?.blockType == 'Paragraph') {
+        haveSelection = arg0.segments.some(seg => seg.isSelected);
+    }
+
+    return haveSelection;
 }

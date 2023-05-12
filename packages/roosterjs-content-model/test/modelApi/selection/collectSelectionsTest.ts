@@ -41,7 +41,7 @@ describe('getSelectedSegments', () => {
                 callback(path, tableContext, block, segments);
             });
 
-            return false;
+            return undefined;
         });
 
         const result = getSelectedSegments(null!, includingFormatHolder);
@@ -193,7 +193,7 @@ describe('getSelectedParagraphs', () => {
                 callback(path, tableContext, block, segments);
             });
 
-            return false;
+            return undefined;
         });
 
         const result = getSelectedParagraphs(null!);
@@ -358,7 +358,7 @@ describe('getFirstSelectedTable', () => {
                 callback(path, tableContext, block, segments);
             });
 
-            return false;
+            return undefined;
         });
 
         const result = getFirstSelectedTable(null!);
@@ -613,7 +613,7 @@ describe('getOperationalBlocks', () => {
                 callback(path, tableContext, block, segments);
             });
 
-            return false;
+            return undefined;
         });
 
         const result = getOperationalBlocks(null!, blockGroupTypes, stopTypes, deepFirst);
