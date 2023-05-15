@@ -8,7 +8,6 @@ const {
     packagesPath,
     deployPath,
     roosterJsDistPath,
-    mainPackageJson,
     packagesUiPath,
     roosterJsUiDistPath,
     runWebPack,
@@ -35,6 +34,11 @@ async function buildDemoSite() {
                 {
                     test: /\.tsx?$/,
                     loader: 'ts-loader',
+                    options: {
+                        compilerOptions: {
+                            downlevelIteration: true,
+                        },
+                    },
                 },
                 {
                     test: /\.svg$/,

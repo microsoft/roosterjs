@@ -320,7 +320,7 @@ function deleteSegment(
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
             } else {
-                text = isForward ? text.substring(1) : text.substring(0, text.length - 1);
+                text = deleteSingleCharacter(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
                     text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
@@ -345,6 +345,42 @@ function deleteSegment(
                 return false;
             }
     }
+}
+
+function deleteSingleCharacter(text: string, deleteFirst: boolean) {
+    // In case of emoji that occupies multiple characters, we need to delete the whole emoji
+    const array = [...text];
+    let deleteLength = 0;
+
+    for (
+        let i = deleteFirst ? 0 : array.length - 1,
+            deleteState: 'notDeleted' | 'waiting' | 'done' = 'notDeleted';
+        i >= 0 && i < array.length && deleteState != 'done';
+        i += deleteFirst ? 1 : -1
+    ) {
+        switch (array[i]) {
+            case '\u200D': // ZERO WIDTH JOINER
+            case '\u20E3': // COMBINING ENCLOSING KEYCAP
+            case '\uFE0E': // VARIATION SELECTOR-15
+            case '\uFE0F': // VARIATION SELECTOR-16
+                deleteState = 'notDeleted';
+                deleteLength++;
+                break;
+
+            default:
+                if (deleteState == 'notDeleted') {
+                    deleteState = 'waiting';
+                    deleteLength++;
+                } else if (deleteState == 'waiting') {
+                    deleteState = 'done';
+                }
+                break;
+        }
+    }
+
+    array.splice(deleteFirst ? 0 : array.length - deleteLength, deleteLength);
+
+    return array.join('');
 }
 
 function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex: number) {

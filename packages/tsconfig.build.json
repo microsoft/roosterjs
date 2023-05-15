@@ -9,6 +9,7 @@
         "noImplicitAny": true,
         "preserveConstEnums": false,
         "noUnusedLocals": true,
+        "downlevelIteration": true,
         "baseUrl": ".",
         "paths": {
             "*": ["*"]
