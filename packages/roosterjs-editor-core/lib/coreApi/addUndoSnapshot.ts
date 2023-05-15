@@ -1,9 +1,5 @@
-import {
-    getEntityFromElement,
-    getEntitySelector,
-    getSelectionPath,
-    Position,
-} from 'roosterjs-editor-dom';
+import { EntityState } from 'roosterjs-editor-types';
+import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
     ChangeSource,
@@ -11,7 +7,6 @@ import {
     ContentChangedEvent,
     ContentMetadata,
     EditorCore,
-    EntitySnapshot,
     NodePosition,
     PluginEventType,
     SelectionRangeEx,
@@ -28,15 +23,13 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
  * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
- * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
     callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
     changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData,
-    entitySnapshot?: EntitySnapshot
+    additionalData?: ContentChangedData
 ) => {
     const undoState = core.undo;
     const isNested = undoState.isNested;
@@ -45,7 +38,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     if (!isNested) {
         undoState.isNested = true;
 
-        addUndoSnapshotInternal(core, canUndoByBackspace, entitySnapshot);
+        // When there is getEntityState, it means this is triggered by an entity change.
+        // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
+        if (core.undo.hasNewContent || !additionalData?.getEntityState || !callback) {
+            addUndoSnapshotInternal(core, canUndoByBackspace, additionalData?.getEntityState?.());
+        }
     }
 
     try {
@@ -57,7 +54,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
             );
 
             if (!isNested) {
-                addUndoSnapshotInternal(core, false /*isAutoCompleteSnapshot*/);
+                const entityStates = additionalData?.getEntityState?.();
+                addUndoSnapshotInternal(core, false /*isAutoCompleteSnapshot*/, entityStates);
             }
         }
     } finally {
@@ -89,29 +87,19 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 function addUndoSnapshotInternal(
     core: EditorCore,
     canUndoByBackspace: boolean,
-    entitySnapshot?: EntitySnapshot
+    entityStates?: EntityState[]
 ) {
     if (!core.lifecycle.shadowEditFragment) {
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
-        const entities: Record<string, HTMLElement> = {};
-
-        core.contentDiv.querySelectorAll(getEntitySelector()).forEach(wrapper => {
-            const entity = getEntityFromElement(wrapper as HTMLElement);
-
-            if (entity) {
-                entities[entity.id] = entity.wrapper;
-            }
-        });
 
         core.undo.snapshotsService.addSnapshot(
             {
                 html: core.contentDiv.innerHTML,
                 metadata,
                 knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
-                entities,
-                entitySnapshot,
+                entityStates,
             },
             canUndoByBackspace
         );

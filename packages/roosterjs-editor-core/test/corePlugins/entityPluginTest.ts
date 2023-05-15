@@ -50,6 +50,7 @@ describe('EntityPlugin', () => {
         expect(state).toEqual({
             knownEntityElements: [],
             shadowEntityCache: {},
+            entities: {},
         });
     });
 
@@ -434,6 +435,7 @@ describe('Shadow DOM Entity', () => {
         expect(state).toEqual({
             knownEntityElements: [],
             shadowEntityCache: {},
+            entities: {},
         });
 
         plugin.initialize(editor);

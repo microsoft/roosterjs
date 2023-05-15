@@ -10,7 +10,6 @@ import { ChangeSource } from '../enum/ChangeSource';
 import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentMetadata } from './ContentMetadata';
 import { DOMEventHandler } from '../type/domEventHandler';
-import { EntitySnapshot } from './Snapshot';
 import { GetContentMode } from '../enum/GetContentMode';
 import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
 import { InsertOption } from './InsertOption';
@@ -91,16 +90,14 @@ export default interface EditorCore extends PluginState {
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
- * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
+ * @param additionalData Optional parameter to provide additional data related to the ContentChanged Event.
  */
 export type AddUndoSnapshot = (
     core: EditorCore,
     callback: ((start: NodePosition | null, end: NodePosition | null) => any) | null,
     changeSource: ChangeSource | CompatibleChangeSource | string | null,
     canUndoByBackspace: boolean,
-    additionalData?: ContentChangedData,
-    entitySnapshot?: EntitySnapshot
+    additionalData?: ContentChangedData
 ) => void;
 
 /**
@@ -253,17 +250,12 @@ export type SelectRange = (core: EditorCore, range: Range, skipSameRange?: boole
  * @param core The EditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
- * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
- * If not passed, we will treat content as in light mode without selection
- * @param entities @optional A map of entities related to the content that will be put into editor.
- * If not passed, we will not do entity replacement
  */
 export type SetContent = (
     core: EditorCore,
     content: string,
     triggerContentChangedEvent: boolean,
-    metadata?: ContentMetadata,
-    entities?: Record<string, HTMLElement>
+    metadata?: ContentMetadata
 ) => void;
 
 /**
@@ -338,9 +330,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
      * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
-     * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
-     * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
-     * @param entitySnapshot @optional snapshot for entity. This is normally passed from IEditor.addEntitySnapshot() from a plugin that handles entity state
+     * @param canUndoByBackspace True if this action can be undone when user presses Backspace key (aka Auto Complete).
      */
     addUndoSnapshot: AddUndoSnapshot;
 
@@ -467,10 +457,6 @@ export interface CoreApiMap {
      * @param core The EditorCore object
      * @param content HTML content to set in
      * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
-     * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
-     * If not passed, we will treat content as in light mode without selection
-     * @param entities @optional A map of entities related to the content that will be put into editor.
-     * If not passed, we will not do entity replacement
      */
     setContent: SetContent;
 

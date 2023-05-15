@@ -13,7 +13,6 @@ import {
     EditorCore,
     EditorOptions,
     EditorUndoState,
-    Entity,
     ExperimentalFeatures,
     GenericContentEditFeature,
     GetContentMode,
@@ -609,20 +608,6 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             canUndoByBackspace ?? false,
             additionalData
         );
-    }
-
-    /**
-     * Add undo snapshot for entity. This is normally triggered by a plugin that handles entity state.
-     * @param entity The entity that the state belong to
-     * @param state The state of this entity to store into undo snapshot
-     */
-    public addEntityUndoSnapshot(entity: Entity, state: Object): void {
-        const core = this.getCore();
-
-        core.api.addUndoSnapshot(core, null, null, false, undefined, {
-            entity,
-            state,
-        });
     }
 
     /**

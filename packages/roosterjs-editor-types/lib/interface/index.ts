@@ -41,7 +41,7 @@ export {
     ImageContentMetadata,
     ContentMetadata,
 } from './ContentMetadata';
-export { default as Snapshot, EntitySnapshot } from './Snapshot';
+export { default as Snapshot, EntityState } from './Snapshot';
 export { default as TableFormat } from './TableFormat';
 export { TableCellMetadataFormat } from './TableCellMetadataFormat';
 export { default as TableSelection } from './TableSelection';

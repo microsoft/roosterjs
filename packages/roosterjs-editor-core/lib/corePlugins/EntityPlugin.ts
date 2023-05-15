@@ -73,6 +73,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         this.state = {
             knownEntityElements: [],
             shadowEntityCache: {},
+            entities: {},
         };
     }
 
@@ -253,9 +254,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
 
         // 2. collect all new entities
-        const knownIds = this.state.knownEntityElements
-            .map(e => getEntityFromElement(e)?.id)
-            .filter((x): x is string => !!x);
         const newEntities =
             event?.source == ChangeSource.InsertEntity && event.data
                 ? [event.data as Entity]
@@ -265,7 +263,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         newEntities.forEach(entity => {
             const { wrapper, type, id, isReadonly } = entity;
 
-            entity.id = this.ensureUniqueId(type, id, knownIds);
+            entity.id = this.ensureUniqueId(type, id, wrapper);
             commitEntity(wrapper, type, isReadonly, entity.id); // Use entity.id here because it is newly updated
             this.handleNewEntity(entity);
         });
@@ -358,6 +356,8 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             moveChildNodes(fragment, cache.shadowRoot);
         }
 
+        this.state.entities[entity.id] = entity.wrapper;
+
         this.triggerEvent(wrapper, EntityOperation.NewEntity, undefined /*rawEvent*/, fragment);
 
         // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
@@ -412,7 +412,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         });
     }
 
-    private ensureUniqueId(type: string, id: string, knownIds: string[]) {
+    private ensureUniqueId(type: string, id: string, wrapper: HTMLElement) {
         const match = ENTITY_ID_REGEX.exec(id);
         const baseId = (match ? id.substr(0, id.length - match[0].length) : id) || type;
 
@@ -422,8 +422,10 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         for (let num = (match && parseInt(match[1])) || 0; ; num++) {
             newId = num > 0 ? `${baseId}_${num}` : baseId;
 
-            if (knownIds.indexOf(newId) < 0) {
-                knownIds.push(newId);
+            const existingEntry = this.state.entities[newId];
+
+            if (!existingEntry || existingEntry == wrapper) {
+                this.state.entities[newId] = wrapper;
                 break;
             }
         }

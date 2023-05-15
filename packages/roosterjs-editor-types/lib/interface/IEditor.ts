@@ -3,7 +3,6 @@ import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import DarkColorHandler from './DarkColorHandler';
 import DefaultFormat from './DefaultFormat';
-import Entity from './Entity';
 import IContentTraverser from './IContentTraverser';
 import IPositionContentSearcher from './IPositionContentSearcher';
 import NodePosition from './NodePosition';
@@ -441,13 +440,6 @@ export default interface IEditor {
         canUndoByBackspace?: boolean,
         additionalData?: ContentChangedData
     ): void;
-
-    /**
-     * Add undo snapshot for entity. This is normally triggered by a plugin that handles entity state.
-     * @param entity The entity that the state belong to
-     * @param state The state of this entity to store into undo snapshot
-     */
-    addEntityUndoSnapshot(entity: Entity, state: Object): void;
 
     /**
      * Whether there is an available undo/redo snapshot

@@ -19,4 +19,9 @@ export default interface EntityPluginState {
      * before it is gone, then after that we can use the cached content to rehydrate entity
      */
     shadowEntityCache: Record<string, HTMLElement>;
+
+    /**
+     * Entities cached for undo snapshot
+     */
+    entities: Record<string, HTMLElement>;
 }

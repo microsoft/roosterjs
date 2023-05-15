@@ -28,7 +28,7 @@ export interface EntityOperationEventData {
      * For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
      * For other operation types, it is not used
      */
-    entityState?: Object;
+    state?: Object;
 
     /**
      * A document fragment for entity based on Shadow DOM. This property is only available for NewEntity operation.

@@ -43,10 +43,19 @@ export default class SampleEntityPlugin implements EditorPlugin {
             event.rawEvent.ctrlKey
         ) {
             const entityNode = this.createEntity();
+            let entity: Entity | undefined;
 
-            this.editor.addUndoSnapshot(() => {
-                insertEntity(this.editor, EntityType, entityNode, true, true);
-            });
+            this.editor.addUndoSnapshot(
+                () => {
+                    entity = insertEntity(this.editor, EntityType, entityNode, true, true);
+                },
+                undefined /*changeSource*/,
+                false /*canUndoByBackspace*/,
+                {
+                    getEntityState: () => this.getEntityStates(entity),
+                }
+            );
+
             event.rawEvent.preventDefault();
         } else if (
             event.eventType == PluginEventType.EntityOperation &&
@@ -86,8 +95,8 @@ export default class SampleEntityPlugin implements EditorPlugin {
                     break;
 
                 case EntityOperation.UpdateEntityState:
-                    if (event.entityState) {
-                        setMetadata(event.entity.wrapper, event.entityState as EntityMetadata);
+                    if (event.state) {
+                        setMetadata(event.entity.wrapper, event.state as EntityMetadata);
                         this.updateEntity(event.entity);
                     }
 
@@ -125,8 +134,28 @@ export default class SampleEntityPlugin implements EditorPlugin {
         const entity = getEntityFromElement(wrapper);
 
         if (entity) {
-            this.updateEntity(entity, 1);
-            this.editor.addEntityUndoSnapshot(entity, getMetadata<EntityMetadata>(entity.wrapper));
+            this.editor.addUndoSnapshot(
+                () => {
+                    this.updateEntity(entity, 1);
+                },
+                undefined /*changeSource*/,
+                false /*canUndoByBackspace*/,
+                {
+                    getEntityState: () => this.getEntityStates(entity),
+                }
+            );
         }
     };
+
+    private getEntityStates(entity: Entity | undefined) {
+        return entity
+            ? [
+                  {
+                      id: entity.id,
+                      type: entity.type,
+                      state: getMetadata<EntityMetadata>(entity.wrapper),
+                  },
+              ]
+            : undefined;
+    }
 }

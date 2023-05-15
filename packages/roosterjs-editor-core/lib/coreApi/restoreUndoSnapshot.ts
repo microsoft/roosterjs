@@ -1,3 +1,4 @@
+import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     EntityOperation,
@@ -25,38 +26,45 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
 
     if (snapshot && snapshot.html != null) {
         try {
-            const { html, metadata, entities, entitySnapshot } = snapshot;
+            const { html, metadata, entityStates, knownColors } = snapshot;
             core.undo.isRestoring = true;
             core.api.setContent(
                 core,
                 html,
                 true /*triggerContentChangedEvent*/,
-                metadata ?? undefined,
-                entities
+                metadata ?? undefined
             );
-
-            if (entitySnapshot) {
-                core.api.triggerEvent(
-                    core,
-                    {
-                        eventType: PluginEventType.EntityOperation,
-                        operation: EntityOperation.UpdateEntityState,
-                        entity: entitySnapshot.entity,
-                        entityState: entitySnapshot.state,
-                    },
-                    false
-                );
-            }
 
             const darkColorHandler = core.darkColorHandler;
             const isDarkModel = core.lifecycle.isDarkMode;
 
-            snapshot.knownColors.forEach(color => {
+            knownColors.forEach(color => {
                 darkColorHandler.registerColor(
                     color.lightModeColor,
                     isDarkModel,
                     color.darkModeColor
                 );
+            });
+
+            entityStates?.forEach(entityState => {
+                const { type, id, state } = entityState;
+                const wrapper = core.contentDiv.querySelector(
+                    getEntitySelector(type, id)
+                ) as HTMLElement;
+                const entity = wrapper && getEntityFromElement(wrapper);
+
+                if (entity) {
+                    core.api.triggerEvent(
+                        core,
+                        {
+                            eventType: PluginEventType.EntityOperation,
+                            operation: EntityOperation.UpdateEntityState,
+                            entity: entity,
+                            state,
+                        },
+                        false
+                    );
+                }
             });
         } finally {
             core.undo.isRestoring = false;

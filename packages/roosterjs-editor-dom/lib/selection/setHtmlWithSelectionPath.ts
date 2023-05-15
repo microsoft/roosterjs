@@ -89,7 +89,7 @@ export function setHtmlWithMetadata(
     html = html || '';
     html = trustedHTMLHandler?.(html) || html;
 
-    if (entities) {
+    if (entities && Object.keys(entities).length > 0) {
         const body = new DOMParser().parseFromString(html, 'text/html').body;
 
         restoreContentWithEntityPlaceholder(body, rootNode, entities);

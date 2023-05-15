@@ -1,15 +1,19 @@
-import Entity from './Entity';
 import ModeIndependentColor from './ModeIndependentColor';
 import { ContentMetadata } from './ContentMetadata';
 
 /**
- * Snapshot for an entity state. This is used for storing entity undo snapshot
+ * State for an entity. This is used for storing entity undo snapshot
  */
-export interface EntitySnapshot {
+export interface EntityState {
     /**
-     * The entity that the snapshot for
+     * Type of the entity
      */
-    entity: Entity;
+    type: string;
+
+    /**
+     * Id of the entity
+     */
+    id: string;
 
     /**
      * The state of this entity to store into undo snapshot
@@ -37,12 +41,8 @@ export default interface Snapshot {
     knownColors: Readonly<ModeIndependentColor>[];
 
     /**
-     * Entity map, from entity id to its DOM wrapper element, to allow reusing existing DOM element when undo/redo
+     * Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
+     * an EntityOperation event with operation = EntityOperation.UpdateEntityState
      */
-    entities?: Record<string, HTMLElement>;
-
-    /**
-     * Undo snapshot for an entity. This is added by IEditor.addEntityUndoSnapshot()
-     */
-    entitySnapshot?: EntitySnapshot;
+    entityStates?: EntityState[];
 }

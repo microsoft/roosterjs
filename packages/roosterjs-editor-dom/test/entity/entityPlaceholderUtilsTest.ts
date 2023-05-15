@@ -63,7 +63,7 @@ describe('moveContentWithEntityPlaceholders', () => {
         resultDiv.appendChild(fragment);
 
         expect(div.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
-        expect(resultDiv.innerHTML).toBe('<entity-placeholder id="a"></entity-placeholder>');
+        expect(resultDiv.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
         expect(entities).toEqual({
             a: div.firstChild as HTMLElement,
         });
@@ -99,7 +99,7 @@ describe('moveContentWithEntityPlaceholders', () => {
             '<div class="_Entity _EType_a _EId_a"></div><div class="_Entity _EType_b _EId_b"></div>'
         );
         expect(resultDiv.innerHTML).toBe(
-            'test1<entity-placeholder id="a"></entity-placeholder><div id="node3"></div><entity-placeholder id="b"></entity-placeholder><div>test5</div>'
+            'test1<div class="_Entity _EType_a _EId_a"></div><div id="node3"></div><div class="_Entity _EType_b _EId_b"></div><div>test5</div>'
         );
         expect(entities).toEqual({
             a: node2,
@@ -136,7 +136,7 @@ describe('moveContentWithEntityPlaceholders', () => {
 
         expect(div.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
         expect(resultDiv.innerHTML).toBe(
-            'test1<entity-placeholder id="a"></entity-placeholder><div id="node3"><entity-placeholder id="b"></entity-placeholder></div><div>test5</div>'
+            'test1<div class="_Entity _EType_a _EId_a"></div><div id="node3"><div class="_Entity _EType_b _EId_b"></div></div><div>test5</div>'
         );
         expect(entities).toEqual({
             a: node2,

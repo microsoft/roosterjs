@@ -74,6 +74,7 @@ describe('Editor', () => {
         expect(core.entity).toEqual({
             knownEntityElements: [],
             shadowEntityCache: {},
+            entities: {},
         });
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeFalse();
@@ -184,6 +185,7 @@ describe('Editor', () => {
         expect(core.entity).toEqual({
             knownEntityElements: [],
             shadowEntityCache: {},
+            entities: {},
         });
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeTrue();
