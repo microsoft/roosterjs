@@ -394,7 +394,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, false /* selectImage */);
+        // this.setEditingImage(null, false /* selectImage */);
     };
     /**
      * Create editing wrapper for the image
@@ -679,7 +679,7 @@ function handleRadIndexCalculator(angleRad: number): number {
     return idx < 0 ? idx + DIRECTIONS : idx;
 }
 
-function rotateHandles(y: string, x: string, angleRad: number): string {
+function rotateHandles(angleRad: number, y: string = '', x: string = ''): string {
     const radIndex = handleRadIndexCalculator(angleRad);
     const originalDirection = y + x;
     const originalIndex = DirectionOrder.indexOf(originalDirection);
@@ -696,9 +696,7 @@ function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
     handles.map(handle => {
         const y = handle.dataset.y;
         const x = handle.dataset.x;
-        if (y && x) {
-            handle.style.cursor = `${rotateHandles(y, x, angleRad)}-resize`;
-        }
+        handle.style.cursor = `${rotateHandles(angleRad, y, x)}-resize`;
     });
 }
 
