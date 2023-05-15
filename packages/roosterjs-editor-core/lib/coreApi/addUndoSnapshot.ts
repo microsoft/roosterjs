@@ -113,8 +113,7 @@ function addUndoSnapshotInternal(
                 entities,
                 entitySnapshot,
             },
-            canUndoByBackspace,
-            !!entitySnapshot /*force*/
+            canUndoByBackspace
         );
         core.undo.hasNewContent = false;
     }

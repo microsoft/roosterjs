@@ -34,11 +34,11 @@ export default class UndoSnapshots implements UndoSnapshotsService<Snapshot> {
         return result;
     }
 
-    public addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean, force?: boolean) {
+    public addSnapshot(snapshot: Snapshot, isAutoCompleteSnapshot: boolean) {
         if (this.hijackUndoSnapshotCallback) {
             this.hijackUndoSnapshotCallback(snapshot);
         } else {
-            addSnapshotV2(this.snapshots, snapshot, isAutoCompleteSnapshot, force);
+            addSnapshotV2(this.snapshots, snapshot, isAutoCompleteSnapshot);
             this.onChange();
         }
     }

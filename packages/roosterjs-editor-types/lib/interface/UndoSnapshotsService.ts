@@ -19,11 +19,8 @@ export default interface UndoSnapshotsService<T = string> {
     /**
      * Add a new undo snapshot
      * @param snapshot The snapshot to add
-     * @param isAutoCompleteSnapshot Pass true if this undo snapshot can be undone using Backspace key (auto complete)
-     * @param force @optional Pass true to bypass the content check so even the html content is not changed, we will still add an undo snapshot.
-     * By default there will be a check and ignore undo snapshot whose html is identical with the previous one
      */
-    addSnapshot(snapshot: T, isAutoCompleteSnapshot: boolean, force?: boolean): void;
+    addSnapshot(snapshot: T, isAutoCompleteSnapshot: boolean): void;
 
     /**
      * Clear all undo snapshots after the current one

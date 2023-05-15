@@ -17,6 +17,10 @@ import {
  * @param core The EditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+ * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
+ * If not passed, we will treat content as in light mode without selection
+ * @param entities @optional A map of entities related to the content that will be put into editor.
+ * If not passed, we will not do entity replacement
  */
 export const setContent: SetContent = (
     core: EditorCore,

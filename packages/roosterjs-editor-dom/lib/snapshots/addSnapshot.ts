@@ -40,7 +40,9 @@ export default function addSnapshot<T>(
     compare = compare || defaultCompare;
 
     const currentSnapshot = snapshots.snapshots[snapshots.currentIndex];
-    if (snapshots.currentIndex < 0 || !currentSnapshot || !compare(snapshot, currentSnapshot)) {
+    const isSameSnapshot = compare(currentSnapshot, snapshot);
+
+    if (snapshots.currentIndex < 0 || !currentSnapshot || !isSameSnapshot) {
         clearProceedingSnapshots(snapshots, getLength);
         snapshots.snapshots.push(snapshot);
         snapshots.currentIndex++;
@@ -64,7 +66,7 @@ export default function addSnapshot<T>(
         if (isAutoCompleteSnapshot) {
             snapshots.autoCompleteIndex = snapshots.currentIndex;
         }
-    } else if (currentSnapshot && compare(snapshot, currentSnapshot)) {
+    } else if (currentSnapshot && isSameSnapshot) {
         // replace the currentSnapshot, to update other data such as metadata
         snapshots.snapshots.splice(snapshots.currentIndex, 1, snapshot);
     }
@@ -75,32 +77,25 @@ export default function addSnapshot<T>(
  * @param snapshots The snapshots data structure to add new snapshot into
  * @param snapshot The snapshot object to add
  * @param isAutoCompleteSnapshot Whether this is a snapshot before auto complete action
- * @param force @optional Pass true to bypass the content check so even the html content is not changed, we will still add an undo snapshot.
- * By default there will be a check and ignore undo snapshot whose html is identical with the previous one
  */
 export function addSnapshotV2(
     snapshots: Snapshots<Snapshot>,
     snapshot: Snapshot,
-    isAutoCompleteSnapshot: boolean,
-    force?: boolean
+    isAutoCompleteSnapshot: boolean
 ) {
     addSnapshot(
         snapshots,
         snapshot,
         isAutoCompleteSnapshot,
         s => s.html?.length || 0,
-        force ? returnFalse : compareSnapshots
+        compareSnapshots
     );
 }
 
 function compareSnapshots(s1: Snapshot, s2: Snapshot) {
-    return s1.html == s2.html;
+    return s1 && s1.html == s2.html && !s2.entitySnapshot;
 }
 
 function defaultCompare<T>(s1: T, s2: T) {
     return s1 == s2;
-}
-
-function returnFalse() {
-    return false;
 }
