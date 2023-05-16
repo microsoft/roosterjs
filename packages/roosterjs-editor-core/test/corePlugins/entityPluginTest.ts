@@ -742,6 +742,8 @@ describe('Shadow DOM Entity', () => {
         commitEntity.default(entity3, 'TEST', false, 'Test');
         commitEntity.default(entity4, 'TEST', false, 'Test_2');
         state.knownEntityElements.push(entity1);
+        state.entities.Test = entity1;
+
         plugin.initialize(editor);
         plugin.onPluginEvent({
             eventType: PluginEventType.ContentChanged,

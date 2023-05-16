@@ -113,6 +113,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     dispose() {
         this.editor = null;
         this.state.knownEntityElements = [];
+        this.state.entities = {};
     }
 
     /**

@@ -187,9 +187,9 @@ describe('restoreContentWithEntityPlaceholder', () => {
 
         const div1 = document.createElement('div');
         const div2 = document.createElement('div');
-        const placeholder = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder = document.createElement('span');
 
-        placeholder.id = 'entity1';
+        placeholder.className = '_Entity _EType_Test _EId_entity1';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -222,9 +222,9 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div2 = document.createElement('div');
         const div3 = document.createElement('div');
         const div4 = document.createElement('div');
-        const placeholder = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder = document.createElement('span');
 
-        placeholder.id = 'entity1';
+        placeholder.className = '_Entity _EType_Test _EId_entity1';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -260,11 +260,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div3.id = 'id3';
@@ -307,11 +307,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div3 = document.createElement('div');
         const div4 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -355,11 +355,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -405,11 +405,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
