@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>0/11</span>
+                <span class='fraction'>11/11</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/2</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">30% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/10</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -114,26 +114,26 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -158,27 +158,27 @@ import {
 const NoCycleCursorMove: BuildInEditFeature&lt;PluginKeyboardEvent&gt; = {
     keys: [Keys.LEFT, Keys.RIGHT],
     allowFunctionKeys: true,
-    shouldHandleEvent: <span class="fstat-no" title="function not covered" >(e</span>vent, editor, ctrlOrMeta) =&gt; {
-        let range: Range | null = <span class="cstat-no" title="statement not covered" >null;</span>
+    shouldHandleEvent: (event, editor, ctrlOrMeta) =&gt; {
+        let range: Range | null = null;
         let position: Position;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        if (</span>
+        if (
             !ctrlOrMeta ||
             !(range = editor.getSelectionRange()) ||
             !range.collapsed ||
             !(position = Position.getStart(range)) ||
             !editor.isPositionAtBeginning(position)
         ) {
-<span class="cstat-no" title="statement not covered" >            return false;</span>
+            return false;
         }
 &nbsp;
-        let rtl = <span class="cstat-no" title="statement not covered" >getComputedStyle(position.element, 'direction') == 'rtl';</span>
-        let rawEvent = <span class="cstat-no" title="statement not covered" >event.rawEvent;</span>
+        let rtl = getComputedStyle(position.element, 'direction') == 'rtl';
+        let rawEvent = event.rawEvent;
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        return (!rtl &amp;&amp; rawEvent.which == Keys.LEFT) || (rtl &amp;&amp; rawEvent.which == Keys.RIGHT);</span>
+        return (!rtl &amp;&amp; rawEvent.which == Keys.LEFT) || (rtl &amp;&amp; rawEvent.which == Keys.RIGHT);
     },
-    handleEvent: <span class="fstat-no" title="function not covered" >event </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >        event.rawEvent.preventDefault();</span>
+    handleEvent: event =&gt; {
+        event.rawEvent.preventDefault();
     },
     defaultDisabled: !Browser.isChrome,
 };
@@ -199,7 +199,7 @@ export const CursorFeatures: Record&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 11 2023 22:55:07 GMT+0000 (Coordinated Universal Time)
+                at Tue May 16 2023 21:56:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
