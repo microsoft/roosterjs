@@ -1,4 +1,4 @@
-import * as deleteSelection from '../../../lib/modelApi/selection/deleteSelections';
+import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelections';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import handleDeleteKey from '../../../lib/publicApi/editing/handleDeleteKey';
