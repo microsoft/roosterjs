@@ -4,6 +4,7 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getMetadata,
+    moveChildNodes,
     setMetadata,
 } from 'roosterjs-editor-dom';
 import {
@@ -63,34 +64,16 @@ export default class SampleEntityPlugin implements EditorPlugin {
         ) {
             switch (event.operation) {
                 case EntityOperation.NewEntity:
-                    {
-                        if (!event.entity.wrapper.querySelector('button')) {
-                            const button = document.createElement('button');
+                    this.dehydrate(event.entity);
+                    this.hydrate(event.entity);
 
-                            event.entity.wrapper.appendChild(button);
-                            button.textContent = 'Test entity';
-                            button.addEventListener('click', this.onClickEntity);
-                        }
-
-                        this.updateEntity(event.entity);
-                    }
                     break;
 
                 case EntityOperation.RemoveFromEnd:
                 case EntityOperation.RemoveFromStart:
                 case EntityOperation.Overwrite:
-                    {
-                        const button = event.entity.wrapper.querySelector('button');
-                        button.removeEventListener('click', this.onClickEntity);
-                    }
-                    break;
-
                 case EntityOperation.ReplaceTemporaryContent:
-                    {
-                        const button = event.entity.wrapper.querySelector('button');
-
-                        event.entity.wrapper.removeChild(button);
-                    }
+                    this.dehydrate(event.entity);
 
                     break;
 
@@ -102,6 +85,31 @@ export default class SampleEntityPlugin implements EditorPlugin {
 
                     break;
             }
+        }
+    }
+
+    private hydrate(entity: Entity) {
+        const containerDiv = entity.wrapper.querySelector('div');
+
+        const span = document.createElement('span');
+        const button = document.createElement('button');
+
+        containerDiv.appendChild(span);
+        containerDiv.appendChild(button);
+
+        button.textContent = 'Test entity';
+        button.addEventListener('click', this.onClickEntity);
+
+        this.updateEntity(entity);
+    }
+
+    private dehydrate(entity: Entity) {
+        const containerDiv = entity.wrapper.querySelector('div');
+        const button = containerDiv.querySelector('button');
+
+        if (button) {
+            button.removeEventListener('click', this.onClickEntity);
+            containerDiv.removeChild(button);
         }
     }
 
@@ -118,9 +126,6 @@ export default class SampleEntityPlugin implements EditorPlugin {
 
     private createEntity() {
         const div = document.createElement('div');
-        const span = document.createElement('span');
-
-        div.appendChild(span);
 
         return div;
     }
