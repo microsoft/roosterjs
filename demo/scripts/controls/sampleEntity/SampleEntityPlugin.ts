@@ -4,7 +4,6 @@ import {
     getEntityFromElement,
     getEntitySelector,
     getMetadata,
-    moveChildNodes,
     setMetadata,
 } from 'roosterjs-editor-dom';
 import {
