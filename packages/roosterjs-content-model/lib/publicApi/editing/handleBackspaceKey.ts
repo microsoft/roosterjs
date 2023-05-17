@@ -1,5 +1,5 @@
 import { ChangeSource, EntityOperationEvent } from 'roosterjs-editor-types';
-import { deleteSelection } from '../../modelApi/selection/deleteSelections';
+import { deleteSelection } from '../../modelApi/edit/deleteSelections';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {

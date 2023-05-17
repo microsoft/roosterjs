@@ -39,6 +39,7 @@ async function pack(isProduction, isAmd, isUi, filename) {
                             rootDir: rootPath,
                             strict: false,
                             declaration: false,
+                            downlevelIteration: true,
                         },
                     },
                 },
