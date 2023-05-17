@@ -1,7 +1,6 @@
 import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import validate from '../metadata/validate';
-import { restoreContentWithEntityPlaceholder } from '../entity/entityPlaceholderUtils';
 import {
     createArrayDefinition,
     createBooleanDefinition,
@@ -79,24 +78,24 @@ export default function setHtmlWithSelectionPath(
 export function setHtmlWithMetadata(
     rootNode: HTMLElement,
     html: string,
-    trustedHTMLHandler?: TrustedHTMLHandler,
-    entities?: Record<string, HTMLElement>
+    trustedHTMLHandler?: TrustedHTMLHandler
 ): ContentMetadata | undefined {
     if (!rootNode) {
         return undefined;
     }
 
     html = html || '';
-    html = trustedHTMLHandler?.(html) || html;
+    rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
 
-    if (entities && Object.keys(entities).length > 0) {
-        const body = new DOMParser().parseFromString(html, 'text/html').body;
+    return extractContentMetadata(rootNode);
+}
 
-        restoreContentWithEntityPlaceholder(body, rootNode, entities);
-    } else {
-        rootNode.innerHTML = html;
-    }
-
+/**
+ * Extract content metadata from DOM tree
+ * @param rootNode Root of the DOM tree
+ * @returns If there is a valid content metadata node in the give DOM tree, return this metadata object, otherwise undefined
+ */
+export function extractContentMetadata(rootNode: HTMLElement): ContentMetadata | undefined {
     const potentialMetadataComment = rootNode.lastChild;
 
     if (safeInstanceOf(potentialMetadataComment, 'Comment')) {

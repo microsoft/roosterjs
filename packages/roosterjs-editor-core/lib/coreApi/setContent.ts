@@ -1,5 +1,10 @@
-import { createRange, queryElements } from 'roosterjs-editor-dom';
-import { setHtmlWithMetadata } from 'roosterjs-editor-dom';
+import {
+    createRange,
+    extractContentMetadata,
+    queryElements,
+    restoreContentWithEntityPlaceholder,
+    setHtmlWithMetadata,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -26,7 +31,8 @@ export const setContent: SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => {
-    let contentChanged = false;
+    let changeSource: string | null = null;
+
     if (core.contentDiv.innerHTML != content) {
         core.api.triggerEvent(
             core,
@@ -37,16 +43,32 @@ export const setContent: SetContent = (
             true /*broadcast*/
         );
 
-        const metadataFromContent = setHtmlWithMetadata(
-            core.contentDiv,
-            content,
-            core.trustedHTMLHandler,
-            core.entity.entities
-        );
+        const entities = core.entity.entities;
+        const hasEntities = Object.keys(entities).length > 0;
+        let metadataFromContent: ContentMetadata | undefined;
+
+        if (hasEntities) {
+            let html = content || '';
+            html = core.trustedHTMLHandler?.(html) || html;
+
+            const body = new DOMParser().parseFromString(html, 'text/html').body;
+
+            restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
+
+            metadataFromContent = extractContentMetadata(core.contentDiv);
+
+            changeSource = ChangeSource.Undo;
+        } else {
+            metadataFromContent = setHtmlWithMetadata(
+                core.contentDiv,
+                content,
+                core.trustedHTMLHandler
+            );
+            changeSource = ChangeSource.SetContent;
+        }
 
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);
-        contentChanged = true;
     }
 
     const isDarkMode = core.lifecycle.isDarkMode;
@@ -61,15 +83,14 @@ export const setContent: SetContent = (
             true /*forceTransform*/,
             metadata?.isDarkMode
         );
-        contentChanged = true;
     }
 
-    if (triggerContentChangedEvent && contentChanged) {
+    if (triggerContentChangedEvent && changeSource) {
         core.api.triggerEvent(
             core,
             {
                 eventType: PluginEventType.ContentChanged,
-                source: ChangeSource.SetContent,
+                source: changeSource,
             },
             false /*broadcast*/
         );
