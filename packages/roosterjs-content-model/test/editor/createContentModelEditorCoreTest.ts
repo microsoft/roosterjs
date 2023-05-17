@@ -93,7 +93,6 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             defaultFormatOnContainer: false,
-            originalContainerFormat: {},
         } as any);
     });
 
@@ -150,7 +149,6 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             defaultFormatOnContainer: false,
-            originalContainerFormat: {},
         } as any);
     });
 
@@ -219,7 +217,6 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             defaultFormatOnContainer: false,
-            originalContainerFormat: {},
         } as any);
     });
 
@@ -272,7 +269,6 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             defaultFormatOnContainer: false,
-            originalContainerFormat: {},
         } as any);
     });
 
@@ -327,7 +323,6 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             defaultFormatOnContainer: false,
-            originalContainerFormat: {},
         } as any);
     });
 });
