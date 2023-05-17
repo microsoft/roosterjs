@@ -27,6 +27,11 @@ module.exports = {
             {
                 test: /\.tsx?$/,
                 loader: 'ts-loader',
+                options: {
+                    compilerOptions: {
+                        downlevelIteration: true,
+                    },
+                },
             },
             {
                 test: /\.svg$/,

@@ -9,7 +9,7 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPoint } from '../selection/deleteSelections';
+import { deleteSelection, InsertPoint } from '../edit/deleteSelections';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';

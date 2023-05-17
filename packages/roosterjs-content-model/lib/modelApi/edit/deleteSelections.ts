@@ -10,6 +10,7 @@ import { createBr } from '../creators/createBr';
 import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
+import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved } from '../common/isWhiteSpacePreserved';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
@@ -17,7 +18,7 @@ import {
     iterateSelections,
     IterateSelectionsOption,
     TableSelectionContext,
-} from './iterateSelections';
+} from '../selection/iterateSelections';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -320,7 +321,7 @@ function deleteSegment(
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
             } else {
-                text = isForward ? text.substring(1) : text.substring(0, text.length - 1);
+                text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
                     text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
