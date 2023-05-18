@@ -1,6 +1,6 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { deleteSelection } from '../../modelApi/selection/deleteSelections';
+import { deleteSelection } from '../../modelApi/edit/deleteSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
