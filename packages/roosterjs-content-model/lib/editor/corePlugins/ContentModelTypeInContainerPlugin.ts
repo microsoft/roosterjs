@@ -79,14 +79,12 @@ export default class ContentModelTypeInContainerPlugin implements EditorPlugin {
             case PluginEventType.KeyUp:
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     this.needToCheckFormat = true;
-                    console.log('Need to check format');
                 }
                 break;
 
             case PluginEventType.MouseUp:
             case PluginEventType.ContentChanged:
                 this.needToCheckFormat = true;
-                console.log('Need to check format');
                 break;
         }
     }
@@ -101,15 +99,12 @@ export default class ContentModelTypeInContainerPlugin implements EditorPlugin {
         };
         let range: SelectionRangeEx;
 
-        console.log('Checking format');
-
         if (
             this.effectiveDefaultFormatKeys.some(key => targetFormat[key] === undefined) &&
             (range = editor.getSelectionRangeEx()) &&
             range.type == SelectionRangeTypes.Normal &&
             range.ranges[0]
         ) {
-            console.log('Applying format');
             setPendingFormat(
                 editor,
                 {
