@@ -1,18 +1,18 @@
+import getSegmentFormat from '../../publicApi/format/getSegmentFormat';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { getObjectKeys, Position } from 'roosterjs-editor-dom';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isCharacterValue, Position } from 'roosterjs-editor-dom';
 import { setPendingFormat } from '../../modelApi/format/pendingFormat';
 import {
     EditorPlugin,
     IEditor,
+    Keys,
     PluginEvent,
     PluginEventType,
+    SelectionRangeEx,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-
-// During IME input, KeyDown event will have "Process" as key
-const ProcessKey = 'Process';
 
 /**
  * ContentModelTypeInContainer plugin helps editor handle keyDown event and make sure typing happens
@@ -20,6 +20,8 @@ const ProcessKey = 'Process';
  */
 export default class ContentModelTypeInContainerPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+    private effectiveDefaultFormatKeys: (keyof ContentModelSegmentFormat)[] = [];
+    private needToCheckFormat = true;
 
     /**
      * Get name of this plugin
@@ -37,6 +39,11 @@ export default class ContentModelTypeInContainerPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
+
+        const defaultFormat = this.editor.getContentModelDefaultFormat();
+        this.effectiveDefaultFormatKeys = getObjectKeys(defaultFormat).filter(
+            key => defaultFormat[key] !== undefined
+        );
     }
 
     /**
@@ -57,27 +64,62 @@ export default class ContentModelTypeInContainerPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         const editor = this.editor;
 
-        if (
-            editor &&
-            event.eventType == PluginEventType.KeyDown &&
-            (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
-        ) {
-            const range = editor.getSelectionRangeEx();
-
-            if (
-                range.type == SelectionRangeTypes.Normal &&
-                range.ranges[0]?.collapsed &&
-                !editor.contains(range.ranges[0].startContainer)
-            ) {
-                const pendingFormat = getPendingFormat(editor) || {};
-                const defaultFormat = editor.getContentModelDefaultFormat();
-                const newFormat: ContentModelSegmentFormat = {
-                    ...defaultFormat,
-                    ...pendingFormat,
-                };
-
-                setPendingFormat(editor, newFormat, Position.getStart(range.ranges[0]));
-            }
+        if (!editor) {
+            return;
         }
+
+        switch (event.eventType) {
+            case PluginEventType.KeyDown:
+                if (this.needToCheckFormat) {
+                    this.ensureFormat(editor);
+                }
+
+                break;
+
+            case PluginEventType.KeyUp:
+                if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
+                    this.needToCheckFormat = true;
+                    console.log('Need to check format');
+                }
+                break;
+
+            case PluginEventType.MouseUp:
+            case PluginEventType.ContentChanged:
+                this.needToCheckFormat = true;
+                console.log('Need to check format');
+                break;
+        }
+    }
+
+    private ensureFormat(editor: IContentModelEditor) {
+        const currentFormat = getSegmentFormat(editor);
+        const pendingFormat = getPendingFormat(editor) || {};
+        const defaultFormat = editor.getContentModelDefaultFormat();
+        const targetFormat = {
+            ...currentFormat,
+            ...pendingFormat,
+        };
+        let range: SelectionRangeEx;
+
+        console.log('Checking format');
+
+        if (
+            this.effectiveDefaultFormatKeys.some(key => targetFormat[key] === undefined) &&
+            (range = editor.getSelectionRangeEx()) &&
+            range.type == SelectionRangeTypes.Normal &&
+            range.ranges[0]
+        ) {
+            console.log('Applying format');
+            setPendingFormat(
+                editor,
+                {
+                    ...defaultFormat,
+                    ...targetFormat,
+                },
+                Position.getStart(range.ranges[0])
+            );
+        }
+
+        this.needToCheckFormat = false;
     }
 }
