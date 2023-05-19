@@ -49,6 +49,9 @@ export function splitTableCellVertically(table: ContentModelTable) {
                             cell.format
                         );
 
+                        //Keep the background color of the original cell
+                        newCell.dataset = { editingInfo: '{"bgColorOverride":true}' };
+
                         if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                             newCell.spanAbove = true;
                         } else {
