@@ -32,12 +32,7 @@ describe('toggleListTypeTest()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div>' +
-                '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
-                '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
-                '<ul><li>test</li></ul>' +
-                '<div><span id="focusNode" style="font-family:&quot;Courier New&quot;;font-size:20pt;color:rgb(208, 92, 18)"></span></div>' +
-                '</div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><div><span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span></div></div>'
         );
     });
 
@@ -58,13 +53,7 @@ describe('toggleListTypeTest()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div>' +
-                '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div>' +
-                '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">' +
-                '<ul><li>test</li></ul>' +
-                '<div><span id="focusNode" style="font-family:&quot;Courier New&quot;;font-size:20pt;color:rgb(208, 92, 18)"></span></div>' +
-                '<ul><li>test</li></ul>' +
-                '</div>'
+            '<div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);">default format</div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><br></div><div style="font-family: Arial; font-size: 16pt; color: rgb(0, 111, 201);"><ul><li>test</li></ul><div><span id="focusNode" style="font-family: &quot;Courier New&quot;; font-size: 20pt; color: rgb(208, 92, 18);"></span></div><ul><li>test</li></ul></div>'
         );
     });
 

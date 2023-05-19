@@ -93,6 +93,7 @@ describe('codeProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
+                    isImplicit: true,
                     segments: [
                         {
                             segmentType: 'Text',
@@ -107,7 +108,6 @@ describe('codeProcessor', () => {
                         },
                     ],
                 },
-                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
         expect(context.code).toEqual({ format: {} });

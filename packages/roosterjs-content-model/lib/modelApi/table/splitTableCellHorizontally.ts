@@ -39,6 +39,8 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                             cell.format
                         );
 
+                        newCell.dataset = { ...cell.dataset };
+
                         if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                             newCell.spanLeft = true;
                         } else {

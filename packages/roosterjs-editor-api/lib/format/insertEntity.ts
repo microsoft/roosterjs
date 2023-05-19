@@ -1,7 +1,10 @@
 import commitListChains from '../utils/commitListChains';
+import getFormatState from './getFormatState';
 import {
     addDelimiters,
+    applyFormat,
     commitEntity,
+    createElement,
     getEntityFromElement,
     getEntitySelector,
     Position,
@@ -14,9 +17,11 @@ import {
     Entity,
     ExperimentalFeatures,
     IEditor,
+    KnownCreateElementDataIndex,
     NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
+import type { CompatibleContentPosition } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Insert an entity into editor.
@@ -29,6 +34,9 @@ import {
  * If isBlock is true, entity will be insert below this position
  * @param insertToRegionRoot @optional When pass true, insert the entity at the root level of current region.
  * Parent nodes will be split if need
+ * @param focusAfterEntity @optional When pass true, focus will be moved next to the entity. For inline entity,
+ * focus will be after right after the entity (and the delimiter if exist). For block entity, focus will be in
+ * the new empty line below the entity
  */
 export default function insertEntity(
     editor: IEditor,
@@ -36,10 +44,18 @@ export default function insertEntity(
     contentNode: Node,
     isBlock: boolean,
     isReadonly: boolean,
-    position?: NodePosition | ContentPosition.Begin | ContentPosition.End | ContentPosition.DomEnd,
-    insertToRegionRoot?: boolean
+    position?:
+        | NodePosition
+        | ContentPosition.Begin
+        | ContentPosition.End
+        | ContentPosition.DomEnd
+        | CompatibleContentPosition.Begin
+        | CompatibleContentPosition.End
+        | CompatibleContentPosition.DomEnd,
+    insertToRegionRoot?: boolean,
+    focusAfterEntity?: boolean
 ): Entity {
-    const wrapper = wrap(contentNode, isBlock ? 'DIV' : 'SPAN');
+    const wrapper = wrap(contentNode, isBlock ? 'div' : 'span');
 
     // For inline & readonly entity, we need to set display to "inline-block" otherwise
     // there will be some weird behavior when move cursor around the entity node.
@@ -53,13 +69,19 @@ export default function insertEntity(
 
     commitEntity(wrapper, type, isReadonly);
 
+    const currentFormat = getFormatState(editor);
+
     if (!editor.contains(wrapper)) {
         let currentRange: Range | null = null;
         let contentPosition:
             | ContentPosition.Begin
             | ContentPosition.End
             | ContentPosition.DomEnd
-            | ContentPosition.SelectionStart;
+            | ContentPosition.SelectionStart
+            | CompatibleContentPosition.Begin
+            | CompatibleContentPosition.End
+            | CompatibleContentPosition.DomEnd
+            | CompatibleContentPosition.SelectionStart;
 
         if (typeof position == 'number') {
             contentPosition = position;
@@ -104,16 +126,49 @@ export default function insertEntity(
         }
     }
 
+    const entity = getEntityFromElement(wrapper)!;
+
     if (isBlock) {
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
-        const br = editor.getDocument().createElement('BR');
-        wrapper.parentNode?.insertBefore(br, wrapper.nextSibling);
-    }
+        const formatOnSpan = editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan);
+        const newLine = createElement(
+            formatOnSpan
+                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
+                : KnownCreateElementDataIndex.EmptyLine,
+            editor.getDocument()
+        );
 
-    const entity = getEntityFromElement(wrapper)!;
-    if (
-        !isBlock &&
+        wrapper.parentNode?.insertBefore(newLine!, wrapper.nextSibling);
+
+        const formatNode = formatOnSpan ? newLine?.querySelector('span') : newLine;
+
+        if (formatNode) {
+            applyFormat(
+                formatNode as HTMLElement,
+                {
+                    backgroundColor: currentFormat.backgroundColor,
+                    textColor: currentFormat.textColor,
+                    bold: currentFormat.isBold,
+                    fontFamily: currentFormat.fontName,
+                    fontSize: currentFormat.fontSize,
+                    italic: currentFormat.isItalic,
+                    underline: currentFormat.isUnderline,
+                },
+                editor.isDarkMode(),
+                editor.getDarkColorHandler()
+            );
+        }
+
+        if (focusAfterEntity) {
+            const br = newLine?.querySelector('br');
+            const pos = br && new Position(br, PositionType.Before);
+
+            if (pos) {
+                editor.select(pos);
+            }
+        }
+    } else if (
         isReadonly &&
         editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
     ) {

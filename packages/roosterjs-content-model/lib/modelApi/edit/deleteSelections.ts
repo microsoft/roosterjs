@@ -10,6 +10,7 @@ import { createBr } from '../creators/createBr';
 import { createNormalizeSegmentContext, normalizeSegment } from '../common/normalizeSegment';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
+import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved } from '../common/isWhiteSpacePreserved';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
@@ -17,7 +18,7 @@ import {
     iterateSelections,
     IterateSelectionsOption,
     TableSelectionContext,
-} from './iterateSelections';
+} from '../selection/iterateSelections';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -153,13 +154,15 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
-                const cell = table.rows[rowIndex].cells[colIndex];
+                const row = table.rows[rowIndex];
+                const cell = row.cells[colIndex];
 
                 path = [cell, ...path];
                 paragraph.segments.push(createBr(model.format));
                 cell.blocks = [paragraph];
 
                 delete cell.cachedElement;
+                delete row.cachedElement;
                 context.isChanged = true;
             }
 
@@ -318,7 +321,7 @@ function deleteSegment(
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
             } else {
-                text = isForward ? text.substring(1) : text.substring(0, text.length - 1);
+                text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
                     text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');

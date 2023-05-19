@@ -26,8 +26,7 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 format.backgroundColor,
                 true /*isBackground*/,
                 context.darkColorHandler,
-                context.isDarkMode,
-                context.getDarkColor
+                context.isDarkMode
             );
         }
     },

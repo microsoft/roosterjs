@@ -31,7 +31,6 @@ const initialState: BuildInPluginState = {
     experimentalFeatures: [
         ExperimentalFeatures.DefaultFormatInSpan,
         ExperimentalFeatures.AutoFormatList,
-        ExperimentalFeatures.VariableBasedDarkColor,
         ExperimentalFeatures.ReusableContentModel,
         ExperimentalFeatures.EditWithContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,

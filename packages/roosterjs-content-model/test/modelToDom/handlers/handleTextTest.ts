@@ -1,4 +1,5 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
+import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
@@ -31,6 +32,7 @@ describe('handleSegment', () => {
             text: 'test',
             format: { textColor: 'red' },
         };
+        context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
         handleText(document, parent, text, context);
 
@@ -47,7 +49,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
+        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
     });
 
     it('Text segment with code', () => {
@@ -64,7 +66,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><code>test</code></span>');
+        expect(parent.innerHTML).toBe('<code><span>test</span></code>');
     });
 
     it('call stackFormat', () => {
@@ -79,7 +81,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
+        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
@@ -102,5 +104,25 @@ describe('handleSegment', () => {
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(text);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span')!.firstChild);
+    });
+
+    it('Link is outside of SPAN', () => {
+        const parent = document.createElement('div');
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: { fontSize: '12px' },
+            link: {
+                format: {
+                    href: '#',
+                    underline: true,
+                },
+                dataset: {},
+            },
+        };
+
+        handleText(document, parent, text, context);
+
+        expect(parent.innerHTML).toBe('<a href="#"><span style="font-size: 12px;">test</span></a>');
     });
 });

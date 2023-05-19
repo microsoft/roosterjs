@@ -1,3 +1,4 @@
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -13,6 +14,7 @@ describe('textColorFormatHandler.parse', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createDomToModelContext();
+        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
         format = {};
     });
 
@@ -49,39 +51,6 @@ describe('textColorFormatHandler.parse', () => {
         textColorFormatHandler.parse(format, div, context, {});
 
         expect(format.textColor).toBe('red');
-    });
-
-    it('Dark mode color with ogsb', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogsc = 'blue';
-        div.dataset.ogsb = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogab', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogac = 'blue';
-        div.dataset.ogab = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('blue');
-    });
-
-    it('Dark mode color with ogsb and ogab', () => {
-        context.isDarkMode = true;
-        div.style.color = 'red';
-        div.dataset.ogac = 'blue';
-        div.dataset.ogsc = 'green';
-
-        textColorFormatHandler.parse(format, div, context, {});
-
-        expect(format.textColor).toBe('green');
     });
 
     it('Color from element overwrite default style', () => {
@@ -125,6 +94,7 @@ describe('textColorFormatHandler.apply', () => {
     beforeEach(() => {
         div = document.createElement('div');
         context = createModelToDomContext();
+        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock: ' + s);
 
         format = {};
     });
@@ -146,11 +116,15 @@ describe('textColorFormatHandler.apply', () => {
     it('Simple color in dark mode', () => {
         format.textColor = 'red';
         context.isDarkMode = true;
-        context.getDarkColor = () => 'green';
 
         textColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div data-ogsc="red" style="color: green;"></div>');
+        const result = [
+            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
+            '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
+        ].indexOf(div.outerHTML);
+
+        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
     });
 
     it('HyperLink without color', () => {

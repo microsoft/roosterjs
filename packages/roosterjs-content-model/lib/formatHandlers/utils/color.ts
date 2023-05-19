@@ -1,4 +1,4 @@
-import { DarkColorHandler, DarkModeDatasetNames } from 'roosterjs-editor-types';
+import { DarkColorHandler } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
@@ -11,19 +11,6 @@ export function getColor(
     isDarkMode: boolean
 ): string | undefined {
     let color: string | undefined;
-    if (isDarkMode && !darkColorHandler) {
-        color =
-            element.dataset[
-                isBackground
-                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                    : DarkModeDatasetNames.OriginalStyleColor
-            ] ||
-            element.dataset[
-                isBackground
-                    ? DarkModeDatasetNames.OriginalAttributeBackgroundColor
-                    : DarkModeDatasetNames.OriginalAttributeColor
-            ];
-    }
 
     if (!color) {
         color =
@@ -49,26 +36,9 @@ export function setColor(
     lightModeColor: string,
     isBackground: boolean,
     darkColorHandler: DarkColorHandler | undefined | null,
-    isDarkMode: boolean,
-    getDarkColor?: (color: string) => string
+    isDarkMode: boolean
 ) {
-    let effectiveColor: string;
-
-    if (darkColorHandler) {
-        effectiveColor = darkColorHandler.registerColor(lightModeColor, isDarkMode);
-    } else {
-        effectiveColor = isDarkMode
-            ? getDarkColor?.(lightModeColor) || lightModeColor
-            : lightModeColor;
-
-        if (isDarkMode && lightModeColor) {
-            element.dataset[
-                isBackground
-                    ? DarkModeDatasetNames.OriginalStyleBackgroundColor
-                    : DarkModeDatasetNames.OriginalStyleColor
-            ] = lightModeColor;
-        }
-    }
+    const effectiveColor = darkColorHandler?.registerColor(lightModeColor, isDarkMode) || '';
 
     if (isBackground) {
         element.style.backgroundColor = effectiveColor;
