@@ -39,8 +39,7 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                             cell.format
                         );
 
-                        //Keep the background color of the original cell
-                        newCell.dataset = { editingInfo: '{"bgColorOverride":true}' };
+                        newCell.dataset = { ...cell.dataset };
 
                         if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                             newCell.spanLeft = true;
