@@ -8,9 +8,9 @@ import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
-import { getContentModelCopyPastePlugin } from './corePlugins/ContentModelCopyPastePlugin';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import {
     CoreCreator,
     DefaultFormat,
@@ -38,9 +38,9 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            ...(options.corePluginOverride || {}),
             typeInContainer: new ContentModelTypeInContainerPlugin(),
-            copyPaste: getContentModelCopyPastePlugin(options),
+            copyPaste: new ContentModelCopyPastePlugin(options),
+            ...(options.corePluginOverride || {}),
         },
     };
 

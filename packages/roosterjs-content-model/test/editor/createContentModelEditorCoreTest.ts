@@ -1,4 +1,3 @@
-import * as ContentModelCopyPastePluginFile from '../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
@@ -10,6 +9,7 @@ import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
+
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
 
 describe('createContentModelEditorCore', () => {
@@ -23,10 +23,6 @@ describe('createContentModelEditorCore', () => {
         contentDiv = {
             style: {},
         } as any;
-
-        spyOn(ContentModelCopyPastePluginFile, 'getContentModelCopyPastePlugin').and.returnValue(
-            copyPastePlugin
-        );
 
         mockedCore = {
             lifecycle: {
@@ -47,7 +43,11 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('No additional option', () => {
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -101,7 +101,13 @@ describe('createContentModelEditorCore', () => {
         const defaultDomToModelOptions = { a: '1' } as any;
         const defaultModelToDomOptions = { b: '2' } as any;
 
-        const options = { defaultDomToModelOptions, defaultModelToDomOptions };
+        const options = {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -165,7 +171,11 @@ describe('createContentModelEditorCore', () => {
             backgroundColor: 'blue',
         };
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -226,7 +236,11 @@ describe('createContentModelEditorCore', () => {
     it('Reuse model', () => {
         mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModel);
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -281,7 +295,11 @@ describe('createContentModelEditorCore', () => {
             ExperimentalFeatures.InlineEntityReadOnlyDelimiters
         );
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -344,10 +362,6 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             style: {},
         } as any;
 
-        spyOn(ContentModelCopyPastePluginFile, 'getContentModelCopyPastePlugin').and.returnValue(
-            copyPastePlugin
-        );
-
         mockedCore = {
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
@@ -367,7 +381,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
     });
 
     it('No additional option', () => {
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
@@ -423,7 +441,13 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
         const defaultDomToModelOptions = { a: '1' } as any;
         const defaultModelToDomOptions = { b: '2' } as any;
 
-        const options = { defaultDomToModelOptions, defaultModelToDomOptions };
+        const options = {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -490,7 +514,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             backgroundColor: 'blue',
         };
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -551,7 +579,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
     it('Reuse model', () => {
         mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModel);
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -612,7 +644,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
             ExperimentalFeatures.InlineEntityReadOnlyDelimiters
         );
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -669,7 +705,11 @@ describe('createContentModelEditorCore with experimental feature "DefaultFormatO
     });
 
     it('Content Div already has style', () => {
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
         contentDiv.style.fontFamily = 'AAAA';
