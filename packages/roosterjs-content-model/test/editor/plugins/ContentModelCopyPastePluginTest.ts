@@ -15,7 +15,6 @@ import {
 
 const modelValue = 'model' as any;
 const darkColorHandler = 'darkColorHandler' as any;
-const isDarkModelValue = 'isDarkModelValue' as any;
 const pasteModelValue = 'pasteModelValue' as any;
 const insertPointValue = 'insertPoint' as any;
 const isChangedValue = 'isChanged' as any;
@@ -109,7 +108,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 return darkColorHandler;
             },
             isDarkMode: () => {
-                return isDarkModelValue;
+                return false;
             },
             paste: (ar1: any) => {
                 pasteSpy(ar1);
@@ -174,7 +173,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
@@ -230,7 +229,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
@@ -284,7 +283,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
@@ -369,7 +368,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
@@ -422,7 +421,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
@@ -476,7 +475,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 div,
                 pasteModelValue,
                 {
-                    isDarkMode: isDarkModelValue,
+                    isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 }
             );
