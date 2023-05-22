@@ -491,4 +491,42 @@ describe('handleParagraph', () => {
 
         expect(parent.innerHTML).toBe('<div></div>');
     });
+
+    it('Verify selection in BR only paragraph', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'SelectionMarker',
+                    format: { fontSize: '20px' },
+                    isSelected: true,
+                },
+                {
+                    segmentType: 'Br',
+                    format: { fontSize: '20px' },
+                },
+            ],
+            format: {},
+        };
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div><span style="font-size: 20px;"><br></span></div>');
+
+        const div = parent.firstChild as HTMLDivElement;
+        const span = div.firstChild as HTMLSpanElement;
+        const txt = span.firstChild as Text;
+        const br = span.lastChild as HTMLBRElement;
+
+        expect(txt).toEqual(document.createTextNode(''));
+        expect(br).toEqual(document.createElement('br'));
+
+        expect(context.regularSelection).toEqual({
+            current: { block: div, segment: br },
+            start: { block: div, segment: txt },
+            end: { block: div, segment: txt },
+        });
+    });
 });
