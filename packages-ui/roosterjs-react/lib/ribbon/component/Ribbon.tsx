@@ -153,6 +153,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     moreCommandsBtn.key,
                     moreCommandsBtn.unlocalizedText
                 ),
+                ...props?.overflowButtonProps,
             }}
         />
     );
