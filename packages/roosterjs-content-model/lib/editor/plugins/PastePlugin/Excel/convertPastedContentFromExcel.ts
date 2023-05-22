@@ -1,5 +1,5 @@
 import addParser from '../utils/addParser';
-import { ContentModelBeforePasteEvent } from 'roosterjs-content-model/lib/publicTypes';
+import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 import { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
