@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelSelectionMarker } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
 
 /**
  * @internal
