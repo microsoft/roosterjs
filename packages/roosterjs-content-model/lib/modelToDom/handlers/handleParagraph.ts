@@ -40,15 +40,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 applyFormat(container, context.formatAppliers.container, paragraph.format, context);
             }
 
-            if (paragraph.decorator) {
-                applyFormat(
-                    container,
-                    context.formatAppliers.segmentOnBlock,
-                    paragraph.decorator.format,
-                    context
-                );
-            }
-
             if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
                 container.style.fontSize = '0';
             }
@@ -58,9 +49,26 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 segment: null,
             };
 
-            paragraph.segments.forEach(segment => {
-                context.modelHandlers.segment(doc, container!, segment, context);
-            });
+            const handleSegments = () => {
+                paragraph.segments.forEach(segment => {
+                    context.modelHandlers.segment(doc, container!, segment, context);
+                });
+            };
+
+            if (paragraph.decorator) {
+                applyFormat(
+                    container,
+                    context.formatAppliers.segmentOnBlock,
+                    paragraph.decorator.format,
+                    context
+                );
+
+                stackFormat(context, paragraph.decorator.format, () => {
+                    handleSegments();
+                });
+            } else {
+                handleSegments();
+            }
 
             optimize(container);
 
