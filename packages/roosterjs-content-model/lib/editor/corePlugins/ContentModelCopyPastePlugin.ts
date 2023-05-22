@@ -114,7 +114,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     tempDiv,
                     pasteModel,
                     {
-                        isDarkMode: this.editor.isDarkMode(),
+                        isDarkMode: false /* To force light mode on paste */,
                         darkColorHandler: this.editor.getDarkColorHandler(),
                     }
                 );
