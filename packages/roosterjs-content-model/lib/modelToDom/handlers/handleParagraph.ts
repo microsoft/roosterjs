@@ -25,6 +25,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
         refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
+            let hasDefaultFormatOnContainer = false;
             const needParagraphWrapper =
                 !paragraph.isImplicit ||
                 !!paragraph.decorator ||
@@ -38,6 +39,16 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             if (needParagraphWrapper) {
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
                 applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+
+                if (context.defaultFormat) {
+                    applyFormat(
+                        container,
+                        context.formatAppliers.segmentOnBlock,
+                        context.defaultFormat,
+                        context
+                    );
+                    hasDefaultFormatOnContainer = true;
+                }
             }
 
             if (paragraph.decorator) {
@@ -58,9 +69,17 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 segment: null,
             };
 
-            paragraph.segments.forEach(segment => {
-                context.modelHandlers.segment(doc, container!, segment, context);
-            });
+            const handleSegments = () => {
+                paragraph.segments.forEach(segment => {
+                    context.modelHandlers.segment(doc, container!, segment, context);
+                });
+            };
+
+            if (hasDefaultFormatOnContainer) {
+                stackFormat(context, context.defaultFormat || null, handleSegments);
+            } else {
+                handleSegments();
+            }
 
             optimize(container);
 
