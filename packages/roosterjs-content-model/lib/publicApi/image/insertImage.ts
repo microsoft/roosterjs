@@ -29,7 +29,7 @@ function insertImageWithSrc(editor: IContentModelEditor, src: string) {
         const doc = createContentModelDocument();
 
         addSegment(doc, image);
-        mergeModel(model, doc);
+        mergeModel(model, doc, { mergeCurrentFormat: true });
 
         return true;
     });

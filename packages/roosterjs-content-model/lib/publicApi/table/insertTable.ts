@@ -37,6 +37,7 @@ export default function insertTable(
             applyTableFormat(table, format);
             mergeModel(model, doc, {
                 insertPosition,
+                mergeCurrentFormat: true,
             });
 
             const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
