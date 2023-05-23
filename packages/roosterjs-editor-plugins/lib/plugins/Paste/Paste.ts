@@ -89,7 +89,7 @@ export default class Paste implements EditorPlugin {
                     convertPastedContentFromPowerPoint(event, trustedHTMLHandler);
                     break;
                 case KnownPasteSourceType.WacComponents:
-                    convertPastedContentFromOfficeOnline(fragment);
+                    convertPastedContentFromOfficeOnline(fragment, sanitizingOption);
                     break;
                 case KnownPasteSourceType.GoogleSheets:
                     sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
