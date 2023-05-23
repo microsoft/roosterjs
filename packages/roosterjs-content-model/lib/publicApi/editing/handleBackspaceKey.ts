@@ -5,6 +5,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
+    shouldDeleteWord,
 } from '../../editor/utils/handleKeyboardEventCommon';
 
 /**
@@ -22,6 +23,7 @@ export default function handleBackspaceKey(
             const { isChanged } = deleteSelection(model, {
                 direction: 'backward',
                 onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                deleteWord: shouldDeleteWord(rawEvent),
             });
 
             handleKeyboardEventResult(editor, model, rawEvent, isChanged);

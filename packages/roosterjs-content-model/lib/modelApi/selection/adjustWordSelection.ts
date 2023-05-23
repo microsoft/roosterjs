@@ -3,6 +3,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../creators/createText';
+import { findDelimiter } from '../edit/findDelimiter';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 
 /**
@@ -81,42 +82,6 @@ export function adjustWordSelection(
     }
 }
 
-/*
-// These are unicode characters mostly from the Category Space Separator (Zs)
-https://unicode.org/Public/UNIDATA/Scripts.txt
-
-\u2000 = EN QUAD
-\u2009 = THIN SPACE
-\u200a = HAIR SPACE
-​\u200b = ZERO WIDTH SPACE
-​\u202f = NARROW NO-BREAK SPACE
-\u205f​ = MEDIUM MATHEMATICAL SPACE
-\u3000 = IDEOGRAPHIC SPACE
-*/
-const SPACES_REGEX = /[\u2000\u2009\u200a​\u200b​\u202f\u205f​\u3000\s\t\r\n]/gm;
-const PUNCTUATION_REGEX = /[.,?!:"()\[\]\\/]/gu;
-
-export function findDelimiter(segment: ContentModelText, moveRightward: boolean): number {
-    const word = segment.text;
-    let offset = -1;
-    if (moveRightward) {
-        for (let i = 0; i < word.length; i++) {
-            if (isWordDelimiter(word[i])) {
-                offset = i;
-                break;
-            }
-        }
-    } else {
-        for (let i = word.length - 1; i >= 0; i--) {
-            if (isWordDelimiter(word[i])) {
-                offset = i + 1;
-                break;
-            }
-        }
-    }
-    return offset;
-}
-
 function splitTextSegment(
     segments: ContentModelSegment[],
     textSegment: ContentModelText,
@@ -141,17 +106,4 @@ function splitTextSegment(
 
     textSegment.text = text.substring(found, text.length);
     segments.splice(index, 0, newSegment);
-}
-
-function isWordDelimiter(char: string) {
-    return PUNCTUATION_REGEX.test(char) || isSpace(char);
-}
-
-function isSpace(char: string) {
-    return (
-        char &&
-        (char.toString() == String.fromCharCode(160) /* &nbsp | \u00A0*/ ||
-        char.toString() == String.fromCharCode(32) /* RegularSpace | \u0020*/ ||
-            SPACES_REGEX.test(char))
-    );
 }

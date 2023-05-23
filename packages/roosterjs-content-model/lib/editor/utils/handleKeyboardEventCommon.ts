@@ -1,8 +1,9 @@
+import { Browser } from 'roosterjs-editor-dom/lib';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { EditEntry } from '../../modelApi/edit/steps/EditStep';
 import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
-import { OnDeleteEntity } from '../../modelApi/edit/deleteSelections';
 
 /**
  * @internal
@@ -11,7 +12,7 @@ export function getOnDeleteEntityCallback(
     editor: IContentModelEditor,
     rawEvent: KeyboardEvent,
     triggeredEntityEvents: EntityOperationEvent[]
-): OnDeleteEntity {
+): EditEntry {
     return (entity, operation) => {
         if (entity.id && entity.type) {
             // Only trigger entity operation event when the same event was not triggered before.
@@ -58,4 +59,13 @@ export function handleKeyboardEventResult(
         // We didn't delete anything from content model, so browser will handle this event and we need to clear the cache
         editor.cacheContentModel(null);
     }
+}
+
+/**
+ * @internal
+ */
+export function shouldDeleteWord(rawEvent: KeyboardEvent) {
+    const mac = Browser.isMac;
+
+    return (mac && rawEvent.altKey) || (!mac && rawEvent.ctrlKey);
 }
