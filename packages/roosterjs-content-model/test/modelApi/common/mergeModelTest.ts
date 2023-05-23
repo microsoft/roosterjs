@@ -1,5 +1,6 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
+import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDivider } from '../../../lib/modelApi/creators/createDivider';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
@@ -1368,6 +1369,59 @@ describe('mergeModel', () => {
                     format: {},
                 },
             ],
+        });
+    });
+
+    it('Merge with default format', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, { mergeCurrentFormat: true });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: MockedFormat,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
         });
     });
 });
