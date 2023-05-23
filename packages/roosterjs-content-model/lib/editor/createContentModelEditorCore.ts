@@ -10,6 +10,7 @@ import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import {
     CoreCreator,
     DefaultFormat,
@@ -37,8 +38,9 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            ...(options.corePluginOverride || {}),
             typeInContainer: new ContentModelTypeInContainerPlugin(),
+            copyPaste: new ContentModelCopyPastePlugin(options),
+            ...(options.corePluginOverride || {}),
         },
     };
 
