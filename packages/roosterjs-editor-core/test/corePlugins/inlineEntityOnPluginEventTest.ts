@@ -440,6 +440,30 @@ describe('Inline Entity On Plugin Event |', () => {
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
         });
 
+        it('Before CutCopyEvent, dont remove delimiter with additional content', () => {
+            const rootDiv = document.createElement('div');
+            const element1 = document.createElement('span');
+            rootDiv.appendChild(element1);
+            const [after, before]: Element[] = addDelimiters(element1);
+
+            after.appendChild(document.createTextNode('testAfter'));
+            before.appendChild(document.createTextNode('testBefore'));
+
+            inlineEntityOnPluginEvent(
+                <BeforeCutCopyEvent>{
+                    eventType: PluginEventType.BeforeCutCopy,
+                    clonedRoot: rootDiv,
+                },
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+            expect(after).toBeDefined();
+            expect(before).toBeDefined();
+            expect(after.innerHTML).toEqual('testAfter');
+            expect(before.innerHTML).toEqual('testBefore');
+        });
+
         it('ExtractContentWithDOM', () => {
             const rootDiv = document.createElement('div');
             const element1 = document.createElement('span');
@@ -455,6 +479,30 @@ describe('Inline Entity On Plugin Event |', () => {
             );
 
             expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+        });
+
+        it('ExtractContentWithDOM, dont remove delimiter with additional content', () => {
+            const rootDiv = document.createElement('div');
+            const element1 = document.createElement('span');
+            rootDiv.appendChild(element1);
+            const [after, before]: Element[] = addDelimiters(element1);
+
+            after.appendChild(document.createTextNode('testAfter'));
+            before.appendChild(document.createTextNode('testBefore'));
+
+            inlineEntityOnPluginEvent(
+                <ExtractContentWithDomEvent>{
+                    eventType: PluginEventType.ExtractContentWithDom,
+                    clonedRoot: rootDiv,
+                },
+                editor
+            );
+
+            expect(rootDiv.querySelectorAll(DELIMITER_SELECTOR).length).toBe(0);
+            expect(after).toBeDefined();
+            expect(before).toBeDefined();
+            expect(after.innerHTML).toEqual('testAfter');
+            expect(before.innerHTML).toEqual('testBefore');
         });
     });
 
