@@ -33,7 +33,6 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ReusableContentModel,
         ExperimentalFeatures.EditWithContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
-        ExperimentalFeatures.DefaultFormatOnContainer,
     ],
     isRtl: false,
 };

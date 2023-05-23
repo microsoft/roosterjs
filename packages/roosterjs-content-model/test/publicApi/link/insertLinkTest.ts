@@ -323,9 +323,7 @@ describe('insertLink', () => {
 
         const a = div.querySelector('a');
 
-        expect(a!.outerHTML).toBe(
-            '<a href="http://test.com" title="title"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">http://test.com</span></a>'
-        );
+        expect(a!.outerHTML).toBe('<a href="http://test.com" title="title">http://test.com</a>');
         expect(onPluginEvent).toHaveBeenCalledTimes(4);
         expect(onPluginEvent).toHaveBeenCalledWith({
             eventType: PluginEventType.ContentChanged,

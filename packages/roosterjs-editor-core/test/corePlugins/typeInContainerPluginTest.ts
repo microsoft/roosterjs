@@ -1,11 +1,6 @@
 import * as dom from 'roosterjs-editor-dom';
 import TypeInContainerPlugin from '../../lib/corePlugins/TypeInContainerPlugin';
-import {
-    ExperimentalFeatures,
-    IEditor,
-    PluginEventType,
-    NodePosition,
-} from 'roosterjs-editor-types';
+import { ExperimentalFeatures, IEditor, PluginEventType } from 'roosterjs-editor-types';
 
 describe('TypeInContainerPlugin', () => {
     let plugin: TypeInContainerPlugin;

@@ -28,10 +28,8 @@ export default function domToContentModel(
     if (safeInstanceOf(root, 'DocumentFragment')) {
         context.elementProcessors.child(model, root, context);
     } else {
-        if (!context.defaultFormatOnContainer) {
-            // For root element, use computed style as initial value of segment formats
-            parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
-        }
+        // For root element, use computed style as initial value of segment formats
+        parseFormat(root, [computedSegmentFormatHandler.parse], context.segmentFormat, context);
 
         // Need to calculate direction (ltr or rtl), use it as initial value
         parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
