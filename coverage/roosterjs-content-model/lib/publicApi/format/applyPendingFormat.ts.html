@@ -119,7 +119,17 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a>
+<a name='L65'></a><a href='#L65'>65</a>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,6 +151,9 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,6 +170,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -178,6 +194,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,45 +222,55 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
     if (format) {
         let isChanged = false;
 &nbsp;
-        formatWithContentModel(editor, 'applyPendingFormat', model =&gt; {
-            iterateSelections([model], (_, __, block, segments) =&gt; {
-                if (
-                    block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph' &amp;&amp;
-                    segments<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength == 1 &amp;&amp;
-                    segments[0].segmentType == 'SelectionMarker'
-                ) {
-                    const marker = segments[0];
-                    const index = block.segments.indexOf(marker);
-                    const previousSegment = block.segments[index - 1];
+        formatWithContentModel(
+            editor,
+            'applyPendingFormat',
+            model =&gt; {
+                iterateSelections([model], (_, __, block, segments) =&gt; {
+                    if (
+                        block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph' &amp;&amp;
+                        segments<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength == 1 &amp;&amp;
+                        segments[0].segmentType == 'SelectionMarker'
+                    ) {
+                        const marker = segments[0];
+                        const index = block.segments.indexOf(marker);
+                        const previousSegment = block.segments[index - 1];
 &nbsp;
-                    if (previousSegment?.segmentType == 'Text') {
-                        const text = previousSegment.text;
-                        const subStr = text.substr(-data.length, data.length);
+                        if (previousSegment?.segmentType == 'Text') {
+                            const text = previousSegment.text;
+                            const subStr = text.substr(-data.length, data.length);
 &nbsp;
-                        // For space, there can be &amp;#32 (space) or &amp;#160 (&amp;nbsp;), we treat them as the same
-                        if (subStr == data || (data == ANSI_SPACE &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >subStr == NON_BREAK_SPACE)</span>) {
-                            marker.format = { ...format };
-                            previousSegment.text = text.substring(0, text.length - data.length);
+                            // For space, there can be &amp;#32 (space) or &amp;#160 (&amp;nbsp;), we treat them as the same
+                            if (
+                                subStr == data ||
+                                (data == ANSI_SPACE &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >subStr == NON_BREAK_SPACE)</span>
+                            ) {
+                                marker.format = { ...format };
+                                previousSegment.text = text.substring(0, text.length - data.length);
 &nbsp;
-                            const newText = createText(
-                                data == ANSI_SPACE ? <span class="branch-0 cbranch-no" title="branch not covered" >NON_BREAK_SPACE </span>: data,
-                                {
-                                    ...previousSegment.format,
-                                    ...format,
-                                }
-                            );
+                                const newText = createText(
+                                    data == ANSI_SPACE ? <span class="branch-0 cbranch-no" title="branch not covered" >NON_BREAK_SPACE </span>: data,
+                                    {
+                                        ...previousSegment.format,
+                                        ...format,
+                                    }
+                                );
 &nbsp;
-                            block.segments.splice(index, 0, newText);
-                            setParagraphNotImplicit(block);
-                            isChanged = true;
+                                block.segments.splice(index, 0, newText);
+                                setParagraphNotImplicit(block);
+                                isChanged = true;
+                            }
                         }
                     }
-                }
-                return true;
-            });
+                    return true;
+                });
 &nbsp;
-            return isChanged;
-        });
+                return isChanged;
+            },
+            {
+                skipUndoSnapshot: true,
+            }
+        );
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -250,7 +280,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue May 23 2023 22:32:36 GMT+0000 (Coordinated Universal Time)
+                at Tue May 23 2023 23:31:34 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
