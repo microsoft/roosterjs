@@ -22,6 +22,7 @@ export default function handleDeleteKey(
             const { isChanged } = deleteSelection(model, {
                 direction: 'forward',
                 onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                hasControlKey: rawEvent.ctrlKey || rawEvent.metaKey,
             });
 
             handleKeyboardEventResult(editor, model, rawEvent, isChanged);

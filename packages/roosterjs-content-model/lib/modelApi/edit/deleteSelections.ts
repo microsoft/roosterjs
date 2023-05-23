@@ -12,6 +12,7 @@ import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { findDelimiter } from '../selection/adjustWordSelection';
 import { isWhiteSpacePreserved } from '../common/isWhiteSpacePreserved';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 import {
@@ -47,6 +48,7 @@ export type OnDeleteEntity = (
 
 export interface DeleteSelectionOptions {
     direction?: 'forward' | 'backward' | 'selectionOnly';
+    hasControlKey?: boolean;
     onDeleteEntity?: OnDeleteEntity;
 }
 
@@ -64,6 +66,7 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
 const DefaultDeleteSelectionOptions: Required<DeleteSelectionOptions> = {
     direction: 'selectionOnly',
     onDeleteEntity: () => false,
+    hasControlKey: false,
 };
 
 interface DeleteSelectionContext {
@@ -179,6 +182,51 @@ const deleteSelectionStep1: DeleteSelectionStep = (context, options, model) => {
     );
 };
 
+const deleteSelectionWithCtrl: DeleteSelectionStep = (context, options, model) => {
+    if (context.insertPoint && !context.isChanged && options.hasControlKey) {
+        const { marker, paragraph } = context.insertPoint;
+        const startIndex = paragraph.segments.indexOf(marker);
+
+        if (options.direction == 'forward') {
+            for (let i = startIndex + 1; i < paragraph.segments.length; i++) {
+                const segment = paragraph.segments[i];
+
+                if (segment.segmentType != 'Text') {
+                    break;
+                }
+
+                const index = findDelimiter(segment, true);
+
+                if (index >= 0) {
+                    segment.text = segment.text.substring(index);
+                } else {
+                    segment.text = '';
+                }
+
+                context.isChanged = true;
+            }
+        } else if (options.direction == 'backward') {
+            for (let i = startIndex - 1; i >= 0; i--) {
+                const segment = paragraph.segments[i];
+
+                if (segment.segmentType != 'Text') {
+                    break;
+                }
+
+                const index = findDelimiter(segment, false);
+
+                if (index >= 0) {
+                    segment.text = segment.text.substring(0, index);
+                } else {
+                    segment.text = '';
+                }
+
+                context.isChanged = true;
+            }
+        }
+    }
+};
+
 // Step 2: if we didn't delete anything, and we want to delete forward/backward, now perform it
 const deleteSelectionStep2: DeleteSelectionStep = (context, options) => {
     if (context.insertPoint && !context.isChanged && options.direction != 'selectionOnly') {
@@ -260,6 +308,7 @@ const deleteSelectionStep3: DeleteSelectionStep = context => {
 
 const DeleteSelectionSteps: DeleteSelectionStep[] = [
     deleteSelectionStep1,
+    deleteSelectionWithCtrl,
     deleteSelectionStep2,
     deleteSelectionStep3,
 ];
