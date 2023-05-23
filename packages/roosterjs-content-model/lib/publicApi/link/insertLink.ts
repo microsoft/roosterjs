@@ -92,7 +92,7 @@ export default function insertLink(
                         links.push(segment.link);
                     }
 
-                    mergeModel(model, doc);
+                    mergeModel(model, doc, { mergeCurrentFormat: true });
                 }
 
                 return segments.length > 0;
