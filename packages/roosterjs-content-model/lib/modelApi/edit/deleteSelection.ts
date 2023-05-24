@@ -1,26 +1,18 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { deleteCollapsedSelection } from './steps/deleteCollapsedSelection';
 import { deleteExpandedSelection } from './steps/deleteExpandedSelection';
-import { deleteWordSelection } from './steps/deleteWordSelection';
-import { EditContext, EditOptions, EditStep, InsertPoint } from './steps/EditStep';
+import { EditContext, EditOptions, EditStep, InsertPoint } from './utils/EditStep';
 import { mergeAfterDelete } from './steps/mergeAfterDelete';
 
 export interface DeleteSelectionResult {
     insertPoint: InsertPoint | null;
     isChanged: boolean;
+    addUndoSnapshot: boolean;
 }
 
-const DeleteSelectionSteps: EditStep[] = [
-    deleteExpandedSelection,
-    deleteWordSelection,
-    deleteCollapsedSelection,
-    mergeAfterDelete,
-];
-
 const DefaultDeleteSelectionOptions: Required<EditOptions> = {
-    direction: 'selectionOnly',
+    keyCode: 0,
     onDeleteEntity: () => false,
-    deleteWord: false,
+    additionalSteps: [],
 };
 
 /**
@@ -35,8 +27,17 @@ export function deleteSelection(
         ...(options || {}),
     };
     const context: EditContext = { isChanged: false };
+    const steps = [
+        deleteExpandedSelection,
+        ...fullOptions.additionalSteps,
+        mergeAfterDelete,
+    ].filter(x => !!x) as EditStep[];
 
-    DeleteSelectionSteps.forEach(step => step(context, fullOptions, model));
+    steps.forEach(step => step(context, fullOptions, model));
 
-    return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
+    return {
+        insertPoint: context.insertPoint || null,
+        isChanged: context.isChanged,
+        addUndoSnapshot: !!context.addUndoSnapshot,
+    };
 }

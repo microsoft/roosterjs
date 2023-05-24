@@ -3,7 +3,7 @@ import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParag
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
 import { createText } from '../creators/createText';
-import { findDelimiter } from '../edit/findDelimiter';
+import { findDelimiter } from '../edit/utils/findDelimiter';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 
 /**

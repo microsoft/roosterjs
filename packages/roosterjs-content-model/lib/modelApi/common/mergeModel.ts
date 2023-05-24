@@ -11,9 +11,9 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection } from '../edit/deleteSelections';
+import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { InsertPoint } from '../edit/steps/EditStep';
+import { InsertPoint } from '../edit/utils/EditStep';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
 

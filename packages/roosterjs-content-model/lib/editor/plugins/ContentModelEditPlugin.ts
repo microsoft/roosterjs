@@ -1,5 +1,4 @@
-import handleBackspaceKey from '../../publicApi/editing/handleBackspaceKey';
-import handleDeleteKey from '../../publicApi/editing/handleDeleteKey';
+import handleKeyDownEvent from '../../publicApi/editing/handleKeyDownEvent';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     EditorPlugin,
@@ -76,15 +75,8 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
                     switch (event.rawEvent.which) {
                         case Keys.BACKSPACE:
-                            handleBackspaceKey(
-                                this.editor,
-                                event.rawEvent,
-                                this.triggeredEntityEvents
-                            );
-                            break;
-
                         case Keys.DELETE:
-                            handleDeleteKey(
+                            handleKeyDownEvent(
                                 this.editor,
                                 event.rawEvent,
                                 this.triggeredEntityEvents

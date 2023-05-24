@@ -8,9 +8,9 @@ import { EntityOperation } from 'roosterjs-editor-types';
 export function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
-    isForward: boolean,
     onDeleteEntity: EditEntry,
-    replacement?: ContentModelBlock
+    replacement?: ContentModelBlock,
+    isForward?: boolean
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
 

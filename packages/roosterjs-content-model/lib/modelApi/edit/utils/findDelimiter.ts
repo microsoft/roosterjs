@@ -1,4 +1,4 @@
-import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import { ContentModelText } from '../../../publicTypes/segment/ContentModelText';
 
 /*
 // These are unicode characters mostly from the Category Space Separator (Zs)

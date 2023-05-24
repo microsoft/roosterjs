@@ -1,6 +1,8 @@
-import { ContentModelSegment } from '../../../publicTypes/segment/ContentModelSegment';
-import { EditContext, EditStep } from './EditStep';
-import { isPunctuation, isSpace } from '../findDelimiter';
+import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
+import { EditContext, EditStep } from '../utils/EditStep';
+import { isPunctuation, isSpace } from '../utils/findDelimiter';
+import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
+import { Keys } from 'roosterjs-editor-types';
 
 const enum DeleteWordState {
     Start,
@@ -8,22 +10,98 @@ const enum DeleteWordState {
     WaitForPunctuationOrSpace,
     WaitForTextOrPunctuationForText,
     WaitForTextOrPunctuationForSpace,
-    WaitForText,
     End,
 }
 
 interface CharInfo {
-    isSpace: boolean;
-    isPunctuation: boolean;
+    text: boolean;
+    space: boolean;
+    punctuation: boolean;
 }
 
+/**
+ * @internal
+ */
+export const deleteWordSelection: EditStep = (context, options) => {
+    if (context.insertPoint && !context.isChanged) {
+        const { marker, paragraph } = context.insertPoint;
+        const startIndex = paragraph.segments.indexOf(marker);
+        const deleteNext = options.keyCode == Keys.DELETE;
+
+        let iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
+        let curr = iterator.next();
+
+        for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
+            const { punctuation, space, text } = curr.value;
+
+            switch (state) {
+                case DeleteWordState.Start:
+                    state = space
+                        ? DeleteWordState.WaitForTextOrPunctuationForSpace
+                        : punctuation
+                        ? DeleteWordState.WaitForSpaceOrText
+                        : DeleteWordState.WaitForPunctuationOrSpace;
+                    curr = iterator.next(true /*delete*/);
+                    break;
+
+                case DeleteWordState.WaitForSpaceOrText:
+                    if (deleteNext && space) {
+                        state = DeleteWordState.WaitForTextOrPunctuationForText;
+                        curr = iterator.next(true /*delete*/);
+                    } else if (punctuation) {
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = DeleteWordState.End;
+                    }
+                    break;
+
+                case DeleteWordState.WaitForPunctuationOrSpace:
+                    if (deleteNext && space) {
+                        state = DeleteWordState.WaitForTextOrPunctuationForText;
+                        curr = iterator.next(true /*delete*/);
+                    } else if (text) {
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = DeleteWordState.End;
+                    }
+                    break;
+
+                case DeleteWordState.WaitForTextOrPunctuationForText:
+                    if (punctuation || !space) {
+                        state = DeleteWordState.End;
+                    } else {
+                        curr = iterator.next(true /*delete*/);
+                    }
+                    break;
+
+                case DeleteWordState.WaitForTextOrPunctuationForSpace:
+                    if (space) {
+                        curr = iterator.next(true /*delete*/);
+                    } else if (punctuation) {
+                        state = deleteNext
+                            ? DeleteWordState.WaitForTextOrPunctuationForText
+                            : DeleteWordState.WaitForSpaceOrText;
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = deleteNext
+                            ? DeleteWordState.End
+                            : DeleteWordState.WaitForPunctuationOrSpace;
+                    }
+                    break;
+            }
+        }
+    }
+};
+
 function* iterateSegments(
-    segments: ContentModelSegment[],
+    paragraph: ContentModelParagraph,
     markerIndex: number,
     forward: boolean,
     context: EditContext
 ): Generator<CharInfo, null, boolean> {
     const step = forward ? 1 : -1;
+    const segments = paragraph.segments;
+    const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
 
     for (let i = markerIndex + step; i >= 0 && i < segments.length; i += step) {
         const segment = segments[i];
@@ -36,29 +114,39 @@ function* iterateSegments(
                     j += step
                 ) {
                     const c = segment.text[j];
-                    if (
-                        yield {
-                            isPunctuation: isPunctuation(c),
-                            isSpace: isSpace(c),
+                    const punctuation = isPunctuation(c);
+                    const space = isSpace(c);
+                    const text = !punctuation && !space;
+
+                    if (yield { punctuation, space, text }) {
+                        let newText = segment.text;
+
+                        newText = newText.substring(0, j) + newText.substring(j + 1);
+
+                        if (!preserveWhiteSpace) {
+                            newText = newText.replace(forward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
                         }
-                    ) {
-                        segment.text = segment.text.substring(0, j) + segment.text.substring(j + 1);
-                        j -= step;
+
+                        segment.text = newText;
+
+                        if (step > 0) {
+                            j -= step;
+                        }
+
                         context.isChanged = true;
+                        context.addUndoSnapshot = true;
                     }
                 }
                 break;
 
             case 'Image':
                 if (
-                    yield {
-                        isPunctuation: true, // Treat image as punctuation since they have the same behavior.
-                        isSpace: false,
-                    }
+                    yield { punctuation: true, space: false, text: false } // Treat image as punctuation since they have the same behavior.
                 ) {
                     segments.splice(i, 1);
                     i -= step;
                     context.isChanged = true;
+                    context.addUndoSnapshot = true;
                 }
                 break;
 
@@ -72,81 +160,3 @@ function* iterateSegments(
 
     return null;
 }
-
-/**
- * @internal
- */
-export const deleteWordSelection: EditStep = (context, options) => {
-    if (context.insertPoint && !context.isChanged && options.deleteWord) {
-        const { marker, paragraph } = context.insertPoint;
-        const startIndex = paragraph.segments.indexOf(marker);
-
-        if (options.direction == 'forward') {
-            let iterator = iterateSegments(paragraph.segments, startIndex, true, context);
-            let curr = iterator.next();
-
-            for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
-                const { isPunctuation: punctuation, isSpace: space } = curr.value;
-                switch (state) {
-                    case DeleteWordState.Start:
-                        state = space
-                            ? DeleteWordState.WaitForTextOrPunctuationForSpace
-                            : punctuation
-                            ? DeleteWordState.WaitForSpaceOrText
-                            : DeleteWordState.WaitForPunctuationOrSpace;
-                        curr = iterator.next(true /*delete*/);
-                        break;
-
-                    case DeleteWordState.WaitForSpaceOrText:
-                        if (punctuation) {
-                            curr = iterator.next(true /*delete*/);
-                        } else if (space) {
-                            state = DeleteWordState.WaitForTextOrPunctuationForText;
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = DeleteWordState.End;
-                        }
-                        break;
-
-                    case DeleteWordState.WaitForPunctuationOrSpace:
-                        if (punctuation) {
-                            state = DeleteWordState.End;
-                        } else if (space) {
-                            state = DeleteWordState.WaitForTextOrPunctuationForText;
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            curr = iterator.next(true /*delete*/);
-                        }
-                        break;
-
-                    case DeleteWordState.WaitForTextOrPunctuationForText:
-                        if (punctuation || !space) {
-                            state = DeleteWordState.End;
-                        } else {
-                            curr = iterator.next(true /*delete*/);
-                        }
-                        break;
-
-                    case DeleteWordState.WaitForTextOrPunctuationForSpace:
-                        if (punctuation) {
-                            state = DeleteWordState.WaitForText;
-                            curr = iterator.next(true /*delete*/);
-                        } else if (space) {
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = DeleteWordState.End;
-                        }
-                        break;
-
-                    case DeleteWordState.WaitForText:
-                        if (space || punctuation) {
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = DeleteWordState.End;
-                        }
-                }
-            }
-        } else if (options.direction == 'backward') {
-        }
-    }
-};

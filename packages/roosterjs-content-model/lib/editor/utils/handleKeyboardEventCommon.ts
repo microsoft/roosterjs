@@ -1,6 +1,6 @@
 import { Browser } from 'roosterjs-editor-dom/lib';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { EditEntry } from '../../modelApi/edit/steps/EditStep';
+import { EditEntry } from '../../modelApi/edit/utils/EditStep';
 import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';

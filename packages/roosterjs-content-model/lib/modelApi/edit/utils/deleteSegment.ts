@@ -1,7 +1,7 @@
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../../publicTypes/segment/ContentModelSegment';
 import { createNormalizeSegmentContext, normalizeSegment } from '../../common/normalizeSegment';
-import { deleteSingleChar } from '../deleteSingleChar';
+import { deleteSingleChar } from './deleteSingleChar';
 import { EditEntry } from './EditStep';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
@@ -12,8 +12,8 @@ import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    isForward: boolean,
-    onDeleteEntity: EditEntry
+    onDeleteEntity: EditEntry,
+    isForward?: boolean
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);

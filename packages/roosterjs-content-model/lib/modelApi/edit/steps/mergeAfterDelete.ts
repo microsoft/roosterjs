@@ -1,4 +1,4 @@
-import { EditStep } from './EditStep';
+import { EditStep } from '../utils/EditStep';
 
 /**
  * @internal

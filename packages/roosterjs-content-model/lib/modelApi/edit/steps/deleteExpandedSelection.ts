@@ -1,10 +1,10 @@
 import { createBr } from '../../creators/createBr';
-import { createInsertPoint } from './createInsertPoint';
+import { createInsertPoint } from '../utils/createInsertPoint';
 import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
-import { deleteBlock } from './deleteBlock';
-import { deleteSegment } from './deleteSegment';
-import { EditStep } from './EditStep';
+import { deleteBlock } from '../utils/deleteBlock';
+import { deleteSegment } from '../utils/deleteSegment';
+import { EditStep } from '../utils/EditStep';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -20,8 +20,7 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * at the first deleted position so that we know where to put cursor to after delete
  */
 export const deleteExpandedSelection: EditStep = (context, options, model) => {
-    const { onDeleteEntity, direction } = options;
-    const isForward = direction == 'forward';
+    const { onDeleteEntity } = options;
 
     iterateSelections(
         [model],
@@ -60,8 +59,7 @@ export const deleteExpandedSelection: EditStep = (context, options, model) => {
                             );
                         } else {
                             context.isChanged =
-                                deleteSegment(block, segment, isForward, onDeleteEntity) ||
-                                context.isChanged;
+                                deleteSegment(block, segment, onDeleteEntity) || context.isChanged;
                         }
                     });
                 }
@@ -69,8 +67,7 @@ export const deleteExpandedSelection: EditStep = (context, options, model) => {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
                 context.isChanged =
-                    deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
-                    context.isChanged;
+                    deleteBlock(blocks, block, onDeleteEntity, paragraph) || context.isChanged;
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
@@ -85,6 +82,9 @@ export const deleteExpandedSelection: EditStep = (context, options, model) => {
                 delete row.cachedElement;
                 context.isChanged = true;
             }
+
+            // When delete whole selection, we should add an undo snapshot immediately
+            context.addUndoSnapshot = context.isChanged;
 
             if (!context.insertPoint) {
                 // If we have not got a insert point after delete and we have a paragraph to put an insert point in, create insert point now

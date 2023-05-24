@@ -24,6 +24,7 @@ export interface EditContext {
     insertPoint?: InsertPoint;
     lastParagraph?: ContentModelParagraph;
     lastTableContext?: TableSelectionContext;
+    addUndoSnapshot?: boolean;
     isChanged: boolean;
 }
 
@@ -45,8 +46,8 @@ export type EditEntry = (
  * @internal
  */
 export interface EditOptions {
-    direction?: 'forward' | 'backward' | 'selectionOnly';
-    deleteWord?: boolean;
+    keyCode?: number;
+    additionalSteps?: (EditStep | null)[];
     onDeleteEntity?: EditEntry;
 }
 
