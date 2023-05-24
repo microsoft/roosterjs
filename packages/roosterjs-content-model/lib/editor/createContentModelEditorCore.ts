@@ -5,23 +5,13 @@ import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInC
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
+import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
-import {
-    CoreCreator,
-    DefaultFormat,
-    EditorCore,
-    ExperimentalFeatures,
-} from 'roosterjs-editor-types';
-
-const DEFAULT_FORMAT: DefaultFormat = {
-    fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
-    fontSize: '12pt',
-};
 
 /**
  * Editor Core creator for Content Model editor
@@ -118,10 +108,9 @@ function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
         fontWeight: format.bold ? 'bold' : undefined,
         italic: format.italic || undefined,
         underline: format.underline || undefined,
-        fontFamily: format.fontFamily || DEFAULT_FORMAT.fontFamily,
-        fontSize: format.fontSize || DEFAULT_FORMAT.fontSize,
-        textColor:
-            format.textColors?.lightModeColor || format.textColor || DEFAULT_FORMAT.textColor,
+        fontFamily: format.fontFamily || undefined,
+        fontSize: format.fontSize || undefined,
+        textColor: format.textColors?.lightModeColor || format.textColor || undefined,
         backgroundColor:
             format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
     };
