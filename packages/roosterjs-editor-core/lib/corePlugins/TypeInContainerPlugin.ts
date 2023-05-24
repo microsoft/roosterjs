@@ -1,11 +1,4 @@
-import {
-    EditorPlugin,
-    ExperimentalFeatures,
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     Browser,
     findClosestElementAncestor,
@@ -99,29 +92,6 @@ export default class TypeInContainerPlugin implements EditorPlugin {
                 } else {
                     this.editor.runAsync(callback);
                 }
-            }
-        }
-
-        /**
-         * Add a Span with default format to the previous element when pressing backspace
-         */
-        if (
-            event.eventType == PluginEventType.KeyDown &&
-            event.rawEvent.which == Keys.BACKSPACE &&
-            this.editor?.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-        ) {
-            const element = this.editor?.getElementAtCursor();
-            const block =
-                element &&
-                this.editor?.getBlockElementAtNode(element)?.getStartNode().previousSibling;
-
-            if (block) {
-                this.editor?.runAsync(editor => {
-                    const position = editor.getFocusedPosition();
-                    if (position && block == position.element) {
-                        editor.ensureTypeInContainer(position, event.rawEvent);
-                    }
-                });
             }
         }
     }

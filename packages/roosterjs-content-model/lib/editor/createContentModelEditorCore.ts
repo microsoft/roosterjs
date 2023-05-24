@@ -1,3 +1,4 @@
+import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
@@ -10,7 +11,6 @@ import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
-import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import {
     CoreCreator,
     DefaultFormat,
@@ -68,32 +68,8 @@ export function promoteToContentModelEditorCore(
 }
 
 function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
-    cmCore.defaultFormatOnContainer = isFeatureEnabled(
-        cmCore.lifecycle.experimentalFeatures,
-        ExperimentalFeatures.DefaultFormatOnContainer
-    );
-    cmCore.lifecycle.defaultFormat = {
-        ...(cmCore.defaultFormatOnContainer ? DEFAULT_FORMAT : {}),
-        ...(cmCore.lifecycle.defaultFormat || {}),
-    };
+    cmCore.lifecycle.defaultFormat = cmCore.lifecycle.defaultFormat || {};
     cmCore.defaultFormat = getDefaultSegmentFormat(cmCore);
-    cmCore.originalContainerFormat = {};
-
-    if (cmCore.defaultFormatOnContainer) {
-        const { contentDiv, defaultFormat } = cmCore;
-        const { fontFamily, fontSize } = defaultFormat;
-
-        cmCore.originalContainerFormat.fontFamily = contentDiv.style.fontFamily;
-        cmCore.originalContainerFormat.fontSize = contentDiv.style.fontSize;
-
-        if (fontFamily) {
-            contentDiv.style.fontFamily = fontFamily;
-        }
-
-        if (fontSize) {
-            contentDiv.style.fontSize = fontSize;
-        }
-    }
 }
 
 function promoteContentModelInfo(
