@@ -114,6 +114,16 @@ export const enum ExperimentalFeatures {
      */
     ListItemAlignment = 'ListItemAlignment',
 
+    /**
+     * @deprecated
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
+
+    /**
+     * @deprecated
+     */
+    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
+
     //#endregion
 
     /**
@@ -135,12 +145,6 @@ export const enum ExperimentalFeatures {
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
 
     /**
-     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
-     * the block element (In most case, the DIV element) so keep the block element clean.
-     */
-    DefaultFormatInSpan = 'DefaultFormatInSpan',
-
-    /**
      * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
      */
     ReusableContentModel = 'ReusableContentModel',
@@ -149,11 +153,6 @@ export const enum ExperimentalFeatures {
      * Handle keyboard editing event with Content Model
      */
     EditWithContentModel = 'EditWithContentModel',
-
-    /**
-     * Apply default format on editor container
-     */
-    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
 
     /**
      * Delete table with Backspace key with the whole was selected with table selector
