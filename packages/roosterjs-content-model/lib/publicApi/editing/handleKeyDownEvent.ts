@@ -1,5 +1,5 @@
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
-import { deleteAllSegmentBefore } from '../../modelApi/edit/steps/deleteAllSegmentBefore';
+import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection, DeleteSelectionResult } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
@@ -13,11 +13,11 @@ import {
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
-} from '../../modelApi/edit/steps/deleteWordSelection';
+} from '../../modelApi/edit/deleteSteps/deleteWordSelection';
 import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
-} from '../../modelApi/edit/steps/deleteCollapsedSelection';
+} from '../../modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 /**
  * Handle KeyDown event

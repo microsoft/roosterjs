@@ -15,11 +15,6 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
     includeListFormatHolder: 'never',
 };
 
-/**
- * @internal
- * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
- * at the first deleted position so that we know where to put cursor to after delete
- */
 export function deleteExpandedSelection(
     options: DeleteSelectionOptions,
     model: ContentModelDocument

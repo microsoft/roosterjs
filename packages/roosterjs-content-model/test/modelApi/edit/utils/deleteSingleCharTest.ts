@@ -1,4 +1,4 @@
-import { deleteSingleChar } from '../../../lib/modelApi/edit/utils/deleteSingleChar';
+import { deleteSingleChar } from '../../../../lib/modelApi/edit/utils/deleteSingleChar';
 
 describe('deleteSingleChar', () => {
     const tests = ['', 'a', '\u200b', '好', '👩‍💻', '🎉', '🛏', '🎉', '👩‍❤️‍💋‍👩'];

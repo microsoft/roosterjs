@@ -1,5 +1,5 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { deleteExpandedSelection } from './steps/deleteExpandedSelection';
+import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import {
     DeleteSelectionOptions,
@@ -38,19 +38,7 @@ export function deleteSelection(
         }
     });
 
-    // if we end up with multiple paragraphs impacted, we need to merge them
-    const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
-
-    if (
-        insertPoint &&
-        isChanged &&
-        lastParagraph &&
-        lastParagraph != insertPoint.paragraph &&
-        lastTableContext == insertPoint.tableContext
-    ) {
-        insertPoint.paragraph.segments.push(...lastParagraph.segments);
-        lastParagraph.segments = [];
-    }
+    mergeParagraphAfterDelete(context);
 
     return {
         insertPoint: context.insertPoint || null,
@@ -63,4 +51,20 @@ function isInsertableContext(
     context: DeleteSelectionContext
 ): context is InsertableDeleteSelectionContext {
     return !!context.insertPoint;
+}
+
+// If we end up with multiple paragraphs impacted, we need to merge them
+function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
+    const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
+
+    if (
+        insertPoint &&
+        isChanged &&
+        lastParagraph &&
+        lastParagraph != insertPoint.paragraph &&
+        lastTableContext == insertPoint.tableContext
+    ) {
+        insertPoint.paragraph.segments.push(...lastParagraph.segments);
+        lastParagraph.segments = [];
+    }
 }
