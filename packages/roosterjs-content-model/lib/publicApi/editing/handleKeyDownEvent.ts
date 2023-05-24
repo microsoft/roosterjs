@@ -1,7 +1,7 @@
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/steps/deleteAllSegmentBefore';
 import { deleteSelection, DeleteSelectionResult } from '../../modelApi/edit/deleteSelection';
-import { EditStep } from '../../modelApi/edit/utils/EditStep';
+import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
@@ -47,7 +47,7 @@ export default function handleKeyDownEvent(
             editor,
             apiName,
             model => {
-                const steps: (EditStep | null)[] = [
+                const steps: (DeleteSelectionStep | null)[] = [
                     shouldDeleteAllSegmentsBefore(rawEvent) ? deleteAllSegmentBefore : null,
                     deleteWordSelection,
                     deleteCollapsedSelection,

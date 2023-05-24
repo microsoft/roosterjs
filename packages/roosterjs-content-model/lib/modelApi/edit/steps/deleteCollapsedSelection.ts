@@ -3,9 +3,9 @@ import { ContentModelSegment } from '../../../publicTypes/segment/ContentModelSe
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
 import { deleteSegment } from '../utils/deleteSegment';
-import { EditStep } from '../utils/EditStep';
+import { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
-function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): EditStep {
+function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return (context, options) => {
         const isForward = direction == 'forward';
 

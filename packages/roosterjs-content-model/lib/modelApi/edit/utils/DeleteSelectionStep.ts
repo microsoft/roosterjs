@@ -8,7 +8,7 @@ import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compa
 /**
  * @internal
  */
-export interface EditContext {
+export interface DeleteSelectionContext {
     insertPoint?: InsertPoint;
     lastParagraph?: ContentModelParagraph;
     lastTableContext?: TableSelectionContext;
@@ -19,7 +19,7 @@ export interface EditContext {
 /**
  * @internal
  */
-export interface InsertableEditContext extends EditContext {
+export interface InsertableDeleteSelectionContext extends DeleteSelectionContext {
     insertPoint: InsertPoint;
 }
 
@@ -40,11 +40,14 @@ export type OnDeleteEntity = (
 /**
  * @internal
  */
-export interface EditOptions {
+export interface DeleteSelectionOptions {
     onDeleteEntity?: OnDeleteEntity;
 }
 
 /**
  * @internal
  */
-export type EditStep = (context: InsertableEditContext, options: Required<EditOptions>) => void;
+export type DeleteSelectionStep = (
+    context: InsertableDeleteSelectionContext,
+    options: Required<DeleteSelectionOptions>
+) => void;

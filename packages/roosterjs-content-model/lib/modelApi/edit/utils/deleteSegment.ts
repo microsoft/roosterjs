@@ -4,7 +4,7 @@ import { createNormalizeSegmentContext, normalizeSegment } from '../../common/no
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
-import { OnDeleteEntity } from './EditStep';
+import { OnDeleteEntity } from './DeleteSelectionStep';
 
 /**
  * @internal

@@ -1,7 +1,12 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { deleteExpandedSelection } from './steps/deleteExpandedSelection';
-import { EditContext, EditOptions, EditStep, InsertableEditContext } from './utils/EditStep';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
+import {
+    DeleteSelectionOptions,
+    DeleteSelectionContext,
+    DeleteSelectionStep,
+    InsertableDeleteSelectionContext,
+} from './utils/DeleteSelectionStep';
 
 export interface DeleteSelectionResult {
     insertPoint: InsertPoint | null;
@@ -9,7 +14,7 @@ export interface DeleteSelectionResult {
     addUndoSnapshot: boolean;
 }
 
-const DefaultDeleteSelectionOptions: Required<EditOptions> = {
+const DefaultDeleteSelectionOptions: Required<DeleteSelectionOptions> = {
     onDeleteEntity: () => false,
 };
 
@@ -18,10 +23,10 @@ const DefaultDeleteSelectionOptions: Required<EditOptions> = {
  */
 export function deleteSelection(
     model: ContentModelDocument,
-    additionalSteps: (EditStep | null)[] = [],
-    options?: EditOptions
+    additionalSteps: (DeleteSelectionStep | null)[] = [],
+    options?: DeleteSelectionOptions
 ): DeleteSelectionResult {
-    const fullOptions: Required<EditOptions> = {
+    const fullOptions: Required<DeleteSelectionOptions> = {
         ...DefaultDeleteSelectionOptions,
         ...(options || {}),
     };
@@ -54,6 +59,8 @@ export function deleteSelection(
     };
 }
 
-function isInsertableContext(context: EditContext): context is InsertableEditContext {
+function isInsertableContext(
+    context: DeleteSelectionContext
+): context is InsertableDeleteSelectionContext {
     return !!context.insertPoint;
 }

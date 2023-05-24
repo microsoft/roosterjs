@@ -1,5 +1,5 @@
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
-import { EditContext, EditStep } from '../utils/EditStep';
+import { DeleteSelectionContext, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 import { isPunctuation, isSpace } from '../utils/findDelimiter';
 import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
 
@@ -18,7 +18,7 @@ interface CharInfo {
     punctuation: boolean;
 }
 
-function getDeleteWordSelection(direction: 'forward' | 'backward'): EditStep {
+function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {
         const { marker, paragraph } = context.insertPoint;
         const startIndex = paragraph.segments.indexOf(marker);
@@ -93,7 +93,7 @@ function* iterateSegments(
     paragraph: ContentModelParagraph,
     markerIndex: number,
     forward: boolean,
-    context: EditContext
+    context: DeleteSelectionContext
 ): Generator<CharInfo, null, boolean> {
     const step = forward ? 1 : -1;
     const segments = paragraph.segments;

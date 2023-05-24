@@ -5,7 +5,7 @@ import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
 import { deleteBlock } from '../utils/deleteBlock';
 import { deleteSegment } from '../utils/deleteSegment';
-import { EditContext, EditOptions } from '../utils/EditStep';
+import { DeleteSelectionContext, DeleteSelectionOptions } from '../utils/DeleteSelectionStep';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -21,11 +21,11 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * at the first deleted position so that we know where to put cursor to after delete
  */
 export function deleteExpandedSelection(
-    options: EditOptions,
+    options: DeleteSelectionOptions,
     model: ContentModelDocument
-): EditContext {
+): DeleteSelectionContext {
     const { onDeleteEntity } = options;
-    const context: EditContext = {
+    const context: DeleteSelectionContext = {
         isChanged: false,
     };
 

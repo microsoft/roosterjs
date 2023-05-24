@@ -1,6 +1,6 @@
 import { ContentModelBlock } from '../../../publicTypes/block/ContentModelBlock';
 import { EntityOperation } from 'roosterjs-editor-types';
-import { OnDeleteEntity } from './EditStep';
+import { OnDeleteEntity } from './DeleteSelectionStep';
 
 /**
  * @internal

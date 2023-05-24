@@ -1,7 +1,7 @@
 import { deleteSegment } from '../utils/deleteSegment';
-import { EditStep } from '../utils/EditStep';
+import { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
-export const deleteAllSegmentBefore: EditStep = (context, options) => {
+export const deleteAllSegmentBefore: DeleteSelectionStep = (context, options) => {
     const { onDeleteEntity } = options;
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
