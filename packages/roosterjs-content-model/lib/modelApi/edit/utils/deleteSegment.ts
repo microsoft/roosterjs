@@ -13,7 +13,7 @@ export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
     onDeleteEntity: EditEntry,
-    isForward?: boolean
+    direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
@@ -31,16 +31,14 @@ export function deleteSegment(
             return true;
 
         case 'Entity':
-            if (
-                !onDeleteEntity?.(
-                    segmentToDelete,
-                    segmentToDelete.isSelected
-                        ? EntityOperation.Overwrite
-                        : isForward
-                        ? EntityOperation.RemoveFromStart
-                        : EntityOperation.RemoveFromEnd
-                )
-            ) {
+            const operation = segmentToDelete.isSelected
+                ? EntityOperation.Overwrite
+                : direction == 'forward'
+                ? EntityOperation.RemoveFromStart
+                : direction == 'backward'
+                ? EntityOperation.RemoveFromEnd
+                : undefined;
+            if (operation !== undefined && !onDeleteEntity?.(segmentToDelete, operation)) {
                 segments.splice(index, 1);
             }
 
@@ -51,11 +49,11 @@ export function deleteSegment(
 
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
-            } else {
-                text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
+            } else if (direction) {
+                text = deleteSingleChar(text, direction == 'forward'); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
-                    text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
+                    text = text.replace(direction == 'forward' ? /^\u0020+/ : /\u0020+$/, '\u00A0');
                 }
 
                 if (text == '') {

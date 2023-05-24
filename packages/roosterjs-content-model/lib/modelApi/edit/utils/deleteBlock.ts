@@ -10,7 +10,7 @@ export function deleteBlock(
     blockToDelete: ContentModelBlock,
     onDeleteEntity: EditEntry,
     replacement?: ContentModelBlock,
-    isForward?: boolean
+    direction?: 'forward' | 'backward'
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
 
@@ -21,16 +21,15 @@ export function deleteBlock(
             return true;
 
         case 'Entity':
-            if (
-                !onDeleteEntity(
-                    blockToDelete,
-                    blockToDelete.isSelected
-                        ? EntityOperation.Overwrite
-                        : isForward
-                        ? EntityOperation.RemoveFromStart
-                        : EntityOperation.RemoveFromEnd
-                )
-            ) {
+            const operation = blockToDelete.isSelected
+                ? EntityOperation.Overwrite
+                : direction == 'forward'
+                ? EntityOperation.RemoveFromStart
+                : direction == 'backward'
+                ? EntityOperation.RemoveFromEnd
+                : undefined;
+
+            if (operation !== undefined && !onDeleteEntity(blockToDelete, operation)) {
                 replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
             }
 

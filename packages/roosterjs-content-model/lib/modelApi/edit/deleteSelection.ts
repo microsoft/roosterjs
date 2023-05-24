@@ -10,7 +10,6 @@ export interface DeleteSelectionResult {
 }
 
 const DefaultDeleteSelectionOptions: Required<EditOptions> = {
-    keyCode: 0,
     onDeleteEntity: () => false,
     additionalSteps: [],
 };

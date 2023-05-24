@@ -1,10 +1,16 @@
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
-import { deleteCollapsedSelection } from '../../modelApi/edit/steps/deleteCollapsedSelection';
 import { deleteSelection, DeleteSelectionResult } from '../../modelApi/edit/deleteSelection';
-import { deleteWordSelection } from '../../modelApi/edit/steps/deleteWordSelection';
 import { EditStep } from '../../modelApi/edit/utils/EditStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import {
+    backwardDeleteWordSelection,
+    forwardDeleteWordSelection,
+} from '../../modelApi/edit/steps/deleteWordSelection';
+import {
+    backwardDeleteCollapsedSelection,
+    forwardDeleteCollapsedSelection,
+} from '../../modelApi/edit/steps/deleteCollapsedSelection';
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
@@ -23,11 +29,19 @@ export default function handleKeyDownEvent(
     const which = rawEvent.which;
 
     if (which == Keys.DELETE || which == Keys.BACKSPACE) {
+        const isForward = which == Keys.DELETE;
+        const apiName = isForward ? 'handleDeleteKey' : 'handleBackspaceKey';
+        const deleteCollapsedSelection = isForward
+            ? forwardDeleteCollapsedSelection
+            : backwardDeleteCollapsedSelection;
+        const deleteWordSelection = isForward
+            ? forwardDeleteWordSelection
+            : backwardDeleteWordSelection;
         let result: DeleteSelectionResult | undefined;
 
         formatWithContentModel(
             editor,
-            which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
+            apiName,
             model => {
                 const additionalSteps: (EditStep | null)[] = [
                     shouldDeleteWord(rawEvent) ? deleteWordSelection : null,
@@ -35,7 +49,6 @@ export default function handleKeyDownEvent(
                 ].filter(x => !!x);
 
                 result = deleteSelection(model, {
-                    keyCode: which,
                     onDeleteEntity: getOnDeleteEntityCallback(
                         editor,
                         rawEvent,
@@ -51,7 +64,7 @@ export default function handleKeyDownEvent(
             {
                 skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
                 changeSource: ChangeSource.Keyboard,
-                getChangeData: () => rawEvent.which,
+                getChangeData: () => which,
             }
         );
 

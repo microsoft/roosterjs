@@ -46,7 +46,6 @@ export type EditEntry = (
  * @internal
  */
 export interface EditOptions {
-    keyCode?: number;
     additionalSteps?: (EditStep | null)[];
     onDeleteEntity?: EditEntry;
 }
