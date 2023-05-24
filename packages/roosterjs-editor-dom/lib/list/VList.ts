@@ -216,7 +216,7 @@ export default class VList {
                     }
                 }
 
-                if (item.getLevel() == 1) {
+                if (item.getLevel() == 1 && !item.isDummy()) {
                     start++;
                 }
             }

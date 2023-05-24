@@ -160,7 +160,7 @@ const MergeInNewLine: BuildInEditFeature<PluginKeyboardEvent> = {
                     li ?? undefined
                 );
                 if (vList && start && end) {
-                    vList.setIndentation(start, end, Indentation.Decrease, false /*softOutdent*/);
+                    vList.setIndentation(start, end, Indentation.Decrease, true /*softOutdent*/);
                     vList.writeBack(
                         editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
                     );
