@@ -10,8 +10,8 @@ import { OnDeleteEntity } from '../../modelApi/edit/utils/DeleteSelectionStep';
  */
 export function getOnDeleteEntityCallback(
     editor: IContentModelEditor,
-    rawEvent: KeyboardEvent,
-    triggeredEntityEvents: EntityOperationEvent[]
+    rawEvent?: KeyboardEvent,
+    triggeredEntityEvents: EntityOperationEvent[] = []
 ): OnDeleteEntity {
     return (entity, operation) => {
         if (entity.id && entity.type) {
@@ -32,7 +32,7 @@ export function getOnDeleteEntityCallback(
             }
         }
 
-        return rawEvent.defaultPrevented;
+        return !!rawEvent?.defaultPrevented;
     };
 }
 

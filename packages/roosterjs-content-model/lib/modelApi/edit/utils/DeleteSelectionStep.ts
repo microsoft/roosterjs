@@ -40,14 +40,7 @@ export type OnDeleteEntity = (
 /**
  * @internal
  */
-export interface DeleteSelectionOptions {
-    onDeleteEntity?: OnDeleteEntity;
-}
-
-/**
- * @internal
- */
 export type DeleteSelectionStep = (
     context: InsertableDeleteSelectionContext,
-    options: Required<DeleteSelectionOptions>
+    onDeleteEntity: OnDeleteEntity
 ) => void;

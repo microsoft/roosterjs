@@ -4,6 +4,7 @@ import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSeg
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
 import { mergeModel } from '../modelApi/common/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -127,7 +128,7 @@ export default class ContentModelEditor
                 this,
                 'Paste',
                 model => {
-                    mergeModel(model, pasteModel);
+                    mergeModel(model, pasteModel, getOnDeleteEntityCallback(this));
                     return true;
                 },
                 {

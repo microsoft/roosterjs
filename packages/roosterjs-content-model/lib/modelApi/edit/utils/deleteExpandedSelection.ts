@@ -5,7 +5,7 @@ import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
 import { deleteBlock } from '../utils/deleteBlock';
 import { deleteSegment } from '../utils/deleteSegment';
-import { DeleteSelectionContext, DeleteSelectionOptions } from '../utils/DeleteSelectionStep';
+import { DeleteSelectionContext, OnDeleteEntity } from '../utils/DeleteSelectionStep';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -15,11 +15,15 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
     includeListFormatHolder: 'never',
 };
 
+/**
+ * @internal
+ * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
+ * at the first deleted position so that we know where to put cursor to after delete
+ */
 export function deleteExpandedSelection(
-    options: DeleteSelectionOptions,
-    model: ContentModelDocument
+    model: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity
 ): DeleteSelectionContext {
-    const { onDeleteEntity } = options;
     const context: DeleteSelectionContext = {
         isChanged: false,
     };

@@ -20,6 +20,10 @@ import {
     forwardDeleteCollapsedSelection,
 } from '../../../lib/modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
+function onDeleteEntityMock() {
+    return false;
+}
+
 describe('deleteSelection - selectionOnly', () => {
     it('empty selection', () => {
         const model = createContentModelDocument();
@@ -27,7 +31,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -52,7 +56,7 @@ describe('deleteSelection - selectionOnly', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeFalse();
         expect(result.insertPoint).toEqual({
@@ -92,7 +96,7 @@ describe('deleteSelection - selectionOnly', () => {
         para.segments.push(text);
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -141,7 +145,7 @@ describe('deleteSelection - selectionOnly', () => {
         model.blocks.push(para1);
         model.blocks.push(para2);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -189,7 +193,7 @@ describe('deleteSelection - selectionOnly', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -243,7 +247,7 @@ describe('deleteSelection - selectionOnly', () => {
         divider2.isSelected = true;
         model.blocks.push(para1, divider1, divider2, para2);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -313,7 +317,7 @@ describe('deleteSelection - selectionOnly', () => {
         table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -414,7 +418,7 @@ describe('deleteSelection - selectionOnly', () => {
         table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -466,7 +470,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         entity.isSelected = true;
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -519,7 +523,7 @@ describe('deleteSelection - selectionOnly', () => {
         entity.isSelected = true;
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(false);
-        const result = deleteSelection(model, [], { onDeleteEntity });
+        const result = deleteSelection(model, onDeleteEntity, []);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -574,7 +578,7 @@ describe('deleteSelection - selectionOnly', () => {
         entity.isSelected = true;
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(true);
-        const result = deleteSelection(model, [], { onDeleteEntity });
+        const result = deleteSelection(model, onDeleteEntity, []);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -627,7 +631,7 @@ describe('deleteSelection - selectionOnly', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: { fontSize: '10pt' },
@@ -668,7 +672,7 @@ describe('deleteSelection - selectionOnly', () => {
         general.isSelected = true;
         model.blocks.push(general);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: {},
@@ -710,7 +714,7 @@ describe('deleteSelection - selectionOnly', () => {
         general.isSelected = true;
         model.blocks.push(divider, general);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: {},
@@ -758,7 +762,7 @@ describe('deleteSelection - selectionOnly', () => {
         para.segments.push(general);
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: {},
@@ -800,7 +804,7 @@ describe('deleteSelection - selectionOnly', () => {
         para.segments.push(general, text);
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: {},
@@ -841,7 +845,7 @@ describe('deleteSelection - selectionOnly', () => {
         para.segments.push(text, image);
         model.blocks.push(para);
 
-        const result = deleteSelection(model);
+        const result = deleteSelection(model, onDeleteEntityMock);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: {},
@@ -880,7 +884,9 @@ describe('deleteSelection - forward', () => {
 
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -905,7 +911,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -945,7 +953,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, segment);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -993,7 +1003,9 @@ describe('deleteSelection - forward', () => {
         para2.segments.push(text2);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1051,7 +1063,9 @@ describe('deleteSelection - forward', () => {
         para2.segments.push(text);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1105,7 +1119,9 @@ describe('deleteSelection - forward', () => {
         para2.segments.push(text);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1164,7 +1180,9 @@ describe('deleteSelection - forward', () => {
         para2.segments.push(marker2, text2);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1219,7 +1237,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, image);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1261,7 +1281,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, br);
         model.blocks.push(para, table);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1302,7 +1324,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, br);
         model.blocks.push(para, divider);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1344,7 +1368,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1387,9 +1413,7 @@ describe('deleteSelection - forward', () => {
         model.blocks.push(para, entity);
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(false);
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
-            onDeleteEntity,
-        });
+        const result = deleteSelection(model, onDeleteEntity, [forwardDeleteCollapsedSelection]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1433,9 +1457,7 @@ describe('deleteSelection - forward', () => {
         model.blocks.push(para, entity);
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(true);
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
-            onDeleteEntity,
-        });
+        const result = deleteSelection(model, onDeleteEntity, [forwardDeleteCollapsedSelection]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1490,7 +1512,9 @@ describe('deleteSelection - forward', () => {
         listItem.blocks.push(para2);
         model.blocks.push(para1, listItem);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1558,7 +1582,9 @@ describe('deleteSelection - forward', () => {
         quote.blocks.push(para2);
         model.blocks.push(para1, quote);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1621,7 +1647,9 @@ describe('deleteSelection - forward', () => {
         quote.blocks.push(para1);
         model.blocks.push(quote, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1686,7 +1714,9 @@ describe('deleteSelection - forward', () => {
         listItem.blocks.push(para2);
         model.blocks.push(quote, listItem);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1758,7 +1788,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(text1, text2);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1812,7 +1844,9 @@ describe('deleteSelection - forward', () => {
         model.blocks.push(para1);
         model.blocks.push(para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1860,7 +1894,9 @@ describe('deleteSelection - forward', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1914,7 +1950,9 @@ describe('deleteSelection - forward', () => {
         divider2.isSelected = true;
         model.blocks.push(para1, divider1, divider2, para2);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -1984,7 +2022,9 @@ describe('deleteSelection - forward', () => {
         table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2085,7 +2125,9 @@ describe('deleteSelection - forward', () => {
         table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2138,7 +2180,9 @@ describe('deleteSelection - forward', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: { fontSize: '10pt' },
@@ -2184,7 +2228,9 @@ describe('deleteSelection - forward', () => {
         parentParagraph.segments.push(general);
         model.blocks.push(parentParagraph);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2235,7 +2281,9 @@ describe('deleteSelection - forward', () => {
         parentParagraph.segments.push(general, text);
         model.blocks.push(parentParagraph);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2287,7 +2335,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, text);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2331,7 +2381,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(marker, text);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2377,7 +2429,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(text1, marker, text2);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2426,7 +2480,9 @@ describe('deleteSelection - forward', () => {
         para.segments.push(text1, marker, text2);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [forwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            forwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -2468,7 +2524,9 @@ describe('deleteSelection - backward', () => {
 
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(model).toEqual({
             blockGroupType: 'Document',
@@ -2493,7 +2551,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2533,7 +2593,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(segment, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2581,7 +2643,9 @@ describe('deleteSelection - backward', () => {
         para2.segments.push(marker, text2);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2639,7 +2703,9 @@ describe('deleteSelection - backward', () => {
         para2.segments.push(marker, text);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2693,7 +2759,9 @@ describe('deleteSelection - backward', () => {
         para2.segments.push(marker, text);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2751,7 +2819,9 @@ describe('deleteSelection - backward', () => {
         para2.segments.push(marker2, text2);
         model.blocks.push(para1, para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2806,7 +2876,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(image, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2848,7 +2920,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(marker, br);
         model.blocks.push(table, para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2889,7 +2963,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(marker, br);
         model.blocks.push(divider, para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2931,7 +3007,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -2974,9 +3052,7 @@ describe('deleteSelection - backward', () => {
         model.blocks.push(entity, para);
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(false);
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
-            onDeleteEntity,
-        });
+        const result = deleteSelection(model, onDeleteEntity, [backwardDeleteCollapsedSelection]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3020,9 +3096,7 @@ describe('deleteSelection - backward', () => {
         model.blocks.push(entity, para);
 
         const onDeleteEntity = jasmine.createSpy('onDeleteEntity').and.returnValue(true);
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
-            onDeleteEntity,
-        });
+        const result = deleteSelection(model, onDeleteEntity, [backwardDeleteCollapsedSelection]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3077,7 +3151,9 @@ describe('deleteSelection - backward', () => {
         listItem.blocks.push(para2);
         model.blocks.push(listItem, para1);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3145,7 +3221,9 @@ describe('deleteSelection - backward', () => {
         quote.blocks.push(para2);
         model.blocks.push(quote, para1);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3208,7 +3286,9 @@ describe('deleteSelection - backward', () => {
         quote.blocks.push(para1);
         model.blocks.push(para2, quote);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3273,7 +3353,9 @@ describe('deleteSelection - backward', () => {
         listItem.blocks.push(para2);
         model.blocks.push(listItem, quote);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3345,7 +3427,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(text1, text2);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3399,7 +3483,9 @@ describe('deleteSelection - backward', () => {
         model.blocks.push(para1);
         model.blocks.push(para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3447,7 +3533,9 @@ describe('deleteSelection - backward', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3501,7 +3589,9 @@ describe('deleteSelection - backward', () => {
         divider2.isSelected = true;
         model.blocks.push(para1, divider1, divider2, para2);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3571,7 +3661,9 @@ describe('deleteSelection - backward', () => {
         table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3672,7 +3764,9 @@ describe('deleteSelection - backward', () => {
         table.rows[0].cells.push(cell);
         model.blocks.push(table);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
         expect(result.insertPoint).toEqual({
@@ -3725,7 +3819,9 @@ describe('deleteSelection - backward', () => {
         divider.isSelected = true;
         model.blocks.push(divider);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
         const marker: ContentModelSelectionMarker = {
             segmentType: 'SelectionMarker',
             format: { fontSize: '10pt' },
@@ -3771,7 +3867,9 @@ describe('deleteSelection - backward', () => {
         parentParagraph.segments.push(general);
         model.blocks.push(parentParagraph);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -3822,7 +3920,9 @@ describe('deleteSelection - backward', () => {
         parentParagraph.segments.push(text, general);
         model.blocks.push(parentParagraph);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -3874,7 +3974,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(text, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -3918,7 +4020,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(text, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -3964,7 +4068,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(text1, text2, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 
@@ -4013,7 +4119,9 @@ describe('deleteSelection - backward', () => {
         para.segments.push(text1, text2, marker);
         model.blocks.push(para);
 
-        const result = deleteSelection(model, [backwardDeleteCollapsedSelection]);
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
 
         expect(result.isChanged).toBeTrue();
 

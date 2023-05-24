@@ -6,10 +6,8 @@ import { deleteSegment } from '../utils/deleteSegment';
 import { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
-    return (context, options) => {
+    return (context, onDeleteEntity) => {
         const isForward = direction == 'forward';
-
-        const { onDeleteEntity } = options;
         const { paragraph, marker, path, tableContext } = context.insertPoint;
         const segments = paragraph.segments;
 

@@ -50,13 +50,11 @@ describe('handleDeleteKey', () => {
             mockedEvent,
             []
         );
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(
-            input,
-            [null, null, forwardDeleteCollapsedSelection],
-            {
-                onDeleteEntity: mockedCallback,
-            }
-        );
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, mockedCallback, [
+            null,
+            null,
+            forwardDeleteCollapsedSelection,
+        ]);
         expect(handleKeyboardEventResult.handleKeyboardEventResult).toHaveBeenCalledWith(
             editor,
             input,

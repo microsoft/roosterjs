@@ -53,13 +53,11 @@ export default function handleKeyDownEvent(
                     deleteCollapsedSelection,
                 ];
 
-                result = deleteSelection(model, steps, {
-                    onDeleteEntity: getOnDeleteEntityCallback(
-                        editor,
-                        rawEvent,
-                        triggeredEntityEvents
-                    ),
-                });
+                result = deleteSelection(
+                    model,
+                    getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                    steps
+                );
 
                 handleKeyboardEventResult(editor, model, rawEvent, result.isChanged);
 

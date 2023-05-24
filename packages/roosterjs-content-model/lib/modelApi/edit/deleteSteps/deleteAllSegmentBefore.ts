@@ -1,8 +1,10 @@
 import { deleteSegment } from '../utils/deleteSegment';
 import { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
-export const deleteAllSegmentBefore: DeleteSelectionStep = (context, options) => {
-    const { onDeleteEntity } = options;
+/**
+ * @internal
+ */
+export const deleteAllSegmentBefore: DeleteSelectionStep = (context, onDeleteEntity) => {
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
 

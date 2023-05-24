@@ -12,7 +12,7 @@ import { OnDeleteEntity } from './DeleteSelectionStep';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    onDeleteEntity?: OnDeleteEntity,
+    onDeleteEntity: OnDeleteEntity,
     direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;
@@ -38,7 +38,7 @@ export function deleteSegment(
                 : direction == 'backward'
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
-            if (operation !== undefined && !onDeleteEntity?.(segmentToDelete, operation)) {
+            if (operation !== undefined && !onDeleteEntity(segmentToDelete, operation)) {
                 segments.splice(index, 1);
             }
 
