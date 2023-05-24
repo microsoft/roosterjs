@@ -13,7 +13,7 @@ import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { InsertPoint } from '../edit/utils/EditStep';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
 

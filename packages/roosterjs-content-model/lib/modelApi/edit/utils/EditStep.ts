@@ -1,20 +1,9 @@
-import { ContentModelBlockGroup } from '../../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelEntity } from '../../../publicTypes/entity/ContentModelEntity';
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSelectionMarker } from '../../../publicTypes/segment/ContentModelSelectionMarker';
 import { EntityOperation } from 'roosterjs-editor-types';
-import { TableSelectionContext } from '../../selection/iterateSelections';
+import { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
+import { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
-
-/**
- * @internal
- */
-export interface InsertPoint {
-    marker: ContentModelSelectionMarker;
-    paragraph: ContentModelParagraph;
-    path: ContentModelBlockGroup[];
-    tableContext?: TableSelectionContext;
-}
 
 /**
  * @internal
@@ -37,7 +26,7 @@ export interface InsertableEditContext extends EditContext {
 /**
  * @internal
  */
-export type EditEntry = (
+export type OnDeleteEntity = (
     entity: ContentModelEntity,
     operation:
         | EntityOperation.RemoveFromStart
@@ -52,7 +41,7 @@ export type EditEntry = (
  * @internal
  */
 export interface EditOptions {
-    onDeleteEntity?: EditEntry;
+    onDeleteEntity?: OnDeleteEntity;
 }
 
 /**

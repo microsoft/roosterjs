@@ -1,12 +1,7 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { deleteExpandedSelection } from './steps/deleteExpandedSelection';
-import {
-    EditContext,
-    EditOptions,
-    EditStep,
-    InsertableEditContext,
-    InsertPoint,
-} from './utils/EditStep';
+import { EditContext, EditOptions, EditStep, InsertableEditContext } from './utils/EditStep';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 
 export interface DeleteSelectionResult {
     insertPoint: InsertPoint | null;

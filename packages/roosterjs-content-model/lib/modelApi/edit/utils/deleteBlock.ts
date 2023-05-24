@@ -1,6 +1,6 @@
 import { ContentModelBlock } from '../../../publicTypes/block/ContentModelBlock';
-import { EditEntry } from './EditStep';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { OnDeleteEntity } from './EditStep';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ import { EntityOperation } from 'roosterjs-editor-types';
 export function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
-    onDeleteEntity?: EditEntry,
+    onDeleteEntity?: OnDeleteEntity,
     replacement?: ContentModelBlock,
     direction?: 'forward' | 'backward'
 ): boolean {

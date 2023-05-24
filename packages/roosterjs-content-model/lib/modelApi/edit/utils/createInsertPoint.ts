@@ -1,8 +1,8 @@
 import { ContentModelBlockGroup } from '../../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSelectionMarker } from '../../../publicTypes/segment/ContentModelSelectionMarker';
-import { InsertPoint } from './EditStep';
-import { TableSelectionContext } from '../../selection/iterateSelections';
+import { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
+import { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
 
 /**
  * @internal
