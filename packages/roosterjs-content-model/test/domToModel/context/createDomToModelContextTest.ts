@@ -80,6 +80,39 @@ describe('createDomToModelContext', () => {
         });
     });
 
+    it('with content model context', () => {
+        const editorContext: EditorContext = {
+            isDarkMode: true,
+        };
+
+        const context = createDomToModelContext(editorContext, {
+            cloneEntityElement: true,
+        });
+
+        expect(context).toEqual({
+            ...editorContext,
+            segmentFormat: {},
+            blockFormat: {},
+            zoomScaleFormat: {},
+            isInSelection: false,
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
+            code: {
+                format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
+            allowCacheElement: true,
+            cloneEntityElement: true,
+            ...contextOptions,
+        });
+    });
+
     it('with normal selection', () => {
         const mockNode = ('Node' as any) as Node;
         const mockedRange = ({

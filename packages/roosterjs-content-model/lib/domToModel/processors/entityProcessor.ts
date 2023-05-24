@@ -20,7 +20,22 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
         context,
         { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
         () => {
-            const entityModel = createEntity(element, isReadonly, context.segmentFormat, id, type);
+            const wrapperToUse = context.cloneEntityElement
+                ? (element.cloneNode(true /* deep */) as HTMLElement)
+                : element;
+
+            if (context.cloneEntityElement) {
+                wrapperToUse.style.backgroundColor = element.style.backgroundColor || 'inherit';
+                wrapperToUse.style.color = element.style.color || 'inherit';
+            }
+
+            const entityModel = createEntity(
+                wrapperToUse,
+                isReadonly,
+                context.segmentFormat,
+                id,
+                type
+            );
 
             // TODO: Need to handle selection for editable entity
             if (context.isInSelection) {
