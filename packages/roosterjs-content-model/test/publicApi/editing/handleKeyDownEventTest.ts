@@ -5,7 +5,7 @@ import handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEven
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { editingTestCommon } from './editingTestCommon';
-import { forwardDeleteCollapsedSelection } from '../../../lib/modelApi/edit/steps/deleteCollapsedSelection';
+import { forwardDeleteCollapsedSelection } from '../../../lib/modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 describe('handleDeleteKey', () => {
     let deleteSelectionSpy: jasmine.Spy;

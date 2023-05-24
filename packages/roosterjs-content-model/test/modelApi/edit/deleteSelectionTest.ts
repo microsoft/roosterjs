@@ -18,7 +18,7 @@ import { EntityOperation } from 'roosterjs-editor-types';
 import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
-} from '../../../lib/modelApi/edit/steps/deleteCollapsedSelection';
+} from '../../../lib/modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 describe('deleteSelection - selectionOnly', () => {
     it('empty selection', () => {
