@@ -4,8 +4,8 @@ import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import {
     DeleteSelectionContext,
-    DeleteSelectionOptions,
     DeleteSelectionStep,
+    OnDeleteEntity,
 } from './utils/DeleteSelectionStep';
 
 /**
@@ -16,25 +16,17 @@ export interface DeleteSelectionResult {
     isChanged: boolean;
 }
 
-const DefaultDeleteSelectionOptions: Required<DeleteSelectionOptions> = {
-    direction: 'selectionOnly',
-    onDeleteEntity: () => false,
-};
-
 /**
  * @internal
  */
 export function deleteSelection(
     model: ContentModelDocument,
-    options?: DeleteSelectionOptions
+    onDeleteEntity: OnDeleteEntity,
+    direction: 'forward' | 'backward' | 'selectionOnly' = 'selectionOnly'
 ): DeleteSelectionResult {
-    const fullOptions: Required<DeleteSelectionOptions> = {
-        ...DefaultDeleteSelectionOptions,
-        ...(options || {}),
-    };
     const context: DeleteSelectionContext = { isChanged: false };
 
-    DeleteSelectionSteps.forEach(step => step(context, fullOptions, model));
+    DeleteSelectionSteps.forEach(step => step(context, onDeleteEntity, model, direction));
 
     return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
 }

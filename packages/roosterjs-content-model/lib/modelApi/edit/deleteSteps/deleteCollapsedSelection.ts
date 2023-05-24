@@ -9,9 +9,13 @@ import { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
  * @internal
  * if we didn't delete anything, and we want to delete forward/backward, now perform it
  */
-export const deleteCollapsedSelection: DeleteSelectionStep = (context, options) => {
-    if (context.insertPoint && !context.isChanged && options.direction != 'selectionOnly') {
-        const { onDeleteEntity, direction } = options;
+export const deleteCollapsedSelection: DeleteSelectionStep = (
+    context,
+    onDeleteEntity,
+    _,
+    direction
+) => {
+    if (context.insertPoint && !context.isChanged && direction != 'selectionOnly') {
         const isForward = direction == 'forward';
         const { paragraph, marker, path, tableContext } = context.insertPoint;
         const segments = paragraph.segments;
