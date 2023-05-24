@@ -1,12 +1,13 @@
 import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
-import handleBackspaceKey from '../../../lib/publicApi/editing/handleBackspaceKey';
+import handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { editingTestCommon } from './editingTestCommon';
+import { forwardDeleteCollapsedSelection } from '../../../lib/modelApi/edit/steps/deleteCollapsedSelection';
 
-describe('handleBackspaceKey', () => {
+describe('handleDeleteKey', () => {
     let deleteSelectionSpy: jasmine.Spy;
     let mockedCallback = 'CALLBACK' as any;
 
@@ -24,7 +25,9 @@ describe('handleBackspaceKey', () => {
         expectedDelete: boolean,
         calledTimes: number
     ) {
-        const mockedEvent = {} as KeyboardEvent;
+        const mockedEvent = {
+            which: 46, // DELETE
+        } as KeyboardEvent;
         deleteSelectionSpy.and.returnValue({
             isChanged: expectedDelete,
         });
@@ -35,7 +38,7 @@ describe('handleBackspaceKey', () => {
             'handleBackspaceKey',
             newEditor => {
                 editor = newEditor;
-                handleBackspaceKey(editor, mockedEvent, []);
+                handleKeyDownEvent(editor, mockedEvent, []);
             },
             input,
             expectedResult,
@@ -47,10 +50,13 @@ describe('handleBackspaceKey', () => {
             mockedEvent,
             []
         );
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, {
-            direction: 'backward',
-            onDeleteEntity: mockedCallback,
-        });
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(
+            input,
+            [null, null, forwardDeleteCollapsedSelection],
+            {
+                onDeleteEntity: mockedCallback,
+            }
+        );
         expect(handleKeyboardEventResult.handleKeyboardEventResult).toHaveBeenCalledWith(
             editor,
             input,
@@ -166,16 +172,16 @@ describe('handleBackspaceKey', () => {
         const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
         const editor = 'EDITOR' as any;
-        const which = 'WHICH';
+        const which = 46; // DELETE
         const event = {
             which,
         } as any;
         const triggeredEvents = 'EVENTS' as any;
 
-        handleBackspaceKey(editor, event, triggeredEvents);
+        handleKeyDownEvent(editor, event, triggeredEvents);
 
         expect(spy.calls.argsFor(0)[0]).toBe(editor);
-        expect(spy.calls.argsFor(0)[1]).toBe('handleBackspaceKey');
+        expect(spy.calls.argsFor(0)[1]).toBe('handleDeleteKey');
         expect(spy.calls.argsFor(0)[3]?.skipUndoSnapshot).toBe(true);
         expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
         expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);

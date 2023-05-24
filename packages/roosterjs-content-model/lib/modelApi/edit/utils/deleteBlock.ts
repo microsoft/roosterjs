@@ -8,7 +8,7 @@ import { EntityOperation } from 'roosterjs-editor-types';
 export function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
-    onDeleteEntity: EditEntry,
+    onDeleteEntity?: EditEntry,
     replacement?: ContentModelBlock,
     direction?: 'forward' | 'backward'
 ): boolean {
@@ -29,7 +29,7 @@ export function deleteBlock(
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
 
-            if (operation !== undefined && !onDeleteEntity(blockToDelete, operation)) {
+            if (operation !== undefined && !onDeleteEntity?.(blockToDelete, operation)) {
                 replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
             }
 

@@ -12,7 +12,7 @@ import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    onDeleteEntity: EditEntry,
+    onDeleteEntity?: EditEntry,
     direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;

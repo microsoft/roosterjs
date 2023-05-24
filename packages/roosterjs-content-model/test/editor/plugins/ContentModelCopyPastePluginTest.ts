@@ -342,11 +342,12 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
-                (model: any, options: any) => {
+                (model: any, steps: any, options: any) => {
                     return {
                         deletedModel: pasteModelValue,
                         insertPoint: insertPointValue,
                         isChanged: isChangedValue,
+                        addUndoSnapshot: false,
                     };
                 }
             );

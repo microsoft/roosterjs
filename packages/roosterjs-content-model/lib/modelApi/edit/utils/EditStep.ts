@@ -52,7 +52,6 @@ export type EditEntry = (
  * @internal
  */
 export interface EditOptions {
-    additionalSteps?: (EditStep | null)[];
     onDeleteEntity?: EditEntry;
 }
 
