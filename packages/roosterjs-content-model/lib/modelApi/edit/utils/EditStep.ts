@@ -1,5 +1,4 @@
 import { ContentModelBlockGroup } from '../../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
 import { ContentModelEntity } from '../../../publicTypes/entity/ContentModelEntity';
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSelectionMarker } from '../../../publicTypes/segment/ContentModelSelectionMarker';
@@ -31,6 +30,13 @@ export interface EditContext {
 /**
  * @internal
  */
+export interface InsertableEditContext extends EditContext {
+    insertPoint: InsertPoint;
+}
+
+/**
+ * @internal
+ */
 export type EditEntry = (
     entity: ContentModelEntity,
     operation:
@@ -53,8 +59,4 @@ export interface EditOptions {
 /**
  * @internal
  */
-export type EditStep = (
-    context: EditContext,
-    options: Required<EditOptions>,
-    model: ContentModelDocument
-) => void;
+export type EditStep = (context: InsertableEditContext, options: Required<EditOptions>) => void;

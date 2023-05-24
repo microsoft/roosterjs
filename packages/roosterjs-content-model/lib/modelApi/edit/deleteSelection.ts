@@ -1,7 +1,6 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { deleteExpandedSelection } from './steps/deleteExpandedSelection';
-import { EditContext, EditOptions, EditStep, InsertPoint } from './utils/EditStep';
-import { mergeAfterDelete } from './steps/mergeAfterDelete';
+import { EditContext, EditOptions, InsertableEditContext, InsertPoint } from './utils/EditStep';
 
 export interface DeleteSelectionResult {
     insertPoint: InsertPoint | null;
@@ -25,18 +24,35 @@ export function deleteSelection(
         ...DefaultDeleteSelectionOptions,
         ...(options || {}),
     };
-    const context: EditContext = { isChanged: false };
-    const steps = [
-        deleteExpandedSelection,
-        ...fullOptions.additionalSteps,
-        mergeAfterDelete,
-    ].filter(x => !!x) as EditStep[];
+    const context = deleteExpandedSelection(fullOptions, model);
 
-    steps.forEach(step => step(context, fullOptions, model));
+    options?.additionalSteps?.forEach(step => {
+        if (step && isInsertableContext(context) && !context.isChanged) {
+            step(context, fullOptions);
+        }
+    });
+
+    // if we end up with multiple paragraphs impacted, we need to merge them
+    const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
+
+    if (
+        insertPoint &&
+        isChanged &&
+        lastParagraph &&
+        lastParagraph != insertPoint.paragraph &&
+        lastTableContext == insertPoint.tableContext
+    ) {
+        insertPoint.paragraph.segments.push(...lastParagraph.segments);
+        lastParagraph.segments = [];
+    }
 
     return {
         insertPoint: context.insertPoint || null,
         isChanged: context.isChanged,
         addUndoSnapshot: !!context.addUndoSnapshot,
     };
+}
+
+function isInsertableContext(context: EditContext): context is InsertableEditContext {
+    return !!context.insertPoint;
 }

@@ -1,10 +1,11 @@
+import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
 import { createBr } from '../../creators/createBr';
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
 import { deleteBlock } from '../utils/deleteBlock';
 import { deleteSegment } from '../utils/deleteSegment';
-import { EditStep } from '../utils/EditStep';
+import { EditContext, EditOptions } from '../utils/EditStep';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -16,11 +17,17 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
 
 /**
  * @internal
- * Step 1: iterate the model and find all selected content if any, delete them, and keep/create an insert point
+ * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
  * at the first deleted position so that we know where to put cursor to after delete
  */
-export const deleteExpandedSelection: EditStep = (context, options, model) => {
+export function deleteExpandedSelection(
+    options: EditOptions,
+    model: ContentModelDocument
+): EditContext {
     const { onDeleteEntity } = options;
+    const context: EditContext = {
+        isChanged: false,
+    };
 
     iterateSelections(
         [model],
@@ -97,4 +104,6 @@ export const deleteExpandedSelection: EditStep = (context, options, model) => {
         },
         DeleteSelectionIteratingOptions
     );
-};
+
+    return context;
+}

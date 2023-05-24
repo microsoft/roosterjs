@@ -20,72 +20,70 @@ interface CharInfo {
 
 function getDeleteWordSelection(direction: 'forward' | 'backward'): EditStep {
     return context => {
-        if (context.insertPoint && !context.isChanged) {
-            const { marker, paragraph } = context.insertPoint;
-            const startIndex = paragraph.segments.indexOf(marker);
-            const deleteNext = direction == 'forward';
+        const { marker, paragraph } = context.insertPoint;
+        const startIndex = paragraph.segments.indexOf(marker);
+        const deleteNext = direction == 'forward';
 
-            let iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
-            let curr = iterator.next();
+        let iterator = iterateSegments(paragraph, startIndex, deleteNext, context);
+        let curr = iterator.next();
 
-            for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
-                const { punctuation, space, text } = curr.value;
+        for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
+            const { punctuation, space, text } = curr.value;
 
-                switch (state) {
-                    case DeleteWordState.Start:
-                        state = space
-                            ? DeleteWordState.WaitForTextOrPunctuationForSpace
-                            : punctuation
-                            ? DeleteWordState.WaitForSpaceOrText
-                            : DeleteWordState.WaitForPunctuationOrSpace;
+            switch (state) {
+                case DeleteWordState.Start:
+                    state = space
+                        ? DeleteWordState.WaitForTextOrPunctuationForSpace
+                        : punctuation
+                        ? DeleteWordState.WaitForSpaceOrText
+                        : DeleteWordState.WaitForPunctuationOrSpace;
+                    curr = iterator.next(true /*delete*/);
+                    break;
+
+                case DeleteWordState.WaitForSpaceOrText:
+                    if (deleteNext && space) {
+                        state = DeleteWordState.WaitForTextOrPunctuationForText;
                         curr = iterator.next(true /*delete*/);
-                        break;
+                    } else if (punctuation) {
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = DeleteWordState.End;
+                    }
+                    break;
 
-                    case DeleteWordState.WaitForSpaceOrText:
-                        if (deleteNext && space) {
-                            state = DeleteWordState.WaitForTextOrPunctuationForText;
-                            curr = iterator.next(true /*delete*/);
-                        } else if (punctuation) {
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = DeleteWordState.End;
-                        }
-                        break;
+                case DeleteWordState.WaitForPunctuationOrSpace:
+                    if (deleteNext && space) {
+                        state = DeleteWordState.WaitForTextOrPunctuationForText;
+                        curr = iterator.next(true /*delete*/);
+                    } else if (text) {
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = DeleteWordState.End;
+                    }
+                    break;
 
-                    case DeleteWordState.WaitForPunctuationOrSpace:
-                        if (deleteNext && space) {
-                            state = DeleteWordState.WaitForTextOrPunctuationForText;
-                            curr = iterator.next(true /*delete*/);
-                        } else if (text) {
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = DeleteWordState.End;
-                        }
-                        break;
+                case DeleteWordState.WaitForTextOrPunctuationForText:
+                    if (punctuation || !space) {
+                        state = DeleteWordState.End;
+                    } else {
+                        curr = iterator.next(true /*delete*/);
+                    }
+                    break;
 
-                    case DeleteWordState.WaitForTextOrPunctuationForText:
-                        if (punctuation || !space) {
-                            state = DeleteWordState.End;
-                        } else {
-                            curr = iterator.next(true /*delete*/);
-                        }
-                        break;
-
-                    case DeleteWordState.WaitForTextOrPunctuationForSpace:
-                        if (space) {
-                            curr = iterator.next(true /*delete*/);
-                        } else if (punctuation) {
-                            state = deleteNext
-                                ? DeleteWordState.WaitForTextOrPunctuationForText
-                                : DeleteWordState.WaitForSpaceOrText;
-                            curr = iterator.next(true /*delete*/);
-                        } else {
-                            state = deleteNext
-                                ? DeleteWordState.End
-                                : DeleteWordState.WaitForPunctuationOrSpace;
-                        }
-                        break;
-                }
+                case DeleteWordState.WaitForTextOrPunctuationForSpace:
+                    if (space) {
+                        curr = iterator.next(true /*delete*/);
+                    } else if (punctuation) {
+                        state = deleteNext
+                            ? DeleteWordState.WaitForTextOrPunctuationForText
+                            : DeleteWordState.WaitForSpaceOrText;
+                        curr = iterator.next(true /*delete*/);
+                    } else {
+                        state = deleteNext
+                            ? DeleteWordState.End
+                            : DeleteWordState.WaitForPunctuationOrSpace;
+                    }
+                    break;
             }
         }
     };
