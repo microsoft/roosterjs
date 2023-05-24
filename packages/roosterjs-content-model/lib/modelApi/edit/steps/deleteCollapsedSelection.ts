@@ -1,5 +1,5 @@
 import { BlockAndPath, getLeafSiblingBlock } from '../../block/getLeafSiblingBlock';
-import { ContentModelSegment } from 'roosterjs-content-model';
+import { ContentModelSegment } from '../../../publicTypes/segment/ContentModelSegment';
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
 import { deleteSegment } from '../utils/deleteSegment';

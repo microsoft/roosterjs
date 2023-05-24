@@ -1,4 +1,4 @@
-import { Browser } from 'roosterjs-editor-dom/lib';
+import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource, EntityOperationEvent, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/steps/deleteAllSegmentBefore';
