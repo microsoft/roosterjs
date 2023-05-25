@@ -32,21 +32,21 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/11</span>
+                <span class='fraction'>15/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>13/13</span>
+                <span class='fraction'>14/14</span>
             </div>
         
             
@@ -111,15 +111,12 @@
 <a name='L52'></a><a href='#L52'>52</a>
 <a name='L53'></a><a href='#L53'>53</a>
 <a name='L54'></a><a href='#L54'>54</a>
-<a name='L55'></a><a href='#L55'>55</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a>
+<a name='L59'></a><a href='#L59'>59</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -135,17 +132,33 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">136x</span>
+<span class="cline-any cline-yes">134x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">294x</span>
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">42x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">392x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">98x</span>
@@ -155,33 +168,21 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { deleteCollapsedSelection } from './deleteSteps/deleteCollapsedSelection';
 import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
-import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import {
+    DeleteResult,
     DeleteSelectionContext,
+    DeleteSelectionResult,
     DeleteSelectionStep,
+    ValidDeleteSelectionContext,
     OnDeleteEntity,
 } from './utils/DeleteSelectionStep';
-&nbsp;
-/**
- * @internal
- */
-export interface DeleteSelectionResult {
-    insertPoint: InsertPoint | null;
-    isChanged: boolean;
-}
 &nbsp;
 /**
  * @internal
@@ -189,22 +190,39 @@ export interface DeleteSelectionResult {
 export function deleteSelection(
     model: ContentModelDocument,
     onDeleteEntity: OnDeleteEntity,
-    direction: 'forward' | 'backward' | 'selectionOnly' = 'selectionOnly'
+    additionalSteps: (DeleteSelectionStep | null)[] = []
 ): DeleteSelectionResult {
-    const context: DeleteSelectionContext = { isChanged: false };
+    const context = deleteExpandedSelection(model, onDeleteEntity);
 &nbsp;
-    DeleteSelectionSteps.forEach(step =&gt; step(context, onDeleteEntity, model, direction));
+    additionalSteps.forEach(step =&gt; {
+        if (
+            step &amp;&amp;
+            isValidDeleteSelectionContext(context) &amp;&amp;
+            context.deleteResult == DeleteResult.NotDeleted
+        ) {
+            step(context, onDeleteEntity);
+        }
+    });
 &nbsp;
-    return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
+    mergeParagraphAfterDelete(context);
+&nbsp;
+    return context;
+}
+&nbsp;
+function isValidDeleteSelectionContext(
+    context: DeleteSelectionContext
+): context is ValidDeleteSelectionContext {
+    return !!context.insertPoint;
 }
 &nbsp;
 // If we end up with multiple paragraphs impacted, we need to merge them
-const mergeParagraphAfterDelete: DeleteSelectionStep = context =&gt; {
-    const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
+function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
+    const { insertPoint, deleteResult, lastParagraph, lastTableContext } = context;
 &nbsp;
     if (
         insertPoint &amp;&amp;
-        isChanged &amp;&amp;
+        deleteResult != DeleteResult.NotDeleted &amp;&amp;
+        deleteResult != DeleteResult.NothingToDelete &amp;&amp;
         lastParagraph &amp;&amp;
         lastParagraph != insertPoint.paragraph &amp;&amp;
         lastTableContext == insertPoint.tableContext
@@ -212,13 +230,7 @@ const mergeParagraphAfterDelete: DeleteSelectionStep = context =&gt; {
         insertPoint.paragraph.segments.push(...lastParagraph.segments);
         lastParagraph.segments = [];
     }
-};
-&nbsp;
-const DeleteSelectionSteps: DeleteSelectionStep[] = [
-    deleteExpandedSelection,
-    deleteCollapsedSelection,
-    mergeParagraphAfterDelete,
-];
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -226,7 +238,7 @@ const DeleteSelectionSteps: DeleteSelectionStep[] = [
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 25 2023 22:35:54 GMT+0000 (Coordinated Universal Time)
+                at Thu May 25 2023 23:43:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.19% </span>
+                <span class="strong">87.8% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>33/37</span>
+                <span class='fraction'>36/41</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">65.79% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>24/36</span>
+                <span class='fraction'>25/38</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.19% </span>
+                <span class="strong">87.8% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/37</span>
+                <span class='fraction'>36/41</span>
             </div>
         
             
@@ -174,6 +174,8 @@
 <span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">47x</span>
+<span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">47x</span>
 <span class="cline-any cline-yes">45x</span>
@@ -194,9 +196,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -207,7 +207,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">38x</span>
 <span class="cline-any cline-yes">26x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
@@ -265,12 +265,14 @@ import { OnDeleteEntity } from './DeleteSelectionStep';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    isForward: boolean,
-    onDeleteEntity: OnDeleteEntity
+    onDeleteEntity: OnDeleteEntity,
+    direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
     const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+    const isForward = direction == 'forward';
+    const isBackward = direction == 'backward';
 &nbsp;
     if (!preserveWhiteSpace) {
         normalizePreviousSegment(segments, index);
@@ -284,16 +286,14 @@ export function deleteSegment(
             return true;
 &nbsp;
 <span class="branch-3 cbranch-no" title="branch not covered" >        case 'Entity':</span>
-<span class="cstat-no" title="statement not covered" >            if (</span>
-                !onDeleteEntity?.(
-                    segmentToDelete,
-                    segmentToDelete.isSelected
-                        ? EntityOperation.Overwrite
-                        : isForward
-                        ? EntityOperation.RemoveFromStart
-                        : EntityOperation.RemoveFromEnd
-                )
-            ) {
+            const operation = <span class="cstat-no" title="statement not covered" >segmentToDelete.isSelected</span>
+                ? EntityOperation.Overwrite
+                : isForward
+                ? EntityOperation.RemoveFromStart
+                : isBackward
+                ? EntityOperation.RemoveFromEnd
+                : undefined;
+<span class="cstat-no" title="statement not covered" >            if (operation !== undefined &amp;&amp; !onDeleteEntity(segmentToDelete, operation)) {</span>
 <span class="cstat-no" title="statement not covered" >                segments.splice(index, 1);</span>
             }
 &nbsp;
@@ -304,7 +304,7 @@ export function deleteSegment(
 &nbsp;
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
-            } else {
+            } else <span class="missing-if-branch" title="else path not taken" >E</span>if (direction) {
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 &nbsp;
                 if (!preserveWhiteSpace) {
@@ -355,7 +355,7 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 25 2023 22:35:54 GMT+0000 (Coordinated Universal Time)
+                at Thu May 25 2023 23:43:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

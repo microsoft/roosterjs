@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>45/45</span>
+                <span class='fraction'>47/47</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>44/44</span>
+                <span class='fraction'>47/47</span>
             </div>
         
             
@@ -161,7 +161,10 @@
 <a name='L102'></a><a href='#L102'>102</a>
 <a name='L103'></a><a href='#L103'>103</a>
 <a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L105'></a><a href='#L105'>105</a>
+<a name='L106'></a><a href='#L106'>106</a>
+<a name='L107'></a><a href='#L107'>107</a>
+<a name='L108'></a><a href='#L108'>108</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -170,6 +173,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,12 +187,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">98x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -225,18 +230,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
-<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -265,13 +269,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createBr } from '../../creators/createBr';
-import { createInsertPoint } from './createInsertPoint';
+<span class="cline-any cline-yes">98x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
+import { createBr } from '../../creators/createBr';
+import { createInsertPoint } from '../utils/createInsertPoint';
 import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
-import { deleteBlock } from './deleteBlock';
-import { deleteSegment } from './deleteSegment';
-import { DeleteSelectionStep } from './DeleteSelectionStep';
+import { deleteBlock } from '../utils/deleteBlock';
+import { DeleteResult, DeleteSelectionContext, OnDeleteEntity } from '../utils/DeleteSelectionStep';
+import { deleteSegment } from '../utils/deleteSegment';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 &nbsp;
@@ -286,13 +293,14 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
  * at the first deleted position so that we know where to put cursor to after delete
  */
-export const deleteExpandedSelection: DeleteSelectionStep = (
-    context,
-    onDeleteEntity,
-    model,
-    direction
-) =&gt; {
-    const isForward = direction == 'forward';
+export function deleteExpandedSelection(
+    model: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity
+): DeleteSelectionContext {
+    const context: DeleteSelectionContext = {
+        deleteResult: DeleteResult.NotDeleted,
+        insertPoint: null,
+    };
 &nbsp;
     iterateSelections(
         [model],
@@ -329,19 +337,18 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
                                 path,
                                 tableContext
                             );
-                        } else {
-                            context.isChanged =
-                                deleteSegment(block, segment, isForward, onDeleteEntity) ||
-<span class="branch-1 cbranch-no" title="branch not covered" >                                context.isChanged;</span>
+                        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (deleteSegment(block, segment, onDeleteEntity)) {
+                            context.deleteResult = DeleteResult.Range;
                         }
                     });
                 }
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
-                context.isChanged =
-                    deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
-<span class="branch-1 cbranch-no" title="branch not covered" >                    context.isChanged;</span>
+&nbsp;
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (deleteBlock(blocks, block, onDeleteEntity, paragraph)) {
+                    context.deleteResult = DeleteResult.Range;
+                }
             } else <span class="missing-if-branch" title="else path not taken" >E</span>if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
@@ -354,7 +361,7 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
 &nbsp;
                 delete cell.cachedElement;
                 delete row.cachedElement;
-                context.isChanged = true;
+                context.deleteResult = DeleteResult.Range;
             }
 &nbsp;
             if (!context.insertPoint) {
@@ -368,7 +375,9 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
         },
         DeleteSelectionIteratingOptions
     );
-};
+&nbsp;
+    return context;
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -376,7 +385,7 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu May 25 2023 22:35:54 GMT+0000 (Coordinated Universal Time)
+                at Thu May 25 2023 23:43:30 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
