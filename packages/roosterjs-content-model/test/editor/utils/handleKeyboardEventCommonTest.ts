@@ -1,4 +1,5 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
@@ -128,17 +129,20 @@ describe('handleKeyboardEventResult', () => {
     let preventDefault: jasmine.Spy;
     let triggerContentChangedEvent: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let addUndoSnapshot: jasmine.Spy;
 
     beforeEach(() => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         preventDefault = jasmine.createSpy('preventDefault');
         triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
 
         mockedEditor = ({
             cacheContentModel,
             triggerContentChangedEvent,
             triggerPluginEvent,
+            addUndoSnapshot,
         } as any) as IContentModelEditor;
         mockedEvent = ({
             preventDefault,
@@ -147,13 +151,19 @@ describe('handleKeyboardEventResult', () => {
         spyOn(normalizeContentModel, 'normalizeContentModel');
     });
 
-    it('isChanged = true', () => {
+    it('DeleteResult.SingleChar', () => {
         const mockedModel = 'MODEL' as any;
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
 
-        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, true);
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            DeleteResult.SingleChar
+        );
 
+        expect(result).toBeTrue();
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
@@ -161,16 +171,65 @@ describe('handleKeyboardEventResult', () => {
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
             rawEvent: mockedEvent,
         });
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 
-    it('isChanged = false', () => {
+    it('DeleteResult.NotDeleted', () => {
         const mockedModel = 'MODEL' as any;
-        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, false);
 
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            DeleteResult.NotDeleted
+        );
+
+        expect(result).toBeFalse();
         expect(preventDefault).not.toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
         expect(cacheContentModel).toHaveBeenCalledWith(null);
         expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
+    });
+
+    it('DeleteResult.Range', () => {
+        const mockedModel = 'MODEL' as any;
+
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            DeleteResult.Range
+        );
+
+        expect(result).toBeTrue();
+        expect(preventDefault).toHaveBeenCalled();
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
+        expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
+        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
+            rawEvent: mockedEvent,
+        });
+        expect(addUndoSnapshot).toHaveBeenCalled();
+    });
+
+    it('DeleteResult.NothingToDelete', () => {
+        const mockedModel = 'MODEL' as any;
+
+        const result = handleKeyboardEventResult(
+            mockedEditor,
+            mockedModel,
+            mockedEvent,
+            DeleteResult.NothingToDelete
+        );
+
+        expect(result).toBeFalse();
+        expect(preventDefault).toHaveBeenCalled();
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
+        expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
+        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
     });
 });
