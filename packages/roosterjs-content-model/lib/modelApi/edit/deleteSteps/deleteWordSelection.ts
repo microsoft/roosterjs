@@ -127,13 +127,23 @@ function* iterateSegments(
                             newText = normalizeText(newText, forward);
                         }
 
-                        segment.text = newText;
-
-                        if (step > 0) {
-                            j -= step;
-                        }
-
                         context.deleteResult = DeleteResult.Range;
+
+                        if (newText) {
+                            segment.text = newText;
+
+                            if (step > 0) {
+                                j -= step;
+                            }
+                        } else {
+                            segments.splice(i, 1);
+
+                            if (step > 0) {
+                                i -= step;
+                            }
+
+                            break;
+                        }
                     }
                 }
                 break;
@@ -143,7 +153,11 @@ function* iterateSegments(
                     yield { punctuation: true, space: false, text: false } // Treat image as punctuation since they have the same behavior.
                 ) {
                     segments.splice(i, 1);
-                    i -= step;
+
+                    if (step > 0) {
+                        i -= step;
+                    }
+
                     context.deleteResult = DeleteResult.Range;
                 }
                 break;
