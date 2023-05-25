@@ -2,7 +2,6 @@ import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import insertLink from '../../../lib/publicApi/link/insertLink';
 import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
-import { computedSegmentFormatHandler } from '../../../lib/formatHandlers/segment/computedSegmentFormatHandler';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -303,8 +302,6 @@ describe('insertLink', () => {
     it('Valid url on existing text, trigger event with data', () => {
         const div = document.createElement('div');
         document.body.appendChild(div);
-
-        spyOn(computedSegmentFormatHandler, 'parse');
 
         const onPluginEvent = jasmine.createSpy('onPluginEvent');
         const mockedPlugin = {

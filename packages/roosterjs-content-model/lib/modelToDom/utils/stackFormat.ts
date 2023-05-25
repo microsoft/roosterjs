@@ -8,15 +8,12 @@ import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 export function stackFormat(
     context: ModelToDomContext,
     tagNameOrFormat: string | (ContentModelSegmentFormat & ContentModelBlockFormat) | null,
-    callback: () => void,
-    additionalFormat?: ContentModelSegmentFormat & ContentModelBlockFormat
+    callback: () => void
 ) {
     const newFormat =
-        typeof tagNameOrFormat == 'string'
-            ? context.defaultImplicitFormatMap[tagNameOrFormat] || {}
-            : typeof tagNameOrFormat == 'object'
-            ? tagNameOrFormat
-            : null;
+        typeof tagNameOrFormat === 'string'
+            ? context.defaultImplicitFormatMap[tagNameOrFormat]
+            : tagNameOrFormat;
 
     if (newFormat) {
         const implicitFormat = context.implicitFormat;

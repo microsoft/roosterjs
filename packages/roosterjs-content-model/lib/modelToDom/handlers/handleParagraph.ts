@@ -30,6 +30,12 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 !!paragraph.decorator ||
                 (getObjectKeys(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
+            const formatOnWrapper = needParagraphWrapper
+                ? {
+                      ...context.defaultFormat,
+                      ...(paragraph.decorator?.format || {}),
+                  }
+                : {};
 
             container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
@@ -38,6 +44,12 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             if (needParagraphWrapper) {
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
                 applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+                applyFormat(
+                    container,
+                    context.formatAppliers.segmentOnBlock,
+                    formatOnWrapper,
+                    context
+                );
             }
 
             if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
@@ -55,17 +67,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 });
             };
 
-            if (paragraph.decorator) {
-                applyFormat(
-                    container,
-                    context.formatAppliers.segmentOnBlock,
-                    paragraph.decorator.format,
-                    context
-                );
-
-                stackFormat(context, paragraph.decorator.format, () => {
-                    handleSegments();
-                });
+            if (needParagraphWrapper) {
+                stackFormat(context, formatOnWrapper, handleSegments);
             } else {
                 handleSegments();
             }

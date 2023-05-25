@@ -13,7 +13,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelections';
+import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelection';
 import { EntityOperation } from 'roosterjs-editor-types';
 
 describe('deleteSelection - selectionOnly', () => {

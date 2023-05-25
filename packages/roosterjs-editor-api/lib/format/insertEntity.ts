@@ -131,21 +131,13 @@ export default function insertEntity(
     if (isBlock) {
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
-        const formatOnSpan = editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan);
-        const newLine = createElement(
-            formatOnSpan
-                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
-                : KnownCreateElementDataIndex.EmptyLine,
-            editor.getDocument()
-        );
+        const newLine = createElement(KnownCreateElementDataIndex.EmptyLine, editor.getDocument());
 
         wrapper.parentNode?.insertBefore(newLine!, wrapper.nextSibling);
 
-        const formatNode = formatOnSpan ? newLine?.querySelector('span') : newLine;
-
-        if (formatNode) {
+        if (newLine) {
             applyFormat(
-                formatNode as HTMLElement,
+                newLine as HTMLElement,
                 {
                     backgroundColor: currentFormat.backgroundColor,
                     textColor: currentFormat.textColor,

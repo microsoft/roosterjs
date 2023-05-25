@@ -1,16 +1,19 @@
 import { addSegment } from './addSegment';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPoint } from '../edit/deleteSelections';
+import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
 
@@ -31,6 +34,13 @@ export interface MergeModelOption {
      * @default undefined
      */
     insertPosition?: InsertPoint;
+
+    /**
+     * When set to true, segment format of the insert position will be merged into the content that is merged into current model.
+     * If the source model already has some format, it will not be overwritten.
+     * @default false
+     */
+    mergeCurrentFormat?: boolean;
 }
 
 /**
@@ -44,6 +54,15 @@ export function mergeModel(
     const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
 
     if (insertPosition) {
+        if (options?.mergeCurrentFormat) {
+            const newFormat: ContentModelSegmentFormat = {
+                ...(target.format || {}),
+                ...insertPosition.marker.format,
+            };
+
+            applyDefaultFormat(source, newFormat);
+        }
+
         for (let i = 0; i < source.blocks.length; i++) {
             const block = source.blocks[i];
 
@@ -231,4 +250,32 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     if (blockIndex >= 0) {
         path[0].blocks.splice(blockIndex, 0, block);
     }
+}
+
+function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelSegmentFormat) {
+    group.blocks.forEach(block => {
+        switch (block.blockType) {
+            case 'BlockGroup':
+                applyDefaultFormat(block, format);
+                break;
+
+            case 'Table':
+                block.rows.forEach(row =>
+                    row.cells.forEach(cell => {
+                        applyDefaultFormat(cell, format);
+                    })
+                );
+                break;
+
+            case 'Paragraph':
+                block.segments.forEach(segment => {
+                    if (segment.segmentType == 'General') {
+                        applyDefaultFormat(segment, format);
+                    }
+
+                    segment.format = { ...format, ...segment.format };
+                });
+                break;
+        }
+    });
 }

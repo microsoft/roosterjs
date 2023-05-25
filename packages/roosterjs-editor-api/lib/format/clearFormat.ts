@@ -13,7 +13,6 @@ import {
     ChangeSource,
     ClearFormatMode,
     DocumentCommand,
-    ExperimentalFeatures,
     IEditor,
     QueryScope,
 } from 'roosterjs-editor-types';
@@ -201,11 +200,7 @@ function clearBlockFormat(editor: IEditor) {
         editor,
         () => {
             blockFormat(editor, region => {
-                const blocks = getSelectedBlockElementsInRegion(
-                    region,
-                    undefined /* createBlockIfEmpty */,
-                    editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-                );
+                const blocks = getSelectedBlockElementsInRegion(region);
                 let nodes = collapseNodesInRegion(region, blocks);
 
                 if (editor.contains(region.rootNode)) {
