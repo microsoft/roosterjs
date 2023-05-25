@@ -1,4 +1,4 @@
-import { createRange, safeInstanceOf } from 'roosterjs-editor-dom';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 
 import {
     EditorPlugin,
@@ -11,7 +11,6 @@ import {
 
 const Escape = 'Escape';
 const Delete = 'Delete';
-const mouseRightButton = 2;
 const mouseLeftButton = 0;
 
 /**
@@ -57,10 +56,7 @@ export default class ImageSelection implements EditorPlugin {
                 case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
                     if (safeInstanceOf(target, 'HTMLImageElement')) {
-                        if (event.rawEvent.button === mouseRightButton) {
-                            const imageRange = createRange(target);
-                            this.editor.select(imageRange);
-                        } else if (event.rawEvent.button === mouseLeftButton) {
+                        if (event.rawEvent.button === mouseLeftButton) {
                             this.editor.select(target);
                         }
                     }
@@ -94,7 +90,13 @@ export default class ImageSelection implements EditorPlugin {
                     break;
                 case PluginEventType.ContextMenu:
                     const contextMenuTarget = event.rawEvent.target;
-                    if (safeInstanceOf(contextMenuTarget, 'HTMLImageElement')) {
+                    const actualSelection = this.editor.getSelectionRangeEx();
+                    if (
+                        safeInstanceOf(contextMenuTarget, 'HTMLImageElement') &&
+                        (actualSelection.type !== SelectionRangeTypes.ImageSelection ||
+                            (actualSelection.type === SelectionRangeTypes.ImageSelection &&
+                                actualSelection.image !== contextMenuTarget))
+                    ) {
                         this.editor.select(contextMenuTarget);
                     }
             }
