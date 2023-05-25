@@ -1,20 +1,13 @@
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
-import { deleteCollapsedSelection } from './deleteSteps/deleteCollapsedSelection';
 import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
-import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import {
+    DeleteResult,
     DeleteSelectionContext,
+    DeleteSelectionResult,
     DeleteSelectionStep,
+    ValidDeleteSelectionContext,
     OnDeleteEntity,
 } from './utils/DeleteSelectionStep';
-
-/**
- * @internal
- */
-export interface DeleteSelectionResult {
-    insertPoint: InsertPoint | null;
-    isChanged: boolean;
-}
 
 /**
  * @internal
@@ -22,22 +15,39 @@ export interface DeleteSelectionResult {
 export function deleteSelection(
     model: ContentModelDocument,
     onDeleteEntity: OnDeleteEntity,
-    direction: 'forward' | 'backward' | 'selectionOnly' = 'selectionOnly'
+    additionalSteps: (DeleteSelectionStep | null)[] = []
 ): DeleteSelectionResult {
-    const context: DeleteSelectionContext = { isChanged: false };
+    const context = deleteExpandedSelection(model, onDeleteEntity);
 
-    DeleteSelectionSteps.forEach(step => step(context, onDeleteEntity, model, direction));
+    additionalSteps.forEach(step => {
+        if (
+            step &&
+            isValidDeleteSelectionContext(context) &&
+            context.deleteResult == DeleteResult.NotDeleted
+        ) {
+            step(context, onDeleteEntity);
+        }
+    });
 
-    return { insertPoint: context.insertPoint || null, isChanged: context.isChanged };
+    mergeParagraphAfterDelete(context);
+
+    return context;
+}
+
+function isValidDeleteSelectionContext(
+    context: DeleteSelectionContext
+): context is ValidDeleteSelectionContext {
+    return !!context.insertPoint;
 }
 
 // If we end up with multiple paragraphs impacted, we need to merge them
-const mergeParagraphAfterDelete: DeleteSelectionStep = context => {
-    const { insertPoint, isChanged, lastParagraph, lastTableContext } = context;
+function mergeParagraphAfterDelete(context: DeleteSelectionContext) {
+    const { insertPoint, deleteResult, lastParagraph, lastTableContext } = context;
 
     if (
         insertPoint &&
-        isChanged &&
+        deleteResult != DeleteResult.NotDeleted &&
+        deleteResult != DeleteResult.NothingToDelete &&
         lastParagraph &&
         lastParagraph != insertPoint.paragraph &&
         lastTableContext == insertPoint.tableContext
@@ -45,10 +55,4 @@ const mergeParagraphAfterDelete: DeleteSelectionStep = context => {
         insertPoint.paragraph.segments.push(...lastParagraph.segments);
         lastParagraph.segments = [];
     }
-};
-
-const DeleteSelectionSteps: DeleteSelectionStep[] = [
-    deleteExpandedSelection,
-    deleteCollapsedSelection,
-    mergeParagraphAfterDelete,
-];
+}

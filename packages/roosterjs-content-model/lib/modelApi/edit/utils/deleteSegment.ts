@@ -12,12 +12,14 @@ import { OnDeleteEntity } from './DeleteSelectionStep';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    isForward: boolean,
-    onDeleteEntity: OnDeleteEntity
+    onDeleteEntity: OnDeleteEntity,
+    direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
     const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+    const isForward = direction == 'forward';
+    const isBackward = direction == 'backward';
 
     if (!preserveWhiteSpace) {
         normalizePreviousSegment(segments, index);
@@ -31,16 +33,14 @@ export function deleteSegment(
             return true;
 
         case 'Entity':
-            if (
-                !onDeleteEntity?.(
-                    segmentToDelete,
-                    segmentToDelete.isSelected
-                        ? EntityOperation.Overwrite
-                        : isForward
-                        ? EntityOperation.RemoveFromStart
-                        : EntityOperation.RemoveFromEnd
-                )
-            ) {
+            const operation = segmentToDelete.isSelected
+                ? EntityOperation.Overwrite
+                : isForward
+                ? EntityOperation.RemoveFromStart
+                : isBackward
+                ? EntityOperation.RemoveFromEnd
+                : undefined;
+            if (operation !== undefined && !onDeleteEntity(segmentToDelete, operation)) {
                 segments.splice(index, 1);
             }
 
@@ -51,7 +51,7 @@ export function deleteSegment(
 
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
-            } else {
+            } else if (direction) {
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
