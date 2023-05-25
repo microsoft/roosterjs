@@ -1,10 +1,10 @@
 import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
-import { blockDecoratorProcessor } from '../../../lib/domToModel/processors/blockDecoratorProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { pProcessor } from '../../../lib/domToModel/processors/pProcessor';
 
-describe('blockDecoratorProcessor', () => {
+describe('pProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -18,7 +18,7 @@ describe('blockDecoratorProcessor', () => {
         h1.appendChild(document.createTextNode('test'));
         h1.style.fontFamily = 'Test';
 
-        blockDecoratorProcessor(group, h1, context);
+        pProcessor(group, h1, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -62,7 +62,7 @@ describe('blockDecoratorProcessor', () => {
 
         h1.appendChild(span);
 
-        blockDecoratorProcessor(group, h1, context);
+        pProcessor(group, h1, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -99,7 +99,7 @@ describe('blockDecoratorProcessor', () => {
 
         spyOn(parseFormat, 'parseFormat');
 
-        blockDecoratorProcessor(group, p, context);
+        pProcessor(group, p, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
