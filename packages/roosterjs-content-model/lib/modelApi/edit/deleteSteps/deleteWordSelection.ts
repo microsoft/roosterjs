@@ -9,10 +9,10 @@ import {
 
 const enum DeleteWordState {
     Start,
-    WaitForSpaceOrText,
-    WaitForPunctuationOrSpace,
-    WaitForTextOrPunctuationForText,
-    WaitForTextOrPunctuationForSpace,
+    Punctuation,
+    Text,
+    NonText,
+    Space,
     End,
 }
 
@@ -34,19 +34,23 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
         for (let state = DeleteWordState.Start; state != DeleteWordState.End && !curr.done; ) {
             const { punctuation, space, text } = curr.value;
 
+            // This is a state machine of how to delete a whole word together with space and punctuations.
+            // For a full state machine chart, see
+            // Forward delete: https://github.com/microsoft/roosterjs/blob/master/assets/design-charts/ForwardDeleteWord.png
+            // Backward delete: https://github.com/microsoft/roosterjs/blob/master/assets/design-charts/BackwardDeleteWord.png
             switch (state) {
                 case DeleteWordState.Start:
                     state = space
-                        ? DeleteWordState.WaitForTextOrPunctuationForSpace
+                        ? DeleteWordState.Space
                         : punctuation
-                        ? DeleteWordState.WaitForSpaceOrText
-                        : DeleteWordState.WaitForPunctuationOrSpace;
+                        ? DeleteWordState.Punctuation
+                        : DeleteWordState.Text;
                     curr = iterator.next(true /*delete*/);
                     break;
 
-                case DeleteWordState.WaitForSpaceOrText:
+                case DeleteWordState.Punctuation:
                     if (deleteNext && space) {
-                        state = DeleteWordState.WaitForTextOrPunctuationForText;
+                        state = DeleteWordState.NonText;
                         curr = iterator.next(true /*delete*/);
                     } else if (punctuation) {
                         curr = iterator.next(true /*delete*/);
@@ -55,9 +59,9 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
                     }
                     break;
 
-                case DeleteWordState.WaitForPunctuationOrSpace:
+                case DeleteWordState.Text:
                     if (deleteNext && space) {
-                        state = DeleteWordState.WaitForTextOrPunctuationForText;
+                        state = DeleteWordState.NonText;
                         curr = iterator.next(true /*delete*/);
                     } else if (text) {
                         curr = iterator.next(true /*delete*/);
@@ -66,7 +70,7 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
                     }
                     break;
 
-                case DeleteWordState.WaitForTextOrPunctuationForText:
+                case DeleteWordState.NonText:
                     if (punctuation || !space) {
                         state = DeleteWordState.End;
                     } else {
@@ -74,18 +78,14 @@ function getDeleteWordSelection(direction: 'forward' | 'backward'): DeleteSelect
                     }
                     break;
 
-                case DeleteWordState.WaitForTextOrPunctuationForSpace:
+                case DeleteWordState.Space:
                     if (space) {
                         curr = iterator.next(true /*delete*/);
                     } else if (punctuation) {
-                        state = deleteNext
-                            ? DeleteWordState.WaitForTextOrPunctuationForText
-                            : DeleteWordState.WaitForSpaceOrText;
+                        state = deleteNext ? DeleteWordState.NonText : DeleteWordState.Punctuation;
                         curr = iterator.next(true /*delete*/);
                     } else {
-                        state = deleteNext
-                            ? DeleteWordState.End
-                            : DeleteWordState.WaitForPunctuationOrSpace;
+                        state = deleteNext ? DeleteWordState.End : DeleteWordState.Text;
                     }
                     break;
             }
