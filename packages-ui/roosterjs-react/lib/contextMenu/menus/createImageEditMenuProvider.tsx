@@ -170,7 +170,7 @@ const ImageCopyMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> 
         if (editor.contains(node)) {
             editor.addUndoSnapshot(() => {
                 editor.getDocument()?.execCommand(DocumentCommand.Copy);
-            }, 'DeleteImage');
+            }, 'CopyImage');
         }
     },
 };
@@ -182,7 +182,7 @@ const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> =
         if (editor.contains(node)) {
             editor.addUndoSnapshot(() => {
                 editor.getDocument()?.execCommand(DocumentCommand.Cut);
-            }, 'DeleteImage');
+            }, 'CutImage');
         }
     },
 };
