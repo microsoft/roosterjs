@@ -25,10 +25,6 @@ function onDeleteEntityMock() {
     return false;
 }
 
-function onDeleteEntityMock() {
-    return false;
-}
-
 describe('deleteSelection - selectionOnly', () => {
     it('empty selection', () => {
         const model = createContentModelDocument();
