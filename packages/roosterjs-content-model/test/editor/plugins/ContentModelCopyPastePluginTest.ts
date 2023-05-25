@@ -17,7 +17,7 @@ const modelValue = 'model' as any;
 const darkColorHandler = 'darkColorHandler' as any;
 const pasteModelValue = 'pasteModelValue' as any;
 const insertPointValue = 'insertPoint' as any;
-const isChangedValue = 'isChanged' as any;
+const deleteResultValue = 'deleteResult' as any;
 
 const allowedCustomPasteType = ['Test'];
 
@@ -342,11 +342,11 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             const deleteSelectionSpy = spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
-                (model: any, options: any) => {
+                (model: any, steps: any, options: any) => {
                     return {
                         deletedModel: pasteModelValue,
                         insertPoint: insertPointValue,
-                        isChanged: isChangedValue,
+                        deleteResult: deleteResultValue,
                     };
                 }
             );

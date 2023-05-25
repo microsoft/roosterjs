@@ -1,4 +1,3 @@
-import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
 import { ContentModelEntity } from '../../../publicTypes/entity/ContentModelEntity';
 import { ContentModelParagraph } from '../../../publicTypes/block/ContentModelParagraph';
 import { EntityOperation } from 'roosterjs-editor-types';
@@ -9,11 +8,34 @@ import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compa
 /**
  * @internal
  */
-export interface DeleteSelectionContext {
-    insertPoint?: InsertPoint;
+export const enum DeleteResult {
+    NotDeleted,
+    SingleChar,
+    Range,
+    NothingToDelete,
+}
+
+/**
+ * @internal
+ */
+export interface DeleteSelectionResult {
+    insertPoint: InsertPoint | null;
+    deleteResult: DeleteResult;
+}
+
+/**
+ * @internal
+ */
+export interface DeleteSelectionContext extends DeleteSelectionResult {
     lastParagraph?: ContentModelParagraph;
     lastTableContext?: TableSelectionContext;
-    isChanged: boolean;
+}
+
+/**
+ * @internal
+ */
+export interface InsertableDeleteSelectionContext extends DeleteSelectionContext {
+    insertPoint: InsertPoint;
 }
 
 /**
@@ -34,8 +56,6 @@ export type OnDeleteEntity = (
  * @internal
  */
 export type DeleteSelectionStep = (
-    context: DeleteSelectionContext,
-    onDeleteEntity: OnDeleteEntity,
-    model: ContentModelDocument,
-    direction?: 'forward' | 'backward' | 'selectionOnly'
+    context: InsertableDeleteSelectionContext,
+    onDeleteEntity: OnDeleteEntity
 ) => void;

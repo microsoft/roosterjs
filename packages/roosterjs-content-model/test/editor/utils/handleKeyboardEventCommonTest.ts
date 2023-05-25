@@ -1,4 +1,5 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
@@ -147,12 +148,12 @@ describe('handleKeyboardEventResult', () => {
         spyOn(normalizeContentModel, 'normalizeContentModel');
     });
 
-    it('isChanged = true', () => {
+    it('DeleteResult.SingleChar', () => {
         const mockedModel = 'MODEL' as any;
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
 
-        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, true);
+        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, DeleteResult.SingleChar);
 
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
@@ -163,9 +164,9 @@ describe('handleKeyboardEventResult', () => {
         });
     });
 
-    it('isChanged = false', () => {
+    it('DeleteResult.NotDeleted', () => {
         const mockedModel = 'MODEL' as any;
-        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, false);
+        handleKeyboardEventResult(mockedEditor, mockedModel, mockedEvent, DeleteResult.NotDeleted);
 
         expect(preventDefault).not.toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
