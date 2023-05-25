@@ -92,6 +92,11 @@ export default class ImageSelection implements EditorPlugin {
                         }
                     }
                     break;
+                case PluginEventType.ContextMenu:
+                    const contextMenuTarget = event.rawEvent.target;
+                    if (safeInstanceOf(contextMenuTarget, 'HTMLImageElement')) {
+                        this.editor.select(contextMenuTarget);
+                    }
             }
         }
     }

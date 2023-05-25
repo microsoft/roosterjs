@@ -141,6 +141,18 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
+    it('should handle contextMenu', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        const contextMenuEvent = contextMenu(target!);
+        imageSelection.onPluginEvent(contextMenuEvent);
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
     const keyDown = (key: string): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
@@ -160,6 +172,16 @@ describe('ImageSelectionPlugin |', () => {
                 preventDefault: () => {},
                 stopPropagation: () => {},
             },
+        };
+    };
+
+    const contextMenu = (target: HTMLElement): PluginEvent => {
+        return {
+            eventType: PluginEventType.ContextMenu,
+            rawEvent: <any>{
+                target: target,
+            },
+            items: [],
         };
     };
 
