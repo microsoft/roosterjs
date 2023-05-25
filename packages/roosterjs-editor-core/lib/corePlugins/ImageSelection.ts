@@ -95,8 +95,7 @@ export default class ImageSelection implements EditorPlugin {
                     if (
                         safeInstanceOf(contextMenuTarget, 'HTMLImageElement') &&
                         (actualSelection.type !== SelectionRangeTypes.ImageSelection ||
-                            (actualSelection.type === SelectionRangeTypes.ImageSelection &&
-                                actualSelection.image !== contextMenuTarget))
+                            actualSelection.image !== contextMenuTarget)
                     ) {
                         this.editor.select(contextMenuTarget);
                     }
