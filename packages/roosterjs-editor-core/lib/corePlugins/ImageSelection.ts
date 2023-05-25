@@ -55,10 +55,11 @@ export default class ImageSelection implements EditorPlugin {
 
                 case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
-                    if (safeInstanceOf(target, 'HTMLImageElement')) {
-                        if (event.rawEvent.button === mouseLeftButton) {
-                            this.editor.select(target);
-                        }
+                    if (
+                        safeInstanceOf(target, 'HTMLImageElement') &&
+                        event.rawEvent.button === mouseLeftButton
+                    ) {
+                        this.editor.select(target);
                     }
                     break;
                 case PluginEventType.MouseDown:
