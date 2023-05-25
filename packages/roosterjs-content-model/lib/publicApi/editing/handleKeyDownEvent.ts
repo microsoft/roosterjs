@@ -1,5 +1,4 @@
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
-import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
@@ -7,13 +6,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
-    shouldDeleteAllSegmentsBefore,
-    shouldDeleteWord,
 } from '../../editor/utils/handleKeyboardEventCommon';
-import {
-    backwardDeleteWordSelection,
-    forwardDeleteWordSelection,
-} from '../../modelApi/edit/deleteSteps/deleteWordSelection';
 import {
     backwardDeleteCollapsedSelection,
     forwardDeleteCollapsedSelection,
@@ -36,21 +29,12 @@ export default function handleKeyDownEvent(
         const deleteCollapsedSelection = isForward
             ? forwardDeleteCollapsedSelection
             : backwardDeleteCollapsedSelection;
-        const deleteWordSelection = shouldDeleteWord(rawEvent)
-            ? isForward
-                ? forwardDeleteWordSelection
-                : backwardDeleteWordSelection
-            : null;
 
         formatWithContentModel(
             editor,
             apiName,
             model => {
-                const steps: (DeleteSelectionStep | null)[] = [
-                    shouldDeleteAllSegmentsBefore(rawEvent) ? deleteAllSegmentBefore : null,
-                    deleteWordSelection,
-                    deleteCollapsedSelection,
-                ];
+                const steps: (DeleteSelectionStep | null)[] = [deleteCollapsedSelection];
 
                 const result = deleteSelection(
                     model,

@@ -5,7 +5,7 @@ import {
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
-    InsertableDeleteSelectionContext,
+    ValidDeleteSelectionContext,
     OnDeleteEntity,
 } from './utils/DeleteSelectionStep';
 
@@ -22,7 +22,7 @@ export function deleteSelection(
     additionalSteps.forEach(step => {
         if (
             step &&
-            isInsertableContext(context) &&
+            isValidDeleteSelectionContext(context) &&
             context.deleteResult == DeleteResult.NotDeleted
         ) {
             step(context, onDeleteEntity);
@@ -34,9 +34,9 @@ export function deleteSelection(
     return context;
 }
 
-function isInsertableContext(
+function isValidDeleteSelectionContext(
     context: DeleteSelectionContext
-): context is InsertableDeleteSelectionContext {
+): context is ValidDeleteSelectionContext {
     return !!context.insertPoint;
 }
 

@@ -1,4 +1,3 @@
-import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { DeleteResult, OnDeleteEntity } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
@@ -76,20 +75,4 @@ export function handleKeyboardEventResult(
 
             return true;
     }
-}
-
-/**
- * @internal
- */
-export function shouldDeleteWord(rawEvent: KeyboardEvent) {
-    const mac = Browser.isMac;
-
-    return (mac && rawEvent.altKey && rawEvent.metaKey) || (!mac && rawEvent.ctrlKey);
-}
-
-/**
- * @internal
- */
-export function shouldDeleteAllSegmentsBefore(rawEvent: KeyboardEvent) {
-    return rawEvent.metaKey && !rawEvent.altKey;
 }

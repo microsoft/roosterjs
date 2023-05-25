@@ -34,7 +34,7 @@ export interface DeleteSelectionContext extends DeleteSelectionResult {
 /**
  * @internal
  */
-export interface InsertableDeleteSelectionContext extends DeleteSelectionContext {
+export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
     insertPoint: InsertPoint;
 }
 
@@ -56,6 +56,6 @@ export type OnDeleteEntity = (
  * @internal
  */
 export type DeleteSelectionStep = (
-    context: InsertableDeleteSelectionContext,
+    context: ValidDeleteSelectionContext,
     onDeleteEntity: OnDeleteEntity
 ) => void;

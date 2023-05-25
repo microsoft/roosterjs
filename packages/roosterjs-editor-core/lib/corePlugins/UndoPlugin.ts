@@ -166,10 +166,6 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.addUndoSnapshot();
             }
             this.lastKeyPress = 0;
-        } else if (this.lastKeyPress == Keys.BACKSPACE || this.lastKeyPress == Keys.DELETE) {
-            if (this.state.hasNewContent) {
-                this.addUndoSnapshot();
-            }
         }
     }
 

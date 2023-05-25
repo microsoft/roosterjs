@@ -64,16 +64,15 @@ export function deleteExpandedSelection(
                                 path,
                                 tableContext
                             );
-                        } else {
-                            if (deleteSegment(block, segment, onDeleteEntity)) {
-                                context.deleteResult = DeleteResult.Range;
-                            }
+                        } else if (deleteSegment(block, segment, onDeleteEntity)) {
+                            context.deleteResult = DeleteResult.Range;
                         }
                     });
                 }
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
+
                 if (deleteBlock(blocks, block, onDeleteEntity, paragraph)) {
                     context.deleteResult = DeleteResult.Range;
                 }

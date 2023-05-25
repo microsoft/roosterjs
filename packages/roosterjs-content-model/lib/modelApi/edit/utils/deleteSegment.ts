@@ -18,6 +18,8 @@ export function deleteSegment(
     const segments = paragraph.segments;
     const index = segments.indexOf(segmentToDelete);
     const preserveWhiteSpace = isWhiteSpacePreserved(paragraph);
+    const isForward = direction == 'forward';
+    const isBackward = direction == 'backward';
 
     if (!preserveWhiteSpace) {
         normalizePreviousSegment(segments, index);
@@ -33,9 +35,9 @@ export function deleteSegment(
         case 'Entity':
             const operation = segmentToDelete.isSelected
                 ? EntityOperation.Overwrite
-                : direction == 'forward'
+                : isForward
                 ? EntityOperation.RemoveFromStart
-                : direction == 'backward'
+                : isBackward
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
             if (operation !== undefined && !onDeleteEntity(segmentToDelete, operation)) {
@@ -50,10 +52,10 @@ export function deleteSegment(
             if (text.length == 0 || segmentToDelete.isSelected) {
                 segments.splice(index, 1);
             } else if (direction) {
-                text = deleteSingleChar(text, direction == 'forward'); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
+                text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
-                    text = text.replace(direction == 'forward' ? /^\u0020+/ : /\u0020+$/, '\u00A0');
+                    text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
                 }
 
                 if (text == '') {
