@@ -8,10 +8,10 @@ import { getSelectedCells } from './getSelectedCells';
 export function mergeTableCells(table: ContentModelTable) {
     const sel = getSelectedCells(table);
 
-    if (sel && canMergeCells(table.cells, sel.firstRow, sel.firstCol, sel.lastRow, sel.lastCol)) {
+    if (sel && canMergeCells(table.rows, sel.firstRow, sel.firstCol, sel.lastRow, sel.lastCol)) {
         for (let rowIndex = sel.firstRow; rowIndex <= sel.lastRow; rowIndex++) {
             for (let colIndex = sel.firstCol; colIndex <= sel.lastCol; colIndex++) {
-                const cell = table.cells[rowIndex][colIndex];
+                const cell = table.rows[rowIndex].cells[colIndex];
 
                 if (cell) {
                     cell.spanLeft = colIndex > sel.firstCol;
@@ -20,6 +20,8 @@ export function mergeTableCells(table: ContentModelTable) {
                     delete cell.cachedElement;
                 }
             }
+
+            delete table.rows[rowIndex].cachedElement;
         }
     }
 }

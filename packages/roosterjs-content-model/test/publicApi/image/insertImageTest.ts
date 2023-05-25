@@ -94,7 +94,6 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {},
                                 dataset: {},
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'SelectionMarker',
@@ -134,7 +133,6 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {},
                                 dataset: {},
-                                isSelectedAsImageSelection: false,
                             },
                             {
                                 segmentType: 'SelectionMarker',
@@ -144,6 +142,57 @@ describe('insertImage', () => {
                         ],
                     },
                 ],
+            },
+            1
+        );
+    });
+
+    it('Insert image with current format', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Test',
+        });
+        const marker = createSelectionMarker({
+            fontSize: '20px',
+        });
+
+        addSegment(model, marker);
+
+        runTest(
+            'insertImage',
+            editor => {
+                insertImage(editor, testUrl);
+            },
+            model,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Image',
+                                src: testUrl,
+                                format: {
+                                    fontFamily: 'Test',
+                                    fontSize: '20px',
+                                },
+                                dataset: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {
+                                    fontSize: '20px',
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+                format: {
+                    fontFamily: 'Test',
+                },
             },
             1
         );

@@ -2,6 +2,8 @@ export { ContentModelBlockGroupType } from './enum/BlockGroupType';
 export { ContentModelBlockType } from './enum/BlockType';
 export { ContentModelSegmentType } from './enum/SegmentType';
 export { Selectable } from './selection/Selectable';
+export { InsertPoint } from './selection/InsertPoint';
+export { TableSelectionContext } from './selection/TableSelectionContext';
 
 export { ContentModelBlockBase } from './block/ContentModelBlockBase';
 export { ContentModelTable } from './block/ContentModelTable';
@@ -9,6 +11,7 @@ export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
 export { ContentModelDocument } from './group/ContentModelDocument';
 export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
 export { ContentModelListItem } from './group/ContentModelListItem';
+export { ContentModelTableRow } from './block/ContentModelTableRow';
 export { ContentModelTableCell } from './group/ContentModelTableCell';
 export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
 export { ContentModelBlockGroup } from './group/ContentModelBlockGroup';
@@ -42,6 +45,8 @@ export { ContentModelWithFormat } from './format/ContentModelWithFormat';
 export { ContentModelWithDataset } from './format/ContentModelWithDataset';
 export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
 export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkFormat';
+export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
+export { ContentModelFormatContainerFormat } from './format/ContentModelFormatContainerFormat';
 
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
@@ -51,6 +56,8 @@ export { IdFormat } from './format/formatParts/IdFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { SpacingFormat } from './format/formatParts/SpacingFormat';
 export { DirectionFormat } from './format/formatParts/DirectionFormat';
+export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { TextColorFormat } from './format/formatParts/TextColorFormat';
 export { FontSizeFormat } from './format/formatParts/FontSizeFormat';
 export { FontFamilyFormat } from './format/formatParts/FontFamilyFormat';
@@ -64,8 +71,10 @@ export { ContentModelFormatBase } from './format/ContentModelFormatBase';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
+export { LetterSpacingFormat } from './format/formatParts/LetterSpacingFormat';
 export { LineHeightFormat } from './format/formatParts/LineHeightFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
+export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
 export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListMetadataFormat } from './format/formatParts/ListMetadataFormat';
@@ -86,7 +95,7 @@ export { EditorContext } from './context/EditorContext';
 export {
     DomToModelListFormat,
     DomToModelFormatContext,
-    DomToModelSegmentDecoratorContext,
+    DomToModelDecoratorContext,
 } from './context/DomToModelFormatContext';
 export {
     DomToModelRegularSelection,
@@ -123,6 +132,7 @@ export {
     FormatAppliersPerCategory,
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 export { ElementProcessor } from './context/ElementProcessor';
 export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
@@ -139,4 +149,7 @@ export {
     CreateEditorContext,
     ContentModelCoreApiMap,
     ContentModelEditorCore,
+    CreatePasteModel,
 } from './ContentModelEditorCore';
+
+export { default as ContentModelBeforePasteEvent } from './event/ContentModelBeforePasteEvent';

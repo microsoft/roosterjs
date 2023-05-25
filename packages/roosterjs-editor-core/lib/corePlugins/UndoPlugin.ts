@@ -124,6 +124,9 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
             case PluginEventType.ContentChanged:
                 this.onContentChanged(event);
                 break;
+            case PluginEventType.BeforeKeyboardEditing:
+                this.onBeforeKeyboardEditing(event.rawEvent);
+                break;
         }
     }
 
@@ -137,7 +140,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
                 this.editor?.undo();
                 this.state.autoCompletePosition = null;
                 this.lastKeyPress = evt.which;
-            } else {
+            } else if (!evt.defaultPrevented) {
                 let selectionRange = this.editor?.getSelectionRange();
 
                 // Add snapshot when
@@ -192,24 +195,25 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         this.lastKeyPress = evt.which;
     }
 
-    private onContentChanged(event: ContentChangedEvent) {
-        if (event.source == ChangeSource.Keyboard) {
-            if (Number.isInteger(event.data)) {
-                // For keyboard event (triggered from Content Model), we can get its keycode from event.data
-                // And when user is keep pressing the same key, mark editor with "hasNewContent" so that next time user
-                // do some other action or press a different key, we will add undo snapshot
-                if (event.data != this.lastKeyPress) {
-                    this.addUndoSnapshot();
-                }
+    private onBeforeKeyboardEditing(event: KeyboardEvent) {
+        // For keyboard event (triggered from Content Model), we can get its keycode from event.data
+        // And when user is keep pressing the same key, mark editor with "hasNewContent" so that next time user
+        // do some other action or press a different key, we will add undo snapshot
+        if (event.which != this.lastKeyPress) {
+            this.addUndoSnapshot();
+        }
 
-                this.lastKeyPress = event.data;
-                this.state.hasNewContent = true;
-            }
-        } else if (
+        this.lastKeyPress = event.which;
+        this.state.hasNewContent = true;
+    }
+
+    private onContentChanged(event: ContentChangedEvent) {
+        if (
             !(
                 this.state.isRestoring ||
                 event.source == ChangeSource.SwitchToDarkMode ||
-                event.source == ChangeSource.SwitchToLightMode
+                event.source == ChangeSource.SwitchToLightMode ||
+                event.source == ChangeSource.Keyboard
             )
         ) {
             this.clearRedoForInput();

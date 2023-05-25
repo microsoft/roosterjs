@@ -1,5 +1,5 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
-import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
+import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,
@@ -22,7 +22,7 @@ describe('getOnDeleteEntityCallback', () => {
     });
 
     it('Entity without id', () => {
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -40,7 +40,7 @@ describe('getOnDeleteEntityCallback', () => {
     });
 
     it('Entity with id and type', () => {
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -73,7 +73,7 @@ describe('getOnDeleteEntityCallback', () => {
             param.rawEvent.defaultPrevented = true;
         });
 
-        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent);
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, []);
 
         const result = func(
             {
@@ -100,6 +100,25 @@ describe('getOnDeleteEntityCallback', () => {
             rawEvent: mockedEvent,
         });
     });
+
+    it('Call with triggeredEntityEvents', () => {
+        const wrapper = 'WRAPPER';
+        const entity = {
+            wrapper,
+        } as any;
+        const func = getOnDeleteEntityCallback(mockedEditor, mockedEvent, [
+            {
+                eventType: PluginEventType.EntityOperation,
+                operation: EntityOperation.Overwrite,
+                entity,
+            },
+        ]);
+
+        const result = func({ wrapper } as any, EntityOperation.Overwrite);
+
+        expect(result).toBeFalse();
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
+    });
 });
 
 describe('handleKeyboardEventResult', () => {
@@ -108,15 +127,18 @@ describe('handleKeyboardEventResult', () => {
     let cacheContentModel: jasmine.Spy;
     let preventDefault: jasmine.Spy;
     let triggerContentChangedEvent: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         preventDefault = jasmine.createSpy('preventDefault');
         triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         mockedEditor = ({
             cacheContentModel,
             triggerContentChangedEvent,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
         mockedEvent = ({
             preventDefault,
@@ -134,8 +156,11 @@ describe('handleKeyboardEventResult', () => {
 
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
-        expect(triggerContentChangedEvent).toHaveBeenCalledWith(ChangeSource.Keyboard, which);
+        expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
+            rawEvent: mockedEvent,
+        });
     });
 
     it('isChanged = false', () => {
@@ -146,5 +171,6 @@ describe('handleKeyboardEventResult', () => {
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
         expect(cacheContentModel).toHaveBeenCalledWith(null);
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
     });
 });

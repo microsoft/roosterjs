@@ -1,7 +1,17 @@
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
+import { mergeModel } from '../modelApi/common/mergeModel';
+import { Position } from 'roosterjs-editor-dom';
+import {
+    ChangeSource,
+    ClipboardData,
+    ExperimentalFeatures,
+    GetContentMode,
+} from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -55,6 +65,75 @@ export default class ContentModelEditor
 
         if (core.reuseModel && !core.lifecycle.shadowEditFragment) {
             core.cachedModel = model || undefined;
+        }
+    }
+
+    /**
+     * Get default format as ContentModelSegmentFormat.
+     * This is a replacement of IEditor.getDefaultFormat for Content Model.
+     * @returns The default format
+     */
+    getContentModelDefaultFormat(): ContentModelSegmentFormat {
+        const core = this.getCore();
+
+        return core.defaultFormat;
+    }
+
+    /**
+     * Paste into editor using a clipboardData object
+     * @param clipboardData Clipboard data retrieved from clipboard
+     * @param pasteAsText Force pasting as plain text. Default value is false
+     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
+     * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
+     */
+    public paste(
+        clipboardData: ClipboardData,
+        pasteAsText: boolean = false,
+        applyCurrentFormat: boolean = false,
+        pasteAsImage: boolean = false
+    ) {
+        if (!this.isFeatureEnabled(ExperimentalFeatures.ContentModelPaste)) {
+            super.paste(clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
+            return;
+        }
+
+        const core = this.getCore();
+        if (!clipboardData) {
+            return;
+        }
+
+        if (clipboardData.snapshotBeforePaste) {
+            // Restore original content before paste a new one
+            this.setContent(clipboardData.snapshotBeforePaste);
+        } else {
+            clipboardData.snapshotBeforePaste = this.getContent(
+                GetContentMode.RawHTMLWithSelection
+            );
+        }
+
+        const range = this.getSelectionRange();
+        const pos = range && Position.getStart(range);
+        const pasteModel = core.api.createPasteModel(
+            core,
+            clipboardData,
+            pos,
+            pasteAsText,
+            applyCurrentFormat,
+            pasteAsImage
+        );
+
+        if (pasteModel) {
+            formatWithContentModel(
+                this,
+                'Paste',
+                model => {
+                    mergeModel(model, pasteModel);
+                    return true;
+                },
+                {
+                    changeSource: ChangeSource.Paste,
+                }
+            );
         }
     }
 }

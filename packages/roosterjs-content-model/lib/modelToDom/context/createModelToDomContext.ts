@@ -17,10 +17,11 @@ export function createModelToDomContext(
     editorContext?: EditorContext,
     options?: ModelToDomOption
 ): ModelToDomContext {
+    options = options || {};
+
     return {
         ...(editorContext || {
             isDarkMode: false,
-            getDarkColor: undefined,
         }),
         regularSelection: {
             current: {
@@ -34,19 +35,20 @@ export function createModelToDomContext(
         },
         implicitFormat: {},
         formatAppliers: getFormatAppliers(
-            options?.formatApplierOverride,
-            options?.additionalFormatAppliers
+            options.formatApplierOverride,
+            options.additionalFormatAppliers
         ),
         modelHandlers: {
             ...defaultContentModelHandlers,
-            ...(options?.modelHandlerOverride || {}),
+            ...(options.modelHandlerOverride || {}),
         },
         defaultImplicitFormatMap: {
             ...defaultImplicitFormatMap,
-            ...(options?.defaultImplicitFormatOverride || {}),
+            ...(options.defaultImplicitFormatOverride || {}),
         },
 
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
+        onNodeCreated: options.onNodeCreated,
     };
 }

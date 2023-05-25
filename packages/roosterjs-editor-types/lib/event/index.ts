@@ -94,3 +94,8 @@ export {
     SelectionChangedEventData,
     CompatibleSelectionChangedEvent,
 } from './SelectionChangeEvent';
+export {
+    default as BeforeKeyboardEditingEvent,
+    BeforeKeyboardEditingData,
+    CompatibleBeforeKeyboardEditingEvent,
+} from './BeforeKeyboardEditingEvent';

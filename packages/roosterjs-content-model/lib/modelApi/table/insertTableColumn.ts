@@ -20,10 +20,10 @@ export function insertTableColumn(
 
     if (sel) {
         for (let i = sel?.firstCol; i <= sel.lastCol; i++) {
-            table.cells.forEach(row => {
-                const cell = row[insertLeft ? sel.firstCol : sel.lastCol];
+            table.rows.forEach(row => {
+                const cell = row.cells[insertLeft ? sel.firstCol : sel.lastCol];
 
-                row.splice(
+                row.cells.splice(
                     insertLeft ? sel.firstCol : sel.lastCol + 1,
                     0,
                     createTableCell(cell.spanLeft, cell.spanAbove, cell.isHeader, cell.format)

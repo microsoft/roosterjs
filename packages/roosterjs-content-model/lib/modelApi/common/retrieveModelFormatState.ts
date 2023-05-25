@@ -11,7 +11,8 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
-import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
+import { iterateSelections } from '../selection/iterateSelections';
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 /**
@@ -30,7 +31,13 @@ export function retrieveModelFormatState(
 
     if (pendingFormat) {
         // Pending format
-        retrieveSegmentFormat(formatState, pendingFormat, isFirst);
+        retrieveSegmentFormat(
+            formatState,
+            pendingFormat,
+            isFirst,
+            undefined /*segment*/,
+            model.format
+        );
     }
 
     iterateSelections(
@@ -56,7 +63,13 @@ export function retrieveModelFormatState(
                 segments?.forEach(segment => {
                     if (!pendingFormat) {
                         if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                            retrieveSegmentFormat(formatState, segment.format, isFirst, segment);
+                            retrieveSegmentFormat(
+                                formatState,
+                                segment.format,
+                                isFirst,
+                                segment,
+                                model.format
+                            );
                         }
 
                         // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
@@ -117,7 +130,8 @@ function retrieveSegmentFormat(
     result: ContentModelFormatState,
     format: ContentModelSegmentFormat,
     isFirst: boolean,
-    segment?: ContentModelSegment
+    segment?: ContentModelSegment,
+    defaultFormat?: ContentModelSegmentFormat
 ) {
     const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
     mergeValue(result, 'isBold', isBold(format.fontWeight), isFirst);
@@ -135,12 +149,18 @@ function retrieveSegmentFormat(
     mergeValue(
         result,
         'fontName',
-        segment?.code ? segment.code.format.fontFamily : format.fontFamily,
+        (segment?.code ? segment.code.format.fontFamily : format.fontFamily) ||
+            defaultFormat?.fontFamily,
         isFirst
     );
-    mergeValue(result, 'fontSize', format.fontSize, isFirst);
-    mergeValue(result, 'backgroundColor', format.backgroundColor, isFirst);
-    mergeValue(result, 'textColor', format.textColor, isFirst);
+    mergeValue(result, 'fontSize', format.fontSize || defaultFormat?.fontSize, isFirst);
+    mergeValue(
+        result,
+        'backgroundColor',
+        format.backgroundColor || defaultFormat?.backgroundColor,
+        isFirst
+    );
+    mergeValue(result, 'textColor', format.textColor || defaultFormat?.textColor, isFirst);
 
     //TODO: handle block owning segments with different line-heights
     mergeValue(result, 'lineHeight', format.lineHeight, isFirst);
@@ -191,7 +211,9 @@ function retrieveTableFormat(tableContext: TableSelectionContext, result: Conten
     const tableFormat = updateTableMetadata(tableContext.table);
 
     result.isInTable = true;
-    result.tableHasHeader = tableContext.table.cells.some(row => row.some(cell => cell.isHeader));
+    result.tableHasHeader = tableContext.table.rows.some(row =>
+        row.cells.some(cell => cell.isHeader)
+    );
 
     if (tableFormat) {
         result.tableFormat = tableFormat;

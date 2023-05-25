@@ -16,7 +16,6 @@ export function createDomToModelContext(
     const context: DomToModelContext = {
         ...(editorContext || {
             isDarkMode: false,
-            getDarkColor: undefined,
         }),
 
         blockFormat: {},
@@ -34,6 +33,10 @@ export function createDomToModelContext(
         },
         code: {
             format: {},
+        },
+        blockDecorator: {
+            format: {},
+            tagName: '',
         },
 
         elementProcessors: {
@@ -53,11 +56,8 @@ export function createDomToModelContext(
 
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
+        allowCacheElement: !options?.disableCacheElement,
     };
-
-    if (options?.alwaysNormalizeTable) {
-        context.alwaysNormalizeTable = true;
-    }
 
     const range = options?.selectionRange;
     let selectionRoot: Node | undefined;

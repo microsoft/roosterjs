@@ -13,24 +13,24 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
     if (sel) {
         for (let colIndex = sel.lastCol; colIndex >= sel.firstCol; colIndex--) {
             if (
-                table.cells.every(
+                table.rows.every(
                     (row, rowIndex) =>
                         rowIndex < sel.firstRow ||
                         rowIndex > sel.lastRow ||
-                        row[colIndex + 1]?.spanLeft
+                        row.cells[colIndex + 1]?.spanLeft
                 )
             ) {
-                table.cells.forEach((row, rowIndex) => {
-                    delete row[colIndex].cachedElement;
+                table.rows.forEach((row, rowIndex) => {
+                    delete row.cells[colIndex].cachedElement;
 
                     if (rowIndex >= sel.firstRow && rowIndex <= sel.lastRow) {
-                        row[colIndex + 1].spanLeft = false;
-                        delete row[colIndex + 1].cachedElement;
+                        row.cells[colIndex + 1].spanLeft = false;
+                        delete row.cells[colIndex + 1].cachedElement;
                     }
                 });
             } else {
-                table.cells.forEach((row, rowIndex) => {
-                    const cell = row[colIndex];
+                table.rows.forEach((row, rowIndex) => {
+                    const cell = row.cells[colIndex];
                     if (cell) {
                         const newCell = createTableCell(
                             cell.spanLeft,
@@ -39,14 +39,16 @@ export function splitTableCellHorizontally(table: ContentModelTable) {
                             cell.format
                         );
 
+                        newCell.dataset = { ...cell.dataset };
+
                         if (rowIndex < sel.firstRow || rowIndex > sel.lastRow) {
                             newCell.spanLeft = true;
                         } else {
                             newCell.isSelected = cell.isSelected;
                         }
-                        row.splice(colIndex + 1, 0, newCell);
+                        row.cells.splice(colIndex + 1, 0, newCell);
 
-                        delete row[colIndex].cachedElement;
+                        delete row.cells[colIndex].cachedElement;
                     }
                 });
 

@@ -2,198 +2,25 @@ import * as handleBackspaceKey from '../../../lib/publicApi/editing/handleBacksp
 import * as handleDeleteKey from '../../../lib/publicApi/editing/handleDeleteKey';
 import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import {
+    EntityOperation,
+    ExperimentalFeatures,
+    Keys,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
+    let cacheContentModel: jasmine.Spy;
+    let isFeatureEnabled: jasmine.Spy;
 
     beforeEach(() => {
-        editor = ({} as any) as IContentModelEditor;
-    });
+        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        isFeatureEnabled = jasmine
+            .createSpy('isFeatureEnabled')
+            .and.callFake(f => f == ExperimentalFeatures.EditWithContentModel);
 
-    describe('willHandleEventExclusively', () => {
-        it('Handle other events', () => {
-            const plugin = new ContentModelEditPlugin();
-
-            plugin.initialize(editor);
-
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.EditorReady,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.KeyPress,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.KeyUp,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.Input,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.CompositionEnd,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.MouseDown,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.MouseUp,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.ContentChanged,
-                    source: '',
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.ExtractContentWithDom,
-                    clonedRoot: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.BeforeCutCopy,
-                    rawEvent: {} as any,
-                    clonedRoot: {} as any,
-                    range: {} as any,
-                    isCut: false,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.BeforePaste,
-                    clipboardData: {} as any,
-                    fragment: {} as any,
-                    sanitizingOption: {} as any,
-                    htmlBefore: {} as any,
-                    htmlAfter: {} as any,
-                    htmlAttributes: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.BeforeDispose,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.PendingFormatStateChanged,
-                    formatState: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.Scroll,
-                    scrollContainer: {} as any,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.EntityOperation,
-                    operation: {} as any,
-                    entity: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.ContextMenu,
-                    items: {} as any,
-                    rawEvent: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.EnteredShadowEdit,
-                    fragment: {} as any,
-                    selectionPath: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.LeavingShadowEdit,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.EditImage,
-                    image: {} as any,
-                    originalSrc: {} as any,
-                    previousSrc: {} as any,
-                    newSrc: {} as any,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.BeforeSetContent,
-                    newContent: '',
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.ZoomChanged,
-                    oldZoomScale: 1,
-                    newZoomScale: 2,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.SelectionChanged,
-                    selectionRangeEx: {} as any,
-                })
-            ).toBeFalse();
-        });
-
-        it('Handle KeyDown events', () => {
-            const plugin = new ContentModelEditPlugin();
-
-            plugin.initialize(editor);
-
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.KeyDown,
-                    rawEvent: ({
-                        which: Keys.ESCAPE,
-                    } as any) as KeyboardEvent,
-                })
-            ).toBeFalse();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.KeyDown,
-                    rawEvent: ({
-                        which: Keys.DELETE,
-                    } as any) as KeyboardEvent,
-                })
-            ).toBeTrue();
-            expect(
-                plugin.willHandleEventExclusively({
-                    eventType: PluginEventType.KeyDown,
-                    rawEvent: ({
-                        which: Keys.BACKSPACE,
-                    } as any) as KeyboardEvent,
-                })
-            ).toBeTrue();
-        });
+        editor = ({ cacheContentModel, isFeatureEnabled } as any) as IContentModelEditor;
     });
 
     describe('onPluginEvent', () => {
@@ -216,8 +43,9 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(handleBackspaceKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -232,7 +60,44 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+
+        it('Backspace, feature is not enabled', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.BACKSPACE } as any;
+
+            isFeatureEnabled.and.returnValue(false);
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
+        });
+
+        it('Delete, feature is not enabled', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.DELETE } as any;
+
+            isFeatureEnabled.and.returnValue(false);
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Other key', () => {
@@ -248,6 +113,69 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
             expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
+        });
+
+        it('Default prevented', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.DELETE, defaultPrevented: true } as any;
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
+        });
+
+        it('Trigger entity event first', () => {
+            const plugin = new ContentModelEditPlugin();
+            const wrapper = 'WRAPPER' as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.EntityOperation,
+                operation: EntityOperation.Overwrite,
+                rawEvent: {
+                    type: 'keydown',
+                } as any,
+                entity: wrapper,
+            });
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: { which: Keys.DELETE } as any,
+            });
+
+            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
+            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(1);
+            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, { which: Keys.DELETE } as any, [
+                {
+                    eventType: PluginEventType.EntityOperation,
+                    operation: EntityOperation.Overwrite,
+                    rawEvent: {
+                        type: 'keydown',
+                    } as any,
+                    entity: wrapper,
+                },
+            ]);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: { which: Keys.DELETE } as any,
+            });
+
+            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(2);
+            expect(handleDeleteKeySpy).toHaveBeenCalledWith(
+                editor,
+                { which: Keys.DELETE } as any,
+                []
+            );
+            expect(cacheContentModel).not.toHaveBeenCalled();
         });
     });
 });

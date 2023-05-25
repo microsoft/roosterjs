@@ -1,3 +1,4 @@
+import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -31,6 +32,7 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -59,50 +61,7 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                     },
                 },
-            ],
-        });
-    });
-
-    it('BLOCKQUOTE with other style', () => {
-        const doc = createContentModelDocument();
-        const quote = document.createElement('blockquote');
-
-        quote.style.marginTop = '0';
-        quote.style.marginBottom = '0';
-        quote.style.color = 'red';
-        quote.appendChild(document.createTextNode('test'));
-
-        formatContainerProcessor(doc, quote, context);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'BlockGroup',
-                    blockGroupType: 'FormatContainer',
-                    format: {
-                        marginRight: '40px',
-                        marginLeft: '40px',
-                        textColor: 'red',
-                        marginTop: '0px',
-                        marginBottom: '0px',
-                    },
-                    tagName: 'blockquote',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    format: {},
-                                    text: 'test',
-                                },
-                            ],
-                            format: {},
-                            isImplicit: true,
-                        },
-                    ],
-                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -136,6 +95,7 @@ describe('formatContainerProcessor', () => {
                         borderLeft: '1px solid black',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -210,6 +170,7 @@ describe('formatContainerProcessor', () => {
                         borderLeft: '2px solid black',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
     });
@@ -220,17 +181,15 @@ describe('formatContainerProcessor', () => {
         const childProcessor = jasmine
             .createSpy('childProcessor')
             .and.callFake((group, element, context) => {
-                expect(context.blockFormat).toEqual({
-                    backgroundColor: 'red',
-                });
+                expect(context.blockFormat).toEqual({});
                 expect(context.segmentFormat).toEqual({
                     fontSize: '20px',
+                    textColor: 'blue',
                 });
             });
 
         quote.style.color = 'blue';
         quote.style.borderLeft = 'solid 1px black';
-        context.blockFormat.backgroundColor = 'red';
         context.segmentFormat.textColor = 'green';
         context.segmentFormat.fontSize = '20px';
         context.elementProcessors.child = childProcessor;
@@ -251,10 +210,9 @@ describe('formatContainerProcessor', () => {
                         marginBottom: '1em',
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
-                        backgroundColor: 'red',
-                        textColor: 'blue',
                     },
                 },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],
         });
 
@@ -269,8 +227,7 @@ describe('formatContainerProcessor', () => {
         quote.style.borderLeft = 'solid 1px black';
 
         context.blockFormat.backgroundColor = 'red';
-        context.blockFormat.textAlign = 'center';
-        context.blockFormat.isTextAlignFromAttr = true;
+        context.blockFormat.htmlAlign = 'center';
         context.blockFormat.lineHeight = '2';
         context.blockFormat.whiteSpace = 'pre';
         context.blockFormat.direction = 'rtl';
@@ -294,16 +251,119 @@ describe('formatContainerProcessor', () => {
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
                         backgroundColor: 'red',
-                        textAlign: 'center',
-                        isTextAlignFromAttr: true,
+                        htmlAlign: 'center',
                         lineHeight: '2',
                         whiteSpace: 'pre',
                         direction: 'rtl',
                     },
                 },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {
+                        backgroundColor: 'red',
+                        htmlAlign: 'center',
+                        lineHeight: '2',
+                        whiteSpace: 'pre',
+                        direction: 'rtl',
+                    },
+                    isImplicit: true,
+                },
             ],
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(1);
+    });
+
+    it('formatContainer with zero font size', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [],
+                    zeroFontSize: true,
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
+
+    it('formatContainer with zero font size and single paragraph child', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontSize = '0px';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontSize: '0px' },
+                        },
+                    ],
+                    format: {},
+                    isImplicit: false,
+                    zeroFontSize: true,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
+    });
+
+    it('formatContainer with max-width and display:inline-block', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.display = 'inline-block';
+        div.style.maxWidth = '50%';
+        div.appendChild(document.createTextNode('test'));
+
+        formatContainerProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                    ],
+                    format: {
+                        maxWidth: '50%',
+                        display: 'inline-block',
+                    } as ContentModelBlockFormat,
+                    isImplicit: false,
+                },
+                { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
+            ],
+        });
     });
 });

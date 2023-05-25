@@ -1,16 +1,19 @@
 import { addSegment } from './addSegment';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPoint } from '../selection/deleteSelections';
+import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
 
@@ -31,6 +34,13 @@ export interface MergeModelOption {
      * @default undefined
      */
     insertPosition?: InsertPoint;
+
+    /**
+     * When set to true, segment format of the insert position will be merged into the content that is merged into current model.
+     * If the source model already has some format, it will not be overwritten.
+     * @default false
+     */
+    mergeCurrentFormat?: boolean;
 }
 
 /**
@@ -44,6 +54,15 @@ export function mergeModel(
     const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
 
     if (insertPosition) {
+        if (options?.mergeCurrentFormat) {
+            const newFormat: ContentModelSegmentFormat = {
+                ...(target.format || {}),
+                ...insertPosition.marker.format,
+            };
+
+            applyDefaultFormat(source, newFormat);
+        }
+
         for (let i = 0; i < source.blocks.length; i++) {
             const block = source.blocks[i];
 
@@ -106,14 +125,14 @@ function mergeTable(
 
     if (tableContext && source.blocks.length == 1 && source.blocks[0] == newTable) {
         const { table, colIndex, rowIndex } = tableContext;
-        for (let i = 0; i < newTable.cells.length; i++) {
-            for (let j = 0; j < newTable.cells[i].length; j++) {
-                const newCell = newTable.cells[i][j];
+        for (let i = 0; i < newTable.rows.length; i++) {
+            for (let j = 0; j < newTable.rows[i].cells.length; j++) {
+                const newCell = newTable.rows[i].cells[j];
 
-                if (i == 0 && colIndex + j >= table.cells[0].length) {
-                    for (let k = 0; k < table.cells.length; k++) {
-                        const leftCell = table.cells[k]?.[colIndex + j - 1];
-                        table.cells[k][colIndex + j] = createTableCell(
+                if (i == 0 && colIndex + j >= table.rows[0].cells.length) {
+                    for (let k = 0; k < table.rows.length; k++) {
+                        const leftCell = table.rows[k]?.cells[colIndex + j - 1];
+                        table.rows[k].cells[colIndex + j] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             leftCell?.isHeader,
@@ -122,14 +141,18 @@ function mergeTable(
                     }
                 }
 
-                if (j == 0 && rowIndex + i >= table.cells.length) {
-                    if (!table.cells[rowIndex + i]) {
-                        table.cells[rowIndex + i] = [];
+                if (j == 0 && rowIndex + i >= table.rows.length) {
+                    if (!table.rows[rowIndex + i]) {
+                        table.rows[rowIndex + i] = {
+                            cells: [],
+                            format: {},
+                            height: 0,
+                        };
                     }
 
-                    for (let k = 0; k < table.cells[rowIndex].length; k++) {
-                        const aboveCell = table.cells[rowIndex + i - 1]?.[k];
-                        table.cells[rowIndex + i][k] = createTableCell(
+                    for (let k = 0; k < table.rows[rowIndex].cells.length; k++) {
+                        const aboveCell = table.rows[rowIndex + i - 1]?.cells[k];
+                        table.rows[rowIndex + i].cells[k] = createTableCell(
                             false /*spanLeft*/,
                             false /*spanAbove*/,
                             false /*isHeader*/,
@@ -138,7 +161,7 @@ function mergeTable(
                     }
                 }
 
-                table.cells[rowIndex + i][colIndex + j] = newCell;
+                table.rows[rowIndex + i].cells[colIndex + j] = newCell;
 
                 if (i == 0 && j == 0) {
                     addSegment(newCell, createSelectionMarker());
@@ -227,4 +250,32 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     if (blockIndex >= 0) {
         path[0].blocks.splice(blockIndex, 0, block);
     }
+}
+
+function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelSegmentFormat) {
+    group.blocks.forEach(block => {
+        switch (block.blockType) {
+            case 'BlockGroup':
+                applyDefaultFormat(block, format);
+                break;
+
+            case 'Table':
+                block.rows.forEach(row =>
+                    row.cells.forEach(cell => {
+                        applyDefaultFormat(cell, format);
+                    })
+                );
+                break;
+
+            case 'Paragraph':
+                block.segments.forEach(segment => {
+                    if (segment.segmentType == 'General') {
+                        applyDefaultFormat(segment, format);
+                    }
+
+                    segment.format = { ...format, ...segment.format };
+                });
+                break;
+        }
+    });
 }

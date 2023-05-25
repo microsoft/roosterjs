@@ -193,7 +193,7 @@ describe('retrieveModelFormatState', () => {
         const para = createParagraph(false, undefined);
         const marker = createSelectionMarker(segmentFormat);
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
             callback(
@@ -229,7 +229,7 @@ describe('retrieveModelFormatState', () => {
         const para = createParagraph(false, undefined);
         const marker = createSelectionMarker(segmentFormat);
 
-        table.cells[0].push(cell);
+        table.rows[0].cells.push(cell);
         applyTableFormat(table);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
@@ -278,7 +278,7 @@ describe('retrieveModelFormatState', () => {
         const cell1 = createTableCell();
         const cell2 = createTableCell(false, false, true);
 
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
         model.blocks.push(table);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
@@ -494,7 +494,7 @@ describe('retrieveModelFormatState', () => {
         const table = createTable(1);
 
         cell2.isSelected = true;
-        table.cells[0] = [cell1, cell2, cell3];
+        table.rows[0] = { format: {}, height: 0, cells: [cell1, cell2, cell3] };
         model.blocks.push(table);
 
         retrieveModelFormatState(model, null, result);
@@ -516,7 +516,7 @@ describe('retrieveModelFormatState', () => {
 
         cell2.isSelected = true;
         cell3.isSelected = true;
-        table.cells[0] = [cell1, cell2, cell3];
+        table.rows[0] = { format: {}, height: 0, cells: [cell1, cell2, cell3] };
         model.blocks.push(table);
 
         retrieveModelFormatState(model, null, result);
@@ -551,7 +551,7 @@ describe('retrieveModelFormatState', () => {
         addSegment(cell3, text3);
         addSegment(cell3, text4);
 
-        table.cells[0] = [cell1, cell2, cell3];
+        table.rows[0] = { format: {}, height: 0, cells: [cell1, cell2, cell3] };
         model.blocks.push(table);
 
         retrieveModelFormatState(model, null, result);
@@ -582,7 +582,7 @@ describe('retrieveModelFormatState', () => {
         const marker = createSelectionMarker();
         addSegment(cell2, marker);
 
-        table.cells[0] = [cell1, cell2, cell3];
+        table.rows[0] = { format: {}, height: 0, cells: [cell1, cell2, cell3] };
         model.blocks.push(table);
 
         retrieveModelFormatState(model, null, result);
@@ -666,6 +666,69 @@ describe('retrieveModelFormatState', () => {
             canUnlink: false,
             canAddImageAltText: true,
             imageFormat: undefined,
+        });
+    });
+
+    it('With default format but no format in body', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        para.segments.push(marker);
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [marker]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontName: 'Arial',
+            fontSize: '12px',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+        });
+    });
+
+    it('With default format and other different format', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1');
+        const text2 = createText('test2', { fontFamily: 'Tahoma', fontSize: '12px' });
+        para.segments.push(text1, text2);
+
+        text1.isSelected = true;
+        text2.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1, text2]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontSize: '12px',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
         });
     });
 });

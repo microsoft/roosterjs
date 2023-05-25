@@ -80,7 +80,7 @@ export default interface EditorCore extends PluginState {
      * Dark model handler for the editor, used for variable-based solution.
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
-    darkColorHandler?: DarkColorHandler;
+    darkColorHandler: DarkColorHandler;
 }
 
 /**
@@ -133,14 +133,13 @@ export type CreatePasteFragment = (
  * @param core The EditorCore object.
  * @param position The position that user is about to type to
  * @param keyboardEvent Optional keyboard event object
- * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
- * a SPAN element inside the block element instead of the block element itself.
+ * @param deprecated Deprecated parameter, not used
  */
 export type EnsureTypeInContainer = (
     core: EditorCore,
     position: NodePosition,
     keyboardEvent?: KeyboardEvent,
-    applyFormatToSpan?: boolean
+    deprecated?: boolean
 ) => void;
 
 /**
@@ -222,14 +221,14 @@ export type RestoreUndoSnapshot = (core: EditorCore, step: number) => void;
  * There are a bunch of allowed combination of parameters. See IEditor.select for more details
  * @param core The editor core object
  * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
- * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection
+ * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
  * @param arg3 (optional) A Node
  * @param arg4 (optional) An offset number, or a PositionType
  */
 export type Select = (
     core: EditorCore,
     arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-    arg2?: NodePosition | number | PositionType | TableSelection,
+    arg2?: NodePosition | number | PositionType | TableSelection | null,
     arg3?: Node,
     arg4?: number | PositionType
 ) => boolean;
@@ -359,8 +358,7 @@ export interface CoreApiMap {
      * @param core The EditorCore object.
      * @param position The position that user is about to type to
      * @param keyboardEvent Optional keyboard event object
-     * @param applyFormatToSpan Optional When set to true, default format (if any) will be applied to
-     * a SPAN element inside the block element instead of the block element itself.
+     * @param deprecated Deprecated parameter, not used
      */
     ensureTypeInContainer: EnsureTypeInContainer;
 
@@ -435,7 +433,7 @@ export interface CoreApiMap {
      * There are a bunch of allowed combination of parameters. See IEditor.select for more details
      * @param core The editor core object
      * @param arg1 A DOM Range, or SelectionRangeEx, or NodePosition, or Node, or Selection Path
-     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection
+     * @param arg2 (optional) A NodePosition, or an offset number, or a PositionType, or a TableSelection, or null
      * @param arg3 (optional) A Node
      * @param arg4 (optional) An offset number, or a PositionType
      */

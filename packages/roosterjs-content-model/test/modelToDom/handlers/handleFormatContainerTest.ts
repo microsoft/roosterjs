@@ -44,7 +44,7 @@ describe('handleFormatContainer', () => {
         handleFormatContainer(document, parent, quote, context, null);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote></div>'
+            '<div><blockquote style="margin: 0px;"><div>test</div></blockquote></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -72,7 +72,7 @@ describe('handleFormatContainer', () => {
         const result = handleFormatContainer(document, parent, quote, context, br);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote style="margin: 0px;"><div><span>test</span></div></blockquote><br></div>'
+            '<div><blockquote style="margin: 0px;"><div>test</div></blockquote><br></div>'
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -83,5 +83,29 @@ describe('handleFormatContainer', () => {
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
         expect(result).toBe(br);
+    });
+
+    it('With onNodeCreated', () => {
+        const parent = document.createElement('div');
+        const quote = createQuote();
+        const paragraph = createParagraph();
+        const text = createText('test');
+        quote.blocks.push(paragraph);
+        paragraph.segments.push(text);
+
+        handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleFormatContainer(document, parent, quote, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<blockquote style="margin: 0px;"><div>test</div></blockquote>'
+        );
+        expect(onNodeCreated).toHaveBeenCalledTimes(3);
+        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);
+        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('blockquote'));
     });
 });

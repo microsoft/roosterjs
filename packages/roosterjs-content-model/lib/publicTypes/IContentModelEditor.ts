@@ -1,10 +1,12 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
+import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
+    OnNodeCreated,
 } from './context/ModelToDomSettings';
 import {
     DefaultStyleMap,
@@ -48,11 +50,10 @@ export interface DomToModelOption {
     additionalFormatParsers?: Partial<FormatParsersPerCategory>;
 
     /**
-     * When process table, whether we should always normalize it.
-     * This can help persist the size of table that is not created from Content Model
-     * @default false
+     * Whether put the source element into Content Model when possible.
+     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
      */
-    alwaysNormalizeTable?: boolean;
+    disableCacheElement?: boolean;
 }
 
 /**
@@ -78,6 +79,13 @@ export interface ModelToDomOption {
      * Overrides default element styles
      */
     defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
+
+    /**
+     * An optional callback that will be called when a DOM node is created
+     * @param modelElement The related Content Model element
+     * @param node The node created for this model element
+     */
+    onNodeCreated?: OnNodeCreated;
 }
 
 /**
@@ -105,6 +113,13 @@ export interface IContentModelEditor extends IEditor {
      * @param model
      */
     cacheContentModel(model: ContentModelDocument | null): void;
+
+    /**
+     * Get default format as ContentModelSegmentFormat.
+     * This is a replacement of IEditor.getDefaultFormat for Content Model.
+     * @returns The default format
+     */
+    getContentModelDefaultFormat(): ContentModelSegmentFormat;
 }
 
 /**

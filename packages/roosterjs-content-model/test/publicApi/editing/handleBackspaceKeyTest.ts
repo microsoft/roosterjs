@@ -1,6 +1,8 @@
-import * as deleteSelection from '../../../lib/modelApi/selection/deleteSelections';
+import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
+import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import handleBackspaceKey from '../../../lib/publicApi/editing/handleBackspaceKey';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { editingTestCommon } from './editingTestCommon';
 
@@ -33,7 +35,7 @@ describe('handleBackspaceKey', () => {
             'handleBackspaceKey',
             newEditor => {
                 editor = newEditor;
-                handleBackspaceKey(editor, mockedEvent);
+                handleBackspaceKey(editor, mockedEvent, []);
             },
             input,
             expectedResult,
@@ -42,7 +44,8 @@ describe('handleBackspaceKey', () => {
 
         expect(handleKeyboardEventResult.getOnDeleteEntityCallback).toHaveBeenCalledWith(
             editor,
-            mockedEvent
+            mockedEvent,
+            []
         );
         expect(deleteSelectionSpy).toHaveBeenCalledWith(input, {
             direction: 'backward',
@@ -157,5 +160,24 @@ describe('handleBackspaceKey', () => {
             true,
             1
         );
+    });
+
+    it('Check parameter of formatWithContentModel', () => {
+        const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+
+        const editor = 'EDITOR' as any;
+        const which = 'WHICH';
+        const event = {
+            which,
+        } as any;
+        const triggeredEvents = 'EVENTS' as any;
+
+        handleBackspaceKey(editor, event, triggeredEvents);
+
+        expect(spy.calls.argsFor(0)[0]).toBe(editor);
+        expect(spy.calls.argsFor(0)[1]).toBe('handleBackspaceKey');
+        expect(spy.calls.argsFor(0)[3]?.skipUndoSnapshot).toBe(true);
+        expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
+        expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
     });
 });

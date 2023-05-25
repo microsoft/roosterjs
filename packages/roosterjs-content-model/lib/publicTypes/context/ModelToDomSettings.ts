@@ -3,6 +3,7 @@ import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelBlockHandler, ContentModelHandler } from './ContentModelHandler';
 import { ContentModelBr } from '../segment/ContentModelBr';
+import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
 import { ContentModelDivider } from '../block/ContentModelDivider';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
@@ -11,10 +12,12 @@ import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelImage } from '../segment/ContentModelImage';
 import { ContentModelListItem } from '../group/ContentModelListItem';
+import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../block/ContentModelTable';
+import { ContentModelTableRow } from '../block/ContentModelTableRow';
 import { ContentModelText } from '../segment/ContentModelText';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import { ModelToDomContext } from './ModelToDomContext';
@@ -134,6 +137,22 @@ export type ContentModelHandlerMap = {
 };
 
 /**
+ * An optional callback that will be called when a DOM node is created
+ * @param modelElement The related Content Model element
+ * @param node The node created for this model element
+ */
+export type OnNodeCreated = (
+    modelElement:
+        | ContentModelBlock
+        | ContentModelBlockGroup
+        | ContentModelSegment
+        | ContentModelDecorator
+        | ContentModelListItemLevelFormat
+        | ContentModelTableRow,
+    node: Node
+) => void;
+
+/**
  * Represents settings to customize DOM to Content Model conversion
  */
 export interface ModelToDomSettings {
@@ -163,4 +182,11 @@ export interface ModelToDomSettings {
      * This provides a way to call original format applier from an overridden applier function
      */
     defaultFormatAppliers: Readonly<FormatAppliers>;
+
+    /**
+     * An optional callback that will be called when a DOM node is created
+     * @param modelElement The related Content Model element
+     * @param node The node created for this model element
+     */
+    onNodeCreated?: OnNodeCreated;
 }

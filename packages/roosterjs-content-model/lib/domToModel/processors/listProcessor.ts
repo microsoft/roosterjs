@@ -14,15 +14,16 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
     element,
     context
 ) => {
-    const level: ContentModelListItemLevelFormat = {};
-    const { listFormat } = context;
-
     stackFormat(
         context,
         {
             segment: 'shallowCloneForBlock',
+            paragraph: 'shallowCloneForGroup',
         },
         () => {
+            const level: ContentModelListItemLevelFormat = { ...context.blockFormat };
+            const { listFormat } = context;
+
             processMetadata(element, context, level);
             parseFormat(element, context.formatParsers.listLevel, level, context);
             parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);

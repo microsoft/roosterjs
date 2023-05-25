@@ -64,18 +64,13 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
 
             case PluginEventType.KeyDown:
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
-                    this.editor.cacheContentModel(null);
                     clearPendingFormat(this.editor);
-                } else {
-                    this.editor.cacheContentModel(null);
                 }
 
                 break;
 
             case PluginEventType.MouseUp:
             case PluginEventType.ContentChanged:
-                this.editor.cacheContentModel(null);
-
                 if (!canApplyPendingFormat(this.editor)) {
                     clearPendingFormat(this.editor);
                 }

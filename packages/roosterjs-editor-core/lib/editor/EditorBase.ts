@@ -112,7 +112,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             core.plugins[i].dispose();
         }
 
-        core.darkColorHandler?.reset();
+        core.darkColorHandler.reset();
 
         this.core = null;
     }
@@ -424,7 +424,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
 
     public select(
         arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
-        arg2?: NodePosition | number | PositionType | TableSelection,
+        arg2?: NodePosition | number | PositionType | TableSelection | null,
         arg3?: Node,
         arg4?: number | PositionType
     ): boolean {
@@ -851,12 +851,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      */
     public ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent) {
         const core = this.getCore();
-        core.api.ensureTypeInContainer(
-            core,
-            position,
-            keyboardEvent,
-            this.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-        );
+        core.api.ensureTypeInContainer(core, position, keyboardEvent);
     }
 
     //#endregion
@@ -916,10 +911,10 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     }
 
     /**
-     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     * Get a darkColorHandler object for this editor.
      */
-    public getDarkColorHandler(): DarkColorHandler | null {
-        return this.getCore().darkColorHandler || null;
+    public getDarkColorHandler(): DarkColorHandler {
+        return this.getCore().darkColorHandler;
     }
 
     /**

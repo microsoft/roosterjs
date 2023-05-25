@@ -63,6 +63,11 @@ export default function getBlockElementAtNode(
     // Both are actually completely and exclusively wrapped in a parent div, and can be represented with a Node block
     // So we shall try to collapse as much as we can to the nearest common ancestor
     let nodes = collapseNodes(rootNode, headNode, tailNode, false /*canSplitParent*/);
+
+    if (nodes.length === 0) {
+        return null;
+    }
+
     headNode = nodes[0];
     tailNode = nodes[nodes.length - 1];
 

@@ -37,10 +37,13 @@ describe('setTableCellShade', () => {
 
         if (expectedTable) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith({
-                blockGroupType: 'Document',
-                blocks: [expectedTable],
-            });
+            expect(setContentModel).toHaveBeenCalledWith(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [expectedTable],
+                },
+                { onNodeCreated: undefined }
+            );
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }
@@ -49,10 +52,9 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [],
+                rows: [],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             null
@@ -63,21 +65,24 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             null
@@ -88,86 +93,92 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            isSelected: true,
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            isSelected: true,
-                            dataset: {},
-                        },
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                isSelected: true,
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                isSelected: true,
+                                dataset: {},
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: '#000000',
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
                             },
-                            dataset: {
-                                editingInfo: '{"bgColorOverride":true}',
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: '#000000',
+                                },
+                                dataset: {
+                                    editingInfo: '{"bgColorOverride":true}',
+                                },
+                                isSelected: true,
                             },
-                            isSelected: true,
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: '#000000',
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: '#000000',
+                                },
+                                dataset: {
+                                    editingInfo: '{"bgColorOverride":true}',
+                                },
+                                isSelected: true,
                             },
-                            dataset: {
-                                editingInfo: '{"bgColorOverride":true}',
-                            },
-                            isSelected: true,
-                        },
-                    ],
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             }
         );
@@ -177,85 +188,91 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'SelectionMarker',
-                                            isSelected: true,
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
-                                },
-                            ],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                    ],
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: true,
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [
-                                {
-                                    blockType: 'Paragraph',
-                                    segments: [
-                                        {
-                                            segmentType: 'SelectionMarker',
-                                            isSelected: true,
-                                            format: {},
-                                        },
-                                    ],
-                                    format: {},
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                dataset: {},
+                            },
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Paragraph',
+                                        segments: [
+                                            {
+                                                segmentType: 'SelectionMarker',
+                                                isSelected: true,
+                                                format: {},
+                                            },
+                                        ],
+                                        format: {},
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: '#000000',
                                 },
-                            ],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: '#000000',
+                                dataset: {
+                                    editingInfo: '{"bgColorOverride":true}',
+                                },
                             },
-                            dataset: {
-                                editingInfo: '{"bgColorOverride":true}',
-                            },
-                        },
-                    ],
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             }
         );
@@ -265,87 +282,99 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [
-                                {
-                                    blockType: 'Table',
-                                    format: {},
-                                    cells: [
-                                        [
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Table',
+                                        format: {},
+                                        rows: [
                                             {
-                                                blockGroupType: 'TableCell',
-                                                spanAbove: false,
-                                                spanLeft: false,
                                                 format: {},
-                                                blocks: [],
-                                                dataset: {},
+                                                height: 0,
+                                                cells: [
+                                                    {
+                                                        blockGroupType: 'TableCell',
+                                                        spanAbove: false,
+                                                        spanLeft: false,
+                                                        format: {},
+                                                        blocks: [],
+                                                        dataset: {},
+                                                    },
+                                                ],
                                             },
                                         ],
-                                    ],
-                                    widths: [0],
-                                    heights: [0],
-                                    dataset: {},
-                                },
-                            ],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {},
-                            isSelected: true,
-                            dataset: {},
-                        },
-                    ],
+                                        widths: [0],
+                                        dataset: {},
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {},
+                                isSelected: true,
+                                dataset: {},
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [
-                                {
-                                    blockType: 'Table',
-                                    format: {},
-                                    cells: [
-                                        [
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [
+                                    {
+                                        blockType: 'Table',
+                                        format: {},
+                                        rows: [
                                             {
-                                                blockGroupType: 'TableCell',
-                                                spanAbove: false,
-                                                spanLeft: false,
                                                 format: {},
-                                                blocks: [],
-                                                dataset: {},
+                                                height: 0,
+                                                cells: [
+                                                    {
+                                                        blockGroupType: 'TableCell',
+                                                        spanAbove: false,
+                                                        spanLeft: false,
+                                                        format: {},
+                                                        blocks: [],
+                                                        dataset: {},
+                                                    },
+                                                ],
                                             },
                                         ],
-                                    ],
-                                    widths: [0],
-                                    heights: [0],
-                                    dataset: {},
+                                        widths: [0],
+                                        dataset: {},
+                                    },
+                                ],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: '#000000',
                                 },
-                            ],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: '#000000',
+                                isSelected: true,
+                                dataset: {
+                                    editingInfo: '{"bgColorOverride":true}',
+                                },
                             },
-                            isSelected: true,
-                            dataset: {
-                                editingInfo: '{"bgColorOverride":true}',
-                            },
-                        },
-                    ],
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             }
         );
@@ -355,70 +384,76 @@ describe('setTableCellShade', () => {
         runTest(
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: 'green',
-                                direction: 'rtl',
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: 'green',
+                                    direction: 'rtl',
+                                },
+                                dataset: {},
                             },
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: 'green',
-                                direction: 'rtl',
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: 'green',
+                                    direction: 'rtl',
+                                },
+                                dataset: {},
+                                isSelected: true,
                             },
-                            dataset: {},
-                            isSelected: true,
-                        },
-                    ],
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             {
                 blockType: 'Table',
-                cells: [
-                    [
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: {
-                                backgroundColor: 'red',
-                                textColor: 'green',
-                                direction: 'rtl',
+                rows: [
+                    {
+                        format: {},
+                        height: 0,
+                        cells: [
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: {
+                                    backgroundColor: 'red',
+                                    textColor: 'green',
+                                    direction: 'rtl',
+                                },
+                                dataset: {},
                             },
-                            dataset: {},
-                        },
-                        {
-                            blockGroupType: 'TableCell',
-                            blocks: [],
-                            spanAbove: false,
-                            spanLeft: false,
-                            format: { direction: 'rtl' },
-                            dataset: {},
-                            isSelected: true,
-                        },
-                    ],
+                            {
+                                blockGroupType: 'TableCell',
+                                blocks: [],
+                                spanAbove: false,
+                                spanLeft: false,
+                                format: { direction: 'rtl' },
+                                dataset: {},
+                                isSelected: true,
+                            },
+                        ],
+                    },
                 ],
                 format: {},
                 widths: [0],
-                heights: [0],
                 dataset: {},
             },
             null

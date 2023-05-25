@@ -1,5 +1,6 @@
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
 import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import { ContentModelImageFormat } from './ContentModelImageFormat';
 import { ContentModelListItemFormat } from './ContentModelListItemFormat';
@@ -40,7 +41,7 @@ export interface ContentModelFormatMap {
     segmentOnTableCell: ContentModelSegmentFormat;
 
     /**
-     * Format type for table
+     * Format type for table, except alignment related styles
      */
     table: ContentModelTableFormat;
 
@@ -48,6 +49,11 @@ export interface ContentModelFormatMap {
      * Format type for tableCell
      */
     tableCell: ContentModelTableCellFormat;
+
+    /**
+     * Format type for tableRow
+     */
+    tableRow: ContentModelBlockFormat;
 
     /**
      * Format type for table border
@@ -98,4 +104,9 @@ export interface ContentModelFormatMap {
      * Format type for divider
      */
     divider: ContentModelDividerFormat;
+
+    /**
+     * Format type for format container
+     */
+    container: ContentModelFormatContainerFormat;
 }

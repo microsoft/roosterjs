@@ -2,7 +2,7 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { deleteSelection } from '../../modelApi/selection/deleteSelections';
+import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -37,9 +37,10 @@ export default function insertTable(
             applyTableFormat(table, format);
             mergeModel(model, doc, {
                 insertPosition,
+                mergeCurrentFormat: true,
             });
 
-            const firstBlock = table.cells[0]?.[0]?.blocks[0];
+            const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
 
             if (firstBlock?.blockType == 'Paragraph') {
                 const marker = createSelectionMarker(firstBlock.segments[0]?.format);

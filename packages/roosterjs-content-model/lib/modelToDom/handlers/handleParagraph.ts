@@ -3,6 +3,7 @@ import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModel
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
@@ -18,24 +19,36 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const element = paragraph.cachedElement;
+    let container = paragraph.cachedElement;
 
-    if (element) {
-        refNode = reuseCachedElement(parent, element, refNode);
+    if (container) {
+        refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
+            let hasDefaultFormatOnContainer = false;
             const needParagraphWrapper =
                 !paragraph.isImplicit ||
                 !!paragraph.decorator ||
                 (getObjectKeys(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
 
-            let container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+            container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
             parent.insertBefore(container, refNode);
 
             if (needParagraphWrapper) {
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+
+                if (context.defaultFormat) {
+                    applyFormat(
+                        container,
+                        context.formatAppliers.segmentOnBlock,
+                        context.defaultFormat,
+                        context
+                    );
+                    hasDefaultFormatOnContainer = true;
+                }
             }
 
             if (paragraph.decorator) {
@@ -47,14 +60,28 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 );
             }
 
+            if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
+                container.style.fontSize = '0';
+            }
+
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
                 segment: null,
             };
 
-            paragraph.segments.forEach(segment => {
-                context.modelHandlers.segment(doc, container, segment, context);
-            });
+            const handleSegments = () => {
+                paragraph.segments.forEach(segment => {
+                    context.modelHandlers.segment(doc, container!, segment, context);
+                });
+            };
+
+            if (hasDefaultFormatOnContainer) {
+                stackFormat(context, context.defaultFormat || null, handleSegments);
+            } else {
+                handleSegments();
+            }
+
+            optimize(container);
 
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;
@@ -62,6 +89,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 unwrap(container);
             }
         });
+    }
+
+    if (container) {
+        context.onNodeCreated?.(paragraph, container);
     }
 
     return refNode;

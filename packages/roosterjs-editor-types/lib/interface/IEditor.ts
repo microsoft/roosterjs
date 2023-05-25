@@ -317,9 +317,9 @@ export default interface IEditor {
     /**
      * Select content using the Table Selection
      * @param table to select
-     * @param coordinates first and last cell of the range
+     * @param coordinates first and last cell of the range, if null is provided will remove the selection on the table
      */
-    select(table: HTMLTableElement, coordinates: TableSelection): boolean;
+    select(table: HTMLTableElement, coordinates: TableSelection | null): boolean;
 
     /**
      * Select content SelectionRangeEx
@@ -597,9 +597,9 @@ export default interface IEditor {
     transformToDarkColor(node: Node): void;
 
     /**
-     * Get a darkColorHandler object for this editor. It will return null if experimental feature "VariableBasedDarkColor" is not enabled
+     * Get a darkColorHandler object for this editor.
      */
-    getDarkColorHandler(): DarkColorHandler | null;
+    getDarkColorHandler(): DarkColorHandler;
 
     /**
      * Make the editor in "Shadow Edit" mode.

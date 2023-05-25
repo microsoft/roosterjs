@@ -110,7 +110,7 @@ describe('getContent', () => {
         expect(html1).toBe('test0');
 
         const html2 = getContent(core, GetContentMode.RawHTMLWithSelection);
-        expect(html2).toBe('test0<!--{"start":[],"end":[]}-->');
+        expect(html2).toBe('test0<!--{"start":[0],"end":[0]}-->');
     });
 
     it('getContent with empty text node', () => {

@@ -10,9 +10,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -21,15 +20,14 @@ describe('deleteTableColumn', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell();
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
 
         deleteTableColumn(table);
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell2]],
+            rows: [{ cells: [cell1, cell2], format: {}, height: 0 }],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -38,7 +36,7 @@ describe('deleteTableColumn', () => {
         const table = createTable(1);
         const cell1 = createTableCell();
         const cell2 = createTableCell();
-        table.cells[0].push(cell1, cell2);
+        table.rows[0].cells.push(cell1, cell2);
 
         cell1.isSelected = true;
 
@@ -46,9 +44,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2]],
+            rows: [{ cells: [cell2], format: {}, height: 0 }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -60,7 +57,7 @@ describe('deleteTableColumn', () => {
         const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
-        table.cells[0].push(cell1, cell2, cell3);
+        table.rows[0].cells.push(cell1, cell2, cell3);
 
         cell2.isSelected = true;
 
@@ -68,9 +65,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell3]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell3] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -83,7 +79,7 @@ describe('deleteTableColumn', () => {
         const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
-        table.cells[0].push(cell1, cell2, cell3);
+        table.rows[0].cells.push(cell1, cell2, cell3);
 
         cell3.isSelected = true;
 
@@ -91,9 +87,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell2]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell2] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -106,7 +101,7 @@ describe('deleteTableColumn', () => {
         const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
-        table.cells[0].push(cell1, cell2, cell3);
+        table.rows[0].cells.push(cell1, cell2, cell3);
 
         cell2.isSelected = true;
         cell3.isSelected = true;
@@ -115,9 +110,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1]],
+            rows: [{ height: 0, format: {}, cells: [cell1] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -129,7 +123,7 @@ describe('deleteTableColumn', () => {
         const cell1 = createTableCell(false, false, false, { textAlign: 'start' });
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
-        table.cells[0].push(cell1, cell2, cell3);
+        table.rows[0].cells.push(cell1, cell2, cell3);
 
         cell1.isSelected = true;
         cell3.isSelected = true;
@@ -138,9 +132,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[]],
+            rows: [{ height: 0, format: {}, cells: [] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
     });
@@ -151,7 +144,7 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(true, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2, cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2, cell3, cell4);
 
         cell2.isSelected = true;
 
@@ -159,9 +152,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell3, cell4]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell3, cell4] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -180,7 +172,7 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(true, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2, cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2, cell3, cell4);
 
         cell2.isSelected = true;
 
@@ -188,9 +180,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell3, cell4]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell3, cell4] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -209,7 +200,7 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(true, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(true, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2, cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2, cell3, cell4);
 
         cell2.isSelected = true;
 
@@ -217,9 +208,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell3, cell4]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell3, cell4] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -238,7 +228,7 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(true, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(true, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2, cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2, cell3, cell4);
 
         cell3.isSelected = true;
 
@@ -246,9 +236,8 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell1, cell2, cell4]],
+            rows: [{ height: 0, format: {}, cells: [cell1, cell2, cell4] }],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -267,8 +256,8 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2);
-        table.cells[1].push(cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2);
+        table.rows[1].cells.push(cell3, cell4);
 
         cell1.isSelected = true;
 
@@ -276,9 +265,11 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2], [cell4]],
+            rows: [
+                { height: 0, format: {}, cells: [cell2] },
+                { height: 0, format: {}, cells: [cell4] },
+            ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -292,8 +283,8 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, false, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, true, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2);
-        table.cells[1].push(cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2);
+        table.rows[1].cells.push(cell3, cell4);
 
         cell1.isSelected = true;
 
@@ -301,9 +292,11 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2], [cell4]],
+            rows: [
+                { height: 0, format: {}, cells: [cell2] },
+                { height: 0, format: {}, cells: [cell4] },
+            ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -320,8 +313,8 @@ describe('deleteTableColumn', () => {
         const cell2 = createTableCell(false, false, false, { textAlign: 'center' });
         const cell3 = createTableCell(false, true, false, { textAlign: 'end' });
         const cell4 = createTableCell(false, false, false, { verticalAlign: 'top' });
-        table.cells[0].push(cell1, cell2);
-        table.cells[1].push(cell3, cell4);
+        table.rows[0].cells.push(cell1, cell2);
+        table.rows[1].cells.push(cell3, cell4);
 
         cell1.isSelected = true;
 
@@ -329,9 +322,11 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [[cell2], [cell4]],
+            rows: [
+                { height: 0, format: {}, cells: [cell2] },
+                { height: 0, format: {}, cells: [cell4] },
+            ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 
@@ -353,9 +348,9 @@ describe('deleteTableColumn', () => {
         const cell7 = createTableCell(false, false, false, { backgroundColor: 'red' });
         const cell8 = createTableCell(false, false, false, { backgroundColor: 'yellow' });
         const cell9 = createTableCell(false, false, false, { backgroundColor: 'blue' });
-        table.cells[0].push(cell1, cell2, cell3);
-        table.cells[1].push(cell4, cell5, cell6);
-        table.cells[2].push(cell7, cell8, cell9);
+        table.rows[0].cells.push(cell1, cell2, cell3);
+        table.rows[1].cells.push(cell4, cell5, cell6);
+        table.rows[2].cells.push(cell7, cell8, cell9);
 
         cell7.isSelected = true;
 
@@ -363,13 +358,12 @@ describe('deleteTableColumn', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cell2, cell3],
-                [cell5, cell6],
-                [cell8, cell9],
+            rows: [
+                { height: 0, format: {}, cells: [cell2, cell3] },
+                { height: 0, format: {}, cells: [cell5, cell6] },
+                { height: 0, format: {}, cells: [cell8, cell9] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
         });
 

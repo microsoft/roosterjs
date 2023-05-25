@@ -1,19 +1,29 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
+import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
+import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
+import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
-const contentDiv = 'DIV' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
     let mockedCore: any;
+    let contentDiv: any;
+
+    let copyPastePlugin = 'copyPastePlugin' as any;
 
     beforeEach(() => {
+        contentDiv = {
+            style: {},
+        } as any;
+
         mockedCore = {
             lifecycle: {
                 experimentalFeatures: [],
@@ -24,6 +34,7 @@ describe('createContentModelEditorCore', () => {
             originalApi: {
                 a: 'b',
             },
+            contentDiv,
         } as any;
 
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
@@ -32,25 +43,38 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('No additional option', () => {
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
+                defaultFormat: {},
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -65,6 +89,9 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: {},
+            },
         } as any);
     });
 
@@ -72,26 +99,43 @@ describe('createContentModelEditorCore', () => {
         const defaultDomToModelOptions = { a: '1' } as any;
         const defaultModelToDomOptions = { b: '2' } as any;
 
-        const options = { defaultDomToModelOptions, defaultModelToDomOptions };
+        const options = {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            defaultDomToModelOptions,
+            defaultModelToDomOptions,
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
 
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
+                defaultFormat: {},
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             defaultDomToModelOptions,
             defaultModelToDomOptions,
@@ -106,6 +150,9 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: {},
+            },
         } as any);
     });
 
@@ -120,10 +167,20 @@ describe('createContentModelEditorCore', () => {
             backgroundColor: 'blue',
         };
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
@@ -142,12 +199,14 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -162,31 +221,47 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: false,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: {},
+            },
         } as any);
     });
 
     it('Reuse model', () => {
         mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModel);
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+                defaultFormat: {},
             },
             api: {
                 switchShadowEdit: switchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -201,6 +276,9 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: true,
             addDelimiterForEntity: false,
+            contentDiv: {
+                style: {},
+            },
         } as any);
     });
 
@@ -209,25 +287,38 @@ describe('createContentModelEditorCore', () => {
             ExperimentalFeatures.InlineEntityReadOnlyDelimiters
         );
 
-        const options = {};
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
         const core = createContentModelEditorCore(contentDiv, options);
 
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, options);
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+                defaultFormat: {},
             },
             api: {
                 switchShadowEdit: mockedSwitchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -242,6 +333,9 @@ describe('createContentModelEditorCore', () => {
             },
             reuseModel: false,
             addDelimiterForEntity: true,
+            contentDiv: {
+                style: {},
+            },
         } as any);
     });
 });

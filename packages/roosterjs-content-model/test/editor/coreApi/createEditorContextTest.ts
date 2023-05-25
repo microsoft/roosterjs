@@ -5,14 +5,12 @@ describe('createEditorContext', () => {
     it('create a normal context', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
-        const getDarkColor = 'GETDARKCOLOR' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const addDelimiterForEntity = 'ADDDELIMITER' as any;
 
         const core = ({
             lifecycle: {
                 isDarkMode,
-                getDarkColor,
             },
             defaultFormat,
             darkColorHandler,
@@ -25,7 +23,6 @@ describe('createEditorContext', () => {
             isDarkMode,
             darkColorHandler,
             defaultFormat,
-            getDarkColor,
             addDelimiterForEntity,
         });
     });

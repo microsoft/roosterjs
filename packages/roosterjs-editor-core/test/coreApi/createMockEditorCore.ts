@@ -1,4 +1,5 @@
 import createCorePlugins, { getPluginState } from '../../lib/corePlugins/createCorePlugins';
+import DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
 import { coreApiMap } from '../../lib/coreApi/coreApiMap';
 import { EditorCore, EditorOptions } from 'roosterjs-editor-types';
 
@@ -19,5 +20,6 @@ export default function createMockEditorCore(
         sizeTransformer: x => x,
         zoomScale: 1,
         getVisibleViewport: () => contentDiv.getBoundingClientRect(),
+        darkColorHandler: new DarkColorHandlerImpl(contentDiv, s => 'darkMock: ' + s),
     };
 }

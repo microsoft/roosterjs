@@ -37,9 +37,8 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [],
+            rows: [],
             widths: [],
-            heights: [],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -54,20 +53,19 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
 
         splitTableCellHorizontally(table);
 
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[1]],
-                [cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 0, cells: [cells[0], cells[1]] },
+                { format: {}, height: 0, cells: [cells[2], cells[3]] },
             ],
             widths: [],
-            heights: [],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -89,10 +87,11 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
         table.widths = [100, 100];
-        table.heights = [200, 200];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
 
         cells[0].isSelected = true;
 
@@ -101,12 +100,15 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[0], cells[1]],
-                [cells[2], { ...cells[2], spanLeft: true }, cells[3]],
+            rows: [
+                { format: {}, height: 200, cells: [cells[0], cells[0], cells[1]] },
+                {
+                    format: {},
+                    height: 200,
+                    cells: [cells[2], { ...cells[2], spanLeft: true }, cells[3]],
+                },
             ],
             widths: [50, 50, 100],
-            heights: [200, 200],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -125,10 +127,11 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
         table.widths = [100, 100];
-        table.heights = [200, 200];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -138,17 +141,20 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[0], cells[1], cells[1]],
-                [
-                    cells[2],
-                    { ...cells[2], spanLeft: true },
-                    cells[3],
-                    { ...cells[3], spanLeft: true },
-                ],
+            rows: [
+                { format: {}, height: 200, cells: [cells[0], cells[0], cells[1], cells[1]] },
+                {
+                    format: {},
+                    height: 200,
+                    cells: [
+                        cells[2],
+                        { ...cells[2], spanLeft: true },
+                        cells[3],
+                        { ...cells[3], spanLeft: true },
+                    ],
+                },
             ],
             widths: [50, 50, 50, 50],
-            heights: [200, 200],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -167,10 +173,11 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
         table.widths = [100, 100];
-        table.heights = [200, 200];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
 
         cells[0].isSelected = true;
         cells[2].isSelected = true;
@@ -180,12 +187,11 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[0], cells[1]],
-                [cells[2], cells[2], cells[3]],
+            rows: [
+                { format: {}, height: 200, cells: [cells[0], cells[0], cells[1]] },
+                { format: {}, height: 200, cells: [cells[2], cells[2], cells[3]] },
             ],
             widths: [50, 50, 100],
-            heights: [200, 200],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -204,10 +210,11 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
         table.widths = [100, 100];
-        table.heights = [200, 200];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -219,12 +226,11 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[0], cells[1], cells[1]],
-                [cells[2], cells[2], cells[3], cells[3]],
+            rows: [
+                { format: {}, height: 200, cells: [cells[0], cells[0], cells[1], cells[1]] },
+                { format: {}, height: 200, cells: [cells[2], cells[2], cells[3], cells[3]] },
             ],
             widths: [50, 50, 50, 50],
-            heights: [200, 200],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -243,10 +249,11 @@ describe('splitTableCellHorizontally', () => {
             createTableCell(false, false, false, { backgroundColor: '4' }),
         ];
 
-        table.cells[0].push(cells[0], cells[1]);
-        table.cells[1].push(cells[2], cells[3]);
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
         table.widths = [100, 50];
-        table.heights = [200, 200];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
 
         cells[0].isSelected = true;
         cells[1].isSelected = true;
@@ -258,12 +265,11 @@ describe('splitTableCellHorizontally', () => {
         expect(table).toEqual({
             blockType: 'Table',
             format: {},
-            cells: [
-                [cells[0], cells[0], cells[1], cells[1]],
-                [cells[2], cells[2], cells[3], cells[3]],
+            rows: [
+                { format: {}, height: 200, cells: [cells[0], cells[0], cells[1], cells[1]] },
+                { format: {}, height: 200, cells: [cells[2], cells[2], cells[3], cells[3]] },
             ],
             widths: [50, 50, 30, 30],
-            heights: [200, 200],
             dataset: {},
             cachedElement: mockedCachedElement,
         });
@@ -271,5 +277,30 @@ describe('splitTableCellHorizontally', () => {
         expect(cells[1].cachedElement).toBeUndefined();
         expect(cells[2].cachedElement).toBeUndefined();
         expect(cells[3].cachedElement).toBeUndefined();
+    });
+
+    it('keep background color', () => {
+        const table = createTable(2);
+        const cells = [
+            createTableCell(false, false, false, { backgroundColor: '1' }),
+            createTableCell(false, false, false, { backgroundColor: '2' }),
+            createTableCell(false, false, false, { backgroundColor: '3' }),
+            createTableCell(false, false, false, { backgroundColor: '4' }),
+        ];
+
+        cells[0].dataset = { editingInfo: '{"bgColorOverride":true}' };
+
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
+
+        cells[0].isSelected = true;
+
+        splitTableCellHorizontally(table);
+
+        expect(table.rows[0].cells[1].dataset).toEqual({ editingInfo: '{"bgColorOverride":true}' });
+        expect(table.rows[0].cells[1].format).toEqual({ backgroundColor: '1' });
     });
 });

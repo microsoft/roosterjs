@@ -1,5 +1,6 @@
 import { addLink } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
@@ -50,35 +51,62 @@ export default function insertLink(
             },
         };
 
-        formatWithContentModel(editor, 'insertLink', model => {
-            const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
-            const originalText = segments
-                .map(x => (x.segmentType == 'Text' ? x.text : ''))
-                .join('');
-            const text = displayText || originalText || '';
+        const links: ContentModelLink[] = [];
+        let anchorNode: Node | undefined;
 
-            if (segments.some(x => x.segmentType != 'SelectionMarker') && originalText == text) {
-                segments.forEach(x => {
-                    addLink(x, link);
-                });
-            } else if (
-                segments.every(x => x.segmentType == 'SelectionMarker') ||
-                (!!text && text != originalText)
-            ) {
-                const segment = createText(text || (linkData ? linkData.originalUrl : url), {
-                    ...(segments[0]?.format || {}),
-                    ...(getPendingFormat(editor) || {}),
-                });
-                const doc = createContentModelDocument();
+        formatWithContentModel(
+            editor,
+            'insertLink',
+            model => {
+                const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+                const originalText = segments
+                    .map(x => (x.segmentType == 'Text' ? x.text : ''))
+                    .join('');
+                const text = displayText || originalText || '';
 
-                addLink(segment, link);
-                addSegment(doc, segment);
+                if (
+                    segments.some(x => x.segmentType != 'SelectionMarker') &&
+                    originalText == text
+                ) {
+                    segments.forEach(x => {
+                        addLink(x, link);
 
-                mergeModel(model, doc);
+                        if (x.link) {
+                            links.push(x.link);
+                        }
+                    });
+                } else if (
+                    segments.every(x => x.segmentType == 'SelectionMarker') ||
+                    (!!text && text != originalText)
+                ) {
+                    const segment = createText(text || (linkData ? linkData.originalUrl : url), {
+                        ...(segments[0]?.format || {}),
+                        ...(getPendingFormat(editor) || {}),
+                    });
+                    const doc = createContentModelDocument();
+
+                    addLink(segment, link);
+                    addSegment(doc, segment);
+
+                    if (segment.link) {
+                        links.push(segment.link);
+                    }
+
+                    mergeModel(model, doc, { mergeCurrentFormat: true });
+                }
+
+                return segments.length > 0;
+            },
+            {
+                changeSource: ChangeSource.CreateLink,
+                onNodeCreated: (modelElement, node) => {
+                    if (!anchorNode && links.indexOf(modelElement as ContentModelLink) >= 0) {
+                        anchorNode = node;
+                    }
+                },
+                getChangeData: () => anchorNode,
             }
-
-            return segments.length > 0;
-        });
+        );
     }
 }
 

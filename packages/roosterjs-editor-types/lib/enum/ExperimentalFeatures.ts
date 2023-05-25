@@ -100,17 +100,36 @@ export const enum ExperimentalFeatures {
      */
     ImageSelection = 'ImageSelection',
 
+    /**
+     * @deprecated this feature is always enabled
+     * Use variable-based dark mode solution rather than dataset-based solution.
+     * When enable this feature, need to pass in a DarkModelHandler object to each call of setColor and applyFormat
+     * if you need them work for dark mode
+     */
+    VariableBasedDarkColor = 'VariableBasedDarkColor',
+
+    /**
+     * @deprecated this feature is always enabled
+     * Align list elements elements to left, center and right using setAlignment API
+     */
+    ListItemAlignment = 'ListItemAlignment',
+
+    /**
+     * @deprecated
+     */
+    DefaultFormatInSpan = 'DefaultFormatInSpan',
+
+    /**
+     * @deprecated
+     */
+    DefaultFormatOnContainer = 'DefaultFormatOnContainer',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Align list elements elements to left, center and right using setAlignment API
-     */
-    ListItemAlignment = 'ListItemAlignment',
 
     /**
      * Trigger formatting by a especial characters. Ex: (A), 1. i).
@@ -126,22 +145,14 @@ export const enum ExperimentalFeatures {
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
 
     /**
-     * When apply default format when initialize or user type, apply the format on a SPAN element rather than
-     * the block element (In most case, the DIV element) so keep the block element clean.
-     */
-    DefaultFormatInSpan = 'DefaultFormatInSpan',
-
-    /**
-     * Use variable-based dark mode solution rather than dataset-based solution.
-     * When enable this feature, need to pass in a DarkModelHandler object to each call of setColor and applyFormat
-     * if you need them work for dark mode
-     */
-    VariableBasedDarkColor = 'VariableBasedDarkColor',
-
-    /**
      * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
      */
     ReusableContentModel = 'ReusableContentModel',
+
+    /**
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
 
     /**
      * Delete table with Backspace key with the whole was selected with table selector
@@ -152,4 +163,9 @@ export const enum ExperimentalFeatures {
      * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
      */
     InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
 }

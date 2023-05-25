@@ -1,12 +1,12 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
+import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
 
 /**
  * @internal
  */
 export function createFormatContainer(
-    tag: 'pre' | 'blockquote',
-    format?: ContentModelBlockFormat
+    tag: string,
+    format?: ContentModelFormatContainerFormat
 ): ContentModelFormatContainer {
     return {
         blockType: 'BlockGroup',

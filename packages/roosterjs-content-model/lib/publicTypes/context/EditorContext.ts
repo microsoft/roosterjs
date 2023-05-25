@@ -16,13 +16,6 @@ export interface EditorContext {
     defaultFormat?: ContentModelSegmentFormat;
 
     /**
-     * Calculate color for dark mode
-     * @param lightColor Light mode color
-     * @returns Dark mode color calculated from lightColor
-     */
-    getDarkColor?: (lightColor: string) => string;
-
-    /**
      * Dark model color handler
      */
     darkColorHandler?: DarkColorHandler | null;
