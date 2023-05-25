@@ -341,7 +341,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 areAllCollapsed: false,
             };
 
-            spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
+            const deleteSelectionSpy = spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
                 (model: any, options: any) => {
                     return {
                         deletedModel: pasteModelValue,
@@ -362,7 +362,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
-            expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalledWith(modelValue);
+            expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
             expect(contentModelToDomFile.default).toHaveBeenCalledWith(
                 document,
                 div,

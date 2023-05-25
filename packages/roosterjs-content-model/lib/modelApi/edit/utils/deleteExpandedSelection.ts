@@ -19,8 +19,12 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
  * at the first deleted position so that we know where to put cursor to after delete
  */
-export const deleteExpandedSelection: DeleteSelectionStep = (context, options, model) => {
-    const { onDeleteEntity, direction } = options;
+export const deleteExpandedSelection: DeleteSelectionStep = (
+    context,
+    onDeleteEntity,
+    model,
+    direction
+) => {
     const isForward = direction == 'forward';
 
     iterateSelections(

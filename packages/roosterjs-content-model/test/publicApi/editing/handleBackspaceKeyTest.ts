@@ -47,10 +47,7 @@ describe('handleBackspaceKey', () => {
             mockedEvent,
             []
         );
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, {
-            direction: 'backward',
-            onDeleteEntity: mockedCallback,
-        });
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, mockedCallback, 'backward');
         expect(handleKeyboardEventResult.handleKeyboardEventResult).toHaveBeenCalledWith(
             editor,
             input,

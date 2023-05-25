@@ -33,16 +33,9 @@ export type OnDeleteEntity = (
 /**
  * @internal
  */
-export interface DeleteSelectionOptions {
-    direction?: 'forward' | 'backward' | 'selectionOnly';
-    onDeleteEntity?: OnDeleteEntity;
-}
-
-/**
- * @internal
- */
 export type DeleteSelectionStep = (
     context: DeleteSelectionContext,
-    options: Required<DeleteSelectionOptions>,
-    model: ContentModelDocument
+    onDeleteEntity: OnDeleteEntity,
+    model: ContentModelDocument,
+    direction?: 'forward' | 'backward' | 'selectionOnly'
 ) => void;
