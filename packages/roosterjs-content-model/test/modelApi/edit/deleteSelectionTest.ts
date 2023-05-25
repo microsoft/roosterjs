@@ -2557,16 +2557,6 @@ describe('deleteSelection - forward', () => {
                         },
                         {
                             segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
                             text: 'test2',
                             format: {},
                         },
@@ -4384,11 +4374,6 @@ describe('deleteSelection - backward', () => {
                             format: {},
                         },
                         {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
                             segmentType: 'SelectionMarker',
                             format: {},
                             isSelected: true,
@@ -4557,16 +4542,6 @@ describe('deleteSelection - backward', () => {
                     blockType: 'Paragraph',
                     format: {},
                     segments: [
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '',
-                            format: {},
-                        },
                         {
                             segmentType: 'SelectionMarker',
                             format: {},
