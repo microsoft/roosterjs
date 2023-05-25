@@ -85,9 +85,7 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
         };
 
-        const context = createDomToModelContext(editorContext, {
-            cloneEntityElement: true,
-        });
+        const context = createDomToModelContext(editorContext);
 
         expect(context).toEqual({
             ...editorContext,
@@ -108,7 +106,6 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             allowCacheElement: true,
-            cloneEntityElement: true,
             ...contextOptions,
         });
     });

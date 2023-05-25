@@ -90,7 +90,6 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (selection && !selection.areAllCollapsed) {
             const model = this.editor.createContentModel({
                 disableCacheElement: true,
-                cloneEntityElement: true,
             });
 
             const pasteModel = cloneModel(model);

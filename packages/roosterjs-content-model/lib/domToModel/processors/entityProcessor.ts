@@ -20,11 +20,11 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
         context,
         { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
         () => {
-            const wrapperToUse = context.cloneEntityElement
-                ? (element.cloneNode(true /* deep */) as HTMLElement)
-                : element;
+            const wrapperToUse = context.allowCacheElement
+                ? element
+                : (element.cloneNode(true /* deep */) as HTMLElement);
 
-            if (context.cloneEntityElement) {
+            if (!context.allowCacheElement) {
                 wrapperToUse.style.backgroundColor = element.style.backgroundColor || 'inherit';
                 wrapperToUse.style.color = element.style.color || 'inherit';
             }

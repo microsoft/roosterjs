@@ -101,9 +101,5 @@ export function createDomToModelContext(
         context.selectionRootNode = selectionRoot;
     }
 
-    if (options?.cloneEntityElement) {
-        context.cloneEntityElement = true;
-    }
-
     return context;
 }

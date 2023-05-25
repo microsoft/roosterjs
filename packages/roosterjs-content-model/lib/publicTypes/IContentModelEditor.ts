@@ -54,11 +54,6 @@ export interface DomToModelOption {
      * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
      */
     disableCacheElement?: boolean;
-
-    /**
-     * Whether to clone the entity element when processing them instead of using the element that is currently in the DOM
-     */
-    cloneEntityElement?: boolean;
 }
 
 /**
