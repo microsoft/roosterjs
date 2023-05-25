@@ -1,10 +1,11 @@
+import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
 import { createBr } from '../../creators/createBr';
-import { createInsertPoint } from './createInsertPoint';
+import { createInsertPoint } from '../utils/createInsertPoint';
 import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
-import { deleteBlock } from './deleteBlock';
-import { deleteSegment } from './deleteSegment';
-import { DeleteSelectionStep } from './DeleteSelectionStep';
+import { deleteBlock } from '../utils/deleteBlock';
+import { DeleteResult, DeleteSelectionContext, OnDeleteEntity } from '../utils/DeleteSelectionStep';
+import { deleteSegment } from '../utils/deleteSegment';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -19,13 +20,14 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
  * at the first deleted position so that we know where to put cursor to after delete
  */
-export const deleteExpandedSelection: DeleteSelectionStep = (
-    context,
-    onDeleteEntity,
-    model,
-    direction
-) => {
-    const isForward = direction == 'forward';
+export function deleteExpandedSelection(
+    model: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity
+): DeleteSelectionContext {
+    const context: DeleteSelectionContext = {
+        deleteResult: DeleteResult.NotDeleted,
+        insertPoint: null,
+    };
 
     iterateSelections(
         [model],
@@ -62,19 +64,18 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
                                 path,
                                 tableContext
                             );
-                        } else {
-                            context.isChanged =
-                                deleteSegment(block, segment, isForward, onDeleteEntity) ||
-                                context.isChanged;
+                        } else if (deleteSegment(block, segment, onDeleteEntity)) {
+                            context.deleteResult = DeleteResult.Range;
                         }
                     });
                 }
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
-                context.isChanged =
-                    deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
-                    context.isChanged;
+
+                if (deleteBlock(blocks, block, onDeleteEntity, paragraph)) {
+                    context.deleteResult = DeleteResult.Range;
+                }
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
@@ -87,7 +88,7 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
 
                 delete cell.cachedElement;
                 delete row.cachedElement;
-                context.isChanged = true;
+                context.deleteResult = DeleteResult.Range;
             }
 
             if (!context.insertPoint) {
@@ -101,4 +102,6 @@ export const deleteExpandedSelection: DeleteSelectionStep = (
         },
         DeleteSelectionIteratingOptions
     );
-};
+
+    return context;
+}
