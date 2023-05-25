@@ -248,8 +248,8 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
 
     private getIdValue(node: Node): string | null {
         let element = node as Element;
-        let attribute = element.attributes.getNamedItem('id');
-        return element.attributes && attribute ? (attribute.value as string) : null;
+        let attribute = element.attributes?.getNamedItem('id');
+        return attribute ? (attribute.value as string) : null;
     }
 
     private getWordBeforeCursor(event: PluginKeyboardEvent | null): string | null {
