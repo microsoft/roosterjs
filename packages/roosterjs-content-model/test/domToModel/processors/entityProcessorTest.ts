@@ -162,7 +162,6 @@ describe('entityProcessor', () => {
         const div = document.createElement('div');
 
         commitEntity(div, 'entity', true, 'entity_1');
-
         context.isInSelection = true;
         context.segmentFormat = {
             fontFamily: 'Arial',
