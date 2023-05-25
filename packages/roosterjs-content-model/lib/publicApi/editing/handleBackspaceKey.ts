@@ -19,10 +19,11 @@ export default function handleBackspaceKey(
         editor,
         'handleBackspaceKey',
         model => {
-            const { isChanged } = deleteSelection(model, {
-                direction: 'backward',
-                onDeleteEntity: getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
-            });
+            const { isChanged } = deleteSelection(
+                model,
+                getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                'backward'
+            );
 
             handleKeyboardEventResult(editor, model, rawEvent, isChanged);
 
