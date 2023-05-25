@@ -157,8 +157,8 @@ describe('ContentModelEditor', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
-                fontSize: '12pt',
+                fontFamily: undefined,
+                fontSize: undefined,
                 textColor: undefined,
                 backgroundColor: undefined,
             },
@@ -238,40 +238,6 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
 
         expect(div.style.fontFamily).toBe('Arial');
-
-        editor.dispose();
-
-        expect(div.style.fontFamily).toBe('Arial');
-    });
-
-    it('dispose with DefaultFormatOnContainer', () => {
-        const div = document.createElement('div');
-        div.style.fontFamily = 'Arial';
-
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
-        });
-
-        expect(div.style.fontFamily).toBe('Calibri, Arial, Helvetica, sans-serif');
-
-        editor.dispose();
-
-        expect(div.style.fontFamily).toBe('Arial');
-    });
-
-    it('dispose with DefaultFormatOnContainer and customized default format', () => {
-        const div = document.createElement('div');
-        div.style.fontFamily = 'Arial';
-
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
-            defaultFormat: {
-                fontFamily: 'Tahoma',
-                fontSize: '20pt',
-            },
-        });
-
-        expect(div.style.fontFamily).toBe('Tahoma');
 
         editor.dispose();
 

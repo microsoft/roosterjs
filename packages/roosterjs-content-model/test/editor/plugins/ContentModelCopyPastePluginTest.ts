@@ -1,6 +1,6 @@
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
 import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDom';
-import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelections';
+import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
