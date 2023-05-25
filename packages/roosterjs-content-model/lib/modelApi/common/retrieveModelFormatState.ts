@@ -11,7 +11,8 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
-import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
+import { iterateSelections } from '../selection/iterateSelections';
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
 /**
