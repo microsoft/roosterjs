@@ -40,6 +40,11 @@ export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
 
 /**
  * @internal
+ * A callback for deleteSelection API to decide how to handle an entity
+ * @param entity The entity to delete
+ * @param operation The operation of entity
+ * @returns True means we want to keep this entity, so deleteSelection() will not remove it. Otherwise false,
+ * the entity will be removed from Content Model
  */
 export type OnDeleteEntity = (
     entity: ContentModelEntity,
