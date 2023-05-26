@@ -1,12 +1,12 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
+import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelBlockFormat } from '../../../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
 import { DomToModelOption } from '../../../../publicTypes/IContentModelEditor';
 import { ElementProcessor } from '../../../../publicTypes/context/ElementProcessor';
 import { ElementProcessorMap } from '../../../../publicTypes/context/DomToModelSettings';
-import { getStyles } from 'roosterjs-editor-dom';
 import { processWordCommand } from './processWordCommand';
 import { processWordList } from './processWordLists';
 
@@ -22,6 +22,13 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
+
+    // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
+    chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
+        moveChildNodes(element);
+        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
+        return true;
+    });
 }
 
 function setProcessor<TKey extends keyof ElementProcessorMap>(
