@@ -5,6 +5,8 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 import {
     getOnDeleteEntityCallback,
     handleKeyboardEventResult,
+    shouldDeleteAllSegmentsBefore,
+    shouldDeleteWord,
 } from '../../../lib/editor/utils/handleKeyboardEventCommon';
 
 describe('getOnDeleteEntityCallback', () => {
@@ -235,5 +237,72 @@ describe('handleKeyboardEventResult', () => {
         expect(cacheContentModel).not.toHaveBeenCalled();
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(addUndoSnapshot).not.toHaveBeenCalled();
+    });
+});
+
+describe('shouldDeleteWord', () => {
+    function runTest(
+        isMac: boolean,
+        altKey: boolean,
+        ctrlKey: boolean,
+        metaKey: boolean,
+        expectedResult: boolean
+    ) {
+        const rawEvent = {
+            altKey,
+            metaKey,
+            ctrlKey,
+        } as any;
+
+        const result = shouldDeleteWord(rawEvent, isMac);
+
+        expect(result).toEqual(expectedResult);
+    }
+
+    it('PC', () => {
+        runTest(false, false, false, false, false);
+        runTest(false, false, false, true, false);
+        runTest(false, false, true, false, true);
+        runTest(false, false, true, true, true);
+        runTest(false, true, false, false, false);
+        runTest(false, true, false, true, false);
+        runTest(false, true, true, false, false);
+        runTest(false, true, true, true, false);
+    });
+
+    it('MAC', () => {
+        runTest(true, false, false, false, false);
+        runTest(true, false, false, true, false);
+        runTest(true, false, true, false, false);
+        runTest(true, false, true, true, false);
+        runTest(true, true, false, false, true);
+        runTest(true, true, false, true, false);
+        runTest(true, true, true, false, true);
+        runTest(true, true, true, true, false);
+    });
+});
+
+describe('shouldDeleteAllSegmentsBefore', () => {
+    function runTest(altKey: boolean, ctrlKey: boolean, metaKey: boolean, expectedResult: boolean) {
+        const rawEvent = {
+            altKey,
+            metaKey,
+            ctrlKey,
+        } as any;
+
+        const result = shouldDeleteAllSegmentsBefore(rawEvent);
+
+        expect(result).toEqual(expectedResult);
+    }
+
+    it('Test', () => {
+        runTest(false, false, false, false);
+        runTest(false, false, true, true);
+        runTest(false, true, false, false);
+        runTest(false, true, true, true);
+        runTest(true, false, false, false);
+        runTest(true, false, true, false);
+        runTest(true, true, false, false);
+        runTest(true, true, true, false);
     });
 });

@@ -4,6 +4,7 @@ import { createNormalizeSegmentContext, normalizeSegment } from '../../common/no
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { isWhiteSpacePreserved } from '../../common/isWhiteSpacePreserved';
+import { normalizeText } from '../../../domUtils/stringUtil';
 import { OnDeleteEntity } from './DeleteSelectionStep';
 
 /**
@@ -55,7 +56,7 @@ export function deleteSegment(
                 text = deleteSingleChar(text, isForward); //  isForward ? text.substring(1) : text.substring(0, text.length - 1);
 
                 if (!preserveWhiteSpace) {
-                    text = text.replace(isForward ? /^\u0020+/ : /\u0020+$/, '\u00A0');
+                    text = normalizeText(text, isForward);
                 }
 
                 if (text == '') {
