@@ -23,6 +23,15 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
 
+    // Remove "border:none" for image to fix image resize behavior
+    // We found a problem that when paste an image with "border:none" then the resize border will be
+    // displayed incorrectly when resize it. So we need to drop this style
+    chainSanitizerCallback(
+        ev.sanitizingOption.cssStyleCallbacks,
+        'border',
+        (value, element) => element.tagName != 'IMG' || value != 'none'
+    );
+
     // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
     chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
         moveChildNodes(element);
