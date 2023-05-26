@@ -880,6 +880,48 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
     });
+
+    it('Make paragraph not implicit when delete', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph(true /*isImplicit*/);
+        const text = createText('test ');
+
+        text.isSelected = true;
+        para.segments.push(text);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, onDeleteEntityMock);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: {},
+            isSelected: true,
+        };
+
+        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+                isImplicit: false,
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                    isImplicit: false,
+                },
+            ],
+        });
+    });
 });
 
 describe('deleteSelection - forward', () => {

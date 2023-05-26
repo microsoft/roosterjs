@@ -13,11 +13,15 @@ describe('getOnDeleteEntityCallback', () => {
     let mockedEditor: IContentModelEditor;
     let mockedEvent: KeyboardEvent;
     let triggerPluginEvent: jasmine.Spy;
+    let contains: jasmine.Spy;
 
     beforeEach(() => {
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        contains = jasmine.createSpy('contains').and.returnValue(true);
+
         mockedEditor = ({
             triggerPluginEvent,
+            contains,
         } as any) as IContentModelEditor;
         mockedEvent = ({
             defaultPrevented: false,

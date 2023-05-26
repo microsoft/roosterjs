@@ -68,6 +68,11 @@ export function deleteExpandedSelection(
                             context.deleteResult = DeleteResult.Range;
                         }
                     });
+
+                    // Since we are operating on this paragraph and it possible we delete everything from this paragraph,
+                    // Need to make it "not implicit" so that it will always have a container element, so that when we do normalization
+                    // of this paragraph, a BR can be added if need
+                    setParagraphNotImplicit(block);
                 }
             } else if (block) {
                 // Delete a whole block (divider, table, ...)

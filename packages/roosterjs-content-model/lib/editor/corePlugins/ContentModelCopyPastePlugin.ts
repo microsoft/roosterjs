@@ -84,75 +84,73 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        if (this.editor) {
-            const selection = this.editor.getSelectionRangeEx();
-            if (selection && !selection.areAllCollapsed) {
-                const model = this.editor.createContentModel({
-                    disableCacheElement: true,
+        if (!this.editor) {
+            return;
+        }
+        const selection = this.editor.getSelectionRangeEx();
+        if (selection && !selection.areAllCollapsed) {
+            const model = this.editor.createContentModel({
+                disableCacheElement: true,
+            });
+
+            const pasteModel = cloneModel(model);
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                iterateSelections([pasteModel], (path, tableContext) => {
+                    if (tableContext?.table) {
+                        const table = tableContext?.table;
+                        table.rows = table.rows
+                            .map(row => {
+                                return {
+                                    ...row,
+                                    cells: row.cells.filter(cell => cell.isSelected),
+                                };
+                            })
+                            .filter(row => row.cells.length > 0);
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            const tempDiv = this.getTempDiv(this.editor);
+            const selectionAfterPaste = contentModelToDom(
+                tempDiv.ownerDocument,
+                tempDiv,
+                pasteModel,
+                {
+                    isDarkMode: false /* To force light mode on paste */,
+                    darkColorHandler: this.editor.getDarkColorHandler(),
+                }
+            );
+
+            let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
+            if (newRange) {
+                const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                    clonedRoot: tempDiv,
+                    range: newRange,
+                    rawEvent: event as ClipboardEvent,
+                    isCut,
                 });
 
-                const pasteModel = cloneModel(model);
-                if (selection.type === SelectionRangeTypes.TableSelection) {
-                    iterateSelections([pasteModel], (path, tableContext) => {
-                        if (tableContext?.table) {
-                            const table = tableContext?.table;
-                            table.rows = table.rows
-                                .map(row => {
-                                    return {
-                                        ...row,
-                                        cells: row.cells.filter(cell => cell.isSelected),
-                                    };
-                                })
-                                .filter(row => row.cells.length > 0);
-                            return true;
-                        }
-                        return false;
-                    });
+                if (cutCopyEvent.range) {
+                    addRangeToSelection(newRange);
                 }
-                const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
-                const selectionAfterPaste = contentModelToDom(
-                    tempDiv.ownerDocument,
-                    tempDiv,
-                    pasteModel,
-                    {
-                        isDarkMode: false /* To force light mode on paste */,
-                        darkColorHandler: this.editor.getDarkColorHandler(),
+
+                this.editor.runAsync(editor => {
+                    cleanUpAndRestoreSelection(tempDiv);
+                    editor.focus();
+                    if (selectionAfterPaste) {
+                        this.editor?.select(selectionAfterPaste);
                     }
-                );
-
-                let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
-                if (newRange) {
-                    const cutCopyEvent = this.editor.triggerPluginEvent(
-                        PluginEventType.BeforeCutCopy,
-                        {
-                            clonedRoot: tempDiv,
-                            range: newRange,
-                            rawEvent: event as ClipboardEvent,
-                            isCut,
-                        }
-                    );
-
-                    if (cutCopyEvent.range) {
-                        addRangeToSelection(newRange);
+                    if (isCut) {
+                        editor.addUndoSnapshot(() => {
+                            deleteSelection(
+                                model,
+                                getOnDeleteEntityCallback(editor as IContentModelEditor)
+                            );
+                            this.editor?.setContentModel(model);
+                        }, ChangeSource.Cut);
                     }
-
-                    this.editor.runAsync(editor => {
-                        cleanUpAndRestoreSelection(tempDiv);
-                        editor.focus();
-                        if (selectionAfterPaste) {
-                            this.editor?.select(selectionAfterPaste);
-                        }
-                        if (isCut) {
-                            editor.addUndoSnapshot(() => {
-                                deleteSelection(
-                                    model,
-                                    getOnDeleteEntityCallback(editor as IContentModelEditor)
-                                );
-                                this.editor?.setContentModel(model);
-                            }, ChangeSource.Cut);
-                        }
-                    });
-                }
+                });
             }
         }
     }
@@ -177,7 +175,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
     };
 
-    private getTempDiv(editor: IEditor, forceInLightMode?: boolean) {
+    private getTempDiv(editor: IEditor) {
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
@@ -193,11 +191,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
             tempDiv => tempDiv.parentNode?.removeChild(tempDiv)
         );
 
-        if (forceInLightMode) {
-            div.style.backgroundColor = 'white';
-            div.style.color = 'black';
-        }
-
+        div.style.backgroundColor = 'white';
+        div.style.color = 'black';
         div.childNodes.forEach(node => div.removeChild(node));
 
         div.style.display = '';

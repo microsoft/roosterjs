@@ -10,11 +10,21 @@ import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings
 import { setProcessor } from '../utils/setProcessor';
 
 const WAC_IDENTIFY_SELECTOR =
-    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
+    'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,span.WACImageBorder';
 export const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 
 const EMPTY_TEXT_RUN = 'EmptyTextRun';
 const END_OF_PARAGRAPH = 'EOP';
+const PARAGRAPH = 'Paragraph';
+
+const TABLE_TEMP_ELEMENTS = [
+    'TableInsertRowGapBlank',
+    'TableColumnResizeHandle',
+    'TableCellTopBorderHandle',
+    'TableCellLeftBorderHandle',
+    'TableHoverColumnHandle',
+    'TableHoverRowHandle',
+];
 
 const CLASSES_TO_KEEP = [
     'OutlineElement',
@@ -24,6 +34,11 @@ const CLASSES_TO_KEEP = [
     'BulletListStyle',
     END_OF_PARAGRAPH,
     EMPTY_TEXT_RUN,
+    ...TABLE_TEMP_ELEMENTS,
+    'TableCellContent',
+    PARAGRAPH,
+    'WACImageContainer',
+    'WACImageBorder',
 ];
 
 /**
@@ -67,8 +82,9 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     }
 
     if (
-        element.classList.contains(END_OF_PARAGRAPH) &&
-        element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)
+        (element.classList.contains(END_OF_PARAGRAPH) &&
+            element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)) ||
+        TABLE_TEMP_ELEMENTS.some(className => element.classList.contains(className))
     ) {
         return;
     }
@@ -145,7 +161,6 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
  * @param ev ContentModelBeforePasteEvent
  */
 export function handleWacComponentsPaste(ev: ContentModelBeforePasteEvent) {
-    ev.domToModelOption.disableCacheElement = true;
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
