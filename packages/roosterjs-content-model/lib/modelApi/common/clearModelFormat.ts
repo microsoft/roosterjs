@@ -11,8 +11,9 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createFormatContainer } from '../creators/createFormatContainer';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { iterateSelections, TableSelectionContext } from '../selection/iterateSelections';
+import { iterateSelections } from '../selection/iterateSelections';
 import { Selectable } from '../../publicTypes/selection/Selectable';
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
 
