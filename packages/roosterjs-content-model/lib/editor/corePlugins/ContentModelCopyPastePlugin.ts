@@ -1,6 +1,7 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
@@ -142,7 +143,10 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     }
                     if (isCut) {
                         editor.addUndoSnapshot(() => {
-                            deleteSelection(model);
+                            deleteSelection(
+                                model,
+                                getOnDeleteEntityCallback(editor as IContentModelEditor)
+                            );
                             this.editor?.setContentModel(model);
                         }, ChangeSource.Cut);
                     }
@@ -210,7 +214,7 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
 function removeContentForAndroid(editor: IContentModelEditor) {
     if (Browser.isAndroid) {
         const model = editor.createContentModel();
-        deleteSelection(model);
+        deleteSelection(model, getOnDeleteEntityCallback(editor));
         editor.setContentModel(model);
     }
 }

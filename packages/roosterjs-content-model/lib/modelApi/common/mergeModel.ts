@@ -16,6 +16,7 @@ import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGrou
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
+import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
 
 /**
  * @internal
@@ -49,9 +50,11 @@ export interface MergeModelOption {
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity,
     options?: MergeModelOption
 ) {
-    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
+    const insertPosition =
+        options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
         if (options?.mergeCurrentFormat) {

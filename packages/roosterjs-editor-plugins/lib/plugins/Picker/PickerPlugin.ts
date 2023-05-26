@@ -5,6 +5,7 @@ import {
     isCharacterValue,
     isModifierKey,
     PartialInlineElement,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -247,9 +248,12 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
     }
 
     private getIdValue(node: Node): string | null {
-        let element = node as Element;
-        let attribute = element.attributes.getNamedItem('id');
-        return element.attributes && attribute ? (attribute.value as string) : null;
+        if (safeInstanceOf(node, 'HTMLElement')) {
+            const attribute = node.attributes.getNamedItem('id');
+            return attribute ? (attribute.value as string) : null;
+        } else {
+            return null;
+        }
     }
 
     private getWordBeforeCursor(event: PluginKeyboardEvent | null): string | null {
