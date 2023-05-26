@@ -59,14 +59,17 @@ export default class ContentModelEditPlugin implements EditorPlugin {
      */
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
-            if (
-                event.eventType == PluginEventType.EntityOperation &&
-                event.rawEvent?.type == 'keydown'
-            ) {
-                // If we see an entity operation event triggered from keydown event, it means the event can be triggered from original
-                // EntityFeatures or EntityPlugin, so we don't need to trigger the same event again from ContentModel.
-                // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
-                this.triggeredEntityEvents.push(event);
+            if (event.eventType == PluginEventType.EntityOperation) {
+                if (event.rawEvent?.type == 'keydown') {
+                    // If we see an entity operation event triggered from keydown event, it means the event can be triggered from original
+                    // EntityFeatures or EntityPlugin, so we don't need to trigger the same event again from ContentModel.
+                    // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
+                    this.triggeredEntityEvents.push(event);
+                }
+
+                // For EntityOperation event, it is possible plugins has deleted entity but did not trigger ContentChangedEvent,
+                // so we need to clear the cached model here to make sure it can be up to date
+                this.editor.cacheContentModel(null);
             } else if (event.eventType == PluginEventType.KeyDown) {
                 if (!this.editWithContentModel || event.rawEvent.defaultPrevented) {
                     // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
