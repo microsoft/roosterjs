@@ -18,7 +18,7 @@ export interface EntityState {
     /**
      * The state of this entity to store into undo snapshot
      */
-    state: Object;
+    state: string;
 }
 
 /**

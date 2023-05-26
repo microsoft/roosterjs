@@ -1,4 +1,24 @@
 /**
+ * Represents the type of entity item in entity map of EntityPluginState
+ */
+export interface EntityStateItem {
+    /**
+     * The HTML element of entity wrapper
+     */
+    element: HTMLElement;
+
+    /**
+     * Whether this entity is deleted.
+     */
+    isDelete?: boolean;
+
+    /**
+     * Whether we want to persist this entity element during undo/redo
+     */
+    canPersist?: boolean;
+}
+
+/**
  * The state object for EntityPlugin
  */
 export default interface EntityPluginState {
@@ -9,9 +29,10 @@ export default interface EntityPluginState {
     clickingPoint?: { pageX: number; pageY: number };
 
     /**
+     * @deprecated
      * All known entity elements
      */
-    knownEntityElements: HTMLElement[];
+    knownEntityElements?: HTMLElement[];
 
     /**
      * Cache for the hydrated content of shadow DOM entity.
@@ -23,5 +44,5 @@ export default interface EntityPluginState {
     /**
      * Entities cached for undo snapshot
      */
-    entities: Record<string, HTMLElement>;
+    entityMap: Record<string, EntityStateItem>;
 }

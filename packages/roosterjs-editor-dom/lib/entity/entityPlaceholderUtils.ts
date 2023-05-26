@@ -1,7 +1,7 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity, NodeType } from 'roosterjs-editor-types';
+import { Entity, EntityClasses, EntityStateItem } from 'roosterjs-editor-types';
 
 const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
 
@@ -75,7 +75,7 @@ export function moveContentWithEntityPlaceholders(
 export function restoreContentWithEntityPlaceholder(
     source: ParentNode,
     target: HTMLElement,
-    entities: Record<string, HTMLElement> | null,
+    entities: Record<string, HTMLElement | EntityStateItem> | null,
     insertClonedNode?: boolean
 ) {
     let anchor = target.firstChild;
@@ -125,12 +125,22 @@ function removeUntil(anchor: ChildNode | null, nodeToStop?: HTMLElement) {
 }
 
 function tryGetWrapperFromEntityPlaceholder(
-    entities: Record<string, HTMLElement> | null,
+    entities: Record<string, HTMLElement | EntityStateItem> | null,
     node: Node
 ): HTMLElement | null {
-    const id = node.nodeType == NodeType.Element && getEntityFromElement(node as HTMLElement)?.id;
+    const id =
+        safeInstanceOf(node, 'HTMLElement') &&
+        node.classList.contains(EntityClasses.ENTITY_INFO_NAME) &&
+        getEntityFromElement(node as HTMLElement)?.id;
+    const item = id ? entities?.[id] : null;
 
-    return (id && entities?.[id]) || null;
+    return !item
+        ? null
+        : safeInstanceOf(item, 'HTMLElement')
+        ? item
+        : item?.canPersist
+        ? item.element
+        : null;
 }
 
 function getPlaceholder(entity: Entity, entities: Record<string, HTMLElement>) {

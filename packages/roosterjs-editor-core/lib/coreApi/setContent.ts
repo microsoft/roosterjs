@@ -3,7 +3,6 @@ import {
     extractContentMetadata,
     queryElements,
     restoreContentWithEntityPlaceholder,
-    setHtmlWithMetadata,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -43,29 +42,18 @@ export const setContent: SetContent = (
             true /*broadcast*/
         );
 
-        const entities = core.entity.entities;
-        const hasEntities = Object.keys(entities).length > 0;
+        const entities = core.entity.entityMap;
         let metadataFromContent: ContentMetadata | undefined;
+        const body = new DOMParser().parseFromString(
+            core.trustedHTMLHandler?.(content) ?? content,
+            'text/html'
+        ).body;
 
-        if (hasEntities) {
-            let html = content || '';
-            html = core.trustedHTMLHandler?.(html) || html;
+        restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
 
-            const body = new DOMParser().parseFromString(html, 'text/html').body;
+        metadataFromContent = extractContentMetadata(core.contentDiv);
 
-            restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
-
-            metadataFromContent = extractContentMetadata(core.contentDiv);
-
-            changeSource = ChangeSource.Undo;
-        } else {
-            metadataFromContent = setHtmlWithMetadata(
-                core.contentDiv,
-                content,
-                core.trustedHTMLHandler
-            );
-            changeSource = ChangeSource.SetContent;
-        }
+        changeSource = ChangeSource.Undo;
 
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);

@@ -71,9 +71,8 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     constructor() {
         this.state = {
-            knownEntityElements: [],
             shadowEntityCache: {},
-            entities: {},
+            entityMap: {},
         };
     }
 
@@ -112,8 +111,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     dispose() {
         this.editor = null;
-        this.state.knownEntityElements = [];
-        this.state.entities = {};
+        this.state.entityMap = {};
     }
 
     /**
@@ -235,13 +233,22 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private handleContentChangedEvent(event?: ContentChangedEvent) {
         let shouldNormalizeDelimiters: boolean = false;
         // 1. find removed entities
-        for (let i = this.state.knownEntityElements.length - 1; i >= 0; i--) {
-            const element = this.state.knownEntityElements[i];
-            if (this.editor && !this.editor.contains(element)) {
-                this.setIsEntityKnown(element, false /*isKnown*/);
+        getObjectKeys(this.state.entityMap).forEach(id => {
+            const item = this.state.entityMap[id];
+            const element = item.element;
+
+            if (this.editor && !item.isDelete && !this.editor.contains(element)) {
+                item.isDelete = true;
 
                 if (element.shadowRoot) {
                     this.triggerEvent(element, EntityOperation.RemoveShadowRoot);
+                }
+
+                if (
+                    event?.source == ChangeSource.SetContent ||
+                    event?.source == ChangeSource.Undo
+                ) {
+                    this.triggerEvent(element, EntityOperation.Overwrite);
                 }
 
                 if (
@@ -252,13 +259,17 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                     shouldNormalizeDelimiters = true;
                 }
             }
-        }
+        });
 
         // 2. collect all new entities
         const newEntities =
             event?.source == ChangeSource.InsertEntity && event.data
                 ? [event.data as Entity]
-                : this.getExistingEntities().filter(({ wrapper }) => !this.isEntityKnown(wrapper));
+                : this.getExistingEntities().filter(entity => {
+                      const item = this.state.entityMap[entity.id];
+
+                      return !item || item.isDelete;
+                  });
 
         // 3. Add new entities to known entity list, and hydrate
         newEntities.forEach(entity => {
@@ -337,14 +348,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     ) {
         const entity = element && getEntityFromElement(element);
 
-        if (entity) {
-            this.editor?.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent,
-                entity,
-                contentForShadowEntity,
-            });
-        }
+        return entity
+            ? this.editor?.triggerPluginEvent(PluginEventType.EntityOperation, {
+                  operation,
+                  rawEvent,
+                  entity,
+                  contentForShadowEntity,
+              })
+            : null;
     }
 
     private handleNewEntity(entity: Entity) {
@@ -357,9 +368,18 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             moveChildNodes(fragment, cache.shadowRoot);
         }
 
-        this.state.entities[entity.id] = entity.wrapper;
+        const event = this.triggerEvent(
+            wrapper,
+            EntityOperation.NewEntity,
+            undefined /*rawEvent*/,
+            fragment
+        );
 
-        this.triggerEvent(wrapper, EntityOperation.NewEntity, undefined /*rawEvent*/, fragment);
+        this.state.entityMap[entity.id] = {
+            element: entity.wrapper,
+            isDelete: false,
+            canPersist: !!event?.shouldPersist,
+        };
 
         // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
         // Then trigger AddShadowRoot so that plugins can do further actions
@@ -378,8 +398,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.editor?.replaceNode(wrapper, newWrapper);
             entity.wrapper = newWrapper;
         }
-
-        this.setIsEntityKnown(entity.wrapper, true /*isKnown*/);
     }
 
     private getExistingEntities(shadowEntityOnly?: boolean): Entity[] {
@@ -423,28 +441,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         for (let num = (match && parseInt(match[1])) || 0; ; num++) {
             newId = num > 0 ? `${baseId}_${num}` : baseId;
 
-            const existingEntry = this.state.entities[newId];
+            const item = this.state.entityMap[newId];
 
-            if (!existingEntry || existingEntry == wrapper) {
-                this.state.entities[newId] = wrapper;
+            if (!item || item.element == wrapper) {
                 break;
             }
         }
 
         return newId;
-    }
-
-    private setIsEntityKnown(wrapper: HTMLElement, isKnown: boolean) {
-        const index = this.state.knownEntityElements.indexOf(wrapper);
-        if (isKnown && index < 0) {
-            this.state.knownEntityElements.push(wrapper);
-        } else if (!isKnown && index >= 0) {
-            this.state.knownEntityElements.splice(index, 1);
-        }
-    }
-
-    private isEntityKnown(wrapper: HTMLElement) {
-        return this.state.knownEntityElements.indexOf(wrapper) >= 0;
     }
 }
 

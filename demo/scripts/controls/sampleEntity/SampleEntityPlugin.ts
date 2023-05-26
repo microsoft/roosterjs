@@ -1,5 +1,7 @@
 import { insertEntity } from 'roosterjs-editor-api';
 import {
+    createNumberDefinition,
+    createObjectDefinition,
     findClosestElementAncestor,
     getEntityFromElement,
     getEntitySelector,
@@ -10,6 +12,7 @@ import {
     EditorPlugin,
     Entity,
     EntityOperation,
+    EntityState,
     IEditor,
     PluginEvent,
     PluginEventType,
@@ -20,6 +23,10 @@ const EntityType = 'SampleEntity';
 interface EntityMetadata {
     count: number;
 }
+
+const EntityMetadataDefinition = createObjectDefinition<EntityMetadata>({
+    count: createNumberDefinition(),
+});
 
 export default class SampleEntityPlugin implements EditorPlugin {
     private editor: IEditor;
@@ -66,6 +73,8 @@ export default class SampleEntityPlugin implements EditorPlugin {
                     this.dehydrate(event.entity);
                     this.hydrate(event.entity);
 
+                    event.shouldPersist = true;
+
                     break;
 
                 case EntityOperation.RemoveFromEnd:
@@ -78,7 +87,11 @@ export default class SampleEntityPlugin implements EditorPlugin {
 
                 case EntityOperation.UpdateEntityState:
                     if (event.state) {
-                        setMetadata(event.entity.wrapper, event.state as EntityMetadata);
+                        setMetadata(
+                            event.entity.wrapper,
+                            JSON.parse(event.state),
+                            EntityMetadataDefinition
+                        );
                         this.updateEntity(event.entity);
                     }
 
@@ -151,13 +164,13 @@ export default class SampleEntityPlugin implements EditorPlugin {
         }
     };
 
-    private getEntityStates(entity: Entity | undefined) {
+    private getEntityStates(entity: Entity | undefined): EntityState[] {
         return entity
             ? [
                   {
                       id: entity.id,
                       type: entity.type,
-                      state: getMetadata<EntityMetadata>(entity.wrapper),
+                      state: entity.wrapper.dataset.editingInfo,
                   },
               ]
             : undefined;

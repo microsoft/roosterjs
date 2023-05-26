@@ -28,7 +28,13 @@ export interface EntityOperationEventData {
      * For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
      * For other operation types, it is not used
      */
-    state?: Object;
+    state?: string;
+
+    /**
+     * For EntityOperation.NewEntity, plugin can set this property to true then the entity will be persisted.
+     * A persisted entity won't be touched during undo/redo, unless it does not exist after undo/redo.
+     */
+    shouldPersist?: boolean;
 
     /**
      * A document fragment for entity based on Shadow DOM. This property is only available for NewEntity operation.
