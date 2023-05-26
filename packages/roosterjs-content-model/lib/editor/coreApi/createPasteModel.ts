@@ -1,5 +1,6 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
+import { ContentModelEditorCore, CreatePasteModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     ClipboardData,
     EditorCore,
@@ -7,7 +8,6 @@ import {
     PasteType,
     PluginEventType,
 } from 'roosterjs-editor-types';
-import { ContentModelEditorCore, CreatePasteModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     createDefaultHtmlSanitizerOptions,
     createFragmentFromClipboardData,
@@ -44,7 +44,10 @@ export const createPasteModel: CreatePasteModel = (
         event
     );
 
-    return domToContentModel(fragment, core.api.createEditorContext(core), event.domToModelOption);
+    return domToContentModel(fragment, core.api.createEditorContext(core), {
+        ...event.domToModelOption,
+        disableCacheElement: true,
+    });
 };
 
 /**
