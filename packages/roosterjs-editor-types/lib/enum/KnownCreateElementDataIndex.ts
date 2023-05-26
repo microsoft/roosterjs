@@ -63,7 +63,7 @@ export const enum KnownCreateElementDataIndex {
     TableSelector = 11,
 
     /**
-     * An empty line without format with span inside of it.
+     * @deprecated
      */
     EmptyLineFormatInSpan = 12,
 }

@@ -14,6 +14,7 @@ import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { TableSelectionContext } from '../../../lib/publicTypes/selection/TableSelectionContext';
 import {
     getSelectedSegments,
     getSelectedParagraphs,
@@ -27,7 +28,7 @@ interface SelectionInfo {
     path: ContentModelBlockGroup[];
     segments?: ContentModelSegment[];
     block?: ContentModelBlock;
-    tableContext?: iterateSelections.TableSelectionContext;
+    tableContext?: TableSelectionContext;
 }
 
 describe('getSelectedSegments', () => {

@@ -14,8 +14,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
-    [ExperimentalFeatures.DefaultFormatInSpan]:
-        'When apply default format when initialize or user type, apply the format on a SPAN element.',
     [ExperimentalFeatures.ReusableContentModel]:
         'Reuse existing DOM structure if possible when convert Content Model back to DOM tree',
     [ExperimentalFeatures.EditWithContentModel]: 'Handle keyboard edit event with Content Model',
@@ -23,7 +21,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
         'Add read entities around read only entities to handle browser edge cases.',
-    [ExperimentalFeatures.DefaultFormatOnContainer]: 'Apply default format on editor container',
     [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
 };
 

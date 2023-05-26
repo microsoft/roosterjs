@@ -71,7 +71,7 @@ export default function createVListFromRegion(
 
         if (nodes.length == 0 && !region.rootNode.firstChild) {
             const newNode = createElement(
-                KnownCreateElementDataIndex.EmptyLineFormatInSpan,
+                KnownCreateElementDataIndex.EmptyLine,
                 region.rootNode.ownerDocument
             )!;
             region.rootNode.appendChild(newNode);

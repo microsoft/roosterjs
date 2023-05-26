@@ -61,10 +61,9 @@ describe('createPasteModel', () => {
     it('Execute', () => {
         createPasteModelFile.createPasteModel(core, clipboardData, null, false, false, false);
 
-        expect(domToContentModel.default).toHaveBeenCalledWith(
-            fragment,
-            mockedContext,
-            beforePasteEvent.domToModelOption
-        );
+        expect(domToContentModel.default).toHaveBeenCalledWith(fragment, mockedContext, {
+            ...beforePasteEvent.domToModelOption,
+            disableCacheElement: true,
+        });
     });
 });
