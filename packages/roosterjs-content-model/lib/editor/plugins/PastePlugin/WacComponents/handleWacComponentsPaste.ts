@@ -145,7 +145,6 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
  * @param ev ContentModelBeforePasteEvent
  */
 export function handleWacComponentsPaste(ev: ContentModelBeforePasteEvent) {
-    ev.domToModelOption.disableCacheElement = true;
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
