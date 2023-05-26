@@ -168,7 +168,7 @@ describe('ContentModelEditPlugin', () => {
                 { which: Keys.DELETE } as any,
                 []
             );
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalled();
         });
     });
 });
