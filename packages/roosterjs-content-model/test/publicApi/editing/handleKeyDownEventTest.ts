@@ -4,7 +4,12 @@ import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyb
 import handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import { ChangeSource, Keys } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
+import {
+    backwardDeleteWordSelection,
+    forwardDeleteWordSelection,
+} from '../../../lib/modelApi/edit/deleteSteps/deleteWordSelection';
 import {
     DeleteResult,
     DeleteSelectionStep,
@@ -87,7 +92,7 @@ describe('handleKeyDownEvent', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection],
             DeleteResult.NotDeleted,
             0
         );
@@ -104,7 +109,83 @@ describe('handleKeyDownEvent', () => {
                 blockGroupType: 'Document',
                 blocks: [],
             },
-            [backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection],
+            DeleteResult.NotDeleted,
+            0
+        );
+    });
+
+    it('Empty model, delete word selection, forward', () => {
+        spyOn(handleKeyboardEventResult, 'shouldDeleteWord').and.returnValue(true);
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            Keys.DELETE,
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            [null!, forwardDeleteWordSelection, forwardDeleteCollapsedSelection],
+            DeleteResult.NotDeleted,
+            0
+        );
+    });
+
+    it('Empty model, delete word selection, backward', () => {
+        spyOn(handleKeyboardEventResult, 'shouldDeleteWord').and.returnValue(true);
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            Keys.BACKSPACE,
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            [null!, backwardDeleteWordSelection, backwardDeleteCollapsedSelection],
+            DeleteResult.NotDeleted,
+            0
+        );
+    });
+
+    it('Empty model, delete all before segments, forward', () => {
+        spyOn(handleKeyboardEventResult, 'shouldDeleteAllSegmentsBefore').and.returnValue(true);
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            Keys.DELETE,
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            [null!, null!, forwardDeleteCollapsedSelection],
+            DeleteResult.NotDeleted,
+            0
+        );
+    });
+
+    it('Empty model, delete all before segments, backward', () => {
+        spyOn(handleKeyboardEventResult, 'shouldDeleteAllSegmentsBefore').and.returnValue(true);
+
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            Keys.BACKSPACE,
+            {
+                blockGroupType: 'Document',
+                blocks: [],
+            },
+            [deleteAllSegmentBefore, null!, backwardDeleteCollapsedSelection],
             DeleteResult.NotDeleted,
             0
         );
@@ -145,7 +226,7 @@ describe('handleKeyDownEvent', () => {
                     },
                 ],
             },
-            [forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection],
             DeleteResult.NotDeleted,
             0
         );
@@ -186,7 +267,7 @@ describe('handleKeyDownEvent', () => {
                     },
                 ],
             },
-            [backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection],
             DeleteResult.NotDeleted,
             0
         );
@@ -237,7 +318,7 @@ describe('handleKeyDownEvent', () => {
                     },
                 ],
             },
-            [forwardDeleteCollapsedSelection],
+            [null!, null!, forwardDeleteCollapsedSelection],
             DeleteResult.SingleChar,
             1
         );
@@ -288,7 +369,7 @@ describe('handleKeyDownEvent', () => {
                     },
                 ],
             },
-            [backwardDeleteCollapsedSelection],
+            [null!, null!, backwardDeleteCollapsedSelection],
             DeleteResult.SingleChar,
             1
         );
