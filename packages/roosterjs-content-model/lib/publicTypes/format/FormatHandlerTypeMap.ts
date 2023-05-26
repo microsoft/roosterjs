@@ -29,6 +29,7 @@ import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
+import { WidthFormat } from './formatParts/WidthFormat';
 import { WordBreakFormat } from './formatParts/WordBreakFormat';
 
 /**
@@ -209,6 +210,11 @@ export interface FormatHandlerTypeMap {
      * Format for WordBreakFormat
      */
     wordBreak: WordBreakFormat;
+
+    /**
+     * Format for Width
+     */
+    width: WidthFormat;
 }
 
 /**
