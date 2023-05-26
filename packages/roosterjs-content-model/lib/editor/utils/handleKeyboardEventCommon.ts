@@ -31,7 +31,9 @@ export function getOnDeleteEntityCallback(
             }
         }
 
-        return !!rawEvent?.defaultPrevented;
+        // If entity is still in editor and default behavior of event is prevented, that means plugin wants to keep this entity
+        // Return true to tell caller we should keep it.
+        return !!rawEvent?.defaultPrevented && editor.contains(entity.wrapper);
     };
 }
 
