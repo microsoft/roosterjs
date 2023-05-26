@@ -278,4 +278,29 @@ describe('splitTableCellHorizontally', () => {
         expect(cells[2].cachedElement).toBeUndefined();
         expect(cells[3].cachedElement).toBeUndefined();
     });
+
+    it('keep background color', () => {
+        const table = createTable(2);
+        const cells = [
+            createTableCell(false, false, false, { backgroundColor: '1' }),
+            createTableCell(false, false, false, { backgroundColor: '2' }),
+            createTableCell(false, false, false, { backgroundColor: '3' }),
+            createTableCell(false, false, false, { backgroundColor: '4' }),
+        ];
+
+        cells[0].dataset = { editingInfo: '{"bgColorOverride":true}' };
+
+        table.rows[0].cells.push(cells[0], cells[1]);
+        table.rows[1].cells.push(cells[2], cells[3]);
+        table.widths = [100, 100];
+        table.rows[0].height = 200;
+        table.rows[1].height = 200;
+
+        cells[0].isSelected = true;
+
+        splitTableCellHorizontally(table);
+
+        expect(table.rows[0].cells[1].dataset).toEqual({ editingInfo: '{"bgColorOverride":true}' });
+        expect(table.rows[0].cells[1].format).toEqual({ backgroundColor: '1' });
+    });
 });

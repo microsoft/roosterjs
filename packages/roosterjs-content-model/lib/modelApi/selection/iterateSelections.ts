@@ -2,17 +2,7 @@ import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockWithCache } from '../../publicTypes/block/ContentModelBlockWithCache';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-
-/**
- * @internal
- */
-export interface TableSelectionContext {
-    table: ContentModelTable;
-    rowIndex: number;
-    colIndex: number;
-    isWholeTableSelected: boolean;
-}
+import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 
 /**
  * @internal
