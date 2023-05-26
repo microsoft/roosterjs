@@ -14,9 +14,27 @@ describe('Paste', () => {
         editor = ({} as any) as IContentModelEditor;
     });
 
-    let event: ContentModelBeforePasteEvent = <ContentModelBeforePasteEvent>{
+    let event: ContentModelBeforePasteEvent = <ContentModelBeforePasteEvent>(<any>{
+        clipboardData: {},
+        fragment: document.createDocumentFragment(),
+        sanitizingOption: {
+            elementCallbacks: {},
+            attributeCallbacks: {},
+            cssStyleCallbacks: {},
+            additionalTagReplacements: {},
+            additionalAllowedAttributes: [],
+            additionalAllowedCssClasses: [],
+            additionalDefaultStyleValues: {},
+            additionalGlobalStyleNodes: [],
+            additionalPredefinedCssForElement: {},
+            preserveHtmlComments: false,
+            unknownTagReplacement: null,
+        },
+        htmlBefore: '',
+        htmlAfter: '',
+        htmlAttributes: {},
         domToModelOption: {},
-    };
+    });
 
     describe('onPluginEvent', () => {
         let plugin = new ContentModelPastePlugin();
@@ -24,13 +42,23 @@ describe('Paste', () => {
         beforeEach(() => {
             plugin = new ContentModelPastePlugin();
 
-            event = <ContentModelBeforePasteEvent>{
+            event = <ContentModelBeforePasteEvent>(<any>{
                 eventType: PluginEventType.BeforePaste,
                 domToModelOption: {},
                 sanitizingOption: {
-                    unknownTagReplacement: {},
+                    elementCallbacks: {},
+                    attributeCallbacks: {},
+                    cssStyleCallbacks: {},
+                    additionalTagReplacements: {},
+                    additionalAllowedAttributes: [],
+                    additionalAllowedCssClasses: [],
+                    additionalDefaultStyleValues: {},
+                    additionalGlobalStyleNodes: [],
+                    additionalPredefinedCssForElement: {},
+                    preserveHtmlComments: false,
+                    unknownTagReplacement: null,
                 },
-            };
+            });
         });
 
         it('WordDesktop', () => {
