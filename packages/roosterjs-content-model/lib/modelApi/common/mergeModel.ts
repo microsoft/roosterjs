@@ -11,10 +11,12 @@ import { createListItem } from '../creators/createListItem';
 import { createParagraph } from '../creators/createParagraph';
 import { createSelectionMarker } from '../creators/createSelectionMarker';
 import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection, InsertPoint } from '../edit/deleteSelections';
+import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
+import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
 
 /**
  * @internal
@@ -48,9 +50,11 @@ export interface MergeModelOption {
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity,
     options?: MergeModelOption
 ) {
-    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
+    const insertPosition =
+        options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
         if (options?.mergeCurrentFormat) {

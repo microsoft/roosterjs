@@ -11,6 +11,10 @@ import { createTableCell } from '../../../lib/modelApi/creators/createTableCell'
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 
+function onDeleteEntityMock() {
+    return false;
+}
+
 describe('mergeModel', () => {
     it('empty to single selection', () => {
         const majorModel = createContentModelDocument();
@@ -21,7 +25,7 @@ describe('mergeModel', () => {
         para.segments.push(marker);
         majorModel.blocks.push(para);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -61,7 +65,7 @@ describe('mergeModel', () => {
         para2.segments.push(text1, text2);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -111,7 +115,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -190,7 +194,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -285,7 +289,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara2);
         sourceModel.blocks.push(newPara3);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -426,7 +430,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -568,7 +572,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -731,7 +735,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -832,7 +836,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel);
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
 
         expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
         expect(majorModel).toEqual({
@@ -949,7 +953,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, {
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
             mergeTable: true,
         });
 
@@ -1086,7 +1090,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, {
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
             mergeTable: true,
         });
 
@@ -1212,7 +1216,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, {
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
             mergeTable: true,
         });
 
@@ -1321,7 +1325,7 @@ describe('mergeModel', () => {
         newPara.segments.push(newText);
         sourceModel.blocks.push(newPara);
 
-        mergeModel(majorModel, sourceModel, {
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
             insertPosition: {
                 marker: marker2,
                 paragraph: para1,
@@ -1399,7 +1403,7 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, { mergeCurrentFormat: true });
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, { mergeCurrentFormat: true });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
