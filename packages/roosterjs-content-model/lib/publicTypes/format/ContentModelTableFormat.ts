@@ -5,7 +5,6 @@ import { DisplayFormat } from './formatParts/DisplayFormat';
 import { IdFormat } from './formatParts/IdFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
-import { WidthFormat } from './formatParts/WidthFormat';
 
 /**
  * Format of Table
@@ -16,5 +15,4 @@ export type ContentModelTableFormat = ContentModelBlockFormat &
     BorderBoxFormat &
     SpacingFormat &
     MarginFormat &
-    DisplayFormat &
-    WidthFormat;
+    DisplayFormat;

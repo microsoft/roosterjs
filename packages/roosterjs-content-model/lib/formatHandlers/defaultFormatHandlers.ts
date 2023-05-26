@@ -36,7 +36,6 @@ import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellF
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
-import { widthFormatHandler } from './common/widthFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
 import {
     FormatApplier,
@@ -89,7 +88,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
     wordBreak: wordBreakFormatHandler,
-    width: widthFormatHandler,
 };
 
 const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
@@ -144,7 +142,7 @@ const defaultFormatKeysPerCategory: {
         'htmlAlign',
     ],
     tableRow: ['backgroundColor'],
-    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin', 'width'],
+    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
