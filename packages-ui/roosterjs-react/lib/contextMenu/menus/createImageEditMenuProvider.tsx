@@ -1,7 +1,7 @@
 import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { EditorPlugin, IEditor, ImageEditOperation } from 'roosterjs-editor-types';
+import { DocumentCommand, EditorPlugin, IEditor, ImageEditOperation } from 'roosterjs-editor-types';
 import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
 import { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
@@ -163,6 +163,30 @@ const ImageRemoveMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit
     },
 };
 
+const ImageCopyMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageCopy',
+    unlocalizedText: 'Copy image',
+    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
+        if (editor.contains(node)) {
+            editor.addUndoSnapshot(() => {
+                editor.getDocument()?.execCommand(DocumentCommand.Copy);
+            }, 'CopyImage');
+        }
+    },
+};
+
+const ImageCutMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
+    key: 'menuNameImageCut',
+    unlocalizedText: 'Cut image',
+    onClick: (_, editor, node, strings, uiUtilities, imageEdit) => {
+        if (editor.contains(node)) {
+            editor.addUndoSnapshot(() => {
+                editor.getDocument()?.execCommand(DocumentCommand.Cut);
+            }, 'CutImage');
+        }
+    },
+};
+
 function shouldShowImageEditItems(editor: IEditor, node: Node) {
     return safeInstanceOf(node, 'HTMLImageElement') && node.isContentEditable;
 }
@@ -184,6 +208,8 @@ export default function createImageEditMenuProvider(
             ImageRemoveMenuItem,
             ImageRotateMenuItem,
             ImageFlipMenuItem,
+            ImageCopyMenuItem,
+            ImageCutMenuItem,
         ],
         strings,
         shouldShowImageEditItems,

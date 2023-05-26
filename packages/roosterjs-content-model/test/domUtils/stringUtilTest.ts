@@ -1,4 +1,4 @@
-import { hasSpacesOnly } from '../../lib/domUtils/hasSpacesOnly';
+import { hasSpacesOnly } from '../../lib/domUtils/stringUtil';
 
 describe('hasSpacesOnly', () => {
     it('Empty string', () => {
