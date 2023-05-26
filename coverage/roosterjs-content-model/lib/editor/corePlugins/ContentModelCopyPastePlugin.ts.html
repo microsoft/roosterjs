@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.02% </span>
+                <span class="strong">82.08% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>88/106</span>
+                <span class='fraction'>87/106</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.82% </span>
+                <span class="strong">59.09% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>40/68</span>
+                <span class='fraction'>39/66</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.5% </span>
+                <span class="strong">82.52% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>86/103</span>
+                <span class='fraction'>85/103</span>
             </div>
         
             
@@ -300,12 +300,7 @@
 <a name='L241'></a><a href='#L241'>241</a>
 <a name='L242'></a><a href='#L242'>242</a>
 <a name='L243'></a><a href='#L243'>243</a>
-<a name='L244'></a><a href='#L244'>244</a>
-<a name='L245'></a><a href='#L245'>245</a>
-<a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a>
-<a name='L248'></a><a href='#L248'>248</a>
-<a name='L249'></a><a href='#L249'>249</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L244'></a><a href='#L244'>244</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -392,6 +387,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -436,9 +433,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -456,7 +450,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -502,9 +495,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
@@ -639,75 +629,73 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
     }
 &nbsp;
     private onCutCopy(event: Event, isCut: boolean) {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.editor) {
-            const selection = this.editor.getSelectionRangeEx();
-            if (selection &amp;&amp; !selection.areAllCollapsed) {
-                const model = this.editor.createContentModel({
-                    disableCacheElement: true,
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.editor) {
+<span class="cstat-no" title="statement not covered" >            return;</span>
+        }
+        const selection = this.editor.getSelectionRangeEx();
+        if (selection &amp;&amp; !selection.areAllCollapsed) {
+            const model = this.editor.createContentModel({
+                disableCacheElement: true,
+            });
+&nbsp;
+            const pasteModel = cloneModel(model);
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                iterateSelections([pasteModel], <span class="fstat-no" title="function not covered" >(p</span>ath, tableContext) =&gt; {
+<span class="cstat-no" title="statement not covered" >                    if (tableContext?.table) {</span>
+                        const table = <span class="cstat-no" title="statement not covered" >tableContext?.table;</span>
+<span class="cstat-no" title="statement not covered" >                        table.rows = table.rows</span>
+                            .map(<span class="fstat-no" title="function not covered" >row </span>=&gt; {
+<span class="cstat-no" title="statement not covered" >                                return {</span>
+                                    ...row,
+                                    cells: row.cells.filter(<span class="fstat-no" title="function not covered" >cell </span>=&gt; <span class="cstat-no" title="statement not covered" >cell.isSelected),</span>
+                                };
+                            })
+                            .filter(<span class="fstat-no" title="function not covered" >row </span>=&gt; <span class="cstat-no" title="statement not covered" >row.cells.length &gt; 0);</span>
+<span class="cstat-no" title="statement not covered" >                        return true;</span>
+                    }
+<span class="cstat-no" title="statement not covered" >                    return false;</span>
+                });
+            }
+            const tempDiv = this.getTempDiv(this.editor);
+            const selectionAfterPaste = contentModelToDom(
+                tempDiv.ownerDocument,
+                tempDiv,
+                pasteModel,
+                {
+                    isDarkMode: false /* To force light mode on paste */,
+                    darkColorHandler: this.editor.getDarkColorHandler(),
+                }
+            );
+&nbsp;
+            let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
+                const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                    clonedRoot: tempDiv,
+                    range: newRange,
+                    rawEvent: event as ClipboardEvent,
+                    isCut,
                 });
 &nbsp;
-                const pasteModel = cloneModel(model);
-                if (selection.type === SelectionRangeTypes.TableSelection) {
-                    iterateSelections([pasteModel], <span class="fstat-no" title="function not covered" >(p</span>ath, tableContext) =&gt; {
-<span class="cstat-no" title="statement not covered" >                        if (tableContext?.table) {</span>
-                            const table = <span class="cstat-no" title="statement not covered" >tableContext?.table;</span>
-<span class="cstat-no" title="statement not covered" >                            table.rows = table.rows</span>
-                                .map(<span class="fstat-no" title="function not covered" >row </span>=&gt; {
-<span class="cstat-no" title="statement not covered" >                                    return {</span>
-                                        ...row,
-                                        cells: row.cells.filter(<span class="fstat-no" title="function not covered" >cell </span>=&gt; <span class="cstat-no" title="statement not covered" >cell.isSelected),</span>
-                                    };
-                                })
-                                .filter(<span class="fstat-no" title="function not covered" >row </span>=&gt; <span class="cstat-no" title="statement not covered" >row.cells.length &gt; 0);</span>
-<span class="cstat-no" title="statement not covered" >                            return true;</span>
-                        }
-<span class="cstat-no" title="statement not covered" >                        return false;</span>
-                    });
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (cutCopyEvent.range) {
+                    addRangeToSelection(newRange);
                 }
-                const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
-                const selectionAfterPaste = contentModelToDom(
-                    tempDiv.ownerDocument,
-                    tempDiv,
-                    pasteModel,
-                    {
-                        isDarkMode: false /* To force light mode on paste */,
-                        darkColorHandler: this.editor.getDarkColorHandler(),
+&nbsp;
+                this.editor.runAsync(editor =&gt; {
+                    cleanUpAndRestoreSelection(tempDiv);
+                    editor.focus();
+                    <span class="missing-if-branch" title="else path not taken" >E</span>if (selectionAfterPaste) {
+                        this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>elect(selectionAfterPaste);
                     }
-                );
-&nbsp;
-                let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
-                    const cutCopyEvent = this.editor.triggerPluginEvent(
-                        PluginEventType.BeforeCutCopy,
-                        {
-                            clonedRoot: tempDiv,
-                            range: newRange,
-                            rawEvent: event as ClipboardEvent,
-                            isCut,
-                        }
-                    );
-&nbsp;
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (cutCopyEvent.range) {
-                        addRangeToSelection(newRange);
+                    if (isCut) {
+                        editor.addUndoSnapshot(() =&gt; {
+                            deleteSelection(
+                                model,
+                                getOnDeleteEntityCallback(editor as IContentModelEditor)
+                            );
+                            this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>etContentModel(model);
+                        }, ChangeSource.Cut);
                     }
-&nbsp;
-                    this.editor.runAsync(editor =&gt; {
-                        cleanUpAndRestoreSelection(tempDiv);
-                        editor.focus();
-                        <span class="missing-if-branch" title="else path not taken" >E</span>if (selectionAfterPaste) {
-                            this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>elect(selectionAfterPaste);
-                        }
-                        if (isCut) {
-                            editor.addUndoSnapshot(() =&gt; {
-                                deleteSelection(
-                                    model,
-                                    getOnDeleteEntityCallback(editor as IContentModelEditor)
-                                );
-                                this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>etContentModel(model);
-                            }, ChangeSource.Cut);
-                        }
-                    });
-                }
+                });
             }
         }
     }
@@ -732,7 +720,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
         }
     };
 &nbsp;
-    private getTempDiv(editor: IEditor, forceInLightMode?: boolean) {
+    private getTempDiv(editor: IEditor) {
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
 <span class="fstat-no" title="function not covered" >            () =&gt; {</span>
@@ -748,11 +736,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
 <span class="fstat-no" title="function not covered" >            tempDiv </span>=&gt; <span class="cstat-no" title="statement not covered" >tempDiv.parentNode?.removeChild(tempDiv)</span>
         );
 &nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (forceInLightMode) {
-            div.style.backgroundColor = 'white';
-            div.style.color = 'black';
-        }
-&nbsp;
+        div.style.backgroundColor = 'white';
+        div.style.color = 'black';
         div.childNodes.forEach(<span class="fstat-no" title="function not covered" >node </span>=&gt; <span class="cstat-no" title="statement not covered" >div.removeChild(node));</span>
 &nbsp;
         div.style.display = '';
@@ -808,7 +793,7 @@ function selectionExToRange(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri May 26 2023 15:37:29 GMT+0000 (Coordinated Universal Time)
+                at Fri May 26 2023 16:39:13 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
