@@ -9,7 +9,7 @@ const PUNCTUATIONS = '.,?!:"()[]\\/';
  * @internal
  */
 export function isPunctuation(char: string) {
-    return PUNCTUATIONS.indexOf(char) >= 0; // PUNCTUATION_REGEX.test(char);
+    return PUNCTUATIONS.indexOf(char) >= 0;
 }
 
 /**
