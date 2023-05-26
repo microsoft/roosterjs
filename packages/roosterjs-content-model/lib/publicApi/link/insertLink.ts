@@ -5,6 +5,7 @@ import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
@@ -92,7 +93,9 @@ export default function insertLink(
                         links.push(segment.link);
                     }
 
-                    mergeModel(model, doc, { mergeCurrentFormat: true });
+                    mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
+                        mergeCurrentFormat: true,
+                    });
                 }
 
                 return segments.length > 0;

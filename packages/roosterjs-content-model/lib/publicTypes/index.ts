@@ -2,6 +2,8 @@ export { ContentModelBlockGroupType } from './enum/BlockGroupType';
 export { ContentModelBlockType } from './enum/BlockType';
 export { ContentModelSegmentType } from './enum/SegmentType';
 export { Selectable } from './selection/Selectable';
+export { InsertPoint } from './selection/InsertPoint';
+export { TableSelectionContext } from './selection/TableSelectionContext';
 
 export { ContentModelBlockBase } from './block/ContentModelBlockBase';
 export { ContentModelTable } from './block/ContentModelTable';

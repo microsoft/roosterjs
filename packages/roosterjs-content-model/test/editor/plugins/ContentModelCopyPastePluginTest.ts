@@ -1,6 +1,6 @@
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
 import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDom';
-import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelections';
+import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
@@ -17,7 +17,7 @@ const modelValue = 'model' as any;
 const darkColorHandler = 'darkColorHandler' as any;
 const pasteModelValue = 'pasteModelValue' as any;
 const insertPointValue = 'insertPoint' as any;
-const isChangedValue = 'isChanged' as any;
+const deleteResultValue = 'deleteResult' as any;
 
 const allowedCustomPasteType = ['Test'];
 
@@ -341,12 +341,12 @@ describe('ContentModelCopyPastePlugin |', () => {
                 areAllCollapsed: false,
             };
 
-            spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
-                (model: any, options: any) => {
+            const deleteSelectionSpy = spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
+                (model: any, steps: any, options: any) => {
                     return {
                         deletedModel: pasteModelValue,
                         insertPoint: insertPointValue,
-                        isChanged: isChangedValue,
+                        deleteResult: deleteResultValue,
                     };
                 }
             );
@@ -362,7 +362,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
-            expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalledWith(modelValue);
+            expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
             expect(contentModelToDomFile.default).toHaveBeenCalledWith(
                 document,
                 div,

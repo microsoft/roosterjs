@@ -1265,26 +1265,6 @@ describe('wordOnlineHandler', () => {
                                 format: {},
                                 isImplicit: true,
                             },
-                            {
-                                blockType: 'BlockGroup',
-                                blockGroupType: 'FormatContainer',
-                                tagName: 'div',
-                                blocks: [],
-                                format: {
-                                    whiteSpace: 'pre',
-                                    marginTop: '0px',
-                                    marginRight: '0px',
-                                    marginBottom: '0px',
-                                    marginLeft: '0px',
-                                    paddingTop: '0px',
-                                    paddingRight: '0px',
-                                    paddingBottom: '0px',
-                                    paddingLeft: '0px',
-                                    width: '264px',
-                                    height: '96px',
-                                    display: 'block',
-                                },
-                            },
                         ],
                     }
                 );
@@ -1313,5 +1293,87 @@ describe('wordOnlineHandler', () => {
                 '<ul><li><p>A</p></li><li><p>B</p></li><li><p>C</p></li><ol start="1"><li style="list-style-type: lower-alpha;"><p>D</p></li></ol></ul>'
             );
         });
+    });
+
+    it('remove table temp elements', () => {
+        runTest(
+            '<table aria-rowcount="1" data-tablelook="1184" data-tablestyle="MsoTableGrid" border="1" class="Table TableStaticStyles Ltr TableWordWrap SCXW96211671 BCX8" id="table"><tbody class="SCXW96211671 BCX8"><tr aria-rowindex="1" role="row" class="TableRow SCXW96211671 BCX8"><td data-celllook="69905" role="rowheader" class="FirstRow FirstCol LastRow AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedLightMode SimilarityUnreviewedDarkMode LowContrastShading SCXW96211671 BCX8"><div class="TableHoverRowHandle SCXW96211671 BCX8"></div><div class="TableHoverColumnHandle SCXW96211671 BCX8"></div><div class="TableCellLeftBorderHandle SCXW96211671 BCX8"></div><div class="TableCellTopBorderHandle SCXW96211671 BCX8"></div><div class="TableColumnResizeHandle SCXW96211671 BCX8"></div><div class="TableInsertRowGapBlank SCXW96211671 BCX8"></div>            <div class="TableCellContent SCXW96211671 BCX8">                <div class="OutlineElement Ltr SCXW96211671 BCX8">                    <p class="Paragraph SCXW96211671 BCX8">                        <span class="TextRun EmptyTextRun SCXW96211671 BCX8" lang="EN-US" data-contrast="auto">a</span>                    </p>                    </div>            </td><td data-celllook="69905" role="columnheader" class="FirstRow LastCol LastRow AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedLightMode SimilarityUnreviewedDarkMode LowContrastShading SCXW96211671 BCX8"><div class="TableHoverColumnHandle SCXW96211671 BCX8"></div><div class="TableCellTopBorderHandle SCXW96211671 BCX8"></div><div class="TableColumnResizeHandle SCXW96211671 BCX8"></div><div class="TableInsertRowGapBlank SCXW96211671 BCX8"></div><div class="TableCellContent SCXW96211671 BCX8"><p><span>asd</span></p></div></td></tr></tbody></table>',
+            '<table id="table" data-tablelook="1184" data-tablestyle="MsoTableGrid"><tbody><tr><td data-celllook="69905"><p>a</p></td><td data-celllook="69905"><p>asd</p></td></tr></tbody></table>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Table',
+                        rows: [
+                            {
+                                cells: [
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'a',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {
+                                                    marginTop: '1em',
+                                                    marginBottom: '1em',
+                                                },
+                                                decorator: {
+                                                    tagName: 'p',
+                                                    format: {},
+                                                },
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: { celllook: '69905' },
+                                    },
+                                    {
+                                        blockGroupType: 'TableCell',
+                                        blocks: [
+                                            {
+                                                blockType: 'Paragraph',
+                                                segments: [
+                                                    {
+                                                        segmentType: 'Text',
+                                                        text: 'asd',
+                                                        format: {},
+                                                    },
+                                                ],
+                                                format: {
+                                                    marginTop: '1em',
+                                                    marginBottom: '1em',
+                                                },
+                                                decorator: {
+                                                    tagName: 'p',
+                                                    format: {},
+                                                },
+                                            },
+                                        ],
+                                        format: {},
+                                        spanLeft: false,
+                                        spanAbove: false,
+                                        isHeader: false,
+                                        dataset: { celllook: '69905' },
+                                    },
+                                ],
+                                format: {},
+                                height: 0,
+                            },
+                        ],
+                        format: { id: 'table' },
+                        dataset: { tablelook: '1184', tablestyle: 'MsoTableGrid' },
+                        widths: [],
+                    },
+                ],
+            }
+        );
     });
 });

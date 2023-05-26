@@ -1,6 +1,6 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { chainSanitizerCallback, getStyles } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelBlockFormat } from '../../../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
@@ -31,6 +31,13 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
         'border',
         (value, element) => element.tagName != 'IMG' || value != 'none'
     );
+
+    // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
+    chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
+        moveChildNodes(element);
+        element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
+        return true;
+    });
 }
 
 function setProcessor<TKey extends keyof ElementProcessorMap>(
