@@ -7,6 +7,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
+    EntityStateItem,
     IEditor,
     Keys,
     PasteType,
@@ -48,9 +49,8 @@ describe('EntityPlugin', () => {
 
     it('init', () => {
         expect(state).toEqual({
-            knownEntityElements: [],
             shadowEntityCache: {},
-            entities: {},
+            entityMap: {},
         });
     });
 
@@ -278,6 +278,7 @@ describe('EntityPlugin', () => {
         let node2: HTMLElement;
         let node3: HTMLElement;
         let containedNodes: Node[];
+        let commitEntitySpy: jasmine.Spy;
         let fragment: DocumentFragment = document.createDocumentFragment();
 
         beforeEach(() => {
@@ -307,19 +308,28 @@ describe('EntityPlugin', () => {
                 return containedNodes;
             });
 
-            spyOn(commitEntity, 'default');
+            commitEntitySpy = spyOn(commitEntity, 'default');
             spyOn(document, 'createDocumentFragment').and.returnValue(fragment);
         });
 
-        function verify(inStateNodes: HTMLElement[], commitedNodes: HTMLElement[]) {
-            expect(state.knownEntityElements).toEqual(inStateNodes);
-            expect(commitEntity.default).toHaveBeenCalledTimes(commitedNodes.length);
-            commitedNodes.forEach(node => {
-                expect(commitEntity.default).toHaveBeenCalledWith(node, entityType, false, node.id);
+        function verify(
+            inStateNodes: Record<string, EntityStateItem>,
+            committedNodes: { element: HTMLElement; id: string }[]
+        ) {
+            expect(state.entityMap).toEqual(inStateNodes);
+
+            expect(commitEntitySpy).toHaveBeenCalledTimes(committedNodes.length);
+            committedNodes.forEach(node => {
+                expect(commitEntitySpy).toHaveBeenCalledWith(
+                    node.element,
+                    entityType,
+                    false,
+                    node.id
+                );
                 expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                     operation: EntityOperation.NewEntity,
                     entity: {
-                        wrapper: node,
+                        wrapper: node.element,
                         id: node.id,
                         type: entityType,
                         isReadonly: false,
@@ -331,7 +341,6 @@ describe('EntityPlugin', () => {
         }
 
         it('content changed event, no existing known nodes', () => {
-            state.knownEntityElements = [];
             containedNodes = [node1];
 
             plugin.onPluginEvent({
@@ -339,11 +348,13 @@ describe('EntityPlugin', () => {
                 source: '',
             });
 
-            verify([node1], [node1]);
+            verify({ node1: { element: node1 } }, [{ element: node1, id: 'node1' }]);
         });
 
         it('content changed event, has existing known nodes', () => {
-            state.knownEntityElements = [node1, node2];
+            state.entityMap.node1 = { element: node1 };
+            state.entityMap.node2 = { element: node2 };
+
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({
@@ -351,52 +362,87 @@ describe('EntityPlugin', () => {
                 source: '',
             });
 
-            verify([node2, node3], [node3]);
+            verify(
+                {
+                    node1: { element: node1, isDeleted: true },
+                    node2: { element: node2 },
+                    node3: { element: node3 },
+                },
+                [{ element: node3, id: 'node3' }]
+            );
         });
 
-        xit('content changed event, reset known nodes', () => {
-            state.knownEntityElements = [node1, node2];
+        it('content changed event, reset known nodes', () => {
+            state.entityMap.node1 = { element: node1 };
+            state.entityMap.node2 = { element: node2 };
+
             containedNodes = [node2, node3];
 
             editor.queryElements = <any>((selector: string, callback: (e: HTMLElement) => void) => {
-                containedNodes.forEach(callback);
                 return containedNodes;
             });
-
-            expect(state.knownEntityElements).toEqual([]);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.ContentChanged,
                 source: ChangeSource.SetContent,
             });
 
-            verify([node2, node3], [node2, node3]);
+            verify(
+                {
+                    node1: { element: node1, isDeleted: true },
+                    node2: { element: node2 },
+                    node3: { element: node3 },
+                },
+                [{ element: node3, id: 'node3' }]
+            );
         });
+
         it('editor ready event', () => {
-            state.knownEntityElements = [node1, node2];
+            state.entityMap.node1 = { element: node1 };
+            state.entityMap.node2 = { element: node2 };
+
             containedNodes = [node2, node3];
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
             });
 
-            verify([node2, node3], [node3]);
+            verify(
+                {
+                    node1: { element: node1, isDeleted: true },
+                    node2: { element: node2 },
+                    node3: { element: node3 },
+                },
+                [{ element: node3, id: 'node3' }]
+            );
         });
 
-        xit('handle id duplication', () => {
+        it('handle id duplication', () => {
             node3.id = node2.id;
-            state.knownEntityElements = [node1, node2];
+            state.entityMap.node1 = { element: node1 };
+            state.entityMap.node2 = { element: node2 };
+
             containedNodes = [node2, node3];
+
+            commitEntitySpy.and.callFake((wrapper: any, type: any, isReadonly: any, id: any) => {
+                wrapper.id = id;
+            });
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.EditorReady,
             });
 
-            node3.id = 'node2_1';
-            verify([node2, node3], [node3]);
+            verify(
+                {
+                    node1: { element: node1, isDeleted: true },
+                    node2: { element: node2 },
+                    node2_1: { element: node3 },
+                },
+                [{ element: node3, id: 'node2_1' }]
+            );
 
-            expect(commitEntity.default).toHaveBeenCalledTimes(1);
-            expect(commitEntity.default).toHaveBeenCalledWith(node2, entityType, false, 'node2_1');
+            expect(commitEntitySpy).toHaveBeenCalledTimes(1);
+            expect(commitEntitySpy).toHaveBeenCalledWith(node3, entityType, false, 'node2_1');
         });
     });
 });
@@ -433,9 +479,8 @@ describe('Shadow DOM Entity', () => {
         entity2.attachShadow({ mode: 'open' }).appendChild(textNode);
 
         expect(state).toEqual({
-            knownEntityElements: [],
             shadowEntityCache: {},
-            entities: {},
+            entityMap: {},
         });
 
         plugin.initialize(editor);
@@ -462,7 +507,7 @@ describe('Shadow DOM Entity', () => {
             isFeatureEnabled: () => false,
         };
 
-        state.knownEntityElements.push(entity1);
+        state.entityMap.TEST1 = { element: entity1 };
         plugin.initialize(editor);
         commitEntity.default(entity1, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' });
@@ -472,7 +517,12 @@ describe('Shadow DOM Entity', () => {
             source: '',
         });
 
-        expect(state.knownEntityElements).toEqual([]);
+        expect(state.entityMap).toEqual({
+            TEST1: {
+                element: entity1,
+                isDeleted: true,
+            },
+        });
         expect(state.shadowEntityCache).toEqual({});
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.RemoveShadowRoot,
@@ -514,7 +564,9 @@ describe('Shadow DOM Entity', () => {
             source: '',
         });
 
-        expect(state.knownEntityElements).toEqual([entity1]);
+        expect(state.entityMap).toEqual({
+            TEST1: { element: entity1 },
+        });
         expect(state.shadowEntityCache).toEqual({});
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
@@ -563,7 +615,7 @@ describe('Shadow DOM Entity', () => {
             data: getEntityFromElement.default(entity1),
         });
 
-        expect(state.knownEntityElements).toEqual([entity1]);
+        expect(state.entityMap).toEqual({ TEST1: { element: entity1 } });
         expect(state.shadowEntityCache).toEqual({});
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
@@ -607,9 +659,9 @@ describe('Shadow DOM Entity', () => {
             source: '',
         });
 
-        expect(state.knownEntityElements.length).toBe(1);
-        expect(state.knownEntityElements[0]).not.toBe(entity1);
-        expect(state.knownEntityElements[1]).not.toBe(newEntity);
+        expect(state.entityMap).toEqual({
+            TEST1: { element: entity1 },
+        });
         expect(state.shadowEntityCache).toEqual({});
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
@@ -657,7 +709,7 @@ describe('Shadow DOM Entity', () => {
         commitEntity.default(entity1, 'TEST', false, 'TEST1');
         commitEntity.default(entity2, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' }).appendChild(document.createTextNode('test'));
-        state.knownEntityElements.push(entity1);
+        state.entityMap.TEST1 = { element: entity1 };
 
         plugin.onPluginEvent({
             eventType: PluginEventType.BeforeSetContent,
@@ -670,8 +722,10 @@ describe('Shadow DOM Entity', () => {
             source: '',
         });
 
-        expect(state.knownEntityElements.length).toBe(1);
-        expect(state.knownEntityElements[0]).toBe(entity2);
+        expect(state.entityMap).toEqual({
+            TEST1: { element: entity1, isDeleted: true },
+            TEST1_1: { element: entity2 },
+        });
         expect(state.shadowEntityCache).toEqual({});
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.NewEntity,
@@ -701,7 +755,7 @@ describe('Shadow DOM Entity', () => {
             isFeatureEnabled: () => false,
         };
 
-        state.knownEntityElements.push(entity1);
+        state.entityMap.TEST1 = { element: entity1 };
         commitEntity.default(entity1, 'TEST', false, 'TEST1');
         entity1.attachShadow({ mode: 'open' });
         plugin.initialize(editor);
@@ -711,7 +765,12 @@ describe('Shadow DOM Entity', () => {
             entity: getEntityFromElement.default(entity1),
         });
 
-        expect(state.knownEntityElements).toEqual([]);
+        expect(state.entityMap).toEqual({
+            TEST1: {
+                element: entity1,
+                isDeleted: true,
+            },
+        });
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             operation: EntityOperation.RemoveShadowRoot,
             entity: getEntityFromElement.default(entity1),
@@ -741,8 +800,7 @@ describe('Shadow DOM Entity', () => {
         commitEntity.default(entity2, 'TEST', false, 'Test_2');
         commitEntity.default(entity3, 'TEST', false, 'Test');
         commitEntity.default(entity4, 'TEST', false, 'Test_2');
-        state.knownEntityElements.push(entity1);
-        state.entities.Test = entity1;
+        state.entityMap.Test = { element: entity1 };
 
         plugin.initialize(editor);
         plugin.onPluginEvent({

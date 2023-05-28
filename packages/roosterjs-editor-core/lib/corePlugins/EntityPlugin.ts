@@ -26,6 +26,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
+    EntityStateItem,
     ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
@@ -237,17 +238,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             const item = this.state.entityMap[id];
             const element = item.element;
 
-            if (this.editor && !item.isDelete && !this.editor.contains(element)) {
-                item.isDelete = true;
+            if (this.editor && !item.isDeleted && !this.editor.contains(element)) {
+                item.isDeleted = true;
 
                 if (element.shadowRoot) {
                     this.triggerEvent(element, EntityOperation.RemoveShadowRoot);
                 }
 
-                if (
-                    event?.source == ChangeSource.SetContent ||
-                    event?.source == ChangeSource.Undo
-                ) {
+                if (event?.source == ChangeSource.SetContent) {
                     this.triggerEvent(element, EntityOperation.Overwrite);
                 }
 
@@ -268,7 +266,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 : this.getExistingEntities().filter(entity => {
                       const item = this.state.entityMap[entity.id];
 
-                      return !item || item.isDelete;
+                      return !item || item.element != entity.wrapper || item.isDeleted;
                   });
 
         // 3. Add new entities to known entity list, and hydrate
@@ -375,11 +373,15 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             fragment
         );
 
-        this.state.entityMap[entity.id] = {
+        const newItem: EntityStateItem = {
             element: entity.wrapper,
-            isDelete: false,
-            canPersist: !!event?.shouldPersist,
         };
+
+        if (event?.shouldPersist) {
+            newItem.canPersist = true;
+        }
+
+        this.state.entityMap[entity.id] = newItem;
 
         // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
         // Then trigger AddShadowRoot so that plugins can do further actions

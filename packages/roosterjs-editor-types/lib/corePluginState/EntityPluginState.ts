@@ -10,7 +10,7 @@ export interface EntityStateItem {
     /**
      * Whether this entity is deleted.
      */
-    isDelete?: boolean;
+    isDeleted?: boolean;
 
     /**
      * Whether we want to persist this entity element during undo/redo

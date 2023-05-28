@@ -30,8 +30,7 @@ export const setContent: SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => {
-    let changeSource: string | null = null;
-
+    let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
         core.api.triggerEvent(
             core,
@@ -44,19 +43,18 @@ export const setContent: SetContent = (
 
         const entities = core.entity.entityMap;
         let metadataFromContent: ContentMetadata | undefined;
+        let html = content || '';
         const body = new DOMParser().parseFromString(
-            core.trustedHTMLHandler?.(content) ?? content,
+            core.trustedHTMLHandler?.(html) ?? html,
             'text/html'
         ).body;
 
         restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
 
         metadataFromContent = extractContentMetadata(core.contentDiv);
-
-        changeSource = ChangeSource.Undo;
-
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);
+        contentChanged = true;
     }
 
     const isDarkMode = core.lifecycle.isDarkMode;
@@ -71,14 +69,15 @@ export const setContent: SetContent = (
             true /*forceTransform*/,
             metadata?.isDarkMode
         );
+        contentChanged = true;
     }
 
-    if (triggerContentChangedEvent && changeSource) {
+    if (triggerContentChangedEvent && contentChanged) {
         core.api.triggerEvent(
             core,
             {
                 eventType: PluginEventType.ContentChanged,
-                source: changeSource,
+                source: ChangeSource.SetContent,
             },
             false /*broadcast*/
         );

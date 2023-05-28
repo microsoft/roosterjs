@@ -68,10 +68,4 @@ export const enum ChangeSource {
      * Data of this event will be the key code number
      */
     Keyboard = 'Keyboard',
-
-    /**
-     * User triggers Undo or Redo, normal content is replaced using the undo snapshot, except entities.
-     * Entities are keep using the original DOM element.
-     */
-    Undo = 'Undo',
 }
