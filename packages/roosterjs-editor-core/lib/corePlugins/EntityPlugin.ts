@@ -13,8 +13,6 @@ import {
     createElement,
     addRangeToSelection,
     createRange,
-    moveChildNodes,
-    getObjectKeys,
     isBlockElement,
 } from 'roosterjs-editor-dom';
 import {
@@ -72,7 +70,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     constructor() {
         this.state = {
             knownEntityElements: [],
-            shadowEntityCache: {},
         };
     }
 
@@ -89,21 +86,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-    }
-
-    /**
-     * Check if the plugin should handle the given event exclusively.
-     * Handle an event exclusively means other plugin will not receive this event in
-     * onPluginEvent method.
-     * If two plugins will return true in willHandleEventExclusively() for the same event,
-     * the final result depends on the order of the plugins are added into editor
-     * @param event The event to check
-     */
-    willHandleEventExclusively(event: PluginEvent) {
-        return (
-            event.eventType == PluginEventType.KeyPress &&
-            !!(event.rawEvent.target as HTMLElement)?.shadowRoot
-        );
     }
 
     /**
@@ -152,9 +134,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 break;
             case PluginEventType.ContextMenu:
                 this.handleContextMenuEvent(event.rawEvent);
-                break;
-            case PluginEventType.BeforeSetContent:
-                this.handleBeforeSetContentEvent();
                 break;
             case PluginEventType.EntityOperation:
                 this.handleEntityOperationEvent(event);
@@ -226,10 +205,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     }
 
-    private handleBeforeSetContentEvent() {
-        this.cacheShadowEntities(this.state.shadowEntityCache);
-    }
-
     private handleContentChangedEvent(event?: ContentChangedEvent) {
         let shouldNormalizeDelimiters: boolean = false;
         // 1. find removed entities
@@ -237,10 +212,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             const element = this.state.knownEntityElements[i];
             if (this.editor && !this.editor.contains(element)) {
                 this.setIsEntityKnown(element, false /*isKnown*/);
-
-                if (element.shadowRoot) {
-                    this.triggerEvent(element, EntityOperation.RemoveShadowRoot);
-                }
 
                 if (
                     !shouldNormalizeDelimiters &&
@@ -268,11 +239,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             entity.id = this.ensureUniqueId(type, id, knownIds);
             commitEntity(wrapper, type, isReadonly, entity.id); // Use entity.id here because it is newly updated
             this.handleNewEntity(entity);
-        });
-
-        getObjectKeys(this.state.shadowEntityCache).forEach(id => {
-            this.triggerEvent(this.state.shadowEntityCache[id], EntityOperation.Overwrite);
-            delete this.state.shadowEntityCache[id];
         });
 
         if (
@@ -330,12 +296,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         }
     }
 
-    private triggerEvent(
-        element: HTMLElement,
-        operation: EntityOperation,
-        rawEvent?: Event,
-        contentForShadowEntity?: DocumentFragment
-    ) {
+    private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: Event) {
         const entity = element && getEntityFromElement(element);
 
         if (entity) {
@@ -343,73 +304,24 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 operation,
                 rawEvent,
                 entity,
-                contentForShadowEntity,
             });
         }
     }
 
     private handleNewEntity(entity: Entity) {
         const { wrapper } = entity;
-        const fragment = this.editor?.getDocument().createDocumentFragment();
-        const cache = this.state.shadowEntityCache[entity.id];
-        delete this.state.shadowEntityCache[entity.id];
 
-        if (fragment && cache?.shadowRoot) {
-            moveChildNodes(fragment, cache.shadowRoot);
-        }
-
-        this.triggerEvent(wrapper, EntityOperation.NewEntity, undefined /*rawEvent*/, fragment);
-
-        // If there is element to hydrate for shadow entity, create shadow root and mount these elements to shadow root
-        // Then trigger AddShadowRoot so that plugins can do further actions
-        if (fragment?.firstChild) {
-            if (wrapper.shadowRoot) {
-                moveChildNodes(wrapper.shadowRoot, fragment);
-            } else {
-                this.createShadowRoot(wrapper, fragment);
-            }
-        } else if (wrapper.shadowRoot) {
-            // If no elements to hydrate, remove existing shadow root by cloning a new node
-            this.triggerEvent(wrapper, EntityOperation.RemoveShadowRoot);
-
-            const newWrapper = wrapper.cloneNode() as HTMLElement;
-            moveChildNodes(newWrapper, wrapper);
-            this.editor?.replaceNode(wrapper, newWrapper);
-            entity.wrapper = newWrapper;
-        }
-
+        this.triggerEvent(wrapper, EntityOperation.NewEntity);
         this.setIsEntityKnown(entity.wrapper, true /*isKnown*/);
     }
 
-    private getExistingEntities(shadowEntityOnly?: boolean): Entity[] {
+    private getExistingEntities(): Entity[] {
         return (
             this.editor
                 ?.queryElements(getEntitySelector())
                 .map(getEntityFromElement)
-                .filter((x): x is Entity => !!x && (!shadowEntityOnly || !!x.wrapper.shadowRoot)) ??
-            []
+                .filter((x): x is Entity => !!x) ?? []
         );
-    }
-
-    private createShadowRoot(wrapper: HTMLElement, shadowContentContainer?: Node) {
-        if (wrapper.attachShadow) {
-            const shadowRoot = wrapper.attachShadow({
-                mode: 'open',
-                delegatesFocus: true,
-            });
-
-            wrapper.contentEditable = 'false';
-            this.triggerEvent(wrapper, EntityOperation.AddShadowRoot);
-            moveChildNodes(shadowRoot, shadowContentContainer);
-
-            return shadowRoot;
-        }
-    }
-
-    private cacheShadowEntities(cache: Record<string, HTMLElement>) {
-        this.getExistingEntities(true /*shadowEntityOnly*/).forEach(({ wrapper, id }) => {
-            cache[id] = wrapper;
-        });
     }
 
     private ensureUniqueId(type: string, id: string, knownIds: string[]) {
