@@ -64,6 +64,7 @@ describe('createPasteModel', () => {
         expect(domToContentModel.default).toHaveBeenCalledWith(fragment, mockedContext, {
             ...beforePasteEvent.domToModelOption,
             disableCacheElement: true,
+            defaultStyleOverride: { table: { width: 'max-content' } },
         });
     });
 });
