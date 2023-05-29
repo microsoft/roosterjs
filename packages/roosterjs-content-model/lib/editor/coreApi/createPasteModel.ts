@@ -47,11 +47,6 @@ export const createPasteModel: CreatePasteModel = (
     return domToContentModel(fragment, core.api.createEditorContext(core), {
         ...event.domToModelOption,
         disableCacheElement: true,
-        defaultStyleOverride: {
-            table: {
-                width: 'max-content',
-            },
-        },
     });
 };
 
