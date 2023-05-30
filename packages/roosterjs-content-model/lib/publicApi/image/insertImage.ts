@@ -4,7 +4,7 @@ import { createImage } from '../../modelApi/creators/createImage';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { mergeModel } from '../../modelApi/common/mergeModel';
+import { mergeModel } from '../utils/mergeModel';
 import { readFile } from 'roosterjs-editor-dom';
 
 /**

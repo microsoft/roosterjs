@@ -5,7 +5,7 @@ import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
-import { mergeModel } from '../modelApi/common/mergeModel';
+import { mergeModel } from '../publicApi/utils/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,

@@ -1,5 +1,5 @@
-import { addSegment } from './addSegment';
-import { applyTableFormat } from '../table/applyTableFormat';
+import { addSegment } from '../../modelApi/common/addSegment';
+import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
@@ -7,16 +7,16 @@ import { ContentModelListItem } from '../../publicTypes/group/ContentModelListIt
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { createListItem } from '../creators/createListItem';
-import { createParagraph } from '../creators/createParagraph';
-import { createSelectionMarker } from '../creators/createSelectionMarker';
-import { createTableCell } from '../creators/createTableCell';
-import { deleteSelection } from '../edit/deleteSelection';
-import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { createListItem } from '../../modelApi/creators/createListItem';
+import { createParagraph } from '../../modelApi/creators/createParagraph';
+import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
+import { createTableCell } from '../../modelApi/creators/createTableCell';
+import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
-import { normalizeContentModel } from './normalizeContentModel';
-import { normalizeTable } from '../table/normalizeTable';
-import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
+import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
+import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { OnDeleteEntity } from '../../modelApi/edit/utils/DeleteSelectionStep';
 
 /**
  * @internal
@@ -45,7 +45,11 @@ export interface MergeModelOption {
 }
 
 /**
- * @internal
+ * Merges the source model into the target model.
+ * @param target Target content model
+ * @param source Source content model
+ * @param onDeleteEntity callback to use if an entity will be deleted if there is a entity inside of the selection
+ * @param options (Optional) Additional options to use when merging the models @see MergeModelOption
  */
 export function mergeModel(
     target: ContentModelDocument,

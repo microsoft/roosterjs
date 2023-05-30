@@ -5,7 +5,10 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 
 /**
- * @internal
+ * Callback used when deleting an entity.
+ * @param editor editor instance
+ * @param rawEvent (Optional) keyboard event
+ * @param triggeredEntityEvents (Optional) Already triggered entity events. so the editor only triggers entity operation event when the event was not triggered before.
  */
 export function getOnDeleteEntityCallback(
     editor: IContentModelEditor,

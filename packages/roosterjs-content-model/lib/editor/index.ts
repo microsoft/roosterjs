@@ -8,3 +8,4 @@ export {
     createContentModelEditorCore,
     promoteToContentModelEditorCore,
 } from './createContentModelEditorCore';
+export { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';

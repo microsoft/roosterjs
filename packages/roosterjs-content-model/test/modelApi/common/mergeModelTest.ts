@@ -9,7 +9,7 @@ import { createSelectionMarker } from '../../../lib/modelApi/creators/createSele
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
+import { mergeModel } from '../../../lib/publicApi/utils/mergeModel';
 
 function onDeleteEntityMock() {
     return false;

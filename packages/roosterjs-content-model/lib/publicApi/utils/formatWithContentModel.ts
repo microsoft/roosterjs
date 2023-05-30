@@ -43,7 +43,11 @@ export interface FormatWithContentModelOptions {
 }
 
 /**
- * @internal
+ * Format the current editor content model.
+ * @param editor Editor Instance
+ * @param apiName Api name that is invoking this function, will be provided to the Content Changed event when adding a undo snapshot
+ * @param callback callback to execute to the content model representing the editor content.
+ * @param options (Optional) Additional options to use when formating @see FormatWithContentModelOptions
  */
 export function formatWithContentModel(
     editor: IContentModelEditor,
