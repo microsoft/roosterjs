@@ -311,7 +311,7 @@ describe('handleBlockGroupChildren', () => {
         handleBlockGroupChildren(document, parent, group, context);
 
         expect(parent.outerHTML).toBe(
-            '<div><blockquote id="div1"><div><span><br></span></div></blockquote></div>'
+            '<div><blockquote id="div1"><div><br></div></blockquote></div>'
         );
         expect(parent.firstChild).toBe(quote);
     });

@@ -1,6 +1,6 @@
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
-import { hasSpacesOnly } from '../../domUtils/hasSpacesOnly';
+import { hasSpacesOnly } from '../../domUtils/stringUtil';
 
 const SPACE = '\u0020';
 const NONE_BREAK_SPACE = '\u00A0';

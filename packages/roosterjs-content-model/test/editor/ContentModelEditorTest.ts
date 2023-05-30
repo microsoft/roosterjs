@@ -3,6 +3,7 @@ import * as domToContentModel from '../../lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument } from '../../lib/publicTypes/group/ContentModelDocument';
 import { EditorContext } from '../../lib/publicTypes/context/EditorContext';
+import { tablePreProcessor } from '../../lib/domToModel/processors/tablePreProcessor';
 import {
     EditorPlugin,
     ExperimentalFeatures,
@@ -34,6 +35,37 @@ describe('ContentModelEditor', () => {
                 type: SelectionRangeTypes.Normal,
                 areAllCollapsed: true,
                 ranges: [],
+            },
+            processorOverride: {
+                table: tablePreProcessor,
+            },
+            disableCacheElement: true,
+        });
+    });
+
+    it('domToContentModel, with Reuse Content Model dont add disableCacheElement option', () => {
+        const div = document.createElement('div');
+        const editor = new ContentModelEditor(div, {
+            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+        });
+
+        const mockedResult = 'Result' as any;
+
+        spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
+        spyOn(domToContentModel, 'default').and.returnValue(mockedResult);
+
+        const model = editor.createContentModel();
+
+        expect(model).toBe(mockedResult);
+        expect(domToContentModel.default).toHaveBeenCalledTimes(1);
+        expect(domToContentModel.default).toHaveBeenCalledWith(div, editorContext, {
+            selectionRange: {
+                type: SelectionRangeTypes.Normal,
+                areAllCollapsed: true,
+                ranges: [],
+            },
+            processorOverride: {
+                table: tablePreProcessor,
             },
         });
     });
@@ -125,8 +157,8 @@ describe('ContentModelEditor', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
-                fontSize: '12pt',
+                fontFamily: undefined,
+                fontSize: undefined,
                 textColor: undefined,
                 backgroundColor: undefined,
             },
@@ -206,40 +238,6 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
 
         expect(div.style.fontFamily).toBe('Arial');
-
-        editor.dispose();
-
-        expect(div.style.fontFamily).toBe('Arial');
-    });
-
-    it('dispose with DefaultFormatOnContainer', () => {
-        const div = document.createElement('div');
-        div.style.fontFamily = 'Arial';
-
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
-        });
-
-        expect(div.style.fontFamily).toBe('Calibri, Arial, Helvetica, sans-serif');
-
-        editor.dispose();
-
-        expect(div.style.fontFamily).toBe('Arial');
-    });
-
-    it('dispose with DefaultFormatOnContainer and customized default format', () => {
-        const div = document.createElement('div');
-        div.style.fontFamily = 'Arial';
-
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.DefaultFormatOnContainer],
-            defaultFormat: {
-                fontFamily: 'Tahoma',
-                fontSize: '20pt',
-            },
-        });
-
-        expect(div.style.fontFamily).toBe('Tahoma');
 
         editor.dispose();
 

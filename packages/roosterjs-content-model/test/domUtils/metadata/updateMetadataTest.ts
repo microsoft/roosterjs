@@ -197,4 +197,14 @@ describe('hasMetadata', () => {
 
         expect(result).toBeTrue();
     });
+
+    it('metadata on HTMLElement', () => {
+        const div = document.createElement('div');
+
+        div.dataset.editingInfo = '{"a":"b"}';
+
+        const result = hasMetadata(div);
+
+        expect(result).toBeTrue();
+    });
 });

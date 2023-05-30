@@ -1,3 +1,5 @@
+import { chainSanitizerCallback } from 'roosterjs-editor-dom';
+import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 import convertPastedContentFromWordOnline, {
     isWordOnlineWithList,
 } from './convertPastedContentFromWordOnline';
@@ -12,7 +14,10 @@ const WAC_IDENTIFY_SELECTOR =
  * We need to remove the display property and margin from all the list item
  * @param event The BeforePaste event
  */
-export default function convertPastedContentFromOfficeOnline(fragment: DocumentFragment) {
+export default function convertPastedContentFromOfficeOnline(
+    fragment: DocumentFragment,
+    sanitizingOption: Required<HtmlSanitizerOptions>
+) {
     fragment.querySelectorAll(WAC_IDENTIFY_SELECTOR).forEach((el: Element) => {
         const element = el as HTMLElement;
         element.style.removeProperty('display');
@@ -23,4 +28,13 @@ export default function convertPastedContentFromOfficeOnline(fragment: DocumentF
     if (isWordOnlineWithList(fragment)) {
         convertPastedContentFromWordOnline(fragment);
     }
+
+    // Remove "border:none" for image to fix image resize behavior
+    // We found a problem that when paste an image with "border:none" then the resize border will be
+    // displayed incorrectly when resize it. So we need to drop this style
+    chainSanitizerCallback(
+        sanitizingOption.cssStyleCallbacks,
+        'border',
+        (value, element) => element.tagName != 'IMG' || value != 'none'
+    );
 }

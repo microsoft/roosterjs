@@ -45,6 +45,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -74,6 +75,37 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
+            ...contextOptions,
+        });
+    });
+
+    it('with content model context', () => {
+        const editorContext: EditorContext = {
+            isDarkMode: true,
+        };
+
+        const context = createDomToModelContext(editorContext);
+
+        expect(context).toEqual({
+            ...editorContext,
+            segmentFormat: {},
+            blockFormat: {},
+            zoomScaleFormat: {},
+            isInSelection: false,
+            listFormat,
+            link: {
+                format: {},
+                dataset: {},
+            },
+            code: {
+                format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -122,6 +154,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockNode,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -165,6 +198,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             selectionRootNode: mockTable,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -202,6 +236,7 @@ describe('createDomToModelContext', () => {
             },
             listFormat,
             selectionRootNode: mockImage,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -238,6 +273,7 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
+            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -276,6 +312,7 @@ describe('createDomToModelContext', () => {
                 tagName: '',
             },
             listFormat,
+            allowCacheElement: true,
             ...contextOptions,
         });
     });

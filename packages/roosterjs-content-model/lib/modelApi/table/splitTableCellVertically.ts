@@ -49,6 +49,8 @@ export function splitTableCellVertically(table: ContentModelTable) {
                             cell.format
                         );
 
+                        newCell.dataset = { ...cell.dataset };
+
                         if (colIndex < sel.firstCol || colIndex > sel.lastCol) {
                             newCell.spanAbove = true;
                         } else {
