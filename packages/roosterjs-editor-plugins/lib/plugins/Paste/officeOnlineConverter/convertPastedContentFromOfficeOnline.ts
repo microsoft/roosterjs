@@ -6,7 +6,16 @@ import convertPastedContentFromWordOnline, {
 
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer';
-
+const TABLE_TEMP_ELEMENTS_QUERY = [
+    'TableInsertRowGapBlank',
+    'TableColumnResizeHandle',
+    'TableCellTopBorderHandle',
+    'TableCellLeftBorderHandle',
+    'TableHoverColumnHandle',
+    'TableHoverRowHandle',
+]
+    .map(className => `.${className}`)
+    .join(',');
 /**
  * @internal
  * Convert pasted content from Office Online
@@ -37,4 +46,8 @@ export default function convertPastedContentFromOfficeOnline(
         'border',
         (value, element) => element.tagName != 'IMG' || value != 'none'
     );
+
+    fragment
+        .querySelectorAll(TABLE_TEMP_ELEMENTS_QUERY)
+        .forEach(node => node.parentElement?.removeChild(node));
 }
