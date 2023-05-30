@@ -12,7 +12,6 @@ import { handleListItem } from '../handlers/handleListItem';
 import { handleParagraph } from '../handlers/handleParagraph';
 import { handleSegment } from '../handlers/handleSegment';
 import { handleSegmentDecorator } from '../handlers/handleSegmentDecorator';
-import { handleSelectionMarker } from '../handlers/handleSelectionMarker';
 import { handleTable } from '../handlers/handleTable';
 import { handleText } from '../handlers/handleText';
 
@@ -33,7 +32,6 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     formatContainer: handleFormatContainer,
     segment: handleSegment,
     segmentDecorator: handleSegmentDecorator,
-    selectionMarker: handleSelectionMarker,
     table: handleTable,
     text: handleText,
 };

@@ -16,7 +16,6 @@ import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemL
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 import { ContentModelTable } from '../block/ContentModelTable';
 import { ContentModelTableRow } from '../block/ContentModelTableRow';
 import { ContentModelText } from '../segment/ContentModelText';
@@ -125,11 +124,6 @@ export type ContentModelHandlerMap = {
      * Content Model type for ContentModelCode
      */
     segmentDecorator: ContentModelHandler<ContentModelSegment>;
-
-    /**
-     * Content Model type for ContentModelSelectionMarker
-     */
-    selectionMarker: ContentModelHandler<ContentModelSelectionMarker>;
 
     /**
      * Content Model type for ContentModelTable

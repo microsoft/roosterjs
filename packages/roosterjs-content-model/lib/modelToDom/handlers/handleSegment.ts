@@ -15,10 +15,6 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
 
     // If start position is not set yet, and current segment is in selection, set start position
     if (segment.isSelected && !regularSelection.start) {
-        if (segment.segmentType == 'SelectionMarker') {
-            context.modelHandlers.selectionMarker(doc, parent, segment, context);
-        }
-
         regularSelection.start = {
             ...regularSelection.current,
         };
