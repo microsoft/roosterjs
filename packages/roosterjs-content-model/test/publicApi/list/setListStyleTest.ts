@@ -10,18 +10,16 @@ describe('setListStyle', () => {
         expectedModel: ContentModelDocument,
         expectedResult: boolean
     ) {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (editor, apiName, callback) => {
-                expect(apiName).toBe('setListStyle');
-                const result = callback(input);
+        spyOn(formatWithContentModel, 'default').and.callFake((editor, apiName, callback) => {
+            expect(apiName).toBe('setListStyle');
+            const result = callback(input);
 
-                expect(result).toBe(expectedResult);
-            }
-        );
+            expect(result).toBe(expectedResult);
+        });
 
         setListStyle(null!, style);
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);
     }
 

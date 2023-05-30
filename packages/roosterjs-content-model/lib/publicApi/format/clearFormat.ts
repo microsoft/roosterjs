@@ -1,9 +1,9 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { clearModelFormat } from '../../modelApi/common/clearModelFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 

@@ -1,9 +1,9 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     getOnDeleteEntityCallback,

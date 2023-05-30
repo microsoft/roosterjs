@@ -1,13 +1,13 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
+import mergeModel from '../utils/mergeModel';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { mergeModel } from '../utils/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';

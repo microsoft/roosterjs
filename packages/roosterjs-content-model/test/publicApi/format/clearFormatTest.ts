@@ -10,17 +10,15 @@ describe('clearFormat', () => {
         const editor = ({} as any) as IContentModelEditor;
         const model = ('Model' as any) as ContentModelDocument;
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('clearFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('clearFormat');
+            callback(model);
+        });
         spyOn(clearModelFormat, 'clearModelFormat');
         spyOn(normalizeContentModel, 'normalizeContentModel');
 
         clearFormat(editor);
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(clearModelFormat.clearModelFormat).toHaveBeenCalledTimes(1);
         expect(clearModelFormat.clearModelFormat).toHaveBeenCalledWith(model, [], [], []);
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledTimes(1);

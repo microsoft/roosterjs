@@ -1,5 +1,5 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

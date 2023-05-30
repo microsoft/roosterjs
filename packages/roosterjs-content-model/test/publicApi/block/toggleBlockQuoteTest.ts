@@ -14,12 +14,12 @@ describe('toggleBlockQuote', () => {
     });
 
     it('toggleBlockQuote', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(formatWithContentModel, 'default').and.callThrough();
         spyOn(toggleModelBlockQuote, 'toggleModelBlockQuote');
 
         toggleBlockQuote(editor, { a: 'b', c: 'd' } as any);
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
             marginTop: '1em',
@@ -33,12 +33,12 @@ describe('toggleBlockQuote', () => {
     });
 
     it('toggleBlockQuote with real format', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(formatWithContentModel, 'default').and.callThrough();
         spyOn(toggleModelBlockQuote, 'toggleModelBlockQuote');
 
         toggleBlockQuote(editor, { lineHeight: '2', textColor: 'red' });
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledTimes(1);
         expect(toggleModelBlockQuote.toggleModelBlockQuote).toHaveBeenCalledWith(fakeModel, {
             marginTop: '1em',

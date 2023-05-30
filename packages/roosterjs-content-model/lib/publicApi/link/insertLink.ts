@@ -1,16 +1,16 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
+import mergeModel from '../utils/mergeModel';
 import { addLink } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createText } from '../../modelApi/creators/createText';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { mergeModel } from '../utils/mergeModel';
 
 // Regex matching Uri scheme
 const URI_REGEX = /^[a-zA-Z]+:/i;

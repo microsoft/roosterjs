@@ -1,5 +1,5 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 

@@ -1,11 +1,11 @@
+import formatWithContentModel from '../publicApi/utils/formatWithContentModel';
+import mergeModel from '../publicApi/utils/mergeModel';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
-import { mergeModel } from '../publicApi/utils/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,

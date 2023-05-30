@@ -1,5 +1,5 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';

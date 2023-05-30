@@ -1,4 +1,4 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setListType } from '../../modelApi/list/setListType';
 

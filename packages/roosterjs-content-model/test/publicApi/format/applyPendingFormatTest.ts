@@ -39,12 +39,10 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('applyPendingFormat');
+            callback(model);
+        });
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -108,12 +106,10 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('applyPendingFormat');
+            callback(model);
+        });
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -168,12 +164,10 @@ describe('applyPendingFormat', () => {
 
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('applyPendingFormat');
+            callback(model);
+        });
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;
@@ -226,12 +220,10 @@ describe('applyPendingFormat', () => {
             fontSize: '10px',
         });
 
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('applyPendingFormat');
+            callback(model);
+        });
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [text]);
             return false;
@@ -271,12 +263,10 @@ describe('applyPendingFormat', () => {
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue({
             fontSize: '10px',
         });
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
-            (_, apiName, callback) => {
-                expect(apiName).toEqual('applyPendingFormat');
-                callback(model);
-            }
-        );
+        spyOn(formatWithContentModel, 'default').and.callFake((_, apiName, callback) => {
+            expect(apiName).toEqual('applyPendingFormat');
+            callback(model);
+        });
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             callback([model], undefined, paragraph, [marker]);
             return false;

@@ -14,12 +14,12 @@ describe('setIndentation', () => {
     });
 
     it('indent', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(formatWithContentModel, 'default').and.callThrough();
         spyOn(setModelIndentation, 'setModelIndentation');
 
         setIndentation(editor, 'indent');
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(setModelIndentation.setModelIndentation).toHaveBeenCalledTimes(1);
         expect(setModelIndentation.setModelIndentation).toHaveBeenCalledWith(
             fakeModel,
@@ -29,12 +29,12 @@ describe('setIndentation', () => {
     });
 
     it('outdent', () => {
-        spyOn(formatWithContentModel, 'formatWithContentModel').and.callThrough();
+        spyOn(formatWithContentModel, 'default').and.callThrough();
         spyOn(setModelIndentation, 'setModelIndentation');
 
         setIndentation(editor, 'outdent');
 
-        expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
+        expect(formatWithContentModel.default).toHaveBeenCalledTimes(1);
         expect(setModelIndentation.setModelIndentation).toHaveBeenCalledTimes(1);
         expect(setModelIndentation.setModelIndentation).toHaveBeenCalledWith(
             fakeModel,

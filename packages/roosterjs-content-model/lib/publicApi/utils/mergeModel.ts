@@ -51,7 +51,7 @@ export interface MergeModelOption {
  * @param onDeleteEntity callback to use if an entity will be deleted if there is a entity inside of the selection
  * @param options (Optional) Additional options to use when merging the models @see MergeModelOption
  */
-export function mergeModel(
+export default function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
     onDeleteEntity: OnDeleteEntity,

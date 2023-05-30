@@ -1,5 +1,5 @@
+import formatWithContentModel from './formatWithContentModel';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedParagraphs } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

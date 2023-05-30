@@ -1,4 +1,4 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
 

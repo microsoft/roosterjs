@@ -1,5 +1,5 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';

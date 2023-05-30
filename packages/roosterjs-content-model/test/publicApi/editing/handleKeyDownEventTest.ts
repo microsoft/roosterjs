@@ -376,7 +376,7 @@ describe('handleKeyDownEvent', () => {
     });
 
     it('Check parameter of formatWithContentModel, forward', () => {
-        const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+        const spy = spyOn(formatWithContentModel, 'default');
 
         const editor = 'EDITOR' as any;
         const which = Keys.DELETE;
@@ -395,7 +395,7 @@ describe('handleKeyDownEvent', () => {
     });
 
     it('Check parameter of formatWithContentModel, backward', () => {
-        const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+        const spy = spyOn(formatWithContentModel, 'default');
 
         const editor = 'EDITOR' as any;
         const which = Keys.BACKSPACE;

@@ -49,7 +49,7 @@ export interface FormatWithContentModelOptions {
  * @param callback callback to execute to the content model representing the editor content.
  * @param options (Optional) Additional options to use when formating @see FormatWithContentModelOptions
  */
-export function formatWithContentModel(
+export default function formatWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
     callback: (model: ContentModelDocument) => boolean,

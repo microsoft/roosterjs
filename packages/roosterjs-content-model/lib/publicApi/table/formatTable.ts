@@ -1,5 +1,5 @@
+import formatWithContentModel from '../utils/formatWithContentModel';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { TableMetadataFormat } from '../../publicTypes/format/formatParts/TableMetadataFormat';
