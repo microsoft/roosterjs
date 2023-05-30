@@ -2,8 +2,9 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
-import { deleteSelection } from '../../modelApi/edit/deleteSelections';
+import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
@@ -27,7 +28,8 @@ export default function insertTable(
     format?: TableMetadataFormat
 ) {
     formatWithContentModel(editor, 'insertTable', model => {
-        const insertPosition = deleteSelection(model).insertPoint;
+        const onDeleteEntity = getOnDeleteEntityCallback(editor);
+        const insertPosition = deleteSelection(model, onDeleteEntity).insertPoint;
 
         if (insertPosition) {
             const doc = createContentModelDocument();
@@ -35,8 +37,9 @@ export default function insertTable(
 
             normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
             applyTableFormat(table, format);
-            mergeModel(model, doc, {
+            mergeModel(model, doc, onDeleteEntity, {
                 insertPosition,
+                mergeCurrentFormat: true,
             });
 
             const firstBlock = table.rows[0]?.cells[0]?.blocks[0];

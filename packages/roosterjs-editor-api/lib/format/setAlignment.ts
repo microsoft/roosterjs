@@ -12,7 +12,6 @@ import {
 import {
     Alignment,
     DocumentCommand,
-    ExperimentalFeatures,
     IEditor,
     QueryScope,
     SelectionRangeTypes,
@@ -110,11 +109,7 @@ function alignList(editor: IEditor, alignment: Alignment | CompatibleAlignment) 
     blockFormat(
         editor,
         (region, start, end) => {
-            const blocks = getSelectedBlockElementsInRegion(
-                region,
-                undefined /* createBlockIfEmpty */,
-                editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan)
-            );
+            const blocks = getSelectedBlockElementsInRegion(region);
             const startNode = blocks[0].getStartNode();
             const vList = createVListFromRegion(region, true /*includeSiblingLists*/, startNode);
             if (start && end) {

@@ -10,11 +10,12 @@ import { BlockElement, KnownCreateElementDataIndex, RegionBase } from 'roosterjs
  * @param regionBase The region to get block elements from
  * @param createBlockIfEmpty When set to true, a new empty block element will be created if there is not
  * any blocks in the region. Default value is false
+ * @param deprecated Deprecated parameter, not used
  */
 export default function getSelectedBlockElementsInRegion(
     regionBase: RegionBase,
     createBlockIfEmpty?: boolean,
-    shouldApplyFormatToSpan?: boolean
+    deprecated?: boolean
 ): BlockElement[] {
     const range = getSelectionRangeInRegion(regionBase);
     let blocks: BlockElement[] = [];
@@ -47,9 +48,7 @@ export default function getSelectedBlockElementsInRegion(
 
     if (blocks.length == 0 && regionBase && !regionBase.rootNode.firstChild && createBlockIfEmpty) {
         const newNode = createElement(
-            shouldApplyFormatToSpan
-                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
-                : KnownCreateElementDataIndex.EmptyLine,
+            KnownCreateElementDataIndex.EmptyLine,
             regionBase.rootNode.ownerDocument
         );
         regionBase.rootNode.appendChild(newNode!);

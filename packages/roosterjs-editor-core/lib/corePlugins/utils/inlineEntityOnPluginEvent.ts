@@ -56,7 +56,13 @@ export function inlineEntityOnPluginEvent(event: PluginEvent, editor: IEditor) {
 
         case PluginEventType.ExtractContentWithDom:
         case PluginEventType.BeforeCutCopy:
-            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(removeNode);
+            event.clonedRoot.querySelectorAll(DELIMITER_SELECTOR).forEach(node => {
+                if (getDelimiterFromElement(node)) {
+                    removeNode(node);
+                } else {
+                    removeDelimiterAttr(node);
+                }
+            });
             break;
 
         case PluginEventType.KeyDown:
@@ -172,7 +178,7 @@ function removeDelimiterAttr(node: Element | undefined | null, checkEntity: bool
 function handleCollapsedEnter(editor: IEditor, delimiter: HTMLElement) {
     const isAfter = delimiter.classList.contains(DelimiterClasses.DELIMITER_AFTER);
     const entity = !isAfter ? delimiter.nextSibling : delimiter.previousSibling;
-    const block = editor.getBlockElementAtNode(delimiter)?.getStartNode();
+    const block = getBlock(editor, delimiter);
 
     editor.runAsync(() => {
         if (!block) {
@@ -208,6 +214,20 @@ const getPosition = (container: HTMLElement | null) => {
     }
     return undefined;
 };
+
+function getBlock(editor: IEditor, element: Node | undefined) {
+    if (!element) {
+        return undefined;
+    }
+
+    let block = editor.getBlockElementAtNode(element)?.getStartNode();
+
+    while (block && !isBlockElement(block)) {
+        block = editor.contains(block.parentElement) ? block.parentElement! : undefined;
+    }
+
+    return block;
+}
 
 function handleSelectionNotCollapsed(editor: IEditor, range: Range, event: KeyboardEvent) {
     const { startContainer, endContainer, startOffset, endOffset } = range;
