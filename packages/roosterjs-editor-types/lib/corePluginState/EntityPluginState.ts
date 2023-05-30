@@ -1,22 +1,4 @@
-/**
- * Represents the type of entity item in entity map of EntityPluginState
- */
-export interface EntityStateItem {
-    /**
-     * The HTML element of entity wrapper
-     */
-    element: HTMLElement;
-
-    /**
-     * Whether this entity is deleted.
-     */
-    isDeleted?: boolean;
-
-    /**
-     * Whether we want to persist this entity element during undo/redo
-     */
-    canPersist?: boolean;
-}
+import { KnownEntityItem } from '../interface/KnownEntityItem';
 
 /**
  * The state object for EntityPlugin
@@ -44,5 +26,5 @@ export default interface EntityPluginState {
     /**
      * Entities cached for undo snapshot
      */
-    entityMap: Record<string, EntityStateItem>;
+    entityMap: Record<string, KnownEntityItem>;
 }

@@ -14,5 +14,5 @@ export default interface ContentChangedData {
      * an EntityOperation event with operation = EntityOperation.UpdateEntityState when undo/redo to this snapshot
      * @returns Related entity state array
      */
-    getEntityState?: () => EntityState[] | undefined;
+    getEntityState?: () => EntityState[];
 }

@@ -1,4 +1,4 @@
-import { getEntityFromElement, getEntitySelector } from 'roosterjs-editor-dom';
+import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
 import {
     EditorCore,
     EntityOperation,
@@ -26,19 +26,18 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
 
     if (snapshot && snapshot.html != null) {
         try {
-            const { html, metadata, entityStates, knownColors } = snapshot;
             core.undo.isRestoring = true;
             core.api.setContent(
                 core,
-                html,
+                snapshot.html,
                 true /*triggerContentChangedEvent*/,
-                metadata ?? undefined
+                snapshot.metadata ?? undefined
             );
 
             const darkColorHandler = core.darkColorHandler;
             const isDarkModel = core.lifecycle.isDarkMode;
 
-            knownColors.forEach(color => {
+            snapshot.knownColors.forEach(color => {
                 darkColorHandler.registerColor(
                     color.lightModeColor,
                     isDarkModel,
@@ -46,11 +45,12 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
                 );
             });
 
-            entityStates?.forEach(entityState => {
+            snapshot.entityStates?.forEach(entityState => {
                 const { type, id, state } = entityState;
-                const wrapper = core.contentDiv.querySelector(
+                const wrapper = queryElements(
+                    core.contentDiv,
                     getEntitySelector(type, id)
-                ) as HTMLElement;
+                )[0] as HTMLElement;
                 const entity = wrapper && getEntityFromElement(wrapper);
 
                 if (entity) {

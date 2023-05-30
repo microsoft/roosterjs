@@ -26,7 +26,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
-    EntityStateItem,
+    KnownEntityItem,
     ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
@@ -72,8 +72,8 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     constructor() {
         this.state = {
-            shadowEntityCache: {},
             entityMap: {},
+            shadowEntityCache: {},
         };
     }
 
@@ -373,7 +373,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             fragment
         );
 
-        const newItem: EntityStateItem = {
+        const newItem: KnownEntityItem = {
             element: entity.wrapper,
         };
 

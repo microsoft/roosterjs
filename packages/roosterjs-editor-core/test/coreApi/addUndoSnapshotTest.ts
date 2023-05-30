@@ -347,6 +347,30 @@ describe('addUndoSnapshot', () => {
             false
         );
     });
+
+    it('Do not add snapshot before callback when there is getEntityState callback', () => {
+        const core = createEditorCore(div, {});
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        const mockedState = 'STATE' as any;
+
+        core.undo.snapshotsService = createUndoSnapshotService(addSnapshot);
+
+        addUndoSnapshot(
+            core,
+            () => {
+                div.innerHTML = 'test';
+            },
+            null,
+            false,
+            {
+                getEntityState: () => mockedState,
+            }
+        );
+
+        expect(addSnapshot).toHaveBeenCalledTimes(1);
+        expect(addSnapshot.calls.argsFor(0)[0].html).toBe('test');
+        expect(addSnapshot.calls.argsFor(0)[0].entityStates).toBe(mockedState);
+    });
 });
 
 function createUndoSnapshotService(addSnapshot: any): UndoSnapshotsService<Snapshot> {

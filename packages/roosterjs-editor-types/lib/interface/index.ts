@@ -122,3 +122,4 @@ export {
     ImageSelectionRange,
     SelectionRangeEx,
 } from './SelectionRangeEx';
+export { KnownEntityItem } from './KnownEntityItem';

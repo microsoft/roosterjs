@@ -7,7 +7,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
-    EntityStateItem,
+    KnownEntityItem,
     IEditor,
     Keys,
     PasteType,
@@ -313,7 +313,7 @@ describe('EntityPlugin', () => {
         });
 
         function verify(
-            inStateNodes: Record<string, EntityStateItem>,
+            inStateNodes: Record<string, KnownEntityItem>,
             committedNodes: { element: HTMLElement; id: string }[]
         ) {
             expect(state.entityMap).toEqual(inStateNodes);
@@ -443,6 +443,244 @@ describe('EntityPlugin', () => {
 
             expect(commitEntitySpy).toHaveBeenCalledTimes(1);
             expect(commitEntitySpy).toHaveBeenCalledWith(node3, entityType, false, 'node2_1');
+        });
+    });
+
+    describe('entity lifecycle', () => {
+        it('No new entity', () => {
+            editor.queryElements = jasmine.createSpy('queryElements').and.returnValue([]);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: '',
+            });
+
+            expect(state).toEqual({
+                entityMap: {},
+                shadowEntityCache: {},
+            });
+            expect(triggerPluginEvent).not.toHaveBeenCalled();
+        });
+
+        it('Add new entity', () => {
+            const entity1 = document.createElement('div');
+
+            commitEntity.default(entity1, 'Entity', true, 'E1');
+            editor.queryElements = jasmine.createSpy('queryElements').and.returnValue([entity1]);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: '',
+            });
+
+            expect(state).toEqual({
+                entityMap: {
+                    E1: {
+                        element: entity1,
+                    },
+                },
+                shadowEntityCache: {},
+            });
+            expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity1,
+                    id: 'E1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: document.createDocumentFragment(),
+            });
+        });
+
+        it('Add new entity with conflict id', () => {
+            const entity1 = document.createElement('div');
+            const entity2 = document.createElement('div');
+
+            commitEntity.default(entity1, 'Entity', true, 'E1');
+            commitEntity.default(entity2, 'Entity', true, 'E1');
+
+            state.entityMap.E1 = {
+                element: entity1,
+            };
+
+            editor.queryElements = jasmine
+                .createSpy('queryElements')
+                .and.returnValue([entity1, entity2]);
+            editor.contains = jasmine.createSpy('contains').and.returnValue(true);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: '',
+            });
+
+            expect(state).toEqual({
+                entityMap: {
+                    E1: {
+                        element: entity1,
+                    },
+                    E1_1: {
+                        element: entity2,
+                    },
+                },
+                shadowEntityCache: {},
+            });
+            expect(state.entityMap.E1.element).toBe(entity1);
+            expect(state.entityMap.E1_1.element).toBe(entity2);
+            expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity2,
+                    id: 'E1_1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: document.createDocumentFragment(),
+            });
+        });
+
+        it('Add new entity with conflict id with deleted entity', () => {
+            const entity1 = document.createElement('div');
+            const entity2 = document.createElement('div');
+
+            commitEntity.default(entity1, 'Entity', true, 'E1');
+            commitEntity.default(entity2, 'Entity', true, 'E1');
+
+            state.entityMap.E1 = {
+                element: entity1,
+            };
+
+            editor.queryElements = jasmine.createSpy('queryElements').and.returnValue([entity2]);
+            editor.contains = jasmine.createSpy('contains').and.callFake(node => node == entity2);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            });
+
+            expect(state).toEqual({
+                entityMap: {
+                    E1: {
+                        element: entity1,
+                        isDeleted: true,
+                    },
+                    E1_1: {
+                        element: entity2,
+                    },
+                },
+                shadowEntityCache: {},
+            });
+            expect(state.entityMap.E1.element).toBe(entity1);
+            expect(state.entityMap.E1_1.element).toBe(entity2);
+            expect(triggerPluginEvent).toHaveBeenCalledTimes(2);
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.Overwrite,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity1,
+                    id: 'E1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: undefined,
+            });
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity2,
+                    id: 'E1_1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: document.createDocumentFragment(),
+            });
+        });
+
+        it('Add back deleted entity', () => {
+            const entity1 = document.createElement('div');
+
+            commitEntity.default(entity1, 'Entity', true, 'E1');
+
+            state.entityMap.E1 = {
+                element: entity1,
+                isDeleted: true,
+            };
+
+            editor.queryElements = jasmine.createSpy('queryElements').and.returnValue([entity1]);
+            editor.contains = jasmine.createSpy('contains').and.callFake(node => node == entity1);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            });
+
+            expect(state).toEqual({
+                entityMap: {
+                    E1: {
+                        element: entity1,
+                    },
+                },
+                shadowEntityCache: {},
+            });
+            expect(state.entityMap.E1.element).toBe(entity1);
+            expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity1,
+                    id: 'E1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: document.createDocumentFragment(),
+            });
+        });
+
+        it('Mark new entity as canPersist', () => {
+            const entity1 = document.createElement('div');
+
+            commitEntity.default(entity1, 'Entity', true, 'E1');
+
+            editor.queryElements = jasmine.createSpy('queryElements').and.returnValue([entity1]);
+            editor.contains = jasmine.createSpy('contains').and.callFake(node => node == entity1);
+
+            triggerPluginEvent.and.returnValue({
+                shouldPersist: true,
+            });
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.ContentChanged,
+                source: ChangeSource.SetContent,
+            });
+
+            expect(state).toEqual({
+                entityMap: {
+                    E1: {
+                        element: entity1,
+                        canPersist: true,
+                    },
+                },
+                shadowEntityCache: {},
+            });
+            expect(state.entityMap.E1.element).toBe(entity1);
+            expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
+                operation: EntityOperation.NewEntity,
+                rawEvent: undefined,
+                entity: {
+                    wrapper: entity1,
+                    id: 'E1',
+                    type: 'Entity',
+                    isReadonly: true,
+                },
+                contentForShadowEntity: document.createDocumentFragment(),
+            });
         });
     });
 });

@@ -1,7 +1,7 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity, EntityClasses, EntityStateItem } from 'roosterjs-editor-types';
+import { Entity, EntityClasses, KnownEntityItem } from 'roosterjs-editor-types';
 
 const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
 
@@ -75,7 +75,7 @@ export function moveContentWithEntityPlaceholders(
 export function restoreContentWithEntityPlaceholder(
     source: ParentNode,
     target: HTMLElement,
-    entities: Record<string, HTMLElement | EntityStateItem> | null,
+    entities: Record<string, HTMLElement | KnownEntityItem> | null,
     insertClonedNode?: boolean
 ) {
     let anchor = target.firstChild;
@@ -125,7 +125,7 @@ function removeUntil(anchor: ChildNode | null, nodeToStop?: HTMLElement) {
 }
 
 function tryGetWrapperFromEntityPlaceholder(
-    entities: Record<string, HTMLElement | EntityStateItem> | null,
+    entities: Record<string, HTMLElement | KnownEntityItem> | null,
     node: Node
 ): HTMLElement | null {
     const id =
