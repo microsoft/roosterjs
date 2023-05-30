@@ -1,5 +1,4 @@
-import * as handleBackspaceKey from '../../../lib/publicApi/editing/handleBackspaceKey';
-import * as handleDeleteKey from '../../../lib/publicApi/editing/handleDeleteKey';
+import * as handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
@@ -24,12 +23,10 @@ describe('ContentModelEditPlugin', () => {
     });
 
     describe('onPluginEvent', () => {
-        let handleBackspaceKeySpy: jasmine.Spy;
-        let handleDeleteKeySpy: jasmine.Spy;
+        let handleKeyDownEventSpy: jasmine.Spy;
 
         beforeEach(() => {
-            handleBackspaceKeySpy = spyOn(handleBackspaceKey, 'default');
-            handleDeleteKeySpy = spyOn(handleDeleteKey, 'default');
+            handleKeyDownEventSpy = spyOn(handleKeyDownEvent, 'default');
         });
 
         it('Backspace', () => {
@@ -43,8 +40,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
-            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -59,8 +55,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -77,8 +72,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -95,8 +89,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -111,8 +104,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -126,8 +118,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).not.toHaveBeenCalled();
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -151,26 +142,28 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent: { which: Keys.DELETE } as any,
             });
 
-            expect(handleBackspaceKeySpy).not.toHaveBeenCalled();
-            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(1);
-            expect(handleDeleteKeySpy).toHaveBeenCalledWith(editor, { which: Keys.DELETE } as any, [
-                {
-                    eventType: PluginEventType.EntityOperation,
-                    operation: EntityOperation.Overwrite,
-                    rawEvent: {
-                        type: 'keydown',
-                    } as any,
-                    entity: wrapper,
-                },
-            ]);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(
+                editor,
+                { which: Keys.DELETE } as any,
+                [
+                    {
+                        eventType: PluginEventType.EntityOperation,
+                        operation: EntityOperation.Overwrite,
+                        rawEvent: {
+                            type: 'keydown',
+                        } as any,
+                        entity: wrapper,
+                    },
+                ]
+            );
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: { which: Keys.DELETE } as any,
             });
 
-            expect(handleDeleteKeySpy).toHaveBeenCalledTimes(2);
-            expect(handleDeleteKeySpy).toHaveBeenCalledWith(
+            expect(handleKeyDownEventSpy).toHaveBeenCalledTimes(2);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(
                 editor,
                 { which: Keys.DELETE } as any,
                 []

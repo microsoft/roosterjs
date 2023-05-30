@@ -197,4 +197,69 @@ describe('entityProcessor', () => {
             lineHeight: '20px',
         });
     });
+
+    it('Block element entity, clone element', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        const clonedDiv = div.cloneNode(true /* deep */) as HTMLDivElement;
+        spyOn(Node.prototype, 'cloneNode').and.returnValue(clonedDiv);
+        context.allowCacheElement = false;
+
+        commitEntity(div, 'entity', true, 'entity_1');
+
+        entityProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    segmentType: 'Entity',
+                    format: {},
+                    id: 'entity_1',
+                    type: 'entity',
+                    isReadonly: true,
+                    wrapper: clonedDiv,
+                },
+            ],
+        });
+    });
+
+    it('Inline element entity, clone entity element', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        const clonedSpan = span.cloneNode(true /* deep */) as HTMLDivElement;
+        spyOn(Node.prototype, 'cloneNode').and.returnValue(clonedSpan);
+        context.allowCacheElement = false;
+
+        commitEntity(span, 'entity', true, 'entity_1');
+
+        entityProcessor(group, span, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            segmentType: 'Entity',
+                            format: {},
+                            id: 'entity_1',
+                            type: 'entity',
+                            isReadonly: true,
+                            wrapper: clonedSpan,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });

@@ -2,6 +2,8 @@ import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import deprecatedColorParser from './utils/deprecatedColorParser';
 import sanitizeLinks from './utils/linkParser';
+import { convertPastedContentFromExcel } from './Excel/convertPastedContentFromExcel';
+import { convertPastedContentFromPowerPoint } from './PowerPoint/convertPastedContentFromPowerPoint';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { handleWacComponentsPaste } from './WacComponents/handleWacComponentsPaste';
 import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
@@ -10,9 +12,12 @@ import {
     EditorPlugin,
     IEditor,
     KnownPasteSourceType,
+    PasteType,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
+
+const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
@@ -75,12 +80,23 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
             case KnownPasteSourceType.WordDesktop:
                 handleWordDesktop(ev);
                 break;
-
             case KnownPasteSourceType.WacComponents:
                 handleWacComponentsPaste(ev);
                 break;
-
-            default:
+            case KnownPasteSourceType.ExcelOnline:
+                if (
+                    event.pasteType === PasteType.Normal ||
+                    event.pasteType === PasteType.MergeFormat
+                ) {
+                    // Handle HTML copied from Excel
+                    convertPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
+                }
+                break;
+            case KnownPasteSourceType.GoogleSheets:
+                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                break;
+            case KnownPasteSourceType.PowerPointDesktop:
+                convertPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
                 break;
         }
 

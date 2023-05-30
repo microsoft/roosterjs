@@ -4,6 +4,7 @@ import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSeg
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
 import { mergeModel } from '../modelApi/common/mergeModel';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -33,17 +34,6 @@ export default class ContentModelEditor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
-    }
-
-    dispose() {
-        const { contentDiv, originalContainerFormat, defaultFormatOnContainer } = this.getCore();
-
-        if (defaultFormatOnContainer) {
-            contentDiv.style.setProperty('font-family', originalContainerFormat.fontFamily || null);
-            contentDiv.style.setProperty('font-size', originalContainerFormat.fontSize || null);
-        }
-
-        super.dispose();
     }
 
     /**
@@ -138,7 +128,7 @@ export default class ContentModelEditor
                 this,
                 'Paste',
                 model => {
-                    mergeModel(model, pasteModel);
+                    mergeModel(model, pasteModel, getOnDeleteEntityCallback(this));
                     return true;
                 },
                 {

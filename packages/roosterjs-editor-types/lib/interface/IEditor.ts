@@ -510,7 +510,7 @@ export default interface IEditor {
      * If it is not cached before, query from DOM and cache the result into the event object
      * @returns A content traverser, or null if editor never got focus before
      */
-    getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null;
+    getContentSearcherOfCursor(event?: PluginEvent | null): IPositionContentSearcher | null;
 
     /**
      * Run a callback function asynchronously
