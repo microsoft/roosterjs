@@ -59,14 +59,12 @@ export const enum EntityOperation {
     ReplaceTemporaryContent,
 
     /**
-     * Notify plugins that editor has attached shadow root for an entity.
-     * Plugins can handle this event to do extra operations to the shadow root
+     * @deprecated
      */
     AddShadowRoot,
 
     /**
-     * Notify plugins that editor has removed the shadow root of an entity
-     * Plugins can handle this event to do any necessary clean up for shadow root
+     * @deprecated
      */
     RemoveShadowRoot,
 }
