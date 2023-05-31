@@ -42,8 +42,7 @@ export const setContent: SetContent = (
         );
 
         const entities = core.entity.entityMap;
-        let metadataFromContent: ContentMetadata | undefined;
-        let html = content || '';
+        const html = content || '';
         const body = new DOMParser().parseFromString(
             core.trustedHTMLHandler?.(html) ?? html,
             'text/html'
@@ -51,7 +50,7 @@ export const setContent: SetContent = (
 
         restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
 
-        metadataFromContent = extractContentMetadata(core.contentDiv);
+        const metadataFromContent = extractContentMetadata(core.contentDiv);
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);
         contentChanged = true;
