@@ -63,7 +63,7 @@ describe('moveContentWithEntityPlaceholders', () => {
         resultDiv.appendChild(fragment);
 
         expect(div.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
-        expect(resultDiv.innerHTML).toBe('<entity-placeholder id="a"></entity-placeholder>');
+        expect(resultDiv.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
         expect(entities).toEqual({
             a: div.firstChild as HTMLElement,
         });
@@ -99,7 +99,7 @@ describe('moveContentWithEntityPlaceholders', () => {
             '<div class="_Entity _EType_a _EId_a"></div><div class="_Entity _EType_b _EId_b"></div>'
         );
         expect(resultDiv.innerHTML).toBe(
-            'test1<entity-placeholder id="a"></entity-placeholder><div id="node3"></div><entity-placeholder id="b"></entity-placeholder><div>test5</div>'
+            'test1<div class="_Entity _EType_a _EId_a"></div><div id="node3"></div><div class="_Entity _EType_b _EId_b"></div><div>test5</div>'
         );
         expect(entities).toEqual({
             a: node2,
@@ -136,7 +136,7 @@ describe('moveContentWithEntityPlaceholders', () => {
 
         expect(div.innerHTML).toBe('<div class="_Entity _EType_a _EId_a"></div>');
         expect(resultDiv.innerHTML).toBe(
-            'test1<entity-placeholder id="a"></entity-placeholder><div id="node3"><entity-placeholder id="b"></entity-placeholder></div><div>test5</div>'
+            'test1<div class="_Entity _EType_a _EId_a"></div><div id="node3"><div class="_Entity _EType_b _EId_b"></div></div><div>test5</div>'
         );
         expect(entities).toEqual({
             a: node2,
@@ -187,9 +187,9 @@ describe('restoreContentWithEntityPlaceholder', () => {
 
         const div1 = document.createElement('div');
         const div2 = document.createElement('div');
-        const placeholder = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder = document.createElement('span');
 
-        placeholder.id = 'entity1';
+        placeholder.className = '_Entity _EType_Test _EId_entity1';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -222,9 +222,9 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div2 = document.createElement('div');
         const div3 = document.createElement('div');
         const div4 = document.createElement('div');
-        const placeholder = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder = document.createElement('span');
 
-        placeholder.id = 'entity1';
+        placeholder.className = '_Entity _EType_Test _EId_entity1';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -260,11 +260,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div3.id = 'id3';
@@ -307,11 +307,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div3 = document.createElement('div');
         const div4 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -355,11 +355,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -405,11 +405,11 @@ describe('restoreContentWithEntityPlaceholder', () => {
         const div4 = document.createElement('div');
         const div5 = document.createElement('div');
         const div6 = document.createElement('div');
-        const placeholder1 = document.createElement('ENTITY-PLACEHOLDER');
-        const placeholder2 = document.createElement('ENTITY-PLACEHOLDER');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
 
-        placeholder1.id = 'entity1';
-        placeholder2.id = 'entity2';
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
 
         div1.id = 'id1';
         div2.id = 'id2';
@@ -443,5 +443,60 @@ describe('restoreContentWithEntityPlaceholder', () => {
         expect(target.innerHTML).toBe(
             '<div id="id1"></div><div id="entity2"></div><div id="id2"></div><div id="entity1"></div><div id="id3"></div>'
         );
+    });
+
+    it('restoreContentWithEntityPlaceholder and entity map', () => {
+        const target = document.createElement('div');
+        const source = document.createDocumentFragment();
+
+        const div1 = document.createElement('div');
+        const div2 = document.createElement('div');
+        const div3 = document.createElement('div');
+        const div4 = document.createElement('div');
+        const div5 = document.createElement('div');
+        const div6 = document.createElement('div');
+        const placeholder1 = document.createElement('span');
+        const placeholder2 = document.createElement('span');
+
+        placeholder1.className = '_Entity _EType_Test _EId_entity1';
+        placeholder2.className = '_Entity _EType_Test _EId_entity2';
+
+        div1.id = 'id1';
+        div2.id = 'id2';
+        div3.id = 'id3';
+        div4.id = 'id4';
+        div5.id = 'id5';
+        div6.id = 'id6';
+
+        source.appendChild(div1);
+        source.appendChild(placeholder2);
+        source.appendChild(div2);
+        source.appendChild(placeholder1);
+        source.appendChild(div3);
+
+        const wrapper1 = document.createElement('div');
+        const wrapper2 = document.createElement('div');
+        wrapper1.id = 'entity1';
+        wrapper2.id = 'entity2';
+
+        target.appendChild(div4);
+        target.appendChild(wrapper1);
+        target.appendChild(div5);
+        target.appendChild(wrapper2);
+        target.appendChild(div6);
+
+        restoreContentWithEntityPlaceholder(source, target, {
+            entity1: { element: wrapper1 },
+            entity2: { element: wrapper2, canPersist: true },
+        });
+
+        expect(target.innerHTML).toBe(
+            '<div id="id1"></div><div id="entity2"></div><div id="id2"></div><span class="_Entity _EType_Test _EId_entity1"></span><div id="id3"></div>'
+        );
+        expect(target.childNodes[0]).toBe(div1);
+        expect(target.childNodes[1]).toBe(wrapper2);
+        expect(target.childNodes[2]).toBe(div2);
+        expect(target.childNodes[3]).toBe(placeholder1);
+        expect(target.childNodes[4]).toBe(div3);
     });
 });

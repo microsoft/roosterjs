@@ -40,7 +40,9 @@ export default function addSnapshot<T>(
     compare = compare || defaultCompare;
 
     const currentSnapshot = snapshots.snapshots[snapshots.currentIndex];
-    if (snapshots.currentIndex < 0 || !currentSnapshot || !compare(snapshot, currentSnapshot)) {
+    const isSameSnapshot = currentSnapshot && compare(currentSnapshot, snapshot);
+
+    if (snapshots.currentIndex < 0 || !currentSnapshot || !isSameSnapshot) {
         clearProceedingSnapshots(snapshots, getLength);
         snapshots.snapshots.push(snapshot);
         snapshots.currentIndex++;
@@ -64,8 +66,8 @@ export default function addSnapshot<T>(
         if (isAutoCompleteSnapshot) {
             snapshots.autoCompleteIndex = snapshots.currentIndex;
         }
-    } else if (currentSnapshot && compare(snapshot, currentSnapshot)) {
-        // replace the currentSnapshot, to update other data such as metadata
+    } else if (isSameSnapshot) {
+        // replace the currentSnapshot's metadata so the selection is updated
         snapshots.snapshots.splice(snapshots.currentIndex, 1, snapshot);
     }
 }
@@ -91,7 +93,7 @@ export function addSnapshotV2(
 }
 
 function compareSnapshots(s1: Snapshot, s2: Snapshot) {
-    return s1.html == s2.html;
+    return s1.html == s2.html && !s1.entityStates && !s2.entityStates;
 }
 
 function defaultCompare<T>(s1: T, s2: T) {
