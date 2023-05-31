@@ -259,7 +259,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1 style="font-weight: normal;">test</h1>',
+            '<h1>test</h1>',
             1
         );
     });
@@ -285,7 +285,7 @@ describe('handleParagraph', () => {
                     },
                     {
                         segmentType: 'Text',
-                        format: {},
+                        format: { fontWeight: 'normal' },
                         text: 'test 2',
                     },
                 ],
@@ -368,7 +368,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
     });
 
