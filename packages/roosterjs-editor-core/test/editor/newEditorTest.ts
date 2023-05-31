@@ -72,7 +72,6 @@ describe('Editor', () => {
             });
         }
         expect(core.entity).toEqual({
-            shadowEntityCache: {},
             entityMap: {},
         });
         expect(core.lifecycle.customData).toEqual({});
@@ -182,7 +181,6 @@ describe('Editor', () => {
             });
         }
         expect(core.entity).toEqual({
-            shadowEntityCache: {},
             entityMap: {},
         });
         expect(core.lifecycle.customData).toEqual({});
