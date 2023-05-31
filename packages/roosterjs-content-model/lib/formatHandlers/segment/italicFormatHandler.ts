@@ -16,6 +16,10 @@ export const italicFormatHandler: FormatHandler<ItalicFormat> = {
         }
     },
     apply: (format, element, context) => {
+        if (typeof format.italic === 'undefined') {
+            return;
+        }
+
         const implicitItalic = context.implicitFormat.italic;
 
         if (!!implicitItalic != !!format.italic) {

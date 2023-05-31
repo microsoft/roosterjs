@@ -781,10 +781,7 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'aa',
-                                format: {
-                                    fontSize: '2em',
-                                    fontWeight: 'bold',
-                                },
+                                format: {},
                             },
                         ],
                         format: {},
@@ -802,10 +799,7 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'bb',
-                                format: {
-                                    fontSize: '1.5em',
-                                    fontWeight: 'bold',
-                                },
+                                format: {},
                             },
                         ],
                         format: {},
@@ -823,10 +817,7 @@ describe('End to end test for DOM => Model', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'cc',
-                                format: {
-                                    fontSize: '1.17em',
-                                    fontWeight: 'bold',
-                                },
+                                format: {},
                             },
                         ],
                         format: {
@@ -1533,8 +1524,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<a href="#" style="color: red; display: block;"><span style="color: red;">test</span></a>',
-            '<a style="color: red; display: block;"><span style="color: red;" href="#">test</span></a>'
+            '<span style="color: red;"><a href="#" style="color: red; display: block;">test</a></span>',
+            '<span style="color: red;"><a style="color: red; display: block;" href="#">test</a></span>'
         );
     });
 });
