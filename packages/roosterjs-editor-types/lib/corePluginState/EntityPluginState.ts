@@ -14,9 +14,7 @@ export default interface EntityPluginState {
     knownEntityElements: HTMLElement[];
 
     /**
-     * Cache for the hydrated content of shadow DOM entity.
-     * When set content to replace the whole editor, we will cache the hydrated content
-     * before it is gone, then after that we can use the cached content to rehydrate entity
+     * @deprecated
      */
-    shadowEntityCache: Record<string, HTMLElement>;
+    shadowEntityCache?: Record<string, HTMLElement>;
 }
