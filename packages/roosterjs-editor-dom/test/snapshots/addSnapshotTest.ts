@@ -1,6 +1,6 @@
-import addSnapshot from '../../lib/snapshots/addSnapshot';
+import addSnapshot, { addSnapshotV2 } from '../../lib/snapshots/addSnapshot';
 import createSnapshots from '../../lib/snapshots/createSnapshots';
-import { Snapshots } from 'roosterjs-editor-types';
+import { Snapshot, Snapshots } from 'roosterjs-editor-types';
 
 describe('addSnapshot', () => {
     function runTest(
@@ -93,5 +93,74 @@ describe('addSnapshot', () => {
             5,
             ['test1']
         );
+    });
+});
+
+describe('addSnapshotV2', () => {
+    it('Add snapshot with entity state', () => {
+        const snapshots: Snapshots<Snapshot> = createSnapshots<Snapshot>(100000);
+        const mockedMetadata = 'METADATA' as any;
+        const mockedEntityStates = 'ENTITYSTATES' as any;
+
+        addSnapshotV2(
+            snapshots,
+            {
+                html: 'test',
+                metadata: null,
+                knownColors: [],
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                metadata: null,
+                knownColors: [],
+            },
+        ]);
+
+        addSnapshotV2(
+            snapshots,
+            {
+                html: 'test',
+                metadata: mockedMetadata,
+                knownColors: [],
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                metadata: mockedMetadata,
+                knownColors: [],
+            },
+        ]);
+
+        addSnapshotV2(
+            snapshots,
+            {
+                html: 'test',
+                metadata: null,
+                knownColors: [],
+                entityStates: mockedEntityStates,
+            },
+            false
+        );
+
+        expect(snapshots.snapshots).toEqual([
+            {
+                html: 'test',
+                metadata: mockedMetadata,
+                knownColors: [],
+            },
+            {
+                html: 'test',
+                metadata: null,
+                knownColors: [],
+                entityStates: mockedEntityStates,
+            },
+        ]);
     });
 });
