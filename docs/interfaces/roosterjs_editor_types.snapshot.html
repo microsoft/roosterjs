@@ -88,6 +88,7 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.snapshot.html#entitystates" class="tsd-kind-icon">entity<wbr>States</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.snapshot.html#html" class="tsd-kind-icon">html</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.snapshot.html#knowncolors" class="tsd-kind-icon">known<wbr>Colors</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.snapshot.html#metadata" class="tsd-kind-icon">metadata</a></li>
@@ -99,12 +100,28 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="entitystates" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> entity<wbr>States</h3>
+					<div class="tsd-signature tsd-kind-icon">entity<wbr>States<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.entitystate.html" class="tsd-signature-type" data-tsd-kind="Interface">EntityState</a><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L49">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:49</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>Entity states related to this undo snapshots. When undo/redo to this snapshot, each entity state will trigger
+							an EntityOperation event with operation = EntityOperation.UpdateEntityState</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
 					<a name="html" class="tsd-anchor"></a>
 					<h3>html</h3>
 					<div class="tsd-signature tsd-kind-icon">html<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L11">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L33">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -119,7 +136,7 @@
 					<div class="tsd-signature tsd-kind-icon">known<wbr>Colors<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Readonly</span><span class="tsd-signature-symbol">&lt;</span><a href="roosterjs_editor_types.modeindependentcolor.html" class="tsd-signature-type" data-tsd-kind="Interface">ModeIndependentColor</a><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L21">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:21</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L43">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -134,7 +151,7 @@
 					<div class="tsd-signature tsd-kind-icon">metadata<span class="tsd-signature-symbol">:</span> <a href="../modules/roosterjs_editor_types.html#contentmetadata" class="tsd-signature-type" data-tsd-kind="Type alias">ContentMetadata</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L16">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:16</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/interface/Snapshot.ts#L38">packages/roosterjs-editor-types/lib/interface/Snapshot.ts:38</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -187,6 +204,9 @@
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
 						<a href="roosterjs_editor_types.snapshot.html" class="tsd-kind-icon">Snapshot</a>
 						<ul>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.snapshot.html#entitystates" class="tsd-kind-icon">entity<wbr>States</a>
+							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.snapshot.html#html" class="tsd-kind-icon">html</a>
 							</li>

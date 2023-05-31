@@ -103,6 +103,8 @@
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent.html#eventtype" class="tsd-kind-icon">event<wbr>Type</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent.html#operation" class="tsd-kind-icon">operation</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent.html#shouldpersist" class="tsd-kind-icon">should<wbr>Persist</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_editor_types.entityoperationevent.html#state" class="tsd-kind-icon">state</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,7 +119,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#contentforshadowentity">contentForShadowEntity</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L30">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:30</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L43">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:43</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -134,7 +136,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#entity">entity</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L20">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:20</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L20">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:20</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -150,7 +152,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventdatacache">eventDataCache</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L18">packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts:18</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L18">packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -176,7 +178,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.basepluginevent.html">BasePluginEvent</a>.<a href="roosterjs_editor_types.basepluginevent.html#eventtype">eventType</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L11">packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts:11</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts#L11">packages/roosterjs-editor-types/lib/event/BasePluginEvent.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -192,7 +194,7 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#operation">operation</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L15">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:15</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L15">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:15</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -208,12 +210,47 @@
 					<aside class="tsd-sources">
 						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#rawevent">rawEvent</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L25">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L25">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:25</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
 							<p>Optional raw event. Need to do null check before use its value</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="shouldpersist" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> should<wbr>Persist</h3>
+					<div class="tsd-signature tsd-kind-icon">should<wbr>Persist<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#shouldpersist">shouldPersist</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L38">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:38</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>For EntityOperation.NewEntity, plugin can set this property to true then the entity will be persisted.
+								A persisted entity won&#39;t be touched during undo/redo, unless it does not exist after undo/redo.
+							For other operation types, this value will be ignored.</p>
+						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="state" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> state</h3>
+					<div class="tsd-signature tsd-kind-icon">state<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
+					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_editor_types.entityoperationeventdata.html">EntityOperationEventData</a>.<a href="roosterjs_editor_types.entityoperationeventdata.html#state">state</a></p>
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts#L31">packages/roosterjs-editor-types/lib/event/EntityOperationEvent.ts:31</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<div class="lead">
+							<p>For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
+							For other operation types, it is not used.</p>
 						</div>
 					</div>
 				</section>
@@ -278,6 +315,12 @@
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
 								<a href="roosterjs_editor_types.entityoperationevent.html#rawevent" class="tsd-kind-icon">raw<wbr>Event</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.entityoperationevent.html#shouldpersist" class="tsd-kind-icon">should<wbr>Persist</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_editor_types.entityoperationevent.html#state" class="tsd-kind-icon">state</a>
 							</li>
 						</ul>
 					</li>

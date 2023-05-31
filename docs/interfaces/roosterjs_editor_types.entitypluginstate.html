@@ -89,6 +89,7 @@
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#clickingpoint" class="tsd-kind-icon">clicking<wbr>Point</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#entitymap" class="tsd-kind-icon">entity<wbr>Map</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#knownentityelements" class="tsd-kind-icon">known<wbr>Entity<wbr>Elements</a></li>
 								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_editor_types.entitypluginstate.html#shadowentitycache" class="tsd-kind-icon">shadow<wbr>Entity<wbr>Cache</a></li>
 							</ul>
@@ -104,7 +105,7 @@
 					<div class="tsd-signature tsd-kind-icon">clicking<wbr>Point<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{ </span>pageX<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">; </span>pageY<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol"> }</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L9">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:9</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L11">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:11</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -127,18 +128,35 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="knownentityelements" class="tsd-anchor"></a>
-					<h3>known<wbr>Entity<wbr>Elements</h3>
-					<div class="tsd-signature tsd-kind-icon">known<wbr>Entity<wbr>Elements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></div>
+					<a name="entitymap" class="tsd-anchor"></a>
+					<h3>entity<wbr>Map</h3>
+					<div class="tsd-signature tsd-kind-icon">entity<wbr>Map<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><a href="roosterjs_editor_types.knownentityitem.html" class="tsd-signature-type" data-tsd-kind="Interface">KnownEntityItem</a><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L14">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:14</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L27">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:27</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>All known entity elements</p>
+							<p>Entities cached for undo snapshot</p>
 						</div>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
+					<a name="knownentityelements" class="tsd-anchor"></a>
+					<h3><span class="tsd-flag ts-flagOptional">Optional</span> known<wbr>Entity<wbr>Elements</h3>
+					<div class="tsd-signature tsd-kind-icon">known<wbr>Entity<wbr>Elements<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">[]</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L17">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:17</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-comment tsd-typography">
+						<dl class="tsd-comment-tags">
+							<dt>deprecated</dt>
+							<dd><p>All known entity elements</p>
+							</dd>
+						</dl>
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
@@ -147,7 +165,7 @@
 					<div class="tsd-signature tsd-kind-icon">shadow<wbr>Entity<wbr>Cache<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">HTMLElement</span><span class="tsd-signature-symbol">&gt;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/2649c36/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L19">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:19</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/cc37b6d/packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts#L22">packages/roosterjs-editor-types/lib/corePluginState/EntityPluginState.ts:22</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -203,6 +221,9 @@
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.entitypluginstate.html#clickingpoint" class="tsd-kind-icon">clicking<wbr>Point</a>
+							</li>
+							<li class=" tsd-kind-property tsd-parent-kind-interface">
+								<a href="roosterjs_editor_types.entitypluginstate.html#entitymap" class="tsd-kind-icon">entity<wbr>Map</a>
 							</li>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
 								<a href="roosterjs_editor_types.entitypluginstate.html#knownentityelements" class="tsd-kind-icon">known<wbr>Entity<wbr>Elements</a>

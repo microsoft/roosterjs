@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -39,14 +39,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>3/3</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>30/30</span>
             </div>
         
             
@@ -168,7 +168,16 @@
 <a name='L109'></a><a href='#L109'>109</a>
 <a name='L110'></a><a href='#L110'>110</a>
 <a name='L111'></a><a href='#L111'>111</a>
-<a name='L112'></a><a href='#L112'>112</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a>
+<a name='L117'></a><a href='#L117'>117</a>
+<a name='L118'></a><a href='#L118'>118</a>
+<a name='L119'></a><a href='#L119'>119</a>
+<a name='L120'></a><a href='#L120'>120</a>
+<a name='L121'></a><a href='#L121'>121</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -250,34 +259,43 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">518x</span>
+<span class="cline-any cline-yes">58x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">517x</span>
-<span class="cline-any cline-yes">517x</span>
+<span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-yes">57x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">517x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">517x</span>
-<span class="cline-any cline-yes">149x</span>
-<span class="cline-any cline-yes">149x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">145x</span>
+<span class="cline-any cline-yes">57x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">137x</span>
-<span class="cline-any cline-yes">137x</span>
-<span class="cline-any cline-yes">137x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">137x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">455x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">380x</span>
+<span class="cline-any cline-yes">455x</span>
+<span class="cline-any cline-yes">160x</span>
+<span class="cline-any cline-yes">160x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">153x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">138x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">317x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
@@ -368,6 +386,15 @@ export function setHtmlWithMetadata(
     html = html || '';
     rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
 &nbsp;
+    return extractContentMetadata(rootNode);
+}
+&nbsp;
+/**
+ * Extract content metadata from DOM tree
+ * @param rootNode Root of the DOM tree
+ * @returns If there is a valid content metadata node in the give DOM tree, return this metadata object, otherwise undefined
+ */
+export function extractContentMetadata(rootNode: HTMLElement): ContentMetadata | undefined {
     const potentialMetadataComment = rootNode.lastChild;
 &nbsp;
     if (safeInstanceOf(potentialMetadataComment, 'Comment')) {
@@ -397,7 +424,7 @@ export function setHtmlWithMetadata(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 31 2023 05:06:01 GMT+0000 (Coordinated Universal Time)
+                at Wed May 31 2023 07:34:11 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
