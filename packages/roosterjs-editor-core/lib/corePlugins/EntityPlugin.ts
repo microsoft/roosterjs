@@ -14,6 +14,7 @@ import {
     addRangeToSelection,
     createRange,
     isBlockElement,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,

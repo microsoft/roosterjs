@@ -440,7 +440,6 @@ describe('EntityPlugin', () => {
 
             expect(state).toEqual({
                 entityMap: {},
-                shadowEntityCache: {},
             });
             expect(triggerPluginEvent).not.toHaveBeenCalled();
         });
@@ -462,7 +461,6 @@ describe('EntityPlugin', () => {
                         element: entity1,
                     },
                 },
-                shadowEntityCache: {},
             });
             expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
             expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -474,7 +472,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: document.createDocumentFragment(),
             });
         });
 
@@ -508,7 +505,6 @@ describe('EntityPlugin', () => {
                         element: entity2,
                     },
                 },
-                shadowEntityCache: {},
             });
             expect(state.entityMap.E1.element).toBe(entity1);
             expect(state.entityMap.E1_1.element).toBe(entity2);
@@ -522,7 +518,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: document.createDocumentFragment(),
             });
         });
 
@@ -555,7 +550,6 @@ describe('EntityPlugin', () => {
                         element: entity2,
                     },
                 },
-                shadowEntityCache: {},
             });
             expect(state.entityMap.E1.element).toBe(entity1);
             expect(state.entityMap.E1_1.element).toBe(entity2);
@@ -569,7 +563,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: undefined,
             });
             expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
                 operation: EntityOperation.NewEntity,
@@ -580,7 +573,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: document.createDocumentFragment(),
             });
         });
 
@@ -608,7 +600,6 @@ describe('EntityPlugin', () => {
                         element: entity1,
                     },
                 },
-                shadowEntityCache: {},
             });
             expect(state.entityMap.E1.element).toBe(entity1);
             expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
@@ -621,7 +612,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: document.createDocumentFragment(),
             });
         });
 
@@ -649,7 +639,6 @@ describe('EntityPlugin', () => {
                         canPersist: true,
                     },
                 },
-                shadowEntityCache: {},
             });
             expect(state.entityMap.E1.element).toBe(entity1);
             expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
@@ -662,7 +651,6 @@ describe('EntityPlugin', () => {
                     type: 'Entity',
                     isReadonly: true,
                 },
-                contentForShadowEntity: document.createDocumentFragment(),
             });
         });
     });
