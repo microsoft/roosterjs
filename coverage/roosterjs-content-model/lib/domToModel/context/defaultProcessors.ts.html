@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -119,25 +119,27 @@
 <a name='L60'></a><a href='#L60'>60</a>
 <a name='L61'></a><a href='#L61'>61</a>
 <a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L63'></a><a href='#L63'>63</a>
+<a name='L64'></a><a href='#L64'>64</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -181,8 +183,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { blockDecoratorProcessor } from '../processors/blockDecoratorProcessor';
-import { brProcessor } from '../processors/brProcessor';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
 import { codeProcessor } from '../processors/codeProcessor';
 import { delimiterProcessor } from '../processors/delimiterProcessor';
@@ -192,12 +193,14 @@ import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
 import { formatContainerProcessor } from '../processors/formatContainerProcessor';
 import { generalProcessor } from '../processors/generalProcessor';
+import { headingProcessor } from '../processors/headingProcessor';
 import { hrProcessor } from '../processors/hrProcessor';
 import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { linkProcessor } from '../processors/linkProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
+import { pProcessor } from '../processors/pProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 &nbsp;
@@ -215,16 +218,16 @@ export const defaultProcessorMap: ElementProcessorMap = {
     font: fontProcessor,
     i: knownElementProcessor,
     img: imageProcessor,
-    h1: blockDecoratorProcessor,
-    h2: blockDecoratorProcessor,
-    h3: blockDecoratorProcessor,
-    h4: blockDecoratorProcessor,
-    h5: blockDecoratorProcessor,
-    h6: blockDecoratorProcessor,
+    h1: headingProcessor,
+    h2: headingProcessor,
+    h3: headingProcessor,
+    h4: headingProcessor,
+    h5: headingProcessor,
+    h6: headingProcessor,
     hr: hrProcessor,
     li: listItemProcessor,
     ol: listProcessor,
-    p: blockDecoratorProcessor,
+    p: pProcessor,
     pre: formatContainerProcessor,
     s: knownElementProcessor,
     span: knownElementProcessor,
@@ -250,7 +253,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed May 31 2023 07:34:11 GMT+0000 (Coordinated Universal Time)
+                at Wed May 31 2023 15:33:10 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
