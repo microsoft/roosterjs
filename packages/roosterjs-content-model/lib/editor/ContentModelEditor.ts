@@ -1,18 +1,10 @@
+import { ClipboardData, EntityOperationEvent, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
-import { mergeModel } from '../modelApi/common/mergeModel';
-import { Position } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    ClipboardData,
-    ExperimentalFeatures,
-    GetContentMode,
-} from 'roosterjs-editor-types';
+import { FormatWithContentModelOptions } from '../publicApi/utils/formatWithContentModel';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -93,48 +85,29 @@ export default class ContentModelEditor
         applyCurrentFormat: boolean = false,
         pasteAsImage: boolean = false
     ) {
+        const core = this.getCore();
+        core.api.paste(core, clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
+
         if (!this.isFeatureEnabled(ExperimentalFeatures.ContentModelPaste)) {
             super.paste(clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
             return;
         }
+    }
 
+    formatWithContentModel(
+        apiName: string,
+        callback: (model: ContentModelDocument) => boolean,
+        options?: FormatWithContentModelOptions
+    ) {
         const core = this.getCore();
-        if (!clipboardData) {
-            return;
-        }
+        core.api.formatWithContentModel(core, apiName, callback, options);
+    }
 
-        if (clipboardData.snapshotBeforePaste) {
-            // Restore original content before paste a new one
-            this.setContent(clipboardData.snapshotBeforePaste);
-        } else {
-            clipboardData.snapshotBeforePaste = this.getContent(
-                GetContentMode.RawHTMLWithSelection
-            );
-        }
-
-        const range = this.getSelectionRange();
-        const pos = range && Position.getStart(range);
-        const pasteModel = core.api.createPasteModel(
-            core,
-            clipboardData,
-            pos,
-            pasteAsText,
-            applyCurrentFormat,
-            pasteAsImage
-        );
-
-        if (pasteModel) {
-            formatWithContentModel(
-                this,
-                'Paste',
-                model => {
-                    mergeModel(model, pasteModel, getOnDeleteEntityCallback(this));
-                    return true;
-                },
-                {
-                    changeSource: ChangeSource.Paste,
-                }
-            );
-        }
+    getOnDeleteEntityCallback(
+        rawEvent?: KeyboardEvent | undefined,
+        triggeredEntityEvents: EntityOperationEvent[] = []
+    ) {
+        const core = this.getCore();
+        return core.onDeleteEntityCallback(core, rawEvent, triggeredEntityEvents);
     }
 }

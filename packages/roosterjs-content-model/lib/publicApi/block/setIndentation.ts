@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 
@@ -13,8 +12,7 @@ export default function setIndentation(
     indentation: 'indent' | 'outdent',
     length?: number
 ) {
-    formatWithContentModel(
-        editor,
+    editor.formatWithContentModel(
         'setIndentation',
         model => setModelIndentation(model, indentation, length),
         {

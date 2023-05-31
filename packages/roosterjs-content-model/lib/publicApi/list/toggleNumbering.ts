@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setListType } from '../../modelApi/list/setListType';
 
@@ -9,7 +8,7 @@ import { setListType } from '../../modelApi/list/setListType';
  * @param editor The editor to operate on
  */
 export default function toggleNumbering(editor: IContentModelEditor) {
-    formatWithContentModel(editor, 'toggleNumbering', model => setListType(model, 'OL'), {
+    editor.formatWithContentModel('toggleNumbering', model => setListType(model, 'OL'), {
         preservePendingFormat: true,
     });
 }

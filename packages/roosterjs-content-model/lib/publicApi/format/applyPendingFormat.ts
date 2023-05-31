@@ -1,5 +1,4 @@
 import { createText } from '../../modelApi/creators/createText';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
@@ -19,8 +18,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
     if (format) {
         let isChanged = false;
 
-        formatWithContentModel(
-            editor,
+        editor.formatWithContentModel(
             'applyPendingFormat',
             model => {
                 iterateSelections([model], (_, __, block, segments) => {

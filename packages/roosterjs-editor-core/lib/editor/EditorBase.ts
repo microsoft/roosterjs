@@ -336,35 +336,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         pasteAsImage: boolean = false
     ) {
         const core = this.getCore();
-        if (!clipboardData) {
-            return;
-        }
-
-        if (clipboardData.snapshotBeforePaste) {
-            // Restore original content before paste a new one
-            this.setContent(clipboardData.snapshotBeforePaste);
-        } else {
-            clipboardData.snapshotBeforePaste = this.getContent(
-                GetContentMode.RawHTMLWithSelection
-            );
-        }
-
-        const range = this.getSelectionRange();
-        const pos = range && Position.getStart(range);
-        const fragment = core.api.createPasteFragment(
-            core,
-            clipboardData,
-            pos,
-            pasteAsText,
-            applyCurrentFormat,
-            pasteAsImage
-        );
-        if (fragment) {
-            this.addUndoSnapshot(() => {
-                this.insertNode(fragment);
-                return clipboardData;
-            }, ChangeSource.Paste);
-        }
+        core.api.paste(core, clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
     }
 
     //#endregion
@@ -437,17 +409,8 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      * Get current focused position. Return null if editor doesn't have focus at this time.
      */
     public getFocusedPosition(): NodePosition | null {
-        let sel = this.getDocument().defaultView?.getSelection();
-        if (sel?.focusNode && this.contains(sel.focusNode)) {
-            return new Position(sel.focusNode, sel.focusOffset);
-        }
-
-        let range = this.getSelectionRange();
-        if (range) {
-            return Position.getStart(range);
-        }
-
-        return null;
+        const core = this.getCore();
+        return core.api.getFocusedPosition(core);
     }
 
     /**
@@ -650,10 +613,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      */
     public getCustomData<T>(key: string, getter?: () => T, disposer?: (value: T) => void): T {
         const core = this.getCore();
-        return (core.lifecycle.customData[key] = core.lifecycle.customData[key] || {
-            value: getter ? getter() : undefined,
-            disposer,
-        }).value as T;
+        return core.api.getCustomData(core, key, getter, disposer) as T;
     }
 
     /**

@@ -92,6 +92,9 @@ export {
     TriggerEvent,
     SelectTable,
     SelectImage,
+    Paste as PasteApi,
+    GetCustomData,
+    GetFocusedPosition,
 } from './EditorCore';
 export { default as EditorOptions } from './EditorOptions';
 export {

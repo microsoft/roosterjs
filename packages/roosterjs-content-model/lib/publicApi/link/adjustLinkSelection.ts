@@ -1,6 +1,5 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setSelection } from '../../modelApi/selection/setSelection';
@@ -13,7 +12,7 @@ export default function adjustLinkSelection(editor: IContentModelEditor): [strin
     let text = '';
     let url: string | null = null;
 
-    formatWithContentModel(editor, 'adjustLinkSelection', model => {
+    editor.formatWithContentModel('adjustLinkSelection', model => {
         let changed = adjustSegmentSelection(
             model,
             target => !!target.isSelected && !!target.link,

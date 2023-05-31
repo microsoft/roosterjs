@@ -1,8 +1,16 @@
-import { ClipboardData, CoreApiMap, EditorCore, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
 import { DomToModelOption, ModelToDomOption } from './IContentModelEditor';
 import { EditorContext } from './context/EditorContext';
+import { FormatWithContentModelOptions } from '../publicApi/utils/formatWithContentModel';
+import { OnDeleteEntity } from '../modelApi/edit/utils/DeleteSelectionStep';
+import {
+    ClipboardData,
+    CoreApiMap,
+    EditorCore,
+    EntityOperationEvent,
+    NodePosition,
+} from 'roosterjs-editor-types';
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -51,6 +59,13 @@ export type CreatePasteModel = (
     pasteAsImage: boolean
 ) => ContentModelDocument | null;
 
+export type FormatWithContentModel = (
+    core: ContentModelEditorCore,
+    apiName: string,
+    callback: (model: ContentModelDocument) => boolean,
+    options?: FormatWithContentModelOptions
+) => void;
+
 /**
  * The interface for the map of core API for Content Model editor.
  * Editor can call call API from this map under ContentModelEditorCore object
@@ -88,6 +103,8 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * false to keep original format
      */
     createPasteModel: CreatePasteModel;
+
+    formatWithContentModel: FormatWithContentModel;
 }
 
 /**
@@ -133,4 +150,10 @@ export interface ContentModelEditorCore extends EditorCore {
      * Whether adding delimiter for entity is allowed
      */
     addDelimiterForEntity: boolean;
+
+    onDeleteEntityCallback: (
+        cmCore: ContentModelEditorCore,
+        rawEvent?: KeyboardEvent,
+        triggeredEntityEvents?: EntityOperationEvent[]
+    ) => OnDeleteEntity;
 }

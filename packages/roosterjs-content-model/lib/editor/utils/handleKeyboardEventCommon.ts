@@ -1,4 +1,6 @@
+import { contains } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
+import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import { DeleteResult, OnDeleteEntity } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { EntityOperationEvent, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -8,7 +10,7 @@ import { normalizeContentModel } from '../../modelApi/common/normalizeContentMod
  * @internal
  */
 export function getOnDeleteEntityCallback(
-    editor: IContentModelEditor,
+    cmCore: ContentModelEditorCore,
     rawEvent?: KeyboardEvent,
     triggeredEntityEvents: EntityOperationEvent[] = []
 ): OnDeleteEntity {
@@ -18,22 +20,27 @@ export function getOnDeleteEntityCallback(
             // TODO: This is a temporary solution as the event deletion is handled by both original EntityPlugin/EntityFeatures and ContentModel.
             // Later when Content Model can fully replace Content Edit Features, we can remove this check.
             if (!triggeredEntityEvents.some(x => x.entity.wrapper == entity.wrapper)) {
-                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                    entity: {
-                        id: entity.id,
-                        isReadonly: entity.isReadonly,
-                        type: entity.type,
-                        wrapper: entity.wrapper,
+                cmCore.api.triggerEvent(
+                    cmCore,
+                    {
+                        eventType: PluginEventType.EntityOperation,
+                        entity: {
+                            id: entity.id,
+                            isReadonly: entity.isReadonly,
+                            type: entity.type,
+                            wrapper: entity.wrapper,
+                        },
+                        operation,
+                        rawEvent: rawEvent,
                     },
-                    operation,
-                    rawEvent: rawEvent,
-                });
+                    false /* broadcast */
+                );
             }
         }
 
         // If entity is still in editor and default behavior of event is prevented, that means plugin wants to keep this entity
         // Return true to tell caller we should keep it.
-        return !!rawEvent?.defaultPrevented && editor.contains(entity.wrapper);
+        return !!rawEvent?.defaultPrevented && contains(cmCore.contentDiv, entity.wrapper);
     };
 }
 

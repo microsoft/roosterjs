@@ -1,5 +1,4 @@
 import { FormatState } from 'roosterjs-editor-types';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
@@ -16,8 +15,7 @@ export default function getFormatState(editor: IContentModelEditor): FormatState
         zoomScale: editor.getZoomScale(),
     };
 
-    formatWithContentModel(
-        editor,
+    editor.formatWithContentModel(
         'getFormatState',
         model => {
             const pendingFormat = getPendingFormat(editor);

@@ -1,3 +1,4 @@
+import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
@@ -71,4 +72,40 @@ function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolde
         format: null,
         position: null,
     }));
+}
+
+/**
+ * @internal
+ * Get pending segment format from editor if any, otherwise null
+ * @param editor The editor to get format from
+ */
+export function getPendingFormatFromCore(
+    core: ContentModelEditorCore
+): ContentModelSegmentFormat | null {
+    return getPendingFormatHolderFromCore(core).format;
+}
+
+/**
+ * @internal
+ * Set pending segment format to editor
+ * @param editor The editor to set pending format to
+ * @param format The format to set.
+ * @param position Cursor position when set this format
+ */
+export function setPendingFormatFromCore(
+    core: ContentModelEditorCore,
+    format: ContentModelSegmentFormat,
+    position: NodePosition
+) {
+    const holder = getPendingFormatHolderFromCore(core);
+
+    holder.format = format;
+    holder.position = position;
+}
+
+function getPendingFormatHolderFromCore(core: ContentModelEditorCore): PendingFormatHolder {
+    return core.api.getCustomData(core, PendingFormatHolderKey, () => ({
+        format: null,
+        position: null,
+    })) as PendingFormatHolder;
 }

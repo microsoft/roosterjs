@@ -4,6 +4,7 @@ import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
+import { formatWithContentModel } from '../../../lib/editor/coreApi/formatWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
 
@@ -42,6 +43,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            formatWithContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
         const model = createContentModelDocument();
@@ -75,6 +77,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            formatWithContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -106,6 +109,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            formatWithContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -145,6 +149,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            formatWithContentModel: () => {},
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -212,6 +217,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            formatWithContentModel,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -270,6 +276,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            formatWithContentModel,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -302,6 +309,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            formatWithContentModel,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -332,6 +340,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            formatWithContentModel,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -362,6 +371,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            formatWithContentModel,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 

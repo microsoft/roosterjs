@@ -1,5 +1,4 @@
 import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
 
@@ -31,8 +30,7 @@ export default function toggleBlockQuote(
         ...quoteFormat,
     };
 
-    formatWithContentModel(
-        editor,
+    editor.formatWithContentModel(
         'toggleBlockQuote',
         model => toggleModelBlockQuote(model, fullQuoteFormat),
         {

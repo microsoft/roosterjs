@@ -318,6 +318,23 @@ export type SelectImage = (
     image: HTMLImageElement | null
 ) => ImageSelectionRange | null;
 
+export type Paste = (
+    core: EditorCore,
+    clipboardData: ClipboardData,
+    pasteAsText: boolean,
+    applyCurrentFormat: boolean,
+    pasteAsImage: boolean
+) => void;
+
+export type GetFocusedPosition = (core: EditorCore) => NodePosition | null;
+
+export type GetCustomData = (
+    core: EditorCore,
+    key: string,
+    getter?: () => any,
+    disposer?: (value: any) => void
+) => any;
+
 /**
  * The interface for the map of core API.
  * Editor can call call API from this map under EditorCore object
@@ -505,4 +522,10 @@ export interface CoreApiMap {
      * @returns true if successful
      */
     selectImage: SelectImage;
+
+    paste: Paste;
+
+    getFocusedPosition: GetFocusedPosition;
+
+    getCustomData: GetCustomData;
 }

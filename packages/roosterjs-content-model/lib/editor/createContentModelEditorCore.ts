@@ -10,6 +10,9 @@ import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { createPasteModel } from './coreApi/createPasteModel';
+import { formatWithContentModel } from './coreApi/formatWithContentModel';
+import { getOnDeleteEntityCallback } from './utils/handleKeyboardEventCommon';
+import { paste } from './coreApi/paste';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
@@ -78,6 +81,8 @@ function promoteContentModelInfo(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
     );
+
+    cmCore.onDeleteEntityCallback = getOnDeleteEntityCallback;
 }
 
 function promoteCoreApi(cmCore: ContentModelEditorCore) {
@@ -85,6 +90,7 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
     cmCore.api.createPasteModel = createPasteModel;
+    cmCore.api.formatWithContentModel = formatWithContentModel;
 
     if (
         isFeatureEnabled(
@@ -95,10 +101,20 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
         // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
         cmCore.api.switchShadowEdit = switchShadowEdit;
     }
+
+    if (
+        isFeatureEnabled(
+            cmCore.lifecycle.experimentalFeatures,
+            ExperimentalFeatures.ContentModelPaste
+        )
+    ) {
+        cmCore.api.paste = paste;
+    }
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
     cmCore.originalApi.createPasteModel = createPasteModel;
+    cmCore.originalApi.formatWithContentModel = formatWithContentModel;
 }
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {

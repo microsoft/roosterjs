@@ -1,6 +1,5 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
@@ -12,7 +11,7 @@ export default function adjustImageSelection(
 ): ContentModelImage | null {
     let image: ContentModelImage | null = null;
 
-    formatWithContentModel(editor, 'adjustImageSelection', model =>
+    editor.formatWithContentModel('adjustImageSelection', model =>
         adjustSegmentSelection(
             model,
             target => {

@@ -1,4 +1,3 @@
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
 
@@ -11,5 +10,5 @@ export default function setAlignment(
     editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
-    formatWithContentModel(editor, 'setAlignment', model => setModelAlignment(model, alignment));
+    editor.formatWithContentModel('setAlignment', model => setModelAlignment(model, alignment));
 }

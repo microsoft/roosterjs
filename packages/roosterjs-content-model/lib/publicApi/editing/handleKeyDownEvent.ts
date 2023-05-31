@@ -3,10 +3,8 @@ import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
-    getOnDeleteEntityCallback,
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
     shouldDeleteWord,
@@ -43,8 +41,7 @@ export default function handleKeyDownEvent(
                 : backwardDeleteWordSelection
             : null;
 
-        formatWithContentModel(
-            editor,
+        editor.formatWithContentModel(
             apiName,
             model => {
                 const steps: (DeleteSelectionStep | null)[] = [
@@ -57,7 +54,7 @@ export default function handleKeyDownEvent(
 
                 const result = deleteSelection(
                     model,
-                    getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                    editor.getOnDeleteEntityCallback(rawEvent, triggeredEntityEvents),
                     steps
                 ).deleteResult;
 

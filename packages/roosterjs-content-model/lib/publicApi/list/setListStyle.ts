@@ -1,5 +1,4 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';
@@ -10,7 +9,7 @@ import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMet
  * @param style The target list item style to set
  */
 export default function setListStyle(editor: IContentModelEditor, style: ListMetadataFormat) {
-    formatWithContentModel(editor, 'setListStyle', model => {
+    editor.formatWithContentModel('setListStyle', model => {
         const listItem = getFirstSelectedListItem(model);
 
         if (listItem) {

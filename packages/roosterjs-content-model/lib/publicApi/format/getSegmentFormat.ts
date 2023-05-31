@@ -1,5 +1,4 @@
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
@@ -14,8 +13,7 @@ export default function getSegmentFormat(
     let result = getPendingFormat(editor);
 
     if (!result) {
-        formatWithContentModel(
-            editor,
+        editor.formatWithContentModel(
             'getSegmentFormat',
             model => {
                 iterateSelections(

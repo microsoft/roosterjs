@@ -1,6 +1,13 @@
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
-import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    EditorOptions,
+    EntityOperationEvent,
+    IEditor,
+    SelectionRangeEx,
+} from 'roosterjs-editor-types';
+import { FormatWithContentModelOptions } from '../publicApi/utils/formatWithContentModel';
+import { OnDeleteEntity } from '../modelApi/edit/utils/DeleteSelectionStep';
 import {
     ContentModelHandlerMap,
     DefaultImplicitFormatMap,
@@ -120,6 +127,17 @@ export interface IContentModelEditor extends IEditor {
      * @returns The default format
      */
     getContentModelDefaultFormat(): ContentModelSegmentFormat;
+
+    formatWithContentModel(
+        apiName: string,
+        callback: (model: ContentModelDocument) => boolean,
+        options?: FormatWithContentModelOptions
+    ): void;
+
+    getOnDeleteEntityCallback(
+        rawEvent?: KeyboardEvent | undefined,
+        triggeredEntityEvents?: EntityOperationEvent[] | undefined
+    ): OnDeleteEntity;
 }
 
 /**

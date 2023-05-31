@@ -43,7 +43,7 @@ describe('formatWithContentModel', () => {
     it('Callback return false', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(false);
 
-        formatWithContentModel(editor, apiName, callback);
+        editor.formatWithContentModel(apiName, callback);
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);
@@ -55,7 +55,7 @@ describe('formatWithContentModel', () => {
     it('Callback return true', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(true);
 
-        formatWithContentModel(editor, apiName, callback);
+        editor.formatWithContentModel(apiName, callback);
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);
@@ -77,7 +77,7 @@ describe('formatWithContentModel', () => {
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(mockedFormat);
         spyOn(pendingFormat, 'setPendingFormat');
 
-        formatWithContentModel(editor, apiName, callback, {
+        editor.formatWithContentModel(apiName, callback, {
             preservePendingFormat: true,
         });
 
@@ -104,7 +104,7 @@ describe('formatWithContentModel', () => {
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(mockedFormat);
         spyOn(pendingFormat, 'setPendingFormat');
 
-        formatWithContentModel(editor, apiName, callback, {
+        editor.formatWithContentModel(apiName, callback, {
             skipUndoSnapshot: true,
         });
 
@@ -116,7 +116,7 @@ describe('formatWithContentModel', () => {
     it('Customize change source', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(true);
 
-        formatWithContentModel(editor, apiName, callback, { changeSource: 'TEST' });
+        editor.formatWithContentModel(apiName, callback, { changeSource: 'TEST' });
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);
@@ -127,7 +127,7 @@ describe('formatWithContentModel', () => {
     it('Customize change source and skip undo snapshot', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(true);
 
-        formatWithContentModel(editor, apiName, callback, {
+        editor.formatWithContentModel(apiName, callback, {
             changeSource: 'TEST',
             skipUndoSnapshot: true,
             getChangeData: () => 'DATA',
@@ -143,7 +143,7 @@ describe('formatWithContentModel', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(true);
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        formatWithContentModel(editor, apiName, callback, { onNodeCreated: onNodeCreated });
+        editor.formatWithContentModel(apiName, callback, { onNodeCreated: onNodeCreated });
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);
@@ -156,7 +156,7 @@ describe('formatWithContentModel', () => {
         const mockedData = 'DATA' as any;
         const getChangeData = jasmine.createSpy('getChangeData').and.returnValue(mockedData);
 
-        formatWithContentModel(editor, apiName, callback, { getChangeData });
+        editor.formatWithContentModel(apiName, callback, { getChangeData });
 
         expect(callback).toHaveBeenCalledWith(mockedModel);
         expect(createContentModel).toHaveBeenCalledTimes(1);

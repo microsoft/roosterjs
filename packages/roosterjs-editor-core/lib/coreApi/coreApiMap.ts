@@ -5,12 +5,15 @@ import { createPasteFragment } from './createPasteFragment';
 import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
 import { getContent } from './getContent';
+import { getCustomData } from './getCustomData';
+import { getFocusedPosition } from './getFocusedPosition';
 import { getPendableFormatState } from './getPendableFormatState';
 import { getSelectionRange } from './getSelectionRange';
 import { getSelectionRangeEx } from './getSelectionRangeEx';
 import { getStyleBasedFormatState } from './getStyleBasedFormatState';
 import { hasFocus } from './hasFocus';
 import { insertNode } from './insertNode';
+import { paste } from './paste';
 import { restoreUndoSnapshot } from './restoreUndoSnapshot';
 import { select } from './select';
 import { selectImage } from './selectImage';
@@ -46,4 +49,7 @@ export const coreApiMap: CoreApiMap = {
     triggerEvent,
     selectTable,
     selectImage,
+    paste,
+    getFocusedPosition,
+    getCustomData,
 };
