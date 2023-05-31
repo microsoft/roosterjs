@@ -25,12 +25,17 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
         refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
-            let hasDefaultFormatOnContainer = false;
             const needParagraphWrapper =
                 !paragraph.isImplicit ||
                 !!paragraph.decorator ||
                 (getObjectKeys(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
+            const formatOnWrapper = needParagraphWrapper
+                ? {
+                      ...context.defaultFormat,
+                      ...(paragraph.decorator?.format || {}),
+                  }
+                : {};
 
             container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
 
@@ -39,23 +44,10 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             if (needParagraphWrapper) {
                 applyFormat(container, context.formatAppliers.block, paragraph.format, context);
                 applyFormat(container, context.formatAppliers.container, paragraph.format, context);
-
-                if (context.defaultFormat) {
-                    applyFormat(
-                        container,
-                        context.formatAppliers.segmentOnBlock,
-                        context.defaultFormat,
-                        context
-                    );
-                    hasDefaultFormatOnContainer = true;
-                }
-            }
-
-            if (paragraph.decorator) {
                 applyFormat(
                     container,
                     context.formatAppliers.segmentOnBlock,
-                    paragraph.decorator.format,
+                    formatOnWrapper,
                     context
                 );
             }
@@ -75,13 +67,21 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 });
             };
 
-            if (hasDefaultFormatOnContainer) {
-                stackFormat(context, context.defaultFormat || null, handleSegments);
+            if (needParagraphWrapper) {
+                stackFormat(context, formatOnWrapper, handleSegments);
             } else {
                 handleSegments();
             }
 
             optimize(container);
+
+            // It is possible the next sibling node is changed during processing child segments
+            // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment
+            // The segment will be appended to container as child then the container will be removed
+            // since this paragraph it is implicit. In that case container.nextSibling will become original
+            // inline entity's next sibling. So reset refNode to its real next sibling (after change) here
+            // to make sure the value is correct.
+            refNode = container.nextSibling;
 
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;

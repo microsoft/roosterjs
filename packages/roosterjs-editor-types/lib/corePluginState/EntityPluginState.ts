@@ -1,3 +1,5 @@
+import { KnownEntityItem } from '../interface/KnownEntityItem';
+
 /**
  * The state object for EntityPlugin
  */
@@ -9,12 +11,18 @@ export default interface EntityPluginState {
     clickingPoint?: { pageX: number; pageY: number };
 
     /**
+     * @deprecated
      * All known entity elements
      */
-    knownEntityElements: HTMLElement[];
+    knownEntityElements?: HTMLElement[];
 
     /**
      * @deprecated
      */
     shadowEntityCache?: Record<string, HTMLElement>;
+
+    /**
+     * Entities cached for undo snapshot
+     */
+    entityMap: Record<string, KnownEntityItem>;
 }

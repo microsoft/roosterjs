@@ -1,10 +1,9 @@
-import * as parseFormat from '../../../lib/domToModel/utils/parseFormat';
-import { blockDecoratorProcessor } from '../../../lib/domToModel/processors/blockDecoratorProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { headingProcessor } from '../../../lib/domToModel/processors/headingProcessor';
 
-describe('blockDecoratorProcessor', () => {
+describe('headingProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -18,7 +17,7 @@ describe('blockDecoratorProcessor', () => {
         h1.appendChild(document.createTextNode('test'));
         h1.style.fontFamily = 'Test';
 
-        blockDecoratorProcessor(group, h1, context);
+        headingProcessor(group, h1, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -28,12 +27,12 @@ describe('blockDecoratorProcessor', () => {
                     format: {},
                     decorator: {
                         tagName: 'h1',
-                        format: { fontWeight: 'bold', fontSize: '2em', fontFamily: 'Test' },
+                        format: { fontFamily: 'Test', fontSize: '2em', fontWeight: 'bold' },
                     },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { fontWeight: 'bold', fontFamily: 'Test', fontSize: '2em' },
+                            format: {},
                             text: 'test',
                         },
                     ],
@@ -43,10 +42,6 @@ describe('blockDecoratorProcessor', () => {
                     format: {},
                     segments: [],
                     isImplicit: true,
-                    decorator: {
-                        tagName: 'h1',
-                        format: { fontFamily: 'Test', fontSize: '2em', fontWeight: 'bold' },
-                    },
                 },
             ],
         });
@@ -62,7 +57,7 @@ describe('blockDecoratorProcessor', () => {
 
         h1.appendChild(span);
 
-        blockDecoratorProcessor(group, h1, context);
+        headingProcessor(group, h1, context);
 
         expect(group).toEqual({
             blockGroupType: 'Document',
@@ -72,12 +67,12 @@ describe('blockDecoratorProcessor', () => {
                     format: {},
                     decorator: {
                         tagName: 'h1',
-                        format: { fontWeight: 'bold', fontSize: '2em' },
+                        format: { fontSize: '2em', fontWeight: 'bold' },
                     },
                     segments: [
                         {
                             segmentType: 'Text',
-                            format: { fontWeight: 'normal', fontSize: '2em' },
+                            format: { fontWeight: 'normal' },
                             text: 'test',
                         },
                     ],
@@ -87,57 +82,8 @@ describe('blockDecoratorProcessor', () => {
                     format: {},
                     segments: [],
                     isImplicit: true,
-                    decorator: { tagName: 'h1', format: { fontSize: '2em', fontWeight: 'bold' } },
                 },
             ],
         });
-    });
-
-    it('P tag', () => {
-        const group = createContentModelDocument();
-        const p = document.createElement('p');
-
-        spyOn(parseFormat, 'parseFormat');
-
-        blockDecoratorProcessor(group, p, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    decorator: {
-                        tagName: 'p',
-                        format: {},
-                    },
-                    segments: [],
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                    decorator: {
-                        tagName: 'p',
-                        format: {},
-                    },
-                },
-            ],
-        });
-
-        expect(parseFormat.parseFormat).toHaveBeenCalledTimes(4);
-        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
-            p,
-            context.formatParsers.block,
-            context.blockFormat,
-            context
-        );
-        expect(parseFormat.parseFormat).toHaveBeenCalledWith(
-            p,
-            context.formatParsers.segmentOnBlock,
-            context.segmentFormat,
-            context
-        );
     });
 });

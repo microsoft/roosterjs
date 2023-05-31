@@ -3,6 +3,7 @@ const components = argv.components !== true && argv.components;
 const runCoverage = typeof argv.coverage !== 'undefined';
 const runFirefox = typeof argv.firefox !== 'undefined';
 const runChrome = typeof argv.chrome !== 'undefined';
+const path = require('path');
 
 module.exports = function (config) {
     const plugins = [
@@ -31,7 +32,10 @@ module.exports = function (config) {
         ? [
               {
                   test: /lib(\\|\/).*\.ts$/,
-                  loader: ['@jsdevtools/coverage-istanbul-loader', 'ts-loader'],
+                  use: [
+                      { loader: '@jsdevtools/coverage-istanbul-loader' },
+                      { loader: 'ts-loader' },
+                  ],
               },
               {
                   test: /test(\\|\/).*\.ts$/,
@@ -80,6 +84,9 @@ module.exports = function (config) {
             resolve: {
                 extensions: ['.ts', '.js'],
                 modules: ['./packages', './node_modules'],
+            },
+            output: {
+                path: path.join(__dirname, 'dist/karma'),
             },
         },
 

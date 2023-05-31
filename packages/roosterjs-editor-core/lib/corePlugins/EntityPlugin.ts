@@ -14,6 +14,7 @@ import {
     addRangeToSelection,
     createRange,
     isBlockElement,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -24,6 +25,7 @@ import {
     EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
+    KnownEntityItem,
     ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
@@ -69,7 +71,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     constructor() {
         this.state = {
-            knownEntityElements: [],
+            entityMap: {},
         };
     }
 
@@ -93,7 +95,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     dispose() {
         this.editor = null;
-        this.state.knownEntityElements = [];
+        this.state.entityMap = {};
     }
 
     /**
@@ -208,10 +210,16 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private handleContentChangedEvent(event?: ContentChangedEvent) {
         let shouldNormalizeDelimiters: boolean = false;
         // 1. find removed entities
-        for (let i = this.state.knownEntityElements.length - 1; i >= 0; i--) {
-            const element = this.state.knownEntityElements[i];
-            if (this.editor && !this.editor.contains(element)) {
-                this.setIsEntityKnown(element, false /*isKnown*/);
+        getObjectKeys(this.state.entityMap).forEach(id => {
+            const item = this.state.entityMap[id];
+            const element = item.element;
+
+            if (this.editor && !item.isDeleted && !this.editor.contains(element)) {
+                item.isDeleted = true;
+
+                if (event?.source == ChangeSource.SetContent) {
+                    this.triggerEvent(element, EntityOperation.Overwrite);
+                }
 
                 if (
                     !shouldNormalizeDelimiters &&
@@ -221,22 +229,23 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                     shouldNormalizeDelimiters = true;
                 }
             }
-        }
+        });
 
         // 2. collect all new entities
-        const knownIds = this.state.knownEntityElements
-            .map(e => getEntityFromElement(e)?.id)
-            .filter((x): x is string => !!x);
         const newEntities =
             event?.source == ChangeSource.InsertEntity && event.data
                 ? [event.data as Entity]
-                : this.getExistingEntities().filter(({ wrapper }) => !this.isEntityKnown(wrapper));
+                : this.getExistingEntities().filter(entity => {
+                      const item = this.state.entityMap[entity.id];
+
+                      return !item || item.element != entity.wrapper || item.isDeleted;
+                  });
 
         // 3. Add new entities to known entity list, and hydrate
         newEntities.forEach(entity => {
             const { wrapper, type, id, isReadonly } = entity;
 
-            entity.id = this.ensureUniqueId(type, id, knownIds);
+            entity.id = this.ensureUniqueId(type, id, wrapper);
             commitEntity(wrapper, type, isReadonly, entity.id); // Use entity.id here because it is newly updated
             this.handleNewEntity(entity);
         });
@@ -299,20 +308,28 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
     private triggerEvent(element: HTMLElement, operation: EntityOperation, rawEvent?: Event) {
         const entity = element && getEntityFromElement(element);
 
-        if (entity) {
-            this.editor?.triggerPluginEvent(PluginEventType.EntityOperation, {
-                operation,
-                rawEvent,
-                entity,
-            });
-        }
+        return entity
+            ? this.editor?.triggerPluginEvent(PluginEventType.EntityOperation, {
+                  operation,
+                  rawEvent,
+                  entity,
+              })
+            : null;
     }
 
     private handleNewEntity(entity: Entity) {
         const { wrapper } = entity;
+        const event = this.triggerEvent(wrapper, EntityOperation.NewEntity);
 
-        this.triggerEvent(wrapper, EntityOperation.NewEntity);
-        this.setIsEntityKnown(entity.wrapper, true /*isKnown*/);
+        const newItem: KnownEntityItem = {
+            element: entity.wrapper,
+        };
+
+        if (event?.shouldPersist) {
+            newItem.canPersist = true;
+        }
+
+        this.state.entityMap[entity.id] = newItem;
     }
 
     private getExistingEntities(): Entity[] {
@@ -324,7 +341,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         );
     }
 
-    private ensureUniqueId(type: string, id: string, knownIds: string[]) {
+    private ensureUniqueId(type: string, id: string, wrapper: HTMLElement) {
         const match = ENTITY_ID_REGEX.exec(id);
         const baseId = (match ? id.substr(0, id.length - match[0].length) : id) || type;
 
@@ -334,26 +351,14 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
         for (let num = (match && parseInt(match[1])) || 0; ; num++) {
             newId = num > 0 ? `${baseId}_${num}` : baseId;
 
-            if (knownIds.indexOf(newId) < 0) {
-                knownIds.push(newId);
+            const item = this.state.entityMap[newId];
+
+            if (!item || item.element == wrapper) {
                 break;
             }
         }
 
         return newId;
-    }
-
-    private setIsEntityKnown(wrapper: HTMLElement, isKnown: boolean) {
-        const index = this.state.knownEntityElements.indexOf(wrapper);
-        if (isKnown && index < 0) {
-            this.state.knownEntityElements.push(wrapper);
-        } else if (!isKnown && index >= 0) {
-            this.state.knownEntityElements.splice(index, 1);
-        }
-    }
-
-    private isEntityKnown(wrapper: HTMLElement) {
-        return this.state.knownEntityElements.indexOf(wrapper) >= 0;
     }
 }
 

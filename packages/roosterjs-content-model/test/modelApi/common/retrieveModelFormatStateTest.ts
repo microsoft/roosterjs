@@ -475,13 +475,17 @@ describe('retrieveModelFormatState', () => {
             fontName: 'Test',
             backgroundColor: 'blue',
             textColor: 'block',
-            isBold: false,
-            isSuperscript: false,
+            isBold: true,
+            isSuperscript: true,
             isSubscript: false,
             canUnlink: false,
             canAddImageAltText: false,
             isBlockQuote: false,
             isCodeInline: false,
+            isItalic: true,
+            isUnderline: true,
+            isStrikeThrough: true,
+            fontSize: '10px',
         });
     });
 
