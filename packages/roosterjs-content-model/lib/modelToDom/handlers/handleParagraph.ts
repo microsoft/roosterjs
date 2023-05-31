@@ -97,6 +97,14 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
             optimize(container);
 
+            // It is possible the next sibling node is changed during processing child segments
+            // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment
+            // The segment will be appended to container as child then the container will be removed
+            // since this paragraph it is implicit. In that case container.nextSibling will become original
+            // inline entity's next sibling. So reset refNode to its real next sibling (after change) here
+            // to make sure the value is correct.
+            refNode = container.nextSibling;
+
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;
             } else {
