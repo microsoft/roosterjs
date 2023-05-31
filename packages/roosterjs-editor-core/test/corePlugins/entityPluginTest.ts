@@ -1,24 +1,18 @@
 import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
+import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     EntityClasses,
     EntityOperation,
-    EntityOperationEvent,
     EntityPluginState,
     IEditor,
     Keys,
     PasteType,
     PluginEventType,
-    PluginKeyboardEvent,
     QueryScope,
 } from 'roosterjs-editor-types';
-import {
-    createDefaultHtmlSanitizerOptions,
-    moveChildNodes,
-    createElement,
-} from 'roosterjs-editor-dom';
 
 describe('EntityPlugin', () => {
     let plugin: EntityPlugin;
@@ -49,7 +43,6 @@ describe('EntityPlugin', () => {
     it('init', () => {
         expect(state).toEqual({
             knownEntityElements: [],
-            shadowEntityCache: {},
         });
     });
 
@@ -101,28 +94,24 @@ describe('EntityPlugin', () => {
             operation: EntityOperation.Overwrite,
             entity: <any>entityReadonly,
             rawEvent,
-            contentForShadowEntity: undefined,
         });
         expect(triggerPluginEvent.calls.argsFor(1)[0]).toBe(PluginEventType.EntityOperation);
         expect(triggerPluginEvent.calls.argsFor(1)[1]).toEqual({
             operation: EntityOperation.Overwrite,
             entity: <any>entityOnSelection1,
             rawEvent,
-            contentForShadowEntity: undefined,
         });
         expect(triggerPluginEvent.calls.argsFor(2)[0]).toBe(PluginEventType.EntityOperation);
         expect(triggerPluginEvent.calls.argsFor(2)[1]).toEqual({
             operation: EntityOperation.PartialOverwrite,
             entity: <any>entityOnSelection2,
             rawEvent,
-            contentForShadowEntity: undefined,
         });
         expect(triggerPluginEvent.calls.argsFor(3)[0]).toBe(PluginEventType.EntityOperation);
         expect(triggerPluginEvent.calls.argsFor(3)[1]).toEqual({
             operation: EntityOperation.Overwrite,
             entity: <any>entityInSelection,
             rawEvent,
-            contentForShadowEntity: undefined,
         });
     }
 
@@ -148,7 +137,6 @@ describe('EntityPlugin', () => {
             operation: EntityOperation.Click,
             rawEvent,
             entity: <any>target,
-            contentForShadowEntity: undefined,
         });
     });
 
@@ -255,7 +243,6 @@ describe('EntityPlugin', () => {
                 isReadonly: true,
             },
             rawEvent: undefined,
-            contentForShadowEntity: undefined,
         });
 
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
@@ -267,7 +254,6 @@ describe('EntityPlugin', () => {
                 isReadonly: false,
             },
             rawEvent: undefined,
-            contentForShadowEntity: undefined,
         });
     });
 
@@ -277,7 +263,6 @@ describe('EntityPlugin', () => {
         let node2: HTMLElement;
         let node3: HTMLElement;
         let containedNodes: Node[];
-        let fragment: DocumentFragment = document.createDocumentFragment();
 
         beforeEach(() => {
             node1 = document.createElement('div');
@@ -307,7 +292,6 @@ describe('EntityPlugin', () => {
             });
 
             spyOn(commitEntity, 'default');
-            spyOn(document, 'createDocumentFragment').and.returnValue(fragment);
         });
 
         function verify(inStateNodes: HTMLElement[], commitedNodes: HTMLElement[]) {
@@ -324,7 +308,6 @@ describe('EntityPlugin', () => {
                         isReadonly: false,
                     },
                     rawEvent: undefined,
-                    contentForShadowEntity: fragment,
                 });
             });
         }
@@ -397,358 +380,5 @@ describe('EntityPlugin', () => {
             expect(commitEntity.default).toHaveBeenCalledTimes(1);
             expect(commitEntity.default).toHaveBeenCalledWith(node2, entityType, false, 'node2_1');
         });
-    });
-});
-
-describe('Shadow DOM Entity', () => {
-    it('Key press event should be handled exclusively when focus to shadow DOM entity', () => {
-        const plugin = new EntityPlugin();
-        const event: PluginKeyboardEvent = {
-            eventType: PluginEventType.KeyPress,
-            rawEvent: <any>{
-                target: {
-                    shadowRoot: {},
-                },
-            },
-        };
-        expect(plugin.willHandleEventExclusively(event)).toBeTrue();
-    });
-
-    it('Cache shadow entity before set content', () => {
-        const plugin = new EntityPlugin();
-        const entity1 = document.createElement('span');
-        const entity2 = document.createElement('span');
-        const editor: IEditor = <any>{
-            getDocument: () => document,
-            queryElements: () => [entity1, entity2],
-            addContentEditFeature: () => {},
-            isFeatureEnabled: () => false,
-        };
-        const state = plugin.getState();
-        const textNode = document.createTextNode('text');
-
-        commitEntity.default(entity1, 'ENTITY1', false, 'TEST1');
-        commitEntity.default(entity2, 'ENTITY2', false, 'TEST2');
-        entity2.attachShadow({ mode: 'open' }).appendChild(textNode);
-
-        expect(state).toEqual({
-            knownEntityElements: [],
-            shadowEntityCache: {},
-        });
-
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.BeforeSetContent,
-            newContent: '',
-        });
-
-        expect(Object.keys(state.shadowEntityCache)).toEqual(['TEST2']);
-        expect(state.shadowEntityCache.TEST2).toBe(entity2);
-        expect(entity2.shadowRoot.firstChild).toBe(textNode);
-    });
-
-    it('ContentChange - Check removed shadow entity', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            queryElements: () => <HTMLElement[]>[],
-            contains: () => false,
-            addContentEditFeature: () => {},
-            isFeatureEnabled: () => false,
-        };
-
-        state.knownEntityElements.push(entity1);
-        plugin.initialize(editor);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-        entity1.attachShadow({ mode: 'open' });
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: '',
-        });
-
-        expect(state.knownEntityElements).toEqual([]);
-        expect(state.shadowEntityCache).toEqual({});
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.RemoveShadowRoot,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: undefined,
-        });
-    });
-
-    it('ContentChange - hydrate new entity', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        const textNode = document.createTextNode('test');
-        const triggerPluginEvent = jasmine
-            .createSpy('triggerPluginEvent')
-            .and.callFake((type: PluginEventType, param: EntityOperationEvent) => {
-                if (
-                    type == PluginEventType.EntityOperation &&
-                    param.operation == EntityOperation.NewEntity
-                ) {
-                    param.contentForShadowEntity.appendChild(textNode);
-                }
-            });
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            queryElements: () => [entity1],
-            contains: (node: Node) => node == entity1,
-            addContentEditFeature: () => {},
-            getDocument: () => document,
-            isFeatureEnabled: () => false,
-        };
-
-        plugin.initialize(editor);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: '',
-        });
-
-        expect(state.knownEntityElements).toEqual([entity1]);
-        expect(state.shadowEntityCache).toEqual({});
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.NewEntity,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: document.createDocumentFragment(),
-        });
-        expect(entity1.shadowRoot.firstChild).toBe(textNode);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.AddShadowRoot,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: undefined,
-        });
-    });
-
-    it('ContentChange - hydrate new entity with known entity', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        const textNode = document.createTextNode('test');
-        const triggerPluginEvent = jasmine
-            .createSpy('triggerPluginEvent')
-            .and.callFake((type: PluginEventType, param: EntityOperationEvent) => {
-                if (
-                    type == PluginEventType.EntityOperation &&
-                    param.operation == EntityOperation.NewEntity
-                ) {
-                    param.contentForShadowEntity.appendChild(textNode);
-                }
-            });
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            contains: (node: Node) => node == entity1,
-            addContentEditFeature: () => {},
-            getDocument: () => document,
-            isFeatureEnabled: () => false,
-        };
-
-        plugin.initialize(editor);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: ChangeSource.InsertEntity,
-            data: getEntityFromElement.default(entity1),
-        });
-
-        expect(state.knownEntityElements).toEqual([entity1]);
-        expect(state.shadowEntityCache).toEqual({});
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.NewEntity,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: document.createDocumentFragment(),
-        });
-        expect(entity1.shadowRoot.firstChild).toBe(textNode);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.AddShadowRoot,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: undefined,
-        });
-    });
-
-    it('ContentChange - dehydrate existing entity', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        let newEntity: HTMLElement;
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            queryElements: () => [entity1],
-            contains: (node: Node) => node == entity1,
-            replaceNode: (oldNode: HTMLElement, newNode: HTMLElement) => {
-                newEntity = newNode;
-            },
-            addContentEditFeature: () => {},
-            getDocument: () => document,
-            isFeatureEnabled: () => false,
-        };
-
-        plugin.initialize(editor);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-        entity1.attachShadow({ mode: 'open' });
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: '',
-        });
-
-        expect(state.knownEntityElements.length).toBe(1);
-        expect(state.knownEntityElements[0]).not.toBe(entity1);
-        expect(state.knownEntityElements[1]).not.toBe(newEntity);
-        expect(state.shadowEntityCache).toEqual({});
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.NewEntity,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: document.createDocumentFragment(),
-        });
-        expect(newEntity.shadowRoot).toBe(null);
-    });
-
-    it('ContentChange - rehydrate existing entity with different content', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        const entity2 = document.createElement('span');
-        const triggerPluginEvent = jasmine
-            .createSpy('triggerPluginEvent')
-            .and.callFake((type: PluginEventType, param: EntityOperationEvent) => {
-                if (
-                    type == PluginEventType.EntityOperation &&
-                    param.operation == EntityOperation.NewEntity
-                ) {
-                    moveChildNodes(
-                        param.contentForShadowEntity,
-                        createElement(
-                            {
-                                tag: 'span',
-                                children: ['test2'],
-                            },
-                            document
-                        )
-                    );
-                }
-            });
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            queryElements: () => [entity1],
-            contains: (node: Node) => node == entity2,
-            getDocument: () => document,
-            addContentEditFeature: () => {},
-            isFeatureEnabled: () => false,
-        };
-
-        plugin.initialize(editor);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-        commitEntity.default(entity2, 'TEST', false, 'TEST1');
-        entity1.attachShadow({ mode: 'open' }).appendChild(document.createTextNode('test'));
-        state.knownEntityElements.push(entity1);
-
-        plugin.onPluginEvent({
-            eventType: PluginEventType.BeforeSetContent,
-            newContent: '',
-        });
-
-        editor.queryElements = () => [entity2];
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: '',
-        });
-
-        expect(state.knownEntityElements.length).toBe(1);
-        expect(state.knownEntityElements[0]).toBe(entity2);
-        expect(state.shadowEntityCache).toEqual({});
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.NewEntity,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity2),
-            contentForShadowEntity: document.createDocumentFragment(),
-        });
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.RemoveShadowRoot,
-            rawEvent: undefined,
-            entity: getEntityFromElement.default(entity1),
-            contentForShadowEntity: undefined,
-        });
-    });
-
-    it('EntityOperation event', () => {
-        const plugin = new EntityPlugin();
-        const state = plugin.getState();
-        const entity1 = document.createElement('span');
-        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        const editor: IEditor = <any>{
-            triggerPluginEvent,
-            queryElements: () => <HTMLElement[]>[],
-            contains: () => false,
-            runAsync: (callback: Function) => callback(),
-            addContentEditFeature: () => {},
-            isFeatureEnabled: () => false,
-        };
-
-        state.knownEntityElements.push(entity1);
-        commitEntity.default(entity1, 'TEST', false, 'TEST1');
-        entity1.attachShadow({ mode: 'open' });
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.EntityOperation,
-            operation: EntityOperation.Overwrite,
-            entity: getEntityFromElement.default(entity1),
-        });
-
-        expect(state.knownEntityElements).toEqual([]);
-        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            operation: EntityOperation.RemoveShadowRoot,
-            entity: getEntityFromElement.default(entity1),
-            rawEvent: undefined,
-            contentForShadowEntity: undefined,
-        });
-    });
-
-    it('Id management', () => {
-        const plugin = new EntityPlugin();
-        const entity1 = document.createElement('span');
-        const entity2 = document.createElement('span');
-        const entity3 = document.createElement('span');
-        const entity4 = document.createElement('span');
-        const state = plugin.getState();
-        const editor: IEditor = <any>{
-            triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
-            queryElements: () => [entity1, entity2, entity3, entity4],
-            contains: (node: Node) =>
-                node == entity1 || node == entity2 || node == entity3 || node == entity4,
-            addContentEditFeature: () => {},
-            getDocument: () => document,
-            isFeatureEnabled: () => false,
-        };
-
-        commitEntity.default(entity1, 'TEST', false, 'Test');
-        commitEntity.default(entity2, 'TEST', false, 'Test_2');
-        commitEntity.default(entity3, 'TEST', false, 'Test');
-        commitEntity.default(entity4, 'TEST', false, 'Test_2');
-        state.knownEntityElements.push(entity1);
-        plugin.initialize(editor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.ContentChanged,
-            source: '',
-        });
-
-        expect(getEntityFromElement.default(entity1).id).toBe('Test');
-        expect(getEntityFromElement.default(entity2).id).toBe('Test_2');
-        expect(getEntityFromElement.default(entity3).id).toBe('Test_1');
-        expect(getEntityFromElement.default(entity4).id).toBe('Test_3');
     });
 });
