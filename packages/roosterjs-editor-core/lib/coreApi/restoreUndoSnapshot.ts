@@ -1,4 +1,10 @@
-import { EditorCore, RestoreUndoSnapshot } from 'roosterjs-editor-types';
+import { getEntityFromElement, getEntitySelector, queryElements } from 'roosterjs-editor-dom';
+import {
+    EditorCore,
+    EntityOperation,
+    PluginEventType,
+    RestoreUndoSnapshot,
+} from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -37,6 +43,28 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
                     isDarkModel,
                     color.darkModeColor
                 );
+            });
+
+            snapshot.entityStates?.forEach(entityState => {
+                const { type, id, state } = entityState;
+                const wrapper = queryElements(
+                    core.contentDiv,
+                    getEntitySelector(type, id)
+                )[0] as HTMLElement;
+                const entity = wrapper && getEntityFromElement(wrapper);
+
+                if (entity) {
+                    core.api.triggerEvent(
+                        core,
+                        {
+                            eventType: PluginEventType.EntityOperation,
+                            operation: EntityOperation.UpdateEntityState,
+                            entity: entity,
+                            state,
+                        },
+                        false
+                    );
+                }
             });
         } finally {
             core.undo.isRestoring = false;

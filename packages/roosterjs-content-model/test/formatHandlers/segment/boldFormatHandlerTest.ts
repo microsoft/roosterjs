@@ -131,6 +131,7 @@ describe('boldFormatHandler.apply', () => {
     it('Turn off bold when there is bold from block', () => {
         div.innerHTML = 'test';
         context.implicitFormat.fontWeight = 'bold';
+        format.fontWeight = 'normal';
 
         boldFormatHandler.apply(format, div, context);
 
