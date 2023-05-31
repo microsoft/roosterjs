@@ -20,8 +20,8 @@ describe('handleSegmentDecorator', () => {
         code: ContentModelCode | undefined,
         expectedInnerHTML: string
     ) {
-        parent = document.createElement('div');
-        parent.innerHTML = 'test';
+        parent = document.createElement('span');
+        parent.textContent = 'test';
 
         const segment: ContentModelSegment = {
             segmentType: 'Br',
@@ -30,7 +30,7 @@ describe('handleSegmentDecorator', () => {
             code: code,
         };
 
-        handleSegmentDecorator(document, parent.firstChild!, segment, context);
+        handleSegmentDecorator(document, parent, segment, context);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
     }
@@ -66,6 +66,7 @@ describe('handleSegmentDecorator', () => {
         const link: ContentModelLink = {
             format: {
                 href: 'http://test.com/test',
+                underline: false,
             },
             dataset: {},
         };
@@ -126,7 +127,7 @@ describe('handleSegmentDecorator', () => {
             },
         };
 
-        runTest(link, code, '<a href="http://test.com/test"><code>test</code></a>');
+        runTest(link, code, '<code><a href="http://test.com/test">test</a></code>');
     });
 
     it('Link with onNodeCreated', () => {
@@ -156,7 +157,7 @@ describe('handleSegmentDecorator', () => {
         handleSegmentDecorator(document, span, segment, context);
 
         expect(parent.innerHTML).toBe(
-            '<a href="https://www.test.com" style="text-decoration: none;"><code><span></span></code></a>'
+            '<span><code><a href="https://www.test.com"></a></code></span>'
         );
         expect(onNodeCreated).toHaveBeenCalledTimes(2);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment.link);
