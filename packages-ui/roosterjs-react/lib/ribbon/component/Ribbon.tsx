@@ -101,7 +101,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     result.subMenuProps = {
                         shouldFocusOnMount: true,
                         focusZoneProps: { direction: FocusZoneDirection.bidirectional },
-                        onDismiss: onDismiss,
+                        onMenuDismissed: onDismiss,
                         onItemClick: onClick,
                         onRenderContextualMenuItem: dropDownMenu.allowLivePreview
                             ? contextMenuItemRenderer
@@ -153,6 +153,7 @@ export default function Ribbon<T extends string>(props: RibbonProps<T>) {
                     moreCommandsBtn.key,
                     moreCommandsBtn.unlocalizedText
                 ),
+                ...props?.overflowButtonProps,
             }}
         />
     );

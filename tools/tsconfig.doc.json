@@ -9,6 +9,7 @@
             "*": ["packages/*", "packages-ui/*"]
         },
         "rootDir": "..",
+        "downlevelIteration": true,
         "lib": ["es6", "dom"]
     },
     "include": [

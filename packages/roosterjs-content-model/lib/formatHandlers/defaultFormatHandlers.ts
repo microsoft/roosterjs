@@ -142,7 +142,7 @@ const defaultFormatKeysPerCategory: {
         'htmlAlign',
     ],
     tableRow: ['backgroundColor'],
-    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
+    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin', 'size'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],

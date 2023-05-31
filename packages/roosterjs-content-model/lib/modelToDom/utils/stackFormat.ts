@@ -1,3 +1,5 @@
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
@@ -5,15 +7,18 @@ import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
  */
 export function stackFormat(
     context: ModelToDomContext,
-    tagName: string | null,
+    tagNameOrFormat: string | (ContentModelSegmentFormat & ContentModelBlockFormat) | null,
     callback: () => void
 ) {
-    if (tagName) {
+    const newFormat =
+        typeof tagNameOrFormat === 'string'
+            ? context.defaultImplicitFormatMap[tagNameOrFormat]
+            : tagNameOrFormat;
+
+    if (newFormat) {
         const implicitFormat = context.implicitFormat;
 
         try {
-            const newFormat = context.defaultImplicitFormatMap[tagName] || {};
-
             context.implicitFormat = {
                 ...implicitFormat,
                 ...newFormat,
