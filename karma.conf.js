@@ -32,7 +32,10 @@ module.exports = function (config) {
         ? [
               {
                   test: /lib(\\|\/).*\.ts$/,
-                  loader: ['@jsdevtools/coverage-istanbul-loader', 'ts-loader'],
+                  use: [
+                      { loader: '@jsdevtools/coverage-istanbul-loader' },
+                      { loader: 'ts-loader' },
+                  ],
               },
               {
                   test: /test(\\|\/).*\.ts$/,
