@@ -178,6 +178,7 @@ describe('knownElementProcessor', () => {
                         marginTop: '0px',
                         marginBottom: '0px',
                     },
+                    segmentFormat: { textColor: 'red' },
                     segments: [
                         {
                             segmentType: 'Text',
@@ -523,6 +524,7 @@ describe('knownElementProcessor', () => {
                 {
                     blockType: 'Paragraph',
                     format: {},
+                    segmentFormat: { fontSize: '0px' },
                     segments: [
                         {
                             segmentType: 'Text',

@@ -1,6 +1,7 @@
 import { blockProcessor } from '../../../lib/domToModel/processors/blockProcessor';
 import { ContentModelBlockFormat } from '../../../lib/publicTypes/format/ContentModelBlockFormat';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
@@ -21,9 +22,10 @@ describe('blockProcessor', () => {
     function runTest(
         element: HTMLElement,
         expectedModel: ContentModelDocument,
-        expectContextFormat: ContentModelBlockFormat
+        expectContextFormat: ContentModelBlockFormat,
+        segmentFormat?: ContentModelSegmentFormat
     ) {
-        blockProcessor(group, element, context);
+        blockProcessor(group, element, context, segmentFormat);
 
         expect(group).toEqual(expectedModel);
         expect(context.blockFormat).toEqual(expectContextFormat);
@@ -186,6 +188,29 @@ describe('blockProcessor', () => {
                 ],
             },
             {}
+        );
+    });
+
+    it('DIV with segment format', () => {
+        const div = document.createElement('div');
+
+        runTest(
+            div,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                    },
+                ],
+            },
+            {},
+            {
+                fontSize: '20px',
+            }
         );
     });
 });

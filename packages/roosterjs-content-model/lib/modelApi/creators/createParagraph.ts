@@ -16,8 +16,11 @@ export function createParagraph(
         blockType: 'Paragraph',
         segments: [],
         format: blockFormat ? { ...blockFormat } : {},
-        segmentFormat: segmentFormat ? { ...segmentFormat } : {},
     };
+
+    if (segmentFormat && Object.keys(segmentFormat).length > 0) {
+        result.segmentFormat = { ...segmentFormat };
+    }
 
     if (isImplicit) {
         result.isImplicit = true;

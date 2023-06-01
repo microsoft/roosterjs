@@ -18,7 +18,7 @@ export interface ContentModelParagraph
     /**
      * Segment format on this paragraph. This is mostly used for default format
      */
-    segmentFormat: ContentModelSegmentFormat;
+    segmentFormat?: ContentModelSegmentFormat;
 
     /**
      * Header info for this paragraph if it is a header

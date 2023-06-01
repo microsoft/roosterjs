@@ -1,5 +1,6 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -46,14 +47,12 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;
 
         stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
-            parseFormat(
-                element,
-                context.formatParsers.segmentOnBlock,
-                context.segmentFormat,
-                context
-            );
+            const segmentFormat: ContentModelSegmentFormat = {};
 
-            blockProcessor(group, element, context);
+            parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
+            Object.assign(context.segmentFormat, segmentFormat);
+
+            blockProcessor(group, element, context, segmentFormat);
         });
 
         if (isBlock && !isSegmentDecorator) {
@@ -62,7 +61,7 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
                 createParagraph(
                     true /*isImplicit*/,
                     context.blockFormat,
-                    context.segmentFormat,
+                    undefined /*segmentFormat*/,
                     decorator
                 )
             );
