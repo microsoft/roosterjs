@@ -78,6 +78,7 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
     setContentModel: SetContentModel;
 
     /**
+     * @deprecated
      * Create a content model to use when pasting.
      * @param core The ContentModelEditorCore object
      * @param clipboardData Clipboard data retrieved from clipboard

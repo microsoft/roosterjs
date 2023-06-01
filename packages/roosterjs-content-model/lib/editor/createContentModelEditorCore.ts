@@ -9,7 +9,6 @@ import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
-import { createPasteModel } from './coreApi/createPasteModel';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
@@ -84,7 +83,6 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
-    cmCore.api.createPasteModel = createPasteModel;
 
     if (
         isFeatureEnabled(
@@ -98,7 +96,6 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
-    cmCore.originalApi.createPasteModel = createPasteModel;
 }
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
