@@ -197,7 +197,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             // Arrange
             const table = document.createElement('table');
             table.id = 'image';
-            // Arrange
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [new Range()],
@@ -208,7 +207,9 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.appendChild(table);
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -401,7 +402,9 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.appendChild(table);
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);

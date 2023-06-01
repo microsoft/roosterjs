@@ -9,7 +9,7 @@ import { createBeforePasteEventMock } from './wordDesktopTest';
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('convertPastedContentFromExcel', () => {
+describe('excel Test', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
@@ -59,7 +59,7 @@ describe('convertPastedContentFromExcel', () => {
     it('Table', () => {
         runTest(
             '<table><tr><td>a</td><td>b</td></tr></table>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
+            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -129,7 +129,7 @@ describe('convertPastedContentFromExcel', () => {
     it('Table without TR', () => {
         runTest(
             '<td>a</td><td>b</td>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
+            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -191,7 +191,7 @@ describe('convertPastedContentFromExcel', () => {
     it('Table without TABLE', () => {
         runTest(
             '<tr><td>a</td><td>b</td></tr>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
+            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -261,7 +261,7 @@ describe('convertPastedContentFromExcel', () => {
     it('Table, handle borderStyle: none', () => {
         runTest(
             '<table><tr><td style="border-style:none">a</td><td style="border-style:none">b</td></tr></table>',
-            '<table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table>',
+            '<div><table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table></div>',
             {
                 blockGroupType: 'Document',
                 blocks: [

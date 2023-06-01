@@ -29,10 +29,12 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
         moveChildNodes(tableNode);
     } else {
+        const tableContainer = doc.createElement('div');
         tableNode = doc.createElement('table');
 
         table.cachedElement = tableNode;
-        parent.insertBefore(tableNode, refNode);
+        tableContainer.appendChild(tableNode);
+        parent.insertBefore(tableContainer, refNode);
 
         applyFormat(tableNode, context.formatAppliers.block, table.format, context);
         applyFormat(tableNode, context.formatAppliers.table, table.format, context);
