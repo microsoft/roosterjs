@@ -1,4 +1,6 @@
+import { commitEntity } from 'roosterjs-editor-dom';
 import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockHandler } from '../../../lib/publicTypes/context/ContentModelHandler';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
@@ -314,5 +316,55 @@ describe('handleBlockGroupChildren', () => {
             '<div><blockquote id="div1"><div><br></div></blockquote></div>'
         );
         expect(parent.firstChild).toBe(quote);
+    });
+
+    it('Inline entity is next to a cached paragraph', () => {
+        // It is possible the refNode is changed during processing child segments
+        // e.g. When this paragraph is an implicit paragraph and it contains an inline entity segment
+        // The segment will be appended to container as child then the container will be removed
+        // since this paragraph it is implicit.
+        // This test case will verify the entity can still be correctly written back after handling the
+        // implicit paragraph (https://github.com/microsoft/roosterjs/issues/1847)
+        const div = document.createElement('div');
+        div.innerHTML = '<br>';
+
+        const span = document.createElement('span');
+        commitEntity(span, 'MyEntity', false);
+
+        parent.appendChild(div);
+        parent.appendChild(span);
+
+        const group: ContentModelBlockGroup = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    cachedElement: div,
+                },
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Entity',
+                            blockType: 'Entity',
+                            wrapper: span,
+                            isReadonly: false,
+                            type: 'MyEntity',
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.innerHTML).toBe(
+            '<div><br></div><span class="_Entity _EType_MyEntity _EReadonly_0"></span>'
+        );
     });
 });
