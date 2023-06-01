@@ -76,7 +76,10 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
         }
     });
 
-    addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
+    addBlock(
+        group,
+        createParagraph(true /*isImplicit*/, context.blockFormat, context.segmentFormat)
+    );
 };
 
 function shouldFallbackToParagraph(formatContainer: ContentModelFormatContainer) {

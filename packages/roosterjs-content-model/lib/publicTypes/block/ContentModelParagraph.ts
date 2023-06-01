@@ -2,6 +2,7 @@ import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of Paragraph
@@ -13,6 +14,11 @@ export interface ContentModelParagraph
      * Segments within this paragraph
      */
     segments: ContentModelSegment[];
+
+    /**
+     * Segment format on this paragraph. This is mostly used for default format
+     */
+    segmentFormat: ContentModelSegmentFormat;
 
     /**
      * Header info for this paragraph if it is a header

@@ -18,5 +18,8 @@ export const pProcessor: ElementProcessor<HTMLElement> = (group, element, contex
         blockProcessor(group, element, context);
     });
 
-    addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
+    addBlock(
+        group,
+        createParagraph(true /*isImplicit*/, context.blockFormat, context.segmentFormat)
+    );
 };

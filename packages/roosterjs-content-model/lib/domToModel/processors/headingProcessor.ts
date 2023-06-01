@@ -25,5 +25,8 @@ export const headingProcessor: ElementProcessor<HTMLHeadingElement> = (group, el
         }
     );
 
-    addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
+    addBlock(
+        group,
+        createParagraph(true /*isImplicit*/, context.blockFormat, context.segmentFormat)
+    );
 };

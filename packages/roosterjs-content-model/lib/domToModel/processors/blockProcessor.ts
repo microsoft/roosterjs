@@ -15,18 +15,23 @@ export const blockProcessor: ElementProcessor<HTMLElement> = (group, element, co
 
     parseFormat(element, context.formatParsers.block, context.blockFormat, context);
 
-    const format = { ...context.blockFormat };
+    const blockFormat = { ...context.blockFormat };
 
-    parseFormat(element, context.formatParsers.container, format, context);
+    parseFormat(element, context.formatParsers.container, blockFormat, context);
 
     ContextStyles.forEach(style => {
-        if (format[style]) {
-            context.blockFormat[style] = format[style];
+        if (blockFormat[style]) {
+            context.blockFormat[style] = blockFormat[style];
         }
     });
 
     if (!isSegmentDecorator) {
-        const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
+        const paragraph = createParagraph(
+            false /*isImplicit*/,
+            blockFormat,
+            context.segmentFormat,
+            decorator
+        );
 
         if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
             paragraph.zeroFontSize = true;

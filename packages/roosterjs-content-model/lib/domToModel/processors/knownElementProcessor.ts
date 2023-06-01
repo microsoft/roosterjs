@@ -57,7 +57,15 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         });
 
         if (isBlock && !isSegmentDecorator) {
-            addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
+            addBlock(
+                group,
+                createParagraph(
+                    true /*isImplicit*/,
+                    context.blockFormat,
+                    context.segmentFormat,
+                    decorator
+                )
+            );
         }
     } else {
         stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () => {

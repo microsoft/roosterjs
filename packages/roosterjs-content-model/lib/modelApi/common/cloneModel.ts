@@ -149,13 +149,14 @@ function cloneEntity(entity: ContentModelEntity): ContentModelEntity {
 }
 
 function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph {
-    const { cachedElement, segments, isImplicit, decorator } = paragraph;
+    const { cachedElement, segments, isImplicit, decorator, segmentFormat } = paragraph;
 
     const newParagraph: ContentModelParagraph = Object.assign(
         {
             cachedElement,
             isImplicit,
             segments: segments.map(cloneSegment),
+            segmentFormat: segmentFormat,
         },
         cloneBlockBase(paragraph),
         cloneModelWithFormat(paragraph)

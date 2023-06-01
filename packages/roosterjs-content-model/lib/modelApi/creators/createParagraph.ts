@@ -1,19 +1,22 @@
 import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 
 /**
  * @internal
  */
 export function createParagraph(
     isImplicit?: boolean,
-    format?: ContentModelBlockFormat,
+    blockFormat?: ContentModelBlockFormat,
+    segmentFormat?: ContentModelSegmentFormat,
     decorator?: ContentModelParagraphDecorator
 ): ContentModelParagraph {
     const result: ContentModelParagraph = {
         blockType: 'Paragraph',
         segments: [],
-        format: format ? { ...format } : {},
+        format: blockFormat ? { ...blockFormat } : {},
+        segmentFormat: segmentFormat ? { ...segmentFormat } : {},
     };
 
     if (isImplicit) {

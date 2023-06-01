@@ -32,8 +32,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
             const formatOnWrapper = needParagraphWrapper
                 ? {
-                      ...context.defaultFormat,
                       ...(paragraph.decorator?.format || {}),
+                      ...paragraph.segmentFormat,
                   }
                 : {};
 

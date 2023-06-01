@@ -60,14 +60,15 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
                 ))}
             </>
         );
-    }, [
-        paragraph,
-        isImplicit,
-        // headerLevel
-    ]);
+    }, [paragraph, isImplicit]);
 
     const getFormat = React.useCallback(() => {
-        return <BlockFormatView format={paragraph.format} />;
+        return (
+            <>
+                <BlockFormatView format={paragraph.format} />
+                <SegmentFormatView format={paragraph.segmentFormat} />
+            </>
+        );
     }, [paragraph.format]);
 
     return (
