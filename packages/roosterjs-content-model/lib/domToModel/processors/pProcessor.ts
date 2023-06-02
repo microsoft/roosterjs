@@ -1,6 +1,6 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
