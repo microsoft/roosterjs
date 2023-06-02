@@ -1428,4 +1428,44 @@ describe('mergeModel', () => {
             format: MockedFormat,
         });
     });
+
+    it('Divider to single selected paragraph with inline format', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, { fontFamily: 'Arial' });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        const divider = createDivider('hr');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        sourceModel.blocks.push(divider);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+                { blockType: 'Divider', tagName: 'hr', format: {} },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+            ],
+        });
+    });
 });
