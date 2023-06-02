@@ -42,6 +42,7 @@ const CLASSES_TO_KEEP = [
 ];
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
+const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
 
 /**
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
@@ -187,7 +188,7 @@ function shouldClearListContext(
     return (
         context.listFormat.levels.length > 0 &&
         LIST_ELEMENT_TAGS.every(tag => tag != elementTag) &&
-        !findClosestElementAncestor(element, undefined, LIST_ELEMENT_TAGS.join(','))
+        !findClosestElementAncestor(element, undefined, LIST_ELEMENT_SELECTOR)
     );
 }
 

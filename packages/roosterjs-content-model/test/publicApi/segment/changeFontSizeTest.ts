@@ -370,6 +370,7 @@ describe('changeFontSize', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
+                        segmentFormat: { fontSize: '20pt' },
                         segments: [
                             {
                                 segmentType: 'Text',

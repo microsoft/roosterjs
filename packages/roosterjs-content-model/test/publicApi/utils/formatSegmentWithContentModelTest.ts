@@ -129,7 +129,7 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(1);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
@@ -199,8 +199,8 @@ describe('formatSegmentWithContentModel', () => {
         });
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(2);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1.format, text1);
-        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3.format, text3);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1.format, text1, para);
+        expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3.format, text3, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(2);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1);
         expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3);

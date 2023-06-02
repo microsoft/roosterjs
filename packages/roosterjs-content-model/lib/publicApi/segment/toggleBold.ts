@@ -10,9 +10,14 @@ export default function toggleBold(editor: IContentModelEditor) {
         editor,
         'toggleBold',
         (format, isTurningOn) => {
-            format.fontWeight = isTurningOn ? 'bold' : undefined;
+            format.fontWeight = isTurningOn ? 'bold' : 'normal';
         },
-        format => isBold(format.fontWeight)
+        (format, _, paragraph) =>
+            isBold(
+                typeof format.fontWeight == 'undefined'
+                    ? paragraph?.decorator?.format.fontWeight
+                    : format.fontWeight
+            )
     );
 }
 
