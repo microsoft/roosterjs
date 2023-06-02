@@ -639,4 +639,39 @@ describe('knownElementProcessor', () => {
 
         expect(formatContainerSpy).not.toHaveBeenCalled();
     });
+
+    it('DIV with inline styles', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontFamily = 'Arial';
+        div.style.fontSize = '20px';
+        div.textContent = 'test';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontFamily: 'Arial', fontSize: '20px' },
+                        },
+                    ],
+                    segmentFormat: { fontFamily: 'Arial', fontSize: '20px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+    });
 });

@@ -536,4 +536,30 @@ describe('handleParagraph', () => {
             end: { block: div, segment: txt },
         });
     });
+
+    it('Paragraph with inline format', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: {
+                        fontSize: '10px',
+                        fontFamily: 'Arial',
+                    },
+                    text: 'test',
+                },
+            ],
+            format: {},
+            segmentFormat: { fontSize: '10px' },
+        };
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="font-size: 10px;"><span style="font-family: Arial;">test</span></div>'
+        );
+    });
 });

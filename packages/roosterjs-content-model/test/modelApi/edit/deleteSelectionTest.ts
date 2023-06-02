@@ -924,6 +924,49 @@ describe('deleteSelection - selectionOnly', () => {
             ],
         });
     });
+
+    it('Delete divider with default format', () => {
+        const model = createContentModelDocument({ fontFamily: 'Arial' });
+        const divider = createDivider('hr');
+
+        divider.isSelected = true;
+        model.blocks.push(divider);
+
+        const result = deleteSelection(model, onDeleteEntityMock);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: { fontFamily: 'Arial' },
+            isSelected: true,
+        };
+
+        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+                isImplicit: false,
+                segmentFormat: { fontFamily: 'Arial' },
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                    isImplicit: false,
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+            ],
+            format: { fontFamily: 'Arial' },
+        });
+    });
 });
 
 describe('deleteSelection - forward', () => {

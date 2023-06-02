@@ -156,7 +156,7 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
             cachedElement,
             isImplicit,
             segments: segments.map(cloneSegment),
-            segmentFormat: segmentFormat,
+            segmentFormat: segmentFormat ? { ...segmentFormat } : undefined,
         },
         cloneBlockBase(paragraph),
         cloneModelWithFormat(paragraph)
