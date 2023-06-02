@@ -32,8 +32,8 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
             const formatOnWrapper = needParagraphWrapper
                 ? {
-                      ...context.defaultFormat,
                       ...(paragraph.decorator?.format || {}),
+                      ...paragraph.segmentFormat,
                   }
                 : {};
 
@@ -50,10 +50,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                     formatOnWrapper,
                     context
                 );
-            }
-
-            if (paragraph.zeroFontSize && !paragraph.segments.some(s => s.segmentType == 'Text')) {
-                container.style.fontSize = '0';
             }
 
             context.regularSelection.current = {

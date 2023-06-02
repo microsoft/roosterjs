@@ -1,4 +1,5 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
@@ -53,7 +54,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
-                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                typeInContainer: undefined,
                 copyPaste: copyPastePlugin,
             },
         });
@@ -105,6 +106,7 @@ describe('createContentModelEditorCore', () => {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
+            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         };
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -116,6 +118,7 @@ describe('createContentModelEditorCore', () => {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
+            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         });
 
         expect(core).toEqual({
@@ -172,6 +175,11 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) => feature == ExperimentalFeatures.EditWithContentModel
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -235,6 +243,13 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) =>
+                feature == ExperimentalFeatures.EditWithContentModel ||
+                feature == ExperimentalFeatures.ReusableContentModel
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -292,6 +307,13 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) =>
+                feature == ExperimentalFeatures.EditWithContentModel ||
+                feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {

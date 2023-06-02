@@ -1,5 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
+import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import applyPendingFormat from '../../../lib/publicApi/format/applyPendingFormat';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
@@ -281,6 +282,7 @@ describe('applyPendingFormat', () => {
             callback([model], undefined, paragraph, [marker]);
             return false;
         });
+        spyOn(normalizeContentModel, 'normalizeContentModel').and.callThrough();
 
         applyPendingFormat(editor, 't');
 
@@ -315,5 +317,7 @@ describe('applyPendingFormat', () => {
                 },
             ],
         });
+
+        expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalled();
     });
 });

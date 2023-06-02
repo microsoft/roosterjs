@@ -651,6 +651,7 @@ describe('deleteSelection - selectionOnly', () => {
                 segments: [marker],
                 format: {},
                 isImplicit: false,
+                segmentFormat: { fontSize: '10pt' },
             },
             path: [model],
             tableContext: undefined,
@@ -664,6 +665,7 @@ describe('deleteSelection - selectionOnly', () => {
                     format: {},
                     segments: [marker],
                     isImplicit: false,
+                    segmentFormat: { fontSize: '10pt' },
                 },
             ],
             format: { fontSize: '10pt' },
@@ -920,6 +922,49 @@ describe('deleteSelection - selectionOnly', () => {
                     isImplicit: false,
                 },
             ],
+        });
+    });
+
+    it('Delete divider with default format', () => {
+        const model = createContentModelDocument({ fontFamily: 'Arial' });
+        const divider = createDivider('hr');
+
+        divider.isSelected = true;
+        model.blocks.push(divider);
+
+        const result = deleteSelection(model, onDeleteEntityMock);
+        const marker: ContentModelSelectionMarker = {
+            segmentType: 'SelectionMarker',
+            format: { fontFamily: 'Arial' },
+            isSelected: true,
+        };
+
+        expect(result.deleteResult).toBe(DeleteResult.Range);
+        expect(result.insertPoint).toEqual({
+            marker,
+            paragraph: {
+                blockType: 'Paragraph',
+                segments: [marker],
+                format: {},
+                isImplicit: false,
+                segmentFormat: { fontFamily: 'Arial' },
+            },
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [marker],
+                    isImplicit: false,
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+            ],
+            format: { fontFamily: 'Arial' },
         });
     });
 });
@@ -2244,6 +2289,7 @@ describe('deleteSelection - forward', () => {
                 segments: [marker],
                 format: {},
                 isImplicit: false,
+                segmentFormat: { fontSize: '10pt' },
             },
             path: [model],
             tableContext: undefined,
@@ -2257,6 +2303,7 @@ describe('deleteSelection - forward', () => {
                     format: {},
                     segments: [marker],
                     isImplicit: false,
+                    segmentFormat: { fontSize: '10pt' },
                 },
             ],
             format: { fontSize: '10pt' },
@@ -4057,6 +4104,7 @@ describe('deleteSelection - backward', () => {
                 segments: [marker],
                 format: {},
                 isImplicit: false,
+                segmentFormat: { fontSize: '10pt' },
             },
             path: [model],
             tableContext: undefined,
@@ -4070,6 +4118,7 @@ describe('deleteSelection - backward', () => {
                     format: {},
                     segments: [marker],
                     isImplicit: false,
+                    segmentFormat: { fontSize: '10pt' },
                 },
             ],
             format: { fontSize: '10pt' },

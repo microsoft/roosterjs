@@ -178,6 +178,7 @@ describe('knownElementProcessor', () => {
                         marginTop: '0px',
                         marginBottom: '0px',
                     },
+                    segmentFormat: { textColor: 'red' },
                     segments: [
                         {
                             segmentType: 'Text',
@@ -508,42 +509,6 @@ describe('knownElementProcessor', () => {
         });
     });
 
-    it('Paragraph with zero font size', () => {
-        const group = createContentModelDocument();
-        const div = document.createElement('div');
-
-        div.appendChild(document.createTextNode('test1'));
-        div.style.fontSize = '0px';
-
-        knownElementProcessor(group, div, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                fontSize: '0px',
-                            },
-                            text: 'test1',
-                        },
-                    ],
-                    zeroFontSize: true,
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                },
-            ],
-        });
-    });
-
     it('div with align attribute, need to use FormatContainer', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');
@@ -636,5 +601,40 @@ describe('knownElementProcessor', () => {
         });
 
         expect(formatContainerSpy).not.toHaveBeenCalled();
+    });
+
+    it('DIV with inline styles', () => {
+        const group = createContentModelDocument();
+        const div = document.createElement('div');
+
+        div.style.fontFamily = 'Arial';
+        div.style.fontSize = '20px';
+        div.textContent = 'test';
+
+        knownElementProcessor(group, div, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: { fontFamily: 'Arial', fontSize: '20px' },
+                        },
+                    ],
+                    segmentFormat: { fontFamily: 'Arial', fontSize: '20px' },
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
     });
 });
