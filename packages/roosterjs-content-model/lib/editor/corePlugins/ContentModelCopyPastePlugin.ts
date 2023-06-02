@@ -1,5 +1,6 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
+import { defaultContentModelHandlers } from 'roosterjs-content-model/lib/modelToDom/context/defaultContentModelHandlers';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -12,6 +13,7 @@ import {
     extractClipboardItems,
     toArray,
     Browser,
+    wrap,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -119,6 +121,25 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 {
                     isDarkMode: false /* To force light mode on paste */,
                     darkColorHandler: this.editor.getDarkColorHandler(),
+                },
+                {
+                    modelHandlerOverride: {
+                        table: (doc, parent, model, context, refNode) => {
+                            refNode = defaultContentModelHandlers.table?.(
+                                doc,
+                                parent,
+                                model,
+                                context,
+                                refNode
+                            );
+
+                            if (model.cachedElement) {
+                                wrap(model.cachedElement, 'div');
+                            }
+
+                            return refNode;
+                        },
+                    },
                 }
             );
 
