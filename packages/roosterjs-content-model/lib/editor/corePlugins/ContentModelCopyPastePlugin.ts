@@ -249,9 +249,16 @@ function selectionExToRange(
     let newRange: Range | null = null;
     if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
-        const elementToSelect =
-            table.parentElement?.childElementCount == 1 ? table.parentElement : table;
-        newRange = createRange(elementToSelect);
+        const elementAfter = table.parentElement?.insertBefore(
+            createElement(
+                {
+                    tag: 'span',
+                },
+                table.ownerDocument
+            )!,
+            table.nextElementSibling
+        );
+        newRange = createRange(table as Node, elementAfter);
     } else if (selection.type === SelectionRangeTypes.ImageSelection) {
         const image = tempDiv.querySelector('#' + selection.image.id);
 

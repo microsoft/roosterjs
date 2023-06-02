@@ -491,7 +491,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<span style="background-color: red;"><b>aa</b></span><div><table><tbody><tr><td><b>bb</b></td></tr></tbody></table></div><span style="background-color: red;"><b>cc</b></span>'
+            '<span style="background-color: red;"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
         );
     });
 
@@ -580,7 +580,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div style="background-color: red; display: block;"><b>aa</b><div><table><tbody><tr><td><b>bb</b></td></tr></tbody></table></div><b>cc</b></div>'
+            '<div style="background-color: red; display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
         );
     });
 
@@ -1340,7 +1340,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<center>test1<div><table><tbody><tr><td>test2</td></tr></tbody></table></div><div align="right">test3</div></center>'
+            '<center>test1<table><tbody><tr><td>test2</td></tr></tbody></table><div align="right">test3</div></center>'
         );
 
         expect(createGeneralBlockSpy).toHaveBeenCalledTimes(1);
@@ -1500,7 +1500,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div align="center"><div><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div></div>'
+            '<div align="center"><table style="margin: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
         );
     });
 

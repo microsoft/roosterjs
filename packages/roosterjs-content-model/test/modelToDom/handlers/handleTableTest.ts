@@ -60,7 +60,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -80,7 +80,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td></td><td></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
     });
 
@@ -99,7 +99,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td></td></tr><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -118,7 +118,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td colspan="2"></td></tr><tr><td></td><td></td></tr></tbody></table>'
         );
     });
 
@@ -137,7 +137,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td rowspan="2"></td><td></td></tr><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -161,7 +161,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table></div>'
+            '<table><tbody><tr><td rowspan="2" colspan="2"></td></tr><tr></tr></tbody></table>'
         );
     });
 
@@ -209,11 +209,11 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody>' +
+            '<table><tbody>' +
                 '<tr><td rowspan="2"></td><td colspan="2"></td></tr>' +
                 '<tr><td></td><td rowspan="2"></td></tr>' +
                 '<tr><td colspan="2"></td></tr>' +
-                '</tbody></table></div>'
+                '</tbody></table>'
         );
     });
 
@@ -229,7 +229,7 @@ describe('handleTable', () => {
                 widths: [],
                 dataset: {},
             },
-            '<div><table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -252,9 +252,9 @@ describe('handleTable', () => {
             null
         );
 
-        expect(div.innerHTML).toBe('<div><table><tbody><tr><td></td></tr></tbody></table></div>');
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
 
-        const table = div.firstChild?.firstChild as HTMLTableElement;
+        const table = div.firstChild as HTMLTableElement;
         expect(datasetApplier).toHaveBeenCalledWith({}, table, context);
         expect(datasetApplier).toHaveBeenCalledWith({}, table.rows[0].cells[0], context);
     });
@@ -279,9 +279,7 @@ describe('handleTable', () => {
             br
         );
 
-        expect(div.innerHTML).toBe(
-            '<div><table><tbody><tr><td></td></tr></tbody></table></div><br>'
-        );
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table><br>');
         expect(result).toBe(br);
     });
 
@@ -337,7 +335,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
         const tableNode = parent.querySelector('table') as HTMLTableElement;
 
@@ -379,7 +377,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px;"><tbody><tr><td></td></tr></tbody></table></div>'
+            '<table style="box-sizing: border-box; border-collapse: collapse; border-spacing: 0px;"><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -394,7 +392,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table></div>'
+            '<table style="margin-right: auto; margin-left: auto;"><tbody><tr><td></td></tr></tbody></table>'
         );
     });
 
@@ -410,7 +408,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table></div>'
+            '<table><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
         );
     });
 
@@ -426,9 +424,7 @@ describe('handleTable', () => {
 
         handleTable(document, parent, table, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr><td></td></tr></tbody></table></div>'
-        );
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
     });
 
     it('With cached TD and allow useBorderBox and has metadata, still apply width and height', () => {
@@ -446,7 +442,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table data-editing-info="{}"><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table></div>'
+            '<table data-editing-info="{}"><tbody><tr><td style="width: 100px; height: 200px;"></td></tr></tbody></table>'
         );
     });
 
@@ -469,8 +465,8 @@ describe('handleTable', () => {
 
         expect(
             [
-                '<div><table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table></div>',
-                '<div><table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table></div>',
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
             ].indexOf(parent.innerHTML) >= 0
         ).toBeTrue();
     });
@@ -493,9 +489,7 @@ describe('handleTable', () => {
 
         handleTable(document, parent, table, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr><td></td></tr></tbody></table></div>'
-        );
+        expect(parent.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
     });
 
     it('Block format on TABLE and TD is respected', () => {
@@ -520,7 +514,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table></div>'
+            '<table style="direction: rtl; text-align: center; line-height: 2; white-space: pre;"><tbody><tr><td style="width: 100px; height: 200px; direction: ltr; text-align: left; line-height: 1; white-space: normal;"></td></tr></tbody></table>'
         );
     });
 
@@ -535,7 +529,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr style="background-color: red;"><td></td></tr></tbody></table></div>'
+            '<table><tbody><tr style="background-color: red;"><td></td></tr></tbody></table>'
         );
     });
 
@@ -551,8 +545,6 @@ describe('handleTable', () => {
 
         handleTable(document, parent, table, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<div><table><tbody><tr id="tr1"><td></td></tr></tbody></table></div>'
-        );
+        expect(parent.innerHTML).toBe('<table><tbody><tr id="tr1"><td></td></tr></tbody></table>');
     });
 });
