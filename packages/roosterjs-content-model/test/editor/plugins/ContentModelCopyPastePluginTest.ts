@@ -3,6 +3,7 @@ import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDo
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
+import * as PasteFile from '../../../lib/publicApi/utils/paste';
 import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes';
 import {
@@ -498,7 +499,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
     describe('Paste |', () => {
         let clipboardData = <ClipboardData>{};
+
         it('Handle', () => {
+            editor.isFeatureEnabled = () => true;
+            spyOn(PasteFile, 'default').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
@@ -517,7 +521,8 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             domEvents.paste?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
+            expect(PasteFile.default).toHaveBeenCalled();
             expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 {

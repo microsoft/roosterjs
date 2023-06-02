@@ -167,11 +167,6 @@ describe('ContentModelFormatPlugin', () => {
                         segments: [
                             {
                                 segmentType: 'Text',
-                                format: {},
-                                text: '',
-                            },
-                            {
-                                segmentType: 'Text',
                                 format: { fontSize: '10px' },
                                 text: 'a',
                             },

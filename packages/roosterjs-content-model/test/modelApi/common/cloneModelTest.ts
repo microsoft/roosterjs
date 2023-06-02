@@ -231,13 +231,26 @@ describe('cloneModel', () => {
                     tagName: 'blockquote',
                     blocks: [],
                 },
-
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'General',
                     format: { backgroundColor: 'red' },
                     element: document.createElement('button'),
                     blocks: [],
+                },
+            ],
+        });
+    });
+
+    it('Model with segment format on block', () => {
+        runTest({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segmentFormat: { fontSize: '20px' },
+                    segments: [],
                 },
             ],
         });
