@@ -204,7 +204,11 @@ function splitParagraph(markerPosition: InsertPoint) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
-    const newParagraph = createParagraph(false /*isImplicit*/, paragraph.format);
+    const newParagraph = createParagraph(
+        false /*isImplicit*/,
+        paragraph.format,
+        paragraph.segmentFormat
+    );
 
     if (segmentIndex >= 0) {
         newParagraph.segments = paragraph.segments.splice(segmentIndex);

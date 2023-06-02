@@ -5,7 +5,7 @@ import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/
 import { ContentModelSegmentFormat } from '../../../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../../../publicTypes/context/ElementProcessor';
-import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
 import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 import { setProcessor } from '../utils/setProcessor';
 
@@ -41,6 +41,9 @@ const CLASSES_TO_KEEP = [
     'WACImageBorder',
 ];
 
+const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
+const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
+
 /**
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
  * This parser normalize the content for content model
@@ -71,6 +74,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     element: HTMLElement,
     context: DomToModelContext
 ): void => {
+    const elementTag = getTagOfNode(element);
     if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
@@ -87,6 +91,10 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
         TABLE_TEMP_ELEMENTS.some(className => element.classList.contains(className))
     ) {
         return;
+    } else if (shouldClearListContext(elementTag, element, context)) {
+        const { listFormat } = context;
+        listFormat.levels = [];
+        listFormat.listParent = undefined;
     }
 
     context.defaultElementProcessors.element(group, element, context);
@@ -153,6 +161,37 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format.marginLeft = undefined;
     format.paddingLeft = undefined;
 };
+
+/**
+ * This function returns whether we need to clear the list format.
+ * Word Online wraps lists inside divs to have this structure:
+ *
+ *  <div class='ListContainerWrapper'>
+ *      <ol>...</ol>
+ *  </div>
+ *  <div>
+ *      <p>...</p>
+ *  <div>
+ *  <div class='ListContainerWrapper'>
+ *      <ol>...</ol>
+ *  </div>
+ *
+ *  So if a elements is not contained inside of a list we should clear the list context to prevent normal text to be
+ *  transformed into list
+ *  For the above scenario, if we do not clear the format, the content inside of the second div would be transformed to a list too.
+ */
+function shouldClearListContext(
+    elementTag: string,
+    element: HTMLElement,
+    context: DomToModelContext
+) {
+    return (
+        context.listFormat.levels.length > 0 &&
+        LIST_ELEMENT_TAGS.every(tag => tag != elementTag) &&
+        !findClosestElementAncestor(element, undefined, LIST_ELEMENT_SELECTOR)
+    );
+}
+
 /**
  * @internal
  * Convert pasted content from Office Online

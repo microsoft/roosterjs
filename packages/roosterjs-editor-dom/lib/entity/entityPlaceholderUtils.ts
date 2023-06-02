@@ -1,12 +1,12 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
-import getTagOfNode from '../utils/getTagOfNode';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity } from 'roosterjs-editor-types';
+import { Entity, EntityClasses, KnownEntityItem } from 'roosterjs-editor-types';
 
 const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
 
 /**
+ * @deprecated
  * Create a placeholder comment node for entity
  * @param entity The entity to create placeholder from
  * @returns A placeholder comment node as
@@ -73,20 +73,20 @@ export function moveContentWithEntityPlaceholders(
  * @param insertClonedNode When pass true, merge with a cloned copy of the nodes from source fragment rather than the nodes themselves @default false
  */
 export function restoreContentWithEntityPlaceholder(
-    source: DocumentFragment,
+    source: ParentNode,
     target: HTMLElement,
-    entities: Record<string, HTMLElement> | null,
+    entities: Record<string, HTMLElement | KnownEntityItem> | null,
     insertClonedNode?: boolean
 ) {
     let anchor = target.firstChild;
-    entities = entities || {};
+
+    const entitySelector = getEntitySelector();
 
     for (let current = source.firstChild; current; ) {
-        let wrapper: HTMLElement | null = null;
         const next = current.nextSibling;
-        const id = tryGetIdFromEntityPlaceholder(current);
+        const wrapper = tryGetWrapperFromEntityPlaceholder(entities, current);
 
-        if (id && (wrapper = entities[(<HTMLElement>current).id])) {
+        if (wrapper) {
             anchor = removeUntil(anchor, wrapper);
 
             if (anchor) {
@@ -99,8 +99,8 @@ export function restoreContentWithEntityPlaceholder(
             target.insertBefore(nodeToInsert, anchor);
 
             if (safeInstanceOf(nodeToInsert, 'HTMLElement')) {
-                nodeToInsert.querySelectorAll(EntityPlaceHolderTagName).forEach(placeholder => {
-                    wrapper = entities![placeholder.id];
+                nodeToInsert.querySelectorAll(entitySelector).forEach(placeholder => {
+                    const wrapper = tryGetWrapperFromEntityPlaceholder(entities, placeholder);
 
                     if (wrapper) {
                         placeholder.parentNode?.replaceChild(wrapper, placeholder);
@@ -124,14 +124,27 @@ function removeUntil(anchor: ChildNode | null, nodeToStop?: HTMLElement) {
     return anchor;
 }
 
-function tryGetIdFromEntityPlaceholder(node: Node): string | null {
-    return getTagOfNode(node) == EntityPlaceHolderTagName ? (<HTMLElement>node).id : null;
+function tryGetWrapperFromEntityPlaceholder(
+    entities: Record<string, HTMLElement | KnownEntityItem> | null,
+    node: Node
+): HTMLElement | null {
+    const id =
+        safeInstanceOf(node, 'HTMLElement') &&
+        node.classList.contains(EntityClasses.ENTITY_INFO_NAME) &&
+        getEntityFromElement(node as HTMLElement)?.id;
+    const item = id ? entities?.[id] : null;
+
+    return !item
+        ? null
+        : safeInstanceOf(item, 'HTMLElement')
+        ? item
+        : item?.canPersist
+        ? item.element
+        : null;
 }
 
 function getPlaceholder(entity: Entity, entities: Record<string, HTMLElement>) {
-    const placeholder = createEntityPlaceholder(entity);
-
     entities[entity.id] = entity.wrapper;
 
-    return placeholder;
+    return entity.wrapper.cloneNode(true /*deep*/);
 }
