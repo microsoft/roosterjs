@@ -1,10 +1,10 @@
 import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
+import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
 import { handleWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 
 describe('convertPastedContentFromWord', () => {
     let div: HTMLElement;
@@ -825,7 +825,9 @@ describe('convertPastedContentFromWord', () => {
                     '</ol>' +
                     '</ol>' +
                     '</ol>',
-                '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
+                Browser.isFirefox
+                    ? '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol style="margin-top: 1em;" start="1"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>'
+                    : '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
                 {
                     blockGroupType: 'Document',
                     blocks: [
