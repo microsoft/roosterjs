@@ -1,5 +1,7 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
+import { ContentModelBlockHandler } from 'roosterjs-content-model/lib/publicTypes/context/ContentModelHandler';
+import { ContentModelTable } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelTable';
 import { defaultContentModelHandlers } from 'roosterjs-content-model/lib/modelToDom/context/defaultContentModelHandlers';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
@@ -124,21 +126,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 },
                 {
                     modelHandlerOverride: {
-                        table: (doc, parent, model, context, refNode) => {
-                            refNode = defaultContentModelHandlers.table?.(
-                                doc,
-                                parent,
-                                model,
-                                context,
-                                refNode
-                            );
-
-                            if (model.cachedElement) {
-                                wrap(model.cachedElement, 'div');
-                            }
-
-                            return refNode;
-                        },
+                        table: copyCutTableHandler,
                     },
                 }
             );
@@ -249,16 +237,9 @@ function selectionExToRange(
     let newRange: Range | null = null;
     if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
-        const elementAfter = table.parentElement?.insertBefore(
-            createElement(
-                {
-                    tag: 'span',
-                },
-                table.ownerDocument
-            )!,
-            table.nextElementSibling
-        );
-        newRange = createRange(table as Node, elementAfter);
+        const elementToSelect =
+            table.parentElement?.childElementCount == 1 ? table.parentElement : table;
+        newRange = createRange(elementToSelect);
     } else if (selection.type === SelectionRangeTypes.ImageSelection) {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
@@ -271,3 +252,19 @@ function selectionExToRange(
 
     return newRange;
 }
+
+const copyCutTableHandler: ContentModelBlockHandler<ContentModelTable> = (
+    doc,
+    parent,
+    model,
+    context,
+    refNode
+) => {
+    refNode = defaultContentModelHandlers.table?.(doc, parent, model, context, refNode);
+
+    if (model.cachedElement) {
+        wrap(model.cachedElement, 'div');
+    }
+
+    return refNode;
+};
