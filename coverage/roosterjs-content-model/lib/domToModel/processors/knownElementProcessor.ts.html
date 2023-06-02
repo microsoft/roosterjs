@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.62% </span>
+                <span class="strong">97.73% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>41/42</span>
+                <span class='fraction'>43/44</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.56% </span>
+                <span class="strong">97.67% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>40/41</span>
+                <span class='fraction'>42/43</span>
             </div>
         
             
@@ -165,8 +165,16 @@
 <a name='L106'></a><a href='#L106'>106</a>
 <a name='L107'></a><a href='#L107'>107</a>
 <a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L109'></a><a href='#L109'>109</a>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a>
+<a name='L114'></a><a href='#L114'>114</a>
+<a name='L115'></a><a href='#L115'>115</a>
+<a name='L116'></a><a href='#L116'>116</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -215,16 +223,22 @@
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">84x</span>
+<span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">84x</span>
 <span class="cline-any cline-yes">81x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">88x</span>
@@ -275,6 +289,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
@@ -321,18 +336,24 @@ export const knownElementProcessor: ElementProcessor&lt;HTMLElement&gt; = (group
         const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) &gt;= 0;
 &nbsp;
         stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () =&gt; {
-            parseFormat(
-                element,
-                context.formatParsers.segmentOnBlock,
-                context.segmentFormat,
-                context
-            );
+            const segmentFormat: ContentModelSegmentFormat = {};
 &nbsp;
-            blockProcessor(group, element, context);
+            parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
+            Object.assign(context.segmentFormat, segmentFormat);
+&nbsp;
+            blockProcessor(group, element, context, segmentFormat);
         });
 &nbsp;
         if (isBlock &amp;&amp; !isSegmentDecorator) {
-            addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
+            addBlock(
+                group,
+                createParagraph(
+                    true /*isImplicit*/,
+                    context.blockFormat,
+                    undefined /*segmentFormat*/,
+                    decorator
+                )
+            );
         }
     } else {
         stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () =&gt; {
@@ -388,7 +409,7 @@ function shouldUseFormatContainer(element: HTMLElement, context: DomToModelConte
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 01 2023 19:22:04 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 02 2023 18:53:16 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
