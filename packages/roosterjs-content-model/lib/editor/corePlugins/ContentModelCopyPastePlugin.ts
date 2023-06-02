@@ -1,10 +1,16 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelDecorator } from '../../publicTypes/decorator/ContentModelDecorator';
+import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     addRangeToSelection,
     createElement,
@@ -13,6 +19,8 @@ import {
     extractClipboardItems,
     toArray,
     Browser,
+    wrap,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -120,6 +128,9 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 {
                     isDarkMode: false /* To force light mode on paste */,
                     darkColorHandler: this.editor.getDarkColorHandler(),
+                },
+                {
+                    onNodeCreated,
                 }
             );
 
@@ -229,7 +240,9 @@ function selectionExToRange(
     let newRange: Range | null = null;
     if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
-        newRange = createRange(table);
+        const elementToSelect =
+            table.parentElement?.childElementCount == 1 ? table.parentElement : table;
+        newRange = createRange(elementToSelect);
     } else if (selection.type === SelectionRangeTypes.ImageSelection) {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
@@ -242,3 +255,22 @@ function selectionExToRange(
 
     return newRange;
 }
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export const onNodeCreated = (
+    _:
+        | ContentModelBlock
+        | ContentModelBlockGroup
+        | ContentModelSegment
+        | ContentModelDecorator
+        | ContentModelListItemLevelFormat
+        | ContentModelTableRow,
+    node: Node
+): void => {
+    if (safeInstanceOf(node, 'HTMLTableElement')) {
+        wrap(node, 'div');
+    }
+};
