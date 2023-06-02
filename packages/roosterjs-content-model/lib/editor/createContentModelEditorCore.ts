@@ -27,7 +27,12 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            typeInContainer: new ContentModelTypeInContainerPlugin(),
+            typeInContainer: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.EditWithContentModel
+            )
+                ? new ContentModelTypeInContainerPlugin()
+                : undefined,
             copyPaste: new ContentModelCopyPastePlugin(options),
             ...(options.corePluginOverride || {}),
         },
