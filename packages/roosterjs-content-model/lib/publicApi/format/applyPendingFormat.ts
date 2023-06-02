@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 
 const ANSI_SPACE = '\u0020';
@@ -61,6 +62,10 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
                     }
                     return true;
                 });
+
+                if (isChanged) {
+                    normalizeContentModel(model);
+                }
 
                 return isChanged;
             },

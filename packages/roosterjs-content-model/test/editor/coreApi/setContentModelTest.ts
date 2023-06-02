@@ -13,6 +13,7 @@ describe('setContentModel', () => {
     let contentModelToDomSpy: jasmine.Spy;
     let createEditorContext: jasmine.Spy;
     let select: jasmine.Spy;
+    let getSelectionRange: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'default').and.returnValue(mockedRange);
@@ -20,12 +21,14 @@ describe('setContentModel', () => {
             .createSpy('createEditorContext')
             .and.returnValue(mockedContext);
         select = jasmine.createSpy('select');
+        getSelectionRange = jasmine.createSpy('getSelectionRange');
 
         core = ({
             contentDiv: mockedDiv,
             api: {
                 createEditorContext,
                 select,
+                getSelectionRange,
             },
             lifecycle: {},
         } as any) as ContentModelEditorCore;
