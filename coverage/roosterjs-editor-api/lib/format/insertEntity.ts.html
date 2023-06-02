@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.84% </span>
+                <span class="strong">6.12% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/51</span>
+                <span class='fraction'>3/49</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">7.84% </span>
+                <span class="strong">6.12% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/51</span>
+                <span class='fraction'>3/49</span>
             </div>
         
             
@@ -222,19 +222,7 @@
 <a name='L163'></a><a href='#L163'>163</a>
 <a name='L164'></a><a href='#L164'>164</a>
 <a name='L165'></a><a href='#L165'>165</a>
-<a name='L166'></a><a href='#L166'>166</a>
-<a name='L167'></a><a href='#L167'>167</a>
-<a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a>
-<a name='L170'></a><a href='#L170'>170</a>
-<a name='L171'></a><a href='#L171'>171</a>
-<a name='L172'></a><a href='#L172'>172</a>
-<a name='L173'></a><a href='#L173'>173</a>
-<a name='L174'></a><a href='#L174'>174</a>
-<a name='L175'></a><a href='#L175'>175</a>
-<a name='L176'></a><a href='#L176'>176</a>
-<a name='L177'></a><a href='#L177'>177</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<a name='L166'></a><a href='#L166'>166</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -305,8 +293,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -372,14 +358,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -410,7 +388,6 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import commitListChains from '../utils/commitListChains';
-import getFormatState from './getFormatState';
 import {
     addDelimiters,
     applyFormat,
@@ -480,8 +457,6 @@ export default function <span class="fstat-no" title="function not covered" >ins
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    commitEntity(wrapper, type, isReadonly);</span>
 &nbsp;
-    const currentFormat = <span class="cstat-no" title="statement not covered" >getFormatState(editor);</span>
-&nbsp;
 <span class="cstat-no" title="statement not covered" >    if (!editor.contains(wrapper)) {</span>
         let currentRange: Range | null = <span class="cstat-no" title="statement not covered" >null;</span>
         let contentPosition<span class="cstat-no" title="statement not covered" >:</span>
@@ -549,15 +524,7 @@ export default function <span class="fstat-no" title="function not covered" >ins
 <span class="cstat-no" title="statement not covered" >        if (newLine) {</span>
 <span class="cstat-no" title="statement not covered" >            applyFormat(</span>
                 newLine as HTMLElement,
-                {
-                    backgroundColor: currentFormat.backgroundColor,
-                    textColor: currentFormat.textColor,
-                    bold: currentFormat.isBold,
-                    fontFamily: currentFormat.fontName,
-                    fontSize: currentFormat.fontSize,
-                    italic: currentFormat.isItalic,
-                    underline: currentFormat.isUnderline,
-                },
+                editor.getDefaultFormat(),
                 editor.isDarkMode(),
                 editor.getDarkColorHandler()
             );
@@ -592,7 +559,7 @@ export default function <span class="fstat-no" title="function not covered" >ins
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 02 2023 22:19:16 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 02 2023 22:33:57 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../prettify.js"></script>
