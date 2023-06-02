@@ -23,9 +23,6 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'listItemElement', (format, element) => {
-        if (element.style.margin) {
-            element.style.margin = '';
-        }
         if (element.style.marginLeft) {
             format.marginLeft = undefined;
         }

@@ -825,7 +825,7 @@ describe('convertPastedContentFromWord', () => {
                     '</ol>' +
                     '</ol>' +
                     '</ol>',
-                '<ol start="1"><li style="margin-left: 0in;">123123</li><ol start="1"><li style="margin-left: 0in; list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; margin-left: 1.5in; list-style-type: lower-roman;">123123</li><ol start="1"><li style="margin-left: 0in; list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
+                '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
                 {
                     blockGroupType: 'Document',
                     blocks: [
@@ -859,7 +859,7 @@ describe('convertPastedContentFromWord', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: { marginLeft: '0in' },
+                            format: { marginLeft: undefined },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -897,7 +897,7 @@ describe('convertPastedContentFromWord', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: { marginLeft: '0in' },
+                            format: { marginLeft: undefined },
                         },
                         {
                             blockType: 'BlockGroup',
@@ -945,7 +945,7 @@ describe('convertPastedContentFromWord', () => {
                             format: {
                                 marginTop: '1em',
                                 marginBottom: '1em',
-                                marginLeft: '1.5in',
+                                marginLeft: undefined,
                             },
                         },
                         {
@@ -997,7 +997,7 @@ describe('convertPastedContentFromWord', () => {
                                 isSelected: true,
                                 format: {},
                             },
-                            format: { marginLeft: '0in' },
+                            format: { marginLeft: undefined },
                         },
                     ],
                 }
