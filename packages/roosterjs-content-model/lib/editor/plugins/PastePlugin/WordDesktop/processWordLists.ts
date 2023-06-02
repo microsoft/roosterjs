@@ -12,6 +12,8 @@ import { parseFormat } from '../../../../domToModel/utils/parseFormat';
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const LOOKUP_DEPTH = 5;
+const OL_TAG = 'OL';
+const WORD_FIRST_LIST = 'l0';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel: number | '';
@@ -49,7 +51,7 @@ export function processWordList(
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = listProps[1] && parseInt(listProps[1].substr('level'.length));
 
-    const wordList = listProps[0] || 'l0';
+    const wordList = listProps[0] || WORD_FIRST_LIST;
     if (listFormat.levels.length == 0) {
         listFormat.levels = listFormat.wordKnownLevels.get(wordList) || [];
     }
@@ -62,7 +64,7 @@ export function processWordList(
         // Create the new level of the list item and parse the format
         const newLevel: ContentModelListItemLevelFormat = {
             listType,
-            startNumberOverride: listType == 'OL' ? parseInt(fakeBullet) || undefined : undefined,
+            startNumberOverride: listType == OL_TAG ? parseInt(fakeBullet) || undefined : undefined,
         };
         parseFormat(element, context.formatParsers.listLevel, newLevel, context);
 
