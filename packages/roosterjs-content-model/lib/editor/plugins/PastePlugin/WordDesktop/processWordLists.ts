@@ -3,6 +3,7 @@ import { ContentModelBlockGroup } from '../../../../publicTypes/group/ContentMod
 import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
 import { createListItem } from '../../../../modelApi/creators/createListItem';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
+import { DomToModelListFormat } from '../../../../publicTypes/context/DomToModelFormatContext';
 import { getStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 import { parseFormat } from '../../../../domToModel/utils/parseFormat';
@@ -11,6 +12,11 @@ import { parseFormat } from '../../../../domToModel/utils/parseFormat';
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const LOOKUP_DEPTH = 5;
+
+interface WordDesktopListFormat extends DomToModelListFormat {
+    wordLevel: number | '';
+    wordKnownLevels: Map<string, ContentModelListItemLevelFormat[]>;
+}
 
 /**
  * @internal
@@ -26,8 +32,11 @@ export function processWordList(
     element: HTMLElement,
     context: DomToModelContext
 ) {
+    const listFormat = context.listFormat as WordDesktopListFormat;
+    if (!listFormat.wordKnownLevels) {
+        listFormat.wordKnownLevels = new Map<string, ContentModelListItemLevelFormat[]>();
+    }
     const wordListStyle = styles[MSO_LIST] || '';
-    const { listFormat } = context;
 
     // If the element contains Ignore style, do not process it,
     // Usually this element contains the fake bullet used in Word Desktop.
@@ -38,8 +47,14 @@ export function processWordList(
     const listProps = wordListStyle.split(' ');
     // Try get the list metadata from word, which follows this format: l1 level1 lfo2
     // If we are able to get the level property means we can process this element to be a list
-    let level = listProps[1] && parseInt(listProps[1].substr('level'.length));
-    if (wordListStyle && group && typeof level === 'number') {
+    listFormat.wordLevel = listProps[1] && parseInt(listProps[1].substr('level'.length));
+
+    const wordList = listProps[0] || 'l0';
+    if (listFormat.levels.length == 0) {
+        listFormat.levels = listFormat.wordKnownLevels.get(wordList) || [];
+    }
+    if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
+        const { wordLevel } = listFormat;
         // Retrieve the Fake bullet on the element and also the list type
         const fakeBullet = getFakeBulletText(element);
         const listType = getFakeBulletTagName(fakeBullet);
@@ -47,19 +62,19 @@ export function processWordList(
         // Create the new level of the list item and parse the format
         const newLevel: ContentModelListItemLevelFormat = {
             listType,
-            startNumberOverride: listType == 'OL' ? parseInt(fakeBullet) || 1 : undefined,
+            startNumberOverride: listType == 'OL' ? parseInt(fakeBullet) || undefined : undefined,
         };
         parseFormat(element, context.formatParsers.listLevel, newLevel, context);
 
         // If the list format is in a different level, update the arraw so we get the new item
         // To be in the same level as the provided level metadata.
-        if (level > listFormat.levels.length) {
-            while (level != listFormat.levels.length) {
+        if (wordLevel > listFormat.levels.length) {
+            while (wordLevel != listFormat.levels.length) {
                 listFormat.levels.push(newLevel);
             }
         } else {
-            listFormat.levels.splice(level, listFormat.levels.length - 1);
-            listFormat.levels[level - 1] = newLevel;
+            listFormat.levels.splice(wordLevel, listFormat.levels.length - 1);
+            listFormat.levels[wordLevel - 1] = newLevel;
         }
 
         listFormat.listParent = group;
@@ -71,8 +86,16 @@ export function processWordList(
 
         context.elementProcessors.child(listItem, element, context);
         addBlock(group, listItem);
+
+        if (
+            listFormat.levels.length > 0 &&
+            listFormat.wordKnownLevels.get(wordList) != listFormat.levels
+        ) {
+            listFormat.wordKnownLevels.set(wordList, [...listFormat.levels]);
+        }
         return true;
     }
+
     return false;
 }
 

@@ -22,6 +22,14 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
+    addParser(ev.domToModelOption, 'listItemElement', (format, element) => {
+        if (element.style.margin) {
+            element.style.margin = '';
+        }
+        if (element.style.marginLeft) {
+            format.marginLeft = undefined;
+        }
+    });
 
     // Remove "border:none" for image to fix image resize behavior
     // We found a problem that when paste an image with "border:none" then the resize border will be
