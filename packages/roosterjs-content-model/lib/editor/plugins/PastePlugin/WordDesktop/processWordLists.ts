@@ -16,8 +16,8 @@ const OL_TAG = 'OL';
 const WORD_FIRST_LIST = 'l0';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
-    wordLevel: number | '';
-    wordKnownLevels: Map<string, ContentModelListItemLevelFormat[]>;
+    wordLevel?: number | '';
+    wordKnownLevels?: Map<string, ContentModelListItemLevelFormat[]>;
 }
 
 /**
