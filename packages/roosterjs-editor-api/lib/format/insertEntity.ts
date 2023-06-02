@@ -1,5 +1,4 @@
 import commitListChains from '../utils/commitListChains';
-import getFormatState from './getFormatState';
 import {
     addDelimiters,
     applyFormat,
