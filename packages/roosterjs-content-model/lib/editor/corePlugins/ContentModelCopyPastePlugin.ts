@@ -1,12 +1,15 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { defaultContentModelHandlers } from '../../modelToDom/context/defaultContentModelHandlers';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelDecorator } from '../../publicTypes/decorator/ContentModelDecorator';
+import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import type { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import {
     addRangeToSelection,
     createElement,
@@ -16,6 +19,7 @@ import {
     toArray,
     Browser,
     wrap,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -125,9 +129,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     darkColorHandler: this.editor.getDarkColorHandler(),
                 },
                 {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
+                    onNodeCreated,
                 }
             );
 
@@ -257,18 +259,17 @@ function selectionExToRange(
  * @internal
  * Exported only for unit testing
  */
-export const copyCutTableHandler: ContentModelBlockHandler<ContentModelTable> = (
-    doc,
-    parent,
-    model,
-    context,
-    refNode
-) => {
-    refNode = defaultContentModelHandlers.table?.(doc, parent, model, context, refNode);
-
-    if (model.cachedElement) {
-        wrap(model.cachedElement, 'div');
+export const onNodeCreated = (
+    _:
+        | ContentModelBlock
+        | ContentModelBlockGroup
+        | ContentModelSegment
+        | ContentModelDecorator
+        | ContentModelListItemLevelFormat
+        | ContentModelTableRow,
+    node: Node
+): void => {
+    if (safeInstanceOf(node, 'HTMLTableElement')) {
+        wrap(node, 'div');
     }
-
-    return refNode;
 };

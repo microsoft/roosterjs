@@ -5,7 +5,7 @@ import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/e
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import { IContentModelEditor } from '../../../lib/publicTypes';
 import ContentModelCopyPastePlugin, {
-    copyCutTableHandler,
+    onNodeCreated,
 } from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
@@ -178,11 +178,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -242,11 +238,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -301,11 +293,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -391,11 +379,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -452,11 +436,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -511,11 +491,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
                 },
-                {
-                    modelHandlerOverride: {
-                        table: copyCutTableHandler,
-                    },
-                }
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
