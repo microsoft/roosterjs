@@ -65,7 +65,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('rotateImage a image that was rotated', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -81,7 +81,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipImage | horizontal', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -97,7 +97,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipImage a vertical Image | horizontal', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -113,7 +113,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('unflipImage | horizontal', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -130,7 +130,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipImage | vertical', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -146,7 +146,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipImage a vertical Image | vertical', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -162,7 +162,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('unflipVertical | vertical', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -179,7 +179,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipVertical a flipped Image', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
@@ -196,7 +196,7 @@ describe('ImageEdit | rotate and flip', () => {
 
     it('flipHorizontal a flipped Image', () => {
         const editInfo = {
-            src: 'teste',
+            src: 'test',
             widthPx: 10,
             heightPx: 10,
             naturalWidth: 10,
