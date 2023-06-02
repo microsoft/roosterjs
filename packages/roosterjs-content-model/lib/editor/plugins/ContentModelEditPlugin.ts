@@ -57,8 +57,11 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         this.editWithContentModel = this.editor.isFeatureEnabled(
             ExperimentalFeatures.EditWithContentModel
         );
+
+        const defaultFormat = this.editor.getContentModelDefaultFormat();
         this.hasDefaultFormat =
-            getObjectKeys(this.editor.getContentModelDefaultFormat()).length > 0;
+            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
+                .length > 0;
     }
 
     /**
@@ -138,7 +141,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         const rangeEx = editor.getSelectionRangeEx();
         const range = rangeEx?.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
         const startPos = range ? Position.getStart(range) : null;
-        let node: Node | null = startPos?.element ?? null;
+        let node: Node | null = startPos?.node ?? null;
 
         while (node && editor.contains(node)) {
             if (isNodeOfType(node, NodeType.Element) && node.getAttribute?.('style')) {
