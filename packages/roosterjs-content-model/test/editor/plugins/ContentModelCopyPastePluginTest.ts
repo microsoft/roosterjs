@@ -3,8 +3,10 @@ import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDo
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
-import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes';
+import ContentModelCopyPastePlugin, {
+    copyCutTableHandler,
+} from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
     DOMEventHandlerFunction,
@@ -175,6 +177,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -208,7 +215,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -231,6 +241,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -285,6 +300,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -370,6 +390,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -401,7 +426,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -423,6 +451,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -477,6 +510,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
+                },
+                {
+                    modelHandlerOverride: {
+                        table: copyCutTableHandler,
+                    },
                 }
             );
             expect(createContentModelSpy).toHaveBeenCalled();

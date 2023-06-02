@@ -59,7 +59,7 @@ describe('excel Test', () => {
     it('Table', () => {
         runTest(
             '<table><tr><td>a</td><td>b</td></tr></table>',
-            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
+            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -129,7 +129,7 @@ describe('excel Test', () => {
     it('Table without TR', () => {
         runTest(
             '<td>a</td><td>b</td>',
-            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
+            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -191,7 +191,7 @@ describe('excel Test', () => {
     it('Table without TABLE', () => {
         runTest(
             '<tr><td>a</td><td>b</td></tr>',
-            '<div><table><tbody><tr><td>a</td><td>b</td></tr></tbody></table></div>',
+            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -261,7 +261,7 @@ describe('excel Test', () => {
     it('Table, handle borderStyle: none', () => {
         runTest(
             '<table><tr><td style="border-style:none">a</td><td style="border-style:none">b</td></tr></table>',
-            '<div><table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table></div>',
+            '<table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [

@@ -1,12 +1,12 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { ContentModelBlockHandler } from 'roosterjs-content-model/lib/publicTypes/context/ContentModelHandler';
-import { ContentModelTable } from 'roosterjs-content-model/lib/publicTypes/block/ContentModelTable';
-import { defaultContentModelHandlers } from 'roosterjs-content-model/lib/modelToDom/context/defaultContentModelHandlers';
+import { defaultContentModelHandlers } from '../../modelToDom/context/defaultContentModelHandlers';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
+import type { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import {
     addRangeToSelection,
     createElement,
@@ -253,7 +253,11 @@ function selectionExToRange(
     return newRange;
 }
 
-const copyCutTableHandler: ContentModelBlockHandler<ContentModelTable> = (
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export const copyCutTableHandler: ContentModelBlockHandler<ContentModelTable> = (
     doc,
     parent,
     model,
