@@ -4,8 +4,10 @@ import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelectio
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
-import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes';
+import ContentModelCopyPastePlugin, {
+    onNodeCreated,
+} from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
     DOMEventHandlerFunction,
@@ -176,7 +178,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -209,7 +212,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -232,7 +238,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -286,7 +293,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -371,7 +379,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -402,7 +411,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -424,7 +436,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -478,7 +491,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);

@@ -8,7 +8,7 @@ import { handleWacComponentsPaste } from '../../../../lib/editor/plugins/PastePl
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('convertPastedContentForLi', () => {
+describe('Wac Test', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {

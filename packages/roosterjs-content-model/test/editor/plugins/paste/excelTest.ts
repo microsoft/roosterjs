@@ -9,7 +9,7 @@ import { createBeforePasteEventMock } from './wordDesktopTest';
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('convertPastedContentFromExcel', () => {
+describe('excel Test', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
