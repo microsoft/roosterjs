@@ -112,7 +112,7 @@ describe('handleBlock', () => {
         runTestWithRefNode(block, '<span></span><br>');
     });
 
-    it('General block and segment', () => {
+    it('General segment', () => {
         const element = document.createElement('span');
         const block: ContentModelGeneralSegment = {
             blockType: 'BlockGroup',
@@ -128,12 +128,12 @@ describe('handleBlock', () => {
         spyOn(applyFormat, 'applyFormat');
         handleBlock(document, parent, block, context, null);
 
-        expect(parent.innerHTML).toBe('<span></span>');
+        expect(parent.innerHTML).toBe('<span><span></span></span>');
         expect(parent.firstChild).not.toBe(element);
-        expect(context.regularSelection.current.segment).toBe(parent.firstChild);
+        expect(context.regularSelection.current.segment).toBe(parent.firstChild!.firstChild);
         expect(applyFormat.applyFormat).toHaveBeenCalled();
 
-        runTestWithRefNode(block, '<span></span><br>');
+        runTestWithRefNode(block, '<span><span></span></span><br>');
     });
 
     it('Entity block', () => {

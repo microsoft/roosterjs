@@ -1,4 +1,5 @@
 import * as createRange from 'roosterjs-editor-dom/lib/selection/createRange';
+import * as entityPlaceholderUtils from 'roosterjs-editor-dom/lib/entity/entityPlaceholderUtils';
 import createEditorCore from './createMockEditorCore';
 import { setContent } from '../../lib/coreApi/setContent';
 import {
@@ -97,6 +98,28 @@ describe('setContent', () => {
             },
             false
         );
+    });
+
+    it('setContent with entity map', () => {
+        const core = createEditorCore(div, {
+            coreApiOverride: {},
+        });
+        const entity = document.createElement('div');
+
+        entity.id = 'div1';
+
+        const entityMapMock = 'ENTITYMAP' as any;
+        core.entity.entityMap = entityMapMock;
+
+        const restoreContentWithEntityPlaceholderSpy = spyOn(
+            entityPlaceholderUtils,
+            'restoreContentWithEntityPlaceholder'
+        );
+
+        setContent(core, 'test', false);
+
+        expect(restoreContentWithEntityPlaceholderSpy).toHaveBeenCalledTimes(1);
+        expect(restoreContentWithEntityPlaceholderSpy.calls.argsFor(0)[2]).toBe(entityMapMock);
     });
 });
 

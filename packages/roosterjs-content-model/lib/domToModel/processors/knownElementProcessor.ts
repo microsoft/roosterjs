@@ -1,8 +1,10 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContextStyles, formatContainerProcessor } from './formatContainerProcessor';
+import { blockProcessor } from './blockProcessor';
+import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { formatContainerProcessor } from './formatContainerProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
@@ -45,39 +47,24 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
         const isSegmentDecorator = SegmentDecoratorTags.indexOf(element.tagName) >= 0;
 
         stackFormat(context, { segment: 'shallowCloneForBlock', paragraph: 'shallowClone' }, () => {
-            parseFormat(element, context.formatParsers.block, context.blockFormat, context);
+            const segmentFormat: ContentModelSegmentFormat = {};
 
-            const format = { ...context.blockFormat };
+            parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
+            Object.assign(context.segmentFormat, segmentFormat);
 
-            parseFormat(element, context.formatParsers.container, format, context);
-            parseFormat(
-                element,
-                context.formatParsers.segmentOnBlock,
-                context.segmentFormat,
-                context
-            );
-
-            ContextStyles.forEach(style => {
-                if (format[style]) {
-                    context.blockFormat[style] = format[style];
-                }
-            });
-
-            if (!isSegmentDecorator) {
-                const paragraph = createParagraph(false /*isImplicit*/, format, decorator);
-
-                if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
-                    paragraph.zeroFontSize = true;
-                }
-
-                addBlock(group, paragraph);
-            }
-
-            context.elementProcessors.child(group, element, context);
+            blockProcessor(group, element, context, segmentFormat);
         });
 
         if (isBlock && !isSegmentDecorator) {
-            addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat, decorator));
+            addBlock(
+                group,
+                createParagraph(
+                    true /*isImplicit*/,
+                    context.blockFormat,
+                    undefined /*segmentFormat*/,
+                    decorator
+                )
+            );
         }
     } else {
         stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () => {

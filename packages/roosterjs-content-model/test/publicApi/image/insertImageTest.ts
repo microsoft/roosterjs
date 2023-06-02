@@ -87,7 +87,7 @@ describe('insertImage', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: false,
+                        isImplicit: true,
                         segments: [
                             {
                                 segmentType: 'Image',
@@ -126,7 +126,7 @@ describe('insertImage', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: false,
+                        isImplicit: true,
                         segments: [
                             {
                                 segmentType: 'Image',
@@ -169,7 +169,7 @@ describe('insertImage', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        isImplicit: false,
+                        isImplicit: true,
                         segments: [
                             {
                                 segmentType: 'Image',

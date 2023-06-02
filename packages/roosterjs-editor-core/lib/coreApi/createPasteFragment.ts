@@ -1,6 +1,7 @@
 import {
     createDefaultHtmlSanitizerOptions,
     createFragmentFromClipboardData,
+    getPasteType,
 } from 'roosterjs-editor-dom';
 import {
     BeforePasteEvent,
@@ -69,16 +70,4 @@ function createBeforePasteEvent(
         htmlAttributes: {},
         pasteType: pasteType,
     };
-}
-
-function getPasteType(pasteAsText: boolean, applyCurrentStyle: boolean, pasteAsImage: boolean) {
-    if (pasteAsText) {
-        return PasteType.AsPlainText;
-    } else if (applyCurrentStyle) {
-        return PasteType.MergeFormat;
-    } else if (pasteAsImage) {
-        return PasteType.AsImage;
-    } else {
-        return PasteType.Normal;
-    }
 }

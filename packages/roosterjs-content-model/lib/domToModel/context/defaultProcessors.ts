@@ -1,4 +1,3 @@
-import { blockDecoratorProcessor } from '../processors/blockDecoratorProcessor';
 import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
 import { codeProcessor } from '../processors/codeProcessor';
@@ -9,12 +8,14 @@ import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
 import { formatContainerProcessor } from '../processors/formatContainerProcessor';
 import { generalProcessor } from '../processors/generalProcessor';
+import { headingProcessor } from '../processors/headingProcessor';
 import { hrProcessor } from '../processors/hrProcessor';
 import { imageProcessor } from '../processors/imageProcessor';
 import { knownElementProcessor } from '../processors/knownElementProcessor';
 import { linkProcessor } from '../processors/linkProcessor';
 import { listItemProcessor } from '../processors/listItemProcessor';
 import { listProcessor } from '../processors/listProcessor';
+import { pProcessor } from '../processors/pProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
 
@@ -32,16 +33,16 @@ export const defaultProcessorMap: ElementProcessorMap = {
     font: fontProcessor,
     i: knownElementProcessor,
     img: imageProcessor,
-    h1: blockDecoratorProcessor,
-    h2: blockDecoratorProcessor,
-    h3: blockDecoratorProcessor,
-    h4: blockDecoratorProcessor,
-    h5: blockDecoratorProcessor,
-    h6: blockDecoratorProcessor,
+    h1: headingProcessor,
+    h2: headingProcessor,
+    h3: headingProcessor,
+    h4: headingProcessor,
+    h5: headingProcessor,
+    h6: headingProcessor,
     hr: hrProcessor,
     li: listItemProcessor,
     ol: listProcessor,
-    p: blockDecoratorProcessor,
+    p: pProcessor,
     pre: formatContainerProcessor,
     s: knownElementProcessor,
     span: knownElementProcessor,
