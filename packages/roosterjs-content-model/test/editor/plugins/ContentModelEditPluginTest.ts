@@ -686,3 +686,344 @@ describe('ContentModelEditPlugin for default format', () => {
         );
     });
 });
+
+describe('ContentModelEditPlugin for default format', () => {
+    let editor: IContentModelEditor;
+    let contentDiv: HTMLDivElement;
+    let getSelectionRangeEx: jasmine.Spy;
+    let getPendingFormatSpy: jasmine.Spy;
+    let setPendingFormatSpy: jasmine.Spy;
+    let isFeatureEnabledSpy: jasmine.Spy;
+    let cacheContentModelSpy: jasmine.Spy;
+    let addUndoSnapshotSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
+        getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
+        getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx');
+        isFeatureEnabledSpy = jasmine
+            .createSpy('isFeatureEnabled')
+            .and.callFake(f => f == ExperimentalFeatures.EditWithContentModel);
+        cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
+        addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
+
+        contentDiv = document.createElement('div');
+
+        editor = ({
+            contains: (e: Node) => contentDiv != e && contentDiv.contains(e),
+            getSelectionRangeEx,
+            getContentModelDefaultFormat: () => ({
+                fontFamily: 'Arial',
+            }),
+            isFeatureEnabled: isFeatureEnabledSpy,
+            cacheContentModel: cacheContentModelSpy,
+            addUndoSnapshot: addUndoSnapshotSpy,
+        } as any) as IContentModelEditor;
+    });
+
+    it('Collapsed range, text input, under editor directly', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'a' } as any;
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: true,
+                    startContainer: contentDiv,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            { fontFamily: 'Arial' },
+            new Position(contentDiv, 0)
+        );
+    });
+
+    it('Expanded range, text input, under editor directly', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'a' } as any;
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: false,
+                    startContainer: contentDiv,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    format: {},
+                                    text: 'test',
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).not.toHaveBeenCalled();
+        expect(addUndoSnapshotSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Collapsed range, IME input, under editor directly', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'Process' } as any;
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: true,
+                    startContainer: contentDiv,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            { fontFamily: 'Arial' },
+            new Position(contentDiv, 0)
+        );
+    });
+
+    it('Collapsed range, other input, under editor directly', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'Up' } as any;
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: true,
+                    startContainer: contentDiv,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).not.toHaveBeenCalled();
+    });
+
+    it('Collapsed range, normal input, not under editor directly, no style', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'a' } as any;
+        const div = document.createElement('div');
+
+        contentDiv.appendChild(div);
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: true,
+                    startContainer: div,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            { fontFamily: 'Arial' },
+            new Position(div, 0)
+        );
+    });
+
+    it('Collapsed range, text input, under editor directly, has pending format', () => {
+        const plugin = new ContentModelEditPlugin();
+        const rawEvent = { key: 'a' } as any;
+
+        getSelectionRangeEx.and.returnValue({
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    collapsed: true,
+                    startContainer: contentDiv,
+                    startOffset: 0,
+                },
+            ],
+        });
+
+        spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
+            (_1: any, _2: any, callback: Function) => {
+                callback({
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            isImplicit: true,
+                            segments: [
+                                {
+                                    segmentType: 'SelectionMarker',
+                                    format: {},
+                                    isSelected: true,
+                                },
+                            ],
+                        },
+                    ],
+                });
+            }
+        );
+
+        getPendingFormatSpy.and.returnValue({
+            fontSize: '10pt',
+        });
+
+        plugin.initialize(editor);
+
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent,
+        });
+
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(
+            editor,
+            { fontFamily: 'Arial', fontSize: '10pt' },
+            new Position(contentDiv, 0)
+        );
+    });
+});

@@ -1,4 +1,3 @@
-import { blockDecoratorProcessor } from '../processors/blockDecoratorProcessor';
 import { brProcessor } from '../processors/brProcessor';
 import { childProcessor } from '../processors/childProcessor';
 import { codeProcessor } from '../processors/codeProcessor';

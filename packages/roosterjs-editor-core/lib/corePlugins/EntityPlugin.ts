@@ -20,6 +20,7 @@ import {
     isBlockElement,
     getObjectKeys,
     isBlockElement,
+    getObjectKeys,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
