@@ -25,15 +25,20 @@ export interface EntityOperationEventData {
     rawEvent?: Event;
 
     /**
-     * A document fragment for entity based on Shadow DOM. This property is only available for NewEntity operation.
-     * Putting DOM nodes under this fragment will cause a shadow root to be attached to the entity wrapper
-     * with these DOM nodes under it.
-     *
-     * If there is already cached DOM nodes, they will also be put under this fragment.
-     * Plugin need to decide:
-     * 1. Apply the cache: do nothing and the DOM nodes will be appended as shadow DOM entity content
-     * 2. Discard the cache and use new content instead: clear the fragment and append new DOM nodes, then new DOM nodes will be used
-     * 3. Dehydrate this entity: clear the fragment, and leave it empty
+     * For EntityOperation.UpdateEntityState, we use this object to pass the new entity state to plugin.
+     * For other operation types, it is not used.
+     */
+    state?: string;
+
+    /**
+     * For EntityOperation.NewEntity, plugin can set this property to true then the entity will be persisted.
+     * A persisted entity won't be touched during undo/redo, unless it does not exist after undo/redo.
+     * For other operation types, this value will be ignored.
+     */
+    shouldPersist?: boolean;
+
+    /**
+     * @deprecated
      */
     contentForShadowEntity?: DocumentFragment;
 }

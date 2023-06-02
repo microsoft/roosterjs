@@ -61,6 +61,7 @@ const EntityOperationMap: { [key in EntityOperation]: string } = {
     [EntityOperation.RemoveFromEnd]: 'RemoveFromEnd',
     [EntityOperation.RemoveFromStart]: 'RemoveFromStart',
     [EntityOperation.ReplaceTemporaryContent]: 'ReplaceTemporaryContent',
+    [EntityOperation.UpdateEntityState]: 'UpdateEntityState',
 };
 
 export default class EventViewPane extends React.Component<

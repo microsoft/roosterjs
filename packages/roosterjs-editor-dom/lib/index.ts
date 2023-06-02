@@ -87,6 +87,7 @@ export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSele
 export {
     default as setHtmlWithSelectionPath,
     setHtmlWithMetadata,
+    extractContentMetadata,
 } from './selection/setHtmlWithSelectionPath';
 export { default as addRangeToSelection } from './selection/addRangeToSelection';
 

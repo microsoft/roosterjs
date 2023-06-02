@@ -6,7 +6,6 @@ import { ContentModelFormatState } from '../../publicTypes/format/formatState/Co
 import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
@@ -29,17 +28,6 @@ export function retrieveModelFormatState(
     let isFirstImage = true;
     let isFirstSegment = true;
 
-    if (pendingFormat) {
-        // Pending format
-        retrieveSegmentFormat(
-            formatState,
-            pendingFormat,
-            isFirst,
-            undefined /*segment*/,
-            model.format
-        );
-    }
-
     iterateSelections(
         [model],
         (path, tableContext, block, segments) => {
@@ -61,23 +49,30 @@ export function retrieveModelFormatState(
 
                 // Segment formats
                 segments?.forEach(segment => {
-                    if (!pendingFormat) {
-                        if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
-                            retrieveSegmentFormat(
-                                formatState,
+                    if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
+                        retrieveSegmentFormat(
+                            formatState,
+                            isFirst,
+                            Object.assign(
+                                {},
+                                model.format,
+                                block.format,
+                                block.decorator?.format,
                                 segment.format,
-                                isFirst,
-                                segment,
-                                model.format
-                            );
-                        }
+                                segment.code?.format,
+                                segment.link?.format,
+                                pendingFormat
+                            )
+                        );
 
-                        // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
-                        // is after some other selected segments, it mostly like appears at the beginning of a seconde line when the whole first line
-                        // is selected (e.g. triple-click on a line) then the second selection marker doesn't contain a correct format, so we need to
-                        // ignore it
-                        isFirstSegment = false;
+                        mergeValue(formatState, 'isCodeInline', !!segment?.code, isFirst);
                     }
+
+                    // We only care the format of selection marker when it is the first selected segment. This is because when selection marker
+                    // is after some other selected segments, it mostly like appears at the beginning of a seconde line when the whole first line
+                    // is selected (e.g. triple-click on a line) then the second selection marker doesn't contain a correct format, so we need to
+                    // ignore it
+                    isFirstSegment = false;
 
                     formatState.canUnlink = formatState.canUnlink || !!segment.link;
                     formatState.canAddImageAltText =
@@ -128,43 +123,25 @@ export function retrieveModelFormatState(
 
 function retrieveSegmentFormat(
     result: ContentModelFormatState,
-    format: ContentModelSegmentFormat,
     isFirst: boolean,
-    segment?: ContentModelSegment,
-    defaultFormat?: ContentModelSegmentFormat
+    mergedFormat: ContentModelSegmentFormat
 ) {
-    const superOrSubscript = format.superOrSubScriptSequence?.split(' ')?.pop();
-    mergeValue(result, 'isBold', isBold(format.fontWeight), isFirst);
-    mergeValue(result, 'isItalic', format.italic, isFirst);
-    mergeValue(
-        result,
-        'isUnderline',
-        segment?.link ? segment.link.format.underline : format.underline,
-        isFirst
-    );
-    mergeValue(result, 'isStrikeThrough', format.strikethrough, isFirst);
+    const superOrSubscript = mergedFormat.superOrSubScriptSequence?.split(' ')?.pop();
+
+    mergeValue(result, 'isBold', isBold(mergedFormat.fontWeight), isFirst);
+    mergeValue(result, 'isItalic', mergedFormat.italic, isFirst);
+    mergeValue(result, 'isUnderline', mergedFormat.underline, isFirst);
+    mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst);
     mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
     mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
 
-    mergeValue(
-        result,
-        'fontName',
-        (segment?.code ? segment.code.format.fontFamily : format.fontFamily) ||
-            defaultFormat?.fontFamily,
-        isFirst
-    );
-    mergeValue(result, 'fontSize', format.fontSize || defaultFormat?.fontSize, isFirst);
-    mergeValue(
-        result,
-        'backgroundColor',
-        format.backgroundColor || defaultFormat?.backgroundColor,
-        isFirst
-    );
-    mergeValue(result, 'textColor', format.textColor || defaultFormat?.textColor, isFirst);
+    mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst);
+    mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);
+    mergeValue(result, 'backgroundColor', mergedFormat.backgroundColor, isFirst);
+    mergeValue(result, 'textColor', mergedFormat.textColor, isFirst);
 
     //TODO: handle block owning segments with different line-heights
-    mergeValue(result, 'lineHeight', format.lineHeight, isFirst);
-    mergeValue(result, 'isCodeInline', !!segment?.code, isFirst);
+    mergeValue(result, 'lineHeight', mergedFormat.lineHeight, isFirst);
 }
 
 function retrieveParagraphFormat(
