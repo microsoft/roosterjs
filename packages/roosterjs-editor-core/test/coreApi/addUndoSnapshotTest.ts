@@ -36,6 +36,7 @@ describe('addUndoSnapshot', () => {
                     end: [],
                 },
                 knownColors: [],
+                entityStates: undefined,
             },
             false
         );
@@ -56,6 +57,7 @@ describe('addUndoSnapshot', () => {
                     end: [],
                 },
                 knownColors: [],
+                entityStates: undefined,
             },
             false
         );
@@ -97,11 +99,13 @@ describe('addUndoSnapshot', () => {
             html: 'result 1',
             metadata: { type: 0, isDarkMode: false, start: [], end: [] },
             knownColors: [],
+            entityStates: undefined,
         });
         expect(snapshot2).toEqual({
             html: 'result 2',
             metadata: { type: 0, isDarkMode: false, start: [], end: [] },
             knownColors: [],
+            entityStates: undefined,
         });
         expect(core.undo.isNested).toBeFalsy();
     });
@@ -264,6 +268,7 @@ describe('addUndoSnapshot', () => {
                     end: [],
                 },
                 knownColors: [],
+                entityStates: undefined,
             },
             false
         );
@@ -299,6 +304,7 @@ describe('addUndoSnapshot', () => {
                     ...selectionPath,
                 },
                 knownColors: [],
+                entityStates: undefined,
             },
             false
         );
@@ -336,9 +342,34 @@ describe('addUndoSnapshot', () => {
                     ...coordinates,
                 },
                 knownColors: [],
+                entityStates: undefined,
             },
             false
         );
+    });
+
+    it('Do not add snapshot before callback when there is getEntityState callback', () => {
+        const core = createEditorCore(div, {});
+        const addSnapshot = jasmine.createSpy('addSnapshot');
+        const mockedState = 'STATE' as any;
+
+        core.undo.snapshotsService = createUndoSnapshotService(addSnapshot);
+
+        addUndoSnapshot(
+            core,
+            () => {
+                div.innerHTML = 'test';
+            },
+            null,
+            false,
+            {
+                getEntityState: () => mockedState,
+            }
+        );
+
+        expect(addSnapshot).toHaveBeenCalledTimes(1);
+        expect(addSnapshot.calls.argsFor(0)[0].html).toBe('test');
+        expect(addSnapshot.calls.argsFor(0)[0].entityStates).toBe(mockedState);
     });
 });
 

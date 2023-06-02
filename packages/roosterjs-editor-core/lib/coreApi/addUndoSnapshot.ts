@@ -1,3 +1,4 @@
+import { EntityState } from 'roosterjs-editor-types';
 import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import {
     AddUndoSnapshot,
@@ -21,7 +22,7 @@ import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatib
  * @param callback The editing callback, accepting current selection start and end position, returns an optional object used as the data field of ContentChangedEvent.
  * @param changeSource The ChangeSource string of ContentChangedEvent. @default ChangeSource.Format. Set to null to avoid triggering ContentChangedEvent
  * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
- * @param formatApiName Optional parameter to provide the ContentChangeEvent which FormatApi was invoked.
+ * @param additionalData @optional parameter to provide additional data related to the ContentChanged Event.
  */
 export const addUndoSnapshot: AddUndoSnapshot = (
     core: EditorCore,
@@ -37,7 +38,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     if (!isNested) {
         undoState.isNested = true;
 
-        addUndoSnapshotInternal(core, canUndoByBackspace);
+        // When there is getEntityState, it means this is triggered by an entity change.
+        // So if HTML content is not changed (hasNewContent is false), no need to add another snapshot before change
+        if (core.undo.hasNewContent || !additionalData?.getEntityState || !callback) {
+            addUndoSnapshotInternal(core, canUndoByBackspace, additionalData?.getEntityState?.());
+        }
     }
 
     try {
@@ -49,7 +54,8 @@ export const addUndoSnapshot: AddUndoSnapshot = (
             );
 
             if (!isNested) {
-                addUndoSnapshotInternal(core, false /*isAutoCompleteSnapshot*/);
+                const entityStates = additionalData?.getEntityState?.();
+                addUndoSnapshotInternal(core, false /*isAutoCompleteSnapshot*/, entityStates);
             }
         }
     } finally {
@@ -78,7 +84,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
     }
 };
 
-function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) {
+function addUndoSnapshotInternal(
+    core: EditorCore,
+    canUndoByBackspace: boolean,
+    entityStates?: EntityState[]
+) {
     if (!core.lifecycle.shadowEditFragment) {
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
@@ -89,6 +99,7 @@ function addUndoSnapshotInternal(core: EditorCore, canUndoByBackspace: boolean) 
                 html: core.contentDiv.innerHTML,
                 metadata,
                 knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
+                entityStates,
             },
             canUndoByBackspace
         );

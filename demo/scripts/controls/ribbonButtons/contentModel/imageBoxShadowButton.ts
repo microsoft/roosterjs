@@ -43,7 +43,7 @@ export const imageBoxShadowButton: RibbonButton<'buttonNameImageBoxSHadow'> = {
     },
     onClick: (editor, size) => {
         if (isContentModelEditor(editor)) {
-            setImageBoxShadow(editor, STYLES[size]);
+            setImageBoxShadow(editor, STYLES[size], STYLES[size].length ? '4px' : null);
         }
         return true;
     },
