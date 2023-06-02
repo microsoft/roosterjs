@@ -8,14 +8,16 @@ import { segmentTestCommon } from '../segment/segmentTestCommon';
 
 describe('setImageBoxShadow', () => {
     const style = '0px 0px 3px 3px #aaaaaa';
+    const margin = '1px';
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
-        calledTimes: number
+        calledTimes: number,
+        nullMargin: boolean = false
     ) {
         segmentTestCommon(
             'setImageBoxShadow',
-            editor => setImageBoxShadow(editor, style),
+            editor => setImageBoxShadow(editor, style, nullMargin ? null : margin),
             model,
             result,
             calledTimes
@@ -120,6 +122,10 @@ describe('setImageBoxShadow', () => {
                                 dataset: {},
                                 format: {
                                     boxShadow: '0px 0px 3px 3px #aaaaaa',
+                                    marginBottom: margin,
+                                    marginLeft: margin,
+                                    marginRight: margin,
+                                    marginTop: margin,
                                 },
                             },
                         ],
@@ -127,6 +133,47 @@ describe('setImageBoxShadow', () => {
                 ],
             },
             1
+        );
+    });
+
+    it('Doc with selection and image with margin, removing margin', () => {
+        const doc = createContentModelDocument();
+        const img = createImage('test', {
+            marginBottom: margin,
+            marginLeft: margin,
+            marginRight: margin,
+            marginTop: margin,
+        });
+
+        img.isSelected = true;
+
+        addSegment(doc, img);
+
+        runTest(
+            doc,
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        isImplicit: true,
+                        segments: [
+                            {
+                                segmentType: 'Image',
+                                src: 'test',
+                                isSelected: true,
+                                dataset: {},
+                                format: {
+                                    boxShadow: '0px 0px 3px 3px #aaaaaa',
+                                },
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            true /* nullMargin */
         );
     });
 });
