@@ -162,10 +162,6 @@ function cloneParagraph(paragraph: ContentModelParagraph): ContentModelParagraph
         cloneModelWithFormat(paragraph)
     );
 
-    if (paragraph.zeroFontSize) {
-        newParagraph.zeroFontSize = true;
-    }
-
     if (decorator) {
         newParagraph.decorator = Object.assign(
             {

@@ -169,28 +169,6 @@ describe('blockProcessor', () => {
         );
     });
 
-    it('DIV with zero font', () => {
-        const div = document.createElement('div');
-
-        div.style.fontSize = '0';
-
-        runTest(
-            div,
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        segments: [],
-                        format: {},
-                        zeroFontSize: true,
-                    },
-                ],
-            },
-            {}
-        );
-    });
-
     it('DIV with segment format', () => {
         const div = document.createElement('div');
 

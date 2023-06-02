@@ -509,43 +509,6 @@ describe('knownElementProcessor', () => {
         });
     });
 
-    it('Paragraph with zero font size', () => {
-        const group = createContentModelDocument();
-        const div = document.createElement('div');
-
-        div.appendChild(document.createTextNode('test1'));
-        div.style.fontSize = '0px';
-
-        knownElementProcessor(group, div, context);
-
-        expect(group).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segmentFormat: { fontSize: '0px' },
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            format: {
-                                fontSize: '0px',
-                            },
-                            text: 'test1',
-                        },
-                    ],
-                    zeroFontSize: true,
-                },
-                {
-                    blockType: 'Paragraph',
-                    format: {},
-                    segments: [],
-                    isImplicit: true,
-                },
-            ],
-        });
-    });
-
     it('div with align attribute, need to use FormatContainer', () => {
         const group = createContentModelDocument();
         const div = document.createElement('div');

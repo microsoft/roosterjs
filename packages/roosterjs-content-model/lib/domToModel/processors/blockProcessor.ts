@@ -40,10 +40,6 @@ export function blockProcessor(
             decorator
         );
 
-        if (element.style.fontSize && parseInt(element.style.fontSize) == 0) {
-            paragraph.zeroFontSize = true;
-        }
-
         addBlock(group, paragraph);
     }
 
