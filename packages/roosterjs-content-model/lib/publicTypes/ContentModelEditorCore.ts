@@ -76,19 +76,6 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel: SetContentModel;
-
-    /**
-     * @deprecated
-     * Create a content model to use when pasting.
-     * @param core The ContentModelEditorCore object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param position The position to paste to
-     * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
-     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
-     * @param pasteAsImage Whether to force paste as image
-     * false to keep original format
-     */
-    createPasteModel: CreatePasteModel;
 }
 
 /**
