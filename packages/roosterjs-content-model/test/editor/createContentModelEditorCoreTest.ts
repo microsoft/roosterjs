@@ -6,7 +6,6 @@ import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/Cont
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
@@ -68,14 +67,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -131,14 +128,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions,
             defaultModelToDomOptions,
@@ -207,14 +202,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -269,14 +262,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -333,14 +324,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
