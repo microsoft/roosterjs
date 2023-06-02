@@ -1,9 +1,9 @@
 import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
+import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 
 describe('processPastedContentFromWordDesktopTest', () => {
@@ -790,6 +790,220 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     },
                 ],
             });
+        });
+
+        /**
+         *  Input
+         *  1. li
+         *      2. li
+         *          3. (p with msolist)
+         *              4. li
+         *
+         *  Result
+         *
+         *  1. li
+         *      2. li
+         *          3. li
+         *              4. li
+         */
+        it('Both List and Divs with mso-list metdata', () => {
+            runTest(
+                '<ol type="1" start="1" style="margin-top:0in">' +
+                    '<li style="margin-left:0in;mso-list:l0 level1 lfo1" class="MsoListParagraph">123123</li>' +
+                    '<ol type="a" start="1" style="margin-top:0in">' +
+                    '<li style="margin-left:0in;mso-list:l0 level2 lfo1" class="MsoListParagraph">123123</li>' +
+                    '</ol>' +
+                    '</ol>' +
+                    '<p style="margin-left:1.5in;text-indent:-1.5in;' +
+                    'mso-text-indent-alt:-9.0pt;mso-list:l0 level3 lfo1" class="MsoListParagraph">123123</p>' +
+                    '<ol type="1" start="1" style="margin-top:0in">' +
+                    '<ol type="a" start="1" style="margin-top:0in">' +
+                    '<ol type="i" start="1" style="margin-top:0in">' +
+                    '<ol type="1" start="1" style="margin-top:0in">' +
+                    '<li style="margin-left:0in;mso-list:l0 level4 lfo1" class="MsoListParagraph">123123123</li>' +
+                    '</ol>' +
+                    '</ol>' +
+                    '</ol>' +
+                    '</ol>',
+                Browser.isFirefox
+                    ? '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol style="margin-top: 1em;" start="1"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>'
+                    : '<ol start="1"><li>123123</li><ol start="1"><li style="list-style-type: lower-alpha;">123123</li><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em; list-style-type: lower-roman;">123123</li><ol start="1"><li style="list-style-type: decimal;">123123123</li></ol></ol></ol></ol>',
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: '123123',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: { marginLeft: undefined },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: '123123',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: { marginLeft: undefined },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: '123123',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                    marginLeft: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: {
+                                marginTop: '1em',
+                                marginBottom: '1em',
+                                marginLeft: undefined,
+                            },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: '123123123',
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                    marginLeft: undefined,
+                                },
+                                {
+                                    listType: 'OL',
+                                    startNumberOverride: undefined,
+                                    marginLeft: undefined,
+                                    marginBottom: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: { marginLeft: undefined },
+                        },
+                    ],
+                }
+            );
         });
     });
 });
