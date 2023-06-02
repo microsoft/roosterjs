@@ -1,4 +1,5 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
+import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
@@ -179,7 +180,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 }).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
                         removeContentForAndroid(editor);
-                        editor.paste(clipboardData);
+                        paste(editor, clipboardData);
                     }
                 });
             }

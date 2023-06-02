@@ -1,4 +1,3 @@
-import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelBlockGroupType } from '../../publicTypes/enum/BlockGroupType';
@@ -26,25 +25,33 @@ export type OperationalBlocks<T extends ContentModelBlockGroup> = {
 /**
  * @internal
  */
-export function getSelectedSegments(
+export function getSelectedSegmentsAndParagraphs(
     model: ContentModelDocument,
     includingFormatHolder: boolean
-): ContentModelSegment[] {
+): [ContentModelSegment, ContentModelParagraph | null][] {
     const selections = collectSelections(model, {
         includeListFormatHolder: includingFormatHolder ? 'allSegments' : 'never',
     });
-    const result: ContentModelSegment[] = [];
+    const result: [ContentModelSegment, ContentModelParagraph | null][] = [];
 
     selections.forEach(({ segments, block }) => {
         if (segments && ((includingFormatHolder && !block) || block?.blockType == 'Paragraph')) {
-            arrayPush(
-                result,
-                segments.filter(x => x.segmentType != 'Entity' || !x.isReadonly)
-            );
+            segments.forEach(segment => {
+                if (segment.segmentType != 'Entity' || !segment.isReadonly) {
+                    result.push([segment, block?.blockType == 'Paragraph' ? block : null]);
+                }
+            });
         }
     });
 
     return result;
+}
+
+export function getSelectedSegments(
+    model: ContentModelDocument,
+    includingFormatHolder: boolean
+): ContentModelSegment[] {
+    return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
 }
 
 /**

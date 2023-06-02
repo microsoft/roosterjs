@@ -139,7 +139,7 @@ describe('retrieveModelFormatState', () => {
     it('Single selection with header', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
-        const para = createParagraph(false, undefined, {
+        const para = createParagraph(false, undefined, undefined, {
             format: {},
             tagName: 'h1',
         });

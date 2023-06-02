@@ -1376,4 +1376,89 @@ describe('wordOnlineHandler', () => {
             }
         );
     });
+
+    /**
+     *  1. List 1
+     *  Test
+     *  1. List 2
+     */
+    it('Text between lists', () => {
+        runTest(
+            '<div class="ListContainerWrapper"><ul><li>List1</li></ul></div><div><p>Text</p></div><div class="ListContainerWrapper"><ul><li>List2</li></ul></div>',
+            '<ul><li>List1</li></ul><p>Text</p><ul><li>List2</li></ul>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'List1',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                                marginLeft: undefined,
+                                paddingLeft: undefined,
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'Text', format: {} }],
+                        format: { marginTop: '1em', marginBottom: '1em' },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'List2',
+                                        format: {},
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                                marginLeft: undefined,
+                                paddingLeft: undefined,
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
 });
