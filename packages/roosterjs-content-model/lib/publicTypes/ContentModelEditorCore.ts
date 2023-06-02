@@ -1,6 +1,6 @@
-import { ClipboardData, CoreApiMap, EditorCore, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelDocument } from './group/ContentModelDocument';
 import { ContentModelSegmentFormat } from './format/ContentModelSegmentFormat';
+import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import { DomToModelOption, ModelToDomOption } from './IContentModelEditor';
 import { EditorContext } from './context/EditorContext';
 
@@ -31,25 +31,6 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption
 ) => void;
-
-/**
- * Create a content model to use when pasting.
- * @param core The ContentModelEditorCore object
- * @param clipboardData Clipboard data retrieved from clipboard
- * @param position The position to paste to
- * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
- * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * @param pasteAsImage Whether to force paste as image
- * false to keep original format
- */
-export type CreatePasteModel = (
-    core: ContentModelEditorCore,
-    clipboardData: ClipboardData,
-    position: NodePosition | null,
-    pasteAsText: boolean,
-    applyCurrentStyle: boolean,
-    pasteAsImage: boolean
-) => ContentModelDocument | null;
 
 /**
  * The interface for the map of core API for Content Model editor.
