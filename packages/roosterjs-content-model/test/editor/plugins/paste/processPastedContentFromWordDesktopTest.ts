@@ -3,10 +3,10 @@ import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
-import { handleWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
 import { moveChildNodes } from 'roosterjs-editor-dom';
+import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 
-describe('convertPastedContentFromWord', () => {
+describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
     let fragment: DocumentFragment;
 
@@ -19,7 +19,7 @@ describe('convertPastedContentFromWord', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWordDesktop(event);
+        processPastedContentFromWordDesktop(event);
 
         const model = domToContentModel(
             fragment,
