@@ -327,7 +327,7 @@ describe('formatContainerProcessor', () => {
                     ],
                     format: {},
                     isImplicit: false,
-                    zeroFontSize: true,
+                    segmentFormat: { fontSize: '0' },
                 },
                 { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },
             ],

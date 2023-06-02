@@ -65,7 +65,9 @@ export const formatContainerProcessor: ElementProcessor<HTMLElement> = (
             const paragraph = formatContainer.blocks[0] as ContentModelParagraph;
 
             if (formatContainer.zeroFontSize) {
-                paragraph.zeroFontSize = true;
+                paragraph.segmentFormat = Object.assign({}, paragraph.segmentFormat, {
+                    fontSize: '0',
+                });
             }
 
             Object.assign(paragraph.format, formatContainer.format);

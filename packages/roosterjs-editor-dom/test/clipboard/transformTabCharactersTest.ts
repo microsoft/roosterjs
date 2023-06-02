@@ -1,4 +1,4 @@
-import { transformTabCharacters } from '../../lib/clipboard/createFragmentFromClipboardData';
+import { transformTabCharacters } from '../../lib/clipboard/handleTextPaste';
 
 describe('transformTabCharacters', () => {
     it('no \t', () => {

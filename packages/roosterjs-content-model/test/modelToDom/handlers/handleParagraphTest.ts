@@ -455,43 +455,6 @@ describe('handleParagraph', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
 
-    it('With zeroFontSize = true and no text segment', () => {
-        const paragraph: ContentModelParagraph = {
-            blockType: 'Paragraph',
-            segments: [
-                {
-                    segmentType: 'Br',
-                    format: {},
-                },
-            ],
-            format: {},
-            zeroFontSize: true,
-        };
-
-        handleParagraph(document, parent, paragraph, context, null);
-
-        expect(parent.innerHTML).toBe('<div style="font-size: 0px;"></div>');
-    });
-
-    it('With zeroFontSize = true and has text segment', () => {
-        const paragraph: ContentModelParagraph = {
-            blockType: 'Paragraph',
-            segments: [
-                {
-                    segmentType: 'Text',
-                    format: {},
-                    text: 'test',
-                },
-            ],
-            format: {},
-            zeroFontSize: true,
-        };
-
-        handleParagraph(document, parent, paragraph, context, null);
-
-        expect(parent.innerHTML).toBe('<div></div>');
-    });
-
     it('Paragraph with only selection marker and BR', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',
@@ -511,16 +474,13 @@ describe('handleParagraph', () => {
                 },
             ],
             format: {},
-            zeroFontSize: true,
         };
 
         handleSegment.and.callFake(originalHandleSegment);
 
         handleParagraph(document, parent, paragraph, context, null);
 
-        expect(parent.innerHTML).toBe(
-            '<div style="font-size: 0px;"><span style="font-size: 10px;"><br></span></div>'
-        );
+        expect(parent.innerHTML).toBe('<div><span style="font-size: 10px;"><br></span></div>');
 
         const div = parent.firstChild as HTMLElement;
         const txt = div.firstChild?.firstChild as Text;
@@ -535,5 +495,31 @@ describe('handleParagraph', () => {
             start: { block: div, segment: txt },
             end: { block: div, segment: txt },
         });
+    });
+
+    it('Paragraph with inline format', () => {
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [
+                {
+                    segmentType: 'Text',
+                    format: {
+                        fontSize: '10px',
+                        fontFamily: 'Arial',
+                    },
+                    text: 'test',
+                },
+            ],
+            format: {},
+            segmentFormat: { fontSize: '10px' },
+        };
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<div style="font-size: 10px;"><span style="font-family: Arial;">test</span></div>'
+        );
     });
 });
