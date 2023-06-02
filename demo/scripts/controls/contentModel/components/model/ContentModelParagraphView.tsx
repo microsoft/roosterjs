@@ -49,7 +49,7 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
         return (
             <>
                 <BlockFormatView format={paragraph.format} />
-                <SegmentFormatView format={paragraph.segmentFormat} />
+                {paragraph.segmentFormat && <SegmentFormatView format={paragraph.segmentFormat} />}
             </>
         );
     }, [paragraph.format]);
