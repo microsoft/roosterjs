@@ -183,7 +183,7 @@ describe('toggleBold', () => {
                                 segmentType: 'Text',
                                 text: 'test',
                                 format: {
-                                    fontWeight: undefined,
+                                    fontWeight: 'normal',
                                 },
                                 isSelected: true,
                             },
@@ -306,6 +306,58 @@ describe('toggleBold', () => {
                                 isSelected: true,
                             },
                         ],
+                    },
+                ],
+            },
+            1
+        );
+    });
+
+    it('With separate selection', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
+                        decorator: {
+                            format: {
+                                fontWeight: 'bold',
+                            },
+                            tagName: 'h1',
+                        },
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontWeight: 'normal' },
+                                isSelected: true,
+                            },
+                        ],
+                        decorator: {
+                            format: {
+                                fontWeight: 'bold',
+                            },
+                            tagName: 'h1',
+                        },
                     },
                 ],
             },
