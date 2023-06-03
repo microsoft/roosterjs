@@ -259,7 +259,7 @@ describe('handleParagraph', () => {
                     },
                 ],
             },
-            '<h1 style="font-weight: normal;">test</h1>',
+            '<h1>test</h1>',
             1
         );
     });
@@ -285,7 +285,7 @@ describe('handleParagraph', () => {
                     },
                     {
                         segmentType: 'Text',
-                        format: {},
+                        format: { fontWeight: 'normal' },
                         text: 'test 2',
                     },
                 ],
@@ -368,7 +368,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
+        expect(stackFormat.stackFormat).toHaveBeenCalledTimes(2);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('h1');
     });
 
@@ -455,40 +455,71 @@ describe('handleParagraph', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
 
-    it('With zeroFontSize = true and no text segment', () => {
+    it('Paragraph with only selection marker and BR', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [
                 {
+                    segmentType: 'SelectionMarker',
+                    format: {
+                        fontSize: '10px',
+                    },
+                    isSelected: true,
+                },
+                {
                     segmentType: 'Br',
-                    format: {},
+                    format: {
+                        fontSize: '10px',
+                    },
                 },
             ],
             format: {},
-            zeroFontSize: true,
         };
+
+        handleSegment.and.callFake(originalHandleSegment);
 
         handleParagraph(document, parent, paragraph, context, null);
 
-        expect(parent.innerHTML).toBe('<div style="font-size: 0px;"></div>');
+        expect(parent.innerHTML).toBe('<div><span style="font-size: 10px;"><br></span></div>');
+
+        const div = parent.firstChild as HTMLElement;
+        const txt = div.firstChild?.firstChild as Text;
+        const br = div.lastChild?.lastChild as HTMLElement;
+
+        expect(div.tagName).toBe('DIV');
+        expect(txt.nodeType).toBe(Node.TEXT_NODE);
+        expect(txt.nodeValue).toBe('');
+        expect(br.tagName).toBe('BR');
+        expect(context.regularSelection).toEqual({
+            current: { block: div, segment: br },
+            start: { block: div, segment: txt },
+            end: { block: div, segment: txt },
+        });
     });
 
-    it('With zeroFontSize = true and has text segment', () => {
+    it('Paragraph with inline format', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',
             segments: [
                 {
                     segmentType: 'Text',
-                    format: {},
+                    format: {
+                        fontSize: '10px',
+                        fontFamily: 'Arial',
+                    },
                     text: 'test',
                 },
             ],
             format: {},
-            zeroFontSize: true,
+            segmentFormat: { fontSize: '10px' },
         };
+
+        handleSegment.and.callFake(originalHandleSegment);
 
         handleParagraph(document, parent, paragraph, context, null);
 
-        expect(parent.innerHTML).toBe('<div></div>');
+        expect(parent.innerHTML).toBe(
+            '<div style="font-size: 10px;"><span style="font-family: Arial;">test</span></div>'
+        );
     });
 });

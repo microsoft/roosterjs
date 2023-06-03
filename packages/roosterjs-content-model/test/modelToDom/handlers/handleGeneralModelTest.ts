@@ -71,10 +71,10 @@ describe('handleBlockGroup', () => {
 
         handleGeneralModel(document, parent, group, context, null);
 
-        expect(parent.outerHTML).toBe('<div><span></span></div>');
+        expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
         expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild);
+        expect(parent.firstChild?.firstChild).toBe(clonedChild);
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -98,10 +98,10 @@ describe('handleBlockGroup', () => {
 
         handleGeneralModel(document, parent, group, context, null);
 
-        expect(parent.outerHTML).toBe('<div><span></span></div>');
+        expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
         expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild);
+        expect(parent.firstChild?.firstChild).toBe(clonedChild);
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(
@@ -133,10 +133,10 @@ describe('handleBlockGroup', () => {
 
         handleGeneralModel(document, parent, group, context, null);
 
-        expect(parent.outerHTML).toBe('<div><a href="/test"><span></span></a></div>');
+        expect(parent.outerHTML).toBe('<div><span><a href="/test"><span></span></a></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
         expect(typeof parent.firstChild).toBe('object');
-        expect(parent.firstChild).toBe(clonedChild.parentElement);
+        expect(parent.firstChild?.firstChild).toBe(clonedChild.parentElement);
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
         expect(handleBlockGroupChildren).toHaveBeenCalledWith(

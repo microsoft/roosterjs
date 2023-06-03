@@ -1,11 +1,11 @@
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { createPasteModel } from '../../lib/editor/coreApi/createPasteModel';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
@@ -53,7 +53,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
-                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                typeInContainer: undefined,
                 copyPaste: copyPastePlugin,
             },
         });
@@ -67,14 +67,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -105,6 +103,7 @@ describe('createContentModelEditorCore', () => {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
+            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         };
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -116,6 +115,7 @@ describe('createContentModelEditorCore', () => {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
+            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         });
 
         expect(core).toEqual({
@@ -128,14 +128,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions,
             defaultModelToDomOptions,
@@ -172,6 +170,11 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) => feature == ExperimentalFeatures.EditWithContentModel
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -199,14 +202,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -235,6 +236,13 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) =>
+                feature == ExperimentalFeatures.EditWithContentModel ||
+                feature == ExperimentalFeatures.ReusableContentModel
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -254,14 +262,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},
@@ -292,6 +298,13 @@ describe('createContentModelEditorCore', () => {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) =>
+                feature == ExperimentalFeatures.EditWithContentModel ||
+                feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+        );
+
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -311,14 +324,12 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             originalApi: {
                 a: 'b',
                 createEditorContext,
                 createContentModel,
                 setContentModel,
-                createPasteModel,
             },
             defaultDomToModelOptions: {},
             defaultModelToDomOptions: {},

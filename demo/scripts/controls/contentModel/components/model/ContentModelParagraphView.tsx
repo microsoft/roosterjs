@@ -15,20 +15,12 @@ const styles = require('./ContentModelParagraphView.scss');
 export function ContentModelParagraphView(props: { paragraph: ContentModelParagraph }) {
     const { paragraph } = props;
     const implicitCheckbox = React.useRef<HTMLInputElement>(null);
-    const zeroFontCheckbox = React.useRef<HTMLInputElement>(null);
     const [isImplicit, setIsImplicit] = useProperty(!!paragraph.isImplicit);
-    const [isZeroFont, setZeroFont] = useProperty(!!paragraph.zeroFontSize);
 
     const onIsImplicitChange = React.useCallback(() => {
         const newValue = implicitCheckbox.current.checked;
         paragraph.isImplicit = newValue;
         setIsImplicit(newValue);
-    }, [paragraph, setIsImplicit]);
-
-    const onChangeZeroFontSize = React.useCallback(() => {
-        const newValue = zeroFontCheckbox.current.checked;
-        paragraph.zeroFontSize = newValue;
-        setZeroFont(newValue);
     }, [paragraph, setIsImplicit]);
 
     const getContent = React.useCallback(() => {
@@ -43,15 +35,6 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
                     />
                     Implicit
                 </div>
-                <div>
-                    <input
-                        type="checkbox"
-                        checked={isZeroFont}
-                        ref={zeroFontCheckbox}
-                        onChange={onChangeZeroFontSize}
-                    />
-                    Zero font size
-                </div>
                 {paragraph.decorator && (
                     <ContentModelParagraphDecoratorView decorator={paragraph.decorator} />
                 )}
@@ -60,14 +43,15 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
                 ))}
             </>
         );
-    }, [
-        paragraph,
-        isImplicit,
-        // headerLevel
-    ]);
+    }, [paragraph, isImplicit]);
 
     const getFormat = React.useCallback(() => {
-        return <BlockFormatView format={paragraph.format} />;
+        return (
+            <>
+                <BlockFormatView format={paragraph.format} />
+                {paragraph.segmentFormat && <SegmentFormatView format={paragraph.segmentFormat} />}
+            </>
+        );
     }, [paragraph.format]);
 
     return (
