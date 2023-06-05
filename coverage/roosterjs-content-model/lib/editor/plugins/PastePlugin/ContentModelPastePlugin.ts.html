@@ -166,16 +166,19 @@
 <a name='L107'></a><a href='#L107'>107</a>
 <a name='L108'></a><a href='#L108'>108</a>
 <a name='L109'></a><a href='#L109'>109</a>
-<a name='L110'></a><a href='#L110'>110</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L110'></a><a href='#L110'>110</a>
+<a name='L111'></a><a href='#L111'>111</a>
+<a name='L112'></a><a href='#L112'>112</a>
+<a name='L113'></a><a href='#L113'>113</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -186,6 +189,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -279,12 +285,12 @@
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import deprecatedColorParser from './utils/deprecatedColorParser';
 import sanitizeLinks from './utils/linkParser';
-import { convertPastedContentFromExcel } from './Excel/convertPastedContentFromExcel';
-import { convertPastedContentFromPowerPoint } from './PowerPoint/convertPastedContentFromPowerPoint';
 import { getPasteSource } from 'roosterjs-editor-dom';
-import { handleWacComponentsPaste } from './WacComponents/handleWacComponentsPaste';
-import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
+import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
+import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
+import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
+import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import {
     EditorPlugin,
     IEditor,
@@ -299,6 +305,9 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
  * 1. Content copied from Word
+ * 2. Content copied from Excel
+ * 3. Content copied from Word Online or OneNote Online
+ * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
@@ -355,10 +364,10 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         const pasteSource = getPasteSource(event, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
-                handleWordDesktop(ev);
+                processPastedContentFromWordDesktop(ev);
                 break;
 <span class="branch-1 cbranch-no" title="branch not covered" >            case KnownPasteSourceType.WacComponents:</span>
-<span class="cstat-no" title="statement not covered" >                handleWacComponentsPaste(ev);</span>
+<span class="cstat-no" title="statement not covered" >                processPastedContentWacComponents(ev);</span>
 <span class="cstat-no" title="statement not covered" >                break;</span>
 <span class="branch-2 cbranch-no" title="branch not covered" >            case KnownPasteSourceType.ExcelOnline:</span>
 <span class="cstat-no" title="statement not covered" >                if (</span>
@@ -366,14 +375,14 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                     event.pasteType === PasteType.MergeFormat
                 ) {
                     // Handle HTML copied from Excel
-<span class="cstat-no" title="statement not covered" >                    convertPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());</span>
+<span class="cstat-no" title="statement not covered" >                    processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());</span>
                 }
 <span class="cstat-no" title="statement not covered" >                break;</span>
 <span class="branch-3 cbranch-no" title="branch not covered" >            case KnownPasteSourceType.GoogleSheets:</span>
 <span class="cstat-no" title="statement not covered" >                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';</span>
 <span class="cstat-no" title="statement not covered" >                break;</span>
 <span class="branch-4 cbranch-no" title="branch not covered" >            case KnownPasteSourceType.PowerPointDesktop:</span>
-<span class="cstat-no" title="statement not covered" >                convertPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());</span>
+<span class="cstat-no" title="statement not covered" >                processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());</span>
 <span class="cstat-no" title="statement not covered" >                break;</span>
         }
 &nbsp;
@@ -391,7 +400,7 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 02 2023 22:50:42 GMT+0000 (Coordinated Universal Time)
+                at Mon Jun 05 2023 14:49:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
