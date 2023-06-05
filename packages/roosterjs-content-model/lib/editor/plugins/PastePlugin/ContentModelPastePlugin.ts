@@ -2,12 +2,12 @@ import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import deprecatedColorParser from './utils/deprecatedColorParser';
 import sanitizeLinks from './utils/linkParser';
-import { convertPastedContentFromExcel } from './Excel/convertPastedContentFromExcel';
-import { convertPastedContentFromPowerPoint } from './PowerPoint/convertPastedContentFromPowerPoint';
 import { getPasteSource } from 'roosterjs-editor-dom';
-import { handleWacComponentsPaste } from './WacComponents/handleWacComponentsPaste';
-import { handleWordDesktop } from './WordDesktop/handleWordDesktopPaste';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
+import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
+import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
+import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
+import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import {
     EditorPlugin,
     IEditor,
@@ -22,6 +22,9 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 /**
  * Paste plugin, handles BeforePaste event and reformat some special content, including:
  * 1. Content copied from Word
+ * 2. Content copied from Excel
+ * 3. Content copied from Word Online or OneNote Online
+ * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
@@ -78,10 +81,10 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         const pasteSource = getPasteSource(event, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
-                handleWordDesktop(ev);
+                processPastedContentFromWordDesktop(ev);
                 break;
             case KnownPasteSourceType.WacComponents:
-                handleWacComponentsPaste(ev);
+                processPastedContentWacComponents(ev);
                 break;
             case KnownPasteSourceType.ExcelOnline:
                 if (
@@ -89,14 +92,14 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                     event.pasteType === PasteType.MergeFormat
                 ) {
                     // Handle HTML copied from Excel
-                    convertPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
+                    processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
                 }
                 break;
             case KnownPasteSourceType.GoogleSheets:
                 event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                 break;
             case KnownPasteSourceType.PowerPointDesktop:
-                convertPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
+                processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
                 break;
         }
 

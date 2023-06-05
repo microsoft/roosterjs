@@ -29,6 +29,9 @@ const DeprecatedColorList: string[] = [
     'windowtext',
 ];
 
+/**
+ * @internal
+ */
 const deprecatedColorParser: FormatParser<ContentModelHyperLinkFormat> = (
     format: ContentModelSegmentFormat,
     element: HTMLElement,

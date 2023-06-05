@@ -1,6 +1,6 @@
 import * as addParser from '../../../lib/editor/plugins/PastePlugin/utils/addParser';
 import * as getPasteSource from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
-import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
+import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelBeforePasteEvent from '../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import deprecatedColorParser from '../../../lib/editor/plugins/PastePlugin/utils/deprecatedColorParser';
@@ -63,12 +63,12 @@ describe('Paste', () => {
 
         it('WordDesktop', () => {
             spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.WordDesktop);
-            spyOn(WordDesktopFile, 'handleWordDesktop').and.callThrough();
+            spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop').and.callThrough();
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(WordDesktopFile.handleWordDesktop).toHaveBeenCalledWith(event);
+            expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledWith(event);
             expect(event.domToModelOption.processorOverride?.element).toBe(
                 WordDesktopFile.wordDesktopElementProcessor
             );
@@ -82,13 +82,13 @@ describe('Paste', () => {
 
         it('Default', () => {
             spyOn(getPasteSource, 'default').and.returnValue(KnownPasteSourceType.Default);
-            spyOn(WordDesktopFile, 'handleWordDesktop');
+            spyOn(WordDesktopFile, 'processPastedContentFromWordDesktop');
             spyOn(addParser, 'default').and.callThrough();
 
             plugin.initialize(editor);
             plugin.onPluginEvent(event);
 
-            expect(WordDesktopFile.handleWordDesktop).not.toHaveBeenCalled();
+            expect(WordDesktopFile.processPastedContentFromWordDesktop).not.toHaveBeenCalled();
             expect(event.domToModelOption.processorOverride?.element).toBeUndefined();
             expect(event.domToModelOption.additionalFormatParsers?.segment).toContain(
                 deprecatedColorParser

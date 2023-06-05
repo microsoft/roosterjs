@@ -1,15 +1,15 @@
-import * as PastePluginFile from '../../../../lib/editor/plugins/PastePlugin/Excel/convertPastedContentFromExcel';
+import * as PastePluginFile from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../../../lib/publicTypes';
-import { convertPastedContentFromExcel } from '../../../../lib/editor/plugins/PastePlugin/Excel/convertPastedContentFromExcel';
-import { createBeforePasteEventMock } from './wordDesktopTest';
+import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
+import { processPastedContentFromExcel } from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('excel Test', () => {
+describe('processPastedContentFromExcelTest', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
@@ -21,7 +21,7 @@ describe('excel Test', () => {
         const event = createBeforePasteEventMock(fragment);
 
         event.clipboardData.html = source;
-        convertPastedContentFromExcel(event, (s: string) => s);
+        processPastedContentFromExcel(event, (s: string) => s);
 
         const model = domToContentModel(
             fragment,
@@ -352,7 +352,7 @@ describe('Do not run scenarios', () => {
         if (excelHandler) {
             spyOn(PastePluginFile, 'excelHandler').and.returnValue(excelHandler);
         }
-        convertPastedContentFromExcel(event, (s: string) => s);
+        processPastedContentFromExcel(event, (s: string) => s);
 
         // Assert
         while (div.firstChild) {

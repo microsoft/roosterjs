@@ -12,7 +12,7 @@ const MSO_ELEMENT_COMMENT_LIST = 'comment-list';
  * this element.
  * @returns
  */
-export function processWordCommand(styles: Record<string, string>, element: HTMLElement) {
+export function processWordComments(styles: Record<string, string>, element: HTMLElement) {
     return (
         styles[MSO_SPECIAL_CHARACTER] == MSO_SPECIAL_CHARACTER_COMMENT ||
         (safeInstanceOf(element, 'HTMLAnchorElement') &&

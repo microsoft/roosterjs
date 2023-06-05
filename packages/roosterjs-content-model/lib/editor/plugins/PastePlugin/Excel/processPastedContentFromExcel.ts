@@ -8,13 +8,14 @@ const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
 const LAST_TR_REGEX = /<tr[^>]*>[^<]*/i;
 const LAST_TABLE_REGEX = /<table[^>]*>[^<]*/i;
 const DEFAULT_BORDER_STYLE = 'solid 1px #d4d4d4';
+
 /**
  * @internal
  * Convert pasted content from Excel, add borders when source doc doesn't have a border
  * @param event The BeforePaste event
  */
 
-export function convertPastedContentFromExcel(
+export function processPastedContentFromExcel(
     event: ContentModelBeforePasteEvent,
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
