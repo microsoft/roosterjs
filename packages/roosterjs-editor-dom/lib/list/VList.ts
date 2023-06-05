@@ -192,7 +192,7 @@ export default class VList {
         let lastList: Node;
 
         // Use a placeholder to hold the position since the root list may be moved into document fragment later
-        this.rootList.parentNode!.replaceChild(placeholder, this.rootList);
+        this.rootList.parentNode?.replaceChild(placeholder, this.rootList);
 
         this.items.forEach(item => {
             const newListStart = item.getNewListStart();
