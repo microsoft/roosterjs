@@ -82,10 +82,11 @@ export default function paste(
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
                     mergeCurrentFormat: applyCurrentFormat,
                 });
-                return clipboardData;
+                return true;
             },
             {
                 changeSource: ChangeSource.Paste,
+                getChangeData: () => clipboardData,
             }
         );
     }

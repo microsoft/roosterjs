@@ -48,7 +48,7 @@ export interface FormatWithContentModelOptions {
 export function formatWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
-    callback: (model: ContentModelDocument) => any,
+    callback: (model: ContentModelDocument) => boolean,
     options?: FormatWithContentModelOptions
 ) {
     const {
