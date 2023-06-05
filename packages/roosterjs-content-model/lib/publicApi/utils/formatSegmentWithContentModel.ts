@@ -1,9 +1,10 @@
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
+import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
+import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 /**
  * @internal
@@ -18,33 +19,42 @@ export function formatSegmentWithContentModel(
     ) => void,
     segmentHasStyleCallback?: (
         format: ContentModelSegmentFormat,
-        segment: ContentModelSegment | null
+        segment: ContentModelSegment | null,
+        paragraph: ContentModelParagraph | null
     ) => boolean,
     includingFormatHolder?: boolean
 ) {
     formatWithContentModel(editor, apiName, model => {
-        let segments = getSelectedSegments(model, !!includingFormatHolder);
+        let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(model, !!includingFormatHolder);
         const pendingFormat = getPendingFormat(editor);
         let isCollapsedSelection =
-            segments.length == 1 && segments[0].segmentType == 'SelectionMarker';
+            segmentAndParagraphs.length == 1 &&
+            segmentAndParagraphs[0][0].segmentType == 'SelectionMarker';
 
         if (isCollapsedSelection) {
-            segments = adjustWordSelection(model, segments[0]);
-            if (segments.length > 1) {
+            const para = segmentAndParagraphs[0][1];
+
+            segmentAndParagraphs = adjustWordSelection(model, segmentAndParagraphs[0][0]).map(x => [
+                x,
+                para,
+            ]);
+
+            if (segmentAndParagraphs.length > 1) {
                 isCollapsedSelection = false;
             }
         }
 
         const formatsAndSegments: [
             ContentModelSegmentFormat,
-            ContentModelSegment | null
+            ContentModelSegment | null,
+            ContentModelParagraph | null
         ][] = pendingFormat
-            ? [[pendingFormat, null]]
-            : segments.map(segment => [segment.format, segment]);
+            ? [[pendingFormat, null, null]]
+            : segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
         const isTurningOff = segmentHasStyleCallback
-            ? formatsAndSegments.every(([format, segment]) =>
-                  segmentHasStyleCallback(format, segment)
+            ? formatsAndSegments.every(([format, segment, paragraph]) =>
+                  segmentHasStyleCallback(format, segment, paragraph)
               )
             : false;
 
@@ -56,7 +66,7 @@ export function formatSegmentWithContentModel(
             const pos = editor.getFocusedPosition();
 
             if (pos) {
-                setPendingFormat(editor, segments[0].format, pos);
+                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos);
             }
         }
 

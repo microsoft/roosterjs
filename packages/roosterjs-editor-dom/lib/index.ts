@@ -22,6 +22,11 @@ export { default as extractClipboardEvent } from './clipboard/extractClipboardEv
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
 export { default as createFragmentFromClipboardData } from './clipboard/createFragmentFromClipboardData';
+export { default as handleImagePaste } from './clipboard/handleImagePaste';
+export { default as handleTextPaste } from './clipboard/handleTextPaste';
+export { default as retrieveMetadataFromClipboard } from './clipboard/retrieveMetadataFromClipboard';
+export { default as sanitizePasteContent } from './clipboard/sanitizePasteContent';
+export { default as getPasteType } from './clipboard/getPasteType';
 
 export { Browser, getBrowserInfo } from './utils/Browser';
 export { default as applyFormat } from './utils/applyFormat';
@@ -87,6 +92,7 @@ export { default as getHtmlWithSelectionPath } from './selection/getHtmlWithSele
 export {
     default as setHtmlWithSelectionPath,
     setHtmlWithMetadata,
+    extractContentMetadata,
 } from './selection/setHtmlWithSelectionPath';
 export { default as addRangeToSelection } from './selection/addRangeToSelection';
 

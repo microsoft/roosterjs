@@ -2,13 +2,14 @@ import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelBlockFormat } from '../../../../publicTypes/format/ContentModelBlockFormat';
+import { ContentModelListItemFormat } from '../../../../publicTypes/format/ContentModelListItemFormat';
 import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/ContentModelListItemLevelFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
-import { DomToModelOption } from '../../../../publicTypes/IContentModelEditor';
 import { ElementProcessor } from '../../../../publicTypes/context/ElementProcessor';
-import { ElementProcessorMap } from '../../../../publicTypes/context/DomToModelSettings';
-import { processWordCommand } from './processWordCommand';
+import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
+import { setProcessor } from '../utils/setProcessor';
+import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 
 const PERCENTAGE_REGEX = /%/;
 const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
@@ -18,10 +19,11 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
  * Handles Pasted content when source is Word Desktop
  * @param ev ContentModelBeforePasteEvent
  */
-export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
+export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
+    addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
 
     // Remove "border:none" for image to fix image resize behavior
     // We found a problem that when paste an image with "border:none" then the resize border will be
@@ -40,18 +42,6 @@ export function handleWordDesktop(ev: ContentModelBeforePasteEvent) {
     });
 }
 
-function setProcessor<TKey extends keyof ElementProcessorMap>(
-    domToModelOption: DomToModelOption,
-    entry: TKey,
-    processorOverride: Partial<ElementProcessorMap>[TKey]
-) {
-    if (!domToModelOption.processorOverride) {
-        domToModelOption.processorOverride = {};
-    }
-
-    domToModelOption.processorOverride[entry] = processorOverride;
-}
-
 /**
  * @internal
  * Exported only for unit test
@@ -64,7 +54,7 @@ export const wordDesktopElementProcessor: ElementProcessor<HTMLElement> = (
     const styles = getStyles(element);
     // Process Word Lists or Word Commands, otherwise use the default processor on this element.
     if (
-        !(processWordList(styles, group, element, context) || processWordCommand(styles, element))
+        !(processWordList(styles, group, element, context) || processWordComments(styles, element))
     ) {
         context.defaultElementProcessors.element(group, element, context);
     }
@@ -99,3 +89,15 @@ function listLevelParser(
 
     format.marginBottom = undefined;
 }
+
+const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
+    format: ContentModelListItemFormat,
+    element: HTMLElement
+): void => {
+    if (element.style.marginLeft) {
+        format.marginLeft = undefined;
+    }
+    if (element.style.marginRight) {
+        format.marginRight = undefined;
+    }
+};

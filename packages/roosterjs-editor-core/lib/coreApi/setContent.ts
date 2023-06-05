@@ -1,5 +1,9 @@
-import { createRange, queryElements } from 'roosterjs-editor-dom';
-import { setHtmlWithMetadata } from 'roosterjs-editor-dom';
+import {
+    createRange,
+    extractContentMetadata,
+    queryElements,
+    restoreContentWithEntityPlaceholder,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     ColorTransformDirection,
@@ -17,6 +21,8 @@ import {
  * @param core The EditorCore object
  * @param content HTML content to set in
  * @param triggerContentChangedEvent True to trigger a ContentChanged event. Default value is true
+ * @param metadata @optional Metadata of the content that helps editor know the selection and color mode.
+ * If not passed, we will treat content as in light mode without selection
  */
 export const setContent: SetContent = (
     core: EditorCore,
@@ -35,12 +41,16 @@ export const setContent: SetContent = (
             true /*broadcast*/
         );
 
-        const metadataFromContent = setHtmlWithMetadata(
-            core.contentDiv,
-            content,
-            core.trustedHTMLHandler
-        );
+        const entities = core.entity.entityMap;
+        const html = content || '';
+        const body = new DOMParser().parseFromString(
+            core.trustedHTMLHandler?.(html) ?? html,
+            'text/html'
+        ).body;
 
+        restoreContentWithEntityPlaceholder(body, core.contentDiv, entities);
+
+        const metadataFromContent = extractContentMetadata(core.contentDiv);
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);
         contentChanged = true;

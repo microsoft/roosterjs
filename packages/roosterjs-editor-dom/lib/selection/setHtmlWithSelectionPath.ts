@@ -87,6 +87,15 @@ export function setHtmlWithMetadata(
     html = html || '';
     rootNode.innerHTML = trustedHTMLHandler?.(html) || html;
 
+    return extractContentMetadata(rootNode);
+}
+
+/**
+ * Extract content metadata from DOM tree
+ * @param rootNode Root of the DOM tree
+ * @returns If there is a valid content metadata node in the give DOM tree, return this metadata object, otherwise undefined
+ */
+export function extractContentMetadata(rootNode: HTMLElement): ContentMetadata | undefined {
     const potentialMetadataComment = rootNode.lastChild;
 
     if (safeInstanceOf(potentialMetadataComment, 'Comment')) {

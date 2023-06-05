@@ -2,6 +2,7 @@ import { ContentModelBlockBase } from './ContentModelBlockBase';
 import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
 import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
+import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of Paragraph
@@ -15,6 +16,11 @@ export interface ContentModelParagraph
     segments: ContentModelSegment[];
 
     /**
+     * Segment format on this paragraph. This is mostly used for default format
+     */
+    segmentFormat?: ContentModelSegmentFormat;
+
+    /**
      * Header info for this paragraph if it is a header
      */
     decorator?: ContentModelParagraphDecorator;
@@ -24,10 +30,4 @@ export interface ContentModelParagraph
      * True means it doesn't have a related block element, false means it was from a block element
      */
     isImplicit?: boolean;
-
-    /**
-     * Whether we can apply "font-size: 0" to this paragraph. When set to true, we will check if there is no text segment inside,
-     * and apply "font-size: 0" to the container element
-     */
-    zeroFontSize?: boolean;
 }

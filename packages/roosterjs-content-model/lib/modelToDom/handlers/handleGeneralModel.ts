@@ -6,6 +6,7 @@ import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { wrap } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -33,9 +34,11 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
             context.regularSelection.current.segment = element;
         }
 
-        applyFormat(element, context.formatAppliers.segment, group.format, context);
+        const span = wrap(element, 'span');
 
-        context.modelHandlers.segmentDecorator(doc, element, group, context);
+        applyFormat(span, context.formatAppliers.segment, group.format, context);
+
+        context.modelHandlers.segmentDecorator(doc, span, group, context);
     }
 
     context.modelHandlers.blockGroupChildren(doc, element, group, context);
