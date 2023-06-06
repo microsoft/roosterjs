@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.25% </span>
+                <span class="strong">76.79% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>91/112</span>
+                <span class='fraction'>86/112</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">58.11% </span>
+                <span class="strong">55.41% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>43/74</span>
+                <span class='fraction'>41/74</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">59.26% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>18/27</span>
+                <span class='fraction'>16/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.48% </span>
+                <span class="strong">76.85% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>88/108</span>
+                <span class='fraction'>83/108</span>
             </div>
         
             
@@ -55,7 +55,7 @@
             Press <em>n</em> or <em>j</em> to go to the next uncovered block, <em>b</em>, <em>p</em> or <em>k</em> for the previous block.
         </p>
     </div>
-    <div class='status-line high'></div>
+    <div class='status-line medium'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -375,16 +375,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">35x</span>
-<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -400,9 +400,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
-<span class="cline-any cline-yes">30x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
@@ -413,18 +413,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
@@ -502,7 +502,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">35x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -661,7 +661,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
      */
     constructor(options: EditorOptions) {
         this.state = {
-            allowedCustomPasteType: options.allowedCustomPasteType || [],
+            allowedCustomPasteType: options.allowedCustomPasteType || <span class="branch-1 cbranch-no" title="branch not covered" >[],</span>
         };
     }
 &nbsp;
@@ -688,19 +688,19 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
     /**
      * Dispose this plugin
      */
-    dispose() {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (this.disposer) {
-            this.disposer();
+<span class="fstat-no" title="function not covered" >    dispose(</span>) {
+<span class="cstat-no" title="statement not covered" >        if (this.disposer) {</span>
+<span class="cstat-no" title="statement not covered" >            this.disposer();</span>
         }
-        this.disposer = null;
-        this.editor = null;
+<span class="cstat-no" title="statement not covered" >        this.disposer = null;</span>
+<span class="cstat-no" title="statement not covered" >        this.editor = null;</span>
     }
 &nbsp;
     /**
      * Get plugin state object
      */
-    getState() {
-        return this.state;
+<span class="fstat-no" title="function not covered" >    getState(</span>) {
+<span class="cstat-no" title="statement not covered" >        return this.state;</span>
     }
 &nbsp;
     private onCutCopy(event: Event, isCut: boolean) {
@@ -892,7 +892,7 @@ export const onNodeCreated = <span class="fstat-no" title="function not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Jun 05 2023 14:49:52 GMT+0000 (Coordinated Universal Time)
+                at Tue Jun 06 2023 01:23:35 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
