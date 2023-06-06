@@ -42,6 +42,11 @@ export interface MergeModelOption {
      * @default false
      */
     mergeCurrentFormat?: boolean;
+
+    /**
+     *
+     */
+    applyCurrentFormat?: boolean;
 }
 
 /**
@@ -57,13 +62,17 @@ export function mergeModel(
         options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
-        if (options?.mergeCurrentFormat) {
+        if (options?.mergeCurrentFormat || options?.applyCurrentFormat) {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat);
+            applyDefaultFormat(
+                source,
+                newFormat,
+                options?.mergeCurrentFormat ? 'MergeCurrentFormat' : 'ApplyDefaultFormat'
+            );
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -259,17 +268,21 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     }
 }
 
-function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelSegmentFormat) {
+function applyDefaultFormat(
+    group: ContentModelBlockGroup,
+    format: ContentModelSegmentFormat,
+    applyDefaultFormatOption: 'ApplyDefaultFormat' | 'MergeCurrentFormat'
+) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':
-                applyDefaultFormat(block, format);
+                applyDefaultFormat(block, format, applyDefaultFormatOption);
                 break;
 
             case 'Table':
                 block.rows.forEach(row =>
                     row.cells.forEach(cell => {
-                        applyDefaultFormat(cell, format);
+                        applyDefaultFormat(cell, format, applyDefaultFormatOption);
                     })
                 );
                 break;
@@ -277,10 +290,18 @@ function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelS
             case 'Paragraph':
                 block.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
-                        applyDefaultFormat(segment, format);
+                        applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format = { ...format, ...segment.format };
+                    segment.format =
+                        applyDefaultFormatOption == 'MergeCurrentFormat'
+                            ? { ...format, ...segment.format }
+                            : {
+                                  ...format,
+                                  fontWeight: segment.format.fontWeight || format.fontWeight,
+                                  italic: segment.format.italic || format.italic,
+                                  underline: segment.format.underline || format.underline,
+                              };
                 });
                 break;
         }
