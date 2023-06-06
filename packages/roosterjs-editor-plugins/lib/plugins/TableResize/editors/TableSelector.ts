@@ -72,13 +72,13 @@ export default function createTableSelector(
     return { div, featureHandler, node: table };
 }
 
-export interface TableSelectorContext {
+interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
 }
 
-export interface TableSelectorInitValue {
+interface TableSelectorInitValue {
     event: MouseEvent;
 }
 
