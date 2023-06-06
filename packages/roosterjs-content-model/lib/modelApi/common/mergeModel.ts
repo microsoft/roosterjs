@@ -301,27 +301,25 @@ function applyDefaultFormat(
                             ? { ...format, ...segment.format }
                             : {
                                   ...format,
-                                  ...mergeSemanticFormat(segment, format),
+                                  ...getSemanticFormat(segment),
                               };
                 });
                 break;
         }
     });
 }
-function mergeSemanticFormat(
-    segment: ContentModelSegment,
-    format: ContentModelSegmentFormat
-): ContentModelSegmentFormat {
+
+function getSemanticFormat(segment: ContentModelSegment): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
-    if (segment.format.fontWeight || format.fontWeight) {
-        result.fontWeight = segment.format.fontWeight || format.fontWeight;
+    if (segment.format.fontWeight) {
+        result.fontWeight = segment.format.fontWeight;
     }
-    if (segment.format.italic || format.italic) {
-        result.italic = segment.format.italic || format.italic;
+    if (segment.format.italic) {
+        result.italic = segment.format.italic;
     }
-    if (segment.format.underline || format.underline) {
-        result.underline = segment.format.underline || format.underline;
+    if (segment.format.underline) {
+        result.underline = segment.format.underline;
     }
 
     return result;
