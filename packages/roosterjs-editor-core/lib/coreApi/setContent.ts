@@ -64,6 +64,7 @@ export const setContent: SetContent = (
             core.contentDiv,
             false /*includeSelf*/,
             null /*callback*/,
+            core.lifecycle.getExcludedElementsFromTransform,
             isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
             true /*forceTransform*/,
             metadata?.isDarkMode

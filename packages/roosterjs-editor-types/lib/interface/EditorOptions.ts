@@ -81,6 +81,11 @@ export default interface EditorOptions {
     getDarkColor?: (lightColor: string) => string;
 
     /**
+     * A function to exclude elements from being transformed
+     */
+    getExcludedElementsFromTransform?: (rootNode: Node) => HTMLElement[];
+
+    /**
      * Whether to skip the adjust editor process when for light/dark mode
      */
     doNotAdjustEditorColor?: boolean;

@@ -56,6 +56,7 @@ export const getContent: GetContent = (
             clonedRoot,
             false /*includeSelf*/,
             null /*callback*/,
+            core.lifecycle.getExcludedElementsFromTransform,
             ColorTransformDirection.DarkToLight,
             true /*forceTransform*/,
             core.lifecycle.isDarkMode

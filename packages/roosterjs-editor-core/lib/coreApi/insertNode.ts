@@ -191,6 +191,7 @@ export const insertNode: InsertNode = (
                     break;
             }
         },
+        core.lifecycle.getExcludedElementsFromTransform,
         ColorTransformDirection.LightToDark
     );
 

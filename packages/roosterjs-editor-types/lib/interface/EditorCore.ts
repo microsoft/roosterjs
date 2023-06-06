@@ -280,6 +280,7 @@ export type TransformColor = (
     rootNode: Node | null,
     includeSelf: boolean,
     callback: (() => void) | null,
+    getExcludeElements: ((rootNode: Node) => HTMLElement[]) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean,
     fromDarkMode?: boolean

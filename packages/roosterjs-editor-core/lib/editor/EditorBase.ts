@@ -179,6 +179,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
                 transformColorForDarkMode ? toNode : null,
                 true /*includeSelf*/,
                 () => existingNode.parentNode?.replaceChild(toNode, existingNode),
+                core.lifecycle.getExcludedElementsFromTransform,
                 ColorTransformDirection.LightToDark
             );
 
@@ -875,6 +876,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             core.contentDiv,
             false /*includeSelf*/,
             null /*callback*/,
+            core.lifecycle.getExcludedElementsFromTransform,
             nextDarkMode
                 ? ColorTransformDirection.LightToDark
                 : ColorTransformDirection.DarkToLight,
@@ -906,6 +908,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             node,
             true /*includeSelf*/,
             null /*callback*/,
+            core.lifecycle.getExcludedElementsFromTransform,
             ColorTransformDirection.LightToDark
         );
     }

@@ -29,6 +29,11 @@ export default interface LifecyclePluginState {
     getDarkColor: (lightColor: string) => string;
 
     /**
+     * Exclude elements from being transformed
+     */
+    getExcludedElementsFromTransform: ((rootNode: Node) => HTMLElement[]) | null;
+
+    /**
      * External content transform function to help do color transform for existing content
      */
     onExternalContentTransform: ((htmlIn: HTMLElement) => void) | null;

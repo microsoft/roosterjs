@@ -3,6 +3,7 @@ import { DarkColorHandler, IEditor, PluginEventType } from 'roosterjs-editor-typ
 
 describe('LifecyclePlugin', () => {
     const getDarkColor = (color: string) => color;
+    const getExcludedElementsFromTransform = () => [] as HTMLElement[];
     it('init', () => {
         const div = document.createElement('div');
         const plugin = new LifecyclePlugin({ getDarkColor }, div);
@@ -30,6 +31,7 @@ describe('LifecyclePlugin', () => {
             shadowEditImageSelectionPath: null,
             shadowEditEntities: null,
             getDarkColor,
+            getExcludedElementsFromTransform: null,
         });
 
         expect(div.isContentEditable).toBeTrue();
@@ -47,6 +49,7 @@ describe('LifecyclePlugin', () => {
         const plugin = new LifecyclePlugin(
             {
                 getDarkColor,
+                getExcludedElementsFromTransform,
                 defaultFormat: {
                     fontFamily: 'arial',
                 },
@@ -78,6 +81,7 @@ describe('LifecyclePlugin', () => {
             shadowEditImageSelectionPath: null,
             shadowEditEntities: null,
             getDarkColor,
+            getExcludedElementsFromTransform,
         });
 
         expect(div.isContentEditable).toBeTrue();

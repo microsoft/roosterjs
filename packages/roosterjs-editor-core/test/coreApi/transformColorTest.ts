@@ -20,8 +20,9 @@ describe('transform to dark mode v2', () => {
     function runTest(
         element: HTMLElement,
         expectedHtml: string,
-        expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean, string][]
+        expectedParseValueCalls: (string | null)[],
+        expectedRegisterColorCalls: [string, boolean, string][],
+        excludedElements: HTMLElement[] = []
     ) {
         const core = createEditorCore(div, {
             inDarkMode: false,
@@ -36,13 +37,26 @@ describe('transform to dark mode v2', () => {
             .createSpy('registerColor')
             .and.callFake((color: string) => color);
 
+        const getExcludedElementsFromTransform = jasmine
+            .createSpy('getExcludedElementsFromTransform')
+            .and.returnValue(excludedElements);
+
         core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
 
-        transformColor(core, element, true, null, ColorTransformDirection.LightToDark, true);
+        transformColor(
+            core,
+            element,
+            true,
+            null,
+            getExcludedElementsFromTransform,
+            ColorTransformDirection.LightToDark,
+            true
+        );
 
         expect(element.outerHTML).toBe(expectedHtml);
         expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
         expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
+        expect(getExcludedElementsFromTransform).toHaveBeenCalledTimes(1);
 
         expectedParseValueCalls.forEach(v => {
             expect(parseColorValue).toHaveBeenCalledWith(v, false);
@@ -90,6 +104,23 @@ describe('transform to dark mode v2', () => {
         );
     });
 
+    it('should skip excluded elements', () => {
+        const element = document.createElement('div');
+        const excludedElement = document.createElement('div');
+        excludedElement.style.color = 'red';
+        excludedElement.style.backgroundColor = 'green';
+
+        element.appendChild(excludedElement);
+
+        runTest(
+            element,
+            '<div><div style="color: red; background-color: green;"></div></div>',
+            [null, null],
+            [],
+            [excludedElement]
+        );
+    });
+
     itChromeOnly('has both css and attribute colors', () => {
         const element = document.createElement('div');
         element.style.color = 'red';
@@ -125,8 +156,9 @@ describe('transform to light mode v2', () => {
     function runTest(
         element: HTMLElement,
         expectedHtml: string,
-        expectedParseValueCalls: string[],
-        expectedRegisterColorCalls: [string, boolean, string][]
+        expectedParseValueCalls: (string | null)[],
+        expectedRegisterColorCalls: [string, boolean, string][],
+        excludedElements: HTMLElement[] = []
     ) {
         const core = createEditorCore(div, {
             getDarkColor,
@@ -139,6 +171,9 @@ describe('transform to light mode v2', () => {
         const registerColor = jasmine
             .createSpy('registerColor')
             .and.callFake((color: string) => color);
+        const getExcludedElementsFromTransform = jasmine
+            .createSpy('getExcludedElementsFromTransform')
+            .and.returnValue(excludedElements);
 
         core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
 
@@ -147,6 +182,7 @@ describe('transform to light mode v2', () => {
             element,
             true /*includeSelf*/,
             null /*callback*/,
+            getExcludedElementsFromTransform,
             ColorTransformDirection.DarkToLight,
             true /*forceTransform*/,
             true /*fromDark*/
@@ -155,6 +191,7 @@ describe('transform to light mode v2', () => {
         expect(element.outerHTML).toBe(expectedHtml);
         expect(parseColorValue).toHaveBeenCalledTimes(expectedParseValueCalls.length);
         expect(registerColor).toHaveBeenCalledTimes(expectedRegisterColorCalls.length);
+        expect(getExcludedElementsFromTransform).toHaveBeenCalledTimes(1);
 
         expectedParseValueCalls.forEach(v => {
             expect(parseColorValue).toHaveBeenCalledWith(v, true);
@@ -199,6 +236,23 @@ describe('transform to light mode v2', () => {
                 ['blue', false, undefined!],
                 ['yellow', false, undefined!],
             ]
+        );
+    });
+
+    it('should skip excluded elements', () => {
+        const element = document.createElement('div');
+        const excludedElement = document.createElement('div');
+        excludedElement.style.color = 'red';
+        excludedElement.style.backgroundColor = 'green';
+
+        element.appendChild(excludedElement);
+
+        runTest(
+            element,
+            '<div><div style="color: red; background-color: green;"></div></div>',
+            [null, null],
+            [],
+            [excludedElement]
         );
     });
 

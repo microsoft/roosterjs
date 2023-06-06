@@ -77,6 +77,7 @@ describe('Editor', () => {
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeFalse();
         expect(core.lifecycle.onExternalContentTransform).toBeNull();
+        expect(core.lifecycle.getExcludedElementsFromTransform).toBeNull();
         expect(core.lifecycle.defaultFormat).toBeDefined();
         expect(core.pendingFormatState).toEqual({
             pendableFormatPosition: null,
@@ -102,6 +103,7 @@ describe('Editor', () => {
             dispose: () => {},
         };
         const myTransform = () => {};
+        const myExcludeTransform = () => [] as HTMLElement[];
         const div = document.createElement('div');
         const scrollContaner = document.createElement('div');
         const editor = new Editor(div, {
@@ -124,6 +126,7 @@ describe('Editor', () => {
             },
             inDarkMode: true,
             onExternalContentTransform: myTransform,
+            getExcludedElementsFromTransform: myExcludeTransform,
             scrollContainer: scrollContaner,
             allowKeyboardEventPropagation: true,
         });
@@ -186,6 +189,7 @@ describe('Editor', () => {
         expect(core.lifecycle.customData).toEqual({});
         expect(core.lifecycle.isDarkMode).toBeTrue();
         expect(core.lifecycle.onExternalContentTransform).toBe(myTransform);
+        expect(core.lifecycle.getExcludedElementsFromTransform).toBe(myExcludeTransform);
         expect(core.lifecycle.defaultFormat).toBeDefined();
         expect(core.lifecycle.defaultFormat.bold).toBeTrue();
         expect(core.pendingFormatState).toEqual({

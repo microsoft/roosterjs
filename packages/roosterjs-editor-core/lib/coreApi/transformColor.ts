@@ -30,6 +30,7 @@ const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
  * @param rootNode The root HTML elements to transform
  * @param includeSelf True to transform the root node as well, otherwise false
  * @param callback The callback function to invoke before do color transformation
+ * @param getExcludeElements The function to get elements that should be excluded from color transformation.
  * @param direction To specify the transform direction, light to dark, or dark to light
  * @param forceTransform By default this function will only work when editor core is in dark mode.
  * Pass true to this value to force do color transformation even editor core is in light mode
@@ -39,6 +40,7 @@ export const transformColor: TransformColor = (
     rootNode: Node | null,
     includeSelf: boolean,
     callback: (() => void) | null,
+    getExcludeElements: ((rootNode: Node) => HTMLElement[]) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean,
     fromDarkMode?: boolean
@@ -46,7 +48,7 @@ export const transformColor: TransformColor = (
     const { darkColorHandler } = core;
     const elements =
         rootNode && (forceTransform || core.lifecycle.isDarkMode)
-            ? getAll(rootNode, includeSelf)
+            ? getAll(rootNode, includeSelf, getExcludeElements)
             : [];
 
     callback?.();
@@ -90,8 +92,13 @@ function transformV2(
     });
 }
 
-function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
+function getAll(
+    rootNode: Node,
+    includeSelf: boolean,
+    getExcludeElements: ((rootNode: Node) => HTMLElement[]) | null
+): HTMLElement[] {
     const result: HTMLElement[] = [];
+    const excludedElementsSet = new Set(getExcludeElements?.(rootNode) || []);
 
     if (safeInstanceOf(rootNode, 'HTMLElement')) {
         if (includeSelf) {
@@ -104,7 +111,7 @@ function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
         arrayPush(result, toArray(allChildren));
     }
 
-    return result.filter(isHTMLElement);
+    return result.filter(isHTMLElement).filter(element => !excludedElementsSet.has(element));
 }
 
 // This is not a strict check, we just need to make sure this element has style so that we can set style to it
