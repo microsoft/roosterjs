@@ -5,7 +5,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from 'roosterjs-content-model/lib/publicTypes';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createListItem } from '../creators/createListItem';
