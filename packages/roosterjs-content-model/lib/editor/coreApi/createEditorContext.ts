@@ -6,7 +6,7 @@ import { CreateEditorContext } from '../../publicTypes/ContentModelEditorCore';
  */
 export const createEditorContext: CreateEditorContext = core => {
     return {
-        isDarkMode: core.lifecycle.isDarkMode,
+        //        isDarkMode: core.lifecycle.isDarkMode,
         defaultFormat: core.defaultFormat,
         darkColorHandler: core.darkColorHandler,
         addDelimiterForEntity: core.addDelimiterForEntity,

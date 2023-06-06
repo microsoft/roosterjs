@@ -1,3 +1,4 @@
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext } from '../../publicTypes/context/EditorContext';
@@ -19,10 +20,14 @@ export function createModelToDomContext(
 ): ModelToDomContext {
     options = options || {};
 
+    if (!editorContext) {
+        editorContext = {
+            darkColorHandler: new DarkColorHandlerImpl(),
+        };
+    }
+
     return {
-        ...(editorContext || {
-            isDarkMode: false,
-        }),
+        ...editorContext,
         regularSelection: {
             current: {
                 block: null,

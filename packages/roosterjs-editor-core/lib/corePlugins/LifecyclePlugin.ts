@@ -1,4 +1,4 @@
-import { Browser, getObjectKeys, setColor } from 'roosterjs-editor-dom';
+import { Browser, getObjectKeys } from 'roosterjs-editor-dom';
 import {
     DocumentCommand,
     EditorOptions,
@@ -82,23 +82,23 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             : () => {
                   const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
                   const { isDarkMode } = this.state;
-                  const darkColorHandler = this.editor?.getDarkColorHandler();
-                  setColor(
-                      contentDiv,
-                      textColors,
-                      false /*isBackground*/,
-                      isDarkMode,
-                      false /*shouldAdaptFontColor*/,
-                      darkColorHandler
-                  );
-                  setColor(
-                      contentDiv,
-                      backgroundColors,
-                      true /*isBackground*/,
-                      isDarkMode,
-                      false /*shouldAdaptFontColor*/,
-                      darkColorHandler
-                  );
+
+                  if (this.editor) {
+                      const darkColorHandler = this.editor.getDarkColorHandler();
+
+                      darkColorHandler.setColor(
+                          contentDiv,
+                          false /*isBackground*/,
+                          textColors,
+                          isDarkMode
+                      );
+                      darkColorHandler.setColor(
+                          contentDiv,
+                          true /*isBackground*/,
+                          backgroundColors,
+                          isDarkMode
+                      );
+                  }
               };
 
         const getDarkColor = options.getDarkColor ?? ((color: string) => color);

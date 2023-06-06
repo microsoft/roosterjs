@@ -1,4 +1,4 @@
-import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
+import { isCharacterValue, Position } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
@@ -154,28 +154,13 @@ export default class PendingFormatStatePlugin
             span.style.setProperty('font-size', currentStyle.fontSize ?? null);
 
             const darkColorHandler = this.editor.getDarkColorHandler();
+            const textColor = currentStyle.textColors || currentStyle.textColor;
+            const bgColor = currentStyle.backgroundColors || currentStyle.backgroundColor;
 
-            if (currentStyle.textColors || currentStyle.textColor) {
-                setColor(
-                    span,
-                    (currentStyle.textColors || currentStyle.textColor)!,
-                    false /*isBackground*/,
-                    isDarkMode,
-                    false /*shouldAdaptFontColor*/,
-                    darkColorHandler
-                );
-            }
+            textColor &&
+                darkColorHandler.setColor(span, false /*isBackground*/, textColor, isDarkMode);
 
-            if (currentStyle.backgroundColors || currentStyle.backgroundColor) {
-                setColor(
-                    span,
-                    (currentStyle.backgroundColors || currentStyle.backgroundColor)!,
-                    true /*isBackground*/,
-                    isDarkMode,
-                    false /*shouldAdaptFontColor*/,
-                    darkColorHandler
-                );
-            }
+            bgColor && darkColorHandler.setColor(span, true /*isBackground*/, bgColor, isDarkMode);
         }
 
         if (span) {

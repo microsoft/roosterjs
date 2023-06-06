@@ -8,7 +8,7 @@ export interface EditorContext {
     /**
      * Whether current content is in dark mode
      */
-    isDarkMode: boolean;
+    // isDarkMode: boolean;
 
     /**
      * Default format of editor
@@ -18,7 +18,7 @@ export interface EditorContext {
     /**
      * Dark model color handler
      */
-    darkColorHandler?: DarkColorHandler | null;
+    darkColorHandler: DarkColorHandler;
 
     /**
      * Whether to handle delimiters in Content Model

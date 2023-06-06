@@ -57,4 +57,14 @@ export default interface DarkColorHandler {
      * @param darkColor The existing dark color
      */
     findLightColorFromDarkColor(darkColor: string): string | null;
+
+    setColor(
+        element: HTMLElement,
+        isBackground: boolean,
+        color: string | ModeIndependentColor,
+        isDarkMode?: boolean,
+        shouldAdaptFontColor?: boolean
+    ): void;
+
+    getColor(element: HTMLElement, isBackground: boolean): string;
 }

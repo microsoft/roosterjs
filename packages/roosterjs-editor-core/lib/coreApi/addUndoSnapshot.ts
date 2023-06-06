@@ -98,7 +98,7 @@ function addUndoSnapshotInternal(
             {
                 html: core.contentDiv.innerHTML,
                 metadata,
-                knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
+                knownColors: core.darkColorHandler.getKnownColorsCopy() || [],
                 entityStates,
             },
             canUndoByBackspace

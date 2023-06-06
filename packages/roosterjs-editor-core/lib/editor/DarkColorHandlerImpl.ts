@@ -12,9 +12,22 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
     private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
 
     constructor(
-        private onRegisterColor: (key: string, darkColor: string | null) => void,
-        private getDarkColor: (color: string) => string
+        private onRegisterColor?: (key: string, darkColor: string | null) => void,
+        private getDarkColor?: (color: string) => string
     ) {}
+
+    setColor(
+        element: HTMLElement,
+        isBackground: boolean,
+        color: string | ModeIndependentColor,
+        isDarkMode?: boolean | undefined
+    ): void {
+        throw new Error('Method not implemented.');
+    }
+
+    getColor(element: HTMLElement, isBackground: boolean): string {
+        throw new Error('Method not implemented.');
+    }
 
     /**
      * Get a copy of known colors
@@ -46,10 +59,10 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
                 colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
 
             if (!this.knownColors[colorKey]) {
-                darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
+                darkModeColor = darkModeColor || this.getDarkColor?.(lightModeColor);
 
                 this.knownColors[colorKey] = { lightModeColor, darkModeColor };
-                this.onRegisterColor(colorKey, darkModeColor);
+                this.onRegisterColor?.(colorKey, darkModeColor);
             }
 
             return `var(${colorKey}, ${lightModeColor})`;
@@ -62,8 +75,11 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * Reset known color record, clean up registered color variables.
      */
     reset(): void {
-        getObjectKeys(this.knownColors).forEach(key => this.onRegisterColor(key, null));
+        getObjectKeys(this.knownColors).forEach(key => this.onRegisterColor?.(key, null));
         this.knownColors = {};
+
+        this.onRegisterColor = undefined;
+        this.getDarkColor = undefined;
     }
 
     /**

@@ -1,5 +1,4 @@
 import { FormatHandler } from '../FormatHandler';
-import { getColor, setColor } from '../utils/color';
 import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorFormat';
 
 /**
@@ -8,12 +7,8 @@ import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorF
 export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const textColor =
-            getColor(
-                element,
-                false /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
-            ) || defaultStyle.color;
+            context.darkColorHandler.getColor(element, false /*isBackground*/) ||
+            defaultStyle.color;
 
         if (textColor && textColor != 'inherit') {
             format.textColor = textColor;
@@ -23,13 +18,7 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
         const implicitColor = context.implicitFormat.textColor;
 
         if (format.textColor && format.textColor != implicitColor) {
-            setColor(
-                element,
-                format.textColor,
-                false /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
-            );
+            context.darkColorHandler.setColor(element, false /*isBackground*/, format.textColor);
         }
     },
 };

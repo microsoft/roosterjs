@@ -1,5 +1,4 @@
 import changeElementTag from '../utils/changeElementTag';
-import setColor from '../utils/setColor';
 import { getTableCellMetadata } from './tableCellInfo';
 import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';

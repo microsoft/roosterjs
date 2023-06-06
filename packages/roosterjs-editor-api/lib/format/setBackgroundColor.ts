@@ -1,6 +1,5 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
 import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
-import { setColor } from 'roosterjs-editor-dom';
 
 /**
  * Set background color at current selection
@@ -16,14 +15,14 @@ export default function setBackgroundColor(editor: IEditor, color: string | Mode
     applyInlineStyle(
         editor,
         (element, isInnerNode) => {
-            setColor(
-                element,
-                isInnerNode ? '' : color,
-                true /*isBackground*/,
-                editor.isDarkMode(),
-                false /*shouldAdaptFontColor*/,
-                editor.getDarkColorHandler()
-            );
+            editor
+                .getDarkColorHandler()
+                .setColor(
+                    element,
+                    true /*isBackground*/,
+                    isInnerNode ? '' : color,
+                    editor.isDarkMode()
+                );
         },
         'setBackgroundColor'
     );
