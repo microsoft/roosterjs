@@ -3,7 +3,14 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
+import {
+    contains,
+    getComputedStyle,
+    normalizeRect,
+    Position,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
@@ -13,6 +20,11 @@ import {
 } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 5;
+
+/**
+ * @internal
+ */
+export type HelperType = 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector';
 
 /**
  * @internal
@@ -71,26 +83,10 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        contentDiv?: EventTarget
+        private contentDiv?: EventTarget
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
-        const zoomScale = editor.getZoomScale();
-        this.tableResizer = createTableResizer(
-            table,
-            zoomScale,
-            this.isRTL,
-            this.onStartTableResize,
-            this.onFinishEditing,
-            this.onShowHelperElement
-        );
-        this.tableSelector = createTableSelector(
-            table,
-            zoomScale,
-            editor,
-            this.onSelect,
-            this.onShowHelperElement,
-            contentDiv
-        );
+        this.setEditorFeatures();
         this.isCurrentlyEditing = false;
     }
 
@@ -103,6 +99,19 @@ export default class TableEditor {
 
     isEditing(): boolean {
         return this.isCurrentlyEditing;
+    }
+
+    isOwnedElement(node: Node) {
+        return [
+            this.tableResizer,
+            this.tableSelector,
+            this.horizontalInserter,
+            this.verticalInserter,
+            this.horizontalResizer,
+            this.verticalResizer,
+        ]
+            .filter(feature => !!feature?.div)
+            .some(feature => contains(feature?.div, node, true /* treatSameNodeAsContain */));
     }
 
     onMouseMove(x: number, y: number) {
@@ -170,6 +179,33 @@ export default class TableEditor {
                 break;
             }
         }
+
+        this.setEditorFeatures();
+    }
+
+    private setEditorFeatures() {
+        if (!this.tableSelector) {
+            this.tableSelector = createTableSelector(
+                this.table,
+                this.editor.getZoomScale(),
+                this.editor,
+                this.onSelect,
+                this.getOnMouseOut,
+                this.onShowHelperElement,
+                this.contentDiv
+            );
+        }
+
+        if (!this.tableResizer) {
+            this.tableResizer = createTableResizer(
+                this.table,
+                this.editor.getZoomScale(),
+                this.isRTL,
+                this.onStartTableResize,
+                this.onFinishEditing,
+                this.onShowHelperElement
+            );
+        }
     }
 
     private setResizingTd(td: HTMLTableCellElement) {
@@ -217,6 +253,7 @@ export default class TableEditor {
                 this.isRTL,
                 !!isHorizontal,
                 this.onInserted,
+                this.getOnMouseOut,
                 this.onShowHelperElement
             );
             if (isHorizontal) {
@@ -330,5 +367,19 @@ export default class TableEditor {
                 this.editor.select(table, selection);
             }
         }
+    };
+
+    private getOnMouseOut = (feature: HTMLElement) => {
+        return (ev: MouseEvent) => {
+            if (
+                feature &&
+                ev.relatedTarget != feature &&
+                safeInstanceOf(this.contentDiv, 'HTMLElement') &&
+                safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
+                !contains(this.contentDiv, ev.relatedTarget, true /* treatSameNodeAsContain */)
+            ) {
+                this.dispose();
+            }
+        };
     };
 }

@@ -2,6 +2,7 @@ import Disposable from '../../../pluginUtils/Disposable';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, getIntersectedRect, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, TableOperation } from 'roosterjs-editor-types';
+import { HelperType } from './TableEditor';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';
@@ -17,10 +18,8 @@ export default function createTableInserter(
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void,
-    onShowHelperElement?: (
-        elementData: CreateElementData,
-        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
+    onShowHelperElement?: (elementData: CreateElementData, helperType: HelperType) => void
 ): TableEditFeature | null {
     const table = editor.getElementAtCursor('table', td);
 
@@ -59,7 +58,14 @@ export default function createTableInserter(
 
         document.body.appendChild(div);
 
-        const handler = new TableInsertHandler(div, td, isHorizontal, editor, onInsert);
+        const handler = new TableInsertHandler(
+            div,
+            td,
+            isHorizontal,
+            editor,
+            onInsert,
+            getOnMouseOut
+        );
 
         return { div, featureHandler: handler, node: td };
     }
@@ -68,20 +74,28 @@ export default function createTableInserter(
 }
 
 class TableInsertHandler implements Disposable {
+    private onMouseOutEvent: null | ((ev: MouseEvent) => void);
     constructor(
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: (table: HTMLTableElement) => void
+        private onInsert: (table: HTMLTableElement) => void,
+        getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void
     ) {
         this.div.addEventListener('click', this.insertTd);
+        this.onMouseOutEvent = getOnMouseOut(div);
+        this.div.addEventListener('mouseout', this.onMouseOutEvent);
     }
 
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
+        if (this.onMouseOutEvent) {
+            this.div.removeEventListener('mouseout', this.onMouseOutEvent);
+        }
         this.div = null;
         this.editor = null;
+        this.onMouseOutEvent = null;
     }
 
     private insertTd = () => {

@@ -1,5 +1,5 @@
-import TableEditor from './editors/TableEditor';
-import { normalizeRect } from 'roosterjs-editor-dom';
+import TableEditor, { HelperType } from './editors/TableEditor';
+import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     CreateElementData,
     EditorPlugin,
@@ -29,7 +29,7 @@ export default class TableResize implements EditorPlugin {
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+            helperType: HelperType
         ) => void
     ) {}
 
@@ -46,8 +46,23 @@ export default class TableResize implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.onMouseMoveDisposer = this.editor.addDomEventHandler({ mousemove: this.onMouseMove });
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler({
+            mousemove: this.onMouseMove,
+            mouseout: e => this.onMouseOut(e),
+        });
     }
+
+    private onMouseOut = (ev: Event) => {
+        if (
+            isMouseEvent(ev) &&
+            safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
+            this.tableEditor &&
+            !this.tableEditor.isOwnedElement(ev.relatedTarget) &&
+            !this.editor?.contains(ev.relatedTarget)
+        ) {
+            this.setTableEditor(null);
+        }
+    };
 
     /**
      * Dispose this plugin
@@ -146,4 +161,8 @@ export default class TableResize implements EditorPlugin {
             });
         }
     }
+}
+
+function isMouseEvent(e: Event): e is MouseEvent {
+    return !!(e as MouseEvent).pageX;
 }
