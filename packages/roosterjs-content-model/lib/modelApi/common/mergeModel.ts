@@ -5,6 +5,7 @@ import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBloc
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelSegment } from 'roosterjs-content-model/lib/publicTypes';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createListItem } from '../creators/createListItem';
@@ -44,7 +45,9 @@ export interface MergeModelOption {
     mergeCurrentFormat?: boolean;
 
     /**
-     *
+     * When set to true, segment format of the insert position will be set into the content that is merged into current model.
+     * If the source model already has fontWeight, Italic or underline, it will not be overwritten.
+     * @default false
      */
     applyCurrentFormat?: boolean;
 }
@@ -71,7 +74,7 @@ export function mergeModel(
             applyDefaultFormat(
                 source,
                 newFormat,
-                options?.mergeCurrentFormat ? 'MergeCurrentFormat' : 'ApplyDefaultFormat'
+                options?.applyCurrentFormat ? 'ApplyDefaultFormat' : 'MergeCurrentFormat'
             );
         }
 
@@ -298,12 +301,28 @@ function applyDefaultFormat(
                             ? { ...format, ...segment.format }
                             : {
                                   ...format,
-                                  fontWeight: segment.format.fontWeight || format.fontWeight,
-                                  italic: segment.format.italic || format.italic,
-                                  underline: segment.format.underline || format.underline,
+                                  ...mergeSemanticFormat(segment, format),
                               };
                 });
                 break;
         }
     });
+}
+function mergeSemanticFormat(
+    segment: ContentModelSegment,
+    format: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    const result: ContentModelSegmentFormat = {};
+
+    if (segment.format.fontWeight || format.fontWeight) {
+        result.fontWeight = segment.format.fontWeight || format.fontWeight;
+    }
+    if (segment.format.italic || format.italic) {
+        result.italic = segment.format.italic || format.italic;
+    }
+    if (segment.format.underline || format.underline) {
+        result.underline = segment.format.underline || format.underline;
+    }
+
+    return result;
 }
