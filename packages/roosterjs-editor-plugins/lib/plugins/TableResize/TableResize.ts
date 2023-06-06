@@ -1,4 +1,4 @@
-import TableEditor, { HelperType } from './editors/TableEditor';
+import TableEditor from './editors/TableEditor';
 import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     CreateElementData,
@@ -29,7 +29,7 @@ export default class TableResize implements EditorPlugin {
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
-            helperType: HelperType
+            helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void
     ) {}
 

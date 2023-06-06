@@ -1,9 +1,8 @@
-import DragAndDropHandler from 'roosterjs-editor-plugins/lib/pluginUtils/DragAndDropHandler';
+import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
 import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
-import { HelperType } from './TableEditor';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -17,7 +16,10 @@ export default function createTableSelector(
     editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) => void,
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-    onShowHelperElement?: (elementData: CreateElementData, helperType: HelperType) => void,
+    onShowHelperElement?: (
+        elementData: CreateElementData,
+        helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
+    ) => void,
     contentDiv?: EventTarget
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
@@ -70,13 +72,13 @@ export default function createTableSelector(
     return { div, featureHandler, node: table };
 }
 
-interface TableSelectorContext {
+export interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
 }
 
-interface TableSelectorInitValue {
+export interface TableSelectorInitValue {
     event: MouseEvent;
 }
 

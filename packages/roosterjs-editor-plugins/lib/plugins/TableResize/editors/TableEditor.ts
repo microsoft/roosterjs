@@ -23,11 +23,6 @@ const INSERTER_HOVER_OFFSET = 5;
 
 /**
  * @internal
- */
-export type HelperType = 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector';
-
-/**
- * @internal
  *
  * A table has 6 hot areas to be resized/edited (take LTR example):
  *
