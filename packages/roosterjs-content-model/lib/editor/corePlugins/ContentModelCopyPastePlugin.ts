@@ -25,7 +25,6 @@ import {
 import {
     ChangeSource,
     CopyPastePluginState,
-    EditorOptions,
     IEditor,
     PluginEventType,
     PluginWithState,
@@ -48,10 +47,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
      * Construct a new instance of CopyPastePlugin
      * @param options The editor options
      */
-    constructor(options: EditorOptions) {
-        this.state = {
-            allowedCustomPasteType: options.allowedCustomPasteType || [],
-        };
+    constructor(state: CopyPastePluginState) {
+        this.state = state;
     }
 
     /**
@@ -83,6 +80,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
         this.disposer = null;
         this.editor = null;
+        this.state = null!;
     }
 
     /**
