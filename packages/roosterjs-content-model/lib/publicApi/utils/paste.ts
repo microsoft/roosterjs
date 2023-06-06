@@ -86,6 +86,7 @@ export default function paste(
             },
             {
                 changeSource: ChangeSource.Paste,
+                getChangeData: () => clipboardData,
             }
         );
     }

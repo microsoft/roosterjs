@@ -1,6 +1,6 @@
 import * as moveChildNodes from 'roosterjs-editor-dom/lib/utils/moveChildNodes';
-import { convertPastedContentFromPowerPoint } from '../../../../lib/editor/plugins/PastePlugin/PowerPoint/convertPastedContentFromPowerPoint';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
+import { processPastedContentFromPowerPoint } from '../../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import {
     BeforePasteEvent,
     ClipboardData,
@@ -22,7 +22,7 @@ const getPasteEvent = (): BeforePasteEvent => {
     };
 };
 
-describe('convertPastedContentFromPowerPoint |', () => {
+describe('processPastedContentFromPowerPointTest |', () => {
     let ev: BeforePasteEvent;
     let trustedHTMLHandlerMock: TrustedHTMLHandler = (html: string) => html;
     let image: HTMLImageElement;
@@ -52,7 +52,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = '';
         ev.clipboardData.image = <File>{};
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).toHaveBeenCalled();
         expect(moveChildNodes.default).toHaveBeenCalledWith(ev.fragment, doc.body);
@@ -63,7 +63,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = 'text';
         ev.clipboardData.image = <File>{};
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();
@@ -74,7 +74,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = '';
         ev.clipboardData.image = <File>{};
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();
@@ -85,7 +85,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = 'Test';
         ev.clipboardData.image = <File>{};
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();
@@ -96,7 +96,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = '';
         ev.clipboardData.image = <File>(<any>null);
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();
@@ -107,7 +107,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = '';
         ev.clipboardData.image = <File>(<any>null);
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();
@@ -118,7 +118,7 @@ describe('convertPastedContentFromPowerPoint |', () => {
         ev.clipboardData.text = 'text';
         ev.clipboardData.image = <File>(<any>null);
 
-        convertPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
+        processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
         expect(moveChildNodes.default).not.toHaveBeenCalled();

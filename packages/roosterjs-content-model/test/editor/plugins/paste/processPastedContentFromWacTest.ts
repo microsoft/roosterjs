@@ -2,13 +2,13 @@ import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../../../lib/publicTypes';
-import { createBeforePasteEventMock } from './wordDesktopTest';
-import { handleWacComponentsPaste } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/handleWacComponentsPaste';
+import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
+import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('Wac Test', () => {
+describe('processPastedContentFromWacTest', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
@@ -18,7 +18,7 @@ describe('Wac Test', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWacComponentsPaste(event);
+        processPastedContentWacComponents(event);
 
         const model = domToContentModel(
             fragment,
@@ -129,7 +129,7 @@ describe('wordOnlineHandler', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWacComponentsPaste(event);
+        processPastedContentWacComponents(event);
 
         const model = domToContentModel(
             fragment,

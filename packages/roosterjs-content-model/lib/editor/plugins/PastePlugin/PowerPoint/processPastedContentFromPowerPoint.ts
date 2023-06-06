@@ -7,7 +7,7 @@ import { moveChildNodes } from 'roosterjs-editor-dom';
  * @param event The BeforePaste event
  */
 
-export function convertPastedContentFromPowerPoint(
+export function processPastedContentFromPowerPoint(
     event: BeforePasteEvent,
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
