@@ -37,7 +37,9 @@ export const createContentModelEditorCore: CoreCreator<
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
             )
-                ? new ContentModelCopyPastePlugin(options)
+                ? new ContentModelCopyPastePlugin({
+                      allowedCustomPasteType: options.allowedCustomPasteType || [],
+                  })
                 : undefined,
             ...(options.corePluginOverride || {}),
         },
