@@ -77,7 +77,6 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
         this.disposer = null;
         this.editor = null;
-        this.state = null!;
     }
 
     /**
