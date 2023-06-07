@@ -151,8 +151,6 @@ export default class TableEditor {
                     const isOnLeftOrRight = this.isRTL
                         ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
                         : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
-
-                    // Top inserter
                     if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
@@ -160,9 +158,7 @@ export default class TableEditor {
                             isOnRightHalf ? td : tr.cells[j - 1],
                             false /*isHorizontal*/
                         );
-                    }
-                    // Side inserter
-                    else if (j === 0 && topOrSide == TOP_OR_SIDE.side && isOnLeftOrRight) {
+                    } else if (j === 0 && topOrSide == TOP_OR_SIDE.side && isOnLeftOrRight) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
                             ? normalizeRect(tdAbove.getBoundingClientRect())
