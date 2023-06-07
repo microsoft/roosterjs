@@ -41,15 +41,12 @@ import {
 export default class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IContentModelEditor | null = null;
     private disposer: (() => void) | null = null;
-    private state: CopyPastePluginState;
 
     /**
      * Construct a new instance of CopyPastePlugin
      * @param options The editor options
      */
-    constructor(state: CopyPastePluginState) {
-        this.state = state;
-    }
+    constructor(private state: CopyPastePluginState) {}
 
     /**
      * Get a friendly name of  this plugin
