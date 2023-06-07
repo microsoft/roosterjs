@@ -1,3 +1,4 @@
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
@@ -17,8 +18,9 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     );
     const alreadyInExpectedType = paragraphOrListItems.every(
         ({ block }) =>
-            isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
-            block.levels[block.levels.length - 1]?.listType == listType
+            (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
+                block.levels[block.levels.length - 1]?.listType == listType) ||
+            (!shouldTurnOnList(block) && paragraphOrListItems.length > 1)
     );
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
@@ -34,7 +36,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
         } else {
             const index = parent.blocks.indexOf(block);
 
-            if (index >= 0) {
+            if (index >= 0 && (paragraphOrListItems.length == 1 || shouldTurnOnList(block))) {
                 const prevBlock = parent.blocks[index - 1];
                 const segmentFormat =
                     (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
@@ -51,6 +53,8 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                     : 1,
                             direction: block.format.direction,
                             textAlign: block.format.textAlign,
+                            marginTop: '0',
+                            marginBottom: '0',
                         },
                     ],
                     // For list bullet, we only want to carry over these formats from segments:
@@ -77,4 +81,12 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     normalizeContentModel(model);
 
     return paragraphOrListItems.length > 0;
+}
+
+function shouldTurnOnList(block: ContentModelBlock): boolean {
+    return (
+        block.blockType == 'Paragraph' &&
+        block.segments.length > 0 &&
+        block.segments.some(x => x.segmentType != 'Br' && x.segmentType != 'SelectionMarker')
+    );
 }
