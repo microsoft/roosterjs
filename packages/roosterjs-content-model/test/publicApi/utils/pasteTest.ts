@@ -23,6 +23,7 @@ describe('Paste ', () => {
     let isDarkMode: jasmine.Spy;
     let getDarkColorHandler: jasmine.Spy;
     let getDefaultFormat: jasmine.Spy;
+    let undoSnapshotResult: any;
 
     const mockedPos = 'POS' as any;
 
@@ -47,7 +48,9 @@ describe('Paste ', () => {
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
+        addUndoSnapshot = jasmine
+            .createSpy('addUndoSnapshot')
+            .and.callFake(callback => (undoSnapshotResult = callback()));
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
@@ -102,5 +105,6 @@ describe('Paste ', () => {
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
+        expect(clipboardData).toEqual(undoSnapshotResult);
     });
 });
