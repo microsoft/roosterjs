@@ -88,7 +88,7 @@ describe('Creators', () => {
         expect(format).toEqual({ a: 1 });
     });
 
-    it('createParagraph - not dummy block', () => {
+    it('createParagraph - not implicit block', () => {
         const result = createParagraph(false);
 
         expect(result).toEqual({
@@ -98,7 +98,7 @@ describe('Creators', () => {
         });
     });
 
-    it('createParagraph - dummy block', () => {
+    it('createParagraph - implicit block', () => {
         const result = createParagraph(true);
 
         expect(result).toEqual({
@@ -109,8 +109,19 @@ describe('Creators', () => {
         });
     });
 
+    it('createParagraph - with segment format', () => {
+        const result = createParagraph(false, undefined, { fontSize: '10px' });
+
+        expect(result).toEqual({
+            blockType: 'Paragraph',
+            segments: [],
+            format: {},
+            segmentFormat: { fontSize: '10px' },
+        });
+    });
+
     it('createParagraph - with decorator', () => {
-        const result = createParagraph(false, undefined, {
+        const result = createParagraph(false, undefined, undefined, {
             tagName: 'p',
             format: {
                 fontSize: '10px',

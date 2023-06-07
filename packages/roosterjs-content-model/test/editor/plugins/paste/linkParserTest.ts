@@ -2,7 +2,7 @@ import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import linkParser from '../../../../lib/editor/plugins/PastePlugin/utils/linkParser';
 import { ContentModelDocument } from '../../../../lib/publicTypes';
-import { createBeforePasteEventMock } from './wordDesktopTest';
+import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 
 let div: HTMLElement;
