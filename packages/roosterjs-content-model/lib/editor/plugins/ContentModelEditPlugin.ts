@@ -19,7 +19,6 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
-    PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
@@ -87,7 +86,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event);
+                    this.handleKeyDownEvent(this.editor, event.rawEvent);
                     break;
 
                 case PluginEventType.ContentChanged:
@@ -107,21 +106,30 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
-        if (!this.editWithContentModel || event.rawEvent.defaultPrevented) {
+    private handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+        const which = rawEvent.which;
+
+        if (!this.editWithContentModel || rawEvent.defaultPrevented) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else if (!event.rawEvent.defaultPrevented) {
+        } else if (!rawEvent.defaultPrevented) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
-            switch (event.rawEvent.which) {
+            switch (which) {
                 case Keys.BACKSPACE:
                 case Keys.DELETE:
-                    handleKeyDownEvent(editor, event.rawEvent, this.triggeredEntityEvents);
+                    const rangeEx = editor.getSelectionRangeEx();
+                    const range =
+                        rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
+
+                    if (this.shouldDeleteWithContentModel(range, which)) {
+                        handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
+                    }
+
                     break;
 
                 default:
                     if (
-                        (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                        (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) &&
                         this.hasDefaultFormat
                     ) {
                         this.tryApplyDefaultFormat(editor);
@@ -222,5 +230,15 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         };
 
         setPendingFormat(editor, newFormat, startPos);
+    }
+
+    private shouldDeleteWithContentModel(range: Range | null, key: Keys.BACKSPACE | Keys.DELETE) {
+        return !(
+            range?.collapsed &&
+            range.startContainer.nodeType == NodeType.Text &&
+            ((key == Keys.BACKSPACE && range.startOffset > 0) ||
+                (key == Keys.DELETE &&
+                    range.startOffset < (range.startContainer.nodeValue?.length ?? 0)))
+        );
     }
 }

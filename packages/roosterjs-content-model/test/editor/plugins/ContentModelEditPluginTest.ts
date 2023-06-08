@@ -31,6 +31,10 @@ describe('ContentModelEditPlugin', () => {
             cacheContentModel,
             isFeatureEnabled,
             getContentModelDefaultFormat,
+            getSelectionRangeEx: () =>
+                ({
+                    type: -1,
+                } as any), // Force return invalid range to go through content model code
         } as any) as IContentModelEditor;
     });
 
@@ -180,6 +184,100 @@ describe('ContentModelEditPlugin', () => {
                 { which: Keys.DELETE } as any,
                 []
             );
+            expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+    });
+
+    describe('onPluginEvent, no need to go through Content Model', () => {
+        let handleKeyDownEventSpy: jasmine.Spy;
+        let range: any;
+
+        beforeEach(() => {
+            handleKeyDownEventSpy = spyOn(handleKeyDownEvent, 'default');
+
+            range = {
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 2,
+            };
+
+            editor.getSelectionRangeEx = () =>
+                ({
+                    type: SelectionRangeTypes.Normal,
+                    areAllCollapsed: true,
+                    ranges: [range],
+                } as any);
+        });
+
+        it('Backspace', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.BACKSPACE } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+
+        it('Delete', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.DELETE } as any;
+
+            plugin.initialize(editor);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
+            expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+
+        it('Backspace from the beginning', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.BACKSPACE } as any;
+
+            plugin.initialize(editor);
+
+            range = {
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 0,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(cacheContentModel).not.toHaveBeenCalled();
+        });
+
+        it('Delete from the last', () => {
+            const plugin = new ContentModelEditPlugin();
+            const rawEvent = { which: Keys.DELETE } as any;
+
+            plugin.initialize(editor);
+
+            range = {
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 4,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent,
+            });
+
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
     });
