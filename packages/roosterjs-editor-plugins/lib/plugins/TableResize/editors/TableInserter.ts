@@ -42,17 +42,19 @@ export default function createTableInserter(
         const div = createElement(createElementData, document) as HTMLDivElement;
 
         if (isHorizontal) {
+            // tableRect.left/right is used because the Inserter is always intended to be on the side
             div.style.left = `${
                 isRTL
-                    ? tdRect.right
-                    : tdRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                    ? tableRect.right
+                    : tableRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
             div.style.top = `${tdRect.bottom - 8}px`;
             (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
         } else {
             div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
+            // tableRect.top is used because the Inserter is always intended to be on top
             div.style.top = `${
-                tdRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                tableRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
             (div.firstChild as HTMLElement).style.height = `${tableRect.bottom - tableRect.top}px`;
         }
