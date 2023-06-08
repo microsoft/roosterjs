@@ -13,10 +13,10 @@ import {
 } from 'roosterjs-editor-types';
 
 const INSERTER_HOVER_OFFSET = 6;
-const TOP_OR_SIDE = {
-    top: 0,
-    side: 1,
-};
+const enum TOP_OR_SIDE {
+    top = 0,
+    side = 1,
+}
 /**
  * @internal
  *
