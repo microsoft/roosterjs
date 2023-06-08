@@ -1,5 +1,3 @@
-import paste from '../publicApi/utils/paste';
-import { ClipboardData, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
