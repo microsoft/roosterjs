@@ -221,7 +221,8 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledTimes(1);
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Delete', () => {
@@ -236,7 +237,8 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(cacheContentModel).toHaveBeenCalledTimes(1);
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Backspace from the beginning', () => {
