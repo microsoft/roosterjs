@@ -30,7 +30,9 @@ function insertImageWithSrc(editor: IContentModelEditor, src: string) {
         const doc = createContentModelDocument();
 
         addSegment(doc, image);
-        mergeModel(model, doc, getOnDeleteEntityCallback(editor), { mergeCurrentFormat: true });
+        mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
+            mergeFormatOption: 'MergeCurrentFormat',
+        });
 
         return true;
     });

@@ -38,18 +38,14 @@ export interface MergeModelOption {
     insertPosition?: InsertPoint;
 
     /**
-     * When set to true, segment format of the insert position will be merged into the content that is merged into current model.
+     * Use this to decide whether to change the source model format when doing the merge.
+     * 'MergeCurrentFormat': segment format of the insert position will be merged into the content that is merged into current model.
      * If the source model already has some format, it will not be overwritten.
-     * @default false
-     */
-    mergeCurrentFormat?: boolean;
-
-    /**
-     * When set to true, segment format of the insert position will be set into the content that is merged into current model.
+     * 'ApplyCurrentFormat': format of the insert position will be set into the content that is merged into current model.
      * If the source model already has fontWeight, Italic or underline, it will not be overwritten.
-     * @default false
+     * @default undefined
      */
-    applyCurrentFormat?: boolean;
+    mergeFormatOption?: 'MergeCurrentFormat' | 'ApplyCurrentFormat';
 }
 
 /**
@@ -65,17 +61,13 @@ export function mergeModel(
         options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
-        if (options?.mergeCurrentFormat || options?.applyCurrentFormat) {
+        if (options?.mergeFormatOption) {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(
-                source,
-                newFormat,
-                options?.applyCurrentFormat ? 'ApplyDefaultFormat' : 'MergeCurrentFormat'
-            );
+            applyDefaultFormat(source, newFormat, options.mergeFormatOption);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -274,7 +266,7 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
 function applyDefaultFormat(
     group: ContentModelBlockGroup,
     format: ContentModelSegmentFormat,
-    applyDefaultFormatOption: 'ApplyDefaultFormat' | 'MergeCurrentFormat'
+    applyDefaultFormatOption: 'MergeCurrentFormat' | 'ApplyCurrentFormat'
 ) {
     group.blocks.forEach(block => {
         switch (block.blockType) {

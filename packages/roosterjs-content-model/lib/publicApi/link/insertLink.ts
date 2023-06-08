@@ -94,7 +94,7 @@ export default function insertLink(
                     }
 
                     mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
-                        mergeCurrentFormat: true,
+                        mergeFormatOption: 'MergeCurrentFormat',
                     });
                 }
 

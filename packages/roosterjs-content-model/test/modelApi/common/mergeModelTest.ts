@@ -1403,7 +1403,9 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, { mergeCurrentFormat: true });
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormatOption: 'MergeCurrentFormat',
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1458,7 +1460,9 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, { applyCurrentFormat: true });
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormatOption: 'ApplyCurrentFormat',
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1519,7 +1523,9 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, { applyCurrentFormat: true });
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormatOption: 'ApplyCurrentFormat',
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',

@@ -39,7 +39,7 @@ export default function insertTable(
             applyTableFormat(table, format);
             mergeModel(model, doc, onDeleteEntity, {
                 insertPosition,
-                mergeCurrentFormat: true,
+                mergeFormatOption: 'MergeCurrentFormat',
             });
 
             const firstBlock = table.rows[0]?.cells[0]?.blocks[0];
