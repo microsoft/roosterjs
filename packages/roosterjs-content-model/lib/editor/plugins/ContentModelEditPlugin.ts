@@ -123,6 +123,8 @@ export default class ContentModelEditPlugin implements EditorPlugin {
 
                     if (this.shouldDeleteWithContentModel(range, which)) {
                         handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
+                    } else {
+                        editor.cacheContentModel(null);
                     }
 
                     break;
