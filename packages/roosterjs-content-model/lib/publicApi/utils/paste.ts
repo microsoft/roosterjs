@@ -1,6 +1,8 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
 import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
+import { ContentModelBlockFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelBlockFormat';
+import { FormatParser } from 'roosterjs-content-model/lib/publicTypes/context/DomToModelSettings';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -8,6 +10,7 @@ import { mergeModel } from '../../modelApi/common/mergeModel';
 import {
     createDefaultHtmlSanitizerOptions,
     getPasteType,
+    getTagOfNode,
     handleImagePaste,
     handleTextPaste,
     moveChildNodes,
@@ -22,6 +25,8 @@ import {
     PasteType,
     PluginEventType,
 } from 'roosterjs-editor-types';
+
+const TABLE_ELEMENT_TAGS = ['TABLE', 'TD', 'TBODY', 'TR'];
 
 /**
  * Paste into editor using a clipboardData object
@@ -71,6 +76,9 @@ export default function paste(
         {
             ...event.domToModelOption,
             disableCacheElement: true,
+            additionalFormatParsers: {
+                block: [blockElementParser],
+            },
         }
     );
 
@@ -152,3 +160,18 @@ function createFragmentFromClipboardData(
 
     return fragment;
 }
+
+/**
+ * @internal
+ * For block elements that have background color style, remove the background color
+ * since we cannot remove background color using formating APIs, the only exclusion for this would be tables.
+ */
+export const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.style.backgroundColor && TABLE_ELEMENT_TAGS.indexOf(getTagOfNode(element)) === -1) {
+        element.style.backgroundColor = '';
+        delete format.backgroundColor;
+    }
+};

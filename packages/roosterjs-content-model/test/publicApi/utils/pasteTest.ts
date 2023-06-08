@@ -1,7 +1,7 @@
 import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipboard/createFragmentFromClipboardData';
 import * as domToContentModel from '../../../lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
-import paste from '../../../lib/publicApi/utils/paste';
+import paste, { blockElementParser } from '../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -102,5 +102,51 @@ describe('Paste ', () => {
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
+    });
+});
+
+describe('Block element parser', () => {
+    it('Remove block styles on paste', () => {
+        const format: any = {};
+        const div = document.createElement('div');
+        div.style.backgroundColor = 'blue';
+
+        blockElementParser(format, div, {} as any, {});
+
+        expect(format.backgroundColor).toBeUndefined();
+        expect(div.style.backgroundColor).toEqual('');
+    });
+
+    it('Clear background color', () => {
+        const format: any = { backgroundColor: 'red' };
+        const div = document.createElement('div');
+        div.style.backgroundColor = 'blue';
+
+        blockElementParser(format, div, {} as any, {});
+
+        expect(format.backgroundColor).toBeUndefined();
+        expect(div.style.backgroundColor).toEqual('');
+    });
+
+    it('Do not update format for tables', () => {
+        const format: any = { backgroundColor: 'red' };
+        const table = document.createElement('table');
+        table.style.backgroundColor = 'blue';
+
+        blockElementParser(format, table, {} as any, {});
+
+        expect(format.backgroundColor).toEqual('red');
+        expect(table.style.backgroundColor).toEqual('blue');
+    });
+
+    it('Do not update format for td', () => {
+        const format: any = { backgroundColor: 'red' };
+        const td = document.createElement('td');
+        td.style.backgroundColor = 'blue';
+
+        blockElementParser(format, td, {} as any, {});
+
+        expect(format.backgroundColor).toEqual('red');
+        expect(td.style.backgroundColor).toEqual('blue');
     });
 });
