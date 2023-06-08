@@ -71,24 +71,4 @@ export default class ContentModelEditor
 
         return core.defaultFormat;
     }
-
-    /**
-     * Paste into editor using a clipboardData object
-     * @param clipboardData Clipboard data retrieved from clipboard
-     * @param pasteAsText Force pasting as plain text. Default value is false
-     * @param applyCurrentStyle True if apply format of current selection to the pasted content,
-     * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
-     */
-    public paste(
-        clipboardData: ClipboardData,
-        pasteAsText: boolean = false,
-        applyCurrentFormat: boolean = false,
-        pasteAsImage: boolean = false
-    ) {
-        if (this.isFeatureEnabled(ExperimentalFeatures.ContentModelPaste)) {
-            paste(this, clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
-        } else {
-            super.paste(clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
-        }
-    }
 }
