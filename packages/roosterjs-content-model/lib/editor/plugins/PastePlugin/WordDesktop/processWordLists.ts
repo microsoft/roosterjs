@@ -128,7 +128,7 @@ function startNumberOverrideParser(
             wordLevel,
             wordList,
         } = context.listFormat as WordDesktopListFormat;
-        if ((format.listType == OL_TAG && typeof wordLevel === 'number', wordList)) {
+        if (format.listType == OL_TAG && typeof wordLevel === 'number' && wordList) {
             const start = parseInt(fakeBullet);
             if (start != undefined && !isNaN(start) && !wordKnownLevels?.has(wordList)) {
                 format.startNumberOverride = start;
