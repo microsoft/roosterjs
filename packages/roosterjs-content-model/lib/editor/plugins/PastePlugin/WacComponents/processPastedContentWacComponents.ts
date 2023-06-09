@@ -17,13 +17,14 @@ const EMPTY_TEXT_RUN = 'EmptyTextRun';
 const END_OF_PARAGRAPH = 'EOP';
 const PARAGRAPH = 'Paragraph';
 
-const TABLE_TEMP_ELEMENTS = [
+const TEMP_ELEMENTS_CLASSES = [
     'TableInsertRowGapBlank',
     'TableColumnResizeHandle',
     'TableCellTopBorderHandle',
     'TableCellLeftBorderHandle',
     'TableHoverColumnHandle',
     'TableHoverRowHandle',
+    'ListMarkerWrappingSpan',
 ];
 
 const CLASSES_TO_KEEP = [
@@ -34,7 +35,7 @@ const CLASSES_TO_KEEP = [
     'BulletListStyle',
     END_OF_PARAGRAPH,
     EMPTY_TEXT_RUN,
-    ...TABLE_TEMP_ELEMENTS,
+    ...TEMP_ELEMENTS_CLASSES,
     'TableCellContent',
     PARAGRAPH,
     'WACImageContainer',
@@ -88,7 +89,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     if (
         (element.classList.contains(END_OF_PARAGRAPH) &&
             element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)) ||
-        TABLE_TEMP_ELEMENTS.some(className => element.classList.contains(className))
+        TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))
     ) {
         return;
     } else if (shouldClearListContext(elementTag, element, context)) {

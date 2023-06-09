@@ -4,6 +4,7 @@ import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/
 import { createListItem } from '../../../../modelApi/creators/createListItem';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
 import { DomToModelListFormat } from '../../../../publicTypes/context/DomToModelFormatContext';
+import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 import { getStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 import { parseFormat } from '../../../../domToModel/utils/parseFormat';
@@ -17,6 +18,7 @@ const WORD_FIRST_LIST = 'l0';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
+    wordList?: string;
     wordKnownLevels?: Map<string, ContentModelListItemLevelFormat[]>;
 }
 
@@ -51,10 +53,11 @@ export function processWordList(
     // If we are able to get the level property means we can process this element to be a list
     listFormat.wordLevel = listProps[1] && parseInt(listProps[1].substr('level'.length));
 
-    const wordList = listProps[0] || WORD_FIRST_LIST;
+    listFormat.wordList = listProps[0] || WORD_FIRST_LIST;
     if (listFormat.levels.length == 0) {
-        listFormat.levels = listFormat.wordKnownLevels.get(wordList) || [];
+        listFormat.levels = listFormat.wordKnownLevels.get(listFormat.wordList) || [];
     }
+
     if (wordListStyle && group && typeof listFormat.wordLevel === 'number') {
         const { wordLevel } = listFormat;
         // Retrieve the Fake bullet on the element and also the list type
@@ -64,11 +67,10 @@ export function processWordList(
         // Create the new level of the list item and parse the format
         const newLevel: ContentModelListItemLevelFormat = {
             listType,
-            startNumberOverride: listType == OL_TAG ? parseInt(fakeBullet) || undefined : undefined,
         };
         parseFormat(element, context.formatParsers.listLevel, newLevel, context);
 
-        // If the list format is in a different level, update the arraw so we get the new item
+        // If the list format is in a different level, update the array so we get the new item
         // To be in the same level as the provided level metadata.
         if (wordLevel > listFormat.levels.length) {
             while (wordLevel != listFormat.levels.length) {
@@ -81,24 +83,58 @@ export function processWordList(
 
         listFormat.listParent = group;
 
-        const listItem = createListItem(listFormat.levels, context.segmentFormat);
-
-        parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
-        parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
-
-        context.elementProcessors.child(listItem, element, context);
-        addBlock(group, listItem);
+        processAsListItem(listFormat, context, element, group, fakeBullet);
 
         if (
             listFormat.levels.length > 0 &&
-            listFormat.wordKnownLevels.get(wordList) != listFormat.levels
+            listFormat.wordKnownLevels.get(listFormat.wordList) != listFormat.levels
         ) {
-            listFormat.wordKnownLevels.set(wordList, [...listFormat.levels]);
+            listFormat.wordKnownLevels.set(listFormat.wordList, [...listFormat.levels]);
         }
         return true;
     }
 
     return false;
+}
+
+function processAsListItem(
+    listFormat: WordDesktopListFormat,
+    context: DomToModelContext,
+    element: HTMLElement,
+    group: ContentModelBlockGroup,
+    fakeBullet: string
+) {
+    const listItem = createListItem(listFormat.levels, context.segmentFormat);
+
+    parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
+    parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
+    parseFormat(
+        element,
+        [startNumberOverrideParser(fakeBullet)],
+        listItem.levels[listItem.levels.length - 1],
+        context
+    );
+
+    context.elementProcessors.child(listItem, element, context);
+    addBlock(group, listItem);
+}
+
+function startNumberOverrideParser(
+    fakeBullet: string
+): FormatParser<ContentModelListItemLevelFormat> | null {
+    return (format, _, context) => {
+        const {
+            wordKnownLevels,
+            wordLevel,
+            wordList,
+        } = context.listFormat as WordDesktopListFormat;
+        if ((format.listType == OL_TAG && typeof wordLevel === 'number', wordList)) {
+            const start = parseInt(fakeBullet);
+            if (start != undefined && !isNaN(start) && !wordKnownLevels?.has(wordList)) {
+                format.startNumberOverride = start;
+            }
+        }
+    };
 }
 
 /**
