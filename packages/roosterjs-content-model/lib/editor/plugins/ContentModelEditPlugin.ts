@@ -3,12 +3,18 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getObjectKeys, isBlockElement, isCharacterValue, Position } from 'roosterjs-editor-dom';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     EntityOperationEvent,
@@ -121,7 +127,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     const range =
                         rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
 
-                    if (this.shouldDeleteWithContentModel(range, which)) {
+                    if (this.shouldDeleteWithContentModel(range, rawEvent)) {
                         handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
                     } else {
                         editor.cacheContentModel(null);
@@ -234,12 +240,13 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         setPendingFormat(editor, newFormat, startPos);
     }
 
-    private shouldDeleteWithContentModel(range: Range | null, key: Keys.BACKSPACE | Keys.DELETE) {
+    private shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEvent) {
         return !(
             range?.collapsed &&
             range.startContainer.nodeType == NodeType.Text &&
-            ((key == Keys.BACKSPACE && range.startOffset > 1) ||
-                (key == Keys.DELETE &&
+            !isModifierKey(rawEvent) &&
+            ((rawEvent.which == Keys.BACKSPACE && range.startOffset > 1) ||
+                (rawEvent.which == Keys.DELETE &&
                     range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1))
         );
     }
