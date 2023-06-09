@@ -56,7 +56,7 @@ export const transformColor: TransformColor = (
                 const color = darkColorHandler.parseColorValue(
                     element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
                         element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
-                    fromDarkMode
+                    !!fromDarkMode
                 ).lightModeColor;
 
                 element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
