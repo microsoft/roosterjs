@@ -238,9 +238,9 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         return !(
             range?.collapsed &&
             range.startContainer.nodeType == NodeType.Text &&
-            ((key == Keys.BACKSPACE && range.startOffset > 0) ||
+            ((key == Keys.BACKSPACE && range.startOffset > 1) ||
                 (key == Keys.DELETE &&
-                    range.startOffset < (range.startContainer.nodeValue?.length ?? 0)))
+                    range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1))
         );
     }
 }
