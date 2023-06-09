@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">53.33% </span>
+                <span class="strong">51.52% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>32/60</span>
+                <span class='fraction'>34/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">31.43% </span>
+                <span class="strong">23.91% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/35</span>
+                <span class='fraction'>11/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">53.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>8/12</span>
+                <span class='fraction'>8/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">57.14% </span>
+                <span class="strong">54.1% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>32/56</span>
+                <span class='fraction'>33/61</span>
             </div>
         
             
@@ -206,7 +206,26 @@
 <a name='L147'></a><a href='#L147'>147</a>
 <a name='L148'></a><a href='#L148'>148</a>
 <a name='L149'></a><a href='#L149'>149</a>
-<a name='L150'></a><a href='#L150'>150</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L150'></a><a href='#L150'>150</a>
+<a name='L151'></a><a href='#L151'>151</a>
+<a name='L152'></a><a href='#L152'>152</a>
+<a name='L153'></a><a href='#L153'>153</a>
+<a name='L154'></a><a href='#L154'>154</a>
+<a name='L155'></a><a href='#L155'>155</a>
+<a name='L156'></a><a href='#L156'>156</a>
+<a name='L157'></a><a href='#L157'>157</a>
+<a name='L158'></a><a href='#L158'>158</a>
+<a name='L159'></a><a href='#L159'>159</a>
+<a name='L160'></a><a href='#L160'>160</a>
+<a name='L161'></a><a href='#L161'>161</a>
+<a name='L162'></a><a href='#L162'>162</a>
+<a name='L163'></a><a href='#L163'>163</a>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a>
+<a name='L168'></a><a href='#L168'>168</a>
+<a name='L169'></a><a href='#L169'>169</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -252,9 +271,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -355,8 +389,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import TableEditor from './editors/TableEditor';
-import { normalizeRect } from 'roosterjs-editor-dom';
+import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     CreateElementData,
     EditorPlugin,
@@ -403,8 +441,23 @@ export default class TableResize implements EditorPlugin {
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.onMouseMoveDisposer = this.editor.addDomEventHandler({ mousemove: this.onMouseMove });
+        this.onMouseMoveDisposer = this.editor.addDomEventHandler({
+            mousemove: this.onMouseMove,
+            mouseout: <span class="fstat-no" title="function not covered" >e </span>=&gt; <span class="cstat-no" title="statement not covered" >this.onMouseOut(e),</span>
+        });
     }
+&nbsp;
+    private onMouseOut = <span class="fstat-no" title="function not covered" >(e</span>v: Event) =&gt; {
+<span class="cstat-no" title="statement not covered" >        if (</span>
+            isMouseEvent(ev) &amp;&amp;
+            safeInstanceOf(ev.relatedTarget, 'HTMLElement') &amp;&amp;
+            this.tableEditor &amp;&amp;
+            !this.tableEditor.isOwnedElement(ev.relatedTarget) &amp;&amp;
+            !this.editor?.contains(ev.relatedTarget)
+        ) {
+<span class="cstat-no" title="statement not covered" >            this.setTableEditor(null);</span>
+        }
+    };
 &nbsp;
     /**
      * Dispose this plugin
@@ -504,6 +557,10 @@ export default class TableResize implements EditorPlugin {
         }
     }
 }
+&nbsp;
+function <span class="fstat-no" title="function not covered" >isMouseEvent(</span>e: Event): e is MouseEvent {
+<span class="cstat-no" title="statement not covered" >    return !!(e as MouseEvent).pageX;</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -511,7 +568,7 @@ export default class TableResize implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 08 2023 23:39:54 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 09 2023 00:48:17 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
