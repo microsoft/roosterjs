@@ -10,6 +10,7 @@
         },
         "rootDir": "..",
         "downlevelIteration": true,
+        "importHelpers": true,
         "lib": ["es6", "dom"]
     },
     "include": [

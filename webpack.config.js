@@ -30,6 +30,7 @@ module.exports = {
                 options: {
                     compilerOptions: {
                         downlevelIteration: true,
+                        importHelpers: true,
                     },
                 },
             },
