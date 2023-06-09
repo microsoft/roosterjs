@@ -10,6 +10,7 @@
         "preserveConstEnums": false,
         "noUnusedLocals": true,
         "downlevelIteration": true,
+        "importHelpers": true,
         "baseUrl": ".",
         "paths": {
             "*": ["*"]
