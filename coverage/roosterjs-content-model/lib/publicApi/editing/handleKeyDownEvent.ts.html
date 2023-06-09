@@ -25,28 +25,28 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.75% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>15/16</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>4/4</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>19/19</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -124,13 +124,7 @@
 <a name='L65'></a><a href='#L65'>65</a>
 <a name='L66'></a><a href='#L66'>66</a>
 <a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a>
-<a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L68'></a><a href='#L68'>68</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -164,26 +158,6 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">10x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -202,6 +176,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Browser } from 'roosterjs-editor-dom';
 import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
@@ -236,45 +224,39 @@ export default function handleKeyDownEvent(
 ) {
     const which = rawEvent.which;
 &nbsp;
-    <span class="missing-if-branch" title="else path not taken" >E</span>if (which == Keys.DELETE || which == Keys.BACKSPACE) {
-        const isForward = which == Keys.DELETE;
-        const apiName = isForward ? 'handleDeleteKey' : 'handleBackspaceKey';
-        const deleteCollapsedSelection = isForward
-            ? forwardDeleteCollapsedSelection
-            : backwardDeleteCollapsedSelection;
-        const deleteWordSelection = shouldDeleteWord(rawEvent, !!Browser.isMac)
-            ? isForward
-                ? forwardDeleteWordSelection
-                : backwardDeleteWordSelection
-            : null;
+    formatWithContentModel(
+        editor,
+        which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
+        model =&gt; {
+            const result = deleteSelection(
+                model,
+                getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                getDeleteSteps(rawEvent)
+            ).deleteResult;
 &nbsp;
-        formatWithContentModel(
-            editor,
-            apiName,
-            model =&gt; {
-                const steps: (DeleteSelectionStep | null)[] = [
-                    shouldDeleteAllSegmentsBefore(rawEvent) &amp;&amp; !isForward
-                        ? deleteAllSegmentBefore
-                        : null,
-                    deleteWordSelection,
-                    deleteCollapsedSelection,
-                ];
+            return handleKeyboardEventResult(editor, model, rawEvent, result);
+        },
+        {
+            skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
+            changeSource: ChangeSource.Keyboard,
+            getChangeData: () =&gt; which,
+        }
+    );
+}
 &nbsp;
-                const result = deleteSelection(
-                    model,
-                    getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
-                    steps
-                ).deleteResult;
-&nbsp;
-                return handleKeyboardEventResult(editor, model, rawEvent, result);
-            },
-            {
-                skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
-                changeSource: ChangeSource.Keyboard,
-                getChangeData: () =&gt; which,
-            }
-        );
-    }
+function getDeleteSteps(rawEvent: KeyboardEvent): (DeleteSelectionStep | null)[] {
+    const isForward = rawEvent.which == Keys.DELETE;
+    const deleteAllSegmentBeforeStep =
+        shouldDeleteAllSegmentsBefore(rawEvent) &amp;&amp; !isForward ? deleteAllSegmentBefore : null;
+    const deleteWordSelection = shouldDeleteWord(rawEvent, !!Browser.isMac)
+        ? isForward
+            ? forwardDeleteWordSelection
+            : backwardDeleteWordSelection
+        : null;
+    const deleteCollapsedSelection = isForward
+        ? forwardDeleteCollapsedSelection
+        : backwardDeleteCollapsedSelection;
+    return [deleteAllSegmentBeforeStep, deleteWordSelection, deleteCollapsedSelection];
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -283,7 +265,7 @@ export default function handleKeyDownEvent(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 09 2023 00:48:17 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 09 2023 03:53:49 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
