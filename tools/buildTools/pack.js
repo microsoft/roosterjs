@@ -40,6 +40,7 @@ async function pack(isProduction, isAmd, isUi, filename) {
                             strict: false,
                             declaration: false,
                             downlevelIteration: true,
+                            importHelpers: true,
                         },
                     },
                 },
