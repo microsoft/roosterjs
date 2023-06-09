@@ -2,6 +2,7 @@
     "name": "roosterjs-editor-core",
     "description": "Editor core for roosterjs",
     "dependencies": {
+        "tslib": "^2.3.1",
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": ""
     },

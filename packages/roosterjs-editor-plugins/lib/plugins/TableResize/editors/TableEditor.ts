@@ -19,8 +19,11 @@ import {
     CreateElementData,
 } from 'roosterjs-editor-types';
 
-const INSERTER_HOVER_OFFSET = 5;
-
+const INSERTER_HOVER_OFFSET = 6;
+const enum TOP_OR_SIDE {
+    top = 0,
+    side = 1,
+}
 /**
  * @internal
  *
@@ -110,6 +113,23 @@ export default class TableEditor {
     }
 
     onMouseMove(x: number, y: number) {
+        //Get Cell [0,0]
+        const firstCell = this.table.rows[0].cells[0];
+        const firstCellRect = normalizeRect(firstCell.getBoundingClientRect());
+
+        //Determine if cursor is on top or side
+        const topOrSide =
+            y <= firstCellRect.top + INSERTER_HOVER_OFFSET
+                ? TOP_OR_SIDE.top
+                : this.isRTL
+                ? x >= firstCellRect.right - INSERTER_HOVER_OFFSET
+                    ? TOP_OR_SIDE.side
+                    : undefined
+                : x <= firstCellRect.left + INSERTER_HOVER_OFFSET
+                ? TOP_OR_SIDE.side
+                : undefined;
+
+        // i is row index, j is column index
         for (let i = 0; i < this.table.rows.length; i++) {
             const tr = this.table.rows[i];
             let j = 0;
@@ -122,27 +142,27 @@ export default class TableEditor {
                     continue;
                 }
 
+                // Determine the cell the cursor is in range of
                 const lessThanBottom = y <= tdRect.bottom;
-                const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
+                const lessThanRight = this.isRTL
+                    ? x <= tdRect.right + INSERTER_HOVER_OFFSET
+                    : x <= tdRect.right;
+                const moreThanLeft = this.isRTL
+                    ? x >= tdRect.left
+                    : x >= tdRect.left - INSERTER_HOVER_OFFSET;
 
-                if (lessThanRight && lessThanBottom) {
+                if (lessThanBottom && lessThanRight && moreThanLeft) {
                     const isOnLeftOrRight = this.isRTL
                         ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
                         : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
-                    if (i === 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
                         this.setInserterTd(
                             isOnRightHalf ? td : tr.cells[j - 1],
                             false /*isHorizontal*/
                         );
-                    } else if (
-                        j == 0 &&
-                        (this.isRTL
-                            ? x >= tdRect.right - INSERTER_HOVER_OFFSET
-                            : x <= tdRect.left + INSERTER_HOVER_OFFSET) &&
-                        isOnLeftOrRight
-                    ) {
+                    } else if (j === 0 && topOrSide == TOP_OR_SIDE.side && isOnLeftOrRight) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
                             ? normalizeRect(tdAbove.getBoundingClientRect())
