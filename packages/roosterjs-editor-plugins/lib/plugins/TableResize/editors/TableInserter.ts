@@ -17,6 +17,7 @@ export default function createTableInserter(
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void,
+    getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
@@ -61,7 +62,14 @@ export default function createTableInserter(
 
         document.body.appendChild(div);
 
-        const handler = new TableInsertHandler(div, td, isHorizontal, editor, onInsert);
+        const handler = new TableInsertHandler(
+            div,
+            td,
+            isHorizontal,
+            editor,
+            onInsert,
+            getOnMouseOut
+        );
 
         return { div, featureHandler: handler, node: td };
     }
@@ -70,20 +78,28 @@ export default function createTableInserter(
 }
 
 class TableInsertHandler implements Disposable {
+    private onMouseOutEvent: null | ((ev: MouseEvent) => void);
     constructor(
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: (table: HTMLTableElement) => void
+        private onInsert: (table: HTMLTableElement) => void,
+        getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void
     ) {
         this.div.addEventListener('click', this.insertTd);
+        this.onMouseOutEvent = getOnMouseOut(div);
+        this.div.addEventListener('mouseout', this.onMouseOutEvent);
     }
 
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
+        if (this.onMouseOutEvent) {
+            this.div.removeEventListener('mouseout', this.onMouseOutEvent);
+        }
         this.div = null;
         this.editor = null;
+        this.onMouseOutEvent = null;
     }
 
     private insertTd = () => {
