@@ -31,43 +31,37 @@ export default function handleKeyDownEvent(
 ) {
     const which = rawEvent.which;
 
-    if (which == Keys.DELETE || which == Keys.BACKSPACE) {
-        const isForward = which == Keys.DELETE;
-        const apiName = isForward ? 'handleDeleteKey' : 'handleBackspaceKey';
-        const deleteCollapsedSelection = isForward
-            ? forwardDeleteCollapsedSelection
-            : backwardDeleteCollapsedSelection;
-        const deleteWordSelection = shouldDeleteWord(rawEvent, !!Browser.isMac)
-            ? isForward
-                ? forwardDeleteWordSelection
-                : backwardDeleteWordSelection
-            : null;
+    formatWithContentModel(
+        editor,
+        which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
+        model => {
+            const result = deleteSelection(
+                model,
+                getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
+                getDeleteSteps(rawEvent)
+            ).deleteResult;
 
-        formatWithContentModel(
-            editor,
-            apiName,
-            model => {
-                const steps: (DeleteSelectionStep | null)[] = [
-                    shouldDeleteAllSegmentsBefore(rawEvent) && !isForward
-                        ? deleteAllSegmentBefore
-                        : null,
-                    deleteWordSelection,
-                    deleteCollapsedSelection,
-                ];
+            return handleKeyboardEventResult(editor, model, rawEvent, result);
+        },
+        {
+            skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
+            changeSource: ChangeSource.Keyboard,
+            getChangeData: () => which,
+        }
+    );
+}
 
-                const result = deleteSelection(
-                    model,
-                    getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
-                    steps
-                ).deleteResult;
-
-                return handleKeyboardEventResult(editor, model, rawEvent, result);
-            },
-            {
-                skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
-                changeSource: ChangeSource.Keyboard,
-                getChangeData: () => which,
-            }
-        );
-    }
+function getDeleteSteps(rawEvent: KeyboardEvent): (DeleteSelectionStep | null)[] {
+    const isForward = rawEvent.which == Keys.DELETE;
+    const deleteAllSegmentBeforeStep =
+        shouldDeleteAllSegmentsBefore(rawEvent) && !isForward ? deleteAllSegmentBefore : null;
+    const deleteWordSelection = shouldDeleteWord(rawEvent, !!Browser.isMac)
+        ? isForward
+            ? forwardDeleteWordSelection
+            : backwardDeleteWordSelection
+        : null;
+    const deleteCollapsedSelection = isForward
+        ? forwardDeleteCollapsedSelection
+        : backwardDeleteCollapsedSelection;
+    return [deleteAllSegmentBeforeStep, deleteWordSelection, deleteCollapsedSelection];
 }
