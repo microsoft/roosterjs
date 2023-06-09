@@ -1,10 +1,5 @@
 import { arrayPush, safeInstanceOf, setColor, toArray } from 'roosterjs-editor-dom';
-import {
-    ColorTransformDirection,
-    DarkColorHandler,
-    EditorCore,
-    TransformColor,
-} from 'roosterjs-editor-types';
+import { ColorTransformDirection, EditorCore, TransformColor } from 'roosterjs-editor-types';
 import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const enum ColorAttributeEnum {
@@ -51,44 +46,36 @@ export const transformColor: TransformColor = (
 
     callback?.();
 
-    transformV2(
-        elements,
-        darkColorHandler,
-        !!fromDarkMode,
-        direction == ColorTransformDirection.LightToDark
-    );
-};
+    if (core.lifecycle.onExternalContentTransform) {
+        elements.forEach(element => core.lifecycle.onExternalContentTransform!(element));
+    } else {
+        const toDark = direction == ColorTransformDirection.LightToDark;
 
-function transformV2(
-    elements: HTMLElement[],
-    darkColorHandler: DarkColorHandler,
-    fromDark: boolean,
-    toDark: boolean
-) {
-    elements.forEach(element => {
-        ColorAttributeName.forEach((names, i) => {
-            const color = darkColorHandler.parseColorValue(
-                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
-                    element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
-                fromDark
-            ).lightModeColor;
+        elements.forEach(element => {
+            ColorAttributeName.forEach((names, i) => {
+                const color = darkColorHandler.parseColorValue(
+                    element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
+                        element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
+                    fromDarkMode
+                ).lightModeColor;
 
-            element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
-            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
+                element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
+                element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
 
-            if (color && color != 'inherit') {
-                setColor(
-                    element,
-                    color,
-                    i != 0,
-                    toDark,
-                    false /*shouldAdaptFontColor*/,
-                    darkColorHandler
-                );
-            }
+                if (color && color != 'inherit') {
+                    setColor(
+                        element,
+                        color,
+                        i != 0,
+                        toDark,
+                        false /*shouldAdaptFontColor*/,
+                        darkColorHandler
+                    );
+                }
+            });
         });
-    });
-}
+    }
+};
 
 function getAll(rootNode: Node, includeSelf: boolean): HTMLElement[] {
     const result: HTMLElement[] = [];
