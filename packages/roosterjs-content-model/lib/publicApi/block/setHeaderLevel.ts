@@ -28,10 +28,6 @@ export default function setHeaderLevel(
                 tagName: tagName!,
                 format: { ...headerStyle },
             };
-
-            para.segments.forEach(segment => {
-                Object.assign(segment.format, headerStyle);
-            });
         } else if (tagName) {
             delete para.decorator;
         }
