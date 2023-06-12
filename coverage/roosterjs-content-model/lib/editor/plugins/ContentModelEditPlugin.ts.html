@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.88% </span>
+                <span class="strong">96.04% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>93/97</span>
+                <span class='fraction'>97/101</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.35% </span>
+                <span class="strong">83.18% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>84/102</span>
+                <span class='fraction'>89/107</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.31% </span>
+                <span class="strong">93.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>12/13</span>
+                <span class='fraction'>14/15</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.65% </span>
+                <span class="strong">95.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>88/92</span>
+                <span class='fraction'>92/96</span>
             </div>
         
             
@@ -303,17 +303,43 @@
 <a name='L244'></a><a href='#L244'>244</a>
 <a name='L245'></a><a href='#L245'>245</a>
 <a name='L246'></a><a href='#L246'>246</a>
-<a name='L247'></a><a href='#L247'>247</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L247'></a><a href='#L247'>247</a>
+<a name='L248'></a><a href='#L248'>248</a>
+<a name='L249'></a><a href='#L249'>249</a>
+<a name='L250'></a><a href='#L250'>250</a>
+<a name='L251'></a><a href='#L251'>251</a>
+<a name='L252'></a><a href='#L252'>252</a>
+<a name='L253'></a><a href='#L253'>253</a>
+<a name='L254'></a><a href='#L254'>254</a>
+<a name='L255'></a><a href='#L255'>255</a>
+<a name='L256'></a><a href='#L256'>256</a>
+<a name='L257'></a><a href='#L257'>257</a>
+<a name='L258'></a><a href='#L258'>258</a>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -549,17 +575,37 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import handleKeyDownEvent from '../../publicApi/editing/handleKeyDownEvent';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getObjectKeys, isBlockElement, isCharacterValue, Position } from 'roosterjs-editor-dom';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     EntityOperationEvent,
@@ -672,7 +718,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     const range =
                         rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
 &nbsp;
-                    if (this.shouldDeleteWithContentModel(range, which)) {
+                    if (this.shouldDeleteWithContentModel(range, rawEvent)) {
                         handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
                     } else {
                         editor.cacheContentModel(null);
@@ -785,13 +831,27 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         setPendingFormat(editor, newFormat, startPos);
     }
 &nbsp;
-    private shouldDeleteWithContentModel(range: Range | null, key: Keys.BACKSPACE | Keys.DELETE) {
+    private shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEvent) {
         return !(
             range?.collapsed &amp;&amp;
             range.startContainer.nodeType == NodeType.Text &amp;&amp;
-            ((key == Keys.BACKSPACE &amp;&amp; range.startOffset &gt; 0) ||
-                (key == Keys.DELETE &amp;&amp;
-                    range.startOffset &lt; (range.startContainer.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span>))
+            !isModifierKey(rawEvent) &amp;&amp;
+            (this.canDeleteBefore(rawEvent, range) || this.canDeleteAfter(rawEvent, range))
+        );
+    }
+&nbsp;
+    private canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.BACKSPACE &amp;&amp;
+            (range.startOffset &gt; 1 || range.startContainer.previousSibling)
+        );
+    }
+&nbsp;
+    private canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.DELETE &amp;&amp;
+            (range.startOffset &lt; (range.startContainer.nodeValue<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength ?? <span class="branch-1 cbranch-no" title="branch not covered" >0)</span> - 1 ||
+                range.startContainer.nextSibling)
         );
     }
 }
@@ -802,7 +862,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 09 2023 16:39:03 GMT+0000 (Coordinated Universal Time)
+                at Mon Jun 12 2023 17:38:12 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
