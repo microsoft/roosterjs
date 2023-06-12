@@ -245,9 +245,22 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             range?.collapsed &&
             range.startContainer.nodeType == NodeType.Text &&
             !isModifierKey(rawEvent) &&
-            ((rawEvent.which == Keys.BACKSPACE && range.startOffset > 1) ||
-                (rawEvent.which == Keys.DELETE &&
-                    range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1))
+            (this.canDeleteBefore(rawEvent, range) || this.canDeleteAfter(rawEvent, range))
+        );
+    }
+
+    private canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.BACKSPACE &&
+            (range.startOffset > 1 || range.startContainer.previousSibling)
+        );
+    }
+
+    private canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.DELETE &&
+            (range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1 ||
+                range.startContainer.nextSibling)
         );
     }
 }
