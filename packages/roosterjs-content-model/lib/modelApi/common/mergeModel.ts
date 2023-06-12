@@ -39,13 +39,14 @@ export interface MergeModelOption {
 
     /**
      * Use this to decide whether to change the source model format when doing the merge.
-     * 'MergeCurrentFormat': segment format of the insert position will be merged into the content that is merged into current model.
+     * 'mergeAll': segment format of the insert position will be merged into the content that is merged into current model.
      * If the source model already has some format, it will not be overwritten.
-     * 'ApplyCurrentFormat': format of the insert position will be set into the content that is merged into current model.
-     * If the source model already has fontWeight, Italic or underline, it will not be overwritten.
+     * 'keepSourceEmphasisFormat': format of the insert position will be set into the content that is merged into current model.
+     * If the source model already has emphasis format, such as, fontWeight, Italic or underline different than the default style, it will not be overwritten.
+     * 'none' the source segment format will not be modified.
      * @default undefined
      */
-    mergeFormatOption?: 'MergeCurrentFormat' | 'ApplyCurrentFormat';
+    mergeFormat?: 'mergeAll' | 'keepSourceEmphasisFormat' | 'none';
 }
 
 /**
@@ -61,13 +62,13 @@ export function mergeModel(
         options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
-        if (options?.mergeFormatOption) {
+        if (options?.mergeFormat && options.mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat, options.mergeFormatOption);
+            applyDefaultFormat(source, newFormat, options?.mergeFormat);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -266,7 +267,7 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
 function applyDefaultFormat(
     group: ContentModelBlockGroup,
     format: ContentModelSegmentFormat,
-    applyDefaultFormatOption: 'MergeCurrentFormat' | 'ApplyCurrentFormat'
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
@@ -289,7 +290,7 @@ function applyDefaultFormat(
                     }
 
                     segment.format =
-                        applyDefaultFormatOption == 'MergeCurrentFormat'
+                        applyDefaultFormatOption == 'mergeAll'
                             ? { ...format, ...segment.format }
                             : {
                                   ...format,
@@ -304,14 +305,16 @@ function applyDefaultFormat(
 function getSemanticFormat(segment: ContentModelSegment): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
-    if (segment.format.fontWeight) {
+    const { fontWeight, italic, underline } = segment.format;
+
+    if (fontWeight && fontWeight != 'normal') {
         result.fontWeight = segment.format.fontWeight;
     }
-    if (segment.format.italic) {
-        result.italic = segment.format.italic;
+    if (italic) {
+        result.italic = italic;
     }
-    if (segment.format.underline) {
-        result.underline = segment.format.underline;
+    if (underline) {
+        result.underline = underline;
     }
 
     return result;

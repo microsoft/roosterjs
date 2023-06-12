@@ -31,7 +31,7 @@ function insertImageWithSrc(editor: IContentModelEditor, src: string) {
 
         addSegment(doc, image);
         mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
-            mergeFormatOption: 'MergeCurrentFormat',
+            mergeFormat: 'mergeAll',
         });
 
         return true;

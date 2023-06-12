@@ -1404,7 +1404,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormatOption: 'MergeCurrentFormat',
+            mergeFormat: 'mergeAll',
         });
 
         expect(majorModel).toEqual({
@@ -1461,7 +1461,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormatOption: 'ApplyCurrentFormat',
+            mergeFormat: 'keepSourceEmphasisFormat',
         });
 
         expect(majorModel).toEqual({
@@ -1524,7 +1524,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormatOption: 'ApplyCurrentFormat',
+            mergeFormat: 'keepSourceEmphasisFormat',
         });
 
         expect(majorModel).toEqual({
