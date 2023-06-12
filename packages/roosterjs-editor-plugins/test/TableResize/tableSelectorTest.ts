@@ -123,6 +123,7 @@ describe('Table Selector Tests', () => {
             1,
             editor,
             () => {},
+            () => () => {},
             () => {},
             <EventTarget>node
         );

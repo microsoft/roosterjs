@@ -11,13 +11,15 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     // TODO: Use strong-typed editor core object
     const core = editorCore as ContentModelEditorCore;
 
-    if (isOn && !core.cachedModel) {
-        core.cachedModel = core.api.createContentModel(core);
-    }
+    if (isOn != !!core.lifecycle.shadowEditFragment) {
+        if (isOn && !core.cachedModel) {
+            core.cachedModel = core.api.createContentModel(core);
+        }
 
-    core.originalApi.switchShadowEdit(editorCore, isOn);
+        core.originalApi.switchShadowEdit(editorCore, isOn);
 
-    if (!isOn && core.cachedModel) {
-        core.api.setContentModel(core, core.cachedModel);
+        if (!isOn && core.cachedModel) {
+            core.api.setContentModel(core, core.cachedModel);
+        }
     }
 };

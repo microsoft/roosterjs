@@ -37,6 +37,7 @@ async function buildDemoSite() {
                     options: {
                         compilerOptions: {
                             downlevelIteration: true,
+                            importHelpers: true,
                         },
                     },
                 },

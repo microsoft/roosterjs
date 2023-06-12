@@ -23,46 +23,95 @@ describe('switchShadowEdit', () => {
             originalApi: {
                 switchShadowEdit: originalSwitchShadowEdit,
             },
+            lifecycle: {},
         } as any) as ContentModelEditorCore;
     });
 
-    it('no cache, isOn', () => {
-        switchShadowEdit(core, true);
+    describe('was off', () => {
+        it('no cache, isOn', () => {
+            switchShadowEdit(core, true);
 
-        expect(createContentModel).toHaveBeenCalledWith(core);
-        expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
-        expect(setContentModel).not.toHaveBeenCalled();
-        expect(core.cachedModel).toBe(mockedModel);
+            expect(createContentModel).toHaveBeenCalledWith(core);
+            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(mockedModel);
+        });
+
+        it('with cache, isOn', () => {
+            core.cachedModel = mockedCachedModel;
+
+            switchShadowEdit(core, true);
+
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(mockedCachedModel);
+        });
+
+        it('no cache, isOff', () => {
+            switchShadowEdit(core, false);
+
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(undefined);
+        });
+
+        it('with cache, isOff', () => {
+            core.cachedModel = mockedCachedModel;
+
+            switchShadowEdit(core, false);
+
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(mockedCachedModel);
+        });
     });
 
-    it('with cache, isOn', () => {
-        core.cachedModel = mockedCachedModel;
+    describe('was on', () => {
+        beforeEach(() => {
+            core.lifecycle.shadowEditFragment = {} as any;
+        });
 
-        switchShadowEdit(core, true);
+        it('no cache, isOn', () => {
+            switchShadowEdit(core, true);
 
-        expect(createContentModel).not.toHaveBeenCalled();
-        expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
-        expect(setContentModel).not.toHaveBeenCalled();
-        expect(core.cachedModel).toBe(mockedCachedModel);
-    });
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(undefined);
+        });
 
-    it('no cache, isOff', () => {
-        switchShadowEdit(core, false);
+        it('with cache, isOn', () => {
+            core.cachedModel = mockedCachedModel;
 
-        expect(createContentModel).not.toHaveBeenCalled();
-        expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
-        expect(setContentModel).not.toHaveBeenCalled();
-        expect(core.cachedModel).toBe(undefined);
-    });
+            switchShadowEdit(core, true);
 
-    it('with cache, isOff', () => {
-        core.cachedModel = mockedCachedModel;
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(mockedCachedModel);
+        });
 
-        switchShadowEdit(core, false);
+        it('no cache, isOff', () => {
+            switchShadowEdit(core, false);
 
-        expect(createContentModel).not.toHaveBeenCalled();
-        expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
-        expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel);
-        expect(core.cachedModel).toBe(mockedCachedModel);
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
+            expect(setContentModel).not.toHaveBeenCalled();
+            expect(core.cachedModel).toBe(undefined);
+        });
+
+        it('with cache, isOff', () => {
+            core.cachedModel = mockedCachedModel;
+
+            switchShadowEdit(core, false);
+
+            expect(createContentModel).not.toHaveBeenCalled();
+            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
+            expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel);
+            expect(core.cachedModel).toBe(mockedCachedModel);
+        });
     });
 });
