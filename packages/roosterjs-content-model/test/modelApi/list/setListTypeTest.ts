@@ -65,6 +65,7 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: undefined,
                             textAlign: undefined,
+                            marginTop: undefined,
                         },
                     ],
                     blocks: [para],
@@ -285,6 +286,7 @@ describe('indent', () => {
                                     startNumberOverride: undefined,
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginTop: undefined,
                                 },
                             ],
                             blocks: [para3],
@@ -343,6 +345,7 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: 'rtl',
                             textAlign: 'start',
+                            marginTop: undefined,
                         },
                     ],
                     blocks: [para],
@@ -417,6 +420,8 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: undefined,
                             textAlign: undefined,
+                            marginTop: undefined,
+                            marginBottom: '0',
                         },
                     ],
                     formatHolder: {
@@ -441,6 +446,7 @@ describe('indent', () => {
                             direction: undefined,
                             textAlign: undefined,
                             startNumberOverride: undefined,
+                            marginTop: '0',
                         },
                     ],
                     formatHolder: {
@@ -491,6 +497,7 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: undefined,
                             textAlign: undefined,
+                            marginTop: undefined,
                         },
                     ],
                     formatHolder: {

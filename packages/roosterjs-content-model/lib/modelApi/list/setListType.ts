@@ -2,7 +2,7 @@ import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { createListItem } from '../creators/createListItem';
-import { getOperationalBlocks } from '../selection/collectSelections';
+import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { normalizeContentModel } from '../common/normalizeContentModel';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
@@ -20,8 +20,10 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
         ({ block }) =>
             (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
                 block.levels[block.levels.length - 1]?.listType == listType) ||
-            (!shouldTurnOnList(block) && paragraphOrListItems.length > 1)
+            !shouldTurnOnList(paragraphOrListItems, block)
     );
+    let existingListItems: ContentModelListItem[] = [];
+    let hasIgnoredParagraphBefore = false;
 
     paragraphOrListItems.forEach(({ block, parent }, itemIndex) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
@@ -36,42 +38,51 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
         } else {
             const index = parent.blocks.indexOf(block);
 
-            if (index >= 0 && (paragraphOrListItems.length == 1 || shouldTurnOnList(block))) {
-                const prevBlock = parent.blocks[index - 1];
-                const segmentFormat =
-                    (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
-                const newListItem = createListItem(
-                    [
+            if (index >= 0) {
+                if (shouldTurnOnList(paragraphOrListItems, block)) {
+                    const prevBlock = parent.blocks[index - 1];
+                    const segmentFormat =
+                        (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
+                    const newListItem = createListItem(
+                        [
+                            {
+                                listType,
+                                startNumberOverride:
+                                    itemIndex > 0 ||
+                                    (prevBlock?.blockType == 'BlockGroup' &&
+                                        prevBlock.blockGroupType == 'ListItem' &&
+                                        prevBlock.levels[0]?.listType == 'OL')
+                                        ? undefined
+                                        : 1,
+                                direction: block.format.direction,
+                                textAlign: block.format.textAlign,
+                                marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
+                            },
+                        ],
+                        // For list bullet, we only want to carry over these formats from segments:
                         {
-                            listType,
-                            startNumberOverride:
-                                itemIndex > 0 ||
-                                (prevBlock?.blockType == 'BlockGroup' &&
-                                    prevBlock.blockGroupType == 'ListItem' &&
-                                    prevBlock.levels[0]?.listType == 'OL')
-                                    ? undefined
-                                    : 1,
-                            direction: block.format.direction,
-                            textAlign: block.format.textAlign,
-                        },
-                    ],
-                    // For list bullet, we only want to carry over these formats from segments:
-                    {
-                        fontFamily: segmentFormat.fontFamily,
-                        fontSize: segmentFormat.fontSize,
-                        textColor: segmentFormat.textColor,
+                            fontFamily: segmentFormat.fontFamily,
+                            fontSize: segmentFormat.fontSize,
+                            textColor: segmentFormat.textColor,
+                        }
+                    );
+
+                    // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
+                    // TODO: Do we need to keep the CSS styles applied to original DIV?
+                    if (block.blockType == 'Paragraph') {
+                        block.isImplicit = true;
                     }
-                );
 
-                // Since there is only one paragraph under the list item, no need to keep its paragraph element (DIV).
-                // TODO: Do we need to keep the CSS styles applied to original DIV?
-                if (block.blockType == 'Paragraph') {
-                    block.isImplicit = true;
+                    newListItem.blocks.push(block);
+
+                    parent.blocks.splice(index, 1, newListItem);
+                    existingListItems.push(newListItem);
+                } else {
+                    hasIgnoredParagraphBefore = true;
+
+                    existingListItems.forEach(x => (x.levels[0].marginBottom = '0'));
+                    existingListItems = [];
                 }
-
-                newListItem.blocks.push(block);
-
-                parent.blocks.splice(index, 1, newListItem);
             }
         }
     });
@@ -81,10 +92,14 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     return paragraphOrListItems.length > 0;
 }
 
-function shouldTurnOnList(block: ContentModelBlock): boolean {
+function shouldTurnOnList(
+    blocks: OperationalBlocks<ContentModelListItem>[],
+    block: ContentModelBlock
+): boolean {
     return (
-        block.blockType == 'Paragraph' &&
-        block.segments.length > 0 &&
-        block.segments.some(x => x.segmentType != 'Br' && x.segmentType != 'SelectionMarker')
+        blocks.length == 1 ||
+        (block.blockType == 'Paragraph' &&
+            block.segments.length > 0 &&
+            block.segments.some(x => x.segmentType != 'Br' && x.segmentType != 'SelectionMarker'))
     );
 }
