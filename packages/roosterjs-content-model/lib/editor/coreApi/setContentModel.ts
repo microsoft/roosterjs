@@ -21,19 +21,5 @@ export const setContentModel: SetContentModel = (core, model, option) => {
 
     if (!core.lifecycle.shadowEditFragment) {
         core.api.select(core, range);
-
-        // We realize a behavior when current paragraph is empty (only has a BR), the focus
-        // will not be correctly set, and the final result. When this happens, focus will be directly
-        // put under editor content DIV.
-        // To workaround it, we can set focus again after a rerender, so we can call requestAnimationFrame
-        // and set focus again
-        if (
-            core.api.getSelectionRange(core, false /*tryGetFromCache*/)?.startContainer ==
-            core.contentDiv
-        ) {
-            core.contentDiv.ownerDocument.defaultView?.requestAnimationFrame(() => {
-                core.api.select(core, range);
-            });
-        }
     }
 };
