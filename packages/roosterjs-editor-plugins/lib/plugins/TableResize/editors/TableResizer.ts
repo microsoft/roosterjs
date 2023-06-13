@@ -96,15 +96,15 @@ function onDragging(
     const shouldResizeX = Math.abs(ratioX - 1.0) > 1e-3;
     const shouldResizeY = Math.abs(ratioY - 1.0) > 1e-3;
 
-    if (shouldResizeX || shouldResizeY) {
+    if (vTable.cells && (shouldResizeX || shouldResizeY)) {
         for (let i = 0; i < vTable.cells.length; i++) {
             for (let j = 0; j < vTable.cells[i].length; j++) {
                 const cell = vTable.cells[i][j];
                 if (cell.td) {
                     if (shouldResizeX) {
                         // the width of some external table is fixed, we need to make it resizable
-                        vTable.table.style.width = null;
-                        const newWidth = (cell.width * ratioX) / zoomScale;
+                        vTable.table.style.setProperty('width', null);
+                        const newWidth = ((cell.width ?? 0) * ratioX) / zoomScale;
                         cell.td.style.boxSizing = 'border-box';
                         if (newWidth >= MIN_CELL_WIDTH) {
                             cell.td.style.wordBreak = 'break-word';
@@ -115,14 +115,14 @@ function onDragging(
 
                     if (shouldResizeY) {
                         // the height of some external table is fixed, we need to make it resizable
-                        vTable.table.style.height = null;
+                        vTable.table.style.setProperty('height', null);
                         if (j == 0) {
-                            const newHeight = (cell.height * ratioY) / zoomScale;
+                            const newHeight = ((cell.height ?? 0) * ratioY) / zoomScale;
                             if (newHeight >= MIN_CELL_HEIGHT) {
                                 cell.td.style.height = `${newHeight}px`;
                             }
                         } else {
-                            cell.td.style.height = null;
+                            cell.td.style.setProperty('height', null);
                         }
                     }
                 }

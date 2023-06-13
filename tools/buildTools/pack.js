@@ -34,10 +34,9 @@ async function pack(isProduction, isAmd, isUi, filename) {
                     test: /\.tsx?$/,
                     loader: 'ts-loader',
                     options: {
-                        configFile: isUi ? 'tsconfig.json' : 'tsconfig.build.json',
+                        configFile: 'tsconfig.json',
                         compilerOptions: {
                             rootDir: rootPath,
-                            strict: false,
                             declaration: false,
                             downlevelIteration: true,
                             importHelpers: true,

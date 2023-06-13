@@ -63,14 +63,14 @@ export default class TableEditor {
     private verticalResizer: TableEditFeature | null = null;
 
     // 5 - Resize whole table
-    private tableResizer: TableEditFeature | null;
+    private tableResizer: TableEditFeature | null = null;
 
     // 6 - Select whole table
-    private tableSelector: TableEditFeature | null;
+    private tableSelector: TableEditFeature | null = null;
 
     private isRTL: boolean;
-    private start: NodePosition;
-    private end: NodePosition;
+    private start: NodePosition | null = null;
+    private end: NodePosition | null = null;
     private isCurrentlyEditing: boolean;
 
     constructor(
@@ -81,7 +81,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private contentDiv?: EventTarget
+        private contentDiv?: EventTarget | null
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.setEditorFeatures();
@@ -116,6 +116,10 @@ export default class TableEditor {
         //Get Cell [0,0]
         const firstCell = this.table.rows[0].cells[0];
         const firstCellRect = normalizeRect(firstCell.getBoundingClientRect());
+
+        if (!firstCellRect) {
+            return;
+        }
 
         //Determine if cursor is on top or side
         const topOrSide =
@@ -255,7 +259,7 @@ export default class TableEditor {
      * create or remove TableInserter
      * @param td td to attach to, set this to null to remove inserters (both horizontal and vertical)
      */
-    private setInserterTd(td: HTMLTableCellElement, isHorizontal?: boolean) {
+    private setInserterTd(td: HTMLTableCellElement | null, isHorizontal?: boolean) {
         const inserter = isHorizontal ? this.horizontalInserter : this.verticalInserter;
         if (td === null || (inserter && inserter.node != td)) {
             this.disposeTableInserter();
@@ -317,8 +321,12 @@ export default class TableEditor {
 
     private onFinishEditing = (): false => {
         this.editor.focus();
-        this.editor.select(this.start, this.end);
-        this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
+
+        if (this.start && this.end) {
+            this.editor.select(this.start, this.end);
+        }
+
+        this.editor.addUndoSnapshot(undefined /*callback*/, ChangeSource.Format);
         this.onChanged();
         this.isCurrentlyEditing = false;
 
