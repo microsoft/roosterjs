@@ -23,10 +23,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.lifecycle.shadowEditSelectionPath =
                 range && getSelectionPath(core.contentDiv, range);
             core.lifecycle.shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
-        }
-
-        // core.originalApi.switchShadowEdit(editorCore, isOn);
-        else {
+        } else {
             if (core.cachedModel) {
                 core.api.setContentModel(core, core.cachedModel);
             }

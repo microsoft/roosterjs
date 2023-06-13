@@ -8,22 +8,21 @@ describe('switchShadowEdit', () => {
     let core: ContentModelEditorCore;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
-    let originalSwitchShadowEdit: jasmine.Spy;
+    let getSelectionRange: jasmine.Spy;
 
     beforeEach(() => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
-        originalSwitchShadowEdit = jasmine.createSpy('originalSwitchShadowEdit');
+        getSelectionRange = jasmine.createSpy('getSelectionRange');
 
         core = ({
             api: {
                 createContentModel,
                 setContentModel,
-            },
-            originalApi: {
-                switchShadowEdit: originalSwitchShadowEdit,
+                getSelectionRange,
             },
             lifecycle: {},
+            contentDiv: document.createElement('div'),
         } as any) as ContentModelEditorCore;
     });
 
@@ -32,7 +31,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, true);
 
             expect(createContentModel).toHaveBeenCalledWith(core);
-            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(mockedModel);
         });
@@ -43,7 +41,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, true);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, true);
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(mockedCachedModel);
         });
@@ -52,7 +49,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(undefined);
         });
@@ -63,7 +59,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(mockedCachedModel);
         });
@@ -78,7 +73,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, true);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(undefined);
         });
@@ -89,7 +83,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, true);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(mockedCachedModel);
         });
@@ -98,7 +91,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
             expect(setContentModel).not.toHaveBeenCalled();
             expect(core.cachedModel).toBe(undefined);
         });
@@ -109,7 +101,6 @@ describe('switchShadowEdit', () => {
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
-            expect(originalSwitchShadowEdit).toHaveBeenCalledWith(core, false);
             expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel);
             expect(core.cachedModel).toBe(mockedCachedModel);
         });
