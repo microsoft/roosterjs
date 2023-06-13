@@ -1556,6 +1556,120 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Merge model with List Item with default format, keep the source bold, italic and underline', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+            backgroundColor: 'rgb(0,0,0)',
+            color: 'rgb(255,255,255)',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {
+                            backgroundColor: 'blue',
+                            color: 'red',
+                            formatName: 'ToBeRemoved',
+                        } as any,
+                        isSelected: true,
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [
+                        {
+                            listType: 'OL',
+                        },
+                    ],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        formatName: 'ToBeRemoved',
+                                        fontWeight: 'sourceFontWeight',
+                                        italic: 'sourceItalic',
+                                        underline: 'sourceUnderline',
+                                    } as any,
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    format: {},
+                    formatHolder: {
+                        format: {
+                            formatName: 'mocked',
+                            backgroundColor: 'rgb(0,0,0)',
+                            color: 'rgb(255,255,255)',
+                        } as any,
+                        isSelected: true,
+                        segmentType: 'SelectionMarker',
+                    },
+                    levels: [{ listType: 'OL' }],
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'test',
+                                    format: {
+                                        formatName: 'mocked',
+                                        backgroundColor: 'rgb(0,0,0)',
+                                        color: 'rgb(255,255,255)',
+                                        fontWeight: 'sourceFontWeight',
+                                        italic: 'sourceItalic',
+                                        underline: 'sourceUnderline',
+                                    } as any,
+                                },
+                            ],
+                            format: {},
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Br', format: {} },
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
     it('Divider to single selected paragraph with inline format', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();

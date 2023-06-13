@@ -37,11 +37,15 @@ export interface MergeModelOption {
     insertPosition?: InsertPoint;
 
     /**
-     * When set to true, segment format of the insert position will be merged into the content that is merged into current model.
+     * Use this to decide whether to change the source model format when doing the merge.
+     * 'mergeAll': segment format of the insert position will be merged into the content that is merged into current model.
      * If the source model already has some format, it will not be overwritten.
-     * @default false
+     * 'keepSourceEmphasisFormat': format of the insert position will be set into the content that is merged into current model.
+     * If the source model already has emphasis format, such as, fontWeight, Italic or underline different than the default style, it will not be overwritten.
+     * 'none' the source segment format will not be modified.
+     * @default undefined
      */
-    mergeCurrentFormat?: boolean;
+    mergeFormat?: 'mergeAll' | 'keepSourceEmphasisFormat' | 'none';
 }
 
 /**
@@ -57,13 +61,13 @@ export function mergeModel(
         options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
-        if (options?.mergeCurrentFormat) {
+        if (options?.mergeFormat && options.mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat, options.applyDefaultFormatOption);
+            applyDefaultFormat(source, newFormat, options?.mergeFormat);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -262,7 +266,7 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
 function applyDefaultFormat(
     group: ContentModelBlockGroup,
     format: ContentModelSegmentFormat,
-    applyDefaultFormatOption: string
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
 ) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
@@ -303,7 +307,7 @@ function applyDefaultFormat(
 }
 
 function mergeSegmentFormat(
-    applyDefaultFormatOption: string,
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
     targetformat: ContentModelSegmentFormat,
     sourceFormat: ContentModelSegmentFormat
 ): ContentModelSegmentFormat {

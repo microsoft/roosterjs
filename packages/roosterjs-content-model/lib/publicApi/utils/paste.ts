@@ -1,8 +1,8 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
 import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
-import { ContentModelBlockFormat } from 'roosterjs-content-model/lib/publicTypes/format/ContentModelBlockFormat';
-import { FormatParser } from 'roosterjs-content-model/lib/publicTypes/context/DomToModelSettings';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -85,7 +85,7 @@ export default function paste(
             'Paste',
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
-                    mergeCurrentFormat: applyCurrentFormat,
+                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : undefined,
                 });
                 return true;
             },
@@ -160,11 +160,10 @@ function createFragmentFromClipboardData(
 }
 
 /**
- * @internal
- * For block elements that have background color style, remove the background color
- * since we cannot remove background color using formating APIs, the only exclusion for this would be tables.
+ * For block elements that have background color style, remove the background color when user selects the merge current format
+ * paste option
  */
-export const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+const blockElementParser: FormatParser<ContentModelBlockFormat> = (
     format: ContentModelBlockFormat,
     element: HTMLElement
 ) => {
