@@ -74,7 +74,11 @@ export default function paste(
             ...event.domToModelOption,
             disableCacheElement: true,
             additionalFormatParsers: {
-                block: applyCurrentFormat ? [blockElementParser] : undefined,
+                ...event.domToModelOption,
+                block: [
+                    ...(event.domToModelOption?.additionalFormatParsers?.block || []),
+                    ...(applyCurrentFormat ? [blockElementParser] : []),
+                ],
             },
         }
     );
