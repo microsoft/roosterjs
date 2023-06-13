@@ -308,7 +308,7 @@ function getSemanticFormat(segment: ContentModelSegment): ContentModelSegmentFor
     const { fontWeight, italic, underline } = segment.format;
 
     if (fontWeight && fontWeight != 'normal') {
-        result.fontWeight = segment.format.fontWeight;
+        result.fontWeight = fontWeight;
     }
     if (italic) {
         result.italic = italic;
