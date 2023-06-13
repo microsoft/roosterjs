@@ -33,7 +33,14 @@ export const createContentModelEditorCore: CoreCreator<
             )
                 ? new ContentModelTypeInContainerPlugin()
                 : undefined,
-            copyPaste: new ContentModelCopyPastePlugin(options),
+            copyPaste: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.ContentModelPaste
+            )
+                ? new ContentModelCopyPastePlugin({
+                      allowedCustomPasteType: options.allowedCustomPasteType || [],
+                  })
+                : undefined,
             ...(options.corePluginOverride || {}),
         },
     };
