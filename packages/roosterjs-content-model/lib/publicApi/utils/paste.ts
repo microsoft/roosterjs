@@ -31,6 +31,7 @@ import {
  * @param pasteAsText Force pasting as plain text. Default value is false
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
  * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
+ * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
  */
 export default function paste(
     editor: IContentModelEditor,
