@@ -1,5 +1,7 @@
 import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import { createBr } from '../../../lib/modelApi/creators/createBr';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createQuote } from '../../../lib/modelApi/creators/createQuote';
@@ -63,6 +65,7 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: undefined,
                             textAlign: undefined,
+                            marginTop: undefined,
                         },
                     ],
                     blocks: [para],
@@ -283,6 +286,7 @@ describe('indent', () => {
                                     startNumberOverride: undefined,
                                     direction: undefined,
                                     textAlign: undefined,
+                                    marginTop: undefined,
                                 },
                             ],
                             blocks: [para3],
@@ -341,6 +345,7 @@ describe('indent', () => {
                             startNumberOverride: 1,
                             direction: 'rtl',
                             textAlign: 'start',
+                            marginTop: undefined,
                         },
                     ],
                     blocks: [para],
@@ -377,6 +382,136 @@ describe('indent', () => {
                     },
                     isSelected: true,
                 },
+            ],
+        });
+    });
+
+    it('do not turn on list for empty paragraphs', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text = createText('test1');
+        const br = createBr();
+        const img = createImage('img');
+
+        para1.segments.push(text);
+        para2.segments.push(br);
+        para3.segments.push(img);
+        group.blocks.push(para1, para2, para3);
+
+        text.isSelected = true;
+        br.isSelected = true;
+        img.isSelected = true;
+
+        const result = setListType(group, 'OL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            startNumberOverride: 1,
+                            direction: undefined,
+                            textAlign: undefined,
+                            marginTop: undefined,
+                            marginBottom: '0',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+                para2,
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para3],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            direction: undefined,
+                            textAlign: undefined,
+                            startNumberOverride: undefined,
+                            marginTop: '0',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('still turn on list for empty paragraphs if it is the only selected paragraph', () => {
+        const group = createContentModelDocument();
+        const para1 = createParagraph();
+        const para2 = createParagraph();
+        const para3 = createParagraph();
+        const text = createText('test1');
+        const br = createBr();
+        const img = createImage('img');
+
+        para1.segments.push(text);
+        para2.segments.push(br);
+        para3.segments.push(img);
+        group.blocks.push(para1, para2, para3);
+
+        br.isSelected = true;
+
+        const result = setListType(group, 'OL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                para1,
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para2],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            startNumberOverride: 1,
+                            direction: undefined,
+                            textAlign: undefined,
+                            marginTop: undefined,
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {
+                            fontFamily: undefined,
+                            fontSize: undefined,
+                            textColor: undefined,
+                        },
+                    },
+                    format: {},
+                },
+                para3,
             ],
         });
     });
