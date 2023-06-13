@@ -1,4 +1,5 @@
 import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import { getSelectionPath } from 'roosterjs-editor-dom';
 import { SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
@@ -12,14 +13,26 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
     const core = editorCore as ContentModelEditorCore;
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
-        if (isOn && !core.cachedModel) {
-            core.cachedModel = core.api.createContentModel(core);
+        if (isOn) {
+            if (!core.cachedModel) {
+                core.cachedModel = core.api.createContentModel(core);
+            }
+
+            const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
+
+            core.lifecycle.shadowEditSelectionPath =
+                range && getSelectionPath(core.contentDiv, range);
+            core.lifecycle.shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
         }
 
-        core.originalApi.switchShadowEdit(editorCore, isOn);
+        // core.originalApi.switchShadowEdit(editorCore, isOn);
+        else {
+            if (core.cachedModel) {
+                core.api.setContentModel(core, core.cachedModel);
+            }
 
-        if (!isOn && core.cachedModel) {
-            core.api.setContentModel(core, core.cachedModel);
+            core.lifecycle.shadowEditFragment = null;
+            core.lifecycle.shadowEditSelectionPath = null;
         }
     }
 };
