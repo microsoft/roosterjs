@@ -1403,7 +1403,9 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, { mergeCurrentFormat: true });
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'mergeAll',
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1426,6 +1428,171 @@ describe('mergeModel', () => {
                 },
             ],
             format: MockedFormat,
+        });
+    });
+
+    it('Merge with default format', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'ToBeRemoved',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: MockedFormat,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
+    it('Merge with default format, keep the source bold, italic and underline', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+            fontWeight: 'ToBeRemoved',
+            italic: 'ToBeRemoved',
+            underline: 'ToBeRemoved',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'ToBeRemoved',
+                                fontWeight: 'sourceFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'mocked',
+                                fontWeight: 'sourceFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                            } as any,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
+    it('Divider to single selected paragraph with inline format', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, { fontFamily: 'Arial' });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        const divider = createDivider('hr');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        sourceModel.blocks.push(divider);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+                { blockType: 'Divider', tagName: 'hr', format: {} },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: { fontFamily: 'Arial' },
+                },
+            ],
         });
     });
 });

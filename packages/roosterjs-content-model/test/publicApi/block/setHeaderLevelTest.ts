@@ -102,11 +102,11 @@ describe('setHeaderLevel to 1', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: { fontSize: '2em', fontWeight: 'bold' },
+                                format: {},
                             },
                             {
                                 segmentType: 'SelectionMarker',
-                                format: { fontSize: '2em', fontWeight: 'bold' },
+                                format: {},
                                 isSelected: true,
                             },
                         ],
@@ -153,10 +153,7 @@ describe('setHeaderLevel to 1', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontSize: '2em',
-                                    fontWeight: 'bold',
-                                },
+                                format: {},
                                 isSelected: true,
                             },
                         ],
@@ -213,10 +210,7 @@ describe('setHeaderLevel to 1', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontSize: '2em',
-                                    fontWeight: 'bold',
-                                },
+                                format: {},
                                 isSelected: true,
                             },
                         ],
@@ -363,8 +357,7 @@ describe('setHeaderLevel to 0', () => {
                                 segmentType: 'Text',
                                 text: 'test',
                                 format: {
-                                    fontSize: '1em',
-                                    fontWeight: 'normal',
+                                    fontSize: '20pt',
                                 },
                                 isSelected: true,
                             },
@@ -389,7 +382,7 @@ describe('setHeaderLevel to 0', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {},
+                                format: { fontSize: '20pt' },
                                 isSelected: true,
                             },
                         ],

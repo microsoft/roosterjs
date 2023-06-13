@@ -17,6 +17,7 @@ export default function createTableInserter(
     isRTL: boolean,
     isHorizontal: boolean,
     onInsert: (table: HTMLTableElement) => void,
+    getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
@@ -42,24 +43,33 @@ export default function createTableInserter(
         const div = createElement(createElementData, document) as HTMLDivElement;
 
         if (isHorizontal) {
+            // tableRect.left/right is used because the Inserter is always intended to be on the side
             div.style.left = `${
                 isRTL
-                    ? tdRect.right
-                    : tdRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                    ? tableRect.right
+                    : tableRect.left - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
             div.style.top = `${tdRect.bottom - 8}px`;
             (div.firstChild as HTMLElement).style.width = `${tableRect.right - tableRect.left}px`;
         } else {
             div.style.left = `${isRTL ? tdRect.left - 8 : tdRect.right - 8}px`;
+            // tableRect.top is used because the Inserter is always intended to be on top
             div.style.top = `${
-                tdRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
+                tableRect.top - (INSERTER_SIDE_LENGTH - 1 + 2 * INSERTER_BORDER_SIZE)
             }px`;
             (div.firstChild as HTMLElement).style.height = `${tableRect.bottom - tableRect.top}px`;
         }
 
         document.body.appendChild(div);
 
-        const handler = new TableInsertHandler(div, td, isHorizontal, editor, onInsert);
+        const handler = new TableInsertHandler(
+            div,
+            td,
+            isHorizontal,
+            editor,
+            onInsert,
+            getOnMouseOut
+        );
 
         return { div, featureHandler: handler, node: td };
     }
@@ -68,20 +78,28 @@ export default function createTableInserter(
 }
 
 class TableInsertHandler implements Disposable {
+    private onMouseOutEvent: null | ((ev: MouseEvent) => void);
     constructor(
         private div: HTMLDivElement,
         private td: HTMLTableCellElement,
         private isHorizontal: boolean,
         private editor: IEditor,
-        private onInsert: (table: HTMLTableElement) => void
+        private onInsert: (table: HTMLTableElement) => void,
+        getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void
     ) {
         this.div.addEventListener('click', this.insertTd);
+        this.onMouseOutEvent = getOnMouseOut(div);
+        this.div.addEventListener('mouseout', this.onMouseOutEvent);
     }
 
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
+        if (this.onMouseOutEvent) {
+            this.div.removeEventListener('mouseout', this.onMouseOutEvent);
+        }
         this.div = null;
         this.editor = null;
+        this.onMouseOutEvent = null;
     }
 
     private insertTd = () => {
@@ -108,7 +126,7 @@ function getInsertElementData(
     backgroundColor: string
 ): CreateElementData {
     const inserterColor = isDark ? INSERTER_COLOR_DARK_MODE : INSERTER_COLOR;
-    const outerDivStyle = `position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: ${inserterColor}; line-height: 8px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${backgroundColor}`;
+    const outerDivStyle = `position: fixed; width: ${INSERTER_SIDE_LENGTH}px; height: ${INSERTER_SIDE_LENGTH}px; font-size: 16px; color: black; line-height: 8px; vertical-align: middle; text-align: center; cursor: pointer; border: solid ${INSERTER_BORDER_SIZE}px ${inserterColor}; border-radius: 50%; background-color: ${backgroundColor}`;
     const leftOrRight = isRTL ? 'right' : 'left';
     const childBaseStyles = `position: absolute; box-sizing: border-box; background-color: ${backgroundColor};`;
     const childInfo: CreateElementData = {

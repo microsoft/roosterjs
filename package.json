@@ -25,6 +25,9 @@
         "test:firefox": "node tools/build.js normalize & karma start --firefox",
         "test:debug": "node tools/build.js normalize & karma start --no-single-run --chrome",
         "test:coverage": "node tools/build.js normalize & karma start --coverage --firefox --chrome",
+        "test:cm": "node tools/build.js normalize & karma start --no-single-run --chrome --contentmodel",
+        "test:r": "node tools/build.js normalize & karma start --no-single-run --chrome --roosterjs",
+        "test:ui": "node tools/build.js normalize & karma start --no-single-run --chrome --ui",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd buildmjs dts pack packprod builddemo builddoc publish"
     },
     "devDependencies": {
@@ -51,8 +54,8 @@
         "karma-firefox-launcher": "1.3.0",
         "karma-jasmine": "3.1.1",
         "karma-phantomjs-launcher": "1.0.4",
-        "karma-sourcemap-loader": "0.3.7",
-        "karma-webpack": "4.0.2",
+        "karma-sourcemap-loader": "0.4.0",
+        "karma-webpack": "5.0.0",
         "prettier": "2.0.5",
         "pretty-quick": "^2.0.1",
         "progress": "2.0.3",
@@ -61,6 +64,7 @@
         "sass-loader": "8.0.2",
         "toposort": "2.0.2",
         "ts-loader": "7.0.2",
+        "tslib": "^2.3.1",
         "tslint": "6.1.2",
         "tslint-eslint-rules": "5.4.0",
         "tslint-microsoft-contrib": "6.2.0",
@@ -69,7 +73,7 @@
         "typedoc-plugin-remove-references": "0.0.5",
         "typescript": "4.4.4",
         "url-loader": "4.1.0",
-        "webpack": "4.43.0",
+        "webpack": "5.84.1",
         "webpack-cli": "3.3.11",
         "webpack-dev-server": "3.10.3"
     },

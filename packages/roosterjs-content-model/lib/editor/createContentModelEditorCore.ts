@@ -9,7 +9,6 @@ import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
-import { createPasteModel } from './coreApi/createPasteModel';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
@@ -28,8 +27,20 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            typeInContainer: new ContentModelTypeInContainerPlugin(),
-            copyPaste: new ContentModelCopyPastePlugin(options),
+            typeInContainer: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.EditWithContentModel
+            )
+                ? new ContentModelTypeInContainerPlugin()
+                : undefined,
+            copyPaste: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.ContentModelPaste
+            )
+                ? new ContentModelCopyPastePlugin({
+                      allowedCustomPasteType: options.allowedCustomPasteType || [],
+                  })
+                : undefined,
             ...(options.corePluginOverride || {}),
         },
     };
@@ -84,7 +95,6 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
-    cmCore.api.createPasteModel = createPasteModel;
 
     if (
         isFeatureEnabled(
@@ -98,7 +108,6 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
-    cmCore.originalApi.createPasteModel = createPasteModel;
 }
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {

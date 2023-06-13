@@ -5,25 +5,26 @@ import { ContentModelListItemLevelFormat } from '../../../../publicTypes/format/
 import { ContentModelSegmentFormat } from '../../../../publicTypes/format/ContentModelSegmentFormat';
 import { DomToModelContext } from '../../../../publicTypes/context/DomToModelContext';
 import { ElementProcessor } from '../../../../publicTypes/context/ElementProcessor';
-import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
 import { FormatParser } from '../../../../publicTypes/context/DomToModelSettings';
 import { setProcessor } from '../utils/setProcessor';
 
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,span.WACImageBorder';
-export const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
+const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 
 const EMPTY_TEXT_RUN = 'EmptyTextRun';
 const END_OF_PARAGRAPH = 'EOP';
 const PARAGRAPH = 'Paragraph';
 
-const TABLE_TEMP_ELEMENTS = [
+const TEMP_ELEMENTS_CLASSES = [
     'TableInsertRowGapBlank',
     'TableColumnResizeHandle',
     'TableCellTopBorderHandle',
     'TableCellLeftBorderHandle',
     'TableHoverColumnHandle',
     'TableHoverRowHandle',
+    'ListMarkerWrappingSpan',
 ];
 
 const CLASSES_TO_KEEP = [
@@ -34,12 +35,15 @@ const CLASSES_TO_KEEP = [
     'BulletListStyle',
     END_OF_PARAGRAPH,
     EMPTY_TEXT_RUN,
-    ...TABLE_TEMP_ELEMENTS,
+    ...TEMP_ELEMENTS_CLASSES,
     'TableCellContent',
     PARAGRAPH,
     'WACImageContainer',
     'WACImageBorder',
 ];
+
+const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
+const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
 
 /**
  * Wac components do not use sub and super tags, instead only add vertical align to a span.
@@ -71,6 +75,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     element: HTMLElement,
     context: DomToModelContext
 ): void => {
+    const elementTag = getTagOfNode(element);
     if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
@@ -84,9 +89,13 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     if (
         (element.classList.contains(END_OF_PARAGRAPH) &&
             element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)) ||
-        TABLE_TEMP_ELEMENTS.some(className => element.classList.contains(className))
+        TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))
     ) {
         return;
+    } else if (shouldClearListContext(elementTag, element, context)) {
+        const { listFormat } = context;
+        listFormat.levels = [];
+        listFormat.listParent = undefined;
     }
 
     context.defaultElementProcessors.element(group, element, context);
@@ -153,6 +162,37 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
     format.marginLeft = undefined;
     format.paddingLeft = undefined;
 };
+
+/**
+ * This function returns whether we need to clear the list format.
+ * Word Online wraps lists inside divs to have this structure:
+ *
+ *  <div class='ListContainerWrapper'>
+ *      <ol>...</ol>
+ *  </div>
+ *  <div>
+ *      <p>...</p>
+ *  <div>
+ *  <div class='ListContainerWrapper'>
+ *      <ol>...</ol>
+ *  </div>
+ *
+ *  So if a elements is not contained inside of a list we should clear the list context to prevent normal text to be
+ *  transformed into list
+ *  For the above scenario, if we do not clear the format, the content inside of the second div would be transformed to a list too.
+ */
+function shouldClearListContext(
+    elementTag: string,
+    element: HTMLElement,
+    context: DomToModelContext
+) {
+    return (
+        context.listFormat.levels.length > 0 &&
+        LIST_ELEMENT_TAGS.every(tag => tag != elementTag) &&
+        !findClosestElementAncestor(element, undefined, LIST_ELEMENT_SELECTOR)
+    );
+}
+
 /**
  * @internal
  * Convert pasted content from Office Online
@@ -160,7 +200,7 @@ const wacListLevelParser: FormatParser<ContentModelListItemLevelFormat> = (
  * We need to remove the display property and margin from all the list item
  * @param ev ContentModelBeforePasteEvent
  */
-export function handleWacComponentsPaste(ev: ContentModelBeforePasteEvent) {
+export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
