@@ -1,0 +1,88 @@
+@import './theme/contentModelEditorTheme.scss';
+
+.mainPane {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+}
+
+.noGrow {
+    flex: 0 0 auto;
+    overflow-x: hidden;
+}
+
+.body {
+    flex: 1 1 auto;
+    position: relative;
+    display: flex;
+}
+
+.editorContainer {
+    width: '100%';
+    min-width: 200px;
+    flex-grow: 1;
+    flex-shrink: 1;
+    position: relative;
+}
+
+@media (prefers-color-scheme: dark) {
+    .editorContainer {
+        a:link,
+        a:visited {
+            color: #ba7cff;
+        }
+    }
+}
+
+.editor {
+    border: solid 1px $primaryBorder;
+    overflow: auto;
+    padding: 10px;
+    outline: none;
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+}
+
+.resizer {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 6px;
+    cursor: col-resize;
+    &:hover {
+        background-color: #ccc;
+    }
+}
+
+.showSidePane {
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 30px;
+    cursor: hand;
+    white-space: nowrap;
+    div {
+        transform: rotate(-90deg);
+    }
+    &:hover {
+        background-color: #ccc;
+    }
+}
+
+.sidePane {
+    min-width: 340px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    width: 300px;
+    &.sidePaneFullWidth {
+        width: 100%;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .editor {
+        border: solid 1px $primaryBorderDark;
+    }
+}

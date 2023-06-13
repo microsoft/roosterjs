@@ -14,13 +14,17 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
+    [ExperimentalFeatures.ReusableContentModel]:
+        'Reuse existing DOM structure if possible when convert Content Model back to DOM tree',
+    [ExperimentalFeatures.EditWithContentModel]: 'Handle keyboard edit event with Content Model',
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
         'Add read entities around read only entities to handle browser edge cases.',
+    [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
 };
 
-export default class ExperimentalFeaturesPane extends React.Component<
+export default class ContentModelExperimentalFeaturesPane extends React.Component<
     ExperimentalFeaturesProps,
     {}
 > {
