@@ -29,8 +29,10 @@ export default function setHeaderLevel(
                 format: { ...headerStyle },
             };
 
+            // Remove existing formats since tags have default font size and weight
             para.segments.forEach(segment => {
-                Object.assign(segment.format, headerStyle);
+                delete segment.format.fontSize;
+                delete segment.format.fontWeight;
             });
         } else if (tagName) {
             delete para.decorator;
