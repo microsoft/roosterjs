@@ -18,12 +18,10 @@ export default function editTable(
             editor,
             () => {
                 let vtable = new VTable(td);
-
                 saveTableSelection(editor, vtable);
                 vtable.edit(operation);
-                vtable.writeBack();
+                vtable.writeBack(false /** skipApplyFormat */, editor.getDarkColorHandler());
                 editor.transformToDarkColor(vtable.table);
-
                 editor.focus();
                 if (isUndefined(vtable.row) || isUndefined(vtable.col)) {
                     return;
