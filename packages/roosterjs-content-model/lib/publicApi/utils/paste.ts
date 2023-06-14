@@ -76,10 +76,8 @@ export default function paste(
             disableCacheElement: true,
             additionalFormatParsers: {
                 ...event.domToModelOption,
-                block: [
-                    ...(event.domToModelOption?.additionalFormatParsers?.block || []),
-                    ...(applyCurrentFormat ? [blockElementParser] : []),
-                ],
+                block: [...(applyCurrentFormat ? [blockElementParser] : [])],
+                listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
             },
         }
     );
@@ -90,7 +88,7 @@ export default function paste(
             'Paste',
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
-                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'mergeAll',
+                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
                 });
                 return true;
             },
