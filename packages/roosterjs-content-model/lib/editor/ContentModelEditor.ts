@@ -1,8 +1,10 @@
+import { ClipboardData } from 'roosterjs-editor-types/lib';
 import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import { paste } from '../publicApi';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -68,5 +70,14 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         return core.defaultFormat;
+    }
+
+    paste(
+        clipboardData: ClipboardData,
+        pasteAsText: boolean = false,
+        applyCurrentFormat: boolean = false,
+        pasteAsImage: boolean = false
+    ) {
+        paste(this, clipboardData, pasteAsText, applyCurrentFormat, pasteAsImage);
     }
 }

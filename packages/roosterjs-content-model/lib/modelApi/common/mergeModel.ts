@@ -115,7 +115,9 @@ function mergeParagraph(
     mergeToCurrentParagraph: boolean
 ) {
     const { paragraph, marker } = markerPosition;
-    const newParagraph = mergeToCurrentParagraph ? paragraph : splitParagraph(markerPosition);
+    const newParagraph = mergeToCurrentParagraph
+        ? paragraph
+        : splitParagraph(markerPosition, newPara);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
     if (segmentIndex >= 0) {
@@ -184,7 +186,7 @@ function mergeTable(
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
-    splitParagraph(markerPosition);
+    splitParagraph(markerPosition, newList);
 
     const { path, paragraph } = markerPosition;
 
@@ -204,13 +206,13 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     }
 }
 
-function splitParagraph(markerPosition: InsertPoint) {
+function splitParagraph(markerPosition: InsertPoint, newPara: ContentModelBlock) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
     const newParagraph = createParagraph(
         false /*isImplicit*/,
-        paragraph.format,
+        { ...paragraph.format, ...newPara.format },
         paragraph.segmentFormat
     );
 
@@ -255,7 +257,7 @@ function splitParagraph(markerPosition: InsertPoint) {
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition);
+    const newPara = splitParagraph(markerPosition, block);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {

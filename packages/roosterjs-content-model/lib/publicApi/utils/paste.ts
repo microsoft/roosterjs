@@ -90,7 +90,7 @@ export default function paste(
             'Paste',
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
-                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : undefined,
+                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'mergeAll',
                 });
                 return true;
             },
