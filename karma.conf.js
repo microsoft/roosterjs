@@ -61,12 +61,22 @@ module.exports = function (config) {
               {
                   test: /test(\\|\/).*\.ts$/,
                   loader: 'ts-loader',
+                  options: {
+                      compilerOptions: {
+                          strict: false,
+                      },
+                  },
               },
           ]
         : [
               {
                   test: /\.ts$/,
                   loader: 'ts-loader',
+                  options: {
+                      compilerOptions: {
+                          strict: false,
+                      },
+                  },
               },
           ];
 
