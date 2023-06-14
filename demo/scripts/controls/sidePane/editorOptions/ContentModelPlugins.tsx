@@ -10,7 +10,7 @@ export interface PluginsProps {
     resetState: (callback: (state: BuildInPluginState) => void, resetEditor: boolean) => void;
 }
 
-export default class Plugins extends React.Component<PluginsProps, {}> {
+export default class ContentModelPlugins extends React.Component<PluginsProps, {}> {
     private linkTitle = React.createRef<HTMLInputElement>();
     private watermarkText = React.createRef<HTMLInputElement>();
     private forcePreserveRatio = React.createRef<HTMLInputElement>();
@@ -61,6 +61,7 @@ export default class Plugins extends React.Component<PluginsProps, {}> {
                         'Show customized context menu for special cases'
                     )}
                     {this.renderPluginItem('tableCellSelection', 'Table Cell Selection')}
+                    {this.renderPluginItem('contentModelPaste', 'Paste Plugin using content model')}
                 </tbody>
             </table>
         );
