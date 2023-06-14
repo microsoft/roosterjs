@@ -43,6 +43,7 @@ function hasCellShade(cell: VCell) {
 /**
  * Set color to the table
  * @param format the format that must be applied
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
 function setCellColor(
     cells: VCell[][],
@@ -312,6 +313,7 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
 /**
  * Apply custom design to the Header Row
  * @param format
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  * @returns
  */
 function setHeaderRowFormat(

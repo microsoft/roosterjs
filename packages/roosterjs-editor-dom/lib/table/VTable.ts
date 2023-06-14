@@ -136,7 +136,7 @@ export default class VTable {
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
      * @param skipApplyFormat Do not reapply table format when write back. Only use this parameter when you are pretty sure there is no format or table structure change during the process.
-     * @param darkColorHandler A object to handle dark background colors, if not passed the cell background color will not be set
+     * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
      */
     writeBack(skipApplyFormat?: boolean, darkColorHandler?: DarkColorHandler | null) {
         if (this.cells) {
