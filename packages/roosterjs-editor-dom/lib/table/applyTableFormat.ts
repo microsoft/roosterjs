@@ -10,6 +10,7 @@ const TABLE_HEADER_TAG_NAME = 'TH';
  * @internal
  * Apply the given table format to this virtual table
  * @param format Table format to apply
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
 export default function applyTableFormat(
     table: HTMLTableElement,
