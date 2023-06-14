@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">51.52% </span>
+                <span class="strong">52.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/66</span>
+                <span class='fraction'>38/72</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">23.91% </span>
+                <span class="strong">20% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>11/46</span>
+                <span class='fraction'>13/65</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">54.1% </span>
+                <span class="strong">55.22% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>33/61</span>
+                <span class='fraction'>37/67</span>
             </div>
         
             
@@ -225,7 +225,12 @@
 <a name='L166'></a><a href='#L166'>166</a>
 <a name='L167'></a><a href='#L167'>167</a>
 <a name='L168'></a><a href='#L168'>168</a>
-<a name='L169'></a><a href='#L169'>169</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L169'></a><a href='#L169'>169</a>
+<a name='L170'></a><a href='#L170'>170</a>
+<a name='L171'></a><a href='#L171'>171</a>
+<a name='L172'></a><a href='#L172'>172</a>
+<a name='L173'></a><a href='#L173'>173</a>
+<a name='L174'></a><a href='#L174'>174</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -242,10 +247,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -295,6 +300,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
@@ -319,19 +325,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -340,6 +349,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -410,10 +420,10 @@ const TABLE_RESIZER_LENGTH = 12;
  * TableResize plugin, provides the ability to resize a table by drag-and-drop
  */
 export default class TableResize implements EditorPlugin {
-    private editor: IEditor;
-    private onMouseMoveDisposer: () =&gt; void;
-    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] = null;
-    private tableEditor: TableEditor;
+    private editor: IEditor | null = null;
+    private onMouseMoveDisposer: (() =&gt; void) | null = null;
+    private tableRectMap: { table: HTMLTableElement; rect: Rect }[] | null = null;
+    private tableEditor: TableEditor | null = null;
 &nbsp;
     /**
      * Construct a new instance of TableResize plugin
@@ -463,10 +473,11 @@ export default class TableResize implements EditorPlugin {
      * Dispose this plugin
      */
     dispose() {
-        this.onMouseMoveDisposer();
+        this.onMouseMoveDisposer<span class="branch-0 cbranch-no" title="branch not covered" >?.();</span>
         this.invalidateTableRects();
         this.disposeTableEditor();
         this.editor = null;
+        this.onMouseMoveDisposer = null;
     }
 &nbsp;
     /**
@@ -485,29 +496,33 @@ export default class TableResize implements EditorPlugin {
         }
     }
 &nbsp;
-    private onMouseMove = <span class="fstat-no" title="function not covered" >(e</span>: MouseEvent) =&gt; {
-<span class="cstat-no" title="statement not covered" >        if (e.buttons &gt; 0) {</span>
+    private onMouseMove = <span class="fstat-no" title="function not covered" >(e</span>vent: Event) =&gt; {
+        const e = <span class="cstat-no" title="statement not covered" >event as MouseEvent;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >        if (e.buttons &gt; 0 || !this.editor) {</span>
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
 &nbsp;
 <span class="cstat-no" title="statement not covered" >        this.ensureTableRects();</span>
 &nbsp;
-        const editorWindow = <span class="cstat-no" title="statement not covered" >this.editor.getDocument().defaultView;</span>
+        const editorWindow = <span class="cstat-no" title="statement not covered" >this.editor.getDocument().defaultView || window;</span>
         const x = <span class="cstat-no" title="statement not covered" >e.pageX - editorWindow.scrollX;</span>
         const y = <span class="cstat-no" title="statement not covered" >e.pageY - editorWindow.scrollY;</span>
         let currentTable: HTMLTableElement | null = <span class="cstat-no" title="statement not covered" >null;</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >        for (let i = <span class="cstat-no" title="statement not covered" >this.tableRectMap.length - 1;</span> i &gt;= 0; i--) {</span>
-            const { table<span class="cstat-no" title="statement not covered" >, r</span>ect<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >t</span>his.tableRectMap[i];</span>
+<span class="cstat-no" title="statement not covered" >        if (this.tableRectMap) {</span>
+<span class="cstat-no" title="statement not covered" >            for (let i = <span class="cstat-no" title="statement not covered" >this.tableRectMap.length - 1;</span> i &gt;= 0; i--) {</span>
+                const { table<span class="cstat-no" title="statement not covered" >, r</span>ect<span class="cstat-no" title="statement not covered" > } = <span class="cstat-no" title="statement not covered" >t</span>his.tableRectMap[i];</span>
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            if (</span>
-                x &gt;= rect.left - TABLE_RESIZER_LENGTH &amp;&amp;
-                x &lt;= rect.right + TABLE_RESIZER_LENGTH &amp;&amp;
-                y &gt;= rect.top - TABLE_RESIZER_LENGTH &amp;&amp;
-                y &lt;= rect.bottom + TABLE_RESIZER_LENGTH
-            ) {
-<span class="cstat-no" title="statement not covered" >                currentTable = table;</span>
-<span class="cstat-no" title="statement not covered" >                break;</span>
+<span class="cstat-no" title="statement not covered" >                if (</span>
+                    x &gt;= rect.left - TABLE_RESIZER_LENGTH &amp;&amp;
+                    x &lt;= rect.right + TABLE_RESIZER_LENGTH &amp;&amp;
+                    y &gt;= rect.top - TABLE_RESIZER_LENGTH &amp;&amp;
+                    y &lt;= rect.bottom + TABLE_RESIZER_LENGTH
+                ) {
+<span class="cstat-no" title="statement not covered" >                    currentTable = table;</span>
+<span class="cstat-no" title="statement not covered" >                    break;</span>
+                }
             }
         }
 &nbsp;
@@ -520,13 +535,13 @@ export default class TableResize implements EditorPlugin {
 <span class="cstat-no" title="statement not covered" >            this.disposeTableEditor();</span>
         }
 &nbsp;
-        <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.tableEditor &amp;&amp; table) {
+        <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.tableEditor &amp;&amp; table &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >this.editor)</span> {
 <span class="cstat-no" title="statement not covered" >            this.tableEditor = new TableEditor(</span>
                 this.editor,
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                e.currentTarget
+                e?.currentTarget
             );
         }
     }
@@ -536,17 +551,17 @@ export default class TableResize implements EditorPlugin {
     };
 &nbsp;
     private disposeTableEditor() {
-        this.tableEditor<span class="branch-1 cbranch-no" title="branch not covered" >?.dispose();</span>
+        this.tableEditor<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >?.d</span>ispose();</span>
         this.tableEditor = null;
     }
 &nbsp;
 <span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >    private e</span></span>nsureTableRects() {
-<span class="cstat-no" title="statement not covered" >        if (!this.tableRectMap) {</span>
+<span class="cstat-no" title="statement not covered" >        if (!this.tableRectMap &amp;&amp; this.editor) {</span>
 <span class="cstat-no" title="statement not covered" >            this.tableRectMap = [];</span>
 <span class="cstat-no" title="statement not covered" >            this.editor.queryElements('table', <span class="fstat-no" title="function not covered" >table </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                if (table.isContentEditable) {</span>
                     const rect = <span class="cstat-no" title="statement not covered" >normalizeRect(table.getBoundingClientRect());</span>
-<span class="cstat-no" title="statement not covered" >                    if (rect) {</span>
+<span class="cstat-no" title="statement not covered" >                    if (rect &amp;&amp; this.tableRectMap) {</span>
 <span class="cstat-no" title="statement not covered" >                        this.tableRectMap.push({</span>
                             table,
                             rect,
@@ -568,7 +583,7 @@ function <span class="fstat-no" title="function not covered" >isMouseEvent(</spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Jun 14 2023 06:06:37 GMT+0000 (Coordinated Universal Time)
+                at Wed Jun 14 2023 18:18:32 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
