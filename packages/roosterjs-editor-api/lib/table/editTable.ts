@@ -21,7 +21,7 @@ export default function editTable(
 
                 saveTableSelection(editor, vtable);
                 vtable.edit(operation);
-                vtable.writeBack();
+                vtable.writeBack(false /** skipApplyFormat */, editor.getDarkColorHandler());
                 editor.transformToDarkColor(vtable.table);
 
                 editor.focus();
