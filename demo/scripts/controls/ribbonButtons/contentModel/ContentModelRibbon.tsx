@@ -9,16 +9,18 @@ import { bulletedListButton } from './bulletedListButton';
 import { changeImageButton } from './changeImageButton';
 import { clearFormatButton } from './clearFormatButton';
 import { codeButton } from './codeButton';
+import { darkMode } from '../darkMode';
 import { decreaseFontSizeButton } from './decreaseFontSizeButton';
 import { decreaseIndentButton } from './decreaseIndentButton';
+import { exportContent } from '../export';
 import { fontButton } from './fontButton';
 import { fontSizeButton } from './fontSizeButton';
 import { formatPainterButton } from './formatPainterButton';
 import { formatTableButton } from './formatTableButton';
 import { imageBorderColorButton } from './imageBorderColorButton';
+import { imageBorderRemoveButton } from './imageBorderRemoveButton';
 import { imageBorderStyleButton } from './imageBorderStyleButton';
 import { imageBorderWidthButton } from './imageBorderWidthButton';
-import { imageBorderRemoveButton } from './imageBorderRemoveButton';
 import { imageBoxShadowButton } from './imageBoxShadowButton';
 import { increaseFontSizeButton } from './increaseFontSizeButton';
 import { increaseIndentButton } from './increaseIndentButton';
@@ -29,8 +31,9 @@ import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
 import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
+import { popout } from '../popout';
 import { removeLinkButton } from './removeLinkButton';
-import { Ribbon, RibbonPlugin } from 'roosterjs-react';
+import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { rtlButton } from './rtlButton';
 import { setBulletedListStyleButton } from './setBulletedListStyleButton';
 import { setHeaderLevelButton } from './setHeaderLevelButton';
@@ -44,6 +47,7 @@ import { subscriptButton } from './subscriptButton';
 import { superscriptButton } from './superscriptButton';
 import { textColorButton } from './textColorButton';
 import { underlineButton } from './underlineButton';
+import { zoom } from '../zoom';
 import {
     tableAlignCellButton,
     tableAlignTableButton,
@@ -107,8 +111,21 @@ const buttons = [
     spaceAfterButton,
 ];
 
-export default function ContentModelRibbon(props: { ribbonPlugin: RibbonPlugin; isRtl: boolean }) {
-    const { ribbonPlugin, isRtl } = props;
+export default function ContentModelRibbon(props: {
+    ribbonPlugin: RibbonPlugin;
+    isRtl: boolean;
+    isInPopout: boolean;
+}) {
+    const { ribbonPlugin, isRtl, isInPopout } = props;
+    const ribbonButtons = React.useMemo(() => {
+        const result: RibbonButton<any>[] = [...buttons, darkMode, zoom, exportContent];
 
-    return <Ribbon buttons={buttons} plugin={ribbonPlugin} dir={isRtl ? 'rtl' : 'ltr'} />;
+        if (!isInPopout) {
+            result.push(popout);
+        }
+
+        return result;
+    }, [isInPopout]);
+
+    return <Ribbon buttons={ribbonButtons} plugin={ribbonPlugin} dir={isRtl ? 'rtl' : 'ltr'} />;
 }
