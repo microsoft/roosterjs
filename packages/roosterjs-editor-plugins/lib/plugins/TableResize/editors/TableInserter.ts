@@ -26,7 +26,8 @@ export default function createTableInserter(
     const table = editor.getElementAtCursor('table', td);
 
     const tdRect = normalizeRect(td.getBoundingClientRect());
-    const tableRect = table ? getIntersectedRect([table], [editor.getVisibleViewport()]) : null;
+    const viewPort = editor.getVisibleViewport();
+    const tableRect = table && viewPort ? getIntersectedRect([table], [viewPort]) : null;
 
     // set inserter position
     if (tdRect && tableRect) {
@@ -94,11 +95,11 @@ class TableInsertHandler implements Disposable {
 
     dispose() {
         this.div.removeEventListener('click', this.insertTd);
+
         if (this.onMouseOutEvent) {
             this.div.removeEventListener('mouseout', this.onMouseOutEvent);
         }
-        this.div = null;
-        this.editor = null;
+
         this.onMouseOutEvent = null;
     }
 
@@ -109,7 +110,7 @@ class TableInsertHandler implements Disposable {
 
             // Since adding new column will cause table width to change, we need to remove width properties
             vtable.table.removeAttribute('width');
-            vtable.table.style.width = null;
+            vtable.table.style.setProperty('width', null);
         }
 
         vtable.edit(this.isHorizontal ? TableOperation.InsertBelow : TableOperation.InsertRight);
