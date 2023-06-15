@@ -131,6 +131,7 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'padding',
         'listStylePosition',
+        'backgroundColor',
     ],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,

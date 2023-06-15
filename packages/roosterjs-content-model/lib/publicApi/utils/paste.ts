@@ -1,6 +1,8 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import domToContentModel from '../../domToModel/domToContentModel';
 import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
+import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -29,6 +31,7 @@ import {
  * @param pasteAsText Force pasting as plain text. Default value is false
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
  * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
+ * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
  */
 export default function paste(
     editor: IContentModelEditor,
@@ -71,6 +74,11 @@ export default function paste(
         {
             ...event.domToModelOption,
             disableCacheElement: true,
+            additionalFormatParsers: {
+                ...event.domToModelOption,
+                block: [...(applyCurrentFormat ? [blockElementParser] : [])],
+                listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
+            },
         }
     );
 
@@ -80,7 +88,7 @@ export default function paste(
             'Paste',
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
-                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : undefined,
+                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
                 });
                 return true;
             },
@@ -153,3 +161,17 @@ function createFragmentFromClipboardData(
 
     return fragment;
 }
+
+/**
+ * For block elements that have background color style, remove the background color when user selects the merge current format
+ * paste option
+ */
+const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.style.backgroundColor) {
+        element.style.backgroundColor = '';
+        delete format.backgroundColor;
+    }
+};
