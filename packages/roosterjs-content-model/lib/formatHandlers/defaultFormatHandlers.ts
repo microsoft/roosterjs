@@ -128,6 +128,7 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'padding',
         'listStylePosition',
+        'backgroundColor',
     ],
     segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     segmentOnBlock: [...sharedSegmentFormats, 'textColor'],

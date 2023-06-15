@@ -1,11 +1,11 @@
 import { addSegment } from './addSegment';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
 import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { createListItem } from '../creators/createListItem';
@@ -116,7 +116,9 @@ function mergeParagraph(
     mergeToCurrentParagraph: boolean
 ) {
     const { paragraph, marker } = markerPosition;
-    const newParagraph = mergeToCurrentParagraph ? paragraph : splitParagraph(markerPosition);
+    const newParagraph = mergeToCurrentParagraph
+        ? paragraph
+        : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
     if (segmentIndex >= 0) {
@@ -185,7 +187,7 @@ function mergeTable(
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
-    splitParagraph(markerPosition);
+    splitParagraph(markerPosition, newList.format);
 
     const { path, paragraph } = markerPosition;
 
@@ -205,13 +207,13 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     }
 }
 
-function splitParagraph(markerPosition: InsertPoint) {
+function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModelBlockFormat) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
     const newParagraph = createParagraph(
         false /*isImplicit*/,
-        paragraph.format,
+        { ...paragraph.format, ...newParaFormat },
         paragraph.segmentFormat
     );
 
@@ -256,7 +258,7 @@ function splitParagraph(markerPosition: InsertPoint) {
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition);
+    const newPara = splitParagraph(markerPosition, block.format);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
@@ -272,6 +274,13 @@ function applyDefaultFormat(
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':
+                if (block.blockGroupType == 'ListItem') {
+                    block.formatHolder.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        format,
+                        block.formatHolder.format
+                    );
+                }
                 applyDefaultFormat(block, format, applyDefaultFormatOption);
                 break;
 
@@ -289,23 +298,34 @@ function applyDefaultFormat(
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format =
-                        applyDefaultFormatOption == 'mergeAll'
-                            ? { ...format, ...segment.format }
-                            : {
-                                  ...format,
-                                  ...getSemanticFormat(segment),
-                              };
+                    segment.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        format,
+                        segment.format
+                    );
                 });
                 break;
         }
     });
 }
 
-function getSemanticFormat(segment: ContentModelSegment): ContentModelSegmentFormat {
+function mergeSegmentFormat(
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    targetformat: ContentModelSegmentFormat,
+    sourceFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    return applyDefaultFormatOption == 'mergeAll'
+        ? { ...targetformat, ...sourceFormat }
+        : {
+              ...targetformat,
+              ...getSemanticFormat(sourceFormat),
+          };
+}
+
+function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
     const result: ContentModelSegmentFormat = {};
 
-    const { fontWeight, italic, underline } = segment.format;
+    const { fontWeight, italic, underline } = segmentFormat;
 
     if (fontWeight && fontWeight != 'normal') {
         result.fontWeight = fontWeight;
