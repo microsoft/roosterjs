@@ -1,7 +1,7 @@
 import changeElementTag from '../utils/changeElementTag';
 import setColor from '../utils/setColor';
+import { DarkColorHandler, TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 import { getTableCellMetadata } from './tableCellInfo';
-import { TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';
@@ -10,20 +10,22 @@ const TABLE_HEADER_TAG_NAME = 'TH';
  * @internal
  * Apply the given table format to this virtual table
  * @param format Table format to apply
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
 export default function applyTableFormat(
     table: HTMLTableElement,
     cells: VCell[][],
-    format: Required<TableFormat>
+    format: Required<TableFormat>,
+    darkColorHandler?: DarkColorHandler | null
 ) {
     if (!format) {
         return;
     }
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
-    setCellColor(cells, format);
+    setCellColor(cells, format, darkColorHandler);
     setFirstColumnFormat(cells, format);
-    setHeaderRowFormat(cells, format);
+    setHeaderRowFormat(cells, format, darkColorHandler);
 }
 
 /**
@@ -42,8 +44,13 @@ function hasCellShade(cell: VCell) {
 /**
  * Set color to the table
  * @param format the format that must be applied
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
-function setCellColor(cells: VCell[][], format: TableFormat) {
+function setCellColor(
+    cells: VCell[][],
+    format: TableFormat,
+    darkColorHandler?: DarkColorHandler | null
+) {
     const color = (index: number) => (index % 2 === 0 ? format.bgColorEven : format.bgColorOdd);
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
     const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
@@ -57,7 +64,8 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         backgroundColor || TRANSPARENT,
                         true /** isBackgroundColor*/,
                         undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        darkColorHandler
                     );
                 } else if (shouldColorWholeTable) {
                     setColor(
@@ -65,7 +73,8 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         format.bgColorOdd || TRANSPARENT,
                         true /** isBackgroundColor*/,
                         undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        darkColorHandler
                     );
                 } else {
                     setColor(
@@ -73,7 +82,8 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
                         undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        darkColorHandler
                     );
                 }
             }
@@ -89,7 +99,8 @@ function setCellColor(cells: VCell[][], format: TableFormat) {
                         backgroundColor,
                         true /** isBackgroundColor*/,
                         undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        darkColorHandler
                     );
                 }
             });
@@ -303,9 +314,14 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
 /**
  * Apply custom design to the Header Row
  * @param format
+ * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  * @returns
  */
-function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
+function setHeaderRowFormat(
+    cells: VCell[][],
+    format: TableFormat,
+    darkColorHandler?: DarkColorHandler | null
+) {
     if (!format.hasHeaderRow) {
         cells[0]?.forEach(cell => {
             if (cell.td) {
@@ -323,7 +339,8 @@ function setHeaderRowFormat(cells: VCell[][], format: TableFormat) {
                     format.headerRowColor,
                     true /** isBackgroundColor*/,
                     undefined /** isDarkMode **/,
-                    true /** shouldAdaptFontColor */
+                    true /** shouldAdaptFontColor */,
+                    darkColorHandler
                 );
             }
             cell.td.style.borderRightColor = format.headerRowColor;

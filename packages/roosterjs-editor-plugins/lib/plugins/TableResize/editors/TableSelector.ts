@@ -20,7 +20,7 @@ export default function createTableSelector(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    contentDiv?: EventTarget
+    contentDiv?: EventTarget | null
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -116,7 +116,11 @@ function setSelectorDivPosition(context: TableSelectorContext, trigger: HTMLElem
     }
 }
 
-function isTableTopVisible(editor: IEditor, rect: Rect | null, contentDiv?: EventTarget): boolean {
+function isTableTopVisible(
+    editor: IEditor,
+    rect: Rect | null,
+    contentDiv?: EventTarget | null
+): boolean {
     const visibleViewport = editor.getVisibleViewport();
     if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
         const containerRect = normalizeRect(contentDiv.getBoundingClientRect());

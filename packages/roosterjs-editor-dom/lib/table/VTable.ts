@@ -13,6 +13,7 @@ import {
     TableOperation,
     TableSelection,
     VCell,
+    DarkColorHandler,
 } from 'roosterjs-editor-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
@@ -134,10 +135,10 @@ export default class VTable {
 
     /**
      * Write the virtual table back to DOM tree to represent the change of VTable
-     * @param skipApplyFormat Do not reapply table format when write back.
-     * Only use this parameter when you are pretty sure there is no format or table structure change during the process.
+     * @param skipApplyFormat Do not reapply table format when write back. Only use this parameter when you are pretty sure there is no format or table structure change during the process.
+     * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
      */
-    writeBack(skipApplyFormat?: boolean) {
+    writeBack(skipApplyFormat?: boolean, darkColorHandler?: DarkColorHandler | null) {
         if (this.cells) {
             moveChildNodes(this.table);
             this.cells.forEach((row, r) => {
@@ -156,7 +157,7 @@ export default class VTable {
             });
             if (this.formatInfo && !skipApplyFormat) {
                 saveTableInfo(this.table, this.formatInfo);
-                applyTableFormat(this.table, this.cells, this.formatInfo);
+                applyTableFormat(this.table, this.cells, this.formatInfo, darkColorHandler);
             }
         } else if (this.table) {
             this.table.parentNode?.removeChild(this.table);

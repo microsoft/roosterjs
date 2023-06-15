@@ -16,10 +16,7 @@ function buildAmd() {
 
     runNode(
         typescriptPath +
-            ` -p ${path.join(
-                packagesPath,
-                'tsconfig.build.json'
-            )} -t es5 --moduleResolution node -m amd`,
+            ` -p ${path.join(packagesPath, 'tsconfig.json')} -t es5 --moduleResolution node -m amd`,
         packagesPath
     );
     runNode(
