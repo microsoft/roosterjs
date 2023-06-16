@@ -14,6 +14,10 @@ export const boldFormatHandler: FormatHandler<BoldFormat> = {
         }
     },
     apply: (format, element, context) => {
+        if (typeof format.fontWeight === 'undefined') {
+            return;
+        }
+
         const blockFontWeight = context.implicitFormat.fontWeight;
 
         if (

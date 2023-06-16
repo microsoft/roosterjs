@@ -1,10 +1,11 @@
+import { ContentModelDocument } from '../../../publicTypes/group/ContentModelDocument';
 import { createBr } from '../../creators/createBr';
-import { createInsertPoint } from './createInsertPoint';
+import { createInsertPoint } from '../utils/createInsertPoint';
 import { createParagraph } from '../../creators/createParagraph';
 import { createSelectionMarker } from '../../creators/createSelectionMarker';
-import { deleteBlock } from './deleteBlock';
-import { deleteSegment } from './deleteSegment';
-import { DeleteSelectionStep } from './DeleteSelectionStep';
+import { deleteBlock } from '../utils/deleteBlock';
+import { DeleteResult, DeleteSelectionContext, OnDeleteEntity } from '../utils/DeleteSelectionStep';
+import { deleteSegment } from '../utils/deleteSegment';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import { setParagraphNotImplicit } from '../../block/setParagraphNotImplicit';
 
@@ -19,16 +20,25 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  * Iterate the model and find all selected content if any, delete them, and keep/create an insert point
  * at the first deleted position so that we know where to put cursor to after delete
  */
-export const deleteExpandedSelection: DeleteSelectionStep = (context, options, model) => {
-    const { onDeleteEntity, direction } = options;
-    const isForward = direction == 'forward';
+export function deleteExpandedSelection(
+    model: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity
+): DeleteSelectionContext {
+    const context: DeleteSelectionContext = {
+        deleteResult: DeleteResult.NotDeleted,
+        insertPoint: null,
+    };
 
     iterateSelections(
         [model],
         (path, tableContext, block, segments) => {
             // Set paragraph, format and index for default position where we will put cursor to.
             // Later we can overwrite these info when process the selections
-            let paragraph = createParagraph(true /*implicit*/);
+            let paragraph = createParagraph(
+                true /*implicit*/,
+                undefined /*blockFormat*/,
+                model.format
+            );
             let markerFormat = model.format;
             let insertMarkerIndex = 0;
 
@@ -58,19 +68,25 @@ export const deleteExpandedSelection: DeleteSelectionStep = (context, options, m
                                 path,
                                 tableContext
                             );
-                        } else {
-                            context.isChanged =
-                                deleteSegment(block, segment, isForward, onDeleteEntity) ||
-                                context.isChanged;
+                        } else if (deleteSegment(block, segment, onDeleteEntity)) {
+                            context.deleteResult = DeleteResult.Range;
                         }
                     });
+
+                    // Since we are operating on this paragraph and it possible we delete everything from this paragraph,
+                    // Need to make it "not implicit" so that it will always have a container element, so that when we do normalization
+                    // of this paragraph, a BR can be added if need
+                    if (context.deleteResult == DeleteResult.Range) {
+                        setParagraphNotImplicit(block);
+                    }
                 }
             } else if (block) {
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
-                context.isChanged =
-                    deleteBlock(blocks, block, isForward, onDeleteEntity, paragraph) ||
-                    context.isChanged;
+
+                if (deleteBlock(blocks, block, onDeleteEntity, paragraph)) {
+                    context.deleteResult = DeleteResult.Range;
+                }
             } else if (tableContext) {
                 // Delete a whole table cell
                 const { table, colIndex, rowIndex } = tableContext;
@@ -83,7 +99,7 @@ export const deleteExpandedSelection: DeleteSelectionStep = (context, options, m
 
                 delete cell.cachedElement;
                 delete row.cachedElement;
-                context.isChanged = true;
+                context.deleteResult = DeleteResult.Range;
             }
 
             if (!context.insertPoint) {
@@ -97,4 +113,6 @@ export const deleteExpandedSelection: DeleteSelectionStep = (context, options, m
         },
         DeleteSelectionIteratingOptions
     );
-};
+
+    return context;
+}

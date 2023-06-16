@@ -5,7 +5,7 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
-describe('handleSegment', () => {
+describe('handleText', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
 
@@ -49,7 +49,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
+        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
     });
 
     it('Text segment with code', () => {
@@ -66,7 +66,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<code><span>test</span></code>');
+        expect(parent.innerHTML).toBe('<span><code>test</code></span>');
     });
 
     it('call stackFormat', () => {
@@ -81,7 +81,7 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<a href="/test"><span>test</span></a>');
+        expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
@@ -123,6 +123,6 @@ describe('handleSegment', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<a href="#"><span style="font-size: 12px;">test</span></a>');
+        expect(parent.innerHTML).toBe('<span style="font-size: 12px;"><a href="#">test</a></span>');
     });
 });

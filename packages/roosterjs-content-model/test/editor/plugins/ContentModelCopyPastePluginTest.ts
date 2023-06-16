@@ -3,8 +3,11 @@ import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDo
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
-import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
+import * as PasteFile from '../../../lib/publicApi/utils/paste';
 import { IContentModelEditor } from '../../../lib/publicTypes';
+import ContentModelCopyPastePlugin, {
+    onNodeCreated,
+} from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
     DOMEventHandlerFunction,
@@ -17,7 +20,7 @@ const modelValue = 'model' as any;
 const darkColorHandler = 'darkColorHandler' as any;
 const pasteModelValue = 'pasteModelValue' as any;
 const insertPointValue = 'insertPoint' as any;
-const isChangedValue = 'isChanged' as any;
+const deleteResultValue = 'deleteResult' as any;
 
 const allowedCustomPasteType = ['Test'];
 
@@ -175,7 +178,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -208,7 +212,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -231,7 +238,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -285,7 +293,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -341,12 +350,12 @@ describe('ContentModelCopyPastePlugin |', () => {
                 areAllCollapsed: false,
             };
 
-            spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
-                (model: any, options: any) => {
+            const deleteSelectionSpy = spyOn(deleteSelectionsFile, 'deleteSelection').and.callFake(
+                (model: any, steps: any, options: any) => {
                     return {
                         deletedModel: pasteModelValue,
                         insertPoint: insertPointValue,
-                        isChanged: isChangedValue,
+                        deleteResult: deleteResultValue,
                     };
                 }
             );
@@ -362,7 +371,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
-            expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalledWith(modelValue);
+            expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
             expect(contentModelToDomFile.default).toHaveBeenCalledWith(
                 document,
                 div,
@@ -370,7 +379,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -401,7 +411,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'default').and.callFake(() => {
-                div.appendChild(table);
+                const container = document.createElement('div');
+                container.append(table);
+
+                div.appendChild(container);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
@@ -423,7 +436,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -477,7 +491,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 {
                     isDarkMode: false,
                     darkColorHandler: darkColorHandler,
-                }
+                },
+                { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -498,7 +513,10 @@ describe('ContentModelCopyPastePlugin |', () => {
 
     describe('Paste |', () => {
         let clipboardData = <ClipboardData>{};
+
         it('Handle', () => {
+            editor.isFeatureEnabled = () => true;
+            spyOn(PasteFile, 'default').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
                 clipboardData: <DataTransfer>(<any>{
@@ -517,7 +535,8 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             domEvents.paste?.(clipboardEvent);
 
-            expect(pasteSpy).toHaveBeenCalledWith(clipboardData);
+            expect(pasteSpy).not.toHaveBeenCalledWith(clipboardData);
+            expect(PasteFile.default).toHaveBeenCalled();
             expect(extractClipboardItemsFile.default).toHaveBeenCalledWith(
                 Array.from(clipboardEvent.clipboardData!.items),
                 {

@@ -2,6 +2,7 @@ import { addSegment } from '../../modelApi/common/addSegment';
 import { createContentModelDocument } from '../../modelApi/creators/createContentModelDocument';
 import { createImage } from '../../modelApi/creators/createImage';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { readFile } from 'roosterjs-editor-dom';
@@ -29,7 +30,9 @@ function insertImageWithSrc(editor: IContentModelEditor, src: string) {
         const doc = createContentModelDocument();
 
         addSegment(doc, image);
-        mergeModel(model, doc, { mergeCurrentFormat: true });
+        mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
+            mergeFormat: 'mergeAll',
+        });
 
         return true;
     });

@@ -1,6 +1,7 @@
 import { addSegment } from './addSegment';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
@@ -16,6 +17,7 @@ import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGrou
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeContentModel } from './normalizeContentModel';
 import { normalizeTable } from '../table/normalizeTable';
+import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
 
 /**
  * @internal
@@ -36,11 +38,15 @@ export interface MergeModelOption {
     insertPosition?: InsertPoint;
 
     /**
-     * When set to true, segment format of the insert position will be merged into the content that is merged into current model.
+     * Use this to decide whether to change the source model format when doing the merge.
+     * 'mergeAll': segment format of the insert position will be merged into the content that is merged into current model.
      * If the source model already has some format, it will not be overwritten.
-     * @default false
+     * 'keepSourceEmphasisFormat': format of the insert position will be set into the content that is merged into current model.
+     * If the source model already has emphasis format, such as, fontWeight, Italic or underline different than the default style, it will not be overwritten.
+     * 'none' the source segment format will not be modified.
+     * @default undefined
      */
-    mergeCurrentFormat?: boolean;
+    mergeFormat?: 'mergeAll' | 'keepSourceEmphasisFormat' | 'none';
 }
 
 /**
@@ -49,18 +55,20 @@ export interface MergeModelOption {
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
+    onDeleteEntity: OnDeleteEntity,
     options?: MergeModelOption
 ) {
-    const insertPosition = options?.insertPosition ?? deleteSelection(target).insertPoint;
+    const insertPosition =
+        options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
 
     if (insertPosition) {
-        if (options?.mergeCurrentFormat) {
+        if (options?.mergeFormat && options.mergeFormat != 'none') {
             const newFormat: ContentModelSegmentFormat = {
                 ...(target.format || {}),
                 ...insertPosition.marker.format,
             };
 
-            applyDefaultFormat(source, newFormat);
+            applyDefaultFormat(source, newFormat, options?.mergeFormat);
         }
 
         for (let i = 0; i < source.blocks.length; i++) {
@@ -108,7 +116,9 @@ function mergeParagraph(
     mergeToCurrentParagraph: boolean
 ) {
     const { paragraph, marker } = markerPosition;
-    const newParagraph = mergeToCurrentParagraph ? paragraph : splitParagraph(markerPosition);
+    const newParagraph = mergeToCurrentParagraph
+        ? paragraph
+        : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
     if (segmentIndex >= 0) {
@@ -177,7 +187,7 @@ function mergeTable(
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
-    splitParagraph(markerPosition);
+    splitParagraph(markerPosition, newList.format);
 
     const { path, paragraph } = markerPosition;
 
@@ -197,11 +207,15 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     }
 }
 
-function splitParagraph(markerPosition: InsertPoint) {
+function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModelBlockFormat) {
     const { paragraph, marker, path } = markerPosition;
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
-    const newParagraph = createParagraph(false /*isImplicit*/, paragraph.format);
+    const newParagraph = createParagraph(
+        false /*isImplicit*/,
+        { ...paragraph.format, ...newParaFormat },
+        paragraph.segmentFormat
+    );
 
     if (segmentIndex >= 0) {
         newParagraph.segments = paragraph.segments.splice(segmentIndex);
@@ -244,7 +258,7 @@ function splitParagraph(markerPosition: InsertPoint) {
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition);
+    const newPara = splitParagraph(markerPosition, block.format);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
@@ -252,17 +266,28 @@ function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     }
 }
 
-function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelSegmentFormat) {
+function applyDefaultFormat(
+    group: ContentModelBlockGroup,
+    format: ContentModelSegmentFormat,
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat'
+) {
     group.blocks.forEach(block => {
         switch (block.blockType) {
             case 'BlockGroup':
-                applyDefaultFormat(block, format);
+                if (block.blockGroupType == 'ListItem') {
+                    block.formatHolder.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        format,
+                        block.formatHolder.format
+                    );
+                }
+                applyDefaultFormat(block, format, applyDefaultFormatOption);
                 break;
 
             case 'Table':
                 block.rows.forEach(row =>
                     row.cells.forEach(cell => {
-                        applyDefaultFormat(cell, format);
+                        applyDefaultFormat(cell, format, applyDefaultFormatOption);
                     })
                 );
                 break;
@@ -270,12 +295,47 @@ function applyDefaultFormat(group: ContentModelBlockGroup, format: ContentModelS
             case 'Paragraph':
                 block.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
-                        applyDefaultFormat(segment, format);
+                        applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format = { ...format, ...segment.format };
+                    segment.format = mergeSegmentFormat(
+                        applyDefaultFormatOption,
+                        format,
+                        segment.format
+                    );
                 });
                 break;
         }
     });
+}
+
+function mergeSegmentFormat(
+    applyDefaultFormatOption: 'mergeAll' | 'keepSourceEmphasisFormat',
+    targetformat: ContentModelSegmentFormat,
+    sourceFormat: ContentModelSegmentFormat
+): ContentModelSegmentFormat {
+    return applyDefaultFormatOption == 'mergeAll'
+        ? { ...targetformat, ...sourceFormat }
+        : {
+              ...targetformat,
+              ...getSemanticFormat(sourceFormat),
+          };
+}
+
+function getSemanticFormat(segmentFormat: ContentModelSegmentFormat): ContentModelSegmentFormat {
+    const result: ContentModelSegmentFormat = {};
+
+    const { fontWeight, italic, underline } = segmentFormat;
+
+    if (fontWeight && fontWeight != 'normal') {
+        result.fontWeight = fontWeight;
+    }
+    if (italic) {
+        result.italic = italic;
+    }
+    if (underline) {
+        result.underline = underline;
+    }
+
+    return result;
 }

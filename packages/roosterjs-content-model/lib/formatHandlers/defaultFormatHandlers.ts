@@ -90,11 +90,14 @@ const defaultFormatHandlerMap: FormatHandlers = {
     wordBreak: wordBreakFormatHandler,
 };
 
-const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
-    'strike',
     'fontFamily',
     'fontSize',
+];
+
+const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'strike',
     'underline',
     'superOrSubScript',
     'italic',
@@ -128,10 +131,23 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'padding',
         'listStylePosition',
+        'backgroundColor',
     ],
-    segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
-    segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
+    styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    elementBasedSegment: elementBasedSegmentFormats,
+    segment: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColor',
+        'backgroundColor',
+        'lineHeight',
+    ],
+    segmentOnBlock: [...styleBasedSegmentFormats, ...elementBasedSegmentFormats, 'textColor'],
+    segmentOnTableCell: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColorOnTableCell',
+    ],
     tableCell: [
         'border',
         'backgroundColor',
@@ -142,7 +158,7 @@ const defaultFormatKeysPerCategory: {
         'htmlAlign',
     ],
     tableRow: ['backgroundColor'],
-    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin'],
+    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin', 'size'],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],

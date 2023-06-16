@@ -157,6 +157,6 @@ describe('underlineFormatHandler.apply', () => {
 
         underlineFormatHandler.apply(format, a, context);
 
-        expect(a.outerHTML).toEqual('<a style="text-decoration: none;">test</a>');
+        expect(a.outerHTML).toEqual('<a>test</a>');
     });
 });

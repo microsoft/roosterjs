@@ -1,8 +1,16 @@
 import contentModelToDom from '../../modelToDom/contentModelToDom';
+import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
+import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
+import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelDecorator } from '../../publicTypes/decorator/ContentModelDecorator';
+import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
+import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     addRangeToSelection,
     createElement,
@@ -11,11 +19,12 @@ import {
     extractClipboardItems,
     toArray,
     Browser,
+    wrap,
+    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     CopyPastePluginState,
-    EditorOptions,
     IEditor,
     PluginEventType,
     PluginWithState,
@@ -32,17 +41,12 @@ import {
 export default class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IContentModelEditor | null = null;
     private disposer: (() => void) | null = null;
-    private state: CopyPastePluginState;
 
     /**
      * Construct a new instance of CopyPastePlugin
      * @param options The editor options
      */
-    constructor(options: EditorOptions) {
-        this.state = {
-            allowedCustomPasteType: options.allowedCustomPasteType || [],
-        };
-    }
+    constructor(private state: CopyPastePluginState) {}
 
     /**
      * Get a friendly name of  this plugin
@@ -83,72 +87,76 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
     }
 
     private onCutCopy(event: Event, isCut: boolean) {
-        if (this.editor) {
-            const selection = this.editor.getSelectionRangeEx();
-            if (selection && !selection.areAllCollapsed) {
-                const model = this.editor.createContentModel({
-                    disableCacheElement: true,
+        if (!this.editor) {
+            return;
+        }
+        const selection = this.editor.getSelectionRangeEx();
+        if (selection && !selection.areAllCollapsed) {
+            const model = this.editor.createContentModel({
+                disableCacheElement: true,
+            });
+
+            const pasteModel = cloneModel(model);
+            if (selection.type === SelectionRangeTypes.TableSelection) {
+                iterateSelections([pasteModel], (path, tableContext) => {
+                    if (tableContext?.table) {
+                        const table = tableContext?.table;
+                        table.rows = table.rows
+                            .map(row => {
+                                return {
+                                    ...row,
+                                    cells: row.cells.filter(cell => cell.isSelected),
+                                };
+                            })
+                            .filter(row => row.cells.length > 0);
+                        return true;
+                    }
+                    return false;
+                });
+            }
+            const tempDiv = this.getTempDiv(this.editor);
+            const selectionAfterPaste = contentModelToDom(
+                tempDiv.ownerDocument,
+                tempDiv,
+                pasteModel,
+                {
+                    isDarkMode: false /* To force light mode on paste */,
+                    darkColorHandler: this.editor.getDarkColorHandler(),
+                },
+                {
+                    onNodeCreated,
+                }
+            );
+
+            let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
+            if (newRange) {
+                const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                    clonedRoot: tempDiv,
+                    range: newRange,
+                    rawEvent: event as ClipboardEvent,
+                    isCut,
                 });
 
-                const pasteModel = cloneModel(model);
-                if (selection.type === SelectionRangeTypes.TableSelection) {
-                    iterateSelections([pasteModel], (path, tableContext) => {
-                        if (tableContext?.table) {
-                            const table = tableContext?.table;
-                            table.rows = table.rows
-                                .map(row => {
-                                    return {
-                                        ...row,
-                                        cells: row.cells.filter(cell => cell.isSelected),
-                                    };
-                                })
-                                .filter(row => row.cells.length > 0);
-                            return true;
-                        }
-                        return false;
-                    });
+                if (cutCopyEvent.range) {
+                    addRangeToSelection(newRange);
                 }
-                const tempDiv = this.getTempDiv(this.editor, true /*forceInLightMode*/);
-                const selectionAfterPaste = contentModelToDom(
-                    tempDiv.ownerDocument,
-                    tempDiv,
-                    pasteModel,
-                    {
-                        isDarkMode: false /* To force light mode on paste */,
-                        darkColorHandler: this.editor.getDarkColorHandler(),
+
+                this.editor.runAsync(editor => {
+                    cleanUpAndRestoreSelection(tempDiv);
+                    editor.focus();
+                    if (selectionAfterPaste) {
+                        this.editor?.select(selectionAfterPaste);
                     }
-                );
-
-                let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
-                if (newRange) {
-                    const cutCopyEvent = this.editor.triggerPluginEvent(
-                        PluginEventType.BeforeCutCopy,
-                        {
-                            clonedRoot: tempDiv,
-                            range: newRange,
-                            rawEvent: event as ClipboardEvent,
-                            isCut,
-                        }
-                    );
-
-                    if (cutCopyEvent.range) {
-                        addRangeToSelection(newRange);
+                    if (isCut) {
+                        editor.addUndoSnapshot(() => {
+                            deleteSelection(
+                                model,
+                                getOnDeleteEntityCallback(editor as IContentModelEditor)
+                            );
+                            this.editor?.setContentModel(model);
+                        }, ChangeSource.Cut);
                     }
-
-                    this.editor.runAsync(editor => {
-                        cleanUpAndRestoreSelection(tempDiv);
-                        editor.focus();
-                        if (selectionAfterPaste) {
-                            this.editor?.select(selectionAfterPaste);
-                        }
-                        if (isCut) {
-                            editor.addUndoSnapshot(() => {
-                                deleteSelection(model);
-                                this.editor?.setContentModel(model);
-                            }, ChangeSource.Cut);
-                        }
-                    });
-                }
+                });
             }
         }
     }
@@ -166,14 +174,14 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 }).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
                         removeContentForAndroid(editor);
-                        editor.paste(clipboardData);
+                        paste(editor, clipboardData);
                     }
                 });
             }
         }
     };
 
-    private getTempDiv(editor: IEditor, forceInLightMode?: boolean) {
+    private getTempDiv(editor: IEditor) {
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
@@ -189,11 +197,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
             tempDiv => tempDiv.parentNode?.removeChild(tempDiv)
         );
 
-        if (forceInLightMode) {
-            div.style.backgroundColor = 'white';
-            div.style.color = 'black';
-        }
-
+        div.style.backgroundColor = 'white';
+        div.style.color = 'black';
         div.childNodes.forEach(node => div.removeChild(node));
 
         div.style.display = '';
@@ -215,7 +220,7 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
 function removeContentForAndroid(editor: IContentModelEditor) {
     if (Browser.isAndroid) {
         const model = editor.createContentModel();
-        deleteSelection(model);
+        deleteSelection(model, getOnDeleteEntityCallback(editor));
         editor.setContentModel(model);
     }
 }
@@ -229,7 +234,9 @@ function selectionExToRange(
     let newRange: Range | null = null;
     if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
-        newRange = createRange(table);
+        const elementToSelect =
+            table.parentElement?.childElementCount == 1 ? table.parentElement : table;
+        newRange = createRange(elementToSelect);
     } else if (selection.type === SelectionRangeTypes.ImageSelection) {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
@@ -242,3 +249,22 @@ function selectionExToRange(
 
     return newRange;
 }
+
+/**
+ * @internal
+ * Exported only for unit testing
+ */
+export const onNodeCreated = (
+    _:
+        | ContentModelBlock
+        | ContentModelBlockGroup
+        | ContentModelSegment
+        | ContentModelDecorator
+        | ContentModelListItemLevelFormat
+        | ContentModelTableRow,
+    node: Node
+): void => {
+    if (safeInstanceOf(node, 'HTMLTableElement')) {
+        wrap(node, 'div');
+    }
+};

@@ -1,11 +1,12 @@
-import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
+import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { wrap } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -17,30 +18,26 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let element: Node = group.element;
+    let node: Node = group.element;
 
-    if (refNode && element.parentNode == parent) {
-        refNode = reuseCachedElement(parent, element, refNode);
+    if (refNode && node.parentNode == parent) {
+        refNode = reuseCachedElement(parent, node, refNode);
     } else {
-        element = element.cloneNode();
-        group.element = element as HTMLElement;
+        node = node.cloneNode();
+        group.element = node as HTMLElement;
 
-        parent.insertBefore(element, refNode);
+        parent.insertBefore(node, refNode);
     }
 
-    if (isGeneralSegment(group) && isNodeOfType(element, NodeType.Element)) {
-        if (!group.element.firstChild) {
-            context.regularSelection.current.segment = element;
-        }
+    if (isGeneralSegment(group) && isNodeOfType(node, NodeType.Element)) {
+        const element = wrap(node, 'span');
 
-        applyFormat(element, context.formatAppliers.segment, group.format, context);
-
-        context.modelHandlers.segmentDecorator(doc, element, group, context);
+        handleSegmentCommon(doc, node, element, group, context);
+    } else {
+        context.onNodeCreated?.(group, node);
     }
 
-    context.modelHandlers.blockGroupChildren(doc, element, group, context);
-
-    context.onNodeCreated?.(group, element);
+    context.modelHandlers.blockGroupChildren(doc, node, group, context);
 
     return refNode;
 };

@@ -1,6 +1,6 @@
-import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBr } from '../../publicTypes/segment/ContentModelBr';
 import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
+import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 
 /**
@@ -17,9 +17,5 @@ export const handleBr: ContentModelHandler<ContentModelBr> = (
     element.appendChild(br);
     parent.appendChild(element);
 
-    context.regularSelection.current.segment = br;
-    applyFormat(element, context.formatAppliers.segment, segment.format, context);
-
-    context.modelHandlers.segmentDecorator(doc, br, segment, context);
-    context.onNodeCreated?.(segment, br);
+    handleSegmentCommon(doc, br, element, segment, context);
 };
