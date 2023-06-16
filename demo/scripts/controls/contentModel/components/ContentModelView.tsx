@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { ButtonGroup } from './ButtonGroup';
 import { ContentModelJson } from './model/ContentModelJson';
-import { ContentModelWithDataset, DatasetFormat } from 'roosterjs-content-model';
 import { css } from '@fluentui/react/lib/Utilities';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { useProperty } from '../hooks/useProperty';

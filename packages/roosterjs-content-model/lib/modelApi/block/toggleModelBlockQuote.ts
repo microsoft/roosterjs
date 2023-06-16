@@ -1,6 +1,5 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
 import { ContentModelDocument } from '../../publicTypes/group/ContentModelDocument';
 import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';

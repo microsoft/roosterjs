@@ -108,34 +108,4 @@ describe('handleSegment', () => {
         expect(parent.innerHTML).toBe('');
         expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
     });
-
-    it('entity segment', () => {
-        const div = document.createElement('div');
-        const segment: ContentModelSegment = {
-            segmentType: 'Entity',
-            blockType: 'Entity',
-            format: {},
-            type: 'entity',
-            id: 'entity_1',
-            wrapper: div,
-            isReadonly: true,
-        };
-
-        handleSegment(document, parent, segment, context);
-        expect(parent.innerHTML).toBe('');
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context, null);
-    });
-
-    it('image segment', () => {
-        const segment: ContentModelSegment = {
-            segmentType: 'Image',
-            src: 'test',
-            format: {},
-            dataset: {},
-        };
-
-        handleSegment(document, parent, segment, context);
-        expect(parent.innerHTML).toBe('');
-        expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
-    });
 });

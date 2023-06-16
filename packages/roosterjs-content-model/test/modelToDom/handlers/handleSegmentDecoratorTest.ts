@@ -207,40 +207,4 @@ describe('handleSegmentDecorator', () => {
             '<a href="http://test.com/test" style="background-color: red;">test</a>'
         );
     });
-
-    it('Link with onNodeCreated', () => {
-        const parent = document.createElement('div');
-        const span = document.createElement('span');
-        const segment: ContentModelText = {
-            segmentType: 'Text',
-            format: {},
-            text: 'test',
-            link: {
-                format: {
-                    href: 'https://www.test.com',
-                },
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-        };
-
-        parent.appendChild(span);
-
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
-
-        context.onNodeCreated = onNodeCreated;
-
-        handleSegmentDecorator(document, span, segment, context);
-
-        expect(parent.innerHTML).toBe(
-            '<a href="https://www.test.com" style="text-decoration: none;"><code><span></span></code></a>'
-        );
-        expect(onNodeCreated).toHaveBeenCalledTimes(2);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment.link);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('a'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(segment.code);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('code'));
-    });
 });

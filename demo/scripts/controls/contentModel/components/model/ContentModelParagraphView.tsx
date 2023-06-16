@@ -54,10 +54,6 @@ export function ContentModelParagraphView(props: { paragraph: ContentModelParagr
         );
     }, [paragraph.format]);
 
-    const getFormat = React.useCallback(() => {
-        return <FormatView format={paragraph.format} renderers={ParagraphFormatRenders} />;
-    }, [paragraph.format]);
-
     return (
         <ContentModelView
             title="Paragraph"

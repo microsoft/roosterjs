@@ -37,9 +37,6 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
     addDecorators(segment, context);
     addSegment(group, segment);
 
-    addDecorators(segment, context);
-    addSegment(group, segment);
-
     stackFormat(
         context,
         {

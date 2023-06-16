@@ -3,15 +3,6 @@ import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelSegmentFormat } from '../publicTypes/format/ContentModelSegmentFormat';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { formatWithContentModel } from '../publicApi/utils/formatWithContentModel';
-import { mergeModel } from '../modelApi/common/mergeModel';
-import { Position } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    ClipboardData,
-    ExperimentalFeatures,
-    GetContentMode,
-} from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     DomToModelOption,
@@ -35,24 +26,12 @@ export default class ContentModelEditor
         super(contentDiv, options, createContentModelEditorCore);
     }
 
-    dispose() {
-        const { contentDiv, originalContainerFormat, defaultFormatOnContainer } = this.getCore();
-
-        if (defaultFormatOnContainer) {
-            contentDiv.style.setProperty('font-family', originalContainerFormat.fontFamily || null);
-            contentDiv.style.setProperty('font-size', originalContainerFormat.fontSize || null);
-        }
-
-        super.dispose();
-    }
-
     /**
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
     createContentModel(option?: DomToModelOption): ContentModelDocument {
         const core = this.getCore();
-        const cachedModel = this.reuseModel ? this.cachedModel : null;
 
         return core.api.createContentModel(core, option);
     }
@@ -89,20 +68,5 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         return core.defaultFormat;
-    }
-
-    private getDefaultSegmentFormat(): ContentModelSegmentFormat {
-        const format = this.getDefaultFormat();
-
-        return {
-            fontWeight: format.bold ? 'bold' : undefined,
-            italic: format.italic || undefined,
-            underline: format.underline || undefined,
-            fontFamily: format.fontFamily || undefined,
-            fontSize: format.fontSize || undefined,
-            textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-            backgroundColor:
-                format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
-        };
     }
 }

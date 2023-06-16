@@ -152,30 +152,4 @@ describe('textColorFormatHandler.apply', () => {
 
         expect(a.outerHTML).toBe('<a style="color: red;"></a>');
     });
-
-    it('HyperLink without color', () => {
-        const a = document.createElement('a');
-
-        textColorFormatHandler.apply(format, a, context);
-
-        expect(a.outerHTML).toBe('<a></a>');
-    });
-
-    it('HyperLink with default color', () => {
-        const a = document.createElement('a');
-
-        textColorFormatHandler.apply(format, a, context);
-
-        expect(a.outerHTML).toBe('<a></a>');
-    });
-
-    it('HyperLink with color override', () => {
-        const a = document.createElement('a');
-
-        format.textColor = 'red';
-
-        textColorFormatHandler.apply(format, a, context);
-
-        expect(a.outerHTML).toBe('<a style="color: red;"></a>');
-    });
 });

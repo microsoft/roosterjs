@@ -108,12 +108,6 @@ export default class ImageEdit implements EditorPlugin {
     // The image wrapper
     private wrapper: HTMLSpanElement | null = null;
 
-    // Image cloned from the current editing image
-    private clonedImage: HTMLImageElement | null = null;
-
-    // The image wrapper
-    private wrapper: HTMLSpanElement | null = null;
-
     // Current edit info of the image. All changes user made will be stored in this object.
     // We use this object to update the editing UI, and finally we will use this object to generate
     // the new image if necessary
@@ -129,16 +123,6 @@ export default class ImageEdit implements EditorPlugin {
      * Identify if the image was resized by the user.
      */
     private wasResized: boolean = false;
-
-    /**
-     * The span element that wraps the image and opens shadow dom
-     */
-    private shadowSpan: HTMLSpanElement | null = null;
-
-    /**
-     * The span element that wraps the image and opens shadow dom
-     */
-    private isCropping: boolean = false;
 
     /**
      * The span element that wraps the image and opens shadow dom
@@ -249,9 +233,6 @@ export default class ImageEdit implements EditorPlugin {
                         }
                     );
                 }
-                break;
-            case PluginEventType.BeforeDispose:
-                this.removeWrapper();
                 break;
             case PluginEventType.BeforeDispose:
                 this.removeWrapper();
@@ -660,23 +641,6 @@ function setSize(
     element.style.bottom = bottom !== undefined ? getPx(bottom) : element.style.bottom;
     element.style.width = width !== undefined ? getPx(width) : element.style.width;
     element.style.height = height !== undefined ? getPx(height) : element.style.height;
-}
-
-function setWrapperSizeDimensions(
-    wrapper: HTMLElement,
-    image: HTMLImageElement,
-    width: number,
-    height: number
-) {
-    const hasBorder = image.style.borderStyle;
-    if (hasBorder) {
-        const borderWidth = image.style.borderWidth ? 2 * parseInt(image.style.borderWidth) : 2;
-        wrapper.style.width = getPx(width + borderWidth);
-        wrapper.style.height = getPx(height + borderWidth);
-        return;
-    }
-    wrapper.style.width = getPx(width);
-    wrapper.style.height = getPx(height);
 }
 
 function setWrapperSizeDimensions(

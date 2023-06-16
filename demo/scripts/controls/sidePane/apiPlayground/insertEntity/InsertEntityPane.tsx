@@ -61,10 +61,6 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                     <label htmlFor="focusAfterEntity">Focus after entity</label>
                 </div>
                 <div>
-                    Force insert at root of region:{' '}
-                    <input type="checkbox" ref={this.insertAtRoot} />
-                </div>
-                <div>
                     <button onClick={this.insertEntity}>Insert Entity</button>
                 </div>
                 <hr />

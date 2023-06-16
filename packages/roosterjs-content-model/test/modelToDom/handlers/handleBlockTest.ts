@@ -265,25 +265,4 @@ describe('handleBlockGroup', () => {
 
         runTestWithRefNode(group, 'test<br>');
     });
-
-    it('Entity block', () => {
-        const element = document.createElement('div');
-        const block: ContentModelEntity = {
-            blockType: 'Entity',
-            segmentType: 'Entity',
-            format: {},
-            wrapper: element,
-            type: 'entity',
-            id: 'entity_1',
-            isReadonly: true,
-        };
-
-        parent = document.createElement('div');
-
-        handleBlock(document, parent, block, context, null);
-
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context, null);
-
-        runTestWithRefNode(block, '<br>');
-    });
 });

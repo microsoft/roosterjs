@@ -157,8 +157,8 @@ describe('ContentModelEditor', () => {
                 fontWeight: undefined,
                 italic: undefined,
                 underline: undefined,
-                fontFamily: 'Calibri, Arial, Helvetica, sans-serif',
-                fontSize: '12pt',
+                fontFamily: undefined,
+                fontSize: undefined,
                 textColor: undefined,
                 backgroundColor: undefined,
             },
@@ -264,72 +264,6 @@ describe('ContentModelEditor', () => {
             fontSize: '20pt',
             textColor: undefined,
             backgroundColor: undefined,
-        });
-    });
-
-    it('get model with cache', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
-        });
-        const cachedModel = 'MODEL' as any;
-
-        (editor as any).cachedModel = cachedModel;
-
-        spyOn(domToContentModel, 'default');
-
-        const model = editor.createContentModel();
-
-        expect(model).toBe(cachedModel);
-        expect(domToContentModel.default).not.toHaveBeenCalled();
-    });
-
-    it('cache model', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
-        });
-        const cachedModel = 'MODEL' as any;
-
-        editor.cacheContentModel(cachedModel);
-
-        expect((editor as any).cachedModel).toBe(cachedModel);
-
-        editor.cacheContentModel(null);
-
-        expect((editor as any).cachedModel).toBe(null);
-    });
-
-    it('default format', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            defaultFormat: {
-                bold: true,
-                italic: true,
-                underline: true,
-                fontFamily: 'Arial',
-                fontSize: '10pt',
-                textColors: {
-                    lightModeColor: 'black',
-                    darkModeColor: 'white',
-                },
-                backgroundColors: {
-                    lightModeColor: 'white',
-                    darkModeColor: 'black',
-                },
-            },
-        });
-
-        const model = editor.createContentModel();
-
-        expect(model.format).toEqual({
-            fontWeight: 'bold',
-            italic: true,
-            underline: true,
-            fontFamily: 'Arial',
-            fontSize: '10pt',
-            textColor: 'black',
-            backgroundColor: 'white',
         });
     });
 });

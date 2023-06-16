@@ -127,59 +127,6 @@ function stackDecoratorInternal(
     }
 }
 
-function stackLinkInternal(linkFormat: ContentModelLink, link?: 'linkDefault' | 'empty') {
-    switch (link) {
-        case 'linkDefault':
-            return {
-                format: {
-                    underline: true,
-                },
-                dataset: {},
-            };
-
-        case 'empty':
-            return {
-                format: {},
-                dataset: {},
-            };
-
-        default:
-            return linkFormat;
-    }
-}
-
-function stackCodeInternal(codeFormat: ContentModelCode, code?: 'codeDefault' | 'empty') {
-    switch (code) {
-        case 'codeDefault':
-            return {
-                format: {
-                    fontFamily: 'monospace',
-                },
-            };
-        case 'empty':
-            return {
-                format: {},
-            };
-        default:
-            return codeFormat;
-    }
-}
-
-function stackDecoratorInternal(
-    format: ContentModelParagraphDecorator,
-    decorator?: 'decoratorDefault' | 'empty'
-) {
-    switch (decorator) {
-        case 'empty':
-            return {
-                format: {},
-                tagName: '',
-            };
-        default:
-            return format;
-    }
-}
-
 function stackFormatInternal<T extends ContentModelFormatBase>(
     format: T,
     processType?: 'shallowClone' | 'shallowCloneForBlock' | 'shallowCloneForGroup' | 'empty'

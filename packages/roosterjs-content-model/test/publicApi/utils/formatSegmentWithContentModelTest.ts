@@ -28,9 +28,6 @@ describe('formatSegmentWithContentModel', () => {
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormat = spyOn(pendingFormat, 'getPendingFormat');
 
-        setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
-        getPendingFormat = spyOn(pendingFormat, 'getPendingFormat');
-
         editor = ({
             focus,
             addUndoSnapshot,

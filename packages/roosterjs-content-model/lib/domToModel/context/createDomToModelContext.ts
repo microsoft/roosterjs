@@ -59,14 +59,6 @@ export function createDomToModelContext(
         allowCacheElement: !options?.disableCacheElement,
     };
 
-    if (options?.alwaysNormalizeTable) {
-        context.alwaysNormalizeTable = true;
-    }
-
-    if (options?.allowCacheElement) {
-        context.allowCacheElement = true;
-    }
-
     const range = options?.selectionRange;
     let selectionRoot: Node | undefined;
 

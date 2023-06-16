@@ -9,9 +9,6 @@ import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImp
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';
 
-const ANSI_SPACE = '\u0020';
-const NON_BREAK_SPACE = '\u00A0';
-
 /**
  * Apply pending format to the text user just input
  * @param editor The editor to get format from

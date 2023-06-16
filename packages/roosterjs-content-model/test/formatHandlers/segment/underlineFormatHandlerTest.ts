@@ -5,7 +5,7 @@ import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomCo
 import { UnderlineFormat } from '../../../lib/publicTypes/format/formatParts/UnderlineFormat';
 import { underlineFormatHandler } from '../../../lib/formatHandlers/segment/underlineFormatHandler';
 
-xdescribe('underlineFormatHandler.parse', () => {
+describe('underlineFormatHandler.parse', () => {
     let div: HTMLElement;
     let context: DomToModelContext;
     let format: UnderlineFormat;
@@ -82,7 +82,7 @@ xdescribe('underlineFormatHandler.parse', () => {
     });
 });
 
-xdescribe('underlineFormatHandler.apply', () => {
+describe('underlineFormatHandler.apply', () => {
     let div: HTMLElement;
     let format: UnderlineFormat;
     let context: ModelToDomContext;

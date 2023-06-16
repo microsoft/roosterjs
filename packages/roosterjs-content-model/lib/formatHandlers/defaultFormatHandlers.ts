@@ -81,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
+    textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
     underline: underlineFormatHandler,
@@ -178,39 +179,6 @@ const defaultFormatKeysPerCategory: {
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
-};
-
-const defaultFormatKeysPerCategory: {
-    [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
-} = {
-    block: ['backgroundColor', 'direction'],
-    listItem: ['listItemThread', 'listItemMetadata'],
-    listItemElement: ['direction', 'lineHeight'],
-    listLevel: ['listType', 'listLevelThread', 'listLevelMetadata', 'direction', 'margin'],
-    segment: [
-        'superOrSubScript',
-        'strike',
-        'fontFamily',
-        'fontSize',
-        'underline',
-        'italic',
-        'bold',
-        'textColor',
-        'backgroundColor',
-        'lineHeight',
-    ],
-    segmentOnBlock: ['fontFamily', 'fontSize', 'underline', 'italic', 'bold', 'textColor'],
-    tableCell: ['border', 'borderBox', 'backgroundColor', 'padding', 'direction', 'verticalAlign'],
-    table: [
-        'id',
-        'border',
-        'borderBox',
-        'tableSpacing',
-        'margin',
-        'backgroundColor',
-        'display',
-        'direction',
-    ],
 };
 
 /**

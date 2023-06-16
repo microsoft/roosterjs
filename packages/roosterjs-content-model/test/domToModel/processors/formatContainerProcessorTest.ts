@@ -210,7 +210,6 @@ describe('formatContainerProcessor', () => {
                         marginBottom: '1em',
                         marginLeft: '40px',
                         borderLeft: '1px solid black',
-                        backgroundColor: 'red',
                     },
                 },
                 { blockType: 'Paragraph', segments: [], format: {}, isImplicit: true },

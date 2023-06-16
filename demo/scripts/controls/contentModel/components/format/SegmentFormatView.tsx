@@ -15,7 +15,6 @@ import {
     UnderlineFormatRenderer,
     SuperOrSubScriptFormatRenderer,
 } from './formatPart/BasicFormatRenderers';
-import { LineHeightFormatRenderer } from './formatPart/LineHeightFormatRenderer';
 
 const SegmentFormatRenders: FormatRenderer<ContentModelSegmentFormat>[] = [
     TextColorFormatRenderer,

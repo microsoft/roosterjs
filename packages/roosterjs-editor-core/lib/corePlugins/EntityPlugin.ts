@@ -3,10 +3,6 @@ import {
     normalizeDelimitersInEditor,
 } from './utils/inlineEntityOnPluginEvent';
 import {
-    inlineEntityOnPluginEvent,
-    normalizeDelimitersInEditor,
-} from './utils/inlineEntityOnPluginEvent';
-import {
     Browser,
     commitEntity,
     getEntityFromElement,
@@ -17,8 +13,6 @@ import {
     createElement,
     addRangeToSelection,
     createRange,
-    isBlockElement,
-    getObjectKeys,
     isBlockElement,
     getObjectKeys,
 } from 'roosterjs-editor-dom';
@@ -225,14 +219,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
                 if (event?.source == ChangeSource.SetContent) {
                     this.triggerEvent(element, EntityOperation.Overwrite);
-                }
-
-                if (
-                    !shouldNormalizeDelimiters &&
-                    !element.isContentEditable &&
-                    !isBlockElement(element)
-                ) {
-                    shouldNormalizeDelimiters = true;
                 }
 
                 if (

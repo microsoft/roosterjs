@@ -64,16 +64,6 @@ export function ContentModelTableView(props: { table: ContentModelTable }) {
         );
     }, [table]);
 
-    const getMetadata = React.useCallback(() => {
-        return (
-            <MetadataView
-                model={table}
-                renderers={TableMetadataFormatRenders}
-                updater={updateTableMetadata}
-            />
-        );
-    }, [table]);
-
     return (
         <ContentModelView
             title="Table"
