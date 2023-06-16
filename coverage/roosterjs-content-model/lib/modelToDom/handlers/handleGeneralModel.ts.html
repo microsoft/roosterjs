@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>19/19</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">92.86% </span>
+                <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/14</span>
+                <span class='fraction'>12/12</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -100,15 +100,9 @@
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -139,25 +133,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">15x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">21x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
 import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
+import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
@@ -175,32 +163,26 @@ export const handleGeneralModel: ContentModelBlockHandler&lt;ContentModelGeneral
     context: ModelToDomContext,
     refNode: Node | null
 ) =&gt; {
-    let element: Node = group.element;
+    let node: Node = group.element;
 &nbsp;
-    if (refNode &amp;&amp; element.parentNode == parent) {
-        refNode = reuseCachedElement(parent, element, refNode);
+    if (refNode &amp;&amp; node.parentNode == parent) {
+        refNode = reuseCachedElement(parent, node, refNode);
     } else {
-        element = element.cloneNode();
-        group.element = element as HTMLElement;
+        node = node.cloneNode();
+        group.element = node as HTMLElement;
 &nbsp;
-        parent.insertBefore(element, refNode);
+        parent.insertBefore(node, refNode);
     }
 &nbsp;
-    if (isGeneralSegment(group) &amp;&amp; isNodeOfType(element, NodeType.Element)) {
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (!group.element.firstChild) {
-            context.regularSelection.current.segment = element;
-        }
+    if (isGeneralSegment(group) &amp;&amp; isNodeOfType(node, NodeType.Element)) {
+        const element = wrap(node, 'span');
 &nbsp;
-        const span = wrap(element, 'span');
-&nbsp;
-        applyFormat(span, context.formatAppliers.segment, group.format, context);
-&nbsp;
-        context.modelHandlers.segmentDecorator(doc, span, group, context);
+        handleSegmentCommon(doc, node, element, group, context);
+    } else {
+        context.onNodeCreated?.(group, node);
     }
 &nbsp;
-    context.modelHandlers.blockGroupChildren(doc, element, group, context);
-&nbsp;
-    context.onNodeCreated?.(group, element);
+    context.modelHandlers.blockGroupChildren(doc, node, group, context);
 &nbsp;
     return refNode;
 };
@@ -211,7 +193,7 @@ export const handleGeneralModel: ContentModelBlockHandler&lt;ContentModelGeneral
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 15 2023 21:57:27 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 16 2023 00:20:07 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
