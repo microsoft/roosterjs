@@ -1600,6 +1600,33 @@ describe('End to end test for DOM => Model', () => {
         );
     });
 
+    it('Link inside superscript', () => {
+        runTest(
+            '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { superOrSubScriptSequence: 'super' },
+                                link: {
+                                    format: { underline: true, href: 'http://www.bing.com' },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>'
+        );
+    });
+
     it('Multiple P tag with margin-left', () => {
         runTest(
             '<p style="margin-left: 40px">aaa</p><p style="margin-left: 40px">bbb</p>',

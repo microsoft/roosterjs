@@ -5,7 +5,7 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
 import { ModelToDomContext } from '../../../lib/publicTypes/context/ModelToDomContext';
 
-describe('handleSegment', () => {
+describe('handleText', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
 

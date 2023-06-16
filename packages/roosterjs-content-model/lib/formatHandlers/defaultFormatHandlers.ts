@@ -90,11 +90,14 @@ const defaultFormatHandlerMap: FormatHandlers = {
     wordBreak: wordBreakFormatHandler,
 };
 
-const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
-    'strike',
     'fontFamily',
     'fontSize',
+];
+
+const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'strike',
     'underline',
     'superOrSubScript',
     'italic',
@@ -130,9 +133,21 @@ const defaultFormatKeysPerCategory: {
         'listStylePosition',
         'backgroundColor',
     ],
-    segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
-    segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
+    styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    elementBasedSegment: elementBasedSegmentFormats,
+    segment: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColor',
+        'backgroundColor',
+        'lineHeight',
+    ],
+    segmentOnBlock: [...styleBasedSegmentFormats, ...elementBasedSegmentFormats, 'textColor'],
+    segmentOnTableCell: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColorOnTableCell',
+    ],
     tableCell: [
         'border',
         'backgroundColor',
