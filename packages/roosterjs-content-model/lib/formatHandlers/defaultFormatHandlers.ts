@@ -185,6 +185,7 @@ const defaultFormatKeysPerCategory: {
         'size',
         'textAlign',
     ],
+    segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],

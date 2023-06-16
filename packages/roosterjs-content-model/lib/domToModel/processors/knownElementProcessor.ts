@@ -67,11 +67,28 @@ export const knownElementProcessor: ElementProcessor<HTMLElement> = (group, elem
             );
         }
     } else {
-        stackFormat(context, { segment: 'shallowClone', paragraph: 'shallowClone' }, () => {
-            parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
+        stackFormat(
+            context,
+            {
+                segment: 'shallowClone',
+                paragraph: 'shallowClone',
+                link: 'cloneFormat',
+            },
+            () => {
+                parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
-            context.elementProcessors.child(group, element, context);
-        });
+                if (context.link.format.href && element.tagName != 'A') {
+                    parseFormat(
+                        element,
+                        context.formatParsers.segmentUnderLink,
+                        context.link.format,
+                        context
+                    );
+                }
+
+                context.elementProcessors.child(group, element, context);
+            }
+        );
     }
 };
 
