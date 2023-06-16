@@ -1676,4 +1676,50 @@ describe('End to end test for DOM => Model', () => {
             '<p style="margin-left: 40px;">aaa</p><p style="margin-left: 40px;">bbb</p>'
         );
     });
+
+    it('SPAN inside link with color', () => {
+        runTest(
+            '<a href="#">before<span style="color:red">test</span>after</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'before',
+                                format: {},
+                                link: {
+                                    format: { underline: true, href: '#' },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { textColor: 'red' },
+                                link: {
+                                    format: { underline: true, href: '#', textColor: 'red' },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'after',
+                                format: {},
+                                link: {
+                                    format: { underline: true, href: '#' },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<a href="#">before</a><span style="color: red;"><a href="#" style="color: red;">test</a></span><a href="#">after</a>'
+        );
+    });
 });
