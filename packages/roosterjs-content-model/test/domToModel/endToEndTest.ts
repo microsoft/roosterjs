@@ -1626,4 +1626,54 @@ describe('End to end test for DOM => Model', () => {
             '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>'
         );
     });
+
+    it('Multiple P tag with margin-left', () => {
+        runTest(
+            '<p style="margin-left: 40px">aaa</p><p style="margin-left: 40px">bbb</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '40px',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'aaa',
+                            },
+                        ],
+                        decorator: {
+                            format: {},
+                            tagName: 'p',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '40px',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'bbb',
+                            },
+                        ],
+                        decorator: {
+                            format: {},
+                            tagName: 'p',
+                        },
+                    },
+                ],
+            },
+            '<p style="margin-left: 40px;">aaa</p><p style="margin-left: 40px;">bbb</p>'
+        );
+    });
 });
