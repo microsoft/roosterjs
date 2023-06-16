@@ -217,9 +217,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             if (this.editor && !item.isDeleted && !this.editor.contains(element)) {
                 item.isDeleted = true;
 
-                if (event?.source == ChangeSource.SetContent) {
-                    this.triggerEvent(element, EntityOperation.Overwrite);
-                }
+                this.triggerEvent(element, EntityOperation.Overwrite);
 
                 if (
                     !shouldNormalizeDelimiters &&
