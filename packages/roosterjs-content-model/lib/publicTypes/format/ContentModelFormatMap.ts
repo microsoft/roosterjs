@@ -101,6 +101,11 @@ export interface ContentModelFormatMap {
     link: ContentModelHyperLinkFormat;
 
     /**
+     * Format type for segment inside link
+     */
+    segmentUnderLink: ContentModelHyperLinkFormat;
+
+    /**
      * Format type for code
      */
     code: FontFamilyFormat;
