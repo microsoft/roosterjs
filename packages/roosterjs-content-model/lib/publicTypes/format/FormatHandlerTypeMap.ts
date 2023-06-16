@@ -24,6 +24,7 @@ import { SizeFormat } from './formatParts/SizeFormat';
 import { SpacingFormat } from './formatParts/SpacingFormat';
 import { StrikeFormat } from './formatParts/StrikeFormat';
 import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
+import { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
@@ -169,6 +170,11 @@ export interface FormatHandlerTypeMap {
      * Format for SuperOrSubScriptFormat
      */
     superOrSubScript: SuperOrSubScriptFormat;
+
+    /**
+     * Format for TableLayout
+     */
+    tableLayout: TableLayoutFormat;
 
     /**
      * Format for SpacingFormat
