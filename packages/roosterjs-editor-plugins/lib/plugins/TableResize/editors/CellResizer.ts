@@ -103,10 +103,13 @@ function onDraggingHorizontal(
     const { vTable } = initValue;
 
     vTable.table.removeAttribute('height');
-    vTable.table.style.height = null;
+    vTable.table.style.setProperty('height', null);
     vTable.forEachCellOfCurrentRow(cell => {
         if (cell.td) {
-            cell.td.style.height = cell.td == td ? `${cell.height / zoomScale + deltaY}px` : null;
+            cell.td.style.setProperty(
+                'height',
+                cell.td == td ? `${(cell.height ?? 0) / zoomScale + deltaY}px` : null
+            );
         }
     });
 
@@ -135,7 +138,7 @@ function onDraggingVertical(
     const isShiftPressed = event.shiftKey;
 
     if (isLastCell || isShiftPressed) {
-        vTable.table.style.width = null;
+        vTable.table.style.setProperty('width', null);
     }
 
     const newWidthList = new Map<HTMLTableCellElement, number>();

@@ -1528,4 +1528,102 @@ describe('End to end test for DOM => Model', () => {
             '<span style="color: red;"><a style="color: red; display: block;" href="#">test</a></span>'
         );
     });
+
+    it('Segment format on block', () => {
+        runTest(
+            '<div style="font-weight: bold; font-style: italic; text-decoration: underline line-through">test</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {
+                                    strikethrough: true,
+                                    underline: true,
+                                    italic: true,
+                                    fontWeight: 'bold',
+                                },
+                            },
+                        ],
+                        format: {},
+                        segmentFormat: {
+                            strikethrough: true,
+                            underline: true,
+                            italic: true,
+                            fontWeight: 'bold',
+                        },
+                    },
+                ],
+            },
+            '<div><b><i><u><s><s>test</s></s></u></i></b></div>'
+        );
+    });
+
+    it('Segment format on block from parent', () => {
+        runTest(
+            'aaa<b>bbb<div>ccc</div>ddd</b>eeee',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'aaa', format: {} },
+                            { segmentType: 'Text', text: 'bbb', format: { fontWeight: 'bold' } },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'ccc', format: { fontWeight: 'bold' } },
+                        ],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            { segmentType: 'Text', text: 'ddd', format: { fontWeight: 'bold' } },
+                            { segmentType: 'Text', text: 'eeee', format: {} },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            'aaa<b>bbb</b><div><b>ccc</b></div><b>ddd</b>eeee'
+        );
+    });
+
+    it('Link inside superscript', () => {
+        runTest(
+            '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'www.bing.com',
+                                format: { superOrSubScriptSequence: 'super' },
+                                link: {
+                                    format: { underline: true, href: 'http://www.bing.com' },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            },
+            '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>'
+        );
+    });
 });

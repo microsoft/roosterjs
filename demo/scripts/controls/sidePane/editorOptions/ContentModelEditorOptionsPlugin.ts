@@ -1,6 +1,6 @@
 import BuildInPluginState, { BuildInPluginProps, UrlPlaceholder } from '../../BuildInPluginState';
+import ContentModelOptionsPane from './ContentModelOptionsPane';
 import getDefaultContentEditFeatureSettings from './getDefaultContentEditFeatureSettings';
-import OptionsPane from './OptionsPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
@@ -30,17 +30,19 @@ const initialState: BuildInPluginState = {
     forcePreserveRatio: false,
     experimentalFeatures: [
         ExperimentalFeatures.AutoFormatList,
+        ExperimentalFeatures.ReusableContentModel,
+        ExperimentalFeatures.EditWithContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
     ],
     isRtl: false,
 };
 
-export default class EditorOptionsPlugin extends SidePanePluginImpl<
-    OptionsPane,
+export default class ContentModelEditorOptionsPlugin extends SidePanePluginImpl<
+    ContentModelOptionsPane,
     BuildInPluginProps
 > {
     constructor() {
-        super(OptionsPane, 'options', 'Editor Options');
+        super(ContentModelOptionsPane, 'options', 'Editor Options');
     }
 
     getBuildInPluginState(): BuildInPluginState {

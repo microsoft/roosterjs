@@ -4,9 +4,9 @@ import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
-import { handleWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/handleWordDesktopPaste';
+import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 
-describe('convertPastedContentFromWord', () => {
+describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
     let fragment: DocumentFragment;
 
@@ -19,7 +19,7 @@ describe('convertPastedContentFromWord', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWordDesktop(event);
+        processPastedContentFromWordDesktop(event);
 
         const model = domToContentModel(
             fragment,
@@ -236,7 +236,6 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
@@ -271,7 +270,6 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                         ],
@@ -313,7 +311,6 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
@@ -348,13 +345,11 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                         ],
@@ -396,7 +391,6 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
@@ -431,18 +425,15 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                         ],
@@ -484,7 +475,6 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
@@ -519,18 +509,15 @@ describe('convertPastedContentFromWord', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginTop: '1em',
                                 marginBottom: undefined,
                             },
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                             {
                                 listType: 'UL',
-                                startNumberOverride: undefined,
                                 marginBottom: undefined,
                             },
                         ],
@@ -544,7 +531,6 @@ describe('convertPastedContentFromWord', () => {
                 ],
             });
         });
-
         it('Complex list inside a Table cell', () => {
             const html =
                 '<table id="t1"><td id="td1">' +
@@ -553,12 +539,10 @@ describe('convertPastedContentFromWord', () => {
                 createListElementFromWord('p', 'test2', 'l1 level2 lfo2') +
                 createListElementFromWord('p', 'test2', 'l1 level5 lfo2') +
                 '</td></table>';
-
             div = document.createElement('div');
             fragment = document.createDocumentFragment();
             div.innerHTML = html;
             moveChildNodes(fragment, div);
-
             runTest(undefined, undefined, {
                 blockGroupType: 'Document',
                 blocks: [
@@ -592,25 +576,21 @@ describe('convertPastedContentFromWord', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
@@ -620,10 +600,7 @@ describe('convertPastedContentFromWord', () => {
                                                     isSelected: true,
                                                     format: {},
                                                 },
-                                                format: {
-                                                    marginTop: '1em',
-                                                    marginBottom: '1em',
-                                                },
+                                                format: { marginTop: '1em', marginBottom: '1em' },
                                             },
                                             {
                                                 blockType: 'BlockGroup',
@@ -645,19 +622,16 @@ describe('convertPastedContentFromWord', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
@@ -667,10 +641,7 @@ describe('convertPastedContentFromWord', () => {
                                                     isSelected: true,
                                                     format: {},
                                                 },
-                                                format: {
-                                                    marginTop: '1em',
-                                                    marginBottom: '1em',
-                                                },
+                                                format: { marginTop: '1em', marginBottom: '1em' },
                                             },
                                             {
                                                 blockType: 'BlockGroup',
@@ -692,13 +663,11 @@ describe('convertPastedContentFromWord', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
@@ -708,10 +677,7 @@ describe('convertPastedContentFromWord', () => {
                                                     isSelected: true,
                                                     format: {},
                                                 },
-                                                format: {
-                                                    marginTop: '1em',
-                                                    marginBottom: '1em',
-                                                },
+                                                format: { marginTop: '1em', marginBottom: '1em' },
                                             },
                                             {
                                                 blockType: 'BlockGroup',
@@ -733,31 +699,26 @@ describe('convertPastedContentFromWord', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        startNumberOverride: undefined,
                                                         marginTop: '1em',
                                                         marginBottom: undefined,
                                                     },
@@ -767,10 +728,7 @@ describe('convertPastedContentFromWord', () => {
                                                     isSelected: true,
                                                     format: {},
                                                 },
-                                                format: {
-                                                    marginTop: '1em',
-                                                    marginBottom: '1em',
-                                                },
+                                                format: { marginTop: '1em', marginBottom: '1em' },
                                             },
                                         ],
                                         format: {},
@@ -783,9 +741,7 @@ describe('convertPastedContentFromWord', () => {
                             },
                         ],
                         dataset: {},
-                        format: {
-                            id: 't1',
-                        },
+                        format: { id: 't1' },
                         widths: [],
                     },
                 ],
@@ -851,7 +807,6 @@ describe('convertPastedContentFromWord', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
@@ -883,13 +838,11 @@ describe('convertPastedContentFromWord', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
@@ -921,19 +874,16 @@ describe('convertPastedContentFromWord', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     marginLeft: undefined,
@@ -970,26 +920,22 @@ describe('convertPastedContentFromWord', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginTop: '1em',
                                     marginBottom: undefined,
                                     marginLeft: undefined,
                                 },
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
                                     marginLeft: undefined,
                                     marginBottom: undefined,
                                 },
@@ -1000,6 +946,100 @@ describe('convertPastedContentFromWord', () => {
                                 format: {},
                             },
                             format: { marginLeft: undefined },
+                        },
+                    ],
+                }
+            );
+        });
+
+        /**
+         *  Test
+         *  1. Test
+         *  2. Test
+         */
+        it('Word doc created online but edited and copied from Desktop', () => {
+            runTest(
+                '<p class="MsoNormal"><span style="font-family:Arial,sans-serif">it went:<o:p></o:p></span></p><p class="MsoListParagraphCxSpFirst" style="text-indent:-.25in;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Arial"><span style="mso-list:Ignore">1.<span style="font:7pt "Times New Roman"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]><span style="font-family:Arial,sans-serif">Test<o:p></o:p></span></p><p class="MsoListParagraphCxSpLast" style="text-indent:-.25in;mso-list:l0 level1 lfo1"><![if !supportLists]><span style="font-family:Arial,sans-serif;mso-fareast-font-family:Arial"><span style="mso-list:Ignore">2.<span style="font:7pt "Times New Roman"">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></span></span><![endif]><span style="font-family:Arial,sans-serif">Test2<o:p></o:p></span></p>',
+                Browser.isFirefox
+                    ? '<p><span style="font-family: Arial, sans-serif;">it went:</span></p><ol style="margin-top: 1em;" start="1"><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test</span></li><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test2</span></li></ol>'
+                    : '<p><span style="font-family: Arial, sans-serif;">it went:</span></p><ol start="1" style="margin-top: 1em;"><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test</span></li><li style="margin-top: 1em; margin-bottom: 1em;"><span style="font-family: Arial, sans-serif;">Test2</span></li></ol>',
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'it went:',
+                                    format: { fontFamily: 'Arial, sans-serif' },
+                                },
+                            ],
+                            format: { marginTop: '1em', marginBottom: '1em' },
+                            decorator: { tagName: 'p', format: {} },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'Test',
+                                            format: { fontFamily: 'Arial, sans-serif' },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                    startNumberOverride: 1,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: { marginTop: '1em', marginBottom: '1em' },
+                        },
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'ListItem',
+                            blocks: [
+                                {
+                                    blockType: 'Paragraph',
+                                    segments: [
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'Test2',
+                                            format: { fontFamily: 'Arial, sans-serif' },
+                                        },
+                                    ],
+                                    format: {},
+                                    isImplicit: true,
+                                },
+                            ],
+                            levels: [
+                                {
+                                    listType: 'OL',
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
+                            ],
+                            formatHolder: {
+                                segmentType: 'SelectionMarker',
+                                isSelected: true,
+                                format: {},
+                            },
+                            format: { marginTop: '1em', marginBottom: '1em' },
                         },
                     ],
                 }

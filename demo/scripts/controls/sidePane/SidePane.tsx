@@ -1,10 +1,12 @@
 import * as React from 'react';
 import SidePanePlugin from '../SidePanePlugin';
 
-const styles = require('./SidePane.scss');
+const classicStyles = require('./SidePane.scss');
+const contentModelStyles = require('./ContentModelSidePane.scss');
 
 export interface SidePaneProps {
     plugins: SidePanePlugin[];
+    isContentModelDemo: boolean;
     className?: string;
 }
 
@@ -33,7 +35,9 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     }
 
     render() {
-        let className = (this.props.className || '') + ' ' + styles.sidePane;
+        const styles = this.getStyles();
+        const className = (this.props.className || '') + ' ' + styles.sidePane;
+
         return (
             <div className={className} ref={this.div}>
                 {this.props.plugins.map(this.renderSidePane)}
@@ -75,8 +79,10 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
     };
 
     private renderSidePane = (plugin: SidePanePlugin): JSX.Element => {
-        let title = plugin.getTitle();
-        let isCurrent = this.state.currentPane == plugin;
+        const title = plugin.getTitle();
+        const isCurrent = this.state.currentPane == plugin;
+        const styles = this.getStyles();
+
         return (
             <div key={title} className={isCurrent ? styles.activePane : styles.inactivePane}>
                 <div className={styles.title} onClick={() => this.updateHash(plugin.getName())}>
@@ -88,4 +94,8 @@ export default class SidePane extends React.Component<SidePaneProps, SidePaneSta
             </div>
         );
     };
+
+    private getStyles() {
+        return this.props.isContentModelDemo ? contentModelStyles : classicStyles;
+    }
 }
