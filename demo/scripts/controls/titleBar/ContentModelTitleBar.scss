@@ -1,0 +1,58 @@
+@import '../theme//contentModelEditorTheme.scss';
+
+.titleBar {
+    display: flex;
+    background-color: $primaryColor;
+    padding: 5px 10px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.title {
+    flex: 0 0 auto;
+    font-size: 24pt;
+    font-family: Arial;
+    font-weight: bold;
+    font-style: italic;
+    color: white;
+    text-shadow: 2px 2px 2px black;
+}
+
+.version {
+    flex: 1 1 auto;
+    color: white;
+    font-family: Calibri;
+    font-size: 14pt;
+    margin: 10px 0 0 10px;
+}
+
+.links {
+    color: white;
+    flex: 0 0 auto;
+    text-align: right;
+    font-size: 14pt;
+    font-family: Calibri;
+}
+
+.link {
+    color: white;
+    text-decoration: none;
+    &:hover {
+        text-decoration: underline;
+    }
+}
+
+.externalLink {
+    vertical-align: middle;
+}
+
+@media (prefers-color-scheme: dark) {
+    .titleBar {
+        background-color: $primaryColorDark;
+    }
+    .title,
+    .link {
+        color: #bbd1e1;
+    }
+}

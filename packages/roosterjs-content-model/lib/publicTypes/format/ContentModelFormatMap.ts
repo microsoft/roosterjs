@@ -21,6 +21,16 @@ export interface ContentModelFormatMap {
     block: ContentModelBlockFormat;
 
     /**
+     * Format type for style based segment format
+     */
+    styleBasedSegment: ContentModelSegmentFormat;
+
+    /**
+     * Format type for element based segment format
+     */
+    elementBasedSegment: ContentModelSegmentFormat;
+
+    /**
      * Format type for segment
      */
     segment: ContentModelSegmentFormat;
@@ -89,6 +99,11 @@ export interface ContentModelFormatMap {
      * Format type for link
      */
     link: ContentModelHyperLinkFormat;
+
+    /**
+     * Format type for segment inside link
+     */
+    segmentUnderLink: ContentModelHyperLinkFormat;
 
     /**
      * Format type for code

@@ -41,17 +41,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
             parent.insertBefore(container, refNode);
 
-            if (needParagraphWrapper) {
-                applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
-                applyFormat(
-                    container,
-                    context.formatAppliers.segmentOnBlock,
-                    formatOnWrapper,
-                    context
-                );
-            }
-
             context.regularSelection.current = {
                 block: needParagraphWrapper ? container : container.parentNode,
                 segment: null,
@@ -87,6 +76,15 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
 
             if (needParagraphWrapper) {
                 stackFormat(context, formatOnWrapper, handleSegments);
+
+                applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+                applyFormat(
+                    container,
+                    context.formatAppliers.segmentOnBlock,
+                    formatOnWrapper,
+                    context
+                );
             } else {
                 handleSegments();
             }

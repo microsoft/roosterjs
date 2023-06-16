@@ -29,6 +29,7 @@ import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
+import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
+    tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
@@ -90,11 +92,14 @@ const defaultFormatHandlerMap: FormatHandlers = {
     wordBreak: wordBreakFormatHandler,
 };
 
-const sharedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+const styleBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
     'letterSpacing',
-    'strike',
     'fontFamily',
     'fontSize',
+];
+
+const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
+    'strike',
     'underline',
     'superOrSubScript',
     'italic',
@@ -128,10 +133,23 @@ const defaultFormatKeysPerCategory: {
         'margin',
         'padding',
         'listStylePosition',
+        'backgroundColor',
     ],
-    segment: [...sharedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
-    segmentOnBlock: [...sharedSegmentFormats, 'textColor'],
-    segmentOnTableCell: [...sharedSegmentFormats, 'textColorOnTableCell'],
+    styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
+    elementBasedSegment: elementBasedSegmentFormats,
+    segment: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColor',
+        'backgroundColor',
+        'lineHeight',
+    ],
+    segmentOnBlock: [...styleBasedSegmentFormats, ...elementBasedSegmentFormats, 'textColor'],
+    segmentOnTableCell: [
+        ...styleBasedSegmentFormats,
+        ...elementBasedSegmentFormats,
+        'textColorOnTableCell',
+    ],
     tableCell: [
         'border',
         'backgroundColor',
@@ -142,7 +160,16 @@ const defaultFormatKeysPerCategory: {
         'htmlAlign',
     ],
     tableRow: ['backgroundColor'],
-    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin', 'size'],
+    table: [
+        'id',
+        'border',
+        'backgroundColor',
+        'display',
+        'htmlAlign',
+        'margin',
+        'size',
+        'tableLayout',
+    ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
@@ -158,6 +185,7 @@ const defaultFormatKeysPerCategory: {
         'size',
         'textAlign',
     ],
+    segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],

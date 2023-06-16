@@ -70,6 +70,35 @@ describe('stackFormat', () => {
         });
     });
 
+    it('Clone format for link', () => {
+        const context = createDomToModelContext();
+
+        context.link.format.textColor = 'red';
+        context.link.format.underline = true;
+        context.link.dataset = { a: 'b' };
+
+        stackFormat(context, { link: 'cloneFormat' }, () => {
+            expect(context.link).toEqual({
+                format: {
+                    underline: true,
+                    textColor: 'red',
+                },
+                dataset: { a: 'b' },
+            });
+
+            context.link.format.textColor = 'green';
+            context.link.dataset.a = 'c';
+        });
+
+        expect(context.link).toEqual({
+            format: {
+                textColor: 'red',
+                underline: true,
+            },
+            dataset: { a: 'c' },
+        });
+    });
+
     it('use default style for code', () => {
         const context = createDomToModelContext();
 

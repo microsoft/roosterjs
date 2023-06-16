@@ -3,12 +3,18 @@ import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModel
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getObjectKeys, isBlockElement, isCharacterValue, Position } from 'roosterjs-editor-dom';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { normalizeContentModel } from '../../modelApi/common/normalizeContentModel';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     EntityOperationEvent,
@@ -19,7 +25,6 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
-    PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
@@ -87,7 +92,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event);
+                    this.handleKeyDownEvent(this.editor, event.rawEvent);
                     break;
 
                 case PluginEventType.ContentChanged:
@@ -107,21 +112,32 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
-        if (!this.editWithContentModel || event.rawEvent.defaultPrevented) {
+    private handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+        const which = rawEvent.which;
+
+        if (!this.editWithContentModel || rawEvent.defaultPrevented) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else if (!event.rawEvent.defaultPrevented) {
+        } else if (!rawEvent.defaultPrevented) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
-            switch (event.rawEvent.which) {
+            switch (which) {
                 case Keys.BACKSPACE:
                 case Keys.DELETE:
-                    handleKeyDownEvent(editor, event.rawEvent, this.triggeredEntityEvents);
+                    const rangeEx = editor.getSelectionRangeEx();
+                    const range =
+                        rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
+
+                    if (this.shouldDeleteWithContentModel(range, rawEvent)) {
+                        handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
+                    } else {
+                        editor.cacheContentModel(null);
+                    }
+
                     break;
 
                 default:
                     if (
-                        (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey) &&
+                        (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) &&
                         this.hasDefaultFormat
                     ) {
                         this.tryApplyDefaultFormat(editor);
@@ -222,5 +238,29 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         };
 
         setPendingFormat(editor, newFormat, startPos);
+    }
+
+    private shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEvent) {
+        return !(
+            range?.collapsed &&
+            range.startContainer.nodeType == NodeType.Text &&
+            !isModifierKey(rawEvent) &&
+            (this.canDeleteBefore(rawEvent, range) || this.canDeleteAfter(rawEvent, range))
+        );
+    }
+
+    private canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.BACKSPACE &&
+            (range.startOffset > 1 || range.startContainer.previousSibling)
+        );
+    }
+
+    private canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
+        return (
+            rawEvent.which == Keys.DELETE &&
+            (range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1 ||
+                range.startContainer.nextSibling)
+        );
     }
 }

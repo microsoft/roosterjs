@@ -88,6 +88,7 @@ export { DatasetFormat } from './format/formatParts/DatasetFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
 export { WordBreakFormat } from './format/formatParts/WordBreakFormat';
 export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
+export { TableLayoutFormat } from './format/formatParts/TableLayoutFormat';
 
 export { ContentModelFormatMap } from './format/ContentModelFormatMap';
 

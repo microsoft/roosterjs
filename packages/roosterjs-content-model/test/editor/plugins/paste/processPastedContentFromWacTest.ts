@@ -2,13 +2,13 @@ import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
 import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from '../../../../lib/publicTypes';
-import { createBeforePasteEventMock } from './wordDesktopTest';
-import { handleWacComponentsPaste } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/handleWacComponentsPaste';
+import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
+import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
 
-describe('Wac Test', () => {
+describe('processPastedContentFromWacTest', () => {
     function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
@@ -18,7 +18,7 @@ describe('Wac Test', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWacComponentsPaste(event);
+        processPastedContentWacComponents(event);
 
         const model = domToContentModel(
             fragment,
@@ -129,7 +129,7 @@ describe('wordOnlineHandler', () => {
             moveChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
-        handleWacComponentsPaste(event);
+        processPastedContentWacComponents(event);
 
         const model = domToContentModel(
             fragment,
@@ -1459,6 +1459,23 @@ describe('wordOnlineHandler', () => {
                     },
                 ],
             }
+        );
+    });
+
+    /**
+     * Text
+     * 1. List with inline block temp marker
+     * 2. List with inline block temp marker
+     *
+     * Result
+     * Test
+     * 1.
+     * 2.
+     */
+    it('Remove temp marker from Word Online', () => {
+        runTest(
+            '<div class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1448465497" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{224}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">it went:&nbsp;</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="1"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1079168982" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{230}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8"><span class="NormalTextRun SCXW152957598 BCX8">Test</span></span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"><span class="ListMarker BCX8 SCXW152957598"></span></span></li></ol></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="2"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="500697608" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{239}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">Test.</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"></span></li><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><div><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}"><br></span></div></li></ol></div>',
+            '<p>it went:&nbsp;&nbsp;</p><ol start="1"><li><p>Test</p></li><li><p>Test.&nbsp;</p></li><li><div><br></div></li></ol>'
         );
     });
 });

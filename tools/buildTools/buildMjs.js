@@ -18,7 +18,7 @@ function buildMjs() {
         typescriptPath +
             ` -p ${path.join(
                 packagesPath,
-                'tsconfig.build.json'
+                'tsconfig.json'
             )} -t es5 --moduleResolution node -m esnext`,
         packagesPath
     );
