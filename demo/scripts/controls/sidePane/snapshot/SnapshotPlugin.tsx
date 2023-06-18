@@ -85,12 +85,8 @@ export default class SnapshotPlugin implements SidePanePlugin {
         this.editorInstance.focus();
         this.editorInstance.setContent(
             this.component.snapshotToString(snapshot),
-            false /*triggerContentChangedEvent*/
+            triggerContentChangedEvent
         );
-
-        if (triggerContentChangedEvent) {
-            this.editorInstance.triggerContentChangedEvent(ChangeSource.SetContent);
-        }
     };
 
     private updateSnapshots = () => {
