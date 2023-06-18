@@ -5,7 +5,7 @@ const styles = require('./SnapshotPane.scss');
 
 export interface SnapshotPaneProps {
     onTakeSnapshot: () => Snapshot;
-    onRestoreSnapshot: (snapshot: Snapshot) => void;
+    onRestoreSnapshot: (snapshot: Snapshot, triggerContentChangedEvent: boolean) => void;
     onMove: (moveStep: number) => void;
 }
 
@@ -40,11 +40,14 @@ export default class SnapshotPane extends React.Component<SnapshotPaneProps, Sna
                     <button onClick={this.takeSnapshot}>{'Take snapshot'}</button>{' '}
                     <button
                         onClick={() =>
-                            this.props.onRestoreSnapshot({
-                                html: this.textarea.value,
-                                metadata: null,
-                                knownColors: [],
-                            })
+                            this.props.onRestoreSnapshot(
+                                {
+                                    html: this.textarea.value,
+                                    metadata: null,
+                                    knownColors: [],
+                                },
+                                true
+                            )
                         }>
                         {'Restore snapshot'}
                     </button>
