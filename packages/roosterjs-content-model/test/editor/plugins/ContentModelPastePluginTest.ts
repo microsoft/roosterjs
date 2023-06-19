@@ -72,6 +72,12 @@ describe('Paste', () => {
             expect(event.domToModelOption.processorOverride?.element).toBe(
                 WordDesktopFile.wordDesktopElementProcessor
             );
+            expect(event.domToModelOption.additionalFormatParsers?.segment).toContain(
+                deprecatedColorParser
+            );
+            expect(event.domToModelOption.additionalFormatParsers?.segmentOnBlock).toContain(
+                deprecatedColorParser
+            );
         });
 
         it('Default', () => {
@@ -84,6 +90,12 @@ describe('Paste', () => {
 
             expect(WordDesktopFile.processPastedContentFromWordDesktop).not.toHaveBeenCalled();
             expect(event.domToModelOption.processorOverride?.element).toBeUndefined();
+            expect(event.domToModelOption.additionalFormatParsers?.segment).toContain(
+                deprecatedColorParser
+            );
+            expect(event.domToModelOption.additionalFormatParsers?.segmentOnBlock).toContain(
+                deprecatedColorParser
+            );
         });
     });
 });
