@@ -64,7 +64,6 @@ const REMOVE_ENTITY_OPERATIONS: (EntityOperation | CompatibleEntityOperation)[] 
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor | null = null;
     private state: EntityPluginState;
-    private cancelAsyncRun: (() => void) | null = null;
 
     /**
      * Construct a new instance of EntityPlugin
@@ -217,9 +216,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             if (this.editor && !item.isDeleted && !this.editor.contains(element)) {
                 item.isDeleted = true;
 
-                if (event?.source == ChangeSource.SetContent) {
-                    this.triggerEvent(element, EntityOperation.Overwrite);
-                }
+                this.triggerEvent(element, EntityOperation.Overwrite);
 
                 if (
                     !shouldNormalizeDelimiters &&
@@ -260,11 +257,11 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
 
     private handleEntityOperationEvent(event: EntityOperationEvent) {
         if (this.editor && REMOVE_ENTITY_OPERATIONS.indexOf(event.operation) >= 0) {
-            this.cancelAsyncRun?.();
-            this.cancelAsyncRun = this.editor.runAsync(() => {
-                this.cancelAsyncRun = null;
-                this.handleContentChangedEvent();
-            });
+            const item = this.state.entityMap[event.entity.id];
+
+            if (item) {
+                item.isDeleted = true;
+            }
         }
     }
 

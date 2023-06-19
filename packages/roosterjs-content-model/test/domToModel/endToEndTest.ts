@@ -1626,4 +1626,100 @@ describe('End to end test for DOM => Model', () => {
             '<div><sup><a href="http://www.bing.com">www.bing.com</a></sup></div>'
         );
     });
+
+    it('Multiple P tag with margin-left', () => {
+        runTest(
+            '<p style="margin-left: 40px">aaa</p><p style="margin-left: 40px">bbb</p>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '40px',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'aaa',
+                            },
+                        ],
+                        decorator: {
+                            format: {},
+                            tagName: 'p',
+                        },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        format: {
+                            marginLeft: '40px',
+                            marginTop: '1em',
+                            marginBottom: '1em',
+                        },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                format: {},
+                                text: 'bbb',
+                            },
+                        ],
+                        decorator: {
+                            format: {},
+                            tagName: 'p',
+                        },
+                    },
+                ],
+            },
+            '<p style="margin-left: 40px;">aaa</p><p style="margin-left: 40px;">bbb</p>'
+        );
+    });
+
+    it('SPAN inside link with color', () => {
+        runTest(
+            '<a href="#">before<span style="color:red">test</span>after</a>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'before',
+                                format: {},
+                                link: {
+                                    format: { underline: true, href: '#' },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { textColor: 'red' },
+                                link: {
+                                    format: { underline: true, href: '#', textColor: 'red' },
+                                    dataset: {},
+                                },
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'after',
+                                format: {},
+                                link: {
+                                    format: { underline: true, href: '#' },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                        isImplicit: true,
+                    },
+                ],
+            },
+            '<a href="#">before</a><span style="color: red;"><a href="#" style="color: red;">test</a></span><a href="#">after</a>'
+        );
+    });
 });
