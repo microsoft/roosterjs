@@ -11,16 +11,20 @@ import { stackFormat } from '../utils/stackFormat';
  * @internal
  */
 export const pProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
-    stackFormat(context, { blockDecorator: 'empty' }, () => {
-        context.blockDecorator = createParagraphDecorator(element.tagName);
+    stackFormat(
+        context,
+        { blockDecorator: 'empty', segment: 'shallowCloneForBlock', paragraph: 'shallowClone' },
+        () => {
+            context.blockDecorator = createParagraphDecorator(element.tagName);
 
-        const segmentFormat: ContentModelSegmentFormat = {};
+            const segmentFormat: ContentModelSegmentFormat = {};
 
-        parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
-        Object.assign(context.segmentFormat, segmentFormat);
+            parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
+            Object.assign(context.segmentFormat, segmentFormat);
 
-        blockProcessor(group, element, context, segmentFormat);
-    });
+            blockProcessor(group, element, context, segmentFormat);
+        }
+    );
 
     addBlock(group, createParagraph(true /*isImplicit*/, context.blockFormat));
 };

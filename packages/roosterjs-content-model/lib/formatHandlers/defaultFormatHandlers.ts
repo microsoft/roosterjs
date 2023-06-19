@@ -29,6 +29,7 @@ import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
+import { tableLayoutFormatHandler } from './table/tableLayoutFormatHandler';
 import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
@@ -80,6 +81,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     size: sizeFormatHandler,
     strike: strikeFormatHandler,
     superOrSubScript: superOrSubScriptFormatHandler,
+    tableLayout: tableLayoutFormatHandler,
     tableSpacing: tableSpacingFormatHandler,
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
@@ -159,7 +161,16 @@ const defaultFormatKeysPerCategory: {
         'size',
     ],
     tableRow: ['backgroundColor'],
-    table: ['id', 'border', 'backgroundColor', 'display', 'htmlAlign', 'margin', 'size'],
+    table: [
+        'id',
+        'border',
+        'backgroundColor',
+        'display',
+        'htmlAlign',
+        'margin',
+        'size',
+        'tableLayout',
+    ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
     image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
@@ -175,6 +186,7 @@ const defaultFormatKeysPerCategory: {
         'size',
         'textAlign',
     ],
+    segmentUnderLink: ['textColor'],
     code: ['fontFamily', 'display'],
     dataset: ['dataset'],
     divider: [...sharedBlockFormats, ...sharedContainerFormats, 'display', 'size', 'htmlAlign'],

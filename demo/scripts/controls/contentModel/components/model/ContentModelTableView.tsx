@@ -11,6 +11,7 @@ import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
+import { TableLayoutFormatRenderer } from '../format/formatPart/TableLayoutFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
 import { updateTableMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
@@ -30,6 +31,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     ...BorderFormatRenderers,
     BorderBoxFormatRenderer,
     DisplayFormatRenderer,
+    TableLayoutFormatRenderer,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {
