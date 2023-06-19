@@ -2,8 +2,8 @@ import * as React from 'react';
 import SidePanePlugin from '../../SidePanePlugin';
 import SnapshotPane from './SnapshotPane';
 import UndoSnapshots from './UndoSnapshots';
-import { ChangeSource, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { createSnapshots } from 'roosterjs-editor-dom';
+import { IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { Snapshot } from 'roosterjs-editor-types';
 
 export default class SnapshotPlugin implements SidePanePlugin {
@@ -78,16 +78,15 @@ export default class SnapshotPlugin implements SidePanePlugin {
 
     private onMove = (step: number) => {
         const snapshot = this.snapshotService.move(step);
-        this.onRestoreSnapshot(snapshot);
+        this.onRestoreSnapshot(snapshot, false);
     };
 
-    private onRestoreSnapshot = (snapshot: Snapshot) => {
+    private onRestoreSnapshot = (snapshot: Snapshot, triggerContentChangedEvent: boolean) => {
         this.editorInstance.focus();
         this.editorInstance.setContent(
             this.component.snapshotToString(snapshot),
-            false /*triggerContentChangedEvent*/
+            triggerContentChangedEvent
         );
-        this.editorInstance.triggerContentChangedEvent(ChangeSource.SetContent);
     };
 
     private updateSnapshots = () => {
