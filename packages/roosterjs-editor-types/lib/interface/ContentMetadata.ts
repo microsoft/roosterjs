@@ -6,8 +6,15 @@ import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
  * Common part of NormalContentMetadata and TableContentMetadata
  */
 export interface ContentMetadataBase<T extends SelectionRangeTypes> {
-    isDarkMode: boolean;
+    /**
+     * Type of this metadata
+     */
     type: T;
+
+    /**
+     * @deprecated
+     */
+    isDarkMode?: boolean;
 }
 
 /**

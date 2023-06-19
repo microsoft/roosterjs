@@ -1,10 +1,4 @@
-import {
-    ColorTransformDirection,
-    EditorCore,
-    GetContent,
-    GetContentMode,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { EditorCore, GetContent, GetContentMode, PluginEventType } from 'roosterjs-editor-types';
 import {
     createRange,
     getHtmlWithSelectionPath,
@@ -28,6 +22,8 @@ export const getContent: GetContent = (
     let content: string | null = '';
     const triggerExtractContentEvent = mode == GetContentMode.CleanHTML;
     const includeSelectionMarker = mode == GetContentMode.RawHTMLWithSelection;
+    const keepColorFormat =
+        mode == GetContentMode.RawHTMLOnly || mode == GetContentMode.RawHTMLWithSelection;
 
     // When there is fragment for shadow edit, always use the cached fragment as document since HTML node in editor
     // has been changed by uncommitted shadow edit which should be ignored.
@@ -51,15 +47,13 @@ export const getContent: GetContent = (
             : null;
         const range = path && createRange(clonedRoot, path.start, path.end);
 
-        core.api.transformColor(
-            core,
-            clonedRoot,
-            false /*includeSelf*/,
-            null /*callback*/,
-            ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            core.lifecycle.isDarkMode
-        );
+        if (!keepColorFormat) {
+            core.darkColorHandler.transformColors(
+                clonedRoot,
+                true /*isCleaningUp*/,
+                false /*includeSelf*/
+            );
+        }
 
         if (triggerExtractContentEvent) {
             core.api.triggerEvent(

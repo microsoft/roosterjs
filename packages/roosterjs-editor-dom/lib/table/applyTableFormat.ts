@@ -24,7 +24,7 @@ export default function applyTableFormat(
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
     setCellColor(cells, format, darkColorHandler);
-    setFirstColumnFormat(cells, format);
+    setFirstColumnFormat(cells, format, darkColorHandler);
     setHeaderRowFormat(cells, format, darkColorHandler);
 }
 
@@ -273,7 +273,11 @@ function setBordersType(cells: VCell[][], format: TableFormat) {
  * @param format
  * @returns
  */
-function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
+function setFirstColumnFormat(
+    cells: VCell[][],
+    format: Partial<TableFormat>,
+    darkColorHandler?: DarkColorHandler | null
+) {
     if (!format.hasFirstColumn) {
         cells.forEach(row => {
             row.forEach((cell, cellIndex) => {
@@ -298,7 +302,8 @@ function setFirstColumnFormat(cells: VCell[][], format: Partial<TableFormat>) {
                         TRANSPARENT,
                         true /** isBackgroundColor*/,
                         undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */
+                        true /** shouldAdaptFontColor */,
+                        darkColorHandler
                     );
                 }
                 if (rowIndex !== cells.length - 1 && rowIndex !== 0) {

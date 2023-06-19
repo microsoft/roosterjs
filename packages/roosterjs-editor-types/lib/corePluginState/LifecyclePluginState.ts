@@ -29,9 +29,10 @@ export default interface LifecyclePluginState {
     getDarkColor: (lightColor: string) => string;
 
     /**
+     * @deprecated
      * External content transform function to help do color transform for existing content
      */
-    onExternalContentTransform: ((htmlIn: HTMLElement) => void) | null;
+    onExternalContentTransform?: ((htmlIn: HTMLElement) => void) | null;
 
     /**
      * Enabled experimental features

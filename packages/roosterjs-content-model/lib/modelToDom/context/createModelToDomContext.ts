@@ -20,9 +20,7 @@ export function createModelToDomContext(
     options = options || {};
 
     return {
-        ...(editorContext || {
-            isDarkMode: false,
-        }),
+        ...editorContext,
         regularSelection: {
             current: {
                 block: null,

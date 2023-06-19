@@ -34,14 +34,8 @@ const COMMANDS: Record<string, string> = Browser.isFirefox
     : {};
 
 const DARK_MODE_DEFAULT_FORMAT = {
-    backgroundColors: {
-        darkModeColor: 'rgb(51,51,51)',
-        lightModeColor: 'rgb(255,255,255)',
-    },
-    textColors: {
-        darkModeColor: 'rgb(255,255,255)',
-        lightModeColor: 'rgb(0,0,0)',
-    },
+    backgroundColors: '#FFFFFF',
+    textColors: '#000000',
 };
 
 /**
@@ -54,7 +48,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
     private initialContent: string;
     private initializer: (() => void) | null = null;
     private disposer: (() => void) | null = null;
-    private adjustColor: () => void;
+    private adjustColor: (() => void) | null = null;
 
     /**
      * Construct a new instance of LifecyclePlugin
@@ -77,29 +71,30 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
                 contentDiv.removeAttribute(CONTENT_EDITABLE_ATTRIBUTE_NAME);
             };
         }
-        this.adjustColor = options.doNotAdjustEditorColor
-            ? () => {}
-            : () => {
-                  const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
-                  const { isDarkMode } = this.state;
-                  const darkColorHandler = this.editor?.getDarkColorHandler();
-                  setColor(
-                      contentDiv,
-                      textColors,
-                      false /*isBackground*/,
-                      isDarkMode,
-                      false /*shouldAdaptFontColor*/,
-                      darkColorHandler
-                  );
-                  setColor(
-                      contentDiv,
-                      backgroundColors,
-                      true /*isBackground*/,
-                      isDarkMode,
-                      false /*shouldAdaptFontColor*/,
-                      darkColorHandler
-                  );
-              };
+
+        if (!options.doNotAdjustEditorColor) {
+            this.adjustColor = () => {
+                const { textColors, backgroundColors } = DARK_MODE_DEFAULT_FORMAT;
+                const { isDarkMode } = this.state;
+                const darkColorHandler = this.editor?.getDarkColorHandler();
+                setColor(
+                    contentDiv,
+                    textColors,
+                    false /*isBackground*/,
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
+                );
+                setColor(
+                    contentDiv,
+                    backgroundColors,
+                    true /*isBackground*/,
+                    isDarkMode,
+                    false /*shouldAdaptFontColor*/,
+                    darkColorHandler
+                );
+            };
+        }
 
         const getDarkColor = options.getDarkColor ?? ((color: string) => color);
         const defaultFormat = options.defaultFormat ? { ...options.defaultFormat } : null;
@@ -127,7 +122,6 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             defaultFormat,
             isDarkMode: !!options.inDarkMode,
             getDarkColor,
-            onExternalContentTransform: options.onExternalContentTransform ?? null,
             experimentalFeatures: options.experimentalFeatures || [],
             shadowEditFragment: null,
             shadowEditEntities: null,
@@ -158,7 +152,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
         this.initializer?.();
 
         // Set editor background color for dark mode
-        this.adjustColor();
+        this.adjustColor?.();
 
         // Do proper change for browsers to disable some browser-specified behaviors.
         this.adjustBrowserBehavior();
@@ -183,11 +177,10 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             delete this.state.customData[key];
         });
 
-        if (this.disposer) {
-            this.disposer();
-            this.disposer = null;
-            this.initializer = null;
-        }
+        this.disposer?.();
+        this.disposer = null;
+        this.initializer = null;
+        this.adjustColor = null;
 
         this.editor = null;
     }
@@ -205,12 +198,14 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
      */
     onPluginEvent(event: PluginEvent) {
         if (
+            this.editor &&
             event.eventType == PluginEventType.ContentChanged &&
             (event.source == ChangeSource.SwitchToDarkMode ||
                 event.source == ChangeSource.SwitchToLightMode)
         ) {
+            // TODO: this.state.isDarkMode is not required any more, we can remove it in next major release
             this.state.isDarkMode = event.source == ChangeSource.SwitchToDarkMode;
-            this.adjustColor();
+            this.editor.getDarkColorHandler().isDarkMode = this.state.isDarkMode;
         }
     }
 

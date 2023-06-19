@@ -67,8 +67,6 @@ export default function paste(
     const pasteModel = domToContentModel(
         fragment,
         {
-            isDarkMode: editor.isDarkMode(),
-            darkColorHandler: editor.getDarkColorHandler(),
             defaultFormat: editor.getDefaultFormat(),
         },
         {

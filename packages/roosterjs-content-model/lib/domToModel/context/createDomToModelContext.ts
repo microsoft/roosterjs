@@ -14,9 +14,7 @@ export function createDomToModelContext(
     options?: DomToModelOption
 ): DomToModelContext {
     const context: DomToModelContext = {
-        ...(editorContext || {
-            isDarkMode: false,
-        }),
+        ...editorContext,
 
         blockFormat: {},
         segmentFormat: {},

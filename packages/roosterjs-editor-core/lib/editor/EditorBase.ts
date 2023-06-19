@@ -869,19 +869,6 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         if (isDarkMode == !!nextDarkMode) {
             return;
         }
-        const core = this.getCore();
-
-        core.api.transformColor(
-            core,
-            core.contentDiv,
-            false /*includeSelf*/,
-            null /*callback*/,
-            nextDarkMode
-                ? ColorTransformDirection.LightToDark
-                : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            isDarkMode
-        );
 
         this.triggerContentChangedEvent(
             nextDarkMode ? ChangeSource.SwitchToDarkMode : ChangeSource.SwitchToLightMode

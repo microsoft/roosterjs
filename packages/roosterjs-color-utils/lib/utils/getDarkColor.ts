@@ -11,15 +11,22 @@ export default function getDarkColor(
     color: string,
     baseLValue: number = DefaultBaseLValue
 ): string {
-    try {
-        const computedColor = Color(color || undefined);
-        const colorLab = computedColor.lab().array();
-        const newLValue = (100 - colorLab[0]) * ((100 - baseLValue) / 100) + baseLValue;
-        color = Color.lab(newLValue, colorLab[1], colorLab[2])
-            .rgb()
-            .alpha(computedColor.alpha())
-            .toString();
-    } catch {}
+    const computedColor = getRgbColor(color);
+    const colorLab = computedColor.lab().array();
+    const newLValue = (100 - colorLab[0]) * ((100 - baseLValue) / 100) + baseLValue;
+    color = Color.lab(newLValue, colorLab[1], colorLab[2])
+        .rgb()
+        .alpha(computedColor.alpha())
+        .toString();
 
     return color;
+}
+
+function getRgbColor(color: string): Color {
+    try {
+        return Color(color || undefined);
+    } catch {
+        // For unrecognized color, always treat it as black since browser will also render it as black
+        return Color('#000000');
+    }
 }

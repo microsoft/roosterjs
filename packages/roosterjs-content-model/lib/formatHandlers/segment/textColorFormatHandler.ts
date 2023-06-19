@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { getColor, setColor } from '../utils/color';
+import { getColor, setColor } from 'roosterjs-editor-dom';
 import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorFormat';
 
 /**
@@ -8,12 +8,8 @@ import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorF
 export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const textColor =
-            getColor(
-                element,
-                false /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
-            ) || defaultStyle.color;
+            getColor(element, false /*isBackground*/, context.darkColorHandler) ||
+            defaultStyle.color;
 
         if (textColor && textColor != 'inherit') {
             format.textColor = textColor;
@@ -27,8 +23,9 @@ export const textColorFormatHandler: FormatHandler<TextColorFormat> = {
                 element,
                 format.textColor,
                 false /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
+                false /*isDarkModel*/,
+                false /*adjustTextColor*/,
+                context.darkColorHandler
             );
         }
     },

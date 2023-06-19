@@ -6,7 +6,6 @@ import {
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
-    ColorTransformDirection,
     ContentMetadata,
     EditorCore,
     PluginEventType,
@@ -30,7 +29,6 @@ export const setContent: SetContent = (
     triggerContentChangedEvent: boolean,
     metadata?: ContentMetadata
 ) => {
-    let contentChanged = false;
     if (core.contentDiv.innerHTML != content) {
         core.api.triggerEvent(
             core,
@@ -53,33 +51,23 @@ export const setContent: SetContent = (
         const metadataFromContent = extractContentMetadata(core.contentDiv);
         metadata = metadata || metadataFromContent;
         selectContentMetadata(core, metadata);
-        contentChanged = true;
-    }
 
-    const isDarkMode = core.lifecycle.isDarkMode;
-
-    if ((!metadata && isDarkMode) || (metadata && !!metadata.isDarkMode != !!isDarkMode)) {
-        core.api.transformColor(
-            core,
+        core.darkColorHandler.transformColors(
             core.contentDiv,
-            false /*includeSelf*/,
-            null /*callback*/,
-            isDarkMode ? ColorTransformDirection.LightToDark : ColorTransformDirection.DarkToLight,
-            true /*forceTransform*/,
-            metadata?.isDarkMode
+            false /*isCleaningUpp*/,
+            false /*includeSelf*/
         );
-        contentChanged = true;
-    }
 
-    if (triggerContentChangedEvent && contentChanged) {
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.ContentChanged,
-                source: ChangeSource.SetContent,
-            },
-            false /*broadcast*/
-        );
+        if (triggerContentChangedEvent) {
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.ContentChanged,
+                    source: ChangeSource.SetContent,
+                },
+                false /*broadcast*/
+            );
+        }
     }
 };
 

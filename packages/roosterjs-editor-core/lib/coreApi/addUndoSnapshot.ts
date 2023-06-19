@@ -91,14 +91,12 @@ function addUndoSnapshotInternal(
 ) {
     if (!core.lifecycle.shadowEditFragment) {
         const rangeEx = core.api.getSelectionRangeEx(core);
-        const isDarkMode = core.lifecycle.isDarkMode;
-        const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;
+        const metadata = createContentMetadata(core.contentDiv, rangeEx) || null;
 
         core.undo.snapshotsService.addSnapshot(
             {
                 html: core.contentDiv.innerHTML,
                 metadata,
-                knownColors: core.darkColorHandler?.getKnownColorsCopy() || [],
                 entityStates,
             },
             canUndoByBackspace
@@ -109,27 +107,23 @@ function addUndoSnapshotInternal(
 
 function createContentMetadata(
     root: HTMLElement,
-    rangeEx: SelectionRangeEx,
-    isDarkMode: boolean
+    rangeEx: SelectionRangeEx
 ): ContentMetadata | undefined {
     switch (rangeEx?.type) {
         case SelectionRangeTypes.TableSelection:
             return {
                 type: SelectionRangeTypes.TableSelection,
                 tableId: rangeEx.table.id,
-                isDarkMode: !!isDarkMode,
                 ...rangeEx.coordinates!,
             };
         case SelectionRangeTypes.ImageSelection:
             return {
                 type: SelectionRangeTypes.ImageSelection,
                 imageId: rangeEx.image.id,
-                isDarkMode: !!isDarkMode,
             };
         case SelectionRangeTypes.Normal:
             return {
                 type: SelectionRangeTypes.Normal,
-                isDarkMode: !!isDarkMode,
                 start: [],
                 end: [],
                 ...(getSelectionPath(root, rangeEx.ranges[0]) || {}),

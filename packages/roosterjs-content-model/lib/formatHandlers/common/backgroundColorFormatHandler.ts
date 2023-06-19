@@ -1,6 +1,6 @@
 import { BackgroundColorFormat } from '../../publicTypes/format/formatParts/BackgroundColorFormat';
 import { FormatHandler } from '../FormatHandler';
-import { getColor, setColor } from '../utils/color';
+import { getColor, setColor } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -8,12 +8,8 @@ import { getColor, setColor } from '../utils/color';
 export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> = {
     parse: (format, element, context, defaultStyle) => {
         const backgroundColor =
-            getColor(
-                element,
-                true /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
-            ) || defaultStyle.backgroundColor;
+            getColor(element, true /*isBackground*/, context.darkColorHandler) ||
+            defaultStyle.backgroundColor;
 
         if (backgroundColor) {
             format.backgroundColor = backgroundColor;
@@ -25,8 +21,9 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 element,
                 format.backgroundColor,
                 true /*isBackground*/,
-                context.darkColorHandler,
-                context.isDarkMode
+                false /*isDarkMode*/,
+                format.adjustTextColor,
+                context.darkColorHandler
             );
         }
     },

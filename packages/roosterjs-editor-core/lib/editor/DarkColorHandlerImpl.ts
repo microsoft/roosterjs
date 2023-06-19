@@ -1,5 +1,5 @@
 import { ColorKeyAndValue, DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
-import { getObjectKeys, parseColor } from 'roosterjs-editor-dom';
+import { getColor, getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
@@ -11,7 +11,24 @@ const COLOR_VAR_PREFIX = 'darkColor';
 export default class DarkColorHandlerImpl implements DarkColorHandler {
     private knownColors: Record<string, Readonly<ModeIndependentColor>> = {};
 
-    constructor(private contentDiv: HTMLElement, private getDarkColor: (color: string) => string) {}
+    constructor(
+        private contentDiv: HTMLElement,
+        private getDarkColor?: (color: string) => string,
+        private darkMode?: boolean,
+        private onExternalContentTransform?: (htmlIn: HTMLElement) => void
+    ) {}
+
+    get isDarkMode() {
+        return !!this.darkMode;
+    }
+
+    set isDarkMode(value: boolean) {
+        if (this.darkMode != value) {
+            this.darkMode = value;
+
+            this.resetContainerColors(this.darkMode);
+        }
+    }
 
     /**
      * Get a copy of known colors
@@ -29,27 +46,25 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * @param darkModeColor Optional dark mode color value. If not passed, we will calculate one.
      */
     registerColor(lightModeColor: string, isDarkMode: boolean, darkModeColor?: string): string {
-        const parsedColor = this.parseColorValue(lightModeColor);
-        let colorKey: string | undefined;
+        const parsedColor = this.parseColorValue(lightModeColor, isDarkMode);
 
-        if (parsedColor) {
-            lightModeColor = parsedColor.lightModeColor;
-            darkModeColor = parsedColor.darkModeColor || darkModeColor;
-            colorKey = parsedColor.key;
-        }
+        lightModeColor = parsedColor.lightModeColor;
+        darkModeColor = parsedColor.darkModeColor || darkModeColor;
+        const colorKey =
+            parsedColor.key || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
 
-        if (isDarkMode && lightModeColor) {
-            colorKey =
-                colorKey || `--${COLOR_VAR_PREFIX}_${lightModeColor.replace(/[^\d\w]/g, '_')}`;
-
+        if (lightModeColor && this.getDarkColor) {
             if (!this.knownColors[colorKey]) {
                 darkModeColor = darkModeColor || this.getDarkColor(lightModeColor);
 
                 this.knownColors[colorKey] = { lightModeColor, darkModeColor };
-                this.contentDiv.style.setProperty(colorKey, darkModeColor);
+
+                if (this.isDarkMode) {
+                    this.setColorVariable(colorKey, darkModeColor);
+                }
             }
 
-            return `var(${colorKey}, ${lightModeColor})`;
+            return `${VARIABLE_PREFIX}${colorKey}, ${lightModeColor})`;
         } else {
             return lightModeColor;
         }
@@ -59,8 +74,7 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
      * Reset known color record, clean up registered color variables.
      */
     reset(): void {
-        getObjectKeys(this.knownColors).forEach(key => this.contentDiv.style.removeProperty(key));
-        this.knownColors = {};
+        this.resetContainerColors(false /*isDarkMode*/);
     }
 
     /**
@@ -128,5 +142,75 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
         }
 
         return null;
+    }
+
+    transformColors(root: HTMLElement, isCleaningUp: boolean, includeSelf: boolean) {
+        const darkColorHandler = isCleaningUp ? null : this;
+
+        this.iterateElements(root, includeSelf, element => {
+            if (!isCleaningUp && this.onExternalContentTransform) {
+                this.onExternalContentTransform(element);
+            } else {
+                [false, true].forEach(isBackground => {
+                    const color = getColor(element, isBackground, this, isCleaningUp);
+
+                    element.style.setProperty(isBackground ? 'background-color' : 'color', null);
+                    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
+
+                    if (color && color != 'inherit') {
+                        setColor(
+                            element,
+                            color,
+                            isBackground,
+                            this.isDarkMode,
+                            false /*adjustTextColor*/,
+                            darkColorHandler
+                        );
+                    }
+                });
+            }
+        });
+    }
+
+    private setColorVariable(key: string, darkModeColor: string | null) {
+        if (this.contentDiv) {
+            if (darkModeColor) {
+                this.contentDiv.style.setProperty(key, darkModeColor);
+            } else {
+                this.contentDiv.style.removeProperty(key);
+            }
+        }
+    }
+
+    private resetContainerColors(isDarkMode: boolean) {
+        getObjectKeys(this.knownColors).forEach(key => {
+            this.setColorVariable(key, isDarkMode ? this.knownColors[key].darkModeColor : null);
+        });
+    }
+
+    private iterateElements(
+        root: Node,
+        includeSelf: boolean,
+        transformer: (element: HTMLElement) => void
+    ) {
+        if (includeSelf && this.isHTMLElement(root)) {
+            transformer(root);
+        }
+
+        for (let child = root.firstChild; child; child = child.nextSibling) {
+            if (this.isHTMLElement(child)) {
+                transformer(child);
+            }
+
+            this.iterateElements(child, false /*includeSelf*/, transformer);
+        }
+    }
+
+    private isHTMLElement(node: Node): node is HTMLElement {
+        // This is not a strict check, we just need to make sure this element has style so that we can set style to it
+        // We don't use safeInstanceOf() here since this function will be called very frequently when extract html content
+        // in dark mode, so we need to make sure this check is fast enough
+        const htmlElement = <HTMLElement>node;
+        return node.nodeType == Node.ELEMENT_NODE && !!htmlElement.style;
     }
 }
