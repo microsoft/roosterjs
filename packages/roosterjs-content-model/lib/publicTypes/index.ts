@@ -48,6 +48,9 @@ export { ContentModelHyperLinkFormat } from './format/ContentModelHyperLinkForma
 export { ContentModelCodeFormat } from './format/ContentModelCodeFormat';
 export { ContentModelFormatContainerFormat } from './format/ContentModelFormatContainerFormat';
 
+export { ContentModelFormatState } from './format/formatState/ContentModelFormatState';
+export { ImageFormatState } from './format/formatState/ImageFormatState';
+
 export { VerticalAlignFormat } from './format/formatParts/VerticalAlignFormat';
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
 export { BorderFormat } from './format/formatParts/BorderFormat';

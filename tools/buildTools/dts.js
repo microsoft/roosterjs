@@ -382,6 +382,12 @@ function generateDts(library, isAmd, queue) {
         var { filename, elements } = queue[i];
 
         for (var name in elements) {
+            if (!elements[name].forEach) {
+                console.log(name);
+                console.log(JSON.stringify(elements, null, 4));
+                console.log(elements[name].forEach);
+            }
+
             elements[name].forEach(({ published, text, comment }) => {
                 var code = text.replace(namePlaceholder, name);
                 if (!comment) {
@@ -423,6 +429,9 @@ function createQueue(rootPath, baseDir, root, additionalFiles, externalHandler) 
     return queue;
 }
 
+const externalHandler = getWebpackExternalCallback([
+    [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs'],
+]);
 const config = {
     rooster: {
         targetPath: roosterJsDistPath,
@@ -438,7 +447,9 @@ const config = {
         startFileName: 'roosterjs-react/lib/index.d.ts',
         libraryName: 'roosterjsReact',
         targetFileName: 'rooster-react',
-        externalHandler: getWebpackExternalCallback([]),
+        externalHandler,
+        dependsOnRoosterJs: true,
+        dependsOnReact: true,
     },
     contentModel: {
         targetPath: contentModelDistPath,
@@ -446,7 +457,8 @@ const config = {
         startFileName: 'roosterjs-content-model/lib/index.d.ts',
         libraryName: 'roosterjsContentModel',
         targetFileName: 'rooster-content-model',
-        externalHandler: getWebpackExternalCallback([]),
+        externalHandler,
+        dependsOnRoosterJs: true,
     },
 };
 
@@ -458,6 +470,8 @@ function dts(isAmd, target) {
         libraryName,
         targetFileName,
         externalHandler,
+        dependsOnRoosterJs,
+        dependsOnReact,
     } = config[target];
 
     mkdirp.sync(targetPath);
@@ -479,23 +493,23 @@ function dts(isAmd, target) {
     const fileName = `${targetFileName}${isAmd ? '-amd' : ''}.d.ts`;
     const fullFileName = path.join(targetPath, fileName);
 
-    if (target != 'rooster') {
+    let dependencies = '';
+
+    if (dependsOnRoosterJs) {
         const roosterjsDtsFileName = `rooster${isAmd ? '-amd' : ''}.d.ts`;
         fs.copyFileSync(
             path.join(roosterJsDistPath, roosterjsDtsFileName),
             path.join(targetPath, roosterjsDtsFileName)
         );
-        fs.writeFileSync(
-            fullFileName,
-            `/// <reference path="./rooster${
-                isAmd ? '-amd' : ''
-            }" />\n/// <reference types="react" />\n\n` +
-                "import * as FluentUIReact from '@fluentui/react/dist/react';\n\n" +
-                dtsContent
-        );
-    } else {
-        fs.writeFileSync(fullFileName, dtsContent);
+
+        dependencies += `/// <reference path="./rooster${isAmd ? '-amd' : ''}" />\n`;
     }
+
+    if (dependsOnReact) {
+        dependencies += `/// <reference types="react" />\n\nimport * as FluentUIReact from '@fluentui/react/dist/react';\n`;
+    }
+
+    fs.writeFileSync(fullFileName, dependencies ? dependencies + '\n' + dtsContent : dtsContent);
 
     if (!isAmd) {
         const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');

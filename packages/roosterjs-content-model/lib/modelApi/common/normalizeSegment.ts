@@ -18,6 +18,9 @@ export interface NormalizeSegmentContext {
     lastInlineSegment: ContentModelSegment | undefined;
 }
 
+/**
+ * @internal
+ */
 export function createNormalizeSegmentContext(): NormalizeSegmentContext {
     return resetNormalizeSegmentContext();
 }
@@ -89,6 +92,9 @@ export function normalizeSegment(segment: ContentModelSegment, context: Normaliz
     }
 }
 
+/**
+ * @internal
+ */
 export function normalizeTextSegments(
     segments: ContentModelText[],
     lastInlineSegment: ContentModelSegment | undefined
@@ -110,6 +116,9 @@ export function normalizeTextSegments(
     });
 }
 
+/**
+ * @internal
+ */
 export function normalizeLastTextSegment(
     segment: ContentModelText | undefined,
     lastInlineSegment: ContentModelSegment | undefined

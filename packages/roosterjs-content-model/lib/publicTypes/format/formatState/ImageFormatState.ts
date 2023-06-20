@@ -1,7 +1,7 @@
 /**
  * Image Format
  */
-export default interface ImageFormat {
+export interface ImageFormatState {
     /**
      * Border color
      */

@@ -1,6 +1,9 @@
 import { FormatHandler } from '../FormatHandler';
 import { TextColorFormat } from '../../publicTypes/format/formatParts/TextColorFormat';
 
+/**
+ * @internal
+ */
 export const textColorOnTableCellFormatHandler: FormatHandler<TextColorFormat> = {
     parse: (format, element) => {
         if (element.style.color) {
