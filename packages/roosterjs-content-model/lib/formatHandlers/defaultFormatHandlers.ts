@@ -158,6 +158,7 @@ const defaultFormatKeysPerCategory: {
         'wordBreak',
         'textColor',
         'htmlAlign',
+        'size',
     ],
     tableRow: ['backgroundColor'],
     table: [
