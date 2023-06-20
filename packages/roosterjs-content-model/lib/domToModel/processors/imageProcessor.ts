@@ -1,8 +1,7 @@
 import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
-import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
+import { ContentModelImageFormat, ElementProcessor } from 'roosterjs-content-model-types';
 import { createImage } from '../../modelApi/creators/createImage';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

@@ -1,12 +1,14 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
-import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import {
+    ContentModelTableCellFormat,
+    DatasetFormat,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

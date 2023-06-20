@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { ItalicFormat } from '../../publicTypes/format/formatParts/ItalicFormat';
+import { ItalicFormat } from 'roosterjs-content-model-types';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 
 /**

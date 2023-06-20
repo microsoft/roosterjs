@@ -1,5 +1,5 @@
 import { createListItem } from '../../modelApi/creators/createListItem';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { ElementProcessor } from 'roosterjs-content-model-types';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

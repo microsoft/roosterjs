@@ -1,5 +1,4 @@
-import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
-import { ContentModelImageFormat } from '../../publicTypes/format/ContentModelImageFormat';
+import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

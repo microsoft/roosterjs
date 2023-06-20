@@ -1,5 +1,4 @@
-import { ContentModelTableCell } from '../../publicTypes/group/ContentModelTableCell';
-import { ContentModelTableCellFormat } from '../../publicTypes/format/ContentModelTableCellFormat';
+import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

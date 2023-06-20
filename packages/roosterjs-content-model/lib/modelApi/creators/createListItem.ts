@@ -1,7 +1,9 @@
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { createSelectionMarker } from './createSelectionMarker';
+import {
+    ContentModelListItem,
+    ContentModelListItemLevelFormat,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

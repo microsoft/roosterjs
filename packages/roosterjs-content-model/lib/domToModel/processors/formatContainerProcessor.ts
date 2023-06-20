@@ -1,16 +1,18 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
-import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { createFormatContainer } from '../../modelApi/creators/createFormatContainer';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getDefaultStyle } from '../utils/getDefaultStyle';
-import { MarginFormat } from '../../publicTypes/format/formatParts/MarginFormat';
-import { PaddingFormat } from '../../publicTypes/format/formatParts/PaddingFormat';
 import { parseFormat } from '../utils/parseFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
+import {
+    ContentModelFormatContainer,
+    ContentModelFormatContainerFormat,
+    ContentModelParagraph,
+    ElementProcessor,
+    MarginFormat,
+    PaddingFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

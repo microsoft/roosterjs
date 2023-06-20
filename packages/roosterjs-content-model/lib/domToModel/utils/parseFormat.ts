@@ -1,7 +1,9 @@
-import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { FormatParser } from '../../publicTypes/context/DomToModelSettings';
 import { getDefaultStyle } from './getDefaultStyle';
+import {
+    ContentModelFormatBase,
+    DomToModelContext,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

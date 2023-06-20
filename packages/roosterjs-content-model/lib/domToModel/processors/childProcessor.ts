@@ -1,7 +1,9 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import {
+    ContentModelBlockGroup,
+    DomToModelContext,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';

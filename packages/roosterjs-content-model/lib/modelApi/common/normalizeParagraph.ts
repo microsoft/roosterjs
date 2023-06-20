@@ -1,4 +1,4 @@
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';

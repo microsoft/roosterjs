@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { ZoomScaleFormat } from '../../publicTypes/format/formatParts/ZoomScaleFormat';
+import { ZoomScaleFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

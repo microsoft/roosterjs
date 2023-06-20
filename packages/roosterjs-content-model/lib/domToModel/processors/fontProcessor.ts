@@ -1,4 +1,4 @@
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { ElementProcessor } from 'roosterjs-content-model-types';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';

@@ -1,7 +1,7 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createEntity } from '../../modelApi/creators/createEntity';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { ElementProcessor } from 'roosterjs-content-model-types';
 import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isBlockElement } from '../utils/isBlockElement';
 import { stackFormat } from '../utils/stackFormat';

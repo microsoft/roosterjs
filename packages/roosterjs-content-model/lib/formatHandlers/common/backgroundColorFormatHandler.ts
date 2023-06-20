@@ -1,4 +1,4 @@
-import { BackgroundColorFormat } from '../../publicTypes/format/formatParts/BackgroundColorFormat';
+import { BackgroundColorFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 import { getColor, setColor } from '../utils/color';
 

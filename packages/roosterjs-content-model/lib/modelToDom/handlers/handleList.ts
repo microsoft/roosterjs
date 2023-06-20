@@ -1,10 +1,12 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ContentModelListItemLevelFormat } from '../../publicTypes/format/ContentModelListItemLevelFormat';
-import { DatasetFormat } from '../../publicTypes/format/formatParts/DatasetFormat';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import {
+    ContentModelBlockHandler,
+    ContentModelListItem,
+    ContentModelListItemLevelFormat,
+    DatasetFormat,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

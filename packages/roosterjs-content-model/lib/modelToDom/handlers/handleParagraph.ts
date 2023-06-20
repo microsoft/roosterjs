@@ -1,11 +1,13 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
 import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
+import {
+    ContentModelBlockHandler,
+    ContentModelParagraph,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 const DefaultParagraphTag = 'div';
 

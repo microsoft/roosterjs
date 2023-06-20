@@ -1,9 +1,8 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { blockProcessor } from './blockProcessor';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelSegmentFormat, ElementProcessor } from 'roosterjs-content-model-types';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../modelApi/creators/createParagraphDecorator';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

@@ -1,6 +1,6 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { createDivider } from '../../modelApi/creators/createDivider';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { ElementProcessor } from 'roosterjs-content-model-types';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 

@@ -1,7 +1,9 @@
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
-import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
 import { getDelimiterFromElement, getEntityFromElement } from 'roosterjs-editor-dom';
+import {
+    DomToModelContext,
+    ElementProcessor,
+    ElementProcessorMap,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { SizeFormat } from '../../publicTypes/format/formatParts/SizeFormat';
+import { SizeFormat } from 'roosterjs-content-model-types';
 
 const PercentageRegex = /[\d\.]+%/;
 

@@ -1,4 +1,4 @@
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
+import { ContentModelParagraph } from 'roosterjs-content-model-types';
 
 // According to https://developer.mozilla.org/en-US/docs/Web/CSS/white-space, these style values will need to preserve white spaces
 const WHITESPACE_PRE_VALUES = ['pre', 'pre-wrap', 'break-spaces'];

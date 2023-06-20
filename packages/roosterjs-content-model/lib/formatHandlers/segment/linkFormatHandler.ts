@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { LinkFormat } from '../../publicTypes/format/formatParts/LinkFormat';
+import { LinkFormat } from 'roosterjs-content-model-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 
 /**

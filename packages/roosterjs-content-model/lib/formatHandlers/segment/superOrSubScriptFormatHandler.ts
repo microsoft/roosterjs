@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
 import { moveChildNodes } from 'roosterjs-editor-dom';
-import { SuperOrSubScriptFormat } from '../../publicTypes/format/formatParts/SuperOrSubScriptFormat';
+import { SuperOrSubScriptFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

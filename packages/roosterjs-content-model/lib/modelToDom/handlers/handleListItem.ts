@@ -1,9 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelListItem } from '../../publicTypes/group/ContentModelListItem';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
+import {
+    ContentModelBlockHandler,
+    ContentModelListItem,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

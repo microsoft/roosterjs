@@ -1,11 +1,13 @@
-import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
-import { ContentModelFormatContainerFormat } from '../../publicTypes/format/ContentModelFormatContainerFormat';
+import {
+    ContentModelFormatContainer,
+    ContentModelFormatContainerFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export function createFormatContainer(
-    tag: string,
+    tag: Lowercase<string>,
     format?: ContentModelFormatContainerFormat
 ): ContentModelFormatContainer {
     return {

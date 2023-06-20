@@ -1,10 +1,12 @@
 import { addBlock } from '../../modelApi/common/addBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
 import { ContextStyles } from './formatContainerProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { parseFormat } from '../utils/parseFormat';
+import {
+    ContentModelBlockGroup,
+    ContentModelSegmentFormat,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 const SegmentDecoratorTags = ['A', 'CODE'];
 

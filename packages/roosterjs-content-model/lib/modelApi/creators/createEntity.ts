@@ -1,5 +1,4 @@
-import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

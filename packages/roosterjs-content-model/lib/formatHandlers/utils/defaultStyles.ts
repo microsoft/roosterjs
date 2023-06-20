@@ -1,5 +1,4 @@
-import { DefaultImplicitFormatMap } from '../../publicTypes/context/ModelToDomSettings';
-import { DefaultStyleMap } from '../../publicTypes/context/DomToModelSettings';
+import { DefaultImplicitFormatMap, DefaultStyleMap } from 'roosterjs-content-model-types';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',

@@ -1,5 +1,4 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
+import { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-content-model-types';
 
 /**
  * @internal

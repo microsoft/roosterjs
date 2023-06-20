@@ -1,8 +1,10 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelDivider } from '../../publicTypes/block/ContentModelDivider';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import {
+    ContentModelBlockHandler,
+    ContentModelDivider,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

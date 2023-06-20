@@ -1,6 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
+import { ContentModelHandler, ContentModelSegment } from 'roosterjs-content-model-types';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { stackFormat } from '../utils/stackFormat';
 

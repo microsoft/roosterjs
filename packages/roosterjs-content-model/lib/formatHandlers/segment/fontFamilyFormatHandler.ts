@@ -1,4 +1,4 @@
-import { FontFamilyFormat } from '../../publicTypes/format/formatParts/FontFamilyFormat';
+import { FontFamilyFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**

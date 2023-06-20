@@ -1,4 +1,4 @@
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
+import { DomToModelContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal

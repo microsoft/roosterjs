@@ -1,8 +1,7 @@
 import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
 import { createSelectionMarker } from '../../modelApi/creators/createSelectionMarker';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 
 /**
  * @internal

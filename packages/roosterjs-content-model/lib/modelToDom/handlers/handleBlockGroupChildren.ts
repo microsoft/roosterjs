@@ -1,6 +1,8 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import {
+    ContentModelBlockGroup,
+    ContentModelHandler,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,5 +1,7 @@
-import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import {
+    ContentModelParagraphDecorator,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

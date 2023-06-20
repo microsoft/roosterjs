@@ -1,11 +1,13 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelFormatContainer } from '../../publicTypes/group/ContentModelFormatContainer';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { PseudoTagNames } from '../../formatHandlers/utils/defaultStyles';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
+import {
+    ContentModelBlockHandler,
+    ContentModelFormatContainer,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

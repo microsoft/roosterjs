@@ -1,11 +1,12 @@
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlockGroup } from 'roosterjs-content-model-types';
 import { isBlockEmpty } from './isEmpty';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
 
 /**
  * @internal
- */ export function normalizeContentModel(group: ContentModelBlockGroup) {
+ */
+export function normalizeContentModel(group: ContentModelBlockGroup) {
     for (let i = group.blocks.length - 1; i >= 0; i--) {
         const block = group.blocks[i];
 

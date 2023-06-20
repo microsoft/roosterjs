@@ -1,9 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelImage } from '../../publicTypes/segment/ContentModelImage';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
+import {
+    ContentModelHandler,
+    ContentModelImage,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

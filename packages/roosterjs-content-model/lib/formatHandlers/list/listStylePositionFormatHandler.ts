@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { ListStylePositionFormat } from '../../publicTypes/format/formatParts/ListStylePositionFormat';
+import { ListStylePositionFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

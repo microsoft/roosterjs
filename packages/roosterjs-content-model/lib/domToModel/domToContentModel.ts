@@ -1,13 +1,15 @@
-import { ContentModelDocument } from '../publicTypes/group/ContentModelDocument';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
-import { DomToModelOption } from '../publicTypes/IContentModelEditor';
-import { EditorContext } from '../publicTypes/context/EditorContext';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
+import {
+    ContentModelDocument,
+    DomToModelOption,
+    EditorContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -17,7 +19,7 @@ import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHa
  * @param option The option to customize the behavior of DOM to Content Model conversion
  * @returns A ContentModelDocument object that contains all the models created from the give root element
  */
-export default function domToContentModel(
+export function domToContentModel(
     root: HTMLElement | DocumentFragment,
     editorContext: EditorContext,
     option: DomToModelOption

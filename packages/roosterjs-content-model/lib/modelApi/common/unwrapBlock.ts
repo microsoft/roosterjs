@@ -1,5 +1,4 @@
-import { ContentModelBlock } from '../../publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 
 /**

@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
 import { moveChildNodes } from 'roosterjs-editor-dom';
-import { StrikeFormat } from '../../publicTypes/format/formatParts/StrikeFormat';
+import { StrikeFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

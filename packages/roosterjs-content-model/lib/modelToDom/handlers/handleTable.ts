@@ -1,11 +1,13 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
 import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import {
+    ContentModelBlockHandler,
+    ContentModelTable,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,6 +1,8 @@
-import { ContentModelTable } from '../../publicTypes/block/ContentModelTable';
-import { ContentModelTableFormat } from '../../publicTypes/format/ContentModelTableFormat';
-import { ContentModelTableRow } from '../../publicTypes/block/ContentModelTableRow';
+import {
+    ContentModelTable,
+    ContentModelTableFormat,
+    ContentModelTableRow,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

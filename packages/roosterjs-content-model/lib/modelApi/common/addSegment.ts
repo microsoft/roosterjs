@@ -1,9 +1,11 @@
 import { addBlock } from './addBlock';
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
 import { createParagraph } from '../creators/createParagraph';
+import type {
+    ContentModelBlockFormat,
+    ContentModelBlockGroup,
+    ContentModelParagraph,
+    ContentModelSegment,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

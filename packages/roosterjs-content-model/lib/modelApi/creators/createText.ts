@@ -1,5 +1,4 @@
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import { ContentModelSegmentFormat, ContentModelText } from 'roosterjs-content-model-types';
 
 /**
  * @internal

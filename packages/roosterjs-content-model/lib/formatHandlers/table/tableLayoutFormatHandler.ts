@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { TableLayoutFormat } from '../../publicTypes/format/formatParts/TableLayoutFormat';
+import { TableLayoutFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

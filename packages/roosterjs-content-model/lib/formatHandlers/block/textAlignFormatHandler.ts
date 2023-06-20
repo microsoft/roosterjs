@@ -1,8 +1,7 @@
 import { calcAlign, ResultMap } from '../utils/dir';
-import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionFormat';
+import { DirectionFormat, TextAlignFormat } from 'roosterjs-content-model-types';
 import { directionFormatHandler } from './directionFormatHandler';
 import { FormatHandler } from '../FormatHandler';
-import { TextAlignFormat } from '../../publicTypes/format/formatParts/TextAlignFormat';
 
 /**
  * @internal

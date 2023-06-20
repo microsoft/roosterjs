@@ -2,10 +2,12 @@ import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
-import { ContentModelBlockGroup } from '../../publicTypes/group/ContentModelBlockGroup';
+import {
+    ContentModelBlockGroup,
+    DomToModelContext,
+    ElementProcessor,
+} from 'roosterjs-content-model-types';
 import { createText } from '../../modelApi/creators/createText';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { hasSpacesOnly } from '../../domUtils/stringUtil';
 

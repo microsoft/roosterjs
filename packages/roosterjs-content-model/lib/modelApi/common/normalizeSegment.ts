@@ -1,5 +1,4 @@
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ContentModelText } from '../../publicTypes/segment/ContentModelText';
+import { ContentModelSegment, ContentModelText } from 'roosterjs-content-model-types';
 import { hasSpacesOnly } from '../../domUtils/stringUtil';
 
 const SPACE = '\u0020';

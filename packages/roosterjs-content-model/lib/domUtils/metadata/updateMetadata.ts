@@ -1,4 +1,4 @@
-import { ContentModelWithDataset } from '../../publicTypes/format/ContentModelWithDataset';
+import { ContentModelWithDataset } from 'roosterjs-content-model-types';
 import { Definition } from 'roosterjs-editor-types';
 import { validate } from 'roosterjs-editor-dom';
 

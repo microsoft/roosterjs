@@ -1,4 +1,4 @@
-import { BoldFormat } from '../../publicTypes/format/formatParts/BoldFormat';
+import { BoldFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 

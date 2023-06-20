@@ -1,4 +1,4 @@
-import { ContentModelHandlerMap } from '../../publicTypes/context/ModelToDomSettings';
+import { ContentModelHandlerMap } from 'roosterjs-content-model-types';
 import { handleBlock } from '../handlers/handleBlock';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';

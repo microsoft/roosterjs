@@ -1,9 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelEntity } from '../../publicTypes/entity/ContentModelEntity';
 import { Entity } from 'roosterjs-editor-types';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import {
+    ContentModelBlockHandler,
+    ContentModelEntity,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 import {
     addDelimiters,
     commitEntity,

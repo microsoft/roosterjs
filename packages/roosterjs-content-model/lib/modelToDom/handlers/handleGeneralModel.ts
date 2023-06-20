@@ -1,12 +1,14 @@
-import { ContentModelBlockHandler } from '../../publicTypes/context/ContentModelHandler';
-import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { wrap } from 'roosterjs-editor-dom';
+import {
+    ContentModelBlockHandler,
+    ContentModelGeneralBlock,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { DisplayFormat } from '../../publicTypes/format/formatParts/DisplayFormat';
+import { DisplayFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**

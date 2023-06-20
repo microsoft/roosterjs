@@ -1,7 +1,7 @@
 import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { ListMetadataFormat } from '../../publicTypes/format/formatParts/ListMetadataFormat';
+import { ListMetadataFormat } from 'roosterjs-content-model-types';
 import { NodeType } from 'roosterjs-editor-types';
 import { OrderedMap, UnorderedMap } from './listLevelMetadataFormatHandler';
 

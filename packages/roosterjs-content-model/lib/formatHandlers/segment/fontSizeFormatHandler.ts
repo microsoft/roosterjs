@@ -1,4 +1,4 @@
-import { FontSizeFormat } from '../../publicTypes/format/formatParts/FontSizeFormat';
+import { FontSizeFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 import { isSuperOrSubScript } from './superOrSubScriptFormatHandler';
 

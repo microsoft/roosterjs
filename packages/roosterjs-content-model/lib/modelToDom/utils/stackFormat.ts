@@ -1,6 +1,8 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import {
+    ContentModelBlockFormat,
+    ContentModelSegmentFormat,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

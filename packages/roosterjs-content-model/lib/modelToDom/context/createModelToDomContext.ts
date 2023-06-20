@@ -1,8 +1,6 @@
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
-import { EditorContext } from '../../publicTypes/context/EditorContext';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
-import { ModelToDomOption } from '../../publicTypes/IContentModelEditor';
+import { EditorContext, ModelToDomContext, ModelToDomOption } from 'roosterjs-content-model-types';
 import {
     defaultFormatAppliers,
     getFormatAppliers,

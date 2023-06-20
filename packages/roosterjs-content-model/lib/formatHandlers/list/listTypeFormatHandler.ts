@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
 import { getTagOfNode } from 'roosterjs-editor-dom';
-import { ListTypeFormat } from '../../publicTypes/format/formatParts/ListTypeFormat';
+import { ListTypeFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

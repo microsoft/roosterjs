@@ -1,4 +1,4 @@
-import { ContentModelGeneralBlock } from '../../publicTypes/group/ContentModelGeneralBlock';
+import { ContentModelGeneralBlock } from 'roosterjs-content-model-types';
 
 /**
  * @internal

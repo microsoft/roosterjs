@@ -1,4 +1,4 @@
-import { DirectionFormat } from '../../publicTypes/format/formatParts/DirectionFormat';
+import { DirectionFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**

@@ -1,6 +1,5 @@
 import { applyFormat } from './applyFormat';
-import { ContentModelSegment } from '../../publicTypes/segment/ContentModelSegment';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import { ContentModelSegment, ModelToDomContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal

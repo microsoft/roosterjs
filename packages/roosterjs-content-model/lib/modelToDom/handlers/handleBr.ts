@@ -1,7 +1,9 @@
-import { ContentModelBr } from '../../publicTypes/segment/ContentModelBr';
-import { ContentModelHandler } from '../../publicTypes/context/ContentModelHandler';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import { ModelToDomContext } from '../../publicTypes/context/ModelToDomContext';
+import {
+    ContentModelBr,
+    ContentModelHandler,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

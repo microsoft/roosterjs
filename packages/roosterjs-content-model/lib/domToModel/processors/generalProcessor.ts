@@ -3,7 +3,7 @@ import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createGeneralBlock } from '../../modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../modelApi/creators/createGeneralSegment';
-import { ElementProcessor } from '../../publicTypes/context/ElementProcessor';
+import { ElementProcessor } from 'roosterjs-content-model-types';
 import { isBlockElement } from '../utils/isBlockElement';
 import { stackFormat } from '../utils/stackFormat';
 

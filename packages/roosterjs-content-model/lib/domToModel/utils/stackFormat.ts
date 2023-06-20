@@ -1,11 +1,13 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelCode } from '../../publicTypes/decorator/ContentModelCode';
-import { ContentModelFormatBase } from '../../publicTypes/format/ContentModelFormatBase';
-import { ContentModelLink } from '../../publicTypes/decorator/ContentModelLink';
-import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import {
+    ContentModelBlockFormat,
+    ContentModelCode,
+    ContentModelFormatBase,
+    ContentModelLink,
+    ContentModelParagraphDecorator,
+    ContentModelSegmentFormat,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

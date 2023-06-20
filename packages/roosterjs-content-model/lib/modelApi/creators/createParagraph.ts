@@ -1,7 +1,9 @@
-import { ContentModelBlockFormat } from '../../publicTypes/format/ContentModelBlockFormat';
-import { ContentModelParagraph } from '../../publicTypes/block/ContentModelParagraph';
-import { ContentModelParagraphDecorator } from '../../publicTypes/decorator/ContentModelParagraphDecorator';
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
+import type {
+    ContentModelBlockFormat,
+    ContentModelParagraph,
+    ContentModelParagraphDecorator,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -3,7 +3,7 @@ import { childProcessor } from '../processors/childProcessor';
 import { codeProcessor } from '../processors/codeProcessor';
 import { delimiterProcessor } from '../processors/delimiterProcessor';
 import { elementProcessor } from '../processors/elementProcessor';
-import { ElementProcessorMap } from '../../publicTypes/context/DomToModelSettings';
+import { ElementProcessorMap } from 'roosterjs-content-model-types';
 import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
 import { formatContainerProcessor } from '../processors/formatContainerProcessor';

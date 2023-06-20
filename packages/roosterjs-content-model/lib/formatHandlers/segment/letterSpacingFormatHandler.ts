@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { LetterSpacingFormat } from '../../publicTypes/format/formatParts/LetterSpacingFormat';
+import { LetterSpacingFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

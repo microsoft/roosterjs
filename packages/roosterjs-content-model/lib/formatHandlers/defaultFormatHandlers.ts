@@ -3,14 +3,12 @@ import { boldFormatHandler } from './segment/boldFormatHandler';
 import { borderBoxFormatHandler } from './common/borderBoxFormatHandler';
 import { borderFormatHandler } from './common/borderFormatHandler';
 import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
-import { ContentModelFormatMap } from '../publicTypes/format/ContentModelFormatMap';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
-import { FormatHandlerTypeMap, FormatKey } from '../publicTypes/format/FormatHandlerTypeMap';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
@@ -24,8 +22,8 @@ import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHa
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
 import { listTypeFormatHandler } from './list/listTypeFormatHandler';
-import { marginFormatHandler } from './paragraph/marginFormatHandler';
-import { paddingFormatHandler } from './paragraph/paddingFormatHandler';
+import { marginFormatHandler } from './block/marginFormatHandler';
+import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
 import { strikeFormatHandler } from './segment/strikeFormatHandler';
 import { superOrSubScriptFormatHandler } from './segment/superOrSubScriptFormatHandler';
@@ -39,15 +37,16 @@ import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler'
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
 import {
+    ContentModelFormatMap,
+    FormatHandlerTypeMap,
+    FormatKey,
     FormatApplier,
     FormatAppliers,
     FormatAppliersPerCategory,
-} from '../publicTypes/context/ModelToDomSettings';
-import {
     FormatParser,
     FormatParsers,
     FormatParsersPerCategory,
-} from '../publicTypes/context/DomToModelSettings';
+} from 'roosterjs-content-model-types';
 
 type FormatHandlers = {
     [Key in FormatKey]: FormatHandler<FormatHandlerTypeMap[Key]>;

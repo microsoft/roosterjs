@@ -1,5 +1,7 @@
-import { ContentModelSegmentFormat } from '../../publicTypes/format/ContentModelSegmentFormat';
-import { ContentModelSelectionMarker } from '../../publicTypes/segment/ContentModelSelectionMarker';
+import {
+    ContentModelSegmentFormat,
+    ContentModelSelectionMarker,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

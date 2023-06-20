@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
 import { moveChildNodes } from 'roosterjs-editor-dom';
-import { UnderlineFormat } from '../../publicTypes/format/formatParts/UnderlineFormat';
+import { UnderlineFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

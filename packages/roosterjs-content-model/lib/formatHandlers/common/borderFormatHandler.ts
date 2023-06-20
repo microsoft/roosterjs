@@ -1,4 +1,4 @@
-import { BorderFormat } from '../../publicTypes/format/formatParts/BorderFormat';
+import { BorderFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**
