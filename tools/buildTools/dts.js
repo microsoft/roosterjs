@@ -12,10 +12,7 @@ const {
     nodeModulesPath,
     runNode,
     err,
-    contentModelDistPath,
-    roosterJsUiDistPath,
-    packagesUI,
-    getWebpackExternalCallback,
+    buildConfig,
 } = require('./common');
 
 const namePlaceholder = '__NAME__';
@@ -429,39 +426,6 @@ function createQueue(rootPath, baseDir, root, additionalFiles, externalHandler) 
     return queue;
 }
 
-const externalHandler = getWebpackExternalCallback([
-    [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs'],
-]);
-const config = {
-    rooster: {
-        targetPath: roosterJsDistPath,
-        targetPackages: ['roosterjs'],
-        startFileName: 'roosterjs/lib/index.d.ts',
-        libraryName: 'roosterjs',
-        targetFileName: 'rooster',
-        externalHandler: undefined,
-    },
-    roosterReact: {
-        targetPath: roosterJsUiDistPath,
-        targetPackages: packagesUI,
-        startFileName: 'roosterjs-react/lib/index.d.ts',
-        libraryName: 'roosterjsReact',
-        targetFileName: 'rooster-react',
-        externalHandler,
-        dependsOnRoosterJs: true,
-        dependsOnReact: true,
-    },
-    contentModel: {
-        targetPath: contentModelDistPath,
-        targetPackages: ['roosterjs-content-model'],
-        startFileName: 'roosterjs-content-model/lib/index.d.ts',
-        libraryName: 'roosterjsContentModel',
-        targetFileName: 'rooster-content-model',
-        externalHandler,
-        dependsOnRoosterJs: true,
-    },
-};
-
 function dts(isAmd, target) {
     const {
         targetPath,
@@ -472,7 +436,7 @@ function dts(isAmd, target) {
         externalHandler,
         dependsOnRoosterJs,
         dependsOnReact,
-    } = config[target];
+    } = buildConfig[target];
 
     mkdirp.sync(targetPath);
 
@@ -540,12 +504,12 @@ module.exports = {
     },
     dtsCommonJsContentModel: {
         message: `Generating type definition file (rooster-content-model.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, 'contentModel'),
+        callback: () => dts(false /*isAmd*/, 'roosterContentModel'),
         enabled: options => options.dts,
     },
     dtsAmdContentModel: {
         message: `Generating type definition file (rooster-content-model-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, 'contentModel'),
+        callback: () => dts(true /*isAmd*/, 'roosterContentModel'),
         enabled: options => options.dts,
     },
 };

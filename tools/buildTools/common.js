@@ -147,6 +147,44 @@ function getWebpackExternalCallback(externalLibraryPairs) {
     };
 }
 
+const buildConfig = {
+    rooster: {
+        targetPath: roosterJsDistPath,
+        packEntry: path.join(packagesPath, 'roosterjs/lib/index.ts'),
+        jsFileBaseName: 'rooster',
+        targetPackages: ['roosterjs'],
+        startFileName: 'roosterjs/lib/index.d.ts',
+        libraryName: 'roosterjs',
+        targetFileName: 'rooster',
+        externalHandler: undefined,
+    },
+    roosterReact: {
+        targetPath: roosterJsUiDistPath,
+        packEntry: path.join(packagesUiPath, 'roosterjs-react/lib/index.ts'),
+        jsFileBaseName: 'rooster-react',
+        targetPackages: packagesUI,
+        startFileName: 'roosterjs-react/lib/index.d.ts',
+        libraryName: 'roosterjsReact',
+        targetFileName: 'rooster-react',
+        externalHandler: getWebpackExternalCallback([]),
+        dependsOnRoosterJs: true,
+        dependsOnReact: true,
+    },
+    roosterContentModel: {
+        targetPath: contentModelDistPath,
+        packEntry: path.join(packagesPath, 'roosterjs-content-model/lib/index.ts'),
+        jsFileBaseName: 'rooster-content-model',
+        targetPackages: ['roosterjs-content-model'],
+        startFileName: 'roosterjs-content-model/lib/index.d.ts',
+        libraryName: 'roosterjsContentModel',
+        targetFileName: 'rooster-content-model',
+        externalHandler: getWebpackExternalCallback([
+            [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs'],
+        ]),
+        dependsOnRoosterJs: true,
+    },
+};
+
 module.exports = {
     rootPath,
     packagesPath,
@@ -169,4 +207,5 @@ module.exports = {
     runWebPack,
     getWebpackExternalCallback,
     contentModelDistPath,
+    buildConfig,
 };

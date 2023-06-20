@@ -12,6 +12,7 @@ const {
     roosterJsUiDistPath,
     runWebPack,
     getWebpackExternalCallback,
+    contentModelDistPath,
 } = require('./common');
 
 async function buildDemoSite() {
@@ -67,6 +68,8 @@ async function buildDemoSite() {
         externals: getWebpackExternalCallback([
             [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
             [/^rosterjs-react\/.*$/, 'roosterjsReact'],
+            [/^roosterjs-react$/, 'roosterjsReact'],
+            [/^roosterjs-content-model$/, 'roosterjsContentModel'],
         ]),
         stats: 'minimal',
         mode: 'production',
@@ -92,6 +95,14 @@ async function buildDemoSite() {
     fs.copyFileSync(
         path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
         path.resolve(deployPath, 'rooster-react-min.js.map')
+    );
+    fs.copyFileSync(
+        path.resolve(contentModelDistPath, 'rooster-content-model-min.js'),
+        path.resolve(deployPath, 'rooster-content-model-min.js')
+    );
+    fs.copyFileSync(
+        path.resolve(contentModelDistPath, 'rooster-content-model-min.js.map'),
+        path.resolve(deployPath, 'rooster-content-model-min.js.map')
     );
     fs.copyFileSync(
         path.resolve(sourcePathRoot, 'index.html'),
