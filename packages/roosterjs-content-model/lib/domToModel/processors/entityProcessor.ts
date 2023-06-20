@@ -7,7 +7,10 @@ import { isBlockElement } from '../utils/isBlockElement';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
- * @internal
+ * Content Model Element Processor for entity
+ * @param group The parent block group
+ * @param parent Parent DOM node to process
+ * @param context DOM to Content Model context
  */
 export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, context) => {
     const entity = getEntityFromElement(element);

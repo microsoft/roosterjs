@@ -11,7 +11,7 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Content Model Element Processor for table
  *
  * For Table with merged/splitted cells, HTML uses colSpan and rowSpan attributes to specify how it should be rendered.
  * To make it easier to edit a table, we will use a different way to describe table.
@@ -23,6 +23,9 @@ import {
  * 4. When edit table, we always edit on this mapped m * n array because it always has an item for each cell
  * 5. When write back to DOM, we create TD/TH elements for those non-spanned cells, and mark its colSpan/rowSpan value according
  * its neighbour cell's spanLeft/spanAbove attribute
+ * @param group The parent block group
+ * @param parent Parent DOM node to process
+ * @param context DOM to Content Model context
  */
 export const tableProcessor: ElementProcessor<HTMLTableElement> = (
     group,

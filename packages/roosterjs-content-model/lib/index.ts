@@ -1,7 +1,11 @@
 export { domToContentModel } from './domToModel/domToContentModel';
 export { contentModelToDom } from './modelToDom/contentModelToDom';
 
-export { handleRegularSelection, processChildNode } from './domToModel/processors/childProcessor';
+export {
+    childProcessor,
+    handleRegularSelection,
+    processChildNode,
+} from './domToModel/processors/childProcessor';
 export { entityProcessor } from './domToModel/processors/entityProcessor';
 export { tableProcessor } from './domToModel/processors/tableProcessor';
 export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelectionOffsets';
@@ -10,7 +14,7 @@ export { areSameFormats } from './domToModel/utils/areSameFormats';
 
 export { hasMetadata } from './domUtils/metadata/updateMetadata';
 export { updateMetadata } from './domUtils/metadata/updateMetadata';
-export { isNodeOfType } from './domUtils/isNodeOfType';
+export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

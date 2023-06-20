@@ -6,7 +6,11 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Parse formats of the given HTML element using specified format parsers
+ * @param element The element to parse format from
+ * @param parsers The parses we are using to parse format
+ * @param format The format object to hold result format
+ * @param context DOM to Content Model context
  */
 export function parseFormat<T extends ContentModelFormatBase>(
     element: HTMLElement,

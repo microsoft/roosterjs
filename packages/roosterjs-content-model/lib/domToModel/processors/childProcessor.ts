@@ -1,15 +1,18 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
+import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
+import { NodeType } from 'roosterjs-editor-types';
 import {
     ContentModelBlockGroup,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
-import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 
 /**
- * @internal
+ * Content Model Element Processor for child elements
+ * @param group The parent block group
+ * @param parent Parent DOM node to process
+ * @param context DOM to Content Model context
  */
 export const childProcessor: ElementProcessor<ParentNode> = (
     group: ContentModelBlockGroup,
@@ -31,7 +34,11 @@ export const childProcessor: ElementProcessor<ParentNode> = (
 };
 
 /**
- * @internal
+ * Helper function for processing child node
+ * @param group The parent block group
+ * @param parent Parent DOM node to process
+ * @param context DOM to Content Model context
+ *
  */
 export function processChildNode(
     group: ContentModelBlockGroup,
@@ -46,7 +53,12 @@ export function processChildNode(
 }
 
 /**
- * @internal
+ * Helper function to handle regular (range based) selection when process child node
+ * @param index Index of current child node in its parent
+ * @param context DOM to Content Model context
+ * @param group The parent block group
+ * @param nodeStartOffset Start offset of current regular selection
+ * @param nodeEndOffset  End offset of current regular selection
  */
 export function handleRegularSelection(
     index: number,

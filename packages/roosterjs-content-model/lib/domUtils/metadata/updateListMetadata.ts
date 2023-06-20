@@ -23,6 +23,7 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListMetadataFormat>(
 );
 
 /**
+ * @internal
  * Update list metadata with a callback
  * @param list The list Content Model (metadata holder)
  * @param callback The callback function used for updating metadata

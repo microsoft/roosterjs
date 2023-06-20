@@ -12,7 +12,6 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
  * Create Content Model from DOM tree in this editor
  * @param root Root element of DOM tree to create Content Model from
  * @param editorContext Context of content model editor
