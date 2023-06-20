@@ -22,8 +22,6 @@ const singleLineComment = /\/\/[^\n]*\n/g;
 const multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
 // 1. [export ][default |declare ](class|interface) <NAME>[ extends| implements <BASE_CLASS>] {...}
-
-// const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_]+(\s*<[^>]+>)?)((\s+extends|\s+implements)(\s[0-9a-zA-Z_\.\s,]+(\s*<[^{]+>)?))?\s*{/g;
 const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_]+(\s*<[^>]+>)?)(\s+extends(?:\s[0-9a-zA-Z_\.\s,]+(?:\s*<[^{]+>)?))?(\s+implements(?:\s[0-9a-zA-Z_\.\s,]+(?:\s*<[^{]+>)?))?\s*{/g;
 // 2. [export ][default |declare ]function <NAME>(...)[: <TYPE>];
 const regFunction = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?function\s+([a-zA-Z0-9_]+(\s*<(?:[^>]|=>)+>)?)\s*(\([^;]+;)/g;
@@ -349,7 +347,6 @@ function generateDts(library, isAmd, queue) {
                         }
                     }
                     if (!texts) {
-                        console.log(JSON.stringify(queue[i], null, 4).replace(/\\r\\n/g, '\r\n'));
                         err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
                     }
                 }
@@ -379,12 +376,6 @@ function generateDts(library, isAmd, queue) {
         var { filename, elements } = queue[i];
 
         for (var name in elements) {
-            if (!elements[name].forEach) {
-                console.log(name);
-                console.log(JSON.stringify(elements, null, 4));
-                console.log(elements[name].forEach);
-            }
-
             elements[name].forEach(({ published, text, comment }) => {
                 var code = text.replace(namePlaceholder, name);
                 if (!comment) {
