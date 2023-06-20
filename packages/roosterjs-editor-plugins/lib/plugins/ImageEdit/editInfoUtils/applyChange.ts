@@ -75,7 +75,5 @@ export default function applyChange(
     if (wasResizedOrCropped || state == ImageEditInfoState.FullyChanged) {
         image.width = targetWidth;
         image.height = targetHeight;
-        image.style.width = targetWidth + 'px';
-        image.style.height = targetHeight + 'px';
     }
 }
