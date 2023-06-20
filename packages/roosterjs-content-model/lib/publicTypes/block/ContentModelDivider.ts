@@ -7,9 +7,9 @@ import { Selectable } from '../selection/Selectable';
  * Content Model of horizontal divider
  */
 export interface ContentModelDivider
-    extends ContentModelBlockBase<'Divider', ContentModelDividerFormat>,
-        Selectable,
-        ContentModelBlockWithCache {
+    extends Selectable,
+        ContentModelBlockWithCache,
+        ContentModelBlockBase<'Divider', ContentModelDividerFormat> {
     /**
      * Tag name of this element, either HR or DIV
      */

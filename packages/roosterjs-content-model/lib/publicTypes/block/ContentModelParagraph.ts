@@ -8,8 +8,8 @@ import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
  * Content Model of Paragraph
  */
 export interface ContentModelParagraph
-    extends ContentModelBlockBase<'Paragraph'>,
-        ContentModelBlockWithCache {
+    extends ContentModelBlockWithCache,
+        ContentModelBlockBase<'Paragraph'> {
     /**
      * Segments within this paragraph
      */

@@ -21,6 +21,7 @@ import {
 } from '../../modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
 /**
+ * @internal
  * Handle KeyDown event
  * Currently only DELETE and BACKSPACE keys are supported
  */

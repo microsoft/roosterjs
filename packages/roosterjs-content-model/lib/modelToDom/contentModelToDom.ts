@@ -14,6 +14,7 @@ import {
 } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Create DOM tree fragment from Content Model document
  * @param doc Document object of the target DOM tree
  * @param root Target node that will become the container of new DOM tree.

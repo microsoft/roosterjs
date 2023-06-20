@@ -8,9 +8,9 @@ import { Selectable } from '../selection/Selectable';
  * Content Model for general Block element
  */
 export interface ContentModelGeneralBlock
-    extends ContentModelBlockGroupBase<'General'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelBlockFormat & ContentModelSegmentFormat>,
-        Selectable {
+    extends Selectable,
+        ContentModelBlockGroupBase<'General'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelBlockFormat & ContentModelSegmentFormat> {
     /**
      * A reference to original HTML node that this model was created from
      */

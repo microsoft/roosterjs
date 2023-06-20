@@ -29,7 +29,8 @@
             "../packages/roosterjs-editor-plugins/lib/index.ts",
             "../packages/roosterjs-color-utils/lib/index.ts",
             "../packages-ui/roosterjs-react/lib/index.ts",
-            "../packages/roosterjs/lib/index.ts"
+            "../packages/roosterjs/lib/index.ts",
+            "../packages/roosterjs-content-model/lib/index.ts"
         ],
         "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
         "out": "../dist/deploy/docs",

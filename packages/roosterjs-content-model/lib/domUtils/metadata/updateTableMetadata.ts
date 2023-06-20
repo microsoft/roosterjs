@@ -41,7 +41,6 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
 );
 
 /**
- * @internal
  * Update table metadata with a callback
  * @param table The table Content Model
  * @param callback The callback function used for updating metadata

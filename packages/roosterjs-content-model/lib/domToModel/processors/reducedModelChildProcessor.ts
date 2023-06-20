@@ -4,7 +4,10 @@ import { DomToModelContext } from '../../publicTypes/context/DomToModelContext';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { handleRegularSelection, processChildNode } from './childProcessor';
 
-interface FormatStateContext extends DomToModelContext {
+/**
+ * @internal
+ */
+export interface FormatStateContext extends DomToModelContext {
     /**
      * An optional stack of parent elements to process. When provided, the child nodes of current parent element will be ignored,
      * but use the top element in this stack instead in childProcessor.

@@ -1,28 +1,24 @@
 'use strict';
 
-const path = require('path');
 const {
     packagesPath,
-    roosterJsDistPath,
-    roosterJsUiDistPath,
     nodeModulesPath,
     packagesUiPath,
     rootPath,
     runWebPack,
-    getWebpackExternalCallback,
+    buildConfig,
 } = require('./common');
 
-async function pack(isProduction, isAmd, isUi, filename) {
+async function pack(isProduction, isAmd, target, filename) {
+    const { packEntry, targetPath, libraryName, externalHandler } = buildConfig[target];
     const webpackConfig = {
-        entry: isUi
-            ? path.join(packagesUiPath, 'roosterjs-react/lib/index.ts')
-            : path.join(packagesPath, 'roosterjs/lib/index.ts'),
+        entry: packEntry,
         devtool: 'source-map',
         output: {
             filename,
-            path: isUi ? roosterJsUiDistPath : roosterJsDistPath,
+            path: targetPath,
             libraryTarget: isAmd ? 'amd' : undefined,
-            library: isAmd ? undefined : isUi ? 'roosterjsReact' : 'roosterjs',
+            library: isAmd ? undefined : libraryName,
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
@@ -45,7 +41,7 @@ async function pack(isProduction, isAmd, isUi, filename) {
                 },
             ],
         },
-        externals: isUi ? getWebpackExternalCallback([]) : undefined,
+        externals: externalHandler,
         stats: 'minimal',
         mode: isProduction ? 'production' : 'development',
         optimization: {
@@ -56,24 +52,40 @@ async function pack(isProduction, isAmd, isUi, filename) {
     await runWebPack(webpackConfig);
 }
 
-function createStep(isProduction, isAmd, isUi) {
-    const fileName = `rooster${isUi ? '-react' : ''}${isAmd ? '-amd' : ''}${
+function createStep(isProduction, isAmd, target) {
+    const fileName = `${buildConfig[target].jsFileBaseName}${isAmd ? '-amd' : ''}${
         isProduction ? '-min' : ''
     }.js`;
     return {
         message: `Packing ${fileName}...`,
-        callback: async () => pack(isProduction, isAmd, isUi, fileName),
+        callback: async () => pack(isProduction, isAmd, target, fileName),
         enabled: options => (isProduction ? options.packprod : options.pack),
     };
 }
 
 module.exports = {
-    commonJsDebug: createStep(false /*isProduction*/, false /*isAmd*/, false /*isUi*/),
-    commonJsProduction: createStep(true /*isProduction*/, false /*isAmd*/, false /*isUi*/),
-    amdDebug: createStep(false /*isProduction*/, true /*isAmd*/, false /*isUi*/),
-    amdProduction: createStep(true /*isProduction*/, true /*isAmd*/, false /*isUi*/),
-    commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, true /*isUi*/),
-    commonJsProductionUi: createStep(true /*isProduction*/, false /*isAmd*/, true /*isUi*/),
-    amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, true /*isUi*/),
-    amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, true /*isUi*/),
+    commonJsDebug: createStep(false /*isProduction*/, false /*isAmd*/, 'rooster'),
+    commonJsProduction: createStep(true /*isProduction*/, false /*isAmd*/, 'rooster'),
+    amdDebug: createStep(false /*isProduction*/, true /*isAmd*/, 'rooster'),
+    amdProduction: createStep(true /*isProduction*/, true /*isAmd*/, 'rooster'),
+    commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'roosterReact'),
+    commonJsProductionUi: createStep(true /*isProduction*/, false /*isAmd*/, 'roosterReact'),
+    amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'roosterReact'),
+    amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'roosterReact'),
+    commonJsDebugContentModel: createStep(
+        false /*isProduction*/,
+        false /*isAmd*/,
+        'roosterContentModel'
+    ),
+    commonJsProductionContentModel: createStep(
+        true /*isProduction*/,
+        false /*isAmd*/,
+        'roosterContentModel'
+    ),
+    amdDebugContentModel: createStep(false /*isProduction*/, true /*isAmd*/, 'roosterContentModel'),
+    amdProductionContentModel: createStep(
+        true /*isProduction*/,
+        true /*isAmd*/,
+        'roosterContentModel'
+    ),
 };
