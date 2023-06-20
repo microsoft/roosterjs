@@ -8,7 +8,7 @@ const INVALID_LINKS_REGEX = /^file:\/\/\/[a-zA-Z\/]/i;
 /**
  * @internal
  */
-const sanitizeLinks: FormatParser<ContentModelHyperLinkFormat> = (format, element) => {
+export const parseLink: FormatParser<ContentModelHyperLinkFormat> = (format, element) => {
     if (!safeInstanceOf(element, 'HTMLAnchorElement')) {
         return;
     }
@@ -28,5 +28,3 @@ const sanitizeLinks: FormatParser<ContentModelHyperLinkFormat> = (format, elemen
         format.href = '';
     }
 };
-
-export default sanitizeLinks;

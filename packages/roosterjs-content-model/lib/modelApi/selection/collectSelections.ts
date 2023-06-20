@@ -47,6 +47,9 @@ export function getSelectedSegmentsAndParagraphs(
     return result;
 }
 
+/**
+ * @internal
+ */
 export function getSelectedSegments(
     model: ContentModelDocument,
     includingFormatHolder: boolean

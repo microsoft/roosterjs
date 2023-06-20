@@ -10,11 +10,11 @@ import { TableCellMetadataFormat } from 'roosterjs-editor-types';
  * Content Model of Table Cell
  */
 export interface ContentModelTableCell
-    extends ContentModelBlockGroupBase<'TableCell'>,
+    extends Selectable,
+        ContentModelBlockGroupBase<'TableCell'>,
         ContentModelWithFormat<ContentModelTableCellFormat>,
         ContentModelWithDataset<TableCellMetadataFormat>,
-        ContentModelBlockWithCache<HTMLTableCellElement>,
-        Selectable {
+        ContentModelBlockWithCache<HTMLTableCellElement> {
     /**
      * Whether this cell is spanned from left cell
      */

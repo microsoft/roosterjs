@@ -10,6 +10,7 @@ import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 
 /**
+ * @internal
  * Create Content Model from DOM tree in this editor
  * @param root Root element of DOM tree to create Content Model from
  * @param editorContext Context of content model editor

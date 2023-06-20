@@ -30,7 +30,7 @@ const DeprecatedColorList: string[] = [
 /**
  * @internal
  */
-function sanitizeHtmlColorsFromPastedContent(sanitizingOption: Required<HtmlSanitizerOptions>) {
+export function parseDeprecatedColor(sanitizingOption: Required<HtmlSanitizerOptions>) {
     ['color', 'background-color'].forEach(property => {
         chainSanitizerCallback(
             sanitizingOption.cssStyleCallbacks,
@@ -39,5 +39,3 @@ function sanitizeHtmlColorsFromPastedContent(sanitizingOption: Required<HtmlSani
         );
     });
 }
-
-export default sanitizeHtmlColorsFromPastedContent;

@@ -24,7 +24,6 @@ const ImageMetadataFormatDefinition = createObjectDefinition<Required<ImageMetad
 });
 
 /**
- * @internal
  * Update image metadata with a callback
  * @param image The image Content Model
  * @param callback The callback function used for updating metadata

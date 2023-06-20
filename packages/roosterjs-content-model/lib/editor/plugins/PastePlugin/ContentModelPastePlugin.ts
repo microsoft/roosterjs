@@ -1,9 +1,9 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import sanitizeHtmlColorsFromPastedContent from './utils/deprecatedColorParser';
-import sanitizeLinks from './utils/linkParser';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
+import { parseDeprecatedColor } from './utils/deprecatedColorParser';
+import { parseLink } from './utils/linkParser';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
@@ -103,8 +103,8 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                 break;
         }
 
-        addParser(ev.domToModelOption, 'link', sanitizeLinks);
-        sanitizeHtmlColorsFromPastedContent(ev.sanitizingOption);
+        addParser(ev.domToModelOption, 'link', parseLink);
+        parseDeprecatedColor(ev.sanitizingOption);
 
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
