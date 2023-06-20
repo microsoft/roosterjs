@@ -1,5 +1,6 @@
 import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import { SizeFormat } from './formatParts/SizeFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WordBreakFormat } from '../format/formatParts/WordBreakFormat';
@@ -11,4 +12,5 @@ export type ContentModelTableCellFormat = ContentModelBlockFormat &
     BorderBoxFormat &
     VerticalAlignFormat &
     WordBreakFormat &
-    TextColorFormat;
+    TextColorFormat &
+    SizeFormat;
