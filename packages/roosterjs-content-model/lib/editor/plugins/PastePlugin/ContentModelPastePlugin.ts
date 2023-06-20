@@ -1,6 +1,6 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import deprecatedColorParser from './utils/deprecatedColorParser';
+import sanitizeHtmlColorsFromPastedContent from './utils/deprecatedColorParser';
 import sanitizeLinks from './utils/linkParser';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
@@ -103,9 +103,8 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                 break;
         }
 
-        addParser(ev.domToModelOption, 'segment', deprecatedColorParser);
-        addParser(ev.domToModelOption, 'segmentOnBlock', deprecatedColorParser);
         addParser(ev.domToModelOption, 'link', sanitizeLinks);
+        sanitizeHtmlColorsFromPastedContent(ev.sanitizingOption);
 
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
