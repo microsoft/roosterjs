@@ -10,6 +10,7 @@ import { FormatView } from '../format/FormatView';
 import { HtmlAlignFormatRenderer } from '../format/formatPart/HtmlAlignFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
+import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
@@ -36,6 +37,7 @@ const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = 
     VerticalAlignFormatRenderer,
     WordBreakFormatRenderer,
     TextColorFormatRenderer,
+    ...SizeFormatRenderers,
 ];
 
 export function ContentModelTableCellView(props: { cell: ContentModelTableCell }) {
