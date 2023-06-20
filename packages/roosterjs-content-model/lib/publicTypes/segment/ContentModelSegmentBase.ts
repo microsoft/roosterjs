@@ -11,7 +11,7 @@ import { Selectable } from '../selection/Selectable';
 export interface ContentModelSegmentBase<
     T extends ContentModelSegmentType,
     TFormat extends ContentModelSegmentFormat = ContentModelSegmentFormat
-> extends ContentModelWithFormat<TFormat>, Selectable {
+> extends Selectable, ContentModelWithFormat<TFormat> {
     /**
      * Type of this segment
      */

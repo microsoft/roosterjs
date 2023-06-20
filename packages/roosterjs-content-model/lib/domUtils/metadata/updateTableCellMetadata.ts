@@ -12,7 +12,6 @@ const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableC
 );
 
 /**
- * @internal
  * Update table cell metadata with a callback
  * @param cell The table cell Content Model
  * @param callback The callback function used for updating metadata

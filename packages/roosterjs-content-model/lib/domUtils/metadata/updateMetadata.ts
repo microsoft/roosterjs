@@ -5,7 +5,11 @@ import { validate } from 'roosterjs-editor-dom';
 const EditingInfoDatasetName = 'editingInfo';
 
 /**
- * @internal
+ * Update metadata of the given model
+ * @param model The model to update metadata to
+ * @param callback A callback function to update metadata
+ * @param definition @optional Metadata definition used for verify the metadata object
+ * @returns The metadata object if any, or null
  */
 export function updateMetadata<T>(
     model: ContentModelWithDataset<T>,

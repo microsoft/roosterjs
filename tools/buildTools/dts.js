@@ -12,7 +12,7 @@ const {
     nodeModulesPath,
     runNode,
     err,
-    packages,
+    contentModelDistPath,
     roosterJsUiDistPath,
     packagesUI,
     getWebpackExternalCallback,
@@ -25,7 +25,9 @@ const singleLineComment = /\/\/[^\n]*\n/g;
 const multiLineComment = /(^\/\*(\*(?!\/)|[^*])*\*\/\s*)/m;
 
 // 1. [export ][default |declare ](class|interface) <NAME>[ extends| implements <BASE_CLASS>] {...}
-const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_]+(\s*<[^>]+>)?)((\s+extends|\s+implements)(\s[0-9a-zA-Z_\.\s,]+(\s*<[^{]+>)?))?\s*{/g;
+
+// const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_]+(\s*<[^>]+>)?)((\s+extends|\s+implements)(\s[0-9a-zA-Z_\.\s,]+(\s*<[^{]+>)?))?\s*{/g;
+const regClassInterface = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?(interface|class)\s+([a-zA-Z0-9_]+(\s*<[^>]+>)?)(\s+extends(?:\s[0-9a-zA-Z_\.\s,]+(?:\s*<[^{]+>)?))?(\s+implements(?:\s[0-9a-zA-Z_\.\s,]+(?:\s*<[^{]+>)?))?\s*{/g;
 // 2. [export ][default |declare ]function <NAME>(...)[: <TYPE>];
 const regFunction = /(\/\*(\*(?!\/)|[^*])*\*\/\s*)?(export\s+)?(default\s+|declare\s+)?function\s+([a-zA-Z0-9_]+(\s*<(?:[^>]|=>)+>)?)\s*(\([^;]+;)/g;
 // 3. [export ][default |declare ]const enum <NAME> {...}
@@ -161,6 +163,7 @@ function parseClasses(content, elements) {
             namePlaceholder +
             (matches[7] || '') +
             (matches[8] || '') +
+            (matches[9] || '') +
             ' {' +
             result[0];
         var name = getName(matches, 6);
@@ -349,6 +352,7 @@ function generateDts(library, isAmd, queue) {
                         }
                     }
                     if (!texts) {
+                        console.log(JSON.stringify(queue[i], null, 4).replace(/\\r\\n/g, '\r\n'));
                         err(`Name not found: ${name}; alias: ${alias}; file: ${filename}`);
                     }
                 }
@@ -419,13 +423,42 @@ function createQueue(rootPath, baseDir, root, additionalFiles, externalHandler) 
     return queue;
 }
 
-function dts(isAmd, isUi) {
-    const targetPath = isUi ? roosterJsUiDistPath : roosterJsDistPath;
-    const targetPackages = isUi ? packagesUI : ['roosterjs'];
-    const startFileName = isUi ? 'roosterjs-react/lib/index.d.ts' : 'roosterjs/lib/index.d.ts';
-    const libraryName = isUi ? 'roosterjsReact' : 'roosterjs';
-    const targetFileName = isUi ? 'rooster-react' : 'rooster';
-    const externalHandler = isUi ? getWebpackExternalCallback([]) : undefined;
+const config = {
+    rooster: {
+        targetPath: roosterJsDistPath,
+        targetPackages: ['roosterjs'],
+        startFileName: 'roosterjs/lib/index.d.ts',
+        libraryName: 'roosterjs',
+        targetFileName: 'rooster',
+        externalHandler: undefined,
+    },
+    roosterReact: {
+        targetPath: roosterJsUiDistPath,
+        targetPackages: packagesUI,
+        startFileName: 'roosterjs-react/lib/index.d.ts',
+        libraryName: 'roosterjsReact',
+        targetFileName: 'rooster-react',
+        externalHandler: getWebpackExternalCallback([]),
+    },
+    contentModel: {
+        targetPath: contentModelDistPath,
+        targetPackages: ['roosterjs-content-model'],
+        startFileName: 'roosterjs-content-model/lib/index.d.ts',
+        libraryName: 'roosterjsContentModel',
+        targetFileName: 'rooster-content-model',
+        externalHandler: getWebpackExternalCallback([]),
+    },
+};
+
+function dts(isAmd, target) {
+    const {
+        targetPath,
+        targetPackages,
+        startFileName,
+        libraryName,
+        targetFileName,
+        externalHandler,
+    } = config[target];
 
     mkdirp.sync(targetPath);
 
@@ -446,7 +479,7 @@ function dts(isAmd, isUi) {
     const fileName = `${targetFileName}${isAmd ? '-amd' : ''}.d.ts`;
     const fullFileName = path.join(targetPath, fileName);
 
-    if (isUi) {
+    if (target != 'rooster') {
         const roosterjsDtsFileName = `rooster${isAmd ? '-amd' : ''}.d.ts`;
         fs.copyFileSync(
             path.join(roosterJsDistPath, roosterjsDtsFileName),
@@ -473,22 +506,32 @@ function dts(isAmd, isUi) {
 module.exports = {
     dtsCommonJs: {
         message: `Generating type definition file (rooster.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, false /*isUi*/),
+        callback: () => dts(false /*isAmd*/, 'rooster'),
         enabled: options => options.dts,
     },
     dtsAmd: {
         message: `Generating type definition file (rooster-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, false /*isUi*/),
+        callback: () => dts(true /*isAmd*/, 'rooster'),
         enabled: options => options.dts,
     },
     dtsCommonJsUi: {
         message: `Generating type definition file (rooster-react.d.ts) for CommonJs...`,
-        callback: () => dts(false /*isAmd*/, true /*isUi*/),
+        callback: () => dts(false /*isAmd*/, 'roosterReact'),
         enabled: options => options.dts,
     },
     dtsAmdUi: {
         message: `Generating type definition file (rooster-react-amd.d.ts) for AMD...`,
-        callback: () => dts(true /*isAmd*/, true /*isUi*/),
+        callback: () => dts(true /*isAmd*/, 'roosterReact'),
+        enabled: options => options.dts,
+    },
+    dtsCommonJsContentModel: {
+        message: `Generating type definition file (rooster-content-model.d.ts) for CommonJs...`,
+        callback: () => dts(false /*isAmd*/, 'contentModel'),
+        enabled: options => options.dts,
+    },
+    dtsAmdContentModel: {
+        message: `Generating type definition file (rooster-content-model-amd.d.ts) for AMD...`,
+        callback: () => dts(true /*isAmd*/, 'contentModel'),
         enabled: options => options.dts,
     },
 };

@@ -7,9 +7,9 @@ import { ContentModelFormatContainerFormat } from '../format/ContentModelFormatC
  * Content Model of Format Container
  */
 export interface ContentModelFormatContainer
-    extends ContentModelBlockGroupBase<'FormatContainer'>,
-        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat>,
-        ContentModelBlockWithCache {
+    extends ContentModelBlockWithCache,
+        ContentModelBlockGroupBase<'FormatContainer'>,
+        ContentModelBlockBase<'BlockGroup', ContentModelFormatContainerFormat> {
     /**
      * Tag name of this container
      */

@@ -16,6 +16,7 @@ const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
+const contentModelDistPath = path.join(distPath, 'roosterjs-content-model/dist');
 const deployPath = path.join(distPath, 'deploy');
 const compatibleEnumPath = path.join(
     packagesPath,
@@ -167,4 +168,5 @@ module.exports = {
     findPackageRoot,
     runWebPack,
     getWebpackExternalCallback,
+    contentModelDistPath,
 };

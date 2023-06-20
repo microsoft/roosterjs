@@ -36,6 +36,8 @@ const allTasks = [
     dts.dtsAmd,
     dts.dtsCommonJsUi,
     dts.dtsAmdUi,
+    dts.dtsCommonJsContentModel,
+    dts.dtsAmdContentModel,
     buildDemoStep,
     buildDocumentStep,
     publishStep,
