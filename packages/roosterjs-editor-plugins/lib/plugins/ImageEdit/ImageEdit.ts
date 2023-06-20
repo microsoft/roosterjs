@@ -293,7 +293,7 @@ export default class ImageEdit implements EditorPlugin {
                 this.image,
                 this.editInfo,
                 this.lastSrc,
-                this.wasResized,
+                this.wasResized || this.isCropping,
                 this.clonedImage
             );
 
