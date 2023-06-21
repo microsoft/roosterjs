@@ -1,12 +1,14 @@
-import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
-import { createBr } from '../../../lib/modelApi/creators/createBr';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
 import { setListType } from '../../../lib/modelApi/list/setListType';
+import {
+    createBr,
+    createContentModelDocument,
+    createFormatContainer,
+    createImage,
+    createListItem,
+    createParagraph,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('indent', () => {
     let normalizeContentModelSpy: jasmine.Spy;
@@ -235,7 +237,7 @@ describe('indent', () => {
         const text3 = createText('test3');
         const listItem1 = createListItem([{ listType: 'OL' }]);
         const listItem2 = createListItem([{ listType: 'OL' }, { listType: 'UL' }]);
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);

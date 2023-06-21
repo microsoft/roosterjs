@@ -1,11 +1,13 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/plugins/ContentModelFormatPlugin';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PluginEventType } from 'roosterjs-editor-types';
+import {
+    addSegment,
+    createContentModelDocument,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('ContentModelFormatPlugin', () => {
     it('no pending format, trigger key down event', () => {

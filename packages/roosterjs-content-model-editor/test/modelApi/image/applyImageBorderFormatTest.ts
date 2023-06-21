@@ -1,6 +1,6 @@
 import applyImageBorderFormat from '../../../lib/modelApi/image/applyImageBorderFormat';
 import { Border } from '../../../lib/publicTypes/interface/Border';
-import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
+import { ContentModelImage } from 'roosterjs-content-model-types';
 
 describe('applyImageBorderFormat', () => {
     function createImage(border?: string): ContentModelImage {

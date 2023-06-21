@@ -1,6 +1,5 @@
 import { canMergeCells } from '../../../lib/modelApi/table/canMergeCells';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { createTable, createTableCell } from 'roosterjs-content-model';
 
 describe('canMergeCells', () => {
     it('Single cell table', () => {

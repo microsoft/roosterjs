@@ -1,6 +1,5 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from '../../../lib/publicTypes/context/DomToModelContext';
+import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model';
+import { DomToModelContext } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../../lib/domToModel/processors/reducedModelChildProcessor';
 
 describe('reducedModelChildProcessor', () => {

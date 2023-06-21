@@ -1,8 +1,10 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndentation';
+import {
+    createContentModelDocument,
+    createListItem,
+    createParagraph,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('indent', () => {
     it('Empty group', () => {

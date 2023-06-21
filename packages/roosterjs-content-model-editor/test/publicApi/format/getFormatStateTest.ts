@@ -1,17 +1,18 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import getFormatState from '../../../lib/publicApi/format/getFormatState';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { FormatState } from 'roosterjs-editor-types';
-import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
-
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
+    createContentModelDocument,
+    createDomToModelContext,
+    normalizeContentModel,
+} from 'roosterjs-content-model';
+import {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
     DomToModelOption,
-    IContentModelEditor,
-} from '../../../lib/publicTypes/IContentModelEditor';
+} from 'roosterjs-content-model-types';
 
 const selectedNodeId = 'Selected';
 

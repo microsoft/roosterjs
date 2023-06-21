@@ -1,10 +1,12 @@
 import setImageBoxShadow from '../../../lib/publicApi/image/setImageBoxShadow';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('setImageBoxShadow', () => {
     const style = '0px 0px 3px 3px #aaaaaa';

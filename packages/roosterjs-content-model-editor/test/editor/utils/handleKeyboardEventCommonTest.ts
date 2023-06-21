@@ -1,4 +1,4 @@
-import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';

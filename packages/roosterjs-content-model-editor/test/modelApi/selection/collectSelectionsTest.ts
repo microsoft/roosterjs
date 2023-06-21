@@ -1,20 +1,24 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../../../lib/publicTypes/group/ContentModelBlockGroup';
-import { ContentModelBlockGroupType } from '../../../lib/publicTypes/enum/BlockGroupType';
-import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
-import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createEntity } from '../../../lib/modelApi/creators/createEntity';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { TableSelectionContext } from '../../../lib/publicTypes/selection/TableSelectionContext';
+import {
+    ContentModelBlock,
+    ContentModelBlockGroup,
+    ContentModelBlockGroupType,
+    ContentModelParagraph,
+    ContentModelSegment,
+    ContentModelTable,
+} from 'roosterjs-content-model-types';
+import {
+    createContentModelDocument,
+    createDivider,
+    createEntity,
+    createFormatContainer,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createText,
+} from 'roosterjs-content-model';
 import {
     getSelectedSegments,
     getSelectedParagraphs,
@@ -866,7 +870,7 @@ describe('getOperationalBlocks', () => {
         const para2 = createParagraph();
         const listItem1 = createListItem([]);
         const listItem2 = createListItem([]);
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
 
         runTest(
             [
@@ -888,7 +892,7 @@ describe('getOperationalBlocks', () => {
         const para1 = createParagraph();
         const para2 = createParagraph();
         const listItem = createListItem([]);
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
 
         runTest(
             [
@@ -913,8 +917,8 @@ describe('getOperationalBlocks', () => {
         const para1 = createParagraph(false, { backgroundColor: 'red' });
         const para2 = createParagraph(false, { backgroundColor: 'green' });
         const listItem = createListItem([]);
-        const quote1 = createQuote({ backgroundColor: 'blue' });
-        const quote2 = createQuote({ backgroundColor: 'black' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: 'blue' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: 'black' });
 
         runTest(
             [
@@ -936,8 +940,8 @@ describe('getOperationalBlocks', () => {
         const para1 = createParagraph(false, { backgroundColor: 'red' });
         const para2 = createParagraph(false, { backgroundColor: 'green' });
         const listItem = createListItem([]);
-        const quote1 = createQuote({ backgroundColor: 'blue' });
-        const quote2 = createQuote({ backgroundColor: 'black' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: 'blue' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: 'black' });
 
         runTest(
             [

@@ -1,13 +1,14 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../../../lib/publicApi/utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
+import {
+    createContentModelDocument,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('formatSegmentWithContentModel', () => {
     let editor: IContentModelEditor;

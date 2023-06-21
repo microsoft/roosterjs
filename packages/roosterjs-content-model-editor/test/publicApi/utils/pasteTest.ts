@@ -1,9 +1,9 @@
 import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipboard/createFragmentFromClipboardData';
-import * as domToContentModel from '../../../lib/domToModel/domToContentModel';
+import * as domToContentModel from 'roosterjs-content-model/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('Paste ', () => {
@@ -40,7 +40,7 @@ describe('Paste ', () => {
     };
 
     beforeEach(() => {
-        spyOn(domToContentModel, 'default').and.callThrough();
+        spyOn(domToContentModel, 'domToContentModel').and.callThrough();
         spyOn(createFragmentFromClipboardData, 'default').and.returnValue(fragment);
 
         div = document.createElement('div');

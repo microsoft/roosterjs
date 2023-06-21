@@ -1,21 +1,23 @@
-import { ContentModelSelectionMarker } from '../../../lib/publicTypes/segment/ContentModelSelectionMarker';
-import { createBr } from '../../../lib/modelApi/creators/createBr';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createEntity } from '../../../lib/modelApi/creators/createEntity';
-import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
-import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelSelectionMarker } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelection';
 import { EntityOperation } from 'roosterjs-editor-types';
+import {
+    createBr,
+    createContentModelDocument,
+    createDivider,
+    createEntity,
+    createFormatContainer,
+    createGeneralBlock,
+    createGeneralSegment,
+    createImage,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -1664,7 +1666,7 @@ describe('deleteSelection - forward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
@@ -1729,7 +1731,7 @@ describe('deleteSelection - forward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
@@ -1794,7 +1796,7 @@ describe('deleteSelection - forward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph();
         const para2 = createParagraph();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const listItem = createListItem([]);
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });
@@ -3479,7 +3481,7 @@ describe('deleteSelection - backward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '10' });
         const para2 = createParagraph(false, { lineHeight: '11' });
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
@@ -3544,7 +3546,7 @@ describe('deleteSelection - backward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '10' });
         const para2 = createParagraph(false, { lineHeight: '11' });
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
@@ -3609,7 +3611,7 @@ describe('deleteSelection - backward', () => {
         const model = createContentModelDocument();
         const para1 = createParagraph(false, { lineHeight: '10' });
         const para2 = createParagraph(false, { lineHeight: '11' });
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const listItem = createListItem([]);
         const text = createText('test');
         const marker = createSelectionMarker({ fontSize: '10px' });

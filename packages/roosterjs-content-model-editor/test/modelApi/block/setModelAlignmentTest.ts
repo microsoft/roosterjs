@@ -1,10 +1,12 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { setModelAlignment } from '../../../lib/modelApi/block/setModelAlignment';
+import {
+    createContentModelDocument,
+    createListItem,
+    createParagraph,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('align left', () => {
     it('Empty group', () => {

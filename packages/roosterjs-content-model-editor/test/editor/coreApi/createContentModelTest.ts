@@ -1,8 +1,8 @@
 import * as cloneModel from '../../../lib/modelApi/common/cloneModel';
-import * as domToContentModel from '../../../lib/domToModel/domToContentModel';
+import * as domToContentModel from 'roosterjs-content-model/lib/domToModel/domToContentModel';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
-import { DomToModelOption } from '../../../lib/publicTypes/IContentModelEditor';
+import { DomToModelOption } from 'roosterjs-content-model-types';
 import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
@@ -25,7 +25,9 @@ describe('createContentModel', () => {
             .and.returnValue(mockedEditorContext);
         getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx').and.returnValue(mockedRange);
 
-        domToContentModelSpy = spyOn(domToContentModel, 'default').and.returnValue(mockedModel);
+        domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
+            mockedModel
+        );
         cloneModelSpy = spyOn(cloneModel, 'cloneModel').and.returnValue(mockedClonedModel);
 
         core = ({

@@ -3,7 +3,10 @@ import { getComputedStyle } from 'roosterjs-editor-dom';
 const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 
 /**
- * @internal
+ * Parse unit value with its unit
+ * @param value The source value to parse
+ * @param element The source element which has this unit value.
+ * @param resultUnit Unit for result, can be px or pt. @default px
  */
 export function parseValueWithUnit(
     value: string = '',

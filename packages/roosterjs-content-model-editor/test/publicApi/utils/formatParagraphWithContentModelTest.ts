@@ -1,8 +1,6 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createContentModelDocument, createParagraph, createText } from 'roosterjs-content-model';
 import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 

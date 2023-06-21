@@ -1,8 +1,7 @@
 import * as PastePluginFile from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
-import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
-import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
-import { ContentModelDocument } from '../../../../lib/publicTypes';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { contentModelToDom, domToContentModel } from 'roosterjs-content-model';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { processPastedContentFromExcel } from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 

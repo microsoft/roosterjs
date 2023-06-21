@@ -1,10 +1,12 @@
 import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
 import insertImage from '../../../lib/publicApi/image/insertImage';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    addSegment,
+    createContentModelDocument,
+    createSelectionMarker,
+} from 'roosterjs-content-model';
 
 describe('insertImage', () => {
     const testUrl = 'http://test.com/test';

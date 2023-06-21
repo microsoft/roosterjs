@@ -1,17 +1,21 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import applyPendingFormat from '../../../lib/publicApi/format/applyPendingFormat';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { ContentModelSelectionMarker } from '../../../lib/publicTypes/segment/ContentModelSelectionMarker';
-import { ContentModelText } from '../../../lib/publicTypes/segment/ContentModelText';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    ContentModelDocument,
+    ContentModelParagraph,
+    ContentModelSelectionMarker,
+    ContentModelText,
+} from 'roosterjs-content-model-types';
+import {
+    createContentModelDocument,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('applyPendingFormat', () => {
     it('Has pending format', () => {

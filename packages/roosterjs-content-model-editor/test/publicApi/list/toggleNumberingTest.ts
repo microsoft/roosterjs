@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleNumbering from '../../../lib/publicApi/list/toggleNumbering';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('toggleNumbering', () => {

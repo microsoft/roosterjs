@@ -1,8 +1,8 @@
 import * as clearModelFormat from '../../../lib/modelApi/common/clearModelFormat';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
-import * as normalizeContentModel from '../../../lib/modelApi/common/normalizeContentModel';
+import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
 import clearFormat from '../../../lib/publicApi/format/clearFormat';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('clearFormat', () => {

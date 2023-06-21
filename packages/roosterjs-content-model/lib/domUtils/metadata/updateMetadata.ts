@@ -41,7 +41,8 @@ export function updateMetadata<T>(
 }
 
 /**
- * @internal Check if the given model has metadata
+ * Check if the given model has metadata
+ * @param model The content model to check
  */
 export function hasMetadata<T>(model: ContentModelWithDataset<T> | HTMLElement): boolean {
     return !!model.dataset[EditingInfoDatasetName];

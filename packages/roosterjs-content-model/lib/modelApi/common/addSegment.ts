@@ -8,7 +8,10 @@ import type {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Add a given segment into a paragraph from its parent group. If the last block of the given group is not paragraph, create a new paragraph.
+ * @param group The parent block group of the paragraph to add segment into
+ * @param newSegment The segment to add
+ * @param blockFormat The block format used for creating a new paragraph when need
  */
 export function addSegment(
     group: ContentModelBlockGroup,

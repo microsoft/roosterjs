@@ -1,7 +1,9 @@
 import { adjustWordSelection } from '../../../lib/modelApi/selection/adjustWordSelection';
-import { ContentModelBlock } from '../../../lib/publicTypes/block/ContentModelBlock';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelSegment } from '../../../lib/publicTypes/segment/ContentModelSegment';
+import {
+    ContentModelBlock,
+    ContentModelDocument,
+    ContentModelSegment,
+} from 'roosterjs-content-model-types';
 
 const defaultMarker: ContentModelSegment = {
     segmentType: 'SelectionMarker',

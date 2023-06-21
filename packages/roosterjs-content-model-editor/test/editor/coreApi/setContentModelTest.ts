@@ -1,4 +1,4 @@
-import * as contentModelToDom from '../../../lib/modelToDom/contentModelToDom';
+import * as contentModelToDom from 'roosterjs-content-model/lib/modelToDom/contentModelToDom';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { setContentModel } from '../../../lib/editor/coreApi/setContentModel';
 
@@ -16,7 +16,9 @@ describe('setContentModel', () => {
     let getSelectionRange: jasmine.Spy;
 
     beforeEach(() => {
-        contentModelToDomSpy = spyOn(contentModelToDom, 'default').and.returnValue(mockedRange);
+        contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(
+            mockedRange
+        );
         createEditorContext = jasmine
             .createSpy('createEditorContext')
             .and.returnValue(mockedContext);

@@ -3,7 +3,7 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
 import { ChangeSource, Keys } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
 import {

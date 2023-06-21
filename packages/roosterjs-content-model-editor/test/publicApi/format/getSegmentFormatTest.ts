@@ -1,16 +1,14 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import getSegmentFormat from '../../../lib/publicApi/format/getSegmentFormat';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { ContentModelSegmentFormat, DomToModelOption } from 'roosterjs-content-model-types';
 import { createRange } from 'roosterjs-editor-dom';
-import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
-
 import {
-    DomToModelOption,
-    IContentModelEditor,
-} from '../../../lib/publicTypes/IContentModelEditor';
+    createContentModelDocument,
+    createDomToModelContext,
+    normalizeContentModel,
+} from 'roosterjs-content-model';
 
 const selectedNodeId = 'Selected';
 

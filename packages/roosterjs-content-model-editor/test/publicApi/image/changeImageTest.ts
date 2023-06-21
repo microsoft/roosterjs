@@ -1,12 +1,14 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as readFile from 'roosterjs-editor-dom/lib/utils/readFile';
 import changeImage from '../../../lib/publicApi/image/changeImage';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('changeImage', () => {
     const testUrl = 'http://test.com/test';

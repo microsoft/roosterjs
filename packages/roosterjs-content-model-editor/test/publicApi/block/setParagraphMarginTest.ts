@@ -1,6 +1,6 @@
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { paragraphTestCommon } from './paragraphTestCommon';
 import setParagraphMargin from '../../../lib/publicApi/block/setParagraphMargin';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { paragraphTestCommon } from './paragraphTestCommon';
 
 describe('setParagraphMargin', () => {
     function runTest(

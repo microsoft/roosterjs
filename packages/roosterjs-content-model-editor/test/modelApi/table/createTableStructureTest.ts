@@ -1,5 +1,5 @@
-import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { ContentModelTable } from 'roosterjs-content-model-types';
+import { createContentModelDocument } from 'roosterjs-content-model';
 import { createTableStructure } from '../../../lib/modelApi/table/createTableStructure';
 
 describe('createTableStructure', () => {

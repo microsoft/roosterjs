@@ -1,12 +1,13 @@
 import removeLink from '../../../lib/publicApi/link/removeLink';
-import { addLink } from '../../../lib/modelApi/common/addDecorators';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    addLink,
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('removeLink', () => {
     let editor: IContentModelEditor;

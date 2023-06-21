@@ -1,8 +1,10 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
 import { findListItemsInSameThread } from '../../../lib/modelApi/list/findListItemsInSameThread';
+import {
+    createContentModelDocument,
+    createFormatContainer,
+    createListItem,
+    createParagraph,
+} from 'roosterjs-content-model';
 
 describe('findListItemsInSameThread', () => {
     it('Empty group', () => {
@@ -192,8 +194,8 @@ describe('findListItemsInSameThread', () => {
         const item1 = createListItem([{ listType: 'UL' }]);
         const item2 = createListItem([{ listType: 'UL' }]);
         const item3 = createListItem([{ listType: 'UL' }]);
-        const quote1 = createQuote();
-        const quote3 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote3 = createFormatContainer('blockquote');
 
         quote1.blocks.push(item1);
         quote3.blocks.push(item3);
@@ -212,8 +214,8 @@ describe('findListItemsInSameThread', () => {
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }]);
-        const quote1 = createQuote();
-        const quote3 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote3 = createFormatContainer('blockquote');
 
         quote1.blocks.push(item1);
         quote3.blocks.push(item3);
@@ -232,8 +234,8 @@ describe('findListItemsInSameThread', () => {
         const item1 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
         const item3 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);
-        const quote1 = createQuote();
-        const quote3 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote3 = createFormatContainer('blockquote');
 
         quote1.blocks.push(item1);
         quote3.blocks.push(item3);
@@ -252,8 +254,8 @@ describe('findListItemsInSameThread', () => {
         const item3 = createListItem([{ listType: 'OL' }]);
         const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
         const item1 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);
-        const quote1 = createQuote();
-        const quote3 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote3 = createFormatContainer('blockquote');
 
         quote1.blocks.push(item1);
         quote3.blocks.push(item3);

@@ -1,9 +1,13 @@
-import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
-import { ContentModelTableFormat } from '../../../lib/publicTypes/format/ContentModelTableFormat';
-import { createTable as originalCreateTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell as originalCreateTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { splitTableCellVertically } from '../../../lib/modelApi/table/splitTableCellVertically';
+import {
+    ContentModelTable,
+    ContentModelTableCellFormat,
+    ContentModelTableFormat,
+} from 'roosterjs-content-model-types';
+import {
+    createTable as originalCreateTable,
+    createTableCell as originalCreateTableCell,
+} from 'roosterjs-content-model';
 
 const mockedCachedElement = {} as any;
 

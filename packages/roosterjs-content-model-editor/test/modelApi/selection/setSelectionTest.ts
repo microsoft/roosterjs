@@ -1,13 +1,15 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { setSelection } from '../../../lib/modelApi/selection/setSelection';
+import {
+    createContentModelDocument,
+    createDivider,
+    createGeneralSegment,
+    createImage,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('setSelection', () => {
     it('Empty model, empty selection', () => {

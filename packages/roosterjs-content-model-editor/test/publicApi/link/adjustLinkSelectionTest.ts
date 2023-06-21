@@ -1,14 +1,15 @@
 import adjustLinkSelection from '../../../lib/publicApi/link/adjustLinkSelection';
-import { addLink } from '../../../lib/modelApi/common/addDecorators';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelLink } from '../../../lib/publicTypes/decorator/ContentModelLink';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument, ContentModelLink } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import {
+    addLink,
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('adjustLinkSelection', () => {
     let editor: IContentModelEditor;

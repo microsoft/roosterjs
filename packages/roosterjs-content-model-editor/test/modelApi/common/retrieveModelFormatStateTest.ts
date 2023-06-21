@@ -1,20 +1,22 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import { addCode } from '../../../lib/modelApi/common/addDecorators';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
 import { ContentModelFormatState } from '../../../lib/publicTypes/format/formatState/ContentModelFormatState';
-import { ContentModelSegmentFormat } from '../../../lib/publicTypes/format/ContentModelSegmentFormat';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { retrieveModelFormatState } from '../../../lib/modelApi/common/retrieveModelFormatState';
+import {
+    addCode,
+    addSegment,
+    createContentModelDocument,
+    createDivider,
+    createFormatContainer,
+    createImage,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('retrieveModelFormatState', () => {
     const segmentFormat: ContentModelSegmentFormat = {
@@ -119,7 +121,7 @@ describe('retrieveModelFormatState', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para = createParagraph();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const marker = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {

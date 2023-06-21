@@ -1,6 +1,5 @@
-import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
-import { ContentModelTableCellFormat } from '../../../lib/publicTypes/format/ContentModelTableCellFormat';
-import { createTableCell as originalCreateTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
+import { createTableCell as originalCreateTableCell } from 'roosterjs-content-model';
 import { setTableCellBackgroundColor } from '../../../lib/modelApi/table/setTableCellBackgroundColor';
 
 function createTableCell(

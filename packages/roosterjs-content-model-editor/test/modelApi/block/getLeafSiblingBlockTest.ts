@@ -1,12 +1,14 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { getLeafSiblingBlock } from '../../../lib/modelApi/block/getLeafSiblingBlock';
+import {
+    createContentModelDocument,
+    createFormatContainer,
+    createGeneralSegment,
+    createListItem,
+    createParagraph,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('getLeafSiblingBlock', () => {
     it('Block is not in model', () => {
@@ -57,7 +59,7 @@ describe('getLeafSiblingBlock', () => {
         const block1 = createParagraph(false, { backgroundColor: '1' });
         const block2 = createParagraph(false, { backgroundColor: '2' });
         const block3 = createParagraph(false, { backgroundColor: '3' });
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const model = createContentModelDocument();
 
         quote.blocks.push(block1, block2, block3);
@@ -80,7 +82,7 @@ describe('getLeafSiblingBlock', () => {
         const block1 = createParagraph(false, { backgroundColor: '1' });
         const block2 = createParagraph(false, { backgroundColor: '2' });
         const block3 = createParagraph(false, { backgroundColor: '3' });
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const model = createContentModelDocument();
 
         quote.blocks.push(block2);
@@ -103,8 +105,8 @@ describe('getLeafSiblingBlock', () => {
         const block1 = createParagraph(false, { backgroundColor: '1' });
         const block2 = createParagraph(false, { backgroundColor: '2' });
         const block3 = createParagraph(false, { backgroundColor: '3' });
-        const quote1 = createQuote({ backgroundColor: '4' });
-        const quote2 = createQuote({ backgroundColor: '5' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: '4' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: '5' });
         const model = createContentModelDocument();
 
         quote1.blocks.push(block1);
@@ -126,8 +128,8 @@ describe('getLeafSiblingBlock', () => {
 
     it('1 paragraphs, between empty block group', () => {
         const block = createParagraph(false, { backgroundColor: '2' });
-        const quote1 = createQuote({ backgroundColor: '4' });
-        const quote2 = createQuote({ backgroundColor: '5' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: '4' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: '5' });
         const model = createContentModelDocument();
 
         model.blocks.push(quote1, block, quote2);
@@ -149,9 +151,9 @@ describe('getLeafSiblingBlock', () => {
         const block1 = createParagraph(false, { backgroundColor: '1' });
         const block2 = createParagraph(false, { backgroundColor: '2' });
         const block3 = createParagraph(false, { backgroundColor: '3' });
-        const quote1 = createQuote({ backgroundColor: '4' });
-        const quote2 = createQuote({ backgroundColor: '5' });
-        const quote3 = createQuote({ backgroundColor: '6' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: '4' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: '5' });
+        const quote3 = createFormatContainer('blockquote', { backgroundColor: '6' });
         const model = createContentModelDocument();
 
         quote1.blocks.push(block1);
@@ -177,9 +179,9 @@ describe('getLeafSiblingBlock', () => {
         const block1 = createParagraph(false, { backgroundColor: '1' });
         const block2 = createParagraph(false, { backgroundColor: '2' });
         const block3 = createParagraph(false, { backgroundColor: '3' });
-        const quote1 = createQuote({ backgroundColor: '4' });
-        const quote2 = createQuote({ backgroundColor: '5' });
-        const quote3 = createQuote({ backgroundColor: '6' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: '4' });
+        const quote2 = createFormatContainer('blockquote', { backgroundColor: '5' });
+        const quote3 = createFormatContainer('blockquote', { backgroundColor: '6' });
         const list1 = createListItem([]);
         const list2 = createListItem([{ listType: 'OL' }]);
         const list3 = createListItem([{ listType: 'UL' }]);

@@ -1,5 +1,5 @@
 import setBackgroundColor from '../../../lib/publicApi/segment/setBackgroundColor';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 
 describe('setBackgroundColor', () => {

@@ -1,13 +1,15 @@
 import { clearModelFormat } from '../../../lib/modelApi/common/clearModelFormat';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import {
+    createContentModelDocument,
+    createDivider,
+    createFormatContainer,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('clearModelFormat', () => {
     it('Empty model', () => {
@@ -583,7 +585,7 @@ describe('clearModelFormat', () => {
 
     it('Model with selection under quote', () => {
         const model = createContentModelDocument();
-        const quote = createQuote({ lineHeight: '25px' });
+        const quote = createFormatContainer('blockquote', { lineHeight: '25px' });
         const para1 = createParagraph(false, { lineHeight: '10px' });
         const para2 = createParagraph(false, { lineHeight: '20px' });
         const para3 = createParagraph(false, { lineHeight: '30px' });

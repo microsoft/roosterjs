@@ -1,9 +1,11 @@
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { toggleModelBlockQuote } from '../../../lib/modelApi/block/toggleModelBlockQuote';
+import {
+    createContentModelDocument,
+    createFormatContainer,
+    createListItem,
+    createParagraph,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('toggleModelBlockQuote', () => {
     it('empty model', () => {
@@ -144,7 +146,7 @@ describe('toggleModelBlockQuote', () => {
         const text1 = createText('test1');
         const para2 = createParagraph();
         const text2 = createText('test2');
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -199,7 +201,7 @@ describe('toggleModelBlockQuote', () => {
         const text1 = createText('test1');
         const para2 = createParagraph();
         const text2 = createText('test2');
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -256,8 +258,8 @@ describe('toggleModelBlockQuote', () => {
         const text2 = createText('test2');
         const para3 = createParagraph();
         const text3 = createText('test3');
-        const quote1 = createQuote();
-        const quote3 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote3 = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -328,8 +330,8 @@ describe('toggleModelBlockQuote', () => {
         const text2 = createText('test2');
         const para3 = createParagraph();
         const text3 = createText('test3');
-        const quote1 = createQuote({ backgroundColor: 'red' });
-        const quote3 = createQuote({ backgroundColor: 'red' });
+        const quote1 = createFormatContainer('blockquote', { backgroundColor: 'red' });
+        const quote3 = createFormatContainer('blockquote', { backgroundColor: 'red' });
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -418,7 +420,7 @@ describe('toggleModelBlockQuote', () => {
         const text3 = createText('test3');
         const para4 = createParagraph();
         const text4 = createText('test4');
-        const quote2 = createQuote();
+        const quote2 = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -559,8 +561,8 @@ describe('toggleModelBlockQuote', () => {
         const text1 = createText('test1');
         const para2 = createParagraph();
         const text2 = createText('test2');
-        const quote1 = createQuote();
-        const quote2 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote2 = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -625,7 +627,7 @@ describe('toggleModelBlockQuote', () => {
         const text1 = createText('test1');
         const para2 = createParagraph();
         const text2 = createText('test2');
-        const quote1 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
         para2.segments.push(text2);

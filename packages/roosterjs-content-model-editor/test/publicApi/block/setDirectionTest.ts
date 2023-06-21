@@ -1,5 +1,5 @@
 import setDirection from '../../../lib/publicApi/block/setDirection';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
 
 describe('setDirection', () => {

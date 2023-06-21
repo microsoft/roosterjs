@@ -1,8 +1,8 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
-import domToContentModel from '../../../lib/domToModel/domToContentModel';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createRange } from 'roosterjs-editor-dom';
+import { domToContentModel } from 'roosterjs-content-model';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';

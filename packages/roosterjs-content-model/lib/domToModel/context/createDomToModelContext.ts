@@ -5,7 +5,9 @@ import { DomToModelContext, DomToModelOption, EditorContext } from 'roosterjs-co
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
- * @internal
+ * Create context object form DOM to Content Model conversion
+ * @param editorContext Context of editor
+ * @param options Options for this context
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,

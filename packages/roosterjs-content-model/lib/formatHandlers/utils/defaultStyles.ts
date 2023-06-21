@@ -132,7 +132,7 @@ export const enum PseudoTagNames {
 }
 
 /**
- * @internal
+ * A map from tag name to its default implicit formats
  */
 export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
     a: {

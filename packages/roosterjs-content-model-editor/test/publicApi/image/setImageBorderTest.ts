@@ -1,11 +1,13 @@
 import setImageBorder from '../../../lib/publicApi/image/setImageBorder';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { Border } from '../../../lib/publicTypes/interface/Border';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('setImageBorder', () => {
     function runTest(

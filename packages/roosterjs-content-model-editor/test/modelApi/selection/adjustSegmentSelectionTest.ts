@@ -1,8 +1,10 @@
 import { adjustSegmentSelection } from '../../../lib/modelApi/selection/adjustSegmentSelection';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import {
+    createContentModelDocument,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('adjustSegmentSelection', () => {
     it('Empty doc', () => {

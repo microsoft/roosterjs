@@ -1,6 +1,6 @@
 import * as setListType from '../../../lib/modelApi/list/setListType';
 import toggleBullet from '../../../lib/publicApi/list/toggleBullet';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('toggleBullet', () => {

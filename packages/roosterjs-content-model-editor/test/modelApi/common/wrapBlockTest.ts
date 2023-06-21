@@ -1,8 +1,9 @@
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelFormatContainer } from '../../../lib/publicTypes/group/ContentModelFormatContainer';
-import { ContentModelParagraph } from '../../../lib/publicTypes/block/ContentModelParagraph';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
+import { createFormatContainer, createParagraph } from 'roosterjs-content-model';
+import {
+    ContentModelDocument,
+    ContentModelFormatContainer,
+    ContentModelParagraph,
+} from 'roosterjs-content-model-types';
 import {
     wrapBlockStep1,
     WrapBlockStep1Result,
@@ -22,7 +23,7 @@ describe('wrapBlockStep1', () => {
                 segments: [],
                 format: {},
             },
-            createQuote,
+            () => createFormatContainer('blockquote'),
             canMerge as any
         );
 
@@ -44,7 +45,13 @@ describe('wrapBlockStep1', () => {
         };
         const canMerge = jasmine.createSpy().and.returnValue(false);
 
-        wrapBlockStep1(result, parent, para, createQuote, canMerge as any);
+        wrapBlockStep1(
+            result,
+            parent,
+            para,
+            () => createFormatContainer('blockquote'),
+            canMerge as any
+        );
 
         expect(parent).toEqual({
             blockGroupType: 'Document',
@@ -103,7 +110,13 @@ describe('wrapBlockStep1', () => {
         };
         const canMerge = jasmine.createSpy().and.returnValue(true);
 
-        wrapBlockStep1(result, parent, para2, createQuote, canMerge as any);
+        wrapBlockStep1(
+            result,
+            parent,
+            para2,
+            () => createFormatContainer('blockquote'),
+            canMerge as any
+        );
 
         expect(parent).toEqual({
             blockGroupType: 'Document',
@@ -149,7 +162,7 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has result, invalid parent', () => {
-        const quote: ContentModelFormatContainer = createQuote();
+        const quote: ContentModelFormatContainer = createFormatContainer('blockquote');
         const doc: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
@@ -178,7 +191,7 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has result, no block to merge', () => {
-        const quote: ContentModelFormatContainer = createQuote();
+        const quote: ContentModelFormatContainer = createFormatContainer('blockquote');
         const doc: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [quote],
@@ -216,10 +229,18 @@ describe('wrapBlockStep2', () => {
     });
 
     it('Has results, can merge', () => {
-        const quote1: ContentModelFormatContainer = createQuote({ backgroundColor: 'red' });
-        const quote2: ContentModelFormatContainer = createQuote({ backgroundColor: 'green' });
-        const quote3: ContentModelFormatContainer = createQuote({ backgroundColor: 'blue' });
-        const quote4: ContentModelFormatContainer = createQuote({ backgroundColor: 'yellow' });
+        const quote1: ContentModelFormatContainer = createFormatContainer('blockquote', {
+            backgroundColor: 'red',
+        });
+        const quote2: ContentModelFormatContainer = createFormatContainer('blockquote', {
+            backgroundColor: 'green',
+        });
+        const quote3: ContentModelFormatContainer = createFormatContainer('blockquote', {
+            backgroundColor: 'blue',
+        });
+        const quote4: ContentModelFormatContainer = createFormatContainer('blockquote', {
+            backgroundColor: 'yellow',
+        });
         const para1: ContentModelParagraph = createParagraph(true, { backgroundColor: 'red' });
         const para2: ContentModelParagraph = createParagraph(true, { backgroundColor: 'green' });
         const para3: ContentModelParagraph = createParagraph(true, { backgroundColor: 'blue' });

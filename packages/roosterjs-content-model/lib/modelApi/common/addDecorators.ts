@@ -18,7 +18,9 @@ export function addLink(segment: ContentModelSegment, link: ContentModelLink) {
 }
 
 /**
- * @internal
+ * Add a code decorator into segment if any
+ * @param segment The segment to add decorator to
+ * @param code The code decorator to add
  */
 export function addCode(segment: ContentModelSegment, code: ContentModelCode) {
     if (code.format.fontFamily) {

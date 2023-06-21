@@ -1,7 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import setListStyle from '../../../lib/publicApi/list/setListStyle';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ListMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ListMetadataFormat';
+import { ContentModelDocument, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 describe('setListStyle', () => {
     function runTest(

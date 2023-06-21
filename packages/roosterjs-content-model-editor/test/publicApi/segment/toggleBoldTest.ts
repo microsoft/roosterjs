@@ -1,5 +1,5 @@
 import toggleBold from '../../../lib/publicApi/segment/toggleBold';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { segmentTestCommon } from './segmentTestCommon';
 
 describe('toggleBold', () => {

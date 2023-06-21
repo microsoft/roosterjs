@@ -1,12 +1,13 @@
 import adjustImageSelection from '../../../lib/publicApi/image/adjustImageSelection';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createText } from '../../../lib/modelApi/creators/createText';
 import { segmentTestCommon } from '../segment/segmentTestCommon';
+import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createParagraph,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('adjustImageSelection', () => {
     function runTest(

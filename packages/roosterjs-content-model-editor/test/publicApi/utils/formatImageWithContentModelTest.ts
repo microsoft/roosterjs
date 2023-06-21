@@ -1,13 +1,14 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import formatImageWithContentModel from '../../../lib/publicApi/utils/formatImageWithContentModel';
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createImage } from '../../../lib/modelApi/creators/createImage';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
+import {
+    addSegment,
+    createContentModelDocument,
+    createImage,
+    createText,
+} from 'roosterjs-content-model';
 
 describe('formatImageWithContentModel', () => {
     function runTest(

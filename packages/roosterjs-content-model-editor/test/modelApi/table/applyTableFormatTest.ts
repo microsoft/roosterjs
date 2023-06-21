@@ -1,9 +1,11 @@
 import { applyTableFormat } from '../../../lib/modelApi/table/applyTableFormat';
-import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { ContentModelTableCell } from '../../../lib/publicTypes/group/ContentModelTableCell';
-import { ContentModelTableRow } from '../../../lib/publicTypes/block/ContentModelTableRow';
 import { TableBorderFormat } from 'roosterjs-editor-types';
-import { TableMetadataFormat } from '../../../lib/publicTypes/format/formatParts/TableMetadataFormat';
+import {
+    ContentModelTable,
+    ContentModelTableCell,
+    ContentModelTableRow,
+    TableMetadataFormat,
+} from 'roosterjs-content-model-types';
 
 describe('applyTableFormat', () => {
     function createCell(): ContentModelTableCell {

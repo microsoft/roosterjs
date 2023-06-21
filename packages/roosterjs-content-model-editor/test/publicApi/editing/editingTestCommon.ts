@@ -1,5 +1,5 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
 

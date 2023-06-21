@@ -1,10 +1,10 @@
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
-import * as contentModelToDomFile from '../../../lib/modelToDom/contentModelToDom';
+import * as contentModelToDomFile from 'roosterjs-content-model/lib/modelToDom/contentModelToDom';
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
-import { IContentModelEditor } from '../../../lib/publicTypes';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
 } from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
@@ -157,7 +157,9 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.returnValue(selectionRangeExValue);
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(
+                selectionRangeExValue
+            );
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
 
             triggerPluginEventSpy.and.callThrough();
@@ -171,7 +173,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,
@@ -211,7 +213,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 const container = document.createElement('div');
                 container.append(table);
 
@@ -231,7 +233,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,
@@ -269,7 +271,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 div.appendChild(image);
                 return selectionRangeExValue;
             });
@@ -286,7 +288,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,
@@ -359,7 +361,9 @@ describe('ContentModelCopyPastePlugin |', () => {
                     };
                 }
             );
-            spyOn(contentModelToDomFile, 'default').and.returnValue(selectionRangeExValue);
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.returnValue(
+                selectionRangeExValue
+            );
 
             triggerPluginEventSpy.and.callThrough();
             focusSpy.and.callThrough();
@@ -372,7 +376,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionSpy.calls.argsFor(0)[0]).toEqual(modelValue);
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,
@@ -410,7 +414,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 const container = document.createElement('div');
                 container.append(table);
 
@@ -429,7 +433,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,
@@ -468,7 +472,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             };
 
             spyOn(deleteSelectionsFile, 'deleteSelection');
-            spyOn(contentModelToDomFile, 'default').and.callFake(() => {
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 div.appendChild(image);
                 return selectionRangeExValue;
             });
@@ -484,7 +488,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // Assert
             expect(getSelectionRangeEx).toHaveBeenCalled();
-            expect(contentModelToDomFile.default).toHaveBeenCalledWith(
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
                 div,
                 pasteModelValue,

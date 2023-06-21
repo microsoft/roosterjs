@@ -2,7 +2,7 @@ import { BorderFormat } from 'roosterjs-content-model-types';
 import { FormatHandler } from '../FormatHandler';
 
 /**
- * @internal
+ * Keys of border items
  */
 export const BorderKeys: (keyof BorderFormat & keyof CSSStyleDeclaration)[] = [
     'borderTop',

@@ -1,6 +1,5 @@
-import * as tableProcessor from '../../../lib/domToModel/processors/tableProcessor';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import * as tableProcessor from 'roosterjs-content-model/lib/domToModel/processors/tableProcessor';
+import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model';
 import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 describe('tablePreProcessor', () => {

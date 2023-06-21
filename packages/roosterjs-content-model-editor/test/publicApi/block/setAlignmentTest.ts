@@ -1,11 +1,13 @@
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import setAlignment from '../../../lib/publicApi/block/setAlignment';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { ContentModelListItem } from '../../../lib/publicTypes/group/ContentModelListItem';
-import { ContentModelTable } from '../../../lib/publicTypes/block/ContentModelTable';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
+import { createContentModelDocument } from 'roosterjs-content-model';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { paragraphTestCommon } from './paragraphTestCommon';
+import {
+    ContentModelDocument,
+    ContentModelListItem,
+    ContentModelTable,
+} from 'roosterjs-content-model-types';
 
 describe('setAlignment', () => {
     function runTest(

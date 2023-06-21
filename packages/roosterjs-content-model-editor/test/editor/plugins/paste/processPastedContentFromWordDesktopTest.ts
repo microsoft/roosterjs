@@ -1,9 +1,8 @@
 import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
-import contentModelToDom from '../../../../lib/modelToDom/contentModelToDom';
-import domToContentModel from '../../../../lib/domToModel/domToContentModel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
-import { ContentModelDocument } from '../../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { contentModelToDom, domToContentModel } from 'roosterjs-content-model';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 
 describe('processPastedContentFromWordDesktopTest', () => {

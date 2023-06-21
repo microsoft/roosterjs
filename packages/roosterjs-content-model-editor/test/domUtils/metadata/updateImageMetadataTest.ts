@@ -1,5 +1,4 @@
-import { ContentModelImage } from '../../../lib/publicTypes/segment/ContentModelImage';
-import { ImageMetadataFormat } from '../../../lib/publicTypes/format/formatParts/ImageMetadataFormat';
+import { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { updateImageMetadata } from '../../../lib/domUtils/metadata/updateImageMetadata';
 
 describe('updateImageMetadataTest', () => {

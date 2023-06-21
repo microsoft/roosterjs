@@ -12,8 +12,7 @@ export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelecti
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
-export { hasMetadata } from './domUtils/metadata/updateMetadata';
-export { updateMetadata } from './domUtils/metadata/updateMetadata';
+export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 
 export { createBr } from './modelApi/creators/createBr';
@@ -27,6 +26,10 @@ export { createText } from './modelApi/creators/createText';
 export { createImage } from './modelApi/creators/createImage';
 export { createContentModelDocument } from './modelApi/creators/createContentModelDocument';
 export { createParagraphDecorator } from './modelApi/creators/createParagraphDecorator';
+export { createGeneralSegment } from './modelApi/creators/createGeneralSegment';
+export { createGeneralBlock } from './modelApi/creators/createGeneralBlock';
+export { createEntity } from './modelApi/creators/createEntity';
+export { createDivider } from './modelApi/creators/createDivider';
 
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
@@ -48,3 +51,5 @@ export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { defaultImplicitFormatMap } from './formatHandlers/utils/defaultStyles';
 
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
+
+export { createDomToModelContext } from './domToModel/context/createDomToModelContext';

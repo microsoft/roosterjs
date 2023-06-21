@@ -1,15 +1,17 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
+import {
+    createContentModelDocument,
+    createDivider,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 
 function onDeleteEntityMock() {
     return false;

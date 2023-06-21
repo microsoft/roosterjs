@@ -1,16 +1,18 @@
-import { addSegment } from '../../../lib/modelApi/common/addSegment';
-import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
-import { createDivider } from '../../../lib/modelApi/creators/createDivider';
-import { createEntity } from '../../../lib/modelApi/creators/createEntity';
-import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
-import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
-import { createQuote } from '../../../lib/modelApi/creators/createQuote';
-import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
-import { createTable } from '../../../lib/modelApi/creators/createTable';
-import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { createText } from '../../../lib/modelApi/creators/createText';
+import {
+    addSegment,
+    createContentModelDocument,
+    createDivider,
+    createEntity,
+    createFormatContainer,
+    createGeneralBlock,
+    createGeneralSegment,
+    createListItem,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model';
 import {
     iterateSelections,
     IterateSelectionsCallback,
@@ -118,7 +120,7 @@ describe('iterateSelections', () => {
 
     it('Group with selection inside quote', () => {
         const group = createContentModelDocument();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('text1');
@@ -180,7 +182,7 @@ describe('iterateSelections', () => {
         const group = createContentModelDocument();
         const table = createTable(1);
         const cell = createTableCell();
-        const quote = createQuote();
+        const quote = createFormatContainer('blockquote');
         const listItem = createListItem([]);
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -1120,8 +1122,8 @@ describe('iterateSelections', () => {
 
     it('Return true from first selection in nested block group', () => {
         const group = createContentModelDocument();
-        const quote1 = createQuote();
-        const quote2 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
+        const quote2 = createFormatContainer('blockquote');
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('text1');
@@ -1340,10 +1342,10 @@ describe('iterateSelections', () => {
     });
 
     it('Check cachedElement is cleared', () => {
-        const quote1 = createQuote();
+        const quote1 = createFormatContainer('blockquote');
         const para1 = createParagraph();
         const divider1 = createDivider('hr');
-        const quote2 = createQuote();
+        const quote2 = createFormatContainer('blockquote');
         const para2 = createParagraph();
         const divider2 = createDivider('hr');
         const marker1 = createSelectionMarker();

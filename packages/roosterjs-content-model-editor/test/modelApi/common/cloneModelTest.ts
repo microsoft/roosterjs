@@ -1,5 +1,5 @@
 import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
-import { ContentModelDocument } from '../../../lib/publicTypes/group/ContentModelDocument';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 
 describe('cloneModel', () => {
     function compareObjects(o1: any, o2: any) {
