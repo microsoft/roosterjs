@@ -26,17 +26,12 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     } = editInfo;
     const imageWidth = naturalWidth * (1 - left - right);
     const imageHeight = naturalHeight * (1 - top - bottom);
-
-    // Adjust the canvas size and scaling for high display resolution
-    const devicePixelRatio = window.devicePixelRatio || 1;
     const canvas = document.createElement('canvas');
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
-    canvas.width = targetWidth * devicePixelRatio;
-    canvas.height = targetHeight * devicePixelRatio;
-
+    canvas.width = targetWidth;
+    canvas.height = targetHeight;
     const context = canvas.getContext('2d');
     if (context) {
-        context.scale(devicePixelRatio, devicePixelRatio);
         context.translate(targetWidth / 2, targetHeight / 2);
         context.rotate(angle);
         context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
