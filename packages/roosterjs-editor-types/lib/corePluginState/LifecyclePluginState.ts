@@ -1,7 +1,7 @@
 import CustomData from '../interface/CustomData';
+import DarkColorHandler from '../interface/DarkColorHandler';
 import DefaultFormat from '../interface/DefaultFormat';
 import SelectionPath from '../interface/SelectionPath';
-import { DarkColorHandler } from '../interface';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
 
