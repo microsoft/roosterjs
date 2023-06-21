@@ -297,17 +297,18 @@ function applyDefaultFormat(
                 break;
 
             case 'Paragraph':
-                const paragraphFormat = block.decorator?.format;
+                const paragraphFormat = block.decorator?.format || {};
                 block.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
                     segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
-                        ...segment.format,
                         ...paragraphFormat,
+                        ...segment.format,
                     });
                 });
+
                 if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
                     delete block.decorator;
                 }

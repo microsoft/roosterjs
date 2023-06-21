@@ -1864,7 +1864,7 @@ describe('mergeModel', () => {
                             text: 'test',
                             format: {
                                 formatName: 'mocked',
-                                fontWeight: 'sourceDecoratorFontWeight',
+                                fontWeight: 'sourceFontWeight',
                                 italic: 'sourceItalic',
                                 underline: 'sourceUnderline',
                             } as any,
@@ -1900,10 +1900,10 @@ describe('mergeModel', () => {
                             segmentType: 'Text',
                             text: 'test',
                             format: {
-                                fontFamily: 'ToBeRemoved',
-                                fontWeight: 'sourceFontWeight',
+                                fontFamily: 'sourceFontFamily',
                                 italic: 'sourceItalic',
                                 underline: 'sourceUnderline',
+                                fontSize: 'sourcefontSize',
                             } as any,
                         },
                     ],
@@ -1942,8 +1942,8 @@ describe('mergeModel', () => {
                                 fontWeight: 'sourceDecoratorFontWeight',
                                 italic: 'sourceItalic',
                                 underline: 'sourceUnderline',
-                                fontFamily: 'sourceDecoratorFontName',
-                                fontSize: 'sourceDecoratorFontSize',
+                                fontFamily: 'sourceFontFamily',
+                                fontSize: 'sourcefontSize',
                             } as any,
                         },
                         {
