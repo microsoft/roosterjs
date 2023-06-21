@@ -4,7 +4,9 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelGeneralSegment model
+ * @param element The original DOM element
+ * @param format @optional The format of this model
  */
 export function createGeneralSegment(
     element: HTMLElement,

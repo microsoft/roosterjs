@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
-import { ContentModelDivider, ContentModelDividerFormat } from 'roosterjs-content-model';
+import { ContentModelDivider, ContentModelDividerFormat } from 'roosterjs-content-model-types';
 import { ContentModelView } from '../ContentModelView';
 import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';

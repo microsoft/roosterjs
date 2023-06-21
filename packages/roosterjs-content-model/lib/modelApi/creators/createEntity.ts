@@ -1,7 +1,12 @@
 import { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelEntity model
+ * @param wrapper Wrapper element of this entity
+ * @param isReadonly Whether this is a readonly entity
+ * @param segmentFormat Segment format of this entity
+ * @param id @optional Id of this entity
+ * @param type @optional Type of this entity
  */
 export function createEntity(
     wrapper: HTMLElement,

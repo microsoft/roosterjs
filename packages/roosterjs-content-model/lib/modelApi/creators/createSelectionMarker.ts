@@ -4,7 +4,8 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelSelectionMarker model
+ * @param format @optional The format of this model
  */
 export function createSelectionMarker(
     format?: ContentModelSegmentFormat

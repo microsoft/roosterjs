@@ -1,6 +1,6 @@
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { ListStylePositionFormat } from 'roosterjs-content-model';
+import { ListStylePositionFormat } from 'roosterjs-content-model-types';
 
 export const ListStylePositionFormatRenderer: FormatRenderer<ListStylePositionFormat> = createDropDownFormatRenderer(
     'List Type',

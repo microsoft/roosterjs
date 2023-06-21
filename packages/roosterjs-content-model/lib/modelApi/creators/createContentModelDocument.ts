@@ -1,7 +1,8 @@
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelDocument model
+ * @param defaultFormat @optional Default format of this model
  */
 export function createContentModelDocument(
     defaultFormat?: ContentModelSegmentFormat

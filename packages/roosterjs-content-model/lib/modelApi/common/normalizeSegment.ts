@@ -1,5 +1,9 @@
-import { ContentModelSegment, ContentModelText } from 'roosterjs-content-model-types';
 import { hasSpacesOnly } from '../../domUtils/stringUtil';
+import {
+    ContentModelParagraph,
+    ContentModelSegment,
+    ContentModelText,
+} from 'roosterjs-content-model-types';
 
 const SPACE = '\u0020';
 const NONE_BREAK_SPACE = '\u00A0';
@@ -8,6 +12,35 @@ const TRAILING_SPACE_REGEX = /\u0020+$/;
 
 /**
  * @internal
+ */
+export function normalizeAllSegments(paragraph: ContentModelParagraph) {
+    const context = resetNormalizeSegmentContext();
+
+    paragraph.segments.forEach(segment => {
+        normalizeSegment(segment, context);
+    });
+
+    normalizeTextSegments(context.textSegments, context.lastInlineSegment);
+    normalizeLastTextSegment(context.lastTextSegment, context.lastInlineSegment);
+}
+
+/**
+ * Normalize a given segment, make sure its spaces are correctly represented by space and non-break space
+ * @param segment The segment to normalize
+ * @param ignoreTrailingSpaces Whether we should ignore the trailing space of the text segment @default false
+ */
+export function normalizeSingleSegment(
+    segment: ContentModelSegment,
+    ignoreTrailingSpaces: boolean = false
+) {
+    const context = resetNormalizeSegmentContext();
+
+    context.ignoreTrailingSpaces = ignoreTrailingSpaces;
+    normalizeSegment(segment, context);
+}
+
+/**
+ * @internal Export for test only
  */
 export interface NormalizeSegmentContext {
     textSegments: ContentModelText[];
@@ -18,7 +51,7 @@ export interface NormalizeSegmentContext {
 }
 
 /**
- * @internal
+ * @internal Export for test only
  */
 export function createNormalizeSegmentContext(): NormalizeSegmentContext {
     return resetNormalizeSegmentContext();
@@ -37,7 +70,7 @@ function resetNormalizeSegmentContext(
 }
 
 /**
- * @internal
+ * @internal Export for test only
  */
 export function normalizeSegment(segment: ContentModelSegment, context: NormalizeSegmentContext) {
     switch (segment.segmentType) {
@@ -91,10 +124,7 @@ export function normalizeSegment(segment: ContentModelSegment, context: Normaliz
     }
 }
 
-/**
- * @internal
- */
-export function normalizeTextSegments(
+function normalizeTextSegments(
     segments: ContentModelText[],
     lastInlineSegment: ContentModelSegment | undefined
 ) {
@@ -115,10 +145,7 @@ export function normalizeTextSegments(
     });
 }
 
-/**
- * @internal
- */
-export function normalizeLastTextSegment(
+function normalizeLastTextSegment(
     segment: ContentModelText | undefined,
     lastInlineSegment: ContentModelSegment | undefined
 ) {

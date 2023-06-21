@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from './formatPart/BackgroundColorFormatRenderer';
 import { BorderFormatRenderers } from './formatPart/BorderFormatRenderers';
-import { ContentModelBlockFormat, ContentModelSegmentFormat } from 'roosterjs-content-model';
+import { ContentModelBlockFormat, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { DirectionFormatRenderer } from './formatPart/DirectionFormatRenderer';
 import { FormatRenderer } from './utils/FormatRenderer';
 import { FormatView } from './FormatView';

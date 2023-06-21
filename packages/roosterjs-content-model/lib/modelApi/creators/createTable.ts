@@ -5,7 +5,9 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelTable model
+ * @param rowCount Count of rows of this table
+ * @param format @optional The format of this model
  */
 export function createTable(rowCount: number, format?: ContentModelTableFormat): ContentModelTable {
     const rows: ContentModelTableRow[] = [];

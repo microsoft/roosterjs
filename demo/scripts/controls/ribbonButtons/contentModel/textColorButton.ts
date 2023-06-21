@@ -1,5 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { setTextColor } from 'roosterjs-content-model';
+import { isContentModelEditor, setTextColor } from 'roosterjs-content-model-editor';
 import {
     getButtons,
     getTextColorValue,

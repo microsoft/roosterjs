@@ -6,7 +6,9 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelListItem model
+ * @param levels Existing list levels
+ * @param format @optional The format of this model
  */
 export function createListItem(
     levels: ContentModelListItemLevelFormat[],

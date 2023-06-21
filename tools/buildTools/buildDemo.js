@@ -65,12 +65,15 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: getWebpackExternalCallback([
-            [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
-            [/^rosterjs-react\/.*$/, 'roosterjsReact'],
-            [/^roosterjs-react$/, 'roosterjsReact'],
-            [/^roosterjs-content-model$/, 'roosterjsContentModel'],
-        ]),
+        externals: getWebpackExternalCallback(
+            [
+                [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
+                [/^rosterjs-react\/.*$/, 'roosterjsReact'],
+                [/^roosterjs-react$/, 'roosterjsReact'],
+                [/^roosterjs-content-model$/, 'roosterjsContentModel'],
+            ],
+            []
+        ),
         stats: 'minimal',
         mode: 'production',
         optimization: {

@@ -1,15 +1,12 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
+import { ContentModelBlockFormat, ContentModelTableRow } from 'roosterjs-content-model-types';
 import { ContentModelBlockGroupView } from './ContentModelBlockGroupView';
 import { ContentModelView } from '../ContentModelView';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-editor';
 import { useProperty } from '../../hooks/useProperty';
-import {
-    ContentModelBlockFormat,
-    ContentModelTableRow,
-    hasSelectionInBlockGroup,
-} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelTableRowView.scss');
 

@@ -1,7 +1,11 @@
 import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelTableCell model
+ * @param spanLeftOrColSpan @optional Whether this is a table cell merged with its left cell, or colspan number @default false
+ * @param spanAboveOrRowSpan Whether this is a table cell merged with its upper cell, or rowSpan number @default false
+ * @param isHeader @optional Whether this is a header cell @default false
+ * @param format @optional The format of this model
  */
 export function createTableCell(
     spanLeftOrColSpan?: boolean | number,

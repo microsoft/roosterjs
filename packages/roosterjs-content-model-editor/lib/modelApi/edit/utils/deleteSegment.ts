@@ -3,9 +3,8 @@ import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { OnDeleteEntity } from './DeleteSelectionStep';
 import {
-    createNormalizeSegmentContext,
     isWhiteSpacePreserved,
-    normalizeSegment,
+    normalizeSingleSegment,
     normalizeText,
 } from 'roosterjs-content-model';
 
@@ -92,9 +91,6 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
     const segment = segments[index];
 
     if (segment) {
-        const context = createNormalizeSegmentContext();
-
-        context.ignoreTrailingSpaces = false;
-        normalizeSegment(segment, context);
+        normalizeSingleSegment(segment);
     }
 }

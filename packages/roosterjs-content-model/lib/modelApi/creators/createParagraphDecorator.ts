@@ -4,7 +4,9 @@ import {
 } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelParagraphDecorator model
+ * @param tagName Tag name of this decorator
+ * @param format @optional The format of this model
  */
 export function createParagraphDecorator(
     tagName: string,

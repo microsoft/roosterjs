@@ -1,7 +1,8 @@
 import { ContentModelGeneralBlock } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Create a ContentModelGeneralBlock model
+ * @param element Original element of this model
  */
 export function createGeneralBlock(element: HTMLElement): ContentModelGeneralBlock {
     return {

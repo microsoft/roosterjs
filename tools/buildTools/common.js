@@ -117,20 +117,13 @@ async function runWebPack(config) {
     });
 }
 
-const NoneExternalPackageNames = [
-    // For now we don't pack ContentModel code into rooster.js file,
-    // so need to bundle it together with demo site and anywhere it is used.
-    // Once ContentModel is finished, we will bundle it into rooster.js and remove from this list.
-    'roosterjs-content-model',
-];
-
-function getWebpackExternalCallback(externalLibraryPairs) {
+function getWebpackExternalCallback(externalLibraryPairs, internalLibraries) {
     const externalMap = new Map([
         ['react', 'React'],
         ['react-dom', 'ReactDOM'],
         [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
         [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
-        ...packages.filter(x => NoneExternalPackageNames.indexOf(x) < 0).map(p => [p, 'roosterjs']),
+        ...packages.filter(x => internalLibraries.indexOf(x) < 0).map(p => [p, 'roosterjs']),
         ...externalLibraryPairs,
     ]);
 
@@ -166,7 +159,7 @@ const buildConfig = {
         startFileName: 'roosterjs-react/lib/index.d.ts',
         libraryName: 'roosterjsReact',
         targetFileName: 'rooster-react',
-        externalHandler: getWebpackExternalCallback([]),
+        externalHandler: getWebpackExternalCallback([], []),
         dependsOnRoosterJs: true,
         dependsOnReact: true,
     },
@@ -174,13 +167,22 @@ const buildConfig = {
         targetPath: contentModelDistPath,
         packEntry: path.join(packagesPath, 'roosterjs-content-model-editor/lib/index.ts'),
         jsFileBaseName: 'rooster-content-model',
-        targetPackages: ['roosterjs-content-model'],
+        targetPackages: [
+            'roosterjs-content-model-editor',
+            'roosterjs-content-model',
+            'roosterjs-content-model-types',
+        ],
         startFileName: 'roosterjs-content-model-editor/lib/index.d.ts',
         libraryName: 'roosterjsContentModel',
         targetFileName: 'rooster-content-model',
-        externalHandler: getWebpackExternalCallback([
-            [/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs'],
-        ]),
+        externalHandler: getWebpackExternalCallback(
+            [[/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs']],
+            [
+                'roosterjs-content-model-editor',
+                'roosterjs-content-model',
+                'roosterjs-content-model-types',
+            ]
+        ),
         dependsOnRoosterJs: true,
     },
 };

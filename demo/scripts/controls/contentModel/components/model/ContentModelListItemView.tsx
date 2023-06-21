@@ -6,6 +6,7 @@ import { FontFamilyFormatRenderer } from '../format/formatPart/FontFamilyFormatR
 import { FontSizeFormatRenderer } from '../format/formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { hasSelectionInBlockGroup } from 'roosterjs-content-model-editor';
 import { LineHeightFormatRenderer } from '../format/formatPart/LineHeightFormatRenderer';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
 import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
@@ -21,8 +22,7 @@ import {
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,
     ContentModelSegmentFormat,
-    hasSelectionInBlockGroup,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-types';
 
 const styles = require('./ContentModelListItemView.scss');
 

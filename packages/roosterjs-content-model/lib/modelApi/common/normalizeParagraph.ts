@@ -2,12 +2,7 @@ import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
-import {
-    createNormalizeSegmentContext,
-    normalizeLastTextSegment,
-    normalizeSegment,
-    normalizeTextSegments,
-} from './normalizeSegment';
+import { normalizeAllSegments } from './normalizeSegment';
 
 /**
  * @internal
@@ -39,14 +34,7 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
     }
 
     if (!isWhiteSpacePreserved(paragraph)) {
-        const context = createNormalizeSegmentContext();
-
-        segments.forEach(segment => {
-            normalizeSegment(segment, context);
-        });
-
-        normalizeTextSegments(context.textSegments, context.lastInlineSegment);
-        normalizeLastTextSegment(context.lastTextSegment, context.lastInlineSegment);
+        normalizeAllSegments(paragraph);
     }
 
     removeEmptySegments(paragraph);
