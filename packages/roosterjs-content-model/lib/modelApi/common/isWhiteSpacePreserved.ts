@@ -4,7 +4,8 @@ import { ContentModelParagraph } from 'roosterjs-content-model-types';
 const WHITESPACE_PRE_VALUES = ['pre', 'pre-wrap', 'break-spaces'];
 
 /**
- * @internal
+ * Check if we have white-space to be preserved for a given paragraph
+ * @param paragraph The paragraph to check
  */
 export function isWhiteSpacePreserved(paragraph: ContentModelParagraph): boolean {
     return (

@@ -1,7 +1,8 @@
 import { ContentModelBlockGroup, ContentModelGeneralSegment } from 'roosterjs-content-model-types';
 
 /**
- * @internal
+ * Check if the given block group is a general segment
+ * @param group The group to check
  */
 export function isGeneralSegment(
     group: ContentModelBlockGroup | ContentModelGeneralSegment
