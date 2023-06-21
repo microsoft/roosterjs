@@ -1805,4 +1805,165 @@ describe('mergeModel', () => {
             ],
         });
     });
+
+    it('Merge with default format paragraph and paragraph with decorator, keepSourceEmphasisFormat', () => {
+        const MockedFormat = {
+            formatName: 'mocked',
+            fontWeight: 'ToBeRemoved',
+            italic: 'ToBeRemoved',
+            underline: 'ToBeRemoved',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'ToBeRemoved',
+                                fontWeight: 'sourceFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontWeight: 'sourceDecoratorFontWeight',
+                            fontSize: 'sourceDecoratorFontSize',
+                            fontFamily: 'sourceDecoratorFontName',
+                        },
+                    },
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'keepSourceEmphasisFormat',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                formatName: 'mocked',
+                                fontWeight: 'sourceDecoratorFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                            } as any,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
+    it('Merge with default format paragraph and paragraph with decorator, mergeAll', () => {
+        const MockedFormat = {
+            fontFamily: 'mocked',
+            fontWeight: 'ToBeRemoved',
+            italic: 'ToBeRemoved',
+            underline: 'ToBeRemoved',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontFamily: 'ToBeRemoved',
+                                fontWeight: 'sourceFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontWeight: 'sourceDecoratorFontWeight',
+                            fontSize: 'sourceDecoratorFontSize',
+                            fontFamily: 'sourceDecoratorFontName',
+                        },
+                    },
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontWeight: 'sourceDecoratorFontWeight',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                                fontFamily: 'sourceDecoratorFontName',
+                                fontSize: 'sourceDecoratorFontSize',
+                            } as any,
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontWeight: 'sourceDecoratorFontWeight',
+                            fontSize: 'sourceDecoratorFontSize',
+                            fontFamily: 'sourceDecoratorFontName',
+                        },
+                    },
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
 });
