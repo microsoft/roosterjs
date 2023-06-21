@@ -3,6 +3,7 @@
         "../packages/**/*.ts",
         "../packages-ui/**/*.ts",
         "../packages-ui/**/*.tsx",
+        "../packages-content-model/**/*.ts",
         "../demo/scripts/**/*.ts",
         "../demo/scripts/**/*.tsx"
     ]

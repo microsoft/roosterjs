@@ -9,6 +9,7 @@ const {
     distPath,
     packagesPath,
     packagesUiPath,
+    packagesContentModelPath,
     allPackages,
 } = require('./common');
 
@@ -23,6 +24,7 @@ function buildCommonJs() {
             )} -t es5 --moduleResolution node -m commonjs`
     );
     runNode(typescriptPath, packagesUiPath);
+    runNode(typescriptPath, packagesContentModelPath);
 
     allPackages.forEach(packageName => {
         const copy = fileName => {

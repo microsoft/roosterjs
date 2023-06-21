@@ -1,4 +1,4 @@
-import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleSegmentCommon } from '../../../lib/modelToDom/utils/handleSegmentCommon';

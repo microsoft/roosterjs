@@ -1,4 +1,4 @@
-import DarkColorHandlerImpl from '../../../../roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
+import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';

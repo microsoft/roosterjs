@@ -11,6 +11,7 @@ const webpack = require('webpack');
 const rootPath = path.join(__dirname, '../..');
 const packagesPath = path.join(rootPath, 'packages');
 const packagesUiPath = path.join(rootPath, 'packages-ui');
+const packagesContentModelPath = path.join(rootPath, 'packages-content-model');
 const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
@@ -65,7 +66,8 @@ function collectPackages(startPath) {
 
 const packages = collectPackages(packagesPath);
 const packagesUI = collectPackages(packagesUiPath);
-const allPackages = packages.concat(packagesUI);
+const packagesContentModel = collectPackages(packagesContentModelPath);
+const allPackages = packages.concat(packagesUI).concat(packagesContentModel);
 
 function runNode(command, cwd, stdio) {
     exec('node ' + command, {
@@ -85,6 +87,8 @@ function findPackageRoot(packageName) {
         ? packagesPath
         : packagesUI.indexOf(packageName) >= 0
         ? packagesUiPath
+        : packagesContentModel.indexOf(packageName) >= 0
+        ? packagesContentModelPath
         : null;
 }
 
@@ -165,23 +169,18 @@ const buildConfig = {
     },
     roosterContentModel: {
         targetPath: contentModelDistPath,
-        packEntry: path.join(packagesPath, 'roosterjs-content-model-editor/lib/index.ts'),
+        packEntry: path.join(
+            packagesContentModelPath,
+            'roosterjs-content-model-editor/lib/index.ts'
+        ),
         jsFileBaseName: 'rooster-content-model',
-        targetPackages: [
-            'roosterjs-content-model-editor',
-            'roosterjs-content-model',
-            'roosterjs-content-model-types',
-        ],
+        targetPackages: packagesContentModel,
         startFileName: 'roosterjs-content-model-editor/lib/index.d.ts',
         libraryName: 'roosterjsContentModel',
         targetFileName: 'rooster-content-model',
         externalHandler: getWebpackExternalCallback(
             [[/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs']],
-            [
-                'roosterjs-content-model-editor',
-                'roosterjs-content-model',
-                'roosterjs-content-model-types',
-            ]
+            packagesContentModel
         ),
         dependsOnRoosterJs: true,
     },
@@ -191,6 +190,7 @@ module.exports = {
     rootPath,
     packagesPath,
     packagesUiPath,
+    packagesContentModelPath,
     nodeModulesPath,
     typescriptPath,
     distPath,
@@ -202,6 +202,7 @@ module.exports = {
     err,
     packages,
     packagesUI,
+    packagesContentModel,
     allPackages,
     readPackageJson,
     mainPackageJson,
