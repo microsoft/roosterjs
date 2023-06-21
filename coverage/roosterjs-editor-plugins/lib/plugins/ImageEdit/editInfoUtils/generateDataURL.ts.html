@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>16/16</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -109,7 +109,12 @@
 <a name='L50'></a><a href='#L50'>50</a>
 <a name='L51'></a><a href='#L51'>51</a>
 <a name='L52'></a><a href='#L52'>52</a>
-<a name='L53'></a><a href='#L53'>53</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a>
+<a name='L58'></a><a href='#L58'>58</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -134,19 +139,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">180x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
-<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">90x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -159,7 +169,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">20x</span>
+<span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import getGeneratedImageSize from './getGeneratedImageSize';
 import ImageEditInfo from '../types/ImageEditInfo';
@@ -189,12 +199,17 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
     } = editInfo;
     const imageWidth = naturalWidth * (1 - left - right);
     const imageHeight = naturalHeight * (1 - top - bottom);
+&nbsp;
+    // Adjust the canvas size and scaling for high display resolution
+    const devicePixelRatio = window.devicePixelRatio || <span class="branch-1 cbranch-no" title="branch not covered" >1;</span>
     const canvas = document.createElement('canvas');
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
-    canvas.width = targetWidth;
-    canvas.height = targetHeight;
+    canvas.width = targetWidth * devicePixelRatio;
+    canvas.height = targetHeight * devicePixelRatio;
+&nbsp;
     const context = canvas.getContext('2d');
     <span class="missing-if-branch" title="else path not taken" >E</span>if (context) {
+        context.scale(devicePixelRatio, devicePixelRatio);
         context.translate(targetWidth / 2, targetHeight / 2);
         context.rotate(angle);
         context.scale(editInfo.flippedHorizontal ? -1 : 1, editInfo.flippedVertical ? -1 : 1);
@@ -220,7 +235,7 @@ export default function generateDataURL(image: HTMLImageElement, editInfo: Image
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jun 20 2023 18:51:50 GMT+0000 (Coordinated Universal Time)
+                at Wed Jun 21 2023 18:21:43 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
