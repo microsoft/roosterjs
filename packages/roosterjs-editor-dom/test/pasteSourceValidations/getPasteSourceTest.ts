@@ -7,7 +7,7 @@ import {
     getWacElement,
     POWERPOINT_ATTRIBUTE_VALUE,
     WORD_ATTRIBUTE_VALUE,
-} from '../../../roosterjs-editor-plugins/test/paste/pasteTestUtils';
+} from 'roosterjs-editor-plugins/test/paste/pasteTestUtils';
 
 describe('getPasteSourceTest | ', () => {
     it('Is Word', () => {

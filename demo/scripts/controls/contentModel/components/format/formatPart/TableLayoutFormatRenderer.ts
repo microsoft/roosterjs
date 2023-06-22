@@ -1,6 +1,6 @@
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { TableLayoutFormat } from 'roosterjs-content-model';
+import { TableLayoutFormat } from 'roosterjs-content-model-types';
 
 export const TableLayoutFormatRenderer: FormatRenderer<TableLayoutFormat> = createTextFormatRenderer<
     TableLayoutFormat

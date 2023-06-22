@@ -1,6 +1,5 @@
-import { isContentModelEditor } from 'roosterjs-content-model';
+import { isContentModelEditor, setImageBorder } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
-import { setImageBorder } from 'roosterjs-content-model';
 
 /**
  * @internal

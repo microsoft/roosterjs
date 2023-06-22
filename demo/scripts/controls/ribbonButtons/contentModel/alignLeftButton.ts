@@ -1,6 +1,5 @@
 import { AlignLeftButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { setAlignment } from 'roosterjs-content-model';
+import { isContentModelEditor, setAlignment } from 'roosterjs-content-model-editor';
 
 /**
  * @internal
