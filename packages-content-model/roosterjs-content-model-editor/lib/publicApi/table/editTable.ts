@@ -6,7 +6,6 @@ import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { hasMetadata } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
@@ -14,6 +13,7 @@ import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
+import { readMetadata } from 'roosterjs-content-model/lib';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
@@ -91,7 +91,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
 
             normalizeTable(tableModel);
 
-            if (hasMetadata(tableModel)) {
+            if (readMetadata(tableModel)) {
                 applyTableFormat(tableModel, undefined /*newFormat*/, true /*keepCellShade*/);
             }
 

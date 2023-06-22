@@ -16,5 +16,6 @@ export { combineBorderValue, extractBorderValues } from './domUtils/borderValues
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
+export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';

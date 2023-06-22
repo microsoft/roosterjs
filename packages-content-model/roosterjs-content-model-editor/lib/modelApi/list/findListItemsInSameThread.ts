@@ -141,5 +141,7 @@ function areListTypesCompatible(
 }
 
 function hasStartNumberOverride(item: ContentModelListItem, levelLength: number): boolean {
-    return item.levels.slice(0, levelLength).some(level => level.startNumberOverride !== undefined);
+    return item.levels
+        .slice(0, levelLength)
+        .some(level => level.format.startNumberOverride !== undefined);
 }

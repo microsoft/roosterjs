@@ -2,6 +2,7 @@ import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSel
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import {
     createListItem,
+    createListLevel,
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
@@ -49,8 +50,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
                     const newListItem = createListItem(
                         [
-                            {
-                                listType,
+                            createListLevel(listType, {
                                 startNumberOverride:
                                     itemIndex > 0 ||
                                     (prevBlock?.blockType == 'BlockGroup' &&
@@ -61,7 +61,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                                 direction: block.format.direction,
                                 textAlign: block.format.textAlign,
                                 marginTop: hasIgnoredParagraphBefore ? '0' : undefined,
-                            },
+                            }),
                         ],
                         // For list bullet, we only want to carry over these formats from segments:
                         {
@@ -84,7 +84,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
                 } else {
                     hasIgnoredParagraphBefore = true;
 
-                    existingListItems.forEach(x => (x.levels[0].marginBottom = '0'));
+                    existingListItems.forEach(x => (x.levels[0].format.marginBottom = '0'));
                     existingListItems = [];
                 }
             }

@@ -2,7 +2,7 @@ import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
 import { ContentModelCode } from '../decorator/ContentModelCode';
 import { ContentModelLink } from '../decorator/ContentModelLink';
-import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelListLevel } from '../group/ContentModelListLevel';
 import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ZoomScaleFormat } from '../format/formatParts/ZoomScaleFormat';
@@ -24,7 +24,7 @@ export interface DomToModelListFormat {
     /**
      * Current list type stack
      */
-    levels: ContentModelListItemLevelFormat[];
+    levels: ContentModelListLevel[];
 }
 
 /**

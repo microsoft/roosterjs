@@ -1,11 +1,11 @@
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelListLevel } from '../group/ContentModelListLevel';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Represents a list stack item used by Content Model to DOM conversion
  */
-export interface ModelToDomListStackItem extends ContentModelListItemLevelFormat {
+export interface ModelToDomListStackItem extends ContentModelListLevel {
     /**
      * DOM node of this list stack
      */

@@ -1,7 +1,7 @@
 import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
 import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
 import { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
-import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import { ContentModelListLevel } from './ContentModelListLevel';
 import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
 /**
@@ -13,7 +13,7 @@ export interface ContentModelListItem
     /**
      * Type of this list, either ordered or unordered
      */
-    levels: ContentModelListItemLevelFormat[];
+    levels: ContentModelListLevel[];
 
     /**
      * A dummy segment to hold format of this list item

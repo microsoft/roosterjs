@@ -32,7 +32,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     if (level) {
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
-        applyFormat(li, context.formatAppliers.listItem, level, context);
+        applyFormat(li, context.formatAppliers.listItem, level.format, context);
 
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
     } else {

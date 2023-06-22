@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
+import { updateListMetadata } from 'roosterjs-content-model-editor';
 
 /**
  * Set style of list items with in same thread of current item
@@ -17,15 +18,25 @@ export default function setListStyle(editor: IContentModelEditor, style: ListMet
             const listItems = findListItemsInSameThread(model, listItem);
             const levelIndex = listItem.levels.length - 1;
 
-            listItems.forEach(listItem => {
-                if (style.orderedStyleType !== undefined) {
-                    listItem.levels[levelIndex].orderedStyleType = style.orderedStyleType;
-                }
+            if (levelIndex >= 0) {
+                listItems.forEach(listItem => {
+                    updateListMetadata(listItem.levels[levelIndex], format => {
+                        if (!format) {
+                            format = {};
+                        }
 
-                if (style.unorderedStyleType !== undefined) {
-                    listItem.levels[levelIndex].unorderedStyleType = style.unorderedStyleType;
-                }
-            });
+                        if (style.orderedStyleType !== undefined) {
+                            format.orderedStyleType = style.orderedStyleType;
+                        }
+
+                        if (style.unorderedStyleType !== undefined) {
+                            format.unorderedStyleType = style.unorderedStyleType;
+                        }
+
+                        return format;
+                    });
+                });
+            }
 
             return true;
         } else {

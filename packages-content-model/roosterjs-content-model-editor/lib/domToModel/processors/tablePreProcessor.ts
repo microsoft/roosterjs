@@ -1,6 +1,6 @@
 import { contains } from 'roosterjs-editor-dom';
 import { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
-import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
+import { entityProcessor, readMetadata, tableProcessor } from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -17,7 +17,7 @@ function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelC
     // 2. Table is in selection
     // 3. There is selection inside table (or whole table is selected)
     // Otherwise, we treat the table as entity so we will not change it when write back
-    return hasMetadata(element) || context.isInSelection || hasSelectionInTable(element, context);
+    return readMetadata(element) || context.isInSelection || hasSelectionInTable(element, context);
 }
 
 function hasSelectionInTable(element: HTMLTableElement, context: DomToModelContext) {

@@ -21,7 +21,6 @@ import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler'
 import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
-import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
@@ -74,7 +73,6 @@ const defaultFormatHandlerMap: FormatHandlers = {
     listLevelMetadata: listLevelMetadataFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
     listStylePosition: listStylePositionFormatHandler,
-    listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
@@ -124,7 +122,6 @@ const defaultFormatKeysPerCategory: {
     listItem: ['listItemThread', 'listItemMetadata'],
     listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
     listLevel: [
-        'listType',
         'listLevelThread',
         'listLevelMetadata',
         'direction',

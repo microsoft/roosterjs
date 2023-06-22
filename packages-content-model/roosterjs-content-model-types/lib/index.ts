@@ -46,7 +46,6 @@ export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
-export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
@@ -77,6 +76,7 @@ export { ContentModelBlockGroupBase } from './group/ContentModelBlockGroupBase';
 export { ContentModelFormatContainer } from './group/ContentModelFormatContainer';
 export { ContentModelGeneralBlock } from './group/ContentModelGeneralBlock';
 export { ContentModelListItem } from './group/ContentModelListItem';
+export { ContentModelListLevel } from './group/ContentModelListLevel';
 export { ContentModelTableCell } from './group/ContentModelTableCell';
 export { ContentModelBlockGroup } from './group/ContentModelBlockGroup';
 

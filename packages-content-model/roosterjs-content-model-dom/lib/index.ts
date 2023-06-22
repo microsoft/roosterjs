@@ -12,7 +12,6 @@ export { getRegularSelectionOffsets } from './domToModel/utils/getRegularSelecti
 export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
-export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 
 export { createBr } from './modelApi/creators/createBr';
@@ -30,6 +29,7 @@ export { createGeneralSegment } from './modelApi/creators/createGeneralSegment';
 export { createGeneralBlock } from './modelApi/creators/createGeneralBlock';
 export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
+export { createListLevel } from './modelApi/creators/createListLevel';
 
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
@@ -42,6 +42,8 @@ export { isWhiteSpacePreserved } from './modelApi/common/isWhiteSpacePreserved';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
+
+export { readMetadata, writeMetadata } from './modelApi/common/metadata';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
