@@ -759,10 +759,10 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
 
 function setFlipped(
     element: HTMLImageElement,
-    flipppedHorizontally?: boolean,
-    flipppedVertically?: boolean
+    flippedHorizontally?: boolean,
+    flippedVertically?: boolean
 ) {
-    element.style.transform = `scale(${flipppedHorizontally ? '-1' : '1'}, ${
-        flipppedVertically ? '-1' : '1'
+    element.style.transform = `scale(${flippedHorizontally ? '-1' : '1'}, ${
+        flippedVertically ? '-1' : '1'
     })`;
 }
