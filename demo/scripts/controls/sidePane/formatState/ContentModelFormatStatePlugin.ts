@@ -1,5 +1,5 @@
 import FormatStatePlugin from './FormatStatePlugin';
-import { getFormatState, IContentModelEditor } from 'roosterjs-content-model';
+import { getFormatState, IContentModelEditor } from 'roosterjs-content-model-editor';
 import { getPositionRect } from 'roosterjs-editor-dom';
 
 export default class ContentModelFormatStatePlugin extends FormatStatePlugin {

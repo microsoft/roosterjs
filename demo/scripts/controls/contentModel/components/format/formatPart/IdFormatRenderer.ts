@@ -1,6 +1,6 @@
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { IdFormat } from 'roosterjs-content-model';
+import { IdFormat } from 'roosterjs-content-model-types';
 
 export const IdFormatRenderer: FormatRenderer<IdFormat> = createTextFormatRenderer<IdFormat>(
     'Id',

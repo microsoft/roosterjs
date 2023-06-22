@@ -1,4 +1,4 @@
-var context = require.context('../packages', true, /roosterjs(-editor-\w+)?\/test\/.+\.ts?$/);
+var contextRoosterjs = require.context('../packages', true, /test\/.+\.ts?$/);
 var karmaTest = require('./karma.test');
 
-module.exports = karmaTest(context);
+module.exports = karmaTest([contextRoosterjs]);

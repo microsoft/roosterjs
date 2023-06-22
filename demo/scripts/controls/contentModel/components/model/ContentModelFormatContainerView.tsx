@@ -5,13 +5,13 @@ import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { hasSelectionInBlock } from 'roosterjs-content-model-editor';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import {
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
-    hasSelectionInBlock,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-types';
 
 const styles = require('./ContentModelFormatContainerView.scss');
 

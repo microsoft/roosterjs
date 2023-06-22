@@ -1,4 +1,4 @@
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { CursorFeatures } from '../../../lib/plugins/ContentEdit/features/cursorFeatures';
 import {
     IEditor,
