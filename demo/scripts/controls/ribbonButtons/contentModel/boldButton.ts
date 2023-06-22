@@ -1,6 +1,5 @@
 import { BoldButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { toggleBold } from 'roosterjs-content-model';
+import { isContentModelEditor, toggleBold } from 'roosterjs-content-model-editor';
 
 /**
  * @internal

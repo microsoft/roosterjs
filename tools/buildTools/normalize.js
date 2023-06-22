@@ -4,14 +4,7 @@ const path = require('path');
 const mkdirp = require('mkdirp');
 const fs = require('fs');
 const processConstEnum = require('./processConstEnum');
-const {
-    packages,
-    allPackages,
-    distPath,
-    readPackageJson,
-    mainPackageJson,
-    err,
-} = require('./common');
+const { allPackages, distPath, readPackageJson, mainPackageJson, err } = require('./common');
 
 function normalize() {
     const knownCustomizedPackages = {};
@@ -24,7 +17,7 @@ function normalize() {
                 // No op, keep the specified value
             } else if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = '^' + knownCustomizedPackages[dep];
-            } else if (packages.indexOf(dep) > -1) {
+            } else if (allPackages.indexOf(dep) > -1) {
                 packageJson.dependencies[dep] = '^' + mainPackageJson.version;
             } else if (mainPackageJson.dependencies && mainPackageJson.dependencies[dep]) {
                 packageJson.dependencies[dep] = mainPackageJson.dependencies[dep];

@@ -13,6 +13,7 @@ const {
     runWebPack,
     getWebpackExternalCallback,
     contentModelDistPath,
+    packagesContentModelPath,
 } = require('./common');
 
 async function buildDemoSite() {
@@ -28,7 +29,13 @@ async function buildDemoSite() {
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
-            modules: [sourcePath, packagesPath, packagesUiPath, nodeModulesPath],
+            modules: [
+                sourcePath,
+                packagesPath,
+                packagesUiPath,
+                packagesContentModelPath,
+                nodeModulesPath,
+            ],
         },
         module: {
             rules: [
@@ -65,12 +72,15 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: getWebpackExternalCallback([
-            [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
-            [/^rosterjs-react\/.*$/, 'roosterjsReact'],
-            [/^roosterjs-react$/, 'roosterjsReact'],
-            [/^roosterjs-content-model$/, 'roosterjsContentModel'],
-        ]),
+        externals: getWebpackExternalCallback(
+            [
+                [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
+                [/^roosterjs-react\/.*$/, 'roosterjsReact'],
+                [/^roosterjs-react$/, 'roosterjsReact'],
+                [/^roosterjs-content-model.*$/, 'roosterjsContentModel'],
+            ],
+            []
+        ),
         stats: 'minimal',
         mode: 'production',
         optimization: {

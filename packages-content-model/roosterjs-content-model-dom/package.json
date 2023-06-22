@@ -1,0 +1,12 @@
+{
+    "name": "roosterjs-content-model-dom",
+    "description": "Content Model for roosterjs (Under development)",
+    "dependencies": {
+        "tslib": "^2.3.1",
+        "roosterjs-editor-types": "",
+        "roosterjs-editor-dom": "",
+        "roosterjs-content-model-types": ""
+    },
+    "main": "./lib/index.ts",
+    "version": "0.0.1"
+}

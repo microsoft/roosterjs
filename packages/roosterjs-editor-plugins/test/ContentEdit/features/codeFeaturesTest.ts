@@ -1,6 +1,6 @@
-import { IEditor, PluginEventType, PluginKeyboardEvent, Keys } from 'roosterjs-editor-types';
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { CodeFeatures } from '../../../lib/plugins/ContentEdit/features/codeFeatures';
+import { IEditor, Keys, PluginEventType, PluginKeyboardEvent } from 'roosterjs-editor-types';
 
 const TEST_ELEMENT_ID = 'test_codeFeatures';
 const TEST_EDITOR_ID = 'testEditor_codeFeatures';
