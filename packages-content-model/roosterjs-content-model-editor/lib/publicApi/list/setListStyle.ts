@@ -20,21 +20,9 @@ export default function setListStyle(editor: IContentModelEditor, style: ListMet
 
             if (levelIndex >= 0) {
                 listItems.forEach(listItem => {
-                    updateListMetadata(listItem.levels[levelIndex], format => {
-                        if (!format) {
-                            format = {};
-                        }
-
-                        if (style.orderedStyleType !== undefined) {
-                            format.orderedStyleType = style.orderedStyleType;
-                        }
-
-                        if (style.unorderedStyleType !== undefined) {
-                            format.unorderedStyleType = style.unorderedStyleType;
-                        }
-
-                        return format;
-                    });
+                    updateListMetadata(listItem.levels[levelIndex], format =>
+                        Object.assign({}, format, style)
+                    );
                 });
             }
 
