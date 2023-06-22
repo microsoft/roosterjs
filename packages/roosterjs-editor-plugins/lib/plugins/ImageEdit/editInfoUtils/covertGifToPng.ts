@@ -3,7 +3,6 @@ import ImageEditInfo from '../types/ImageEditInfo';
 
 /**
  * If the image is a gif, use canvas to convert it to a png.
- * If the image is not a gif, return the original src.
  * @param image to be converted
  * @returns
  */
@@ -27,5 +26,5 @@ export function convertGifToPng(editInfo: ImageEditInfo) {
 
         return generateDataURL(image, newEditInfo);
     }
-    return src;
+    return null;
 }

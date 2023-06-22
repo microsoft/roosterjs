@@ -135,6 +135,9 @@ export default class ImageEdit implements EditorPlugin {
      */
     private isCropping: boolean = false;
 
+    /**
+     * If the image is a gif, this is the png source of the gif image
+     */
     private pngSource: string | null = null;
 
     /**
@@ -292,7 +295,9 @@ export default class ImageEdit implements EditorPlugin {
 
             // If the image is a gif we change the editing image to a new png image, then we need to change the
             // image source to the original gif image
-            this.clonedImage.src = this.editInfo.src;
+            if (this.pngSource) {
+                this.clonedImage.src = this.editInfo.src;
+            }
 
             // Apply the changes, and add undo snapshot if necessary
             applyChange(
@@ -328,6 +333,8 @@ export default class ImageEdit implements EditorPlugin {
 
             // Get initial edit info
             this.editInfo = getEditInfoFromImage(image);
+
+            //Check if the image is a gif and convert it to a png
             this.pngSource = convertGifToPng(this.editInfo);
 
             //Check if the image was resized by the user
@@ -427,8 +434,8 @@ export default class ImageEdit implements EditorPlugin {
             this.lastSrc = this.image.getAttribute('src');
 
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
-            if (this.clonedImage && this.pngSource) {
-                this.clonedImage.src = this.pngSource;
+            if (this.clonedImage) {
+                this.clonedImage.src = this.pngSource ?? this.editInfo.src;
                 setFlipped(
                     this.clonedImage,
                     this.editInfo.flippedHorizontal,
