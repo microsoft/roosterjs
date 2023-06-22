@@ -6,7 +6,7 @@ import {
     addSegment,
     createContentModelDocument,
     createSelectionMarker,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('insertImage', () => {
     const testUrl = 'http://test.com/test';

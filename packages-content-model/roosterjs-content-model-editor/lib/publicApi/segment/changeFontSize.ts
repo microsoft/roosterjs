@@ -1,7 +1,7 @@
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { parseValueWithUnit } from 'roosterjs-content-model';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,

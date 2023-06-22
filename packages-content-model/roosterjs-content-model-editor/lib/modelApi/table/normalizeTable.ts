@@ -1,4 +1,4 @@
-import { addSegment, createBr } from 'roosterjs-content-model';
+import { addSegment, createBr } from 'roosterjs-content-model-dom';
 import { arrayPush } from 'roosterjs-editor-dom';
 import {
     ContentModelSegment,

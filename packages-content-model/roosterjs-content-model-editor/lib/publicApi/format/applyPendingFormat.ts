@@ -6,7 +6,7 @@ import {
     createText,
     normalizeContentModel,
     setParagraphNotImplicit,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 const ANSI_SPACE = '\u0020';
 const NON_BREAK_SPACE = '\u00A0';

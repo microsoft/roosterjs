@@ -8,7 +8,7 @@ import {
     createContentModelDocument,
     createDomToModelContext,
     normalizeContentModel,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 const selectedNodeId = 'Selected';
 

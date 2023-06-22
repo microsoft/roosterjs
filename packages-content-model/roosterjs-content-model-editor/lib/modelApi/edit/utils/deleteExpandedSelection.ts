@@ -9,7 +9,7 @@ import {
     createParagraph,
     createSelectionMarker,
     setParagraphNotImplicit,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
     contentUnderSelectedTableCell: 'ignoreForTableOrCell', // When a table cell is selected, we replace all content for this cell, so no need to go into its content

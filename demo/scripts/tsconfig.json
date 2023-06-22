@@ -26,20 +26,22 @@
             "roosterjs-color-utils": ["packages/roosterjs-color-utils/lib/index"],
             "roosterjs-color-utils/lib/*": ["packages/roosterjs-color-utils/lib/*"],
             "roosterjs-content-model-types": [
-                "packages-content-model/roosterjs-content-model/lib/index"
+                "packages-content-model/roosterjs-content-model-dom/lib/index"
             ],
             "roosterjs-content-model-types/lib/*": [
-                "packages-content-model/roosterjs-content-model/lib/*"
+                "packages-content-model/roosterjs-content-model-dom/lib/*"
             ],
-            "roosterjs-content-model": ["packages-content-model/roosterjs-content-model/lib/index"],
-            "roosterjs-content-model/lib/*": [
-                "packages-content-model/roosterjs-content-model/lib/*"
+            "roosterjs-content-model": [
+                "packages-content-model/roosterjs-content-model-dom/lib/index"
+            ],
+            "roosterjs-content-model-dom/lib/*": [
+                "packages-content-model/roosterjs-content-model-dom/lib/*"
             ],
             "roosterjs-content-model-editor": [
-                "packages-content-model/roosterjs-content-model/lib/index"
+                "packages-content-model/roosterjs-content-model-dom/lib/index"
             ],
             "roosterjs-content-model-editor/lib/*": [
-                "packages-content-model/roosterjs-content-model/lib/*"
+                "packages-content-model/roosterjs-content-model-dom/lib/*"
             ],
             "roosterjs-react": ["packages-ui/roosterjs-react/lib/index"],
             "roosterjs-react/lib/*": ["packages-ui/roosterjs-react/lib/*"]

@@ -1,4 +1,4 @@
-import { addSegment, createBr, createTable, createTableCell } from 'roosterjs-content-model';
+import { addSegment, createBr, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from '../../../lib/modelApi/table/getSelectedCells';
 
 describe('getSelectedCells', () => {

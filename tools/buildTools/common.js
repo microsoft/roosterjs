@@ -17,7 +17,7 @@ const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
-const contentModelDistPath = path.join(distPath, 'roosterjs-content-model-editor/dist');
+const contentModelDistPath = path.join(distPath, 'roosterjs-content-model/dist');
 const deployPath = path.join(distPath, 'deploy');
 const compatibleEnumPath = path.join(
     packagesPath,
@@ -169,13 +169,10 @@ const buildConfig = {
     },
     roosterContentModel: {
         targetPath: contentModelDistPath,
-        packEntry: path.join(
-            packagesContentModelPath,
-            'roosterjs-content-model-editor/lib/index.ts'
-        ),
+        packEntry: path.join(packagesContentModelPath, 'roosterjs-content-model/lib/index.ts'),
         jsFileBaseName: 'rooster-content-model',
         targetPackages: packagesContentModel,
-        startFileName: 'roosterjs-content-model-editor/lib/index.d.ts',
+        startFileName: 'roosterjs-content-model/lib/index.d.ts',
         libraryName: 'roosterjsContentModel',
         targetFileName: 'rooster-content-model',
         externalHandler: getWebpackExternalCallback(

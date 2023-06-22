@@ -1,5 +1,5 @@
 import { alignTable } from '../../../lib/modelApi/table/alignTable';
-import { createTable } from 'roosterjs-content-model';
+import { createTable } from 'roosterjs-content-model-dom';
 import { TableOperation } from 'roosterjs-editor-types';
 
 describe('alignTable', () => {

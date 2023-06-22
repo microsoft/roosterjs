@@ -1,5 +1,5 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { domToContentModel } from 'roosterjs-content-model';
+import { domToContentModel } from 'roosterjs-content-model-dom';
 import { DomToModelOption } from 'roosterjs-content-model-types';
 import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {

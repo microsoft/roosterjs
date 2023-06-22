@@ -8,7 +8,7 @@ import {
     createContentModelDocument,
     createImage,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('changeImage', () => {
     const testUrl = 'http://test.com/test';

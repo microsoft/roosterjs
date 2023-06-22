@@ -7,7 +7,7 @@ import {
     createContentModelDocument,
     createSelectionMarker,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('ContentModelFormatPlugin', () => {
     it('no pending format, trigger key down event', () => {

@@ -7,7 +7,7 @@ import {
     createImage,
     createParagraph,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('setImageAltText', () => {
     const altText = 'image alt text';

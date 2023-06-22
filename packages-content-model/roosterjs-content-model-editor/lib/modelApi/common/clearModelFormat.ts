@@ -1,7 +1,7 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { createFormatContainer } from 'roosterjs-content-model';
+import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections } from '../selection/iterateSelections';
 import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';

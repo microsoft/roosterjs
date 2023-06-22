@@ -1,4 +1,4 @@
-import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model';
+import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
 import { DomToModelContext } from 'roosterjs-content-model-types';
 import { reducedModelChildProcessor } from '../../../lib/domToModel/processors/reducedModelChildProcessor';
 

@@ -8,7 +8,7 @@ import {
     createParagraph,
     createSelectionMarker,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('formatSegmentWithContentModel', () => {
     let editor: IContentModelEditor;

@@ -4,7 +4,7 @@ import {
     createFormatContainer,
     createListItem,
     createParagraph,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('findListItemsInSameThread', () => {
     it('Empty group', () => {

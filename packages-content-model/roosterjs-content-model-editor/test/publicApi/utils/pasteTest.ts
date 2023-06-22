@@ -1,5 +1,5 @@
 import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipboard/createFragmentFromClipboardData';
-import * as domToContentModel from 'roosterjs-content-model/lib/domToModel/domToContentModel';
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';

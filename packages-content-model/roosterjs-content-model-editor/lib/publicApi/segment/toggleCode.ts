@@ -1,4 +1,4 @@
-import { addCode } from 'roosterjs-content-model';
+import { addCode } from 'roosterjs-content-model-dom';
 import { ContentModelCode } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';

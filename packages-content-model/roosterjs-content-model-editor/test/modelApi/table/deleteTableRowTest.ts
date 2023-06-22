@@ -1,5 +1,5 @@
 import hasSelectionInBlock from '../../../lib/publicApi/selection/hasSelectionInBlock';
-import { createTable, createTableCell } from 'roosterjs-content-model';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { deleteTableRow } from '../../../lib/modelApi/table/deleteTableRow';
 
 describe('deleteTableRow', () => {

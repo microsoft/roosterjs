@@ -1,7 +1,7 @@
 import { Border } from '../../publicTypes/interface/Border';
 import { ContentModelImage } from 'roosterjs-content-model-types';
 import { extractBorderValues } from '../../domUtils/borderValues';
-import { parseValueWithUnit } from 'roosterjs-content-model';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 
 /**
  * @internal

@@ -9,7 +9,7 @@ import {
     createParagraph,
     createSelectionMarker,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('adjustLinkSelection', () => {
     let editor: IContentModelEditor;

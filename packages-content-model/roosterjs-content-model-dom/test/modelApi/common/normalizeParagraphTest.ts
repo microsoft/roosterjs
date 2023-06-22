@@ -4,7 +4,7 @@ import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { normalizeContentModel } from 'roosterjs-content-model';
+import { normalizeContentModel } from '../../../lib/modelApi/common/normalizeContentModel';
 
 describe('Normalize text that contains space', () => {
     function runTest(texts: string[], expected: string[], whiteSpace?: string) {

@@ -1,6 +1,6 @@
 import { contains } from 'roosterjs-editor-dom';
 import { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
-import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model';
+import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
 
 /**
  * @internal

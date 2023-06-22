@@ -6,7 +6,7 @@ import { formatWithContentModel } from '../../publicApi/utils/formatWithContentM
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model';
+import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     getObjectKeys,
     isBlockElement,

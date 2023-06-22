@@ -9,7 +9,7 @@ import {
     createTable,
     createTableCell,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('setSelection', () => {
     it('Empty model, empty selection', () => {

@@ -1,6 +1,6 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
-import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import applyPendingFormat from '../../../lib/publicApi/format/applyPendingFormat';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -15,7 +15,7 @@ import {
     createParagraph,
     createSelectionMarker,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('applyPendingFormat', () => {
     it('Has pending format', () => {

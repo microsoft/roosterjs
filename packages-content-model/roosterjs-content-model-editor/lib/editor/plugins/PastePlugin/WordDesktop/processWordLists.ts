@@ -1,4 +1,4 @@
-import { addBlock, createListItem, parseFormat } from 'roosterjs-content-model';
+import { addBlock, createListItem, parseFormat } from 'roosterjs-content-model-dom';
 import { getStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 import {

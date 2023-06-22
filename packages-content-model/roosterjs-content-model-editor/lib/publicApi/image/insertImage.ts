@@ -1,4 +1,4 @@
-import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model';
+import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';

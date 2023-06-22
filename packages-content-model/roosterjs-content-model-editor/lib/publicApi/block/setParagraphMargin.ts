@@ -1,4 +1,4 @@
-import { createParagraphDecorator } from 'roosterjs-content-model';
+import { createParagraphDecorator } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 

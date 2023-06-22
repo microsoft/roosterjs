@@ -1,4 +1,4 @@
-import { BorderKeys } from 'roosterjs-content-model';
+import { BorderKeys } from 'roosterjs-content-model-dom';
 import { combineBorderValue, extractBorderValues } from '../../domUtils/borderValues';
 import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';

@@ -1,4 +1,4 @@
-import { addBlock, createTable, createTableCell } from 'roosterjs-content-model';
+import { addBlock, createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { ContentModelBlockGroup, ContentModelTable } from 'roosterjs-content-model-types';
 
 /**

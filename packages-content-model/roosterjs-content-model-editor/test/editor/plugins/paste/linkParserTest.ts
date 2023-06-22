@@ -1,5 +1,5 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model';
+import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { parseLink } from '../../../../lib/editor/plugins/PastePlugin/utils/linkParser';

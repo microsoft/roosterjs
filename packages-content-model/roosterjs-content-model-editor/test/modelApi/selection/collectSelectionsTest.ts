@@ -18,7 +18,7 @@ import {
     createSelectionMarker,
     createTable,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 import {
     getSelectedSegments,
     getSelectedParagraphs,

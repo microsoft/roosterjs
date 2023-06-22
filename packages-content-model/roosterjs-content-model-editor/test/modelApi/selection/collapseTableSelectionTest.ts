@@ -1,8 +1,8 @@
-import * as addSegment from 'roosterjs-content-model/lib/modelApi/common/addSegment';
-import * as createSelectionMarker from 'roosterjs-content-model/lib/modelApi/creators/createSelectionMarker';
+import * as addSegment from 'roosterjs-content-model-dom/lib/modelApi/common/addSegment';
+import * as createSelectionMarker from 'roosterjs-content-model-dom/lib/modelApi/creators/createSelectionMarker';
 import { collapseTableSelection } from '../../../lib/modelApi/selection/collapseTableSelection';
 import { ContentModelSelectionMarker } from 'roosterjs-content-model-types';
-import { createTable, createTableCell } from 'roosterjs-content-model';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 
 describe('collapseTableSelection', () => {
     it('Collapse Selection to first cell', () => {

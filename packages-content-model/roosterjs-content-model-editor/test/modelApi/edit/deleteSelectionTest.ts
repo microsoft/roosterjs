@@ -17,7 +17,7 @@ import {
     createTable,
     createTableCell,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,

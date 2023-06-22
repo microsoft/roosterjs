@@ -1,4 +1,4 @@
-import { isGeneralSegment } from 'roosterjs-content-model';
+import { isGeneralSegment } from 'roosterjs-content-model-dom';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,

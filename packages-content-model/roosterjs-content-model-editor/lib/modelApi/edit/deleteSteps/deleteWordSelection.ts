@@ -4,7 +4,7 @@ import {
     isSpace,
     isWhiteSpacePreserved,
     normalizeText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 import {
     DeleteResult,
     DeleteSelectionContext,

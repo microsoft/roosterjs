@@ -1,6 +1,6 @@
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import setAlignment from '../../../lib/publicApi/block/setAlignment';
-import { createContentModelDocument } from 'roosterjs-content-model';
+import { createContentModelDocument } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { paragraphTestCommon } from './paragraphTestCommon';
 import {

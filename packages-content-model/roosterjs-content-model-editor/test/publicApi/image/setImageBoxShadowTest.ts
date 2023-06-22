@@ -6,7 +6,7 @@ import {
     createContentModelDocument,
     createImage,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('setImageBoxShadow', () => {
     const style = '0px 0px 3px 3px #aaaaaa';

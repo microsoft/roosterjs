@@ -16,7 +16,7 @@ import {
     createTable,
     createTableCell,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('retrieveModelFormatState', () => {
     const segmentFormat: ContentModelSegmentFormat = {

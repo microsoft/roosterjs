@@ -1,4 +1,4 @@
-import * as normalizeContentModel from 'roosterjs-content-model/lib/modelApi/common/normalizeContentModel';
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import { setListType } from '../../../lib/modelApi/list/setListType';
 import {
     createBr,
@@ -8,7 +8,7 @@ import {
     createListItem,
     createParagraph,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('indent', () => {
     let normalizeContentModelSpy: jasmine.Spy;

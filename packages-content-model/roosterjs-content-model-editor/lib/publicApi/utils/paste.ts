@@ -1,7 +1,7 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
-import { domToContentModel } from 'roosterjs-content-model';
+import { domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';

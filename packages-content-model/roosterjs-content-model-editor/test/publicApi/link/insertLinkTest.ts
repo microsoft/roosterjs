@@ -9,7 +9,7 @@ import {
     createImage,
     createSelectionMarker,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('insertLink', () => {
     let editor: IContentModelEditor;

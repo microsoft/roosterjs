@@ -1,6 +1,6 @@
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import { parseValueWithUnit } from 'roosterjs-content-model';
+import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     ContentModelDocument,
     ContentModelListItem,

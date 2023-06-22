@@ -6,7 +6,7 @@ import {
     isWhiteSpacePreserved,
     normalizeSingleSegment,
     normalizeText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { defaultImplicitFormatMap } from 'roosterjs-content-model';
+import { defaultImplicitFormatMap } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {

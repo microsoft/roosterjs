@@ -4,7 +4,7 @@ import {
     createListItem,
     normalizeContentModel,
     setParagraphNotImplicit,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 import {
     ContentModelBlock,
     ContentModelDocument,

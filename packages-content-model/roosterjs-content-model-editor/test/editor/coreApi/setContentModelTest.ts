@@ -1,4 +1,4 @@
-import * as contentModelToDom from 'roosterjs-content-model/lib/modelToDom/contentModelToDom';
+import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { setContentModel } from '../../../lib/editor/coreApi/setContentModel';
 

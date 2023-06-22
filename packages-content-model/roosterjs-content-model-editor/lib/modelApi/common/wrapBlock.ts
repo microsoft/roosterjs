@@ -1,4 +1,4 @@
-import { addBlock, setParagraphNotImplicit } from 'roosterjs-content-model';
+import { addBlock, setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import { arrayPush } from 'roosterjs-editor-dom';
 import { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
 

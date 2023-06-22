@@ -1,5 +1,5 @@
 import { ContentModelTable } from 'roosterjs-content-model-types';
-import { createTableCell } from 'roosterjs-content-model';
+import { createTableCell } from 'roosterjs-content-model-dom';
 import { getSelectedCells } from './getSelectedCells';
 
 const MIN_WIDTH = 30;

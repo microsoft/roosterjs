@@ -1,4 +1,4 @@
-import { createTable, createTableCell } from 'roosterjs-content-model';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { insertTableColumn } from '../../../lib/modelApi/table/insertTableColumn';
 import { TableOperation } from 'roosterjs-editor-types';
 

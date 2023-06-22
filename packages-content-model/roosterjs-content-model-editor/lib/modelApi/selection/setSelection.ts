@@ -1,5 +1,5 @@
 import { Coordinates } from 'roosterjs-editor-types';
-import { isGeneralSegment } from 'roosterjs-content-model';
+import { isGeneralSegment } from 'roosterjs-content-model-dom';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,

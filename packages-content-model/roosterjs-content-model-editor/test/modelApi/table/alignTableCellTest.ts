@@ -1,6 +1,6 @@
 import { alignTableCell } from '../../../lib/modelApi/table/alignTableCell';
 import { ContentModelTableCellFormat } from 'roosterjs-content-model-types';
-import { createTable, createTableCell } from 'roosterjs-content-model';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { TableOperation } from 'roosterjs-editor-types';
 
 describe('alignTableCell', () => {

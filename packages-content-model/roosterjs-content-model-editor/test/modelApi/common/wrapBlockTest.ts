@@ -1,4 +1,4 @@
-import { createFormatContainer, createParagraph } from 'roosterjs-content-model';
+import { createFormatContainer, createParagraph } from 'roosterjs-content-model-dom';
 import {
     ContentModelDocument,
     ContentModelFormatContainer,

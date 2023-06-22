@@ -7,7 +7,7 @@ import {
 import {
     createTable as originalCreateTable,
     createTableCell as originalCreateTableCell,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 const mockedCachedElement = {} as any;
 

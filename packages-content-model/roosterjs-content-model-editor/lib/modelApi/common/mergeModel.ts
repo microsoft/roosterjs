@@ -1,4 +1,4 @@
-import { addSegment } from 'roosterjs-content-model';
+import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
@@ -11,7 +11,7 @@ import {
     createSelectionMarker,
     createTableCell,
     normalizeContentModel,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 import {
     ContentModelBlock,
     ContentModelBlockFormat,

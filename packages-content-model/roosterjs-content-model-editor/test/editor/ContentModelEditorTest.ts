@@ -1,5 +1,5 @@
-import * as contentModelToDom from 'roosterjs-content-model/lib/modelToDom/contentModelToDom';
-import * as domToContentModel from 'roosterjs-content-model/lib/domToModel/domToContentModel';
+import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
+import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
 import { tablePreProcessor } from '../../lib/domToModel/processors/tablePreProcessor';

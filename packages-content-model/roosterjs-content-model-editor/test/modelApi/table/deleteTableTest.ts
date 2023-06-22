@@ -1,4 +1,4 @@
-import { createTable } from 'roosterjs-content-model';
+import { createTable } from 'roosterjs-content-model-dom';
 import { deleteTable } from '../../../lib/modelApi/table/deleteTable';
 
 describe('deleteTable', () => {

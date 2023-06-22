@@ -1,4 +1,4 @@
-import { areSameFormats, createFormatContainer, unwrapBlock } from 'roosterjs-content-model';
+import { areSameFormats, createFormatContainer, unwrapBlock } from 'roosterjs-content-model-dom';
 import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import { wrapBlockStep1, WrapBlockStep1Result, wrapBlockStep2 } from '../common/wrapBlock';

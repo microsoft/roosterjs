@@ -1,5 +1,5 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
-import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model';
+import { createContentModelDocument, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';

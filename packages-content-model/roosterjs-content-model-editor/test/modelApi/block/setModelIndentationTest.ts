@@ -4,7 +4,7 @@ import {
     createListItem,
     createParagraph,
     createText,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-dom';
 
 describe('indent', () => {
     it('Empty group', () => {

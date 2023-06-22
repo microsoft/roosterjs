@@ -1,6 +1,6 @@
 import { ContentModelTableCell } from 'roosterjs-content-model-types';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { mergeTableCells } from '../../../lib/modelApi/table/mergeTableCells';
-import { createTable, createTableCell } from 'roosterjs-content-model';
 
 describe('mergeTableCells', () => {
     it('empty table', () => {

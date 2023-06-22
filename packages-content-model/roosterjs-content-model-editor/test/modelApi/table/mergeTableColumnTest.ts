@@ -1,5 +1,5 @@
 import { ContentModelTableCell } from 'roosterjs-content-model-types';
-import { createTable, createTableCell } from 'roosterjs-content-model';
+import { createTable, createTableCell } from 'roosterjs-content-model-dom';
 import { mergeTableColumn } from '../../../lib/modelApi/table/mergeTableColumn';
 import { TableOperation } from 'roosterjs-editor-types';
 
