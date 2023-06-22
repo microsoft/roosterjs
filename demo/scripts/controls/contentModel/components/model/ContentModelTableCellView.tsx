@@ -3,25 +3,22 @@ import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundCo
 import { BlockGroupContentView } from './BlockGroupContentView';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
+import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
 import { ContentModelView } from '../ContentModelView';
 import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { hasSelectionInBlockGroup, updateTableCellMetadata } from 'roosterjs-content-model-editor';
 import { HtmlAlignFormatRenderer } from '../format/formatPart/HtmlAlignFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
+import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
 import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
-import { updateTableCellMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
 import { VerticalAlignFormatRenderer } from '../format/formatPart/VerticalAlignFormatRenderer';
 import { WordBreakFormatRenderer } from '../format/formatPart/WordBreakFormatRenderer';
-import {
-    ContentModelTableCell,
-    ContentModelTableCellFormat,
-    hasSelectionInBlockGroup,
-} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelTableCellView.scss');
 
@@ -36,6 +33,7 @@ const TableCellFormatRenderers: FormatRenderer<ContentModelTableCellFormat>[] = 
     VerticalAlignFormatRenderer,
     WordBreakFormatRenderer,
     TextColorFormatRenderer,
+    ...SizeFormatRenderers,
 ];
 
 export function ContentModelTableCellView(props: { cell: ContentModelTableCell }) {

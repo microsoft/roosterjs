@@ -1,4 +1,4 @@
-import { BorderBoxFormat } from 'roosterjs-content-model';
+import { BorderBoxFormat } from 'roosterjs-content-model-types';
 import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
 

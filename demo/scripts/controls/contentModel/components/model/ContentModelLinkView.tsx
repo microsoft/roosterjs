@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelLink } from 'roosterjs-content-model';
+import { ContentModelLink } from 'roosterjs-content-model-types';
 import { ContentModelView } from '../ContentModelView';
 import { LinkFormatView } from '../format/LinkFormatView';
 

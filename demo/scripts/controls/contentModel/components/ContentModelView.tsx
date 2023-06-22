@@ -10,7 +10,7 @@ import {
     ContentModelGeneralBlock,
     ContentModelWithDataset,
     DatasetFormat,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-types';
 
 const styles = require('./ContentModelView.scss');
 const MetadataKey = 'editingInfo';

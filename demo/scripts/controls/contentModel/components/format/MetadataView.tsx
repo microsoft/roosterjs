@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { ContentModelWithDataset } from 'roosterjs-content-model';
+import { ContentModelWithDataset } from 'roosterjs-content-model-types';
 import { FormatRenderer } from './utils/FormatRenderer';
 
 const styles = require('./FormatView.scss');
