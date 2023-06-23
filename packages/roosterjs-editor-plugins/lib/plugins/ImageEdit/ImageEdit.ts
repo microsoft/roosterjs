@@ -6,11 +6,11 @@ import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
 import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
-import { convertGifToPng } from './editInfoUtils/covertGifToPng';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
 import {
     arrayPush,
     Browser,
@@ -335,7 +335,7 @@ export default class ImageEdit implements EditorPlugin {
             this.editInfo = getEditInfoFromImage(image);
 
             //Check if the image is a gif and convert it to a png
-            this.pngSource = convertGifToPng(this.editInfo);
+            this.pngSource = tryToConvertGifToPng(this.editInfo);
 
             //Check if the image was resized by the user
             this.wasResized = checkIfImageWasResized(this.image);
