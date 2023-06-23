@@ -114,7 +114,7 @@ export default class TableEditor {
 
     onMouseMove(x: number, y: number) {
         //Get Cell [0,0]
-        const firstCell = this.table?.rows[0]?.cells[0];
+        const firstCell = this.table.rows[0].cells[0];
 
         if (!firstCell) {
             return;
