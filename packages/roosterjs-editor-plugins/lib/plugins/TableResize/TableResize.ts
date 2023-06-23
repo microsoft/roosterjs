@@ -130,7 +130,7 @@ export default class TableResize implements EditorPlugin {
             this.disposeTableEditor();
         }
 
-        if (!this.tableEditor && table && this.editor) {
+        if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
