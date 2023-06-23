@@ -3,12 +3,12 @@ import { BlockGroupContentView } from './BlockGroupContentView';
 import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
+import { hasSelectionInBlock } from 'roosterjs-content-model-editor';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import {
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
-    hasSelectionInBlock,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-types';
 
 const styles = require('./ContentModelGeneralView.scss');
 

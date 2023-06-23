@@ -14,7 +14,7 @@ import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
 import { arrayPush } from 'roosterjs-editor-dom';
-import { ContentModelEditor } from 'roosterjs-content-model';
+import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';

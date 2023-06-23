@@ -1,5 +1,4 @@
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { setHeaderLevel } from 'roosterjs-content-model';
+import { isContentModelEditor, setHeaderLevel } from 'roosterjs-content-model-editor';
 import {
     getButtons,
     HeaderButtonStringKey,

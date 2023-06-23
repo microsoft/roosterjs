@@ -7,6 +7,7 @@ const {
     rootPath,
     runWebPack,
     buildConfig,
+    packagesContentModelPath,
 } = require('./common');
 
 async function pack(isProduction, isAmd, target, filename) {
@@ -22,7 +23,7 @@ async function pack(isProduction, isAmd, target, filename) {
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js'],
-            modules: [packagesPath, packagesUiPath, nodeModulesPath],
+            modules: [packagesPath, packagesUiPath, packagesContentModelPath, nodeModulesPath],
         },
         module: {
             rules: [

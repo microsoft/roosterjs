@@ -1,6 +1,6 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { getCurrentContentModel } from '../currentModel';
-import { isContentModelEditor } from 'roosterjs-content-model';
+import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 
 export const exportButton: RibbonButton<'buttonNameExport'> = {

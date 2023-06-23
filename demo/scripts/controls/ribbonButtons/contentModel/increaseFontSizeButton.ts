@@ -1,6 +1,5 @@
-import { changeFontSize } from 'roosterjs-content-model';
+import { changeFontSize, isContentModelEditor } from 'roosterjs-content-model-editor';
 import { IncreaseFontSizeButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
 
 /**
  * @internal

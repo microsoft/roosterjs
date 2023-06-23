@@ -1,6 +1,5 @@
 import { DecreaseIndentButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { setIndentation } from 'roosterjs-content-model';
+import { isContentModelEditor, setIndentation } from 'roosterjs-content-model-editor';
 
 /**
  * @internal

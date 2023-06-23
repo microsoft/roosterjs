@@ -25,6 +25,7 @@ const allPreprocessors = Object.keys(testEntries).reduce((value, entry) => {
 }, {});
 
 const path = require('path');
+const rootPath = __dirname;
 
 module.exports = function (config) {
     const plugins = [
@@ -55,16 +56,22 @@ module.exports = function (config) {
                   test: /lib(\\|\/).*\.ts$/,
                   use: [
                       { loader: '@jsdevtools/coverage-istanbul-loader' },
-                      { loader: 'ts-loader' },
+                      {
+                          loader: 'ts-loader',
+                          options: {
+                              compilerOptions: {
+                                  rootDir: rootPath,
+                                  declaration: false,
+                              },
+                          },
+                      },
                   ],
               },
               {
                   test: /test(\\|\/).*\.ts$/,
                   loader: 'ts-loader',
                   options: {
-                      compilerOptions: {
-                          strict: false,
-                      },
+                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
                   },
               },
           ]
@@ -73,9 +80,7 @@ module.exports = function (config) {
                   test: /\.ts$/,
                   loader: 'ts-loader',
                   options: {
-                      compilerOptions: {
-                          strict: false,
-                      },
+                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
                   },
               },
           ];
@@ -110,8 +115,13 @@ module.exports = function (config) {
                 rules,
             },
             resolve: {
-                extensions: ['.ts', '.js'],
-                modules: ['./packages', './node_modules'],
+                extensions: ['.ts', '.tsx', '.js'],
+                modules: [
+                    './packages',
+                    './packages-ui',
+                    './packages-content-model',
+                    './node_modules',
+                ],
             },
             output: {
                 path: path.join(__dirname, 'dist/karma'),
