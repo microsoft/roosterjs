@@ -2,6 +2,7 @@ import generateDataURL from './generateDataURL';
 import ImageEditInfo from '../types/ImageEditInfo';
 
 /**
+ * @internal
  * If the image is a gif, use canvas to convert it to a png.
  * @param image to be converted
  * @returns
