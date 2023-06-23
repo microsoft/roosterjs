@@ -128,6 +128,10 @@ function mergeParagraph(
     if (segmentIndex >= 0) {
         newParagraph.segments.splice(segmentIndex, 0, ...newPara.segments);
     }
+
+    if (newPara.decorator) {
+        newParagraph.decorator = { ...newPara.decorator };
+    }
 }
 
 function mergeTable(
@@ -297,17 +301,21 @@ function applyDefaultFormat(
                 break;
 
             case 'Paragraph':
+                const paragraphFormat = block.decorator?.format || {};
                 block.segments.forEach(segment => {
                     if (segment.segmentType == 'General') {
                         applyDefaultFormat(segment, format, applyDefaultFormatOption);
                     }
 
-                    segment.format = mergeSegmentFormat(
-                        applyDefaultFormatOption,
-                        format,
-                        segment.format
-                    );
+                    segment.format = mergeSegmentFormat(applyDefaultFormatOption, format, {
+                        ...paragraphFormat,
+                        ...segment.format,
+                    });
                 });
+
+                if (applyDefaultFormatOption === 'keepSourceEmphasisFormat') {
+                    delete block.decorator;
+                }
                 break;
         }
     });
