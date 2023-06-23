@@ -27,7 +27,8 @@ export default function setOrderedListNumbering(
                 if (vList) {
                     vList.split(separator, startNumber);
                     vList.writeBack(
-                        editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                        editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
+                        editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
                     );
                 }
             }

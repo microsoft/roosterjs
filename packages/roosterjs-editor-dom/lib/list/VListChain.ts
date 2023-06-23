@@ -103,19 +103,23 @@ export default class VListChain {
     /**
      * After change the lists, commit the change to all lists in this chain to update the list number,
      * and clear the temporary dataset values added to list node
+     * @param shouldReuseAllAncestorListElements Whether we can parent list item (OL/UL) even if its list type does not match the previous one. @default false
+     * @param disableListChain Whether we want to disable list chain functionality, so splitted list will always restart its number from 1 @default false
      */
-    commit(shouldReuseAllAncestorListElements?: boolean) {
+    commit(shouldReuseAllAncestorListElements?: boolean, disableListChain?: boolean) {
         const lists = this.getLists();
         let lastNumber = 0;
 
         for (let i = 0; i < lists.length; i++) {
             const list = lists[i];
 
-            //If there is a list chain sequence, ensure the list chain keep increasing correctly
-            if (list.start > 1) {
-                list.start = list.start === lastNumber ? lastNumber + 1 : list.start;
-            } else {
-                list.start = lastNumber + 1;
+            if (!disableListChain) {
+                //If there is a list chain sequence, ensure the list chain keep increasing correctly
+                if (list.start > 1) {
+                    list.start = list.start === lastNumber ? lastNumber + 1 : list.start;
+                } else {
+                    list.start = lastNumber + 1;
+                }
             }
 
             const vlist = new VList(list);
