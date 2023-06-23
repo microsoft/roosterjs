@@ -1,8 +1,6 @@
 import { BulletListType } from 'roosterjs-editor-types';
-import { isContentModelEditor } from 'roosterjs-content-model';
+import { isContentModelEditor, setListStyle } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
-import { setListStyle } from 'roosterjs-content-model';
-
 const dropDownMenuItems = {
     [BulletListType.Disc]: 'Disc',
     [BulletListType.Dash]: 'Dash',

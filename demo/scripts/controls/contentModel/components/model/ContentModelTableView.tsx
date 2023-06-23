@@ -2,23 +2,20 @@ import * as React from 'react';
 import { BackgroundColorFormatRenderer } from '../format/formatPart/BackgroundColorFormatRenderer';
 import { BorderBoxFormatRenderer } from '../format/formatPart/BorderBoxFormatRenderer';
 import { BorderFormatRenderers } from '../format/formatPart/BorderFormatRenderers';
+import { ContentModelTable, ContentModelTableFormat } from 'roosterjs-content-model-types';
 import { ContentModelTableRowView } from './ContentModelTableRowView';
 import { ContentModelView } from '../ContentModelView';
 import { DisplayFormatRenderer } from '../format/formatPart/DisplayFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
+import { hasSelectionInBlock, updateTableMetadata } from 'roosterjs-content-model-editor';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
 import { SpacingFormatRenderer } from '../format/formatPart/SpacingFormatRenderer';
+import { TableLayoutFormatRenderer } from '../format/formatPart/TableLayoutFormatRenderer';
 import { TableMetadataFormatRenders } from '../format/formatPart/TableMetadataFormatRenders';
-import { updateTableMetadata } from 'roosterjs-content-model';
 import { useProperty } from '../../hooks/useProperty';
-import {
-    ContentModelTable,
-    ContentModelTableFormat,
-    hasSelectionInBlock,
-} from 'roosterjs-content-model';
 
 const styles = require('./ContentModelTableView.scss');
 
@@ -30,6 +27,7 @@ const TableFormatRenderers: FormatRenderer<ContentModelTableFormat>[] = [
     ...BorderFormatRenderers,
     BorderBoxFormatRenderer,
     DisplayFormatRenderer,
+    TableLayoutFormatRenderer,
 ];
 
 export function ContentModelTableView(props: { table: ContentModelTable }) {

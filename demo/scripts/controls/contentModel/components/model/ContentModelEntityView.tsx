@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BlockFormatView } from '../format/BlockFormatView';
-import { ContentModelEntity } from 'roosterjs-content-model';
+import { ContentModelEntity } from 'roosterjs-content-model-types';
 import { ContentModelView } from '../ContentModelView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';

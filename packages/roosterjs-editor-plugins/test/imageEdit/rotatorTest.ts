@@ -1,18 +1,18 @@
-import * as TestHelper from '../../../roosterjs-editor-api/test/TestHelper';
-import createElement from '../../../roosterjs-editor-dom/lib/utils/createElement';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
+import createElement from 'roosterjs-editor-dom/lib/utils/createElement';
+import ImageEditInfo, { RotateInfo } from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
+import ImageHtmlOptions from '../../lib/plugins/ImageEdit/types/ImageHtmlOptions';
+import { IEditor, ImageEditOperation, ImageEditOptions, Rect } from 'roosterjs-editor-types';
+import { ImageEdit } from '../../lib/ImageEdit';
 import DragAndDropContext, {
     DNDDirectionX,
     DnDDirectionY,
 } from '../../lib/plugins/ImageEdit/types/DragAndDropContext';
-import ImageEditInfo, { RotateInfo } from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
-import ImageHtmlOptions from '../../lib/plugins/ImageEdit/types/ImageHtmlOptions';
 import {
     getRotateHTML,
     Rotator,
     updateRotateHandlePosition,
 } from '../../lib/plugins/ImageEdit/imageEditors/Rotator';
-import { IEditor, ImageEditOperation, ImageEditOptions, Rect } from 'roosterjs-editor-types';
-import { ImageEdit } from '../../lib/ImageEdit';
 
 const ROTATE_SIZE = 32;
 const ROTATE_GAP = 15;

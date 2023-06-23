@@ -1,5 +1,4 @@
-import { formatTable } from 'roosterjs-content-model';
-import { isContentModelEditor } from 'roosterjs-content-model';
+import { formatTable, isContentModelEditor } from 'roosterjs-content-model-editor';
 import { PREDEFINED_STYLES } from '../../sidePane/shared/PredefinedTableStyles';
 import { RibbonButton } from 'roosterjs-react';
 

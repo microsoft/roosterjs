@@ -1,4 +1,4 @@
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { Browser } from 'roosterjs-editor-dom';
 import { TextFeatures } from '../../../lib/plugins/ContentEdit/features/textFeatures';
 

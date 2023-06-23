@@ -1,5 +1,9 @@
 import { RibbonButton } from 'roosterjs-react';
-import { getFormatState, isContentModelEditor, setParagraphMargin } from 'roosterjs-content-model';
+import {
+    getFormatState,
+    isContentModelEditor,
+    setParagraphMargin,
+} from 'roosterjs-content-model-editor';
 
 const spaceAfterButtonKey = 'buttonNameSpaceAfter';
 const spaceBeforeButtonKey = 'buttonNameSpaceBefore';

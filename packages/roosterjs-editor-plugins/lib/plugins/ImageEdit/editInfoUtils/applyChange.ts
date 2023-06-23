@@ -12,6 +12,7 @@ import { IEditor, PluginEventType } from 'roosterjs-editor-types';
  * @param image The image to apply the change
  * @param editInfo Edit info that contains the changed information of the image
  * @param previousSrc Last src value of the image before the change was made
+ * @param wasResizedOrCropped if the image was resized or cropped apply the new image dimensions
  * @param editingImage (optional) Image in editing state
  */
 export default function applyChange(
@@ -19,7 +20,7 @@ export default function applyChange(
     image: HTMLImageElement,
     editInfo: ImageEditInfo,
     previousSrc: string,
-    wasResized: boolean,
+    wasResizedOrCropped: boolean,
     editingImage?: HTMLImageElement
 ) {
     let newSrc = '';
@@ -71,10 +72,8 @@ export default function applyChange(
     const { targetWidth, targetHeight } = getGeneratedImageSize(editInfo);
     image.src = newSrc;
 
-    if (wasResized || state == ImageEditInfoState.FullyChanged) {
+    if (wasResizedOrCropped || state == ImageEditInfoState.FullyChanged) {
         image.width = targetWidth;
         image.height = targetHeight;
-        image.style.width = targetWidth + 'px';
-        image.style.height = targetHeight + 'px';
     }
 }

@@ -1,6 +1,5 @@
 import { FontButtonStringKey, RibbonButton } from 'roosterjs-react';
-import { isContentModelEditor } from 'roosterjs-content-model';
-import { setFontName } from 'roosterjs-content-model';
+import { isContentModelEditor, setFontName } from 'roosterjs-content-model-editor';
 
 interface FontName {
     name: string;
