@@ -1,11 +1,17 @@
-import * as getComputedStyles from 'roosterjs-editor-dom/lib/utils/getComputedStyles';
 import { parseValueWithUnit } from '../../../lib/formatHandlers/utils/parseValueWithUnit';
 
 describe('parseValueWithUnit', () => {
     function runTest(unit: string, results: number[]) {
-        const mockedElement = {
+        const mockedElement = ({
             offsetWidth: 1000,
-        } as HTMLElement;
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: () => ({
+                        fontSize: '15pt',
+                    }),
+                },
+            },
+        } as any) as HTMLElement;
 
         ['0', '1', '1.1', '-1.1'].forEach((value, i) => {
             const input = value + unit;
@@ -14,10 +20,6 @@ describe('parseValueWithUnit', () => {
             expect(result).toBe(results[i], input);
         });
     }
-
-    beforeEach(() => {
-        spyOn(getComputedStyles, 'getComputedStyle').and.returnValue('15pt');
-    });
 
     it('empty', () => {
         expect(parseValueWithUnit()).toBe(0);
