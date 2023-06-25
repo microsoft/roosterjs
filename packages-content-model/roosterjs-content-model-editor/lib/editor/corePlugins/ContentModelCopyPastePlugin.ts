@@ -1,6 +1,6 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom } from 'roosterjs-content-model-dom';
+import { contentModelToDom, isElementOfType } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -22,7 +22,6 @@ import {
     toArray,
     Browser,
     wrap,
-    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -265,7 +264,7 @@ export const onNodeCreated = (
         | ContentModelTableRow,
     node: Node
 ): void => {
-    if (safeInstanceOf(node, 'HTMLTableElement')) {
+    if (isElementOfType(node, 'table')) {
         wrap(node, 'div');
     }
 };

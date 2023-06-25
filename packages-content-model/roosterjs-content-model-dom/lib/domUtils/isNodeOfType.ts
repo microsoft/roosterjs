@@ -55,3 +55,18 @@ export function isNodeOfType<T extends NodeType>(
 ): node is NodeTypeMap[T] {
     return !!node && node.nodeType == expectedType;
 }
+
+/**
+ * Type checker for HTML Element. Return true if the given element is of the specified type.
+ * This function only check if the given element is of the expected tag. If the given element is of the sub class
+ * of specified tag, it will return false.
+ * @param element The element to check
+ * @param tagName The expected tag name.
+ * @returns True if the given element is of the specified type, otherwise false
+ */
+export function isElementOfType<T extends keyof HTMLElementTagNameMap>(
+    element: Node | null | undefined,
+    tagName: T
+): element is HTMLElementTagNameMap[T] {
+    return isNodeOfType(element, NodeType.Element) && element.tagName == tagName.toUpperCase();
+}

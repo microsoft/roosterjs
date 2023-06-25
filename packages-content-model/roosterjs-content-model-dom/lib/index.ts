@@ -13,7 +13,7 @@ export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
-export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
+export { isNodeOfType, isElementOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

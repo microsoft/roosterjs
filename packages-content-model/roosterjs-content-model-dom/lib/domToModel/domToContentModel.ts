@@ -1,9 +1,10 @@
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
+import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { NodeType } from 'roosterjs-editor-types';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 import {
     ContentModelDocument,
@@ -26,7 +27,7 @@ export function domToContentModel(
     const model = createContentModelDocument(editorContext.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 
-    if (safeInstanceOf(root, 'DocumentFragment')) {
+    if (isNodeOfType(root, NodeType.DocumentFragment)) {
         context.elementProcessors.child(model, root, context);
     } else {
         // Need to calculate direction (ltr or rtl), use it as initial value
