@@ -1,8 +1,9 @@
-import { contains, getTagOfNode } from 'roosterjs-editor-dom';
+import { contains } from 'roosterjs-editor-dom';
 import { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,
+    isElementOfType,
     processChildNode,
 } from 'roosterjs-content-model-dom';
 
@@ -66,7 +67,7 @@ function createNodeStack(root: Node, startNode: Node): Node[] {
     let node: Node | null = startNode;
 
     while (node && contains(root, node)) {
-        if (getTagOfNode(node) == 'TABLE') {
+        if (isElementOfType(node, 'table')) {
             // For table, we can't do a reduced model creation since we need to handle their cells and indexes,
             // so clean up whatever we already have, and just put table into the stack
             result.splice(0, result.length, node);

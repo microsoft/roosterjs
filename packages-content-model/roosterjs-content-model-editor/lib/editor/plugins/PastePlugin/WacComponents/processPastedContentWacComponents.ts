@@ -1,6 +1,6 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
 import {
     ContentModelBlockGroup,
@@ -77,7 +77,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     element: HTMLElement,
     context: DomToModelContext
 ): void => {
-    const elementTag = getTagOfNode(element);
+    const elementTag = element.tagName;
     if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');

@@ -1,5 +1,4 @@
 import { FormatHandler } from '../FormatHandler';
-import { getTagOfNode } from 'roosterjs-editor-dom';
 import { ListTypeFormat } from 'roosterjs-content-model-types';
 
 /**
@@ -7,7 +6,7 @@ import { ListTypeFormat } from 'roosterjs-content-model-types';
  */
 export const listTypeFormatHandler: FormatHandler<ListTypeFormat> = {
     parse: (format, element) => {
-        const tag = getTagOfNode(element);
+        const tag = element.tagName;
 
         if (tag == 'OL' || tag == 'UL') {
             format.listType = tag;

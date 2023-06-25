@@ -1,7 +1,8 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
-import { TrustedHTMLHandler } from 'roosterjs-editor-types';
+import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
+import { moveChildNodes } from 'roosterjs-editor-dom';
+import { NodeType, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;
@@ -29,12 +30,18 @@ export function processPastedContentFromExcel(
 
     // For Excel Online
     const firstChild = fragment.firstChild;
-    if (firstChild && firstChild.childNodes.length > 0 && getTagOfNode(firstChild) == 'DIV') {
+
+    if (
+        firstChild &&
+        firstChild.childNodes.length > 0 &&
+        isNodeOfType(firstChild, NodeType.Element) &&
+        firstChild.tagName == 'DIV'
+    ) {
         const tableFound = Array.from(firstChild.childNodes).every((child: Node) => {
+            const tagName = isNodeOfType(child, NodeType.Element) ? child.tagName : null;
+
             // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
-            return getTagOfNode(child) == 'META'
-                ? true
-                : getTagOfNode(child) == 'TABLE' && child == firstChild.lastChild;
+            return tagName == 'META' ? true : tagName == 'TABLE' && child == firstChild.lastChild;
         });
 
         // Extract Table from Div

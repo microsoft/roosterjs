@@ -1,6 +1,6 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
-import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { isElementOfType } from '../../domUtils/isNodeOfType';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
 
@@ -61,7 +61,7 @@ export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> =
         const listStyle =
             element.style.listStyleType ||
             (isElementOfType(element, 'ol') && OLTypeToStyleMap[element.type]);
-        const tag = getTagOfNode(element);
+        const tag = element.tagName;
 
         if (listStyle) {
             if (tag == 'OL' && format.orderedStyleType === undefined) {
@@ -76,9 +76,8 @@ export const listLevelMetadataFormatHandler: FormatHandler<ListMetadataFormat> =
         }
     },
     apply: (format, element) => {
-        const tag = getTagOfNode(element);
         const listType =
-            tag == 'OL'
+            element.tagName == 'OL'
                 ? OrderedMap[format.orderedStyleType!]
                 : UnorderedMap[format.unorderedStyleType!];
 

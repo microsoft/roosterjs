@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
 import { NodeType } from 'roosterjs-editor-types';
@@ -37,9 +37,8 @@ export const listItemMetadataFormatHandler: FormatHandler<ListMetadataFormat> = 
         const depth = context.listFormat.nodeStack.length - 2; // Minus two for the parent element and convert length to index
 
         if (depth >= 0 && isNodeOfType(parent, NodeType.Element) && !parent.style.listStyleType) {
-            const parentTag = getTagOfNode(parent);
             const style =
-                parentTag == 'OL'
+                parent.tagName == 'OL'
                     ? getOrderedListStyleValue(
                           OrderedMap[format.orderedStyleType!],
                           context.listFormat.threadItemCounts[depth]
