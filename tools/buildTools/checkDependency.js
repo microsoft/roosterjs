@@ -2,7 +2,7 @@
 
 const path = require('path');
 const fs = require('fs');
-const { allPackages, readPackageJson, findPackageRoot, err } = require('./common');
+const { allPackages, readPackageJson, findPackageRoot, err, rootPath } = require('./common');
 
 function getPossibleNames(dir, objectName) {
     return [
@@ -88,7 +88,7 @@ const GlobalAllowedCrossPackageDependency = [
 
 function checkDependency() {
     allPackages.forEach(packageName => {
-        const packageRoot = findPackageRoot(packageName);
+        const packageRoot = path.join(rootPath, findPackageRoot(packageName));
 
         var packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
         var dependencies = Object.keys(packageJson.dependencies);
