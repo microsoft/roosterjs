@@ -168,4 +168,9 @@ export const enum ExperimentalFeatures {
      * Paste with Content model
      */
     ContentModelPaste = 'ContentModelPaste',
+
+    /**
+     * Disable list chain functionality
+     */
+    DisableListChain = 'DisableListChain',
 }
