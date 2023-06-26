@@ -3,7 +3,7 @@ import * as ReactDOM from 'react-dom';
 import BuildInPluginState from './BuildInPluginState';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
-import { DarkColorHandler, EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
@@ -192,7 +192,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
                             initialContent={this.content}
                             editorCreator={this.state.editorCreator}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
-                            onExternalContentTransform={externalHandler}
                         />
                     )}
                 </div>
@@ -277,16 +276,4 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
             isDarkMode: this.themeMatch?.matches || false,
         });
     };
-}
-
-// TODO: TEMP CODE, will be removed before publish PR
-function externalHandler(
-    element: HTMLElement,
-    fromDark: boolean,
-    toDark: boolean,
-    handler: DarkColorHandler
-) {
-    if (element.tagName == 'SPAN') {
-        handler.transformElementColor(element, fromDark, toDark);
-    }
 }
