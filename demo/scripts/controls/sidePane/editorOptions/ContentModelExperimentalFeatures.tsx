@@ -22,6 +22,7 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
         'Add read entities around read only entities to handle browser edge cases.',
     [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
+    [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
 };
 
 export default class ContentModelExperimentalFeaturesPane extends React.Component<
