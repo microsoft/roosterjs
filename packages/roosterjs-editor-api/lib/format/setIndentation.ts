@@ -86,7 +86,8 @@ export default function setIndentation(
                             vList.writeBack(
                                 editor.isFeatureEnabled(
                                     ExperimentalFeatures.ReuseAllAncestorListElements
-                                )
+                                ),
+                                editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
                             );
                             blockGroups.push([]);
                         }

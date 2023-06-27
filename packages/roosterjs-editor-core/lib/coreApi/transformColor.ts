@@ -19,7 +19,7 @@ export const transformColor: TransformColor = (
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean,
-    fromDarkMode?: boolean
+    fromDarkMode: boolean = false
 ) => {
     if (rootNode) {
         core.darkColorHandler.transformColors(

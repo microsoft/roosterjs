@@ -128,6 +128,7 @@ export default class LifecyclePlugin implements PluginWithState<LifecyclePluginS
             shadowEditSelectionPath: null,
             shadowEditTableSelectionPath: null,
             shadowEditImageSelectionPath: null,
+            onExternalContentTransform: null,
         };
     }
 

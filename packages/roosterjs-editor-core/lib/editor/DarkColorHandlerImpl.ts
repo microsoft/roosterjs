@@ -15,7 +15,12 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
         private contentDiv: HTMLElement,
         private getDarkColor?: (color: string) => string,
         private darkMode?: boolean,
-        private onExternalContentTransform?: (htmlIn: HTMLElement) => void
+        private onExternalContentTransform?: (
+            element: HTMLElement,
+            fromDarkMode: boolean,
+            toDarkMode: boolean,
+            darkColorHandler: DarkColorHandler
+        ) => void
     ) {}
 
     get isDarkMode() {
@@ -145,29 +150,11 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
     }
 
     transformColors(root: HTMLElement, isCleaningUp: boolean, includeSelf: boolean) {
-        const darkColorHandler = isCleaningUp ? null : this;
-
         this.iterateElements(root, includeSelf, element => {
             if (!isCleaningUp && this.onExternalContentTransform) {
-                this.onExternalContentTransform(element);
+                this.onExternalContentTransform(element, isCleaningUp, !isCleaningUp, this);
             } else {
-                [false, true].forEach(isBackground => {
-                    const color = getColor(element, isBackground, this, isCleaningUp);
-
-                    element.style.setProperty(isBackground ? 'background-color' : 'color', null);
-                    element.removeAttribute(isBackground ? 'bgcolor' : 'color');
-
-                    if (color && color != 'inherit') {
-                        setColor(
-                            element,
-                            color,
-                            isBackground,
-                            this.isDarkMode,
-                            false /*adjustTextColor*/,
-                            darkColorHandler
-                        );
-                    }
-                });
+                this.transformElementColor(element, isCleaningUp, !isCleaningUp);
             }
         });
     }
@@ -212,5 +199,31 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
         // in dark mode, so we need to make sure this check is fast enough
         const htmlElement = <HTMLElement>node;
         return node.nodeType == Node.ELEMENT_NODE && !!htmlElement.style;
+    }
+
+    /**
+     * Transform element color, from dark to light or from light to dark
+     * @param element The element to transform color
+     * @param fromDarkMode Whether this is transforming color from dark mode
+     * @param toDarkMode Whether this is transforming color to dark mode
+     */
+    transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void {
+        [false, true].forEach(isBackground => {
+            const color = getColor(element, isBackground, this, !toDarkMode);
+
+            element.style.setProperty(isBackground ? 'background-color' : 'color', null);
+            element.removeAttribute(isBackground ? 'bgcolor' : 'color');
+
+            if (color && color != 'inherit') {
+                setColor(
+                    element,
+                    color,
+                    isBackground,
+                    fromDarkMode,
+                    false /*adjustTextColor*/,
+                    toDarkMode ? this : null
+                );
+            }
+        });
     }
 }

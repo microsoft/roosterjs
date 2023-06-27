@@ -70,4 +70,12 @@ export default interface DarkColorHandler {
      * @param darkColor The existing dark color
      */
     findLightColorFromDarkColor(darkColor: string): string | null;
+
+    /**
+     * Transform element color, from dark to light or from light to dark
+     * @param element The element to transform color
+     * @param fromDarkMode Whether this is transforming color from dark mode
+     * @param toDarkMode Whether this is transforming color to dark mode
+     */
+    transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void;
 }
