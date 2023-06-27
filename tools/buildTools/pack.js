@@ -65,28 +65,32 @@ function createStep(isProduction, isAmd, target) {
 }
 
 module.exports = {
-    commonJsDebug: createStep(false /*isProduction*/, false /*isAmd*/, 'rooster'),
-    commonJsProduction: createStep(true /*isProduction*/, false /*isAmd*/, 'rooster'),
-    amdDebug: createStep(false /*isProduction*/, true /*isAmd*/, 'rooster'),
-    amdProduction: createStep(true /*isProduction*/, true /*isAmd*/, 'rooster'),
-    commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'roosterReact'),
-    commonJsProductionUi: createStep(true /*isProduction*/, false /*isAmd*/, 'roosterReact'),
-    amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'roosterReact'),
-    amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'roosterReact'),
+    commonJsDebug: createStep(false /*isProduction*/, false /*isAmd*/, 'packages'),
+    commonJsProduction: createStep(true /*isProduction*/, false /*isAmd*/, 'packages'),
+    amdDebug: createStep(false /*isProduction*/, true /*isAmd*/, 'packages'),
+    amdProduction: createStep(true /*isProduction*/, true /*isAmd*/, 'packages'),
+    commonJsDebugUi: createStep(false /*isProduction*/, false /*isAmd*/, 'packages-ui'),
+    commonJsProductionUi: createStep(true /*isProduction*/, false /*isAmd*/, 'packages-ui'),
+    amdDebugUi: createStep(false /*isProduction*/, true /*isAmd*/, 'packages-ui'),
+    amdProductionUi: createStep(true /*isProduction*/, true /*isAmd*/, 'packages-ui'),
     commonJsDebugContentModel: createStep(
         false /*isProduction*/,
         false /*isAmd*/,
-        'roosterContentModel'
+        'packages-content-model'
     ),
     commonJsProductionContentModel: createStep(
         true /*isProduction*/,
         false /*isAmd*/,
-        'roosterContentModel'
+        'packages-content-model'
     ),
-    amdDebugContentModel: createStep(false /*isProduction*/, true /*isAmd*/, 'roosterContentModel'),
+    amdDebugContentModel: createStep(
+        false /*isProduction*/,
+        true /*isAmd*/,
+        'packages-content-model'
+    ),
     amdProductionContentModel: createStep(
         true /*isProduction*/,
         true /*isAmd*/,
-        'roosterContentModel'
+        'packages-content-model'
     ),
 };
