@@ -22,7 +22,8 @@ import {
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'tableStyle';
-const SELECTED_CSS_RULE = `{background-color: rgb(198,198,198) !important; caret-color: transparent}`;
+const SELECTED_CSS_RULE =
+    '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
 
 /**
  * @internal
