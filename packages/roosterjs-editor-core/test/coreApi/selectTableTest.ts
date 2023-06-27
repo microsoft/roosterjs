@@ -39,8 +39,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -55,8 +55,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -75,8 +75,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TH:nth-child(1), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > th:nth-child(1), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -95,8 +95,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -115,8 +115,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -134,8 +134,8 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(1) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TBODY > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(1) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tbody > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
@@ -153,8 +153,27 @@ xdescribe('selectTable |', () => {
 
         const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
         expect(style).toBeDefined();
-        expect(style.sheet.cssRules[0]).toBeDefined();
-        expect(style.sheet.cssRules[0].cssText).toEqual(
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
+            Browser.isFirefox
+                ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+                : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
+        );
+    });
+
+    it('Select Table Cells THEAD, TFOOT', () => {
+        div!.innerHTML = buildTableHTML(true /* tbody */);
+        table = div!.querySelector('table');
+
+        selectTable(core, table, <TableSelection>{
+            firstCell: { x: 0, y: 0 },
+            lastCell: { x: 2, y: 2 },
+        });
+
+        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
+        expect(style).toBeDefined();
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual(
             Browser.isFirefox
                 ? '#contentDiv_0 #tableSelected0 > THEAD > tr:nth-child(2) > TD:nth-child(2), #contentDiv_0 #tableSelected0 > TFOOT > tr:nth-child(1) > TD:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'
                 : '#contentDiv_0 #tableSelected0 > thead > tr:nth-child(2) > td:nth-child(2), #contentDiv_0 #tableSelected0 > tfoot > tr:nth-child(1) > td:nth-child(2) { background-color: rgba(198, 198, 198, 0.7) !important; }'

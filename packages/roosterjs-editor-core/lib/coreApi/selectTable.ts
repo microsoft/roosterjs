@@ -2,6 +2,7 @@ import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     getTagOfNode,
+    isWholeTableSelected,
     Position,
     removeGlobalCssStyle,
     removeImportantStyleRule,
@@ -21,6 +22,7 @@ import {
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'tableStyle';
+const SELECTED_CSS_RULE = `{background-color: rgb(198,198,198) !important; caret-color: transparent}`;
 
 /**
  * @internal
@@ -84,6 +86,11 @@ function buildCss(
     const selectors: string[] = [];
 
     const vTable = new VTable(table);
+    const isAllTableSelected = isWholeTableSelected(vTable, coordinates);
+    if (isAllTableSelected) {
+        const tableSelector = contentDivSelector + ' #' + table.id;
+        selectors.push(tableSelector, `${tableSelector} *`);
+    }
 
     // Get whether table has thead, tbody or tfoot.
     const tableChildren = toArray(table.childNodes).filter(
@@ -119,26 +126,27 @@ function buildCss(
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
             const cell = row[cellIndex].td;
             if (cell) {
-                const tag = getTagOfNode(cell);
                 tdCount++;
-
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
                     removeImportant(cell);
 
-                    const selector = generateCssFromCell(
-                        contentDivSelector,
-                        table.id,
-                        middleElSelector,
-                        currentRow,
-                        tag,
-                        tdCount
-                    );
-                    const elementsSelector = selector + ' *';
+                    if (!isAllTableSelected) {
+                        const selector = generateCssFromCell(
+                            contentDivSelector,
+                            table.id,
+                            middleElSelector,
+                            currentRow,
+                            getTagOfNode(cell),
+                            tdCount
+                        );
+                        const elementsSelector = selector + ' *';
 
-                    selectors.push(selector);
-                    selectors.push(elementsSelector);
-                    firstSelected = firstSelected || table.querySelector(selector);
-                    lastSelected = table.querySelector(selector);
+                        selectors.push(selector);
+                        selectors.push(elementsSelector);
+                    }
+
+                    firstSelected = firstSelected || cell;
+                    lastSelected = cell;
                 }
             }
         }
@@ -151,11 +159,7 @@ function buildCss(
         }
     });
 
-    const css = selectors.length
-        ? `${selectors.join(
-              ','
-          )} {background-color: rgb(198,198,198) !important; caret-color: transparent}`
-        : '';
+    const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
 
     return { css, ranges };
 }
