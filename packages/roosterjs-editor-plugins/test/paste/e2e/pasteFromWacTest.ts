@@ -5,7 +5,7 @@ import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 import { initEditor } from '../../TestHelper';
 import { Paste } from '../../../lib/index';
 
-const ID = 'Paste_From_WORD_E2E';
+const ID = 'Paste_From_WORD_Online_E2E';
 
 const clipboardData = <ClipboardData>(<any>{
     types: ['text/plain', 'text/html'],

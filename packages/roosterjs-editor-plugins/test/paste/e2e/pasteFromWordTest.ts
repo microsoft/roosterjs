@@ -1,4 +1,5 @@
 import * as convertPastedContentFromWord from '../../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
+import { Browser } from 'roosterjs-editor-dom';
 import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 import { initEditor } from '../../TestHelper';
 import { Paste } from '../../../lib/index';
@@ -36,7 +37,9 @@ describe(ID, () => {
         editor.paste(clipboardData);
 
         expect(editor.getContent()).toEqual(
-            '<p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif"><p style="margin:0in 0in 8pt;font-size:11pt">Test<o:p>&nbsp;</o:p></p><p style="margin:0in 0in 8pt;font-size:11pt">asdsad<o:p>&nbsp;</o:p></p></p>'
+            Browser.isFirefox
+                ? '<p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif"><p style="margin:0in 0in 8pt;font-size:11pt;font-family:&quot;Calibri&quot;, sans-serif">Test<o:p>&nbsp;</o:p></p><p style="margin:0in 0in 8pt;font-size:11pt;font-family:&quot;Calibri&quot;, sans-serif">asdsad<o:p>&nbsp;</o:p></p></p>'
+                : '<p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif"><p style="margin:0in 0in 8pt;font-size:11pt">Test<o:p>&nbsp;</o:p></p><p style="margin:0in 0in 8pt;font-size:11pt">asdsad<o:p>&nbsp;</o:p></p></p>'
         );
         expect(convertPastedContentFromWord.default).toHaveBeenCalled();
     });
