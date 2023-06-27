@@ -9,6 +9,5 @@
         "roosterjs-content-model-dom": "",
         "roosterjs-content-model-types": ""
     },
-    "main": "./lib/index.ts",
-    "version": "0.0.1"
+    "main": "./lib/index.ts"
 }
