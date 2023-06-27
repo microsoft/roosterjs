@@ -180,6 +180,21 @@ xdescribe('selectTable |', () => {
         );
     });
 
+    it('Select All', () => {
+        div!.innerHTML = buildTableHTML(true /* tbody */, false, false);
+        table = div!.querySelector('table');
+
+        selectTable(core, table, <TableSelection>{
+            firstCell: { x: 0, y: 0 },
+            lastCell: { x: 1, y: 1 },
+        });
+
+        const style = document.getElementById('tableStylecontentDiv_0') as HTMLStyleElement;
+        expect(style).toBeDefined();
+        expect(style.sheet?.cssRules[0]).toBeDefined();
+        expect(style.sheet?.cssRules[0].cssText).toEqual('');
+    });
+
     it('remove duplicated ID', () => {
         const tableHTML = buildTableHTML(true);
         div!.innerHTML = tableHTML + '' + tableHTML;
