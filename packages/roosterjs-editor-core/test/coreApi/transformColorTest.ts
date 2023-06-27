@@ -1,5 +1,6 @@
 import createEditorCore from './createMockEditorCore';
-import { ColorTransformDirection, DarkColorHandler } from 'roosterjs-editor-types';
+import DarkColorHandlerImpl from '../../lib/editor/DarkColorHandlerImpl';
+import { ColorTransformDirection } from 'roosterjs-editor-types';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { itChromeOnly } from '../TestHelper';
 import { transformColor } from '../../lib/coreApi/transformColor';
@@ -23,20 +24,19 @@ describe('transform to dark mode v2', () => {
         expectedParseValueCalls: string[],
         expectedRegisterColorCalls: [string, boolean, string][]
     ) {
+        const handler = new DarkColorHandlerImpl(div, getDarkColor);
         const core = createEditorCore(div, {
             inDarkMode: false,
             getDarkColor,
         });
-        const parseColorValue = jasmine
-            .createSpy('parseColorValue')
-            .and.callFake((color: string) => ({
-                lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
-            }));
-        const registerColor = jasmine
-            .createSpy('registerColor')
-            .and.callFake((color: string) => color);
+        core.darkColorHandler = handler;
 
-        core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
+        const parseColorValue = spyOn(handler, 'parseColorValue').and.callFake((color: string) => ({
+            lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
+        }));
+        const registerColor = spyOn(handler, 'registerColor').and.callFake(
+            (color: string) => color
+        );
 
         transformColor(core, element, true, null, ColorTransformDirection.LightToDark, true);
 
@@ -128,19 +128,18 @@ describe('transform to light mode v2', () => {
         expectedParseValueCalls: string[],
         expectedRegisterColorCalls: [string, boolean, string][]
     ) {
+        const handler = new DarkColorHandlerImpl(div, getDarkColor);
         const core = createEditorCore(div, {
             getDarkColor,
         });
-        const parseColorValue = jasmine
-            .createSpy('parseColorValue')
-            .and.callFake((color: string) => ({
-                lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
-            }));
-        const registerColor = jasmine
-            .createSpy('registerColor')
-            .and.callFake((color: string) => color);
+        const parseColorValue = spyOn(handler, 'parseColorValue').and.callFake((color: string) => ({
+            lightModeColor: color == 'red' ? 'blue' : color == 'green' ? 'yellow' : '',
+        }));
+        const registerColor = spyOn(handler, 'registerColor').and.callFake(
+            (color: string) => color
+        );
 
-        core.darkColorHandler = ({ parseColorValue, registerColor } as any) as DarkColorHandler;
+        core.darkColorHandler = handler;
 
         transformColor(
             core,
