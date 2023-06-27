@@ -8,10 +8,14 @@ const assign = require('object-assign');
 const toposort = require('toposort');
 const webpack = require('webpack');
 
+const packagesName = 'packages';
+const packagesUiName = 'packages-ui';
+const packagesContentModelName = 'packages-content-model';
+
 const rootPath = path.join(__dirname, '../..');
-const packagesPath = path.join(rootPath, 'packages');
-const packagesUiPath = path.join(rootPath, 'packages-ui');
-const packagesContentModelPath = path.join(rootPath, 'packages-content-model');
+const packagesPath = path.join(rootPath, packagesName);
+const packagesUiPath = path.join(rootPath, packagesUiName);
+const packagesContentModelPath = path.join(rootPath, packagesContentModelName);
 const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
@@ -84,17 +88,17 @@ function err(message) {
 
 function findPackageRoot(packageName) {
     return packages.indexOf(packageName) >= 0
-        ? packagesPath
+        ? packagesName
         : packagesUI.indexOf(packageName) >= 0
-        ? packagesUiPath
+        ? packagesUiName
         : packagesContentModel.indexOf(packageName) >= 0
-        ? packagesContentModelPath
+        ? packagesContentModelName
         : null;
 }
 
 function readPackageJson(packageName, readFromSourceFolder) {
     const packageJsonFilePath = path.join(
-        readFromSourceFolder ? findPackageRoot(packageName) : distPath,
+        readFromSourceFolder ? rootPath + '/' + findPackageRoot(packageName) : distPath,
         packageName,
         'package.json'
     );
@@ -145,7 +149,7 @@ function getWebpackExternalCallback(externalLibraryPairs, internalLibraries) {
 }
 
 const buildConfig = {
-    rooster: {
+    packages: {
         targetPath: roosterJsDistPath,
         packEntry: path.join(packagesPath, 'roosterjs/lib/index.ts'),
         jsFileBaseName: 'rooster',
@@ -155,7 +159,7 @@ const buildConfig = {
         targetFileName: 'rooster',
         externalHandler: undefined,
     },
-    roosterReact: {
+    'packages-ui': {
         targetPath: roosterJsUiDistPath,
         packEntry: path.join(packagesUiPath, 'roosterjs-react/lib/index.ts'),
         jsFileBaseName: 'rooster-react',
@@ -167,7 +171,7 @@ const buildConfig = {
         dependsOnRoosterJs: true,
         dependsOnReact: true,
     },
-    roosterContentModel: {
+    'packages-content-model': {
         targetPath: contentModelDistPath,
         packEntry: path.join(packagesContentModelPath, 'roosterjs-content-model/lib/index.ts'),
         jsFileBaseName: 'rooster-content-model',
@@ -182,6 +186,8 @@ const buildConfig = {
         dependsOnRoosterJs: true,
     },
 };
+
+const versions = JSON.parse(fs.readFileSync(path.join(rootPath, 'versions.json')));
 
 module.exports = {
     rootPath,
@@ -208,4 +214,5 @@ module.exports = {
     getWebpackExternalCallback,
     contentModelDistPath,
     buildConfig,
+    versions,
 };
