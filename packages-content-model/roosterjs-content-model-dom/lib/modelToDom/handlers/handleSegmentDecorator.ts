@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelHandler, ContentModelSegment } from 'roosterjs-content-model-types';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveAndReplaceChildNodes } from '../../domUtils/moveAndReplaceChildNodes';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -18,7 +18,7 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
         stackFormat(context, 'a', () => {
             const a = document.createElement('a');
 
-            moveChildNodes(a, parent);
+            moveAndReplaceChildNodes(a, parent);
             parent.appendChild(a);
 
             applyFormat(a, context.formatAppliers.link, link.format, context);
@@ -32,7 +32,7 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
         stackFormat(context, 'code', () => {
             const codeNode = document.createElement('code');
 
-            moveChildNodes(codeNode, parent);
+            moveAndReplaceChildNodes(codeNode, parent);
             parent.appendChild(codeNode);
 
             applyFormat(codeNode, context.formatAppliers.code, code.format, context);

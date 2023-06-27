@@ -1,7 +1,7 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
-import { domToContentModel } from 'roosterjs-content-model-dom';
+import { domToContentModel, moveAndReplaceChildNodes } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -11,7 +11,6 @@ import {
     getPasteType,
     handleImagePaste,
     handleTextPaste,
-    moveChildNodes,
     Position,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
@@ -146,7 +145,7 @@ function createFragmentFromClipboardData(
         // Paste image
         handleImagePaste(imageDataUri, fragment);
     } else if (!pasteAsText && rawHtml && doc ? doc.body : false) {
-        moveChildNodes(fragment, doc?.body);
+        moveAndReplaceChildNodes(fragment, doc?.body);
     } else if (text) {
         // Paste text
         handleTextPaste(text, position, fragment);

@@ -48,5 +48,8 @@ export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { defaultImplicitFormatMap } from './formatHandlers/utils/defaultStyles';
 
 export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
+export { wrapWithTag } from './domUtils/wrapWithTag';
+export { unwrapElement } from './domUtils/unwrapElement';
+export { moveAndReplaceChildNodes } from './domUtils/moveAndReplaceChildNodes';
 
 export { createDomToModelContext } from './domToModel/context/createDomToModelContext';

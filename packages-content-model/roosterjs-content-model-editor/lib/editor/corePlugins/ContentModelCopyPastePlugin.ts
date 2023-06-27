@@ -1,6 +1,11 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom, isElementOfType } from 'roosterjs-content-model-dom';
+import {
+    contentModelToDom,
+    isElementOfType,
+    moveAndReplaceChildNodes,
+    wrapWithTag,
+} from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -16,12 +21,10 @@ import type {
 import {
     addRangeToSelection,
     createElement,
-    moveChildNodes,
     createRange,
     extractClipboardItems,
     toArray,
     Browser,
-    wrap,
 } from 'roosterjs-editor-dom';
 import {
     ChangeSource,
@@ -212,7 +215,7 @@ function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
     tempDiv.style.backgroundColor = '';
     tempDiv.style.color = '';
     tempDiv.style.display = 'none';
-    moveChildNodes(tempDiv);
+    moveAndReplaceChildNodes(tempDiv);
 }
 function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
@@ -265,6 +268,6 @@ export const onNodeCreated = (
     node: Node
 ): void => {
     if (isElementOfType(node, 'table')) {
-        wrap(node, 'div');
+        wrapWithTag(node, 'div');
     }
 };

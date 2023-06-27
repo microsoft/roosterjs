@@ -1,9 +1,13 @@
 import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
-import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
+import {
+    contentModelToDom,
+    domToContentModel,
+    moveAndReplaceChildNodes,
+} from 'roosterjs-content-model-dom';
 
 describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
@@ -15,7 +19,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             div = document.createElement('div');
             div.innerHTML = source;
             fragment = document.createDocumentFragment();
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
         processPastedContentFromWordDesktop(event);
@@ -541,7 +545,7 @@ describe('processPastedContentFromWordDesktopTest', () => {
             div = document.createElement('div');
             fragment = document.createDocumentFragment();
             div.innerHTML = html;
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
             runTest(undefined, undefined, {
                 blockGroupType: 'Document',
                 blocks: [

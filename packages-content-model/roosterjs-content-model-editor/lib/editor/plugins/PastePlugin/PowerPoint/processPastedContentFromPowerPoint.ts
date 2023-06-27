@@ -1,5 +1,5 @@
 import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveAndReplaceChildNodes } from 'roosterjs-content-model-dom';
 
 /**
  * @internal
@@ -21,6 +21,6 @@ export function processPastedContentFromPowerPoint(
             'text/html'
         );
 
-        moveChildNodes(fragment, doc?.body);
+        moveAndReplaceChildNodes(fragment, doc?.body);
     }
 }

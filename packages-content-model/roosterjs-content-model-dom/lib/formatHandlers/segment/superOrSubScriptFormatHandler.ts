@@ -1,5 +1,5 @@
 import { FormatHandler } from '../FormatHandler';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveAndReplaceChildNodes } from '../../domUtils/moveAndReplaceChildNodes';
 import { SuperOrSubScriptFormat } from 'roosterjs-content-model-types';
 
 /**
@@ -28,7 +28,7 @@ export const superOrSubScriptFormatHandler: FormatHandler<SuperOrSubScriptFormat
 
                     if (tagName) {
                         const wrapper = element.ownerDocument.createElement(tagName);
-                        moveChildNodes(wrapper, element);
+                        moveAndReplaceChildNodes(wrapper, element);
                         element.appendChild(wrapper);
                     }
                 });

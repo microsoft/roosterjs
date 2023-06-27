@@ -1,8 +1,9 @@
 import * as PastePluginFile from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
-import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
+import { moveAndReplaceChildNodes } from 'roosterjs-content-model-dom';
 import { processPastedContentFromExcel } from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 
 let div: HTMLElement;
@@ -15,7 +16,7 @@ describe('processPastedContentFromExcelTest', () => {
             div = document.createElement('div');
             div.innerHTML = source;
             fragment = document.createDocumentFragment();
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
 
@@ -357,7 +358,7 @@ describe('Do not run scenarios', () => {
         while (div.firstChild) {
             div.removeChild(div.firstChild);
         }
-        moveChildNodes(div, fragment1);
+        moveAndReplaceChildNodes(div, fragment1);
 
         if (Browser.isChrome) {
             expect(div.innerHTML).toEqual(result);

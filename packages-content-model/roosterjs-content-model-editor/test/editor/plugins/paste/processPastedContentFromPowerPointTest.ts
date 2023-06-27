@@ -1,4 +1,4 @@
-import * as moveChildNodes from 'roosterjs-editor-dom/lib/utils/moveChildNodes';
+import * as moveAndReplaceChildNodes from 'roosterjs-content-model-dom/lib/domUtils/moveAndReplaceChildNodes';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import { processPastedContentFromPowerPoint } from '../../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import {
@@ -31,7 +31,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
     beforeEach(() => {
         ev = getPasteEvent();
         image = document.createElement('img');
-        spyOn(moveChildNodes, 'default');
+        spyOn(moveAndReplaceChildNodes, 'moveAndReplaceChildNodes');
         spyOn(window, 'DOMParser').and.returnValue(<DOMParser>{
             parseFromString(string: string, type: DOMParserSupportedType) {
                 doc = <Document>(<any>document.createDocumentFragment());
@@ -55,7 +55,10 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).toHaveBeenCalled();
-        expect(moveChildNodes.default).toHaveBeenCalledWith(ev.fragment, doc.body);
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).toHaveBeenCalledWith(
+            ev.fragment,
+            doc.body
+        );
     });
 
     it('Dont Execute, Html✅, Text✅, Image✅', () => {
@@ -66,7 +69,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 
     it('Dont Execute, Html❎, Text❎, Image✅', () => {
@@ -77,7 +80,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 
     it('Dont Execute, Html❎, Text✅, Image✅', () => {
@@ -88,7 +91,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 
     it('Dont Execute, Html✅, Text❎, Image❎', () => {
@@ -99,7 +102,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 
     it('Dont Execute, Html❎, Text❎, Image❎', () => {
@@ -110,7 +113,7 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 
     it('Dont Execute, Html❎, Text✅, Image❎', () => {
@@ -121,6 +124,6 @@ describe('processPastedContentFromPowerPointTest |', () => {
         processPastedContentFromPowerPoint(ev, trustedHTMLHandlerMock);
 
         expect(window.DOMParser).not.toHaveBeenCalled();
-        expect(moveChildNodes.default).not.toHaveBeenCalled();
+        expect(moveAndReplaceChildNodes.moveAndReplaceChildNodes).not.toHaveBeenCalled();
     });
 });

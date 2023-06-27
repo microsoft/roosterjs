@@ -3,7 +3,7 @@ import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import { wrap } from 'roosterjs-editor-dom';
+import { wrapWithTag } from '../../domUtils/wrapWithTag';
 import {
     ContentModelBlockHandler,
     ContentModelGeneralBlock,
@@ -32,7 +32,7 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
     }
 
     if (isGeneralSegment(group) && isNodeOfType(node, NodeType.Element)) {
-        const element = wrap(node, 'span');
+        const element = wrapWithTag(node, 'span');
 
         handleSegmentCommon(doc, node, element, group, context);
     } else {

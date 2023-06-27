@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
 import { ItalicFormat } from 'roosterjs-content-model-types';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveAndReplaceChildNodes } from '../../domUtils/moveAndReplaceChildNodes';
 
 /**
  * @internal
@@ -25,7 +25,7 @@ export const italicFormatHandler: FormatHandler<ItalicFormat> = {
         if (!!implicitItalic != !!format.italic) {
             if (format.italic) {
                 const i = element.ownerDocument.createElement('i');
-                moveChildNodes(i, element);
+                moveAndReplaceChildNodes(i, element);
                 element.appendChild(i);
             } else {
                 element.style.fontStyle = 'normal';

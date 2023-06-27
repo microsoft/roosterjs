@@ -1,7 +1,6 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { isNodeOfType, moveAndReplaceChildNodes } from 'roosterjs-content-model-dom';
 import { NodeType, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
@@ -25,7 +24,7 @@ export function processPastedContentFromExcel(
 
     if (html && clipboardData.html != html) {
         const doc = new DOMParser().parseFromString(trustedHTMLHandler(html), 'text/html');
-        moveChildNodes(fragment, doc?.body);
+        moveAndReplaceChildNodes(fragment, doc?.body);
     }
 
     // For Excel Online

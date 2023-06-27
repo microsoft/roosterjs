@@ -1,8 +1,11 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 import { parseLink } from '../../../../lib/editor/plugins/PastePlugin/utils/linkParser';
+import {
+    contentModelToDom,
+    domToContentModel,
+    moveAndReplaceChildNodes,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -14,7 +17,7 @@ describe('link parser test', () => {
             div = document.createElement('div');
             div.innerHTML = source;
             fragment = document.createDocumentFragment();
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
         event.domToModelOption.additionalFormatParsers = {};

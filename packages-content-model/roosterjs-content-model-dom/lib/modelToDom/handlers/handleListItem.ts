@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
-import { unwrap } from 'roosterjs-editor-dom';
+import { unwrapElement } from '../../domUtils/unwrapElement';
 import {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -42,7 +42,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
 
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
 
-        unwrap(li);
+        unwrapElement(li);
     }
 
     context.onNodeCreated?.(listItem, li);

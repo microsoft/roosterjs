@@ -1,18 +1,13 @@
+import { addDelimiters, commitEntity, getObjectKeys, isBlockElement } from 'roosterjs-editor-dom';
 import { applyFormat } from '../utils/applyFormat';
 import { Entity } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
+import { wrapWithTag } from '../../domUtils/wrapWithTag';
 import {
     ContentModelBlockHandler,
     ContentModelEntity,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
-import {
-    addDelimiters,
-    commitEntity,
-    getObjectKeys,
-    isBlockElement,
-    wrap,
-} from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -44,7 +39,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     refNode = reuseCachedElement(parent, wrapper, refNode);
 
     if (isInlineEntity && getObjectKeys(format).length > 0) {
-        const span = wrap(wrapper, 'span');
+        const span = wrapWithTag(wrapper, 'span');
 
         applyFormat(span, context.formatAppliers.segment, format, context);
     }

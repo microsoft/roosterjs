@@ -1,8 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
-import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
+import { unwrapElement } from '../../domUtils/unwrapElement';
 import {
     ContentModelBlockHandler,
     ContentModelParagraph,
@@ -104,7 +105,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             if (needParagraphWrapper) {
                 paragraph.cachedElement = container;
             } else {
-                unwrap(container);
+                unwrapElement(container);
             }
         });
     }

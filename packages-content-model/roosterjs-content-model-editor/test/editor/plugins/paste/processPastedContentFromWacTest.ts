@@ -1,8 +1,12 @@
-import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
+import {
+    contentModelToDom,
+    domToContentModel,
+    moveAndReplaceChildNodes,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -14,7 +18,7 @@ describe('processPastedContentFromWacTest', () => {
             div = document.createElement('div');
             div.innerHTML = source;
             fragment = document.createDocumentFragment();
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
@@ -125,7 +129,7 @@ describe('wordOnlineHandler', () => {
             div = document.createElement('div');
             div.innerHTML = source;
             fragment = document.createDocumentFragment();
-            moveChildNodes(fragment, div);
+            moveAndReplaceChildNodes(fragment, div);
         }
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);

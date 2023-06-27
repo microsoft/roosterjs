@@ -1,6 +1,7 @@
 import addParser from '../utils/addParser';
 import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getStyles } from 'roosterjs-editor-dom';
+import { moveAndReplaceChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
@@ -38,7 +39,7 @@ export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteE
 
     // Preserve <o:p> when its innerHTML is "&nbsp;" to avoid dropping an empty line
     chainSanitizerCallback(ev.sanitizingOption.elementCallbacks, 'O:P', element => {
-        moveChildNodes(element);
+        moveAndReplaceChildNodes(element);
         element.appendChild(element.ownerDocument.createTextNode('\u00A0')); // &nbsp;
         return true;
     });
