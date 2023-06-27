@@ -361,3 +361,165 @@ describe('DarkColorHandlerImpl.findLightColorFromDarkColor', () => {
         expect(result).toEqual('aa');
     });
 });
+
+describe('DarkColorHandlerImpl.transformElementColor', () => {
+    let parseColorSpy: jasmine.Spy;
+    let registerColorSpy: jasmine.Spy;
+    let handler: DarkColorHandlerImpl;
+    let contentDiv: HTMLDivElement;
+
+    beforeEach(() => {
+        const getDarkColor = (color: string) => 'mocked_' + color;
+        contentDiv = document.createElement('div');
+        handler = new DarkColorHandlerImpl(contentDiv, getDarkColor);
+
+        parseColorSpy = spyOn(handler, 'parseColorValue').and.callThrough();
+        registerColorSpy = spyOn(handler, 'registerColor').and.callThrough();
+    });
+
+    it('No color, light to dark', () => {
+        const span = document.createElement('span');
+        handler.transformElementColor(span, false, true);
+
+        expect(span.outerHTML).toBe('<span></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(2);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
+        expect(registerColorSpy).not.toHaveBeenCalled();
+    });
+
+    it('Has simple color in HTML, light to dark', () => {
+        const span = document.createElement('span');
+
+        span.setAttribute('color', 'red');
+
+        handler.transformElementColor(span, false, true);
+
+        expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(3);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
+        expect(registerColorSpy).toHaveBeenCalledTimes(1);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+    });
+
+    it('Has simple color in CSS, light to dark', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'red';
+
+        handler.transformElementColor(span, false, true);
+
+        expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(3);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
+        expect(registerColorSpy).toHaveBeenCalledTimes(1);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+    });
+
+    it('Has color in both text and background, light to dark', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'red';
+        span.style.backgroundColor = 'green';
+
+        handler.transformElementColor(span, false, true);
+
+        expect(span.outerHTML).toBe(
+            '<span style="color: var(--darkColor_red, red); background-color: var(--darkColor_green, green);"></span>'
+        );
+        expect(parseColorSpy).toHaveBeenCalledTimes(4);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', false);
+        expect(parseColorSpy).toHaveBeenCalledWith('green', false);
+        expect(parseColorSpy).toHaveBeenCalledWith('red');
+        expect(parseColorSpy).toHaveBeenCalledWith('green');
+        expect(registerColorSpy).toHaveBeenCalledTimes(2);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+        expect(registerColorSpy).toHaveBeenCalledWith('green', true, undefined);
+    });
+
+    it('Has var-based color, light to dark', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'var(--darkColor_red, red)';
+
+        handler.transformElementColor(span, false, true);
+
+        expect(span.outerHTML).toBe('<span style="color: var(--darkColor_red, red);"></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(3);
+        expect(parseColorSpy).toHaveBeenCalledWith('var(--darkColor_red, red)', false);
+        expect(parseColorSpy).toHaveBeenCalledWith('red');
+        expect(parseColorSpy).toHaveBeenCalledWith(null, false);
+        expect(registerColorSpy).toHaveBeenCalledTimes(1);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', true, undefined);
+    });
+
+    it('No color, dark to light', () => {
+        const span = document.createElement('span');
+        handler.transformElementColor(span, true, false);
+
+        expect(span.outerHTML).toBe('<span></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(2);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
+        expect(registerColorSpy).not.toHaveBeenCalled();
+    });
+
+    it('Has simple color in HTML, dark to light', () => {
+        const span = document.createElement('span');
+
+        span.setAttribute('color', 'red');
+
+        handler.transformElementColor(span, true, false);
+
+        expect(span.outerHTML).toBe('<span></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(2);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
+        expect(registerColorSpy).not.toHaveBeenCalled();
+    });
+
+    it('Has simple color in CSS, dark to light', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'red';
+
+        handler.transformElementColor(span, true, false);
+
+        expect(span.outerHTML).toBe('<span style=""></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(2);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
+        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
+        expect(registerColorSpy).not.toHaveBeenCalled();
+    });
+
+    it('Has color in both text and background, dark to light', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'red';
+        span.style.backgroundColor = 'green';
+
+        handler.transformElementColor(span, true, false);
+
+        expect(span.outerHTML).toBe('<span style=""></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(2);
+        expect(parseColorSpy).toHaveBeenCalledWith('red', true);
+        expect(parseColorSpy).toHaveBeenCalledWith('green', true);
+        expect(registerColorSpy).not.toHaveBeenCalled();
+    });
+
+    it('Has var-based color, dark to light', () => {
+        const span = document.createElement('span');
+
+        span.style.color = 'var(--darkColor_red, red)';
+
+        handler.transformElementColor(span, true, false);
+
+        expect(span.outerHTML).toBe('<span style="color: red;"></span>');
+        expect(parseColorSpy).toHaveBeenCalledTimes(3);
+        expect(parseColorSpy).toHaveBeenCalledWith('var(--darkColor_red, red)', true);
+        expect(parseColorSpy).toHaveBeenCalledWith('red');
+        expect(parseColorSpy).toHaveBeenCalledWith(null, true);
+        expect(registerColorSpy).toHaveBeenCalledTimes(1);
+        expect(registerColorSpy).toHaveBeenCalledWith('red', false, undefined);
+    });
+});

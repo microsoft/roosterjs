@@ -1,4 +1,5 @@
 import CustomData from '../interface/CustomData';
+import DarkColorHandler from '../interface/DarkColorHandler';
 import DefaultFormat from '../interface/DefaultFormat';
 import SelectionPath from '../interface/SelectionPath';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
@@ -31,7 +32,14 @@ export default interface LifecyclePluginState {
     /**
      * External content transform function to help do color transform for existing content
      */
-    onExternalContentTransform: ((htmlIn: HTMLElement) => void) | null;
+    onExternalContentTransform:
+        | ((
+              element: HTMLElement,
+              fromDarkMode: boolean,
+              toDarkMode: boolean,
+              darkColorHandler: DarkColorHandler
+          ) => void)
+        | null;
 
     /**
      * Enabled experimental features
