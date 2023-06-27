@@ -1,6 +1,6 @@
 import { FormatHandler } from '../FormatHandler';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
+import { keysOf } from '../../domUtils/keysOf';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
 import { NodeType } from 'roosterjs-editor-types';
 import { OrderedMap, UnorderedMap } from './listLevelMetadataFormatHandler';
@@ -94,7 +94,7 @@ function convertDecimalsToAlpha(decimal: number, isLowerCase?: boolean): string 
 
 function convertDecimalsToRoman(decimal: number, isLowerCase?: boolean) {
     let romanValue = '';
-    for (let i of getObjectKeys(RomanValues)) {
+    for (let i of keysOf(RomanValues)) {
         let timesRomanCharAppear = Math.floor(decimal / RomanValues[i]);
         decimal = decimal - timesRomanCharAppear * RomanValues[i];
         romanValue = romanValue + i.repeat(timesRomanCharAppear);

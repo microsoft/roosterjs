@@ -1,5 +1,5 @@
 import { ContentModelFormatBase } from 'roosterjs-content-model-types';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { keysOf } from '../../domUtils/keysOf';
 
 /**
  * Check if the two given formats object are equal. This is a check to value but not to reference
@@ -10,8 +10,8 @@ export function areSameFormats<T extends ContentModelFormatBase>(f1: T, f2: T) {
     if (f1 == f2) {
         return true;
     } else {
-        const keys1 = getObjectKeys(f1);
-        const keys2 = getObjectKeys(f2);
+        const keys1 = keysOf(f1);
+        const keys2 = keysOf(f2);
 
         return keys1.length == keys2.length && keys1.every(key => f1[key] == f2[key]);
     }

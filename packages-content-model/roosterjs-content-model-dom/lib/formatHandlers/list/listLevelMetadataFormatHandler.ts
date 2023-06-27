@@ -1,7 +1,7 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 import { FormatHandler } from '../FormatHandler';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { isElementOfType } from '../../domUtils/isNodeOfType';
+import { keysOf } from '../../domUtils/keysOf';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
@@ -92,7 +92,7 @@ function getKeyFromValue<K extends string | number, V>(
     value: V | undefined
 ): string | undefined {
     const result =
-        value === undefined ? undefined : getObjectKeys(map).filter(key => map[key] == value)[0];
+        value === undefined ? undefined : keysOf(map).filter(key => map[key] == value)[0];
 
     // During run time the key is always string
     return (result as any) as string | undefined;

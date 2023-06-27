@@ -1,4 +1,4 @@
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { keysOf } from '../../domUtils/keysOf';
 import {
     ContentModelBlockFormat,
     ContentModelCode,
@@ -143,7 +143,7 @@ function stackFormatInternal<T extends ContentModelFormatBase>(
         default:
             const result = { ...format };
 
-            getObjectKeys(format).forEach(key => {
+            keysOf(format).forEach(key => {
                 if (
                     (processType == 'shallowCloneForBlock' &&
                         SkippedStylesForBlock.indexOf(key as keyof ContentModelSegmentFormat) >=

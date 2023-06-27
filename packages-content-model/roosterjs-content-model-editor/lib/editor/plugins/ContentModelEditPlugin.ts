@@ -6,14 +6,8 @@ import { formatWithContentModel } from '../../publicApi/utils/formatWithContentM
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
+import { isBlockElement, isCharacterValue, isModifierKey, Position } from 'roosterjs-editor-dom';
+import { isNodeOfType, keysOf, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     EditorPlugin,
     EntityOperationEvent,
@@ -64,8 +58,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
 
         const defaultFormat = this.editor.getContentModelDefaultFormat();
         this.hasDefaultFormat =
-            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
-                .length > 0;
+            keysOf(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined').length > 0;
     }
 
     /**

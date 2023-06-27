@@ -9,10 +9,10 @@ import { displayFormatHandler } from './block/displayFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';
+import { keysOf } from '../domUtils/keysOf';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
@@ -195,7 +195,7 @@ const defaultFormatKeysPerCategory: {
 /**
  * @internal
  */
-export const defaultFormatParsers: FormatParsers = getObjectKeys(defaultFormatHandlerMap).reduce(
+export const defaultFormatParsers: FormatParsers = keysOf(defaultFormatHandlerMap).reduce(
     (result, key) => {
         result[key] = defaultFormatHandlerMap[key].parse as FormatParser<any>;
         return result;
@@ -206,7 +206,7 @@ export const defaultFormatParsers: FormatParsers = getObjectKeys(defaultFormatHa
 /**
  * @internal
  */
-export const defaultFormatAppliers: FormatAppliers = getObjectKeys(defaultFormatHandlerMap).reduce(
+export const defaultFormatAppliers: FormatAppliers = keysOf(defaultFormatHandlerMap).reduce(
     (result, key) => {
         result[key] = defaultFormatHandlerMap[key].apply as FormatApplier<any>;
         return result;
@@ -221,7 +221,7 @@ export function getFormatParsers(
     override: Partial<FormatParsers> = {},
     additionalParsers: Partial<FormatParsersPerCategory> = {}
 ): FormatParsersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
+    return keysOf(defaultFormatKeysPerCategory).reduce((result, key) => {
         const value = defaultFormatKeysPerCategory[key]
             .map(
                 formatKey =>
@@ -244,7 +244,7 @@ export function getFormatAppliers(
     override: Partial<FormatAppliers> = {},
     additionalAppliers: Partial<FormatAppliersPerCategory> = {}
 ): FormatAppliersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
+    return keysOf(defaultFormatKeysPerCategory).reduce((result, key) => {
         const value = defaultFormatKeysPerCategory[key]
             .map(
                 formatKey =>

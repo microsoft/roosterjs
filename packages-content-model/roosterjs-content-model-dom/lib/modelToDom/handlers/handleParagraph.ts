@@ -1,5 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { keysOf } from '../../domUtils/keysOf';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
@@ -31,7 +31,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             const needParagraphWrapper =
                 !paragraph.isImplicit ||
                 !!paragraph.decorator ||
-                (getObjectKeys(paragraph.format).length > 0 &&
+                (keysOf(paragraph.format).length > 0 &&
                     paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
             const formatOnWrapper = needParagraphWrapper
                 ? {

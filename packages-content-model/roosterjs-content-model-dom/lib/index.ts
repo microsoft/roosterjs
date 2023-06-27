@@ -51,5 +51,6 @@ export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 export { wrapWithTag } from './domUtils/wrapWithTag';
 export { unwrapElement } from './domUtils/unwrapElement';
 export { moveAndReplaceChildNodes } from './domUtils/moveAndReplaceChildNodes';
+export { keysOf } from './domUtils/keysOf';
 
 export { createDomToModelContext } from './domToModel/context/createDomToModelContext';
