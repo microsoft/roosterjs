@@ -45,7 +45,7 @@ export const selectTable: SelectTable = (
         addUniqueId(table, TABLE_ID);
         addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-        const ranges = select(core, table, coordinates);
+        const { ranges, isWholeTableSelected } = select(core, table, coordinates);
         if (!isMergedCell(table, coordinates)) {
             const cellToSelect = table.rows
                 .item(coordinates.firstCell.y)
@@ -65,6 +65,7 @@ export const selectTable: SelectTable = (
             table,
             areAllCollapsed: ranges.filter(range => range?.collapsed).length == ranges.length,
             coordinates,
+            isWholeTableSelected,
         };
     }
 
@@ -75,29 +76,30 @@ function buildCss(
     table: HTMLTableElement,
     coordinates: TableSelection,
     contentDivSelector: string
-): { css: string; ranges: Range[] } {
+): { css: string; ranges: Range[]; isWholeTableSelected: boolean } {
     const ranges: Range[] = [];
     const selectors: string[] = [];
 
     const vTable = new VTable(table);
     const isAllTableSelected = isWholeTableSelected(vTable, coordinates);
     if (isAllTableSelected) {
-        handleAllTableSelected(contentDivSelector, table, selectors, ranges);
+        handleAllTableSelected(contentDivSelector, vTable, selectors, ranges);
     } else {
         handleTableSelected(coordinates, vTable, contentDivSelector, selectors, ranges);
     }
 
     const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
 
-    return { css, ranges };
+    return { css, ranges, isWholeTableSelected: isAllTableSelected };
 }
 
 function handleAllTableSelected(
     contentDivSelector: string,
-    table: HTMLTableElement,
+    vTable: VTable,
     selectors: string[],
     ranges: Range[]
 ) {
+    const table = vTable.table;
     const tableSelector = contentDivSelector + ' #' + table.id;
     selectors.push(tableSelector, `${tableSelector} *`);
 
@@ -185,11 +187,15 @@ function handleTableSelected(
     });
 }
 
-function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
+function select(
+    core: EditorCore,
+    table: HTMLTableElement,
+    coordinates: TableSelection
+): { ranges: Range[]; isWholeTableSelected: boolean } {
     const contentDivSelector = '#' + core.contentDiv.id;
-    let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
+    let { css, ranges, isWholeTableSelected } = buildCss(table, coordinates, contentDivSelector);
     setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
-    return ranges;
+    return { ranges, isWholeTableSelected };
 }
 
 const unselect = (core: EditorCore) => {

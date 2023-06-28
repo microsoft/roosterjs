@@ -8,6 +8,8 @@ let div: HTMLDivElement | null;
 let table: HTMLTableElement | null;
 let core: EditorCore | null;
 
+const STYLE_ID = 'tableStyle';
+
 describe('selectTable |', () => {
     beforeEach(() => {
         spyOn(setGlobalCssStyles, 'default').and.callThrough();
@@ -37,7 +39,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -52,7 +54,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0> tr:nth-child(1)>TD:nth-child(1),#contentDiv_0 #tableSelected0> tr:nth-child(1)>TD:nth-child(1) *,#contentDiv_0 #tableSelected0> tr:nth-child(2)>TD:nth-child(1),#contentDiv_0 #tableSelected0> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -100,7 +102,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0> tr:nth-child(1)>TH:nth-child(1),#contentDiv_0 #tableSelected0> tr:nth-child(1)>TH:nth-child(1) *,#contentDiv_0 #tableSelected0> tr:nth-child(2)>TH:nth-child(1),#contentDiv_0 #tableSelected0> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -116,7 +118,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -132,7 +134,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -148,7 +150,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(1)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TBODY> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -164,7 +166,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2),#contentDiv_0 #tableSelected0>THEAD> tr:nth-child(2)>TD:nth-child(2) *,#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2),#contentDiv_0 #tableSelected0>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 
@@ -180,7 +182,7 @@ describe('selectTable |', () => {
         expect(setGlobalCssStyles.default).toHaveBeenCalledWith(
             document,
             '#contentDiv_0 #tableSelected0,#contentDiv_0 #tableSelected0 * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
-            'tableStylecontentDiv_0'
+            STYLE_ID + div!.id
         );
     });
 

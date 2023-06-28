@@ -1,4 +1,5 @@
 import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { TABLE_CELL_SELECTOR } from '../constants';
 import {
     GenericContentEditFeature,
     IEditor,
@@ -21,19 +22,25 @@ export const DeleteTableContents: GenericContentEditFeature<PluginEvent> = {
         const selection = editor.getSelectionRangeEx();
         if (selection.type == SelectionRangeTypes.TableSelection) {
             editor.addUndoSnapshot(() => {
-                editor.getSelectedRegions().forEach(region => {
-                    if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                        deleteNodeContents(region.rootNode, editor);
-                    }
-                });
+                if (selection.isWholeTableSelected) {
+                    selection.table
+                        .querySelectorAll(TABLE_CELL_SELECTOR)
+                        .forEach(td => deleteNodeContents(td, editor));
+                } else {
+                    editor
+                        .getSelectedRegions()
+                        .forEach(region => deleteNodeContents(region.rootNode, editor));
+                }
             });
         }
     },
 };
 
-function deleteNodeContents(element: HTMLElement, editor: IEditor) {
-    const range = new Range();
-    range.selectNodeContents(element);
-    range.deleteContents();
-    element.appendChild(editor.getDocument().createElement('br'));
+function deleteNodeContents(element: Node, editor: IEditor) {
+    if (safeInstanceOf(element, 'HTMLTableCellElement')) {
+        const range = new Range();
+        range.selectNodeContents(element);
+        range.deleteContents();
+        element.appendChild(editor.getDocument().createElement('br'));
+    }
 }
