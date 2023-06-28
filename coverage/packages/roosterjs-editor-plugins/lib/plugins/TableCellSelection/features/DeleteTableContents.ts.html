@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">50% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>2/4</span>
+                <span class='fraction'>3/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>5/5</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">88.89% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>16/18</span>
             </div>
         
             
@@ -96,7 +96,15 @@
 <a name='L37'></a><a href='#L37'>37</a>
 <a name='L38'></a><a href='#L38'>38</a>
 <a name='L39'></a><a href='#L39'>39</a>
-<a name='L40'></a><a href='#L40'>40</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L40'></a><a href='#L40'>40</a>
+<a name='L41'></a><a href='#L41'>41</a>
+<a name='L42'></a><a href='#L42'>42</a>
+<a name='L43'></a><a href='#L43'>43</a>
+<a name='L44'></a><a href='#L44'>44</a>
+<a name='L45'></a><a href='#L45'>45</a>
+<a name='L46'></a><a href='#L46'>46</a>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -120,22 +128,29 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">16x</span>
-<span class="cline-any cline-yes">16x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { TABLE_CELL_SELECTOR } from '../constants';
 import {
     GenericContentEditFeature,
     IEditor,
@@ -158,21 +173,27 @@ export const DeleteTableContents: GenericContentEditFeature&lt;PluginEvent&gt; =
         const selection = editor.getSelectionRangeEx();
         <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.type == SelectionRangeTypes.TableSelection) {
             editor.addUndoSnapshot(() =&gt; {
-                editor.getSelectedRegions().forEach(region =&gt; {
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (safeInstanceOf(region.rootNode, 'HTMLTableCellElement')) {
-                        deleteNodeContents(region.rootNode, editor);
-                    }
-                });
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (selection.isWholeTableSelected) {
+                    selection.table
+                        .querySelectorAll(TABLE_CELL_SELECTOR)
+                        .forEach(td =&gt; deleteNodeContents(td, editor));
+                } else {
+<span class="cstat-no" title="statement not covered" >                    editor</span>
+                        .getSelectedRegions()
+                        .forEach(<span class="fstat-no" title="function not covered" >region </span>=&gt; <span class="cstat-no" title="statement not covered" >deleteNodeContents(region.rootNode, editor));</span>
+                }
             });
         }
     },
 };
 &nbsp;
-function deleteNodeContents(element: HTMLElement, editor: IEditor) {
-    const range = new Range();
-    range.selectNodeContents(element);
-    range.deleteContents();
-    element.appendChild(editor.getDocument().createElement('br'));
+function deleteNodeContents(element: Node, editor: IEditor) {
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (safeInstanceOf(element, 'HTMLTableCellElement')) {
+        const range = new Range();
+        range.selectNodeContents(element);
+        range.deleteContents();
+        element.appendChild(editor.getDocument().createElement('br'));
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -181,7 +202,7 @@ function deleteNodeContents(element: HTMLElement, editor: IEditor) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jun 27 2023 18:07:39 GMT+0000 (Coordinated Universal Time)
+                at Wed Jun 28 2023 22:32:02 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
