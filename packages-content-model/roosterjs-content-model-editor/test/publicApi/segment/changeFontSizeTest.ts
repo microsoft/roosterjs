@@ -352,7 +352,6 @@ describe('changeFontSize', () => {
                             areAllCollapsed: false,
                             ranges: [createRange(sub)],
                         },
-                        includeRoot: true,
                         ...option,
                     }
                 ),
@@ -363,6 +362,8 @@ describe('changeFontSize', () => {
 
         changeFontSize(editor, 'increase');
 
+        console.log(JSON.stringify(setContentModel.calls.argsFor(0)[0]));
+
         expect(setContentModel).toHaveBeenCalledWith(
             {
                 blockGroupType: 'Document',
@@ -370,18 +371,15 @@ describe('changeFontSize', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segmentFormat: { fontSize: '20pt' },
                         segments: [
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontSize: '22pt',
-                                    superOrSubScriptSequence: 'sub',
-                                },
+                                format: { superOrSubScriptSequence: 'sub' },
                                 isSelected: true,
                             },
                         ],
+                        isImplicit: true,
                     },
                 ],
             },

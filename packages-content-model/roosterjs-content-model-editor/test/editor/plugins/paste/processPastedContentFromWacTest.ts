@@ -26,7 +26,6 @@ describe('processPastedContentFromWacTest', () => {
             },
             {
                 ...event.domToModelOption,
-                includeRoot: true,
             }
         );
         if (expectedModel) {
@@ -137,7 +136,6 @@ describe('wordOnlineHandler', () => {
             },
             {
                 ...event.domToModelOption,
-                includeRoot: true,
                 disableCacheElement: true,
             }
         );
