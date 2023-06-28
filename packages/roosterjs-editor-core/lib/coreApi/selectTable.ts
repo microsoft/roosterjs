@@ -76,23 +76,51 @@ function buildCss(
     coordinates: TableSelection,
     contentDivSelector: string
 ): { css: string; ranges: Range[] } {
-    const tr1 = coordinates.firstCell.y;
-    const td1 = coordinates.firstCell.x;
-    const tr2 = coordinates.lastCell.y;
-    const td2 = coordinates.lastCell.x;
     const ranges: Range[] = [];
-
-    let firstSelected: HTMLTableCellElement | null = null;
-    let lastSelected: HTMLTableCellElement | null = null;
     const selectors: string[] = [];
 
     const vTable = new VTable(table);
     const isAllTableSelected = isWholeTableSelected(vTable, coordinates);
     if (isAllTableSelected) {
-        const tableSelector = contentDivSelector + ' #' + table.id;
-        selectors.push(tableSelector, `${tableSelector} *`);
+        handleAllTableSelected(contentDivSelector, table, selectors, ranges);
+    } else {
+        handleTableSelected(coordinates, vTable, contentDivSelector, selectors, ranges);
     }
 
+    const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
+
+    return { css, ranges };
+}
+
+function handleAllTableSelected(
+    contentDivSelector: string,
+    table: HTMLTableElement,
+    selectors: string[],
+    ranges: Range[]
+) {
+    const tableSelector = contentDivSelector + ' #' + table.id;
+    selectors.push(tableSelector, `${tableSelector} *`);
+
+    const tableRange = new Range();
+    tableRange.selectNode(table);
+    ranges.push(tableRange);
+}
+
+function handleTableSelected(
+    coordinates: TableSelection,
+    vTable: VTable,
+    contentDivSelector: string,
+    selectors: string[],
+    ranges: Range[]
+) {
+    const tr1 = coordinates.firstCell.y;
+    const td1 = coordinates.firstCell.x;
+    const tr2 = coordinates.lastCell.y;
+    const td2 = coordinates.lastCell.x;
+    const table = vTable.table;
+
+    let firstSelected: HTMLTableCellElement | null = null;
+    let lastSelected: HTMLTableCellElement | null = null;
     // Get whether table has thead, tbody or tfoot.
     const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
@@ -131,23 +159,19 @@ function buildCss(
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
                     removeImportant(cell);
 
-                    if (!isAllTableSelected) {
-                        const selector = generateCssFromCell(
-                            contentDivSelector,
-                            table.id,
-                            middleElSelector,
-                            currentRow,
-                            getTagOfNode(cell),
-                            tdCount
-                        );
-                        const elementsSelector = selector + ' *';
+                    const selector = generateCssFromCell(
+                        contentDivSelector,
+                        table.id,
+                        middleElSelector,
+                        currentRow,
+                        getTagOfNode(cell),
+                        tdCount
+                    );
+                    const elementsSelector = selector + ' *';
 
-                        selectors.push(selector);
-                        selectors.push(elementsSelector);
-                    }
-
-                    firstSelected = firstSelected || cell;
-                    lastSelected = cell;
+                    selectors.push(selector, elementsSelector);
+                    firstSelected = firstSelected || table.querySelector(selector);
+                    lastSelected = table.querySelector(selector);
                 }
             }
         }
@@ -159,10 +183,6 @@ function buildCss(
             ranges.push(rowRange);
         }
     });
-
-    const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
-
-    return { css, ranges };
 }
 
 function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
