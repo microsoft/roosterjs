@@ -362,8 +362,6 @@ describe('changeFontSize', () => {
 
         changeFontSize(editor, 'increase');
 
-        console.log(JSON.stringify(setContentModel.calls.argsFor(0)[0]));
-
         expect(setContentModel).toHaveBeenCalledWith(
             {
                 blockGroupType: 'Document',
