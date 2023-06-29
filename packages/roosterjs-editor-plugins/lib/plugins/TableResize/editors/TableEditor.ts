@@ -24,6 +24,10 @@ const enum TOP_OR_SIDE {
     top = 0,
     side = 1,
 }
+
+// Class name for Table edit feature divs
+export const TEF_CLASS_NAME = '_roosterjsTableEditFeature';
+
 /**
  * @internal
  *
@@ -223,7 +227,7 @@ export default class TableEditor {
         if (!this.tableResizer) {
             this.tableResizer = createTableResizer(
                 this.table,
-                this.editor,
+                this.editor.getZoomScale(),
                 this.isRTL,
                 this.onStartTableResize,
                 this.onFinishEditing,

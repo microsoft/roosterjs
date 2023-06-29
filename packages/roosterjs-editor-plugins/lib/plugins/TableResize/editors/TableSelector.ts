@@ -2,6 +2,7 @@ import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import { TEF_CLASS_NAME } from './TableEditor';
 import {
     createElement,
     getComputedStyle,
@@ -36,7 +37,7 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        className: 'tableEditFeature',
+        className: TEF_CLASS_NAME,
         style:
             'position: absolute; cursor: all-scroll; user-select: none; border: 1px solid #808080;',
     };
