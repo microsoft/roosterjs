@@ -223,7 +223,7 @@ export default class TableEditor {
         if (!this.tableResizer) {
             this.tableResizer = createTableResizer(
                 this.table,
-                this.editor.getZoomScale(),
+                this.editor,
                 this.isRTL,
                 this.onStartTableResize,
                 this.onFinishEditing,
