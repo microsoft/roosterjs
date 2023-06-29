@@ -12,7 +12,7 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 element,
                 true /*isBackground*/,
                 context.darkColorHandler,
-                context.isDarkMode
+                !!context.isDarkMode
             ) || defaultStyle.backgroundColor;
 
         if (backgroundColor) {
@@ -26,7 +26,7 @@ export const backgroundColorFormatHandler: FormatHandler<BackgroundColorFormat> 
                 format.backgroundColor,
                 true /*isBackground*/,
                 context.darkColorHandler,
-                context.isDarkMode
+                !!context.isDarkMode
             );
         }
     },

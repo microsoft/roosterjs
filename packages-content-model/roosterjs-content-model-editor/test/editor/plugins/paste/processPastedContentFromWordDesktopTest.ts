@@ -27,7 +27,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
             },
             {
                 ...event.domToModelOption,
-                includeRoot: true,
                 disableCacheElement: true,
             }
         );

@@ -8,9 +8,7 @@ import {
 } from '../../../lib/formatHandlers/defaultFormatHandlers';
 
 describe('createModelToDomContext', () => {
-    const editorContext: EditorContext = {
-        isDarkMode: false,
-    };
+    const editorContext: EditorContext = {};
     const defaultResult: ModelToDomContext = {
         ...editorContext,
         regularSelection: {
