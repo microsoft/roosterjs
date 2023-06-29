@@ -110,11 +110,11 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
 
                 if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
-                    if (width > 0) {
+                    if (width > 0 && !td.style.width) {
                         td.style.width = width + 'px';
                     }
 
-                    if (height > 0) {
+                    if (height > 0 && !td.style.height) {
                         td.style.height = height + 'px';
                     }
                 }
