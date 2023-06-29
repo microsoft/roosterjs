@@ -36,6 +36,7 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
+        className: 'tableEditFeature',
         style:
             'position: absolute; cursor: all-scroll; user-select: none; border: 1px solid #808080;',
     };
