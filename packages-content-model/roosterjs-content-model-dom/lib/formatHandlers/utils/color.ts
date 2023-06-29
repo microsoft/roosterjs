@@ -38,7 +38,9 @@ export function setColor(
     darkColorHandler: DarkColorHandler | undefined | null,
     isDarkMode: boolean
 ) {
-    const effectiveColor = darkColorHandler?.registerColor(lightModeColor, isDarkMode) || '';
+    const effectiveColor = darkColorHandler
+        ? darkColorHandler.registerColor(lightModeColor, isDarkMode)
+        : lightModeColor;
 
     if (isBackground) {
         element.style.backgroundColor = effectiveColor;
