@@ -72,11 +72,12 @@ export const selectTable: SelectTable = (
     return null;
 };
 
+const MAX_RULE_SELECTOR_LENGTH = 8000;
 function buildCss(
     table: HTMLTableElement,
     coordinates: TableSelection,
     contentDivSelector: string
-): { css: string; ranges: Range[]; isWholeTableSelected: boolean } {
+): { cssRules: string[]; ranges: Range[]; isWholeTableSelected: boolean } {
     const ranges: Range[] = [];
     const selectors: string[] = [];
 
@@ -88,9 +89,17 @@ function buildCss(
         handleTableSelected(coordinates, vTable, contentDivSelector, selectors, ranges);
     }
 
-    const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
+    const cssRules: string[] = [];
+    let currentRules: string = '';
+    while (selectors.length > 0) {
+        currentRules += (currentRules.length > 0 ? ',' : '') + selectors.shift() || '';
+        if (currentRules.length > MAX_RULE_SELECTOR_LENGTH || selectors.length == 0) {
+            cssRules.push(currentRules + ' ' + SELECTED_CSS_RULE);
+            currentRules = '';
+        }
+    }
 
-    return { css, ranges, isWholeTableSelected: isAllTableSelected };
+    return { cssRules, ranges, isWholeTableSelected: isAllTableSelected };
 }
 
 function handleAllTableSelected(
@@ -193,8 +202,15 @@ function select(
     coordinates: TableSelection
 ): { ranges: Range[]; isWholeTableSelected: boolean } {
     const contentDivSelector = '#' + core.contentDiv.id;
-    let { css, ranges, isWholeTableSelected } = buildCss(table, coordinates, contentDivSelector);
-    setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
+    let { cssRules, ranges, isWholeTableSelected } = buildCss(
+        table,
+        coordinates,
+        contentDivSelector
+    );
+    cssRules.forEach(css =>
+        setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id)
+    );
+
     return { ranges, isWholeTableSelected };
 }
 
