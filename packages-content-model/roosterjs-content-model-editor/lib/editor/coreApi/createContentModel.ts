@@ -31,10 +31,12 @@ function internalCreateContentModel(
         selectionRange: core.api.getSelectionRangeEx(core),
         ...core.defaultDomToModelOptions,
         ...(option || {}),
-        processorOverride: {
-            table: tablePreProcessor,
-            ...(option?.processorOverride || {}),
-        },
+    };
+
+    context.processorOverride = {
+        table: tablePreProcessor,
+        ...context.processorOverride,
+        ...option?.processorOverride,
     };
 
     if (!core.reuseModel) {
