@@ -24,6 +24,7 @@ const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'tableStyle';
 const SELECTED_CSS_RULE =
     '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
+const MAX_RULE_SELECTOR_LENGTH = 9000;
 
 /**
  * @internal
@@ -72,7 +73,6 @@ export const selectTable: SelectTable = (
     return null;
 };
 
-const MAX_RULE_SELECTOR_LENGTH = 8000;
 function buildCss(
     table: HTMLTableElement,
     coordinates: TableSelection,
@@ -93,7 +93,10 @@ function buildCss(
     let currentRules: string = '';
     while (selectors.length > 0) {
         currentRules += (currentRules.length > 0 ? ',' : '') + selectors.shift() || '';
-        if (currentRules.length > MAX_RULE_SELECTOR_LENGTH || selectors.length == 0) {
+        if (
+            currentRules.length + (selectors[0]?.length || 0) > MAX_RULE_SELECTOR_LENGTH ||
+            selectors.length == 0
+        ) {
             cssRules.push(currentRules + ' ' + SELECTED_CSS_RULE);
             currentRules = '';
         }
