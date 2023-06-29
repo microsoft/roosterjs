@@ -9,9 +9,7 @@ import {
 } from '../../../lib/formatHandlers/defaultFormatHandlers';
 
 describe('createDomToModelContext', () => {
-    const editorContext: EditorContext = {
-        isDarkMode: false,
-    };
+    const editorContext: EditorContext = {};
     const listFormat: DomToModelListFormat = {
         threadItemCounts: [],
         levels: [],
