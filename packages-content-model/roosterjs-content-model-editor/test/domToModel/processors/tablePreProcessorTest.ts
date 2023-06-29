@@ -1,5 +1,7 @@
 import * as tableProcessor from 'roosterjs-content-model-dom/lib/domToModel/processors/tableProcessor';
 import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
+import { createRange } from 'roosterjs-editor-dom';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 describe('tablePreProcessor', () => {
@@ -56,9 +58,12 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.regularSelection = {
-            startContainer: txt,
-        } as any;
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(txt)],
+            areAllCollapsed: false,
+        };
+        context.selectionRootNode = txt;
 
         tablePreProcessor(group, table, context);
 
@@ -82,9 +87,12 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.regularSelection = {
-            endContainer: txt,
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(txt)],
+            areAllCollapsed: false,
         } as any;
+        context.selectionRootNode = txt;
 
         tablePreProcessor(group, table, context);
 
@@ -108,9 +116,12 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.regularSelection = {
-            startContainer: table,
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(table)],
+            areAllCollapsed: false,
         } as any;
+        context.selectionRootNode = table;
 
         tablePreProcessor(group, table, context);
 
@@ -134,9 +145,14 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.tableSelection = {
+        context.rangeEx = {
             table,
+            coordinates: {
+                firstCell: {},
+                lastCell: {},
+            },
         } as any;
+        context.selectionRootNode = table;
 
         tablePreProcessor(group, table, context);
 
@@ -160,9 +176,11 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.imageSelection = {
-            image: txt,
+        context.rangeEx = {
+            type: SelectionRangeTypes.ImageSelection,
+            image: txt as any,
         } as any;
+        context.selectionRootNode = txt;
 
         tablePreProcessor(group, table, context);
 

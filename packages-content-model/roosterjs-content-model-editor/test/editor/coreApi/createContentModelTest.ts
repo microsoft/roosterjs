@@ -57,7 +57,7 @@ describe('createContentModel', () => {
                 },
             },
             mockedEditorContext,
-            {}
+            null
         );
         expect(model).toBe(mockedModel);
     });
@@ -81,7 +81,7 @@ describe('createContentModel', () => {
                 ...defaultOption,
             },
             mockedEditorContext,
-            {}
+            null
         );
         expect(model).toBe(mockedModel);
     });
@@ -106,7 +106,7 @@ describe('createContentModel', () => {
                 ...additionalOption,
             },
             mockedEditorContext,
-            {}
+            null
         );
         expect(model).toBe(mockedModel);
     });
@@ -130,7 +130,7 @@ describe('createContentModel', () => {
                 },
             },
             mockedEditorContext,
-            {}
+            null
         );
         expect(model).toBe(mockedModel);
     });
@@ -210,8 +210,8 @@ describe('createContentModel with selection', () => {
             },
             undefined,
             {
-                selectionRootNode: MockedContainer,
-                regularSelection: MockedRange,
+                type: SelectionRangeTypes.Normal,
+                ranges: [MockedRange],
             }
         );
     });
@@ -243,9 +243,9 @@ describe('createContentModel with selection', () => {
             },
             undefined,
             {
-                selectionRootNode: MockedContainer,
-                tableSelection: {
-                    table: MockedContainer,
+                type: SelectionRangeTypes.TableSelection,
+                table: MockedContainer,
+                coordinates: {
                     firstCell: MockedFirstCell,
                     lastCell: MockedLastCell,
                 },
@@ -274,17 +274,13 @@ describe('createContentModel with selection', () => {
             },
             undefined,
             {
-                selectionRootNode: MockedContainer,
-                imageSelection: {
-                    image: MockedContainer,
-                },
+                type: SelectionRangeTypes.ImageSelection,
+                image: MockedContainer,
             }
         );
     });
 
     it('Incorrect regular selection', () => {
-        const MockedContainer = 'MockedContainer';
-
         getSelectionRangeExSpy.and.returnValue({
             type: SelectionRangeTypes.Normal,
             ranges: [],
@@ -302,7 +298,10 @@ describe('createContentModel with selection', () => {
                 disableCacheElement: true,
             },
             undefined,
-            {}
+            {
+                type: SelectionRangeTypes.Normal,
+                ranges: [],
+            }
         );
     });
 
@@ -323,7 +322,9 @@ describe('createContentModel with selection', () => {
                 disableCacheElement: true,
             },
             undefined,
-            {}
+            {
+                type: SelectionRangeTypes.TableSelection,
+            }
         );
     });
 });

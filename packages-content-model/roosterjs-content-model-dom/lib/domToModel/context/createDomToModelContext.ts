@@ -1,27 +1,22 @@
 import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
-import {
-    DomToModelContext,
-    DomToModelOption,
-    DomToModelSelectionContext,
-    EditorContext,
-} from 'roosterjs-content-model-types';
+import { DomToModelContext, DomToModelOption, EditorContext } from 'roosterjs-content-model-types';
+import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Create context object form DOM to Content Model conversion
  * @param editorContext Context of editor
  * @param options Options for this context
- * @param selectionContext Selection that already exists in content
+ * @param selection Selection that already exists in content
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,
     options?: DomToModelOption,
-    selectionContext?: DomToModelSelectionContext
+    selection?: SelectionRangeEx
 ): DomToModelContext {
     const context: DomToModelContext = {
         ...editorContext,
-        ...selectionContext,
 
         blockFormat: {},
         segmentFormat: {},
@@ -65,6 +60,18 @@ export function createDomToModelContext(
 
     if (editorContext?.isRootRtl) {
         context.blockFormat.direction = 'rtl';
+    }
+
+    if (selection) {
+        context.rangeEx = selection;
+        context.selectionRootNode =
+            selection.type == SelectionRangeTypes.Normal
+                ? selection.ranges[0]?.commonAncestorContainer
+                : selection.type == SelectionRangeTypes.TableSelection
+                ? selection.table
+                : selection.type == SelectionRangeTypes.ImageSelection
+                ? selection.image
+                : undefined;
     }
 
     return context;

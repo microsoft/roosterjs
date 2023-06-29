@@ -1,64 +1,4 @@
-import { Coordinates } from 'roosterjs-editor-types';
-
-/**
- * Represents a regular selection for DOM to Content Model conversion
- */
-export interface DomToModelRegularSelection {
-    /**
-     * Is the selection collapsed
-     */
-    collapsed?: boolean;
-
-    /**
-     * Start container of this selection
-     */
-    startContainer?: Node;
-
-    /**
-     * End container of this selection
-     */
-    endContainer?: Node;
-
-    /**
-     * Start offset of this selection
-     */
-    startOffset?: number;
-
-    /**
-     * End offset of this selection
-     */
-    endOffset?: number;
-}
-
-/**
- * Represents a table for DOM to Content Model conversion
- */
-export interface DomToModelTableSelection {
-    /**
-     * Table where selection is located
-     */
-    table: HTMLTableElement;
-
-    /**
-     * Coordinate of first selected cell
-     */
-    firstCell: Coordinates;
-
-    /**
-     * Coordinate of last selected cell
-     */
-    lastCell: Coordinates;
-}
-
-/**
- * Represents an image for DOM to Content Model conversion
- */
-export interface DomToModelImageSelection {
-    /**
-     * Selected image
-     */
-    image: HTMLImageElement;
-}
+import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Represents the selection information of content used by DOM to Content Model conversion
@@ -70,19 +10,9 @@ export interface DomToModelSelectionContext {
     isInSelection?: boolean;
 
     /**
-     * Regular selection (selection with a highlight background provided by browser)
+     * Current selection range
      */
-    regularSelection?: DomToModelRegularSelection;
-
-    /**
-     * Table selection provided by editor
-     */
-    tableSelection?: DomToModelTableSelection;
-
-    /**
-     * Image selection provided by editor
-     */
-    imageSelection?: DomToModelImageSelection;
+    rangeEx?: SelectionRangeEx;
 
     /**
      * Root not that contains the selection.

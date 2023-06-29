@@ -5,6 +5,7 @@ import { childProcessor as originalChildProcessor } from '../../../lib/domToMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 import {
     ContentModelBlock,
@@ -279,17 +280,20 @@ describe('tableProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = tableHTML;
-        context.tableSelection = {
+        context.rangeEx = {
+            type: SelectionRangeTypes.TableSelection,
             table: div.firstChild as HTMLTableElement,
-            firstCell: {
-                x: 1,
-                y: 0,
+            coordinates: {
+                firstCell: {
+                    x: 1,
+                    y: 0,
+                },
+                lastCell: {
+                    x: 1,
+                    y: 1,
+                },
             },
-            lastCell: {
-                x: 1,
-                y: 1,
-            },
-        };
+        } as any;
 
         tdModel2.isSelected = true;
         tdModel4.isSelected = true;

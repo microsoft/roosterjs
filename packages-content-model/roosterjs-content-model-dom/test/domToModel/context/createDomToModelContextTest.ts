@@ -125,7 +125,8 @@ describe('createDomToModelContext', () => {
             },
             allowCacheElement: true,
             ...contextOptions,
-            ...selectionContext,
+            rangeEx: selectionContext,
+            selectionRootNode: undefined,
         });
     });
 

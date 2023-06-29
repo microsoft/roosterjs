@@ -3,6 +3,7 @@ import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
 import {
     ContentModelTableCellFormat,
@@ -39,8 +40,16 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
 
             const table = createTable(tableElement.rows.length, context.blockFormat);
-            const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
-            const hasTableSelection = selectedTable == tableElement && !!firstCell && !!lastCell;
+            const tableSelection =
+                context.rangeEx?.type == SelectionRangeTypes.TableSelection
+                    ? context.rangeEx
+                    : null;
+            const selectedTable = tableSelection?.table;
+            const coordinates = tableSelection?.coordinates;
+            const hasTableSelection =
+                selectedTable == tableElement &&
+                !!coordinates?.firstCell &&
+                !!coordinates?.lastCell;
 
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -213,10 +222,10 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                                         if (
                                             (hasSelectionBeforeCell && hasSelectionAfterCell) ||
                                             (hasTableSelection &&
-                                                row >= firstCell.y &&
-                                                row <= lastCell.y &&
-                                                targetCol >= firstCell.x &&
-                                                targetCol <= lastCell.x)
+                                                row >= coordinates.firstCell.y &&
+                                                row <= coordinates.lastCell.y &&
+                                                targetCol >= coordinates.firstCell.x &&
+                                                targetCol <= coordinates.lastCell.x)
                                         ) {
                                             cell.isSelected = true;
                                         }

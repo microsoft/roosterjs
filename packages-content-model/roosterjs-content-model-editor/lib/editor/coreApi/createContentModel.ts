@@ -1,7 +1,6 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { domToContentModel } from 'roosterjs-content-model-dom';
-import { DomToModelOption, DomToModelSelectionContext } from 'roosterjs-content-model-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import { DomToModelOption } from 'roosterjs-content-model-types';
 import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
@@ -41,42 +40,7 @@ function internalCreateContentModel(
         options.disableCacheElement = true;
     }
 
-    const selection: DomToModelSelectionContext = {};
     const range = core.api.getSelectionRangeEx(core);
 
-    switch (range?.type) {
-        case SelectionRangeTypes.Normal:
-            const regularRange = range.ranges[0];
-            if (regularRange) {
-                selection.selectionRootNode = regularRange.commonAncestorContainer;
-                selection.regularSelection = regularRange;
-            }
-            break;
-
-        case SelectionRangeTypes.TableSelection:
-            if (range.coordinates && range.table) {
-                selection.selectionRootNode = range.table;
-                selection.tableSelection = {
-                    table: range.table,
-                    firstCell: { ...range.coordinates.firstCell },
-                    lastCell: { ...range.coordinates.lastCell },
-                };
-            }
-
-            break;
-
-        case SelectionRangeTypes.ImageSelection:
-            selection.selectionRootNode = range.image;
-            selection.imageSelection = {
-                image: range.image,
-            };
-            break;
-    }
-
-    return domToContentModel(
-        core.contentDiv,
-        options,
-        core.api.createEditorContext(core),
-        selection
-    );
+    return domToContentModel(core.contentDiv, options, core.api.createEditorContext(core), range);
 }

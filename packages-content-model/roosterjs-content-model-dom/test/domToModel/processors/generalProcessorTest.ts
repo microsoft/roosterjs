@@ -4,6 +4,7 @@ import { childProcessor as originalChildProcessor } from '../../../lib/domToMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
@@ -149,12 +150,18 @@ describe('generalProcessor', () => {
         const text = document.createTextNode('test');
 
         span.appendChild(text);
-        context.regularSelection = {
-            startContainer: text,
-            startOffset: 1,
-            endContainer: text,
-            endOffset: 3,
-            collapsed: false,
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    startContainer: text,
+                    startOffset: 1,
+                    endContainer: text,
+                    endOffset: 3,
+                    collapsed: false,
+                } as any,
+            ],
+            areAllCollapsed: false,
         };
 
         childProcessor.and.callFake(originalChildProcessor);
@@ -213,12 +220,18 @@ describe('generalProcessor', () => {
         const text = document.createTextNode('test');
 
         span.appendChild(text);
-        context.regularSelection = {
-            startContainer: text,
-            startOffset: 1,
-            endContainer: text,
-            endOffset: 3,
-            collapsed: false,
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    startContainer: text,
+                    startOffset: 1,
+                    endContainer: text,
+                    endOffset: 3,
+                    collapsed: false,
+                } as any,
+            ],
+            areAllCollapsed: false,
         };
         context.isInSelection = true;
 

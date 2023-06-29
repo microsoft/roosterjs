@@ -17,16 +17,9 @@ function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelC
     // 2. Table is in selection
     // 3. There is selection inside table (or whole table is selected)
     // Otherwise, we treat the table as entity so we will not change it when write back
-    return hasMetadata(element) || context.isInSelection || hasSelectionInTable(element, context);
-}
-
-function hasSelectionInTable(element: HTMLTableElement, context: DomToModelContext) {
-    const selectedNodes = [
-        context.imageSelection?.image,
-        context.tableSelection?.table,
-        context.regularSelection?.startContainer,
-        context.regularSelection?.endContainer,
-    ];
-
-    return selectedNodes.some(n => contains(element, n, true /*treatSameNodeAsContain*/));
+    return (
+        hasMetadata(element) ||
+        context.isInSelection ||
+        contains(element, context.selectionRootNode, true /*treatSameNodeAsContain*/)
+    );
 }

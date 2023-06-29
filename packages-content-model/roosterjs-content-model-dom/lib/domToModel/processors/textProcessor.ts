@@ -35,7 +35,7 @@ export const textProcessor: ElementProcessor<Text> = (
     if (txtEndOffset >= 0) {
         addTextSegment(group, txt.substring(0, txtEndOffset), context);
 
-        if (!context.regularSelection!.collapsed) {
+        if (context.rangeEx && !context.rangeEx.areAllCollapsed) {
             addSelectionMarker(group, context);
         }
 

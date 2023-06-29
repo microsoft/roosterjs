@@ -113,12 +113,7 @@ export {
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
-export {
-    DomToModelSelectionContext,
-    DomToModelRegularSelection,
-    DomToModelTableSelection,
-    DomToModelImageSelection,
-} from './context/DomToModelSelectionContext';
+export { DomToModelSelectionContext } from './context/DomToModelSelectionContext';
 export { EditorContext } from './context/EditorContext';
 export {
     DomToModelFormatContext,

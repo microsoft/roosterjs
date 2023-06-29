@@ -1,7 +1,7 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
+import { NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     ContentModelBlockGroup,
     DomToModelContext,
@@ -73,8 +73,8 @@ export function handleRegularSelection(
         addSelectionMarker(group, context);
     }
 
-    if (index == nodeEndOffset && context.regularSelection) {
-        if (!context.regularSelection.collapsed) {
+    if (index == nodeEndOffset && context.rangeEx?.type == SelectionRangeTypes.Normal) {
+        if (!context.rangeEx.areAllCollapsed) {
             addSelectionMarker(group, context);
         }
         context.isInSelection = false;

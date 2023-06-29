@@ -38,7 +38,11 @@ describe('ContentModelEditor', () => {
                 disableCacheElement: true,
             },
             editorContext,
-            {}
+            {
+                type: SelectionRangeTypes.Normal,
+                ranges: [],
+                areAllCollapsed: true,
+            }
         );
     });
 
@@ -65,7 +69,11 @@ describe('ContentModelEditor', () => {
                 },
             },
             editorContext,
-            {}
+            {
+                type: SelectionRangeTypes.Normal,
+                ranges: [],
+                areAllCollapsed: true,
+            }
         );
     });
 
