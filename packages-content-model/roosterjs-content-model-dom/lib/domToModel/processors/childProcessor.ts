@@ -73,8 +73,8 @@ export function handleRegularSelection(
         addSelectionMarker(group, context);
     }
 
-    if (index == nodeEndOffset) {
-        if (!context.regularSelection!.isSelectionCollapsed) {
+    if (index == nodeEndOffset && context.regularSelection) {
+        if (!context.regularSelection.collapsed) {
             addSelectionMarker(group, context);
         }
         context.isInSelection = false;

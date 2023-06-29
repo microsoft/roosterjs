@@ -7,7 +7,7 @@ export interface DomToModelRegularSelection {
     /**
      * Is the selection collapsed
      */
-    isSelectionCollapsed?: boolean;
+    collapsed?: boolean;
 
     /**
      * Start container of this selection

@@ -49,13 +49,7 @@ function internalCreateContentModel(
             const regularRange = range.ranges[0];
             if (regularRange) {
                 selection.selectionRootNode = regularRange.commonAncestorContainer;
-                selection.regularSelection = {
-                    startContainer: regularRange.startContainer,
-                    startOffset: regularRange.startOffset,
-                    endContainer: regularRange.endContainer,
-                    endOffset: regularRange.endOffset,
-                    isSelectionCollapsed: regularRange.collapsed,
-                };
+                selection.regularSelection = regularRange;
             }
             break;
 

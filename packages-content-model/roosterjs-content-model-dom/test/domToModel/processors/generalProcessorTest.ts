@@ -154,7 +154,7 @@ describe('generalProcessor', () => {
             startOffset: 1,
             endContainer: text,
             endOffset: 3,
-            isSelectionCollapsed: false,
+            collapsed: false,
         };
 
         childProcessor.and.callFake(originalChildProcessor);
@@ -218,7 +218,7 @@ describe('generalProcessor', () => {
             startOffset: 1,
             endContainer: text,
             endOffset: 3,
-            isSelectionCollapsed: false,
+            collapsed: false,
         };
         context.isInSelection = true;
 

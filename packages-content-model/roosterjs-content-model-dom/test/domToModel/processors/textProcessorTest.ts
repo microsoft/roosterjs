@@ -361,7 +361,7 @@ describe('textProcessor', () => {
             startOffset: 2,
             endContainer: text,
             endOffset: 2,
-            isSelectionCollapsed: true,
+            collapsed: true,
         };
 
         textProcessor(doc, text, context);

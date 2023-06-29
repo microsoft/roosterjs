@@ -125,7 +125,7 @@ describe('childProcessor', () => {
             startOffset: 1,
             endContainer: div,
             endOffset: 2,
-            isSelectionCollapsed: false,
+            collapsed: false,
         };
 
         childProcessor(doc, div, context);
@@ -156,7 +156,7 @@ describe('childProcessor', () => {
             startOffset: 1,
             endContainer: div,
             endOffset: 1,
-            isSelectionCollapsed: true,
+            collapsed: true,
         };
 
         childProcessor(doc, div, context);
@@ -186,7 +186,7 @@ describe('childProcessor', () => {
             startOffset: 5,
             endContainer: div.firstChild!,
             endOffset: 10,
-            isSelectionCollapsed: false,
+            collapsed: false,
         };
 
         childProcessor(doc, div, context);
@@ -217,7 +217,7 @@ describe('childProcessor', () => {
             startOffset: 5,
             endContainer: div.firstChild!,
             endOffset: 5,
-            isSelectionCollapsed: true,
+            collapsed: true,
         };
 
         childProcessor(doc, div, context);
@@ -247,7 +247,7 @@ describe('childProcessor', () => {
             startOffset: 1,
             endContainer: div.lastChild!,
             endOffset: 5,
-            isSelectionCollapsed: false,
+            collapsed: false,
         };
 
         childProcessor(doc, div, context);
@@ -289,7 +289,7 @@ describe('childProcessor', () => {
             startOffset: 0,
             endContainer: div,
             endOffset: 0,
-            isSelectionCollapsed: true,
+            collapsed: true,
         };
 
         childProcessor(doc, div, context);

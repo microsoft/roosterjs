@@ -3,7 +3,7 @@ import getSegmentFormat from '../../../lib/publicApi/format/getSegmentFormat';
 import { ContentModelSegmentFormat, DomToModelOption } from 'roosterjs-content-model-types';
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
 import {
     createContentModelDocument,
     createDomToModelContext,
@@ -34,21 +34,11 @@ describe('getSegmentFormat', () => {
                 editorDiv.innerHTML = html;
 
                 const selectedNode = editorDiv.querySelector('#' + selectedNodeId);
+                const range =
+                    selectedNode &&
+                    createRange(selectedNode, PositionType.Begin, selectedNode, PositionType.End);
                 const context = createDomToModelContext(undefined, options, {
-                    selectionRange: selectedNode
-                        ? {
-                              type: SelectionRangeTypes.Normal,
-                              ranges: [
-                                  createRange(
-                                      selectedNode,
-                                      PositionType.Begin,
-                                      selectedNode,
-                                      PositionType.End
-                                  ),
-                              ],
-                              areAllCollapsed: false,
-                          }
-                        : undefined,
+                    regularSelection: range || undefined,
                 });
 
                 if (selectedNode) {

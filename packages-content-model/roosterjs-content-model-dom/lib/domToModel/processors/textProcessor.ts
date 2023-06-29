@@ -2,14 +2,14 @@ import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
+import { createText } from '../../modelApi/creators/createText';
+import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
+import { hasSpacesOnly } from '../../domUtils/stringUtil';
 import {
     ContentModelBlockGroup,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
-import { createText } from '../../modelApi/creators/createText';
-import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import { hasSpacesOnly } from '../../domUtils/stringUtil';
 
 /**
  * @internal
@@ -35,7 +35,7 @@ export const textProcessor: ElementProcessor<Text> = (
     if (txtEndOffset >= 0) {
         addTextSegment(group, txt.substring(0, txtEndOffset), context);
 
-        if (!context.regularSelection!.isSelectionCollapsed) {
+        if (!context.regularSelection!.collapsed) {
             addSelectionMarker(group, context);
         }
 

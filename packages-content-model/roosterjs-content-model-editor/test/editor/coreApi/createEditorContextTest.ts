@@ -7,8 +7,20 @@ describe('createEditorContext', () => {
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
         const addDelimiterForEntity = 'ADDDELIMITER' as any;
+        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
+        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+
+        const div = {
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: getComputedStyleSpy,
+                },
+            },
+            getBoundingClientRect: getBoundingClientRectSpy,
+        };
 
         const core = ({
+            contentDiv: div,
             lifecycle: {
                 isDarkMode,
             },
