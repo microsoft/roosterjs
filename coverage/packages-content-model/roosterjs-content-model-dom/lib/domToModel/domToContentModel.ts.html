@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>5/6</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>18/18</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
@@ -100,14 +100,10 @@
 <a name='L41'></a><a href='#L41'>41</a>
 <a name='L42'></a><a href='#L42'>42</a>
 <a name='L43'></a><a href='#L43'>43</a>
-<a name='L44'></a><a href='#L44'>44</a>
-<a name='L45'></a><a href='#L45'>45</a>
-<a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L44'></a><a href='#L44'>44</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -130,35 +126,30 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-yes">100x</span>
+<span class="cline-any cline-yes">99x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">33x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">34x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">33x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">34x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">100x</span>
+<span class="cline-any cline-yes">99x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
+import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { NodeType } from 'roosterjs-editor-types';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 import {
     ContentModelDocument,
@@ -175,27 +166,21 @@ import {
  */
 export function domToContentModel(
     root: HTMLElement | DocumentFragment,
-    editorContext: EditorContext,
-    option: DomToModelOption
+    editorContext?: EditorContext,
+    option?: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument(editorContext.defaultFormat);
+    const model = createContentModelDocument(editorContext<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>efaultFormat);
     const context = createDomToModelContext(editorContext, option);
 &nbsp;
-    if (safeInstanceOf(root, 'DocumentFragment')) {
-        context.elementProcessors.child(model, root, context);
-    } else {
+    if (isNodeOfType(root, NodeType.Element)) {
         // Need to calculate direction (ltr or rtl), use it as initial value
         parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
 &nbsp;
         // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
         parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
-&nbsp;
-        const processor = option.includeRoot
-            ? context.elementProcessors.element
-            : context.elementProcessors.child;
-&nbsp;
-        processor(model, root, context);
     }
+&nbsp;
+    context.elementProcessors.child(model, root, context);
 &nbsp;
     normalizeContentModel(model);
 &nbsp;
@@ -208,7 +193,7 @@ export function domToContentModel(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 29 2023 22:57:28 GMT+0000 (Coordinated Universal Time)
+                at Thu Jun 29 2023 23:51:28 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
