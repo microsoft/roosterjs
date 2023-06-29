@@ -42,7 +42,6 @@ export { SpacingFormat } from './format/formatParts/SpacingFormat';
 export { TableLayoutFormat } from './format/formatParts/TableLayoutFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
-export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';

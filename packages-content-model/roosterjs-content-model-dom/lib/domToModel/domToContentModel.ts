@@ -1,14 +1,10 @@
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
-import { isNodeOfType } from '../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import { parseFormat } from './utils/parseFormat';
-import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
-import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 import {
     ContentModelDocument,
     DomToModelOption,
+    DomToModelSelectionContext,
     EditorContext,
 } from 'roosterjs-content-model-types';
 
@@ -21,19 +17,12 @@ import {
  */
 export function domToContentModel(
     root: HTMLElement | DocumentFragment,
+    option?: DomToModelOption,
     editorContext?: EditorContext,
-    option?: DomToModelOption
+    selectionContext?: DomToModelSelectionContext
 ): ContentModelDocument {
     const model = createContentModelDocument(editorContext?.defaultFormat);
-    const context = createDomToModelContext(editorContext, option);
-
-    if (isNodeOfType(root, NodeType.Element)) {
-        // Need to calculate direction (ltr or rtl), use it as initial value
-        parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
-
-        // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
-        parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
-    }
+    const context = createDomToModelContext(editorContext, option, selectionContext);
 
     context.elementProcessors.child(model, root, context);
 

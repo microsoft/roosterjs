@@ -48,13 +48,17 @@ describe('createContentModel', () => {
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
-            ...option,
-            selectionRange: mockedRange,
-            processorOverride: {
-                table: tablePreProcessor,
+        expect(domToContentModelSpy).toHaveBeenCalledWith(
+            mockedDiv,
+            {
+                ...option,
+                selectionRange: mockedRange,
+                processorOverride: {
+                    table: tablePreProcessor,
+                },
             },
-        });
+            mockedEditorContext
+        );
         expect(model).toBe(mockedModel);
     });
 
@@ -88,14 +92,18 @@ describe('createContentModel', () => {
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedEditorContext, {
-            selectionRange: mockedRange,
-            processorOverride: {
-                table: tablePreProcessor,
+        expect(domToContentModelSpy).toHaveBeenCalledWith(
+            mockedDiv,
+            {
+                selectionRange: mockedRange,
+                processorOverride: {
+                    table: tablePreProcessor,
+                },
+                ...defaultOption,
+                ...additionalOption,
             },
-            ...defaultOption,
-            ...additionalOption,
-        });
+            mockedEditorContext
+        );
         expect(model).toBe(mockedModel);
     });
 

@@ -59,7 +59,7 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
             const columnPositions: number[] = [0];
             const rowPositions: number[] = [0];
-            const zoomScale = context.zoomScaleFormat.zoomScale || 1;
+            const zoomScale = context.zoomScale || 1;
 
             for (let row = 0; row < tableElement.rows.length; row++) {
                 const tr = tableElement.rows[row];

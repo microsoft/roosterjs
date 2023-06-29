@@ -67,7 +67,7 @@ export interface DomToModelSelectionContext {
     /**
      * Is current context under a selection
      */
-    isInSelection: boolean;
+    isInSelection?: boolean;
 
     /**
      * Regular selection (selection with a highlight background provided by browser)

@@ -28,7 +28,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -58,7 +57,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -88,7 +86,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -129,7 +126,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             regularSelection: {
                 startContainer: 'DIV 1' as any,
@@ -175,7 +171,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             tableSelection: {
                 table: mockTable,
@@ -215,7 +210,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             link: {
                 format: {},
                 dataset: {},
@@ -256,7 +250,6 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             isInSelection: false,
             blockFormat: {},
-            zoomScaleFormat: {},
             segmentFormat: {},
             listFormat,
             link: {
@@ -295,7 +288,6 @@ describe('createDomToModelContext', () => {
             isDarkMode: true,
             isInSelection: false,
             blockFormat: {},
-            zoomScaleFormat: {},
             segmentFormat: {},
             link: {
                 format: {},

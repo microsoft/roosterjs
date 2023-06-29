@@ -29,12 +29,13 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, editorContext, {
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, {
             selectionRange: {
                 type: SelectionRangeTypes.Normal,
                 areAllCollapsed: true,
                 ranges: [],
             },
+            editorContext,
             processorOverride: {
                 table: tablePreProcessor,
             },
@@ -57,12 +58,13 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, editorContext, {
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, {
             selectionRange: {
                 type: SelectionRangeTypes.Normal,
                 areAllCollapsed: true,
                 ranges: [],
             },
+            editorContext,
             processorOverride: {
                 table: tablePreProcessor,
             },

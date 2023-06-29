@@ -5,7 +5,6 @@ import { ContentModelLink } from '../decorator/ContentModelLink';
 import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ZoomScaleFormat } from '../format/formatParts/ZoomScaleFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List
@@ -45,11 +44,6 @@ export interface DomToModelFormatContext {
      * Context of list that is currently processing
      */
     listFormat: DomToModelListFormat;
-
-    /**
-     * Zoom scale of the content
-     */
-    zoomScaleFormat: ZoomScaleFormat;
 
     /**
      * Whether put the source element into Content Model when possible.

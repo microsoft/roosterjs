@@ -34,8 +34,7 @@ describe('getSegmentFormat', () => {
                 editorDiv.innerHTML = html;
 
                 const selectedNode = editorDiv.querySelector('#' + selectedNodeId);
-                const context = createDomToModelContext(undefined, {
-                    ...(options || {}),
+                const context = createDomToModelContext(undefined, options, {
                     selectionRange: selectedNode
                         ? {
                               type: SelectionRangeTypes.Normal,

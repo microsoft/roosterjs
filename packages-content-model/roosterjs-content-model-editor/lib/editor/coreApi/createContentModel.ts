@@ -1,6 +1,7 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { domToContentModel } from 'roosterjs-content-model-dom';
-import { DomToModelOption } from 'roosterjs-content-model-types';
+import { DomToModelOption, DomToModelSelectionContext } from 'roosterjs-content-model-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
@@ -25,21 +26,63 @@ export const createContentModel: CreateContentModel = (core, option) => {
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    option: DomToModelOption | undefined
+    options: DomToModelOption | undefined
 ) {
-    const context: DomToModelOption = {
-        selectionRange: core.api.getSelectionRangeEx(core),
+    options = {
         ...core.defaultDomToModelOptions,
-        ...(option || {}),
+        ...(options || {}),
         processorOverride: {
             table: tablePreProcessor,
-            ...(option?.processorOverride || {}),
+            ...options?.processorOverride,
         },
     };
 
     if (!core.reuseModel) {
-        context.disableCacheElement = true;
+        options.disableCacheElement = true;
     }
 
-    return domToContentModel(core.contentDiv, core.api.createEditorContext(core), context);
+    const selection: DomToModelSelectionContext = {};
+    const range = core.api.getSelectionRangeEx(core);
+
+    switch (range?.type) {
+        case SelectionRangeTypes.Normal:
+            const regularRange = range.ranges[0];
+            if (regularRange) {
+                selection.selectionRootNode = regularRange.commonAncestorContainer;
+                selection.regularSelection = {
+                    startContainer: regularRange.startContainer,
+                    startOffset: regularRange.startOffset,
+                    endContainer: regularRange.endContainer,
+                    endOffset: regularRange.endOffset,
+                    isSelectionCollapsed: regularRange.collapsed,
+                };
+            }
+            break;
+
+        case SelectionRangeTypes.TableSelection:
+            if (range.coordinates && range.table) {
+                selection.selectionRootNode = range.table;
+                selection.tableSelection = {
+                    table: range.table,
+                    firstCell: { ...range.coordinates.firstCell },
+                    lastCell: { ...range.coordinates.lastCell },
+                };
+            }
+
+            break;
+
+        case SelectionRangeTypes.ImageSelection:
+            selection.selectionRootNode = range.image;
+            selection.imageSelection = {
+                image: range.image,
+            };
+            break;
+    }
+
+    return domToContentModel(
+        core.contentDiv,
+        options,
+        core.api.createEditorContext(core),
+        selection
+    );
 }
