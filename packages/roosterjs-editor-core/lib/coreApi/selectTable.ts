@@ -2,6 +2,7 @@ import addUniqueId from './utils/addUniqueId';
 import {
     createRange,
     getTagOfNode,
+    isWholeTableSelected,
     Position,
     removeGlobalCssStyle,
     removeImportantStyleRule,
@@ -21,6 +22,8 @@ import {
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';
 const STYLE_ID = 'tableStyle';
+const SELECTED_CSS_RULE =
+    '{background-color: rgb(198,198,198) !important; caret-color: transparent}';
 
 /**
  * @internal
@@ -42,7 +45,7 @@ export const selectTable: SelectTable = (
         addUniqueId(table, TABLE_ID);
         addUniqueId(core.contentDiv, CONTENT_DIV_ID);
 
-        const ranges = select(core, table, coordinates);
+        const { ranges, isWholeTableSelected } = select(core, table, coordinates);
         if (!isMergedCell(table, coordinates)) {
             const cellToSelect = table.rows
                 .item(coordinates.firstCell.y)
@@ -62,6 +65,7 @@ export const selectTable: SelectTable = (
             table,
             areAllCollapsed: ranges.filter(range => range?.collapsed).length == ranges.length,
             coordinates,
+            isWholeTableSelected,
         };
     }
 
@@ -72,19 +76,53 @@ function buildCss(
     table: HTMLTableElement,
     coordinates: TableSelection,
     contentDivSelector: string
-): { css: string; ranges: Range[] } {
+): { css: string; ranges: Range[]; isWholeTableSelected: boolean } {
+    const ranges: Range[] = [];
+    const selectors: string[] = [];
+
+    const vTable = new VTable(table);
+    const isAllTableSelected = isWholeTableSelected(vTable, coordinates);
+    if (isAllTableSelected) {
+        handleAllTableSelected(contentDivSelector, vTable, selectors, ranges);
+    } else {
+        handleTableSelected(coordinates, vTable, contentDivSelector, selectors, ranges);
+    }
+
+    const css = selectors.length ? `${selectors.join(',')} ${SELECTED_CSS_RULE}` : '';
+
+    return { css, ranges, isWholeTableSelected: isAllTableSelected };
+}
+
+function handleAllTableSelected(
+    contentDivSelector: string,
+    vTable: VTable,
+    selectors: string[],
+    ranges: Range[]
+) {
+    const table = vTable.table;
+    const tableSelector = contentDivSelector + ' #' + table.id;
+    selectors.push(tableSelector, `${tableSelector} *`);
+
+    const tableRange = new Range();
+    tableRange.selectNode(table);
+    ranges.push(tableRange);
+}
+
+function handleTableSelected(
+    coordinates: TableSelection,
+    vTable: VTable,
+    contentDivSelector: string,
+    selectors: string[],
+    ranges: Range[]
+) {
     const tr1 = coordinates.firstCell.y;
     const td1 = coordinates.firstCell.x;
     const tr2 = coordinates.lastCell.y;
     const td2 = coordinates.lastCell.x;
-    const ranges: Range[] = [];
+    const table = vTable.table;
 
     let firstSelected: HTMLTableCellElement | null = null;
     let lastSelected: HTMLTableCellElement | null = null;
-    const selectors: string[] = [];
-
-    const vTable = new VTable(table);
-
     // Get whether table has thead, tbody or tfoot.
     const tableChildren = toArray(table.childNodes).filter(
         node => ['THEAD', 'TBODY', 'TFOOT'].indexOf(getTagOfNode(node)) > -1
@@ -119,9 +157,7 @@ function buildCss(
         for (let cellIndex = 0; cellIndex < row.length; cellIndex++) {
             const cell = row[cellIndex].td;
             if (cell) {
-                const tag = getTagOfNode(cell);
                 tdCount++;
-
                 if (rowIndex >= tr1 && rowIndex <= tr2 && cellIndex >= td1 && cellIndex <= td2) {
                     removeImportant(cell);
 
@@ -130,13 +166,12 @@ function buildCss(
                         table.id,
                         middleElSelector,
                         currentRow,
-                        tag,
+                        getTagOfNode(cell),
                         tdCount
                     );
                     const elementsSelector = selector + ' *';
 
-                    selectors.push(selector);
-                    selectors.push(elementsSelector);
+                    selectors.push(selector, elementsSelector);
                     firstSelected = firstSelected || table.querySelector(selector);
                     lastSelected = table.querySelector(selector);
                 }
@@ -150,21 +185,17 @@ function buildCss(
             ranges.push(rowRange);
         }
     });
-
-    const css = selectors.length
-        ? `${selectors.join(
-              ','
-          )} {background-color: rgb(198,198,198) !important; caret-color: transparent}`
-        : '';
-
-    return { css, ranges };
 }
 
-function select(core: EditorCore, table: HTMLTableElement, coordinates: TableSelection): Range[] {
+function select(
+    core: EditorCore,
+    table: HTMLTableElement,
+    coordinates: TableSelection
+): { ranges: Range[]; isWholeTableSelected: boolean } {
     const contentDivSelector = '#' + core.contentDiv.id;
-    let { css, ranges } = buildCss(table, coordinates, contentDivSelector);
+    let { css, ranges, isWholeTableSelected } = buildCss(table, coordinates, contentDivSelector);
     setGlobalCssStyles(core.contentDiv.ownerDocument, css, STYLE_ID + core.contentDiv.id);
-    return ranges;
+    return { ranges, isWholeTableSelected };
 }
 
 const unselect = (core: EditorCore) => {

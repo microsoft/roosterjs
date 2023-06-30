@@ -8,7 +8,7 @@ export interface EditorContext {
     /**
      * Whether current content is in dark mode
      */
-    isDarkMode: boolean;
+    isDarkMode?: boolean;
 
     /**
      * Default format of editor
