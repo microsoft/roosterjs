@@ -1,3 +1,4 @@
+import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
@@ -8,6 +9,7 @@ import {
     ContentModelSegment,
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
+
 /**
  * @internal
  */
@@ -45,6 +47,14 @@ export function formatSegmentWithContentModel(
                 isCollapsedSelection = false;
             }
         }
+
+        //When double click a word or sentence a trailing space will be selected as well, so separate the trailing space in another segment
+        //and only format the text
+        segmentAndParagraphs.forEach(([segment, paragraph]) => {
+            if (paragraph) {
+                adjustTrailingSpaceSelection(segment, paragraph.segments);
+            }
+        });
 
         const formatsAndSegments: [
             ContentModelSegmentFormat,
