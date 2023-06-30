@@ -352,7 +352,6 @@ describe('changeFontSize', () => {
                             areAllCollapsed: false,
                             ranges: [createRange(sub)],
                         },
-                        includeRoot: true,
                         ...option,
                     }
                 ),
@@ -370,18 +369,15 @@ describe('changeFontSize', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segmentFormat: { fontSize: '20pt' },
                         segments: [
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontSize: '22pt',
-                                    superOrSubScriptSequence: 'sub',
-                                },
+                                format: { superOrSubScriptSequence: 'sub' },
                                 isSelected: true,
                             },
                         ],
+                        isImplicit: true,
                     },
                 ],
             },

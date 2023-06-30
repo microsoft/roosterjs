@@ -16,6 +16,6 @@ export default function toggleUnderline(editor: IContentModelEditor) {
                 segment.link.format.underline = !!isTurningOn;
             }
         },
-        format => !!format.underline
+        (format, segment) => !!format.underline || !!segment?.link?.format?.underline
     );
 }

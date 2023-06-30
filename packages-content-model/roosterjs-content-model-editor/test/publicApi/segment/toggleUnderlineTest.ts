@@ -410,4 +410,64 @@ describe('toggleUnderline', () => {
             1
         );
     });
+
+    it('Turn off link', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test',
+                                format: {},
+                                isSelected: true,
+                                link: {
+                                    format: {
+                                        href: 'https://microsoft.github.io/roosterjs/index.html',
+                                        anchorTitle: 'asd',
+                                        underline: true,
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test',
+                                format: {
+                                    underline: false,
+                                },
+                                isSelected: true,
+                                link: {
+                                    format: {
+                                        href: 'https://microsoft.github.io/roosterjs/index.html',
+                                        anchorTitle: 'asd',
+                                        underline: false,
+                                    },
+                                    dataset: {},
+                                },
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                format: {},
+            },
+            1
+        );
+    });
 });

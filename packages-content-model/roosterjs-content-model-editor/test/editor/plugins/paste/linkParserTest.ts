@@ -27,10 +27,7 @@ describe('link parser test', () => {
             {
                 isDarkMode: false,
             },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-            }
+            event.domToModelOption
         );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);

@@ -171,13 +171,16 @@ function cacheGetNeighborEntityElement(
                 return null;
             }
 
+            const regions = editor.getSelectedRegions();
+            const regionRoot = regions[0]?.rootNode;
+
             range.commonAncestorContainer.normalize();
             const pos = Position.getEnd(range).normalize();
             const isAtBeginOrEnd = pos.offset == 0 || pos.isAtEnd;
             let entityNode: HTMLElement | null = null;
 
-            if (isAtBeginOrEnd) {
-                const traverser = editor.getBodyTraverser(pos.node);
+            if (isAtBeginOrEnd && regionRoot) {
+                const traverser = ContentTraverser.createBodyTraverser(regionRoot, pos.node);
                 const sibling = isNext
                     ? pos.offset == 0
                         ? traverser.currentInlineElement
