@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.44% </span>
+                <span class="strong">84.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/45</span>
+                <span class='fraction'>39/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.91% </span>
+                <span class="strong">72% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/23</span>
+                <span class='fraction'>18/25</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.09% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/44</span>
+                <span class='fraction'>38/45</span>
             </div>
         
             
@@ -189,10 +189,28 @@
 <a name='L130'></a><a href='#L130'>130</a>
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -225,16 +243,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -261,6 +282,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -300,10 +322,12 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -324,8 +348,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
-import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import { TEF_CLASS_NAME } from './TableEditor';
+import {
+    createElement,
+    getComputedStyle,
+    normalizeRect,
+    safeInstanceOf,
+} from 'roosterjs-editor-dom';
 &nbsp;
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -354,7 +384,9 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        className: TEF_CLASS_NAME,
+        style:
+            'position: absolute; cursor: all-scroll; user-select: none; border: 1px solid #808080;',
     };
 &nbsp;
     onShowHelperElement<span class="branch-0 cbranch-no" title="branch not covered" >?.(c</span>reateElementData, 'TableSelector');
@@ -364,12 +396,13 @@ export default function createTableSelector(
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
-    document.body.appendChild(div);
+    table.insertAdjacentElement('beforebegin', div);
 &nbsp;
     const context: TableSelectorContext = {
         table,
         zoomScale,
         rect,
+        isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 &nbsp;
     setSelectorDivPosition(context, div);
@@ -399,6 +432,7 @@ interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
+    isRTL: boolean;
 }
 &nbsp;
 interface TableSelectorInitValue {
@@ -432,10 +466,12 @@ class TableSelectorFeature extends DragAndDropHelper&lt;TableSelectorContext, Ta
 }
 &nbsp;
 function setSelectorDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
-    const { rect } = context;
+    const { rect, zoomScale } = context;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (rect) {
-        trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
-        trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
+        trigger.style.marginTop = `${-TABLE_SELECTOR_LENGTH - 1}px`;
+        context.isRTL
+            ? (<span class="branch-0 cbranch-no" title="branch not covered" >trigger.style.marginRight = `${(rect.right - rect.left) / zoomScale}px`)</span>
+            : (trigger.style.marginLeft = `${-TABLE_SELECTOR_LENGTH - 1}px`);
     }
 }
 &nbsp;
@@ -460,7 +496,7 @@ function isTableTopVisible(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jun 29 2023 23:51:28 GMT+0000 (Coordinated Universal Time)
+                at Fri Jun 30 2023 00:53:50 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
