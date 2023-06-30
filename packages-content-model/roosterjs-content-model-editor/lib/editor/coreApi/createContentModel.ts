@@ -25,22 +25,27 @@ export const createContentModel: CreateContentModel = (core, option) => {
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    options: DomToModelOption | undefined
+    option: DomToModelOption | undefined
 ) {
-    options = {
+    const context: DomToModelOption = {
         ...core.defaultDomToModelOptions,
-        ...(options || {}),
-        processorOverride: {
-            table: tablePreProcessor,
-            ...options?.processorOverride,
-        },
+        ...option,
+    };
+
+    context.processorOverride = {
+        table: tablePreProcessor,
+        ...context.processorOverride,
+        ...option?.processorOverride,
     };
 
     if (!core.reuseModel) {
-        options.disableCacheElement = true;
+        context.disableCacheElement = true;
     }
 
-    const range = core.api.getSelectionRangeEx(core);
-
-    return domToContentModel(core.contentDiv, options, core.api.createEditorContext(core), range);
+    return domToContentModel(
+        core.contentDiv,
+        context,
+        core.api.createEditorContext(core),
+        core.api.getSelectionRangeEx(core)
+    );
 }
