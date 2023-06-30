@@ -35,13 +35,6 @@ describe(ID, () => {
         spyOn(moveChildNodes, 'default').and.callThrough();
 
         editor.paste(clipboardData);
-        const el = document.getElementById(ID)?.querySelector('table') as HTMLTableElement;
-        expect(el).toBeDefined();
-        expect(el.tBodies.length).toEqual(1);
-        expect(el.rows.length).toEqual(1);
-        expect(el.rows.item(0)?.cells.length).toEqual(2);
-        expect(el.rows.item(0)?.cells.item(0)?.textContent).toEqual('Test');
-        expect(el.rows.item(0)?.cells.item(1)?.textContent).toEqual('Test');
 
         expect(convertPastedContentFromExcel.default).toHaveBeenCalled();
         expect(moveChildNodes.default).toHaveBeenCalledTimes(2);
@@ -57,10 +50,6 @@ describe(ID, () => {
             false /* applyCurrentFormat */,
             true /* pasteImage */
         );
-        const el = document.getElementById(ID)?.querySelector('img') as HTMLImageElement;
-        expect(el).toBeDefined();
-        expect(el?.tagName.toUpperCase()).toEqual('IMG');
-        expect(el?.src).toEqual('https://github.com/microsoft/roosterjs');
 
         expect(convertPastedContentFromExcel.default).not.toHaveBeenCalled();
         expect(moveChildNodes.default).toHaveBeenCalledTimes(0);

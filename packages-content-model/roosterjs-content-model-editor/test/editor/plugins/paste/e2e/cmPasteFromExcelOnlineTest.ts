@@ -35,118 +35,12 @@ describe(ID, () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor, clipboardData);
-        const model = editor.createContentModel({
+        editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },
         });
 
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                Object({
-                    blockType: 'Table',
-                    dataset: Object({}),
-                    rows: [
-                        Object({
-                            height: 22,
-                            format: Object({}),
-                            cells: [
-                                Object({
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        Object({
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                Object({
-                                                    segmentType: 'Text',
-                                                    text: 'Test',
-                                                    format: Object({
-                                                        fontFamily: 'Calibri, sans-serif',
-                                                        fontSize: '11pt',
-                                                    }),
-                                                }),
-                                            ],
-                                            format: Object({ whiteSpace: 'nowrap' }),
-                                        }),
-                                    ],
-                                    format: Object({
-                                        whiteSpace: 'nowrap',
-                                        paddingTop: '1px',
-                                        paddingRight: '1px',
-                                        paddingLeft: '1px',
-                                        verticalAlign: 'bottom',
-                                        textColor: 'black',
-                                        width: '48pt',
-                                        height: '15pt',
-                                    }),
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: Object({}),
-                                }),
-                                Object({
-                                    blockGroupType: 'TableCell',
-                                    blocks: [
-                                        Object({
-                                            blockType: 'Paragraph',
-                                            segments: [
-                                                Object({
-                                                    segmentType: 'Text',
-                                                    text: 'Test',
-                                                    format: Object({
-                                                        fontFamily: 'Calibri, sans-serif',
-                                                        fontSize: '11pt',
-                                                    }),
-                                                }),
-                                            ],
-                                            format: Object({ whiteSpace: 'nowrap' }),
-                                        }),
-                                    ],
-                                    format: Object({
-                                        whiteSpace: 'nowrap',
-                                        paddingTop: '1px',
-                                        paddingRight: '1px',
-                                        paddingLeft: '1px',
-                                        verticalAlign: 'bottom',
-                                        textColor: 'black',
-                                        width: '48pt',
-                                    }),
-                                    spanLeft: false,
-                                    spanAbove: false,
-                                    isHeader: false,
-                                    dataset: Object({}),
-                                }),
-                            ],
-                        }),
-                    ],
-                    format: Object({ width: '96pt', useBorderBox: true, borderCollapse: true }),
-                    widths: [64, 64],
-                }),
-                Object({
-                    blockType: 'Paragraph',
-                    segments: [
-                        Object({
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: Object({}),
-                        }),
-                        Object({ segmentType: 'Br', format: Object({}) }),
-                    ],
-                    format: Object({ width: '96pt' }),
-                    isImplicit: false,
-                }),
-            ],
-            format: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
-        });
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 });

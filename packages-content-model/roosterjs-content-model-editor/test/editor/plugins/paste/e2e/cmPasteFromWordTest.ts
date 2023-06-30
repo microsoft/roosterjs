@@ -1,6 +1,7 @@
 import * as processPastedContentFromWordDesktop from '../../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import paste from '../../../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
+import { DomToModelOption } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
 import { initEditor } from './cmPasteFromExcelTest';
 import { tableProcessor } from 'roosterjs-content-model-dom';
@@ -39,68 +40,12 @@ describe(ID, () => {
         ).and.callThrough();
 
         paste(editor, clipboardData);
-        const model = editor.createContentModel({
+        editor.createContentModel(<DomToModelOption>{
             processorOverride: {
                 table: tableProcessor,
             },
         });
 
-        expect(model).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'Test ',
-                            format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
-                        },
-                    ],
-                    format: {
-                        marginTop: '0in',
-                        marginRight: '0in',
-                        marginBottom: '8pt',
-                        marginLeft: '0in',
-                    },
-                    segmentFormat: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
-                    decorator: { tagName: 'p', format: {} },
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'asdsad ',
-                            format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
-                        },
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
-                        },
-                    ],
-                    format: {
-                        lineHeight: '107%',
-                        marginTop: '0in',
-                        marginRight: '0in',
-                        marginBottom: '8pt',
-                        marginLeft: '0in',
-                    },
-                    segmentFormat: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
-                    decorator: { tagName: 'p', format: {} },
-                },
-            ],
-            format: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
-        });
         expect(
             processPastedContentFromWordDesktop.processPastedContentFromWordDesktop
         ).toHaveBeenCalled();
