@@ -1,5 +1,5 @@
 {
-    "packages": "0.0.0",
-    "packages-ui": "0.0.0",
-    "packages-content-model": "0.0.0"
+    "packages": "8.51.0",
+    "packages-ui": "8.50.0",
+    "packages-content-model": "0.10.0"
 }
