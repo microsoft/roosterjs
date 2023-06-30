@@ -1,9 +1,10 @@
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from './context/createDomToModelContext';
+import { isNodeOfType } from '../domUtils/isNodeOfType';
+import { NodeType } from 'roosterjs-editor-types';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
 import { parseFormat } from './utils/parseFormat';
 import { rootDirectionFormatHandler } from '../formatHandlers/root/rootDirectionFormatHandler';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { zoomScaleFormatHandler } from '../formatHandlers/root/zoomScaleFormatHandler';
 import {
     ContentModelDocument,
@@ -20,27 +21,21 @@ import {
  */
 export function domToContentModel(
     root: HTMLElement | DocumentFragment,
-    editorContext: EditorContext,
-    option: DomToModelOption
+    editorContext?: EditorContext,
+    option?: DomToModelOption
 ): ContentModelDocument {
-    const model = createContentModelDocument(editorContext.defaultFormat);
+    const model = createContentModelDocument(editorContext?.defaultFormat);
     const context = createDomToModelContext(editorContext, option);
 
-    if (safeInstanceOf(root, 'DocumentFragment')) {
-        context.elementProcessors.child(model, root, context);
-    } else {
+    if (isNodeOfType(root, NodeType.Element)) {
         // Need to calculate direction (ltr or rtl), use it as initial value
         parseFormat(root, [rootDirectionFormatHandler.parse], context.blockFormat, context);
 
         // Need to calculate zoom scale value from root element, use this value to calculate sizes for elements
         parseFormat(root, [zoomScaleFormatHandler.parse], context.zoomScaleFormat, context);
-
-        const processor = option.includeRoot
-            ? context.elementProcessors.element
-            : context.elementProcessors.child;
-
-        processor(model, root, context);
     }
+
+    context.elementProcessors.child(model, root, context);
 
     normalizeContentModel(model);
 

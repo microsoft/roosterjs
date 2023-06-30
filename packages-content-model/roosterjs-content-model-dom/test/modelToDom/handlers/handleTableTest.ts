@@ -546,4 +546,27 @@ describe('handleTable', () => {
 
         expect(parent.innerHTML).toBe('<table><tbody><tr id="tr1"><td></td></tr></tbody></table>');
     });
+
+    it('TD already has width and height', () => {
+        const parent = document.createElement('div');
+        const table = createTable(1, {});
+        const cell = createTableCell();
+
+        table.rows[0].cells.push(cell);
+
+        const td = document.createElement('td');
+        cell.cachedElement = td;
+
+        td.style.width = '20px';
+        td.style.height = '40px';
+
+        table.widths = [100];
+        table.rows[0].height = 200;
+
+        handleTable(document, parent, table, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<table><tbody><tr><td style="width: 20px; height: 40px;"></td></tr></tbody></table>'
+        );
+    });
 });
