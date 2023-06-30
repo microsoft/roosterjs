@@ -50,9 +50,14 @@ export function formatSegmentWithContentModel(
 
         //When double click a word or sentence a trailing space will be selected as well, so separate the trailing space in another segment
         //and only format the text
+        let formattedSegmentsAndParagraphs: [
+            ContentModelSegment,
+            ContentModelParagraph | null
+        ][] = [];
         segmentAndParagraphs.forEach(([segment, paragraph]) => {
-            if (paragraph) {
-                adjustTrailingSpaceSelection(segment, paragraph.segments);
+            const segmentAndParagraph = adjustTrailingSpaceSelection(segment, paragraph);
+            if (segmentAndParagraph) {
+                formattedSegmentsAndParagraphs.push(segmentAndParagraph);
             }
         });
 
@@ -62,7 +67,7 @@ export function formatSegmentWithContentModel(
             ContentModelParagraph | null
         ][] = pendingFormat
             ? [[pendingFormat, null, null]]
-            : segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
+            : formattedSegmentsAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
         const isTurningOff = segmentHasStyleCallback
             ? formatsAndSegments.every(([format, segment, paragraph]) =>
@@ -78,7 +83,7 @@ export function formatSegmentWithContentModel(
             const pos = editor.getFocusedPosition();
 
             if (pos) {
-                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos);
+                setPendingFormat(editor, formattedSegmentsAndParagraphs[0][0].format, pos);
             }
         }
 

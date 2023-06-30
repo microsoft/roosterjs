@@ -1,4 +1,4 @@
-import { ContentModelSegment } from 'roosterjs-content-model-types';
+import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import { createText } from 'roosterjs-content-model-dom';
 
 /**
@@ -6,18 +6,27 @@ import { createText } from 'roosterjs-content-model-dom';
  */
 export function adjustTrailingSpaceSelection(
     segment: ContentModelSegment,
-    segments: ContentModelSegment[],
-    position?: number
-) {
-    if (segment.segmentType == 'Text') {
+    paragraph: ContentModelParagraph | null
+): [ContentModelSegment, ContentModelParagraph | null] | null {
+    if (segment.segmentType == 'Text' && paragraph) {
         const text = segment.text.trimRight();
         const trailingSpacing = segment.text.substring(text.length);
-        const trailingSpacingSegment = createText(trailingSpacing);
-        segment.text = text;
-        if (position != undefined) {
-            segments.splice(position, 0, trailingSpacingSegment);
+        if (text && trailingSpacing) {
+            segment.text = text;
+            const trailingSpacingSegment = createText(trailingSpacing);
+            paragraph.segments.push(trailingSpacingSegment);
+        } else if (text && !trailingSpacing) {
+            segment.text = paragraph.segments
+                .map(segment => {
+                    if (segment.segmentType == 'Text') {
+                        return segment.text;
+                    }
+                })
+                .join('');
+            paragraph.segments.splice(0, paragraph.segments.length, segment);
         } else {
-            segments.push(trailingSpacingSegment);
+            return null;
         }
     }
+    return [segment, paragraph];
 }
