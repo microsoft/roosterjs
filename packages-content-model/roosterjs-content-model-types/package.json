@@ -1,0 +1,8 @@
+{
+    "name": "roosterjs-content-model-types",
+    "description": "Types for Content Model for roosterjs (Under development)",
+    "dependencies": {
+        "roosterjs-editor-types": ""
+    },
+    "main": "./lib/index.ts"
+}

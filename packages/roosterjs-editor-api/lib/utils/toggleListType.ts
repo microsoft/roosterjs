@@ -68,7 +68,8 @@ export default function toggleListType(
                     vList.setListStyleType(orderedStyle, unorderedStyle);
                 }
                 vList.writeBack(
-                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                    editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
+                    editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
                 );
             }
         },

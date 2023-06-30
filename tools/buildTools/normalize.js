@@ -5,18 +5,21 @@ const mkdirp = require('mkdirp');
 const fs = require('fs');
 const processConstEnum = require('./processConstEnum');
 const {
-    packages,
     allPackages,
     distPath,
     readPackageJson,
     mainPackageJson,
     err,
+    findPackageRoot,
+    versions,
 } = require('./common');
 
 function normalize() {
     const knownCustomizedPackages = {};
 
     allPackages.forEach(packageName => {
+        const versionKey = findPackageRoot(packageName);
+        const version = versions[versionKey];
         const packageJson = readPackageJson(packageName, true /*readFromSourceFolder*/);
 
         Object.keys(packageJson.dependencies).forEach(dep => {
@@ -24,8 +27,10 @@ function normalize() {
                 // No op, keep the specified value
             } else if (knownCustomizedPackages[dep]) {
                 packageJson.dependencies[dep] = '^' + knownCustomizedPackages[dep];
-            } else if (packages.indexOf(dep) > -1) {
-                packageJson.dependencies[dep] = '^' + mainPackageJson.version;
+            } else if (allPackages.indexOf(dep) > -1) {
+                var depKey = findPackageRoot(dep);
+                var depVersion = versions[depKey];
+                packageJson.dependencies[dep] = '^' + depVersion;
             } else if (mainPackageJson.dependencies && mainPackageJson.dependencies[dep]) {
                 packageJson.dependencies[dep] = mainPackageJson.dependencies[dep];
             } else if (!packageJson.dependencies[dep]) {
@@ -36,7 +41,7 @@ function normalize() {
         if (packageJson.version) {
             knownCustomizedPackages[packageName] = packageJson.version;
         } else {
-            packageJson.version = mainPackageJson.version;
+            packageJson.version = version;
         }
 
         packageJson.typings = './lib/index.d.ts';

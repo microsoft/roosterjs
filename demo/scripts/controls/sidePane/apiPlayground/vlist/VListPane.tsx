@@ -101,7 +101,8 @@ export default class VListPane extends React.Component<ApiPaneProps, VListPaneSt
         const editor = this.props.getEditor();
         editor.addUndoSnapshot(() => {
             this.state.vlist?.writeBack(
-                editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements)
+                editor.isFeatureEnabled(ExperimentalFeatures.ReuseAllAncestorListElements),
+                editor.isFeatureEnabled(ExperimentalFeatures.DisableListChain)
             );
             editor.focus();
             editor.select(this.state.vlist.items[0]?.getNode(), PositionType.Begin);

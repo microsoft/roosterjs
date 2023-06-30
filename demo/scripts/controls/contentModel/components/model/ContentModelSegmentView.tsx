@@ -3,7 +3,7 @@ import { ContentModelBrView } from './ContentModelBrView';
 import { ContentModelEntityView } from './ContentModelEntityView';
 import { ContentModelGeneralView } from './ContentModelGeneralView';
 import { ContentModelImageView } from './ContentModelImageView';
-import { ContentModelSegment } from 'roosterjs-content-model';
+import { ContentModelSegment } from 'roosterjs-content-model-types';
 import { ContentModelSelectionMarkerView } from './ContentModelSelectionMarkerView';
 import { ContentModelTextView } from './ContentModelTextView';
 

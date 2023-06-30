@@ -2,13 +2,13 @@ import * as React from 'react';
 import { BlockFormatView } from '../format/BlockFormatView';
 import { ContentModelSegmentView } from './ContentModelSegmentView';
 import { ContentModelView } from '../ContentModelView';
+import { hasSelectionInBlock } from 'roosterjs-content-model-editor';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 import { useProperty } from '../../hooks/useProperty';
 import {
     ContentModelParagraph,
     ContentModelParagraphDecorator,
-    hasSelectionInBlock,
-} from 'roosterjs-content-model';
+} from 'roosterjs-content-model-types';
 
 const styles = require('./ContentModelParagraphView.scss');
 

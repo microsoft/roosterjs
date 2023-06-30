@@ -8,14 +8,20 @@ const assign = require('object-assign');
 const toposort = require('toposort');
 const webpack = require('webpack');
 
+const packagesName = 'packages';
+const packagesUiName = 'packages-ui';
+const packagesContentModelName = 'packages-content-model';
+
 const rootPath = path.join(__dirname, '../..');
-const packagesPath = path.join(rootPath, 'packages');
-const packagesUiPath = path.join(rootPath, 'packages-ui');
+const packagesPath = path.join(rootPath, packagesName);
+const packagesUiPath = path.join(rootPath, packagesUiName);
+const packagesContentModelPath = path.join(rootPath, packagesContentModelName);
 const nodeModulesPath = path.join(rootPath, 'node_modules');
 const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 const distPath = path.join(rootPath, 'dist');
 const roosterJsDistPath = path.join(distPath, 'roosterjs/dist');
 const roosterJsUiDistPath = path.join(distPath, 'roosterjs-react/dist');
+const contentModelDistPath = path.join(distPath, 'roosterjs-content-model/dist');
 const deployPath = path.join(distPath, 'deploy');
 const compatibleEnumPath = path.join(
     packagesPath,
@@ -64,7 +70,8 @@ function collectPackages(startPath) {
 
 const packages = collectPackages(packagesPath);
 const packagesUI = collectPackages(packagesUiPath);
-const allPackages = packages.concat(packagesUI);
+const packagesContentModel = collectPackages(packagesContentModelPath);
+const allPackages = packages.concat(packagesUI).concat(packagesContentModel);
 
 function runNode(command, cwd, stdio) {
     exec('node ' + command, {
@@ -81,15 +88,17 @@ function err(message) {
 
 function findPackageRoot(packageName) {
     return packages.indexOf(packageName) >= 0
-        ? packagesPath
+        ? packagesName
         : packagesUI.indexOf(packageName) >= 0
-        ? packagesUiPath
+        ? packagesUiName
+        : packagesContentModel.indexOf(packageName) >= 0
+        ? packagesContentModelName
         : null;
 }
 
 function readPackageJson(packageName, readFromSourceFolder) {
     const packageJsonFilePath = path.join(
-        readFromSourceFolder ? findPackageRoot(packageName) : distPath,
+        readFromSourceFolder ? rootPath + '/' + findPackageRoot(packageName) : distPath,
         packageName,
         'package.json'
     );
@@ -116,20 +125,13 @@ async function runWebPack(config) {
     });
 }
 
-const NoneExternalPackageNames = [
-    // For now we don't pack ContentModel code into rooster.js file,
-    // so need to bundle it together with demo site and anywhere it is used.
-    // Once ContentModel is finished, we will bundle it into rooster.js and remove from this list.
-    'roosterjs-content-model',
-];
-
-function getWebpackExternalCallback(externalLibraryPairs) {
+function getWebpackExternalCallback(externalLibraryPairs, internalLibraries) {
     const externalMap = new Map([
         ['react', 'React'],
         ['react-dom', 'ReactDOM'],
         [/^office-ui-fabric-react(\/.*)?$/, 'FluentUIReact'],
         [/^@fluentui(\/.*)?$/, 'FluentUIReact'],
-        ...packages.filter(x => NoneExternalPackageNames.indexOf(x) < 0).map(p => [p, 'roosterjs']),
+        ...packages.filter(x => internalLibraries.indexOf(x) < 0).map(p => [p, 'roosterjs']),
         ...externalLibraryPairs,
     ]);
 
@@ -146,10 +148,52 @@ function getWebpackExternalCallback(externalLibraryPairs) {
     };
 }
 
+const buildConfig = {
+    packages: {
+        targetPath: roosterJsDistPath,
+        packEntry: path.join(packagesPath, 'roosterjs/lib/index.ts'),
+        jsFileBaseName: 'rooster',
+        targetPackages: ['roosterjs'],
+        startFileName: 'roosterjs/lib/index.d.ts',
+        libraryName: 'roosterjs',
+        targetFileName: 'rooster',
+        externalHandler: undefined,
+    },
+    'packages-ui': {
+        targetPath: roosterJsUiDistPath,
+        packEntry: path.join(packagesUiPath, 'roosterjs-react/lib/index.ts'),
+        jsFileBaseName: 'rooster-react',
+        targetPackages: packagesUI,
+        startFileName: 'roosterjs-react/lib/index.d.ts',
+        libraryName: 'roosterjsReact',
+        targetFileName: 'rooster-react',
+        externalHandler: getWebpackExternalCallback([], []),
+        dependsOnRoosterJs: true,
+        dependsOnReact: true,
+    },
+    'packages-content-model': {
+        targetPath: contentModelDistPath,
+        packEntry: path.join(packagesContentModelPath, 'roosterjs-content-model/lib/index.ts'),
+        jsFileBaseName: 'rooster-content-model',
+        targetPackages: packagesContentModel,
+        startFileName: 'roosterjs-content-model/lib/index.d.ts',
+        libraryName: 'roosterjsContentModel',
+        targetFileName: 'rooster-content-model',
+        externalHandler: getWebpackExternalCallback(
+            [[/^roosterjs-editor-types\/lib\/compatibleTypes/, 'roosterjs']],
+            packagesContentModel
+        ),
+        dependsOnRoosterJs: true,
+    },
+};
+
+const versions = JSON.parse(fs.readFileSync(path.join(rootPath, 'versions.json')));
+
 module.exports = {
     rootPath,
     packagesPath,
     packagesUiPath,
+    packagesContentModelPath,
     nodeModulesPath,
     typescriptPath,
     distPath,
@@ -161,10 +205,14 @@ module.exports = {
     err,
     packages,
     packagesUI,
+    packagesContentModel,
     allPackages,
     readPackageJson,
     mainPackageJson,
     findPackageRoot,
     runWebPack,
     getWebpackExternalCallback,
+    contentModelDistPath,
+    buildConfig,
+    versions,
 };

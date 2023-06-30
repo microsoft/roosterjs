@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { BackgroundColorFormatRenderer } from './formatPart/BackgroundColorFormatRenderer';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model';
+import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { FontFamilyFormatRenderer } from './formatPart/FontFamilyFormatRenderer';
 import { FontSizeFormatRenderer } from './formatPart/FontSizeFormatRenderer';
 import { FormatRenderer } from './utils/FormatRenderer';

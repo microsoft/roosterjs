@@ -1,5 +1,5 @@
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
-import { HtmlAlignFormat } from 'roosterjs-content-model';
+import { HtmlAlignFormat } from 'roosterjs-content-model-types';
 
 export const HtmlAlignFormatRenderer = createDropDownFormatRenderer<
     HtmlAlignFormat,

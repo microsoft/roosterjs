@@ -1,9 +1,23 @@
 import { ColorKeyAndValue, DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
-import { getObjectKeys, parseColor } from 'roosterjs-editor-dom';
+import { getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';
 const COLOR_VAR_PREFIX = 'darkColor';
+const enum ColorAttributeEnum {
+    CssColor = 0,
+    HtmlColor = 1,
+}
+const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
+    {
+        [ColorAttributeEnum.CssColor]: 'color',
+        [ColorAttributeEnum.HtmlColor]: 'color',
+    },
+    {
+        [ColorAttributeEnum.CssColor]: 'background-color',
+        [ColorAttributeEnum.HtmlColor]: 'bgcolor',
+    },
+];
 
 /**
  * @internal
@@ -128,5 +142,28 @@ export default class DarkColorHandlerImpl implements DarkColorHandler {
         }
 
         return null;
+    }
+
+    /**
+     * Transform element color, from dark to light or from light to dark
+     * @param element The element to transform color
+     * @param fromDarkMode Whether this is transforming color from dark mode
+     * @param toDarkMode Whether this is transforming color to dark mode
+     */
+    transformElementColor(element: HTMLElement, fromDarkMode: boolean, toDarkMode: boolean): void {
+        ColorAttributeName.forEach((names, i) => {
+            const color = this.parseColorValue(
+                element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
+                    element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
+                !!fromDarkMode
+            ).lightModeColor;
+
+            element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
+            element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
+
+            if (color && color != 'inherit') {
+                setColor(element, color, i != 0, toDarkMode, false /*shouldAdaptFontColor*/, this);
+            }
+        });
     }
 }

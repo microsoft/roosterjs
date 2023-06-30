@@ -179,8 +179,9 @@ export default class VList {
      * After that, this VList becomes unavailable because we set this.rootList to null
      *
      * @param shouldReuseAllAncestorListElements Optional - defaults to false.
+     * @param disableListChain Whether we want to disable list chain functionality. @default false
      */
-    writeBack(shouldReuseAllAncestorListElements?: boolean) {
+    writeBack(shouldReuseAllAncestorListElements?: boolean, disableListChain?: boolean) {
         if (!this.rootList) {
             throw new Error('rootList must not be null');
         }
@@ -216,7 +217,7 @@ export default class VList {
                     }
                 }
 
-                if (item.getLevel() == 1 && !item.isDummy()) {
+                if (item.getLevel() == 1 && !item.isDummy() && !disableListChain) {
                     start++;
                 }
             }
