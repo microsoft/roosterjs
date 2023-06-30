@@ -3,7 +3,7 @@ import { createCheckboxFormatRenderer } from '../utils/createCheckboxFormatRende
 import { createColorFormatRenderer } from '../utils/createColorFormatRender';
 import { createDropDownFormatRenderer } from '../utils/createDropDownFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { TableMetadataFormat } from 'roosterjs-content-model';
+import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 export const TableMetadataFormatRenders: FormatRenderer<TableMetadataFormat>[] = [
     createColorFormatRenderer<TableMetadataFormat>(

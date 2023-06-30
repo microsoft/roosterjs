@@ -1,8 +1,8 @@
 import * as blockFormat from 'roosterjs-editor-api/lib/utils/blockFormat';
 import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation';
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import * as toggleListType from 'roosterjs-editor-api/lib/utils/toggleListType';
-import getBlockElementAtNode from '../../../../roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode';
+import getBlockElementAtNode from 'roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode';
 import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
 import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
 import {

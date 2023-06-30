@@ -1,5 +1,5 @@
 import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation';
-import * as TestHelper from '../../../../roosterjs-editor-api/test/TestHelper';
+import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import { Browser, cacheGetEventData } from 'roosterjs-editor-dom';
 import { TableFeatures } from '../../../lib/plugins/ContentEdit/features/tableFeatures';
 import {

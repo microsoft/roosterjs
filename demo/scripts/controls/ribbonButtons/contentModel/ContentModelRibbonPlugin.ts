@@ -1,5 +1,5 @@
 import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getFormatState, IContentModelEditor } from 'roosterjs-content-model';
+import { getFormatState, IContentModelEditor } from 'roosterjs-content-model-editor';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, RibbonButton, RibbonPlugin, UIUtilities } from 'roosterjs-react';
 

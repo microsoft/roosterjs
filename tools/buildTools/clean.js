@@ -1,6 +1,5 @@
 'use strict';
 
-const path = require('path');
 const rimraf = require('rimraf');
 const { distPath, compatibleEnumPath } = require('./common');
 

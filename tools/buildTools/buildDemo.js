@@ -12,6 +12,8 @@ const {
     roosterJsUiDistPath,
     runWebPack,
     getWebpackExternalCallback,
+    contentModelDistPath,
+    packagesContentModelPath,
 } = require('./common');
 
 async function buildDemoSite() {
@@ -27,7 +29,13 @@ async function buildDemoSite() {
         },
         resolve: {
             extensions: ['.ts', '.tsx', '.js', '.svg', '.scss', '.'],
-            modules: [sourcePath, packagesPath, packagesUiPath, nodeModulesPath],
+            modules: [
+                sourcePath,
+                packagesPath,
+                packagesUiPath,
+                packagesContentModelPath,
+                nodeModulesPath,
+            ],
         },
         module: {
             rules: [
@@ -64,10 +72,15 @@ async function buildDemoSite() {
                 },
             ],
         },
-        externals: getWebpackExternalCallback([
-            [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
-            [/^rosterjs-react\/.*$/, 'roosterjsReact'],
-        ]),
+        externals: getWebpackExternalCallback(
+            [
+                [/^roosterjs-editor-plugins\/.*$/, 'roosterjs'],
+                [/^roosterjs-react\/.*$/, 'roosterjsReact'],
+                [/^roosterjs-react$/, 'roosterjsReact'],
+                [/^roosterjs-content-model.*$/, 'roosterjsContentModel'],
+            ],
+            []
+        ),
         stats: 'minimal',
         mode: 'production',
         optimization: {
@@ -92,6 +105,14 @@ async function buildDemoSite() {
     fs.copyFileSync(
         path.resolve(roosterJsUiDistPath, 'rooster-react-min.js.map'),
         path.resolve(deployPath, 'rooster-react-min.js.map')
+    );
+    fs.copyFileSync(
+        path.resolve(contentModelDistPath, 'rooster-content-model-min.js'),
+        path.resolve(deployPath, 'rooster-content-model-min.js')
+    );
+    fs.copyFileSync(
+        path.resolve(contentModelDistPath, 'rooster-content-model-min.js.map'),
+        path.resolve(deployPath, 'rooster-content-model-min.js.map')
     );
     fs.copyFileSync(
         path.resolve(sourcePathRoot, 'index.html'),

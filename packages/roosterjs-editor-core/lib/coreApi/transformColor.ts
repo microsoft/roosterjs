@@ -1,22 +1,5 @@
 import { ColorTransformDirection, EditorCore, TransformColor } from 'roosterjs-editor-types';
-import { setColor } from 'roosterjs-editor-dom';
 import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
-
-const enum ColorAttributeEnum {
-    CssColor = 0,
-    HtmlColor = 1,
-}
-
-const ColorAttributeName: { [key in ColorAttributeEnum]: string }[] = [
-    {
-        [ColorAttributeEnum.CssColor]: 'color',
-        [ColorAttributeEnum.HtmlColor]: 'color',
-    },
-    {
-        [ColorAttributeEnum.CssColor]: 'background-color',
-        [ColorAttributeEnum.HtmlColor]: 'bgcolor',
-    },
-];
 
 /**
  * @internal
@@ -36,37 +19,21 @@ export const transformColor: TransformColor = (
     callback: (() => void) | null,
     direction: ColorTransformDirection | CompatibleColorTransformDirection,
     forceTransform?: boolean,
-    fromDarkMode?: boolean
+    fromDarkMode: boolean = false
 ) => {
-    const { darkColorHandler } = core;
-    const toDark = direction == ColorTransformDirection.LightToDark;
-
+    const {
+        darkColorHandler,
+        lifecycle: { onExternalContentTransform },
+    } = core;
+    const toDarkMode = direction == ColorTransformDirection.LightToDark;
     if (rootNode && (forceTransform || core.lifecycle.isDarkMode)) {
-        const transformer =
-            core.lifecycle.onExternalContentTransform ||
-            ((element: HTMLElement) => {
-                ColorAttributeName.forEach((names, i) => {
-                    const color = darkColorHandler.parseColorValue(
-                        element.style.getPropertyValue(names[ColorAttributeEnum.CssColor]) ||
-                            element.getAttribute(names[ColorAttributeEnum.HtmlColor]),
-                        !!fromDarkMode
-                    ).lightModeColor;
-
-                    element.style.setProperty(names[ColorAttributeEnum.CssColor], null);
-                    element.removeAttribute(names[ColorAttributeEnum.HtmlColor]);
-
-                    if (color && color != 'inherit') {
-                        setColor(
-                            element,
-                            color,
-                            i != 0,
-                            toDark,
-                            false /*shouldAdaptFontColor*/,
-                            darkColorHandler
-                        );
-                    }
-                });
-            });
+        const transformer = onExternalContentTransform
+            ? (element: HTMLElement) => {
+                  onExternalContentTransform(element, fromDarkMode, toDarkMode, darkColorHandler);
+              }
+            : (element: HTMLElement) => {
+                  darkColorHandler.transformElementColor(element, fromDarkMode, toDarkMode);
+              };
 
         iterateElements(rootNode, transformer, includeSelf);
     }

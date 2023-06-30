@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelLinkView } from './ContentModelLinkView';
-import { ContentModelSelectionMarker } from 'roosterjs-content-model';
+import { ContentModelSelectionMarker } from 'roosterjs-content-model-types';
 import { ContentModelView } from '../ContentModelView';
 import { SegmentFormatView } from '../format/SegmentFormatView';
 
