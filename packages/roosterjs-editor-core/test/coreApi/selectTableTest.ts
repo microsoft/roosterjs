@@ -88,6 +88,7 @@ describe('selectTable |', () => {
                 '> tr:nth-child(2)>TD:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('Select TH and TR in the same row', () => {
@@ -152,6 +153,7 @@ describe('selectTable |', () => {
                 '> tr:nth-child(2)>TH:nth-child(1) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('Select Table Cells THEAD, TBODY', () => {
@@ -216,6 +218,7 @@ describe('selectTable |', () => {
                 '>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('Select Table Cells THEAD, TBODY, TFOOT', () => {
@@ -264,6 +267,7 @@ describe('selectTable |', () => {
                 '>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('Select Table Cells THEAD, TFOOT', () => {
@@ -296,6 +300,7 @@ describe('selectTable |', () => {
                 '>TFOOT> tr:nth-child(1)>TD:nth-child(2) * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('Select All', () => {
@@ -320,6 +325,7 @@ describe('selectTable |', () => {
                 ' * {background-color: rgb(198,198,198) !important; caret-color: transparent}',
             STYLE_ID + div!.id
         );
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
     });
 
     it('remove duplicated ID', () => {
@@ -337,6 +343,20 @@ describe('selectTable |', () => {
         });
 
         expect(table.id).not.toEqual(table1.id);
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(1);
+    });
+
+    it('Select massive table', () => {
+        // 20x32
+        table = createTable(20, 32);
+        div?.appendChild(table);
+
+        selectTable(core, table, <TableSelection>{
+            firstCell: { x: 0, y: 0 },
+            lastCell: { x: 20, y: 31 },
+        });
+
+        expect(setGlobalCssStyles.default).toHaveBeenCalledTimes(7);
     });
 });
 
@@ -503,6 +523,33 @@ function buildTable(tbody: boolean, thead: boolean = false, tfoot: boolean = fal
                 ],
             }
         );
+    }
+
+    return createElement(
+        {
+            tag: 'table',
+            children,
+        },
+        document
+    ) as HTMLTableElement;
+}
+
+function createTable(row: number, column: number) {
+    const children: CreateElementData[] = [];
+    for (let index = 0; index < row; index++) {
+        const row: CreateElementData = {
+            tag: 'TR',
+            children: [],
+        };
+
+        for (let cIndex = 0; cIndex < column; cIndex++) {
+            row.children?.push({
+                tag: 'TD',
+                children: ['test'],
+            });
+        }
+
+        children.push(row);
     }
 
     return createElement(
