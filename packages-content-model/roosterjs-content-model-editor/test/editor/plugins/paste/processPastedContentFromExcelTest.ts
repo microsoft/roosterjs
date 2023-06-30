@@ -29,7 +29,6 @@ describe('processPastedContentFromExcelTest', () => {
             },
             {
                 ...event.domToModelOption,
-                includeRoot: true,
                 disableCacheElement: true,
             }
         );
