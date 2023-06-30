@@ -2,7 +2,7 @@ import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/def
 import { defaultProcessorMap } from './defaultProcessors';
 import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
 import { DomToModelContext, DomToModelOption, EditorContext } from 'roosterjs-content-model-types';
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Create context object form DOM to Content Model conversion
@@ -64,14 +64,6 @@ export function createDomToModelContext(
 
     if (selection) {
         context.rangeEx = selection;
-        context.selectionRootNode =
-            selection.type == SelectionRangeTypes.Normal
-                ? selection.ranges[0]?.commonAncestorContainer
-                : selection.type == SelectionRangeTypes.TableSelection
-                ? selection.table
-                : selection.type == SelectionRangeTypes.ImageSelection
-                ? selection.image
-                : undefined;
     }
 
     return context;

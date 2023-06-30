@@ -49,10 +49,6 @@ describe('getSegmentFormat', () => {
                         : undefined
                 );
 
-                if (selectedNode) {
-                    context.selectionRootNode = selectedNode;
-                }
-
                 context.elementProcessors.child(model, editorDiv, context);
 
                 normalizeContentModel(model);

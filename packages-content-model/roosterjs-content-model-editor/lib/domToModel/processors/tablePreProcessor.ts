@@ -1,6 +1,7 @@
 import { contains } from 'roosterjs-editor-dom';
 import { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
 import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
+import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 
 /**
  * @internal
@@ -20,6 +21,6 @@ function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelC
     return (
         hasMetadata(element) ||
         context.isInSelection ||
-        contains(element, context.selectionRootNode, true /*treatSameNodeAsContain*/)
+        contains(element, getSelectionRootNode(context.rangeEx), true /*treatSameNodeAsContain*/)
     );
 }
