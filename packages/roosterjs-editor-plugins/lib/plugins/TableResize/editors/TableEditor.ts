@@ -25,7 +25,10 @@ const enum TOP_OR_SIDE {
     side = 1,
 }
 
-// Class name for Table edit feature divs
+/**
+ * @internal
+ * Class name for Table edit feature divs
+ */
 export const TEF_CLASS_NAME = '_roosterjsTableEditFeature';
 
 /**
