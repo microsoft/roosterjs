@@ -1,6 +1,7 @@
 import { DirectionFormat } from './formatParts/DirectionFormat';
 import { LineHeightFormat } from './formatParts/LineHeightFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
+import { PaddingFormat } from './formatParts/PaddingFormat';
 import { TextAlignFormat } from './formatParts/TextAlignFormat';
 
 /**
@@ -9,4 +10,5 @@ import { TextAlignFormat } from './formatParts/TextAlignFormat';
 export type ContentModelListItemFormat = DirectionFormat &
     LineHeightFormat &
     MarginFormat &
+    PaddingFormat &
     TextAlignFormat;
