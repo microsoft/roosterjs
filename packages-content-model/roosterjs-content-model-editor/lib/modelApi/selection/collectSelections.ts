@@ -49,13 +49,6 @@ export function getSelectedSegmentsAndParagraphs(
     return result;
 }
 
-export function getSelectedSegments(
-    model: ContentModelDocument,
-    includingFormatHolder: boolean
-): ContentModelSegment[] {
-    return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
-}
-
 /**
  * @internal
  */

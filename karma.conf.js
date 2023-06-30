@@ -126,9 +126,6 @@ module.exports = function (config) {
             output: {
                 path: path.join(__dirname, 'dist/karma'),
             },
-            output: {
-                path: path.join(__dirname, 'dist/karma'),
-            },
         },
 
         // Concurrency level
