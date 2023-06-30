@@ -1,14 +1,8 @@
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
+import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
-import { TEF_CLASS_NAME } from './TableEditor';
-import {
-    createElement,
-    getComputedStyle,
-    normalizeRect,
-    safeInstanceOf,
-} from 'roosterjs-editor-dom';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -37,9 +31,7 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        className: TEF_CLASS_NAME,
-        style:
-            'position: absolute; cursor: all-scroll; user-select: none; border: 1px solid #808080;',
+        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
     };
 
     onShowHelperElement?.(createElementData, 'TableSelector');
@@ -49,13 +41,12 @@ export default function createTableSelector(
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
-    table.insertAdjacentElement('beforebegin', div);
+    document.body.appendChild(div);
 
     const context: TableSelectorContext = {
         table,
         zoomScale,
         rect,
-        isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 
     setSelectorDivPosition(context, div);
@@ -85,7 +76,6 @@ interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
-    isRTL: boolean;
 }
 
 interface TableSelectorInitValue {
@@ -119,12 +109,10 @@ class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, Table
 }
 
 function setSelectorDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
-    const { rect, zoomScale } = context;
+    const { rect } = context;
     if (rect) {
-        trigger.style.marginTop = `${-TABLE_SELECTOR_LENGTH - 1}px`;
-        context.isRTL
-            ? (trigger.style.marginRight = `${(rect.right - rect.left) / zoomScale}px`)
-            : (trigger.style.marginLeft = `${-TABLE_SELECTOR_LENGTH - 1}px`);
+        trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
+        trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
     }
 }
 
