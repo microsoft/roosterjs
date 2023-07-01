@@ -1,4 +1,4 @@
-import TableEditor, { TEF_CLASS_NAME } from './editors/TableEditor';
+import TableEditor from './editors/TableEditor';
 import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
     CreateElementData,
@@ -85,15 +85,8 @@ export default class TableResize implements EditorPlugin {
             case PluginEventType.ContentChanged:
             case PluginEventType.Scroll:
             case PluginEventType.ZoomChanged:
-            case PluginEventType.SelectionChanged:
                 this.setTableEditor(null);
                 this.invalidateTableRects();
-                break;
-            case PluginEventType.ExtractContentWithDom:
-                const divClass = 'div.' + TEF_CLASS_NAME;
-                e.clonedRoot.querySelectorAll(divClass).forEach(div => {
-                    div.parentNode?.removeChild(div);
-                });
                 break;
         }
     }
