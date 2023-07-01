@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>108/108</span>
+                <span class='fraction'>107/107</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.3% </span>
+                <span class="strong">94.59% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>52/54</span>
+                <span class='fraction'>70/74</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>95/95</span>
+                <span class='fraction'>97/97</span>
             </div>
         
             
@@ -315,11 +315,21 @@
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
 <a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a>
+<a name='L264'></a><a href='#L264'>264</a>
+<a name='L265'></a><a href='#L265'>265</a>
+<a name='L266'></a><a href='#L266'>266</a>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -356,8 +366,16 @@
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">40x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">40x</span>
 <span class="cline-any cline-yes">25x</span>
@@ -578,6 +596,7 @@ import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
 import {
     ContentModelTableCellFormat,
@@ -614,8 +633,16 @@ export const tableProcessor: ElementProcessor&lt;HTMLTableElement&gt; = (
             parseFormat(tableElement, context.formatParsers.block, context.blockFormat, context);
 &nbsp;
             const table = createTable(tableElement.rows.length, context.blockFormat);
-            const { table: selectedTable, firstCell, lastCell } = context.tableSelection || {};
-            const hasTableSelection = selectedTable == tableElement &amp;&amp; !!firstCell &amp;&amp; !!lastCell;
+            const tableSelection =
+                context.rangeEx?.type == SelectionRangeTypes.TableSelection
+                    ? context.rangeEx
+                    : null;
+            const selectedTable = tableSelection?.table;
+            const coordinates = tableSelection?.coordinates;
+            const hasTableSelection =
+                selectedTable == tableElement &amp;&amp;
+                !!coordinates<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>irstCell &amp;&amp;
+                !!coordinates<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>astCell;
 &nbsp;
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
@@ -634,7 +661,7 @@ export const tableProcessor: ElementProcessor&lt;HTMLTableElement&gt; = (
 &nbsp;
             const columnPositions: number[] = [0];
             const rowPositions: number[] = [0];
-            const zoomScale = context.zoomScaleFormat.zoomScale || 1;
+            const zoomScale = context.zoomScale || 1;
 &nbsp;
             for (let row = 0; row &lt; tableElement.rows.length; row++) {
                 const tr = tableElement.rows[row];
@@ -788,10 +815,10 @@ export const tableProcessor: ElementProcessor&lt;HTMLTableElement&gt; = (
                                         if (
                                             (hasSelectionBeforeCell &amp;&amp; <span class="branch-1 cbranch-no" title="branch not covered" >hasSelectionAfterCell)</span> ||
                                             (hasTableSelection &amp;&amp;
-                                                row &gt;= firstCell.y &amp;&amp;
-                                                row &lt;= lastCell.y &amp;&amp;
-                                                targetCol &gt;= firstCell.x &amp;&amp;
-                                                targetCol &lt;= lastCell.x)
+                                                row &gt;= coordinates.firstCell.y &amp;&amp;
+                                                row &lt;= coordinates.lastCell.y &amp;&amp;
+                                                targetCol &gt;= coordinates.firstCell.x &amp;&amp;
+                                                targetCol &lt;= coordinates.lastCell.x)
                                         ) {
                                             cell.isSelected = true;
                                         }
@@ -838,7 +865,7 @@ function calcSizes(positions: number[]): number[] {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 30 2023 19:24:26 GMT+0000 (Coordinated Universal Time)
+                at Sat Jul 01 2023 05:44:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

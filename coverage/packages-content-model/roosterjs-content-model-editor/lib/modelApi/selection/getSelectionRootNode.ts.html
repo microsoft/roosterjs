@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages-content-model/roosterjs-content-model-dom/lib/formatHandlers/root/zoomScaleFormatHandler.ts</title>
+    <title>Code coverage report for packages-content-model/roosterjs-content-model-editor/lib/modelApi/selection/getSelectionRootNode.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../../base.css" />
@@ -19,34 +19,34 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-dom/lib/formatHandlers/root</a> zoomScaleFormatHandler.ts</h1>
+        <h1><a href="../../../../../index.html">All files</a> / <a href="index.html">packages-content-model/roosterjs-content-model-editor/lib/modelApi/selection</a> getSelectionRootNode.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">83.33% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>10/12</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>2/2</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/4</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
@@ -73,19 +73,12 @@
 <a name='L14'></a><a href='#L14'>14</a>
 <a name='L15'></a><a href='#L15'>15</a>
 <a name='L16'></a><a href='#L16'>16</a>
-<a name='L17'></a><a href='#L17'>17</a>
-<a name='L18'></a><a href='#L18'>18</a>
-<a name='L19'></a><a href='#L19'>19</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L17'></a><a href='#L17'>17</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-yes">43x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">43x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -93,24 +86,25 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { FormatHandler } from '../FormatHandler';
-import { ZoomScaleFormat } from 'roosterjs-content-model-types';
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * @internal
  */
-export const zoomScaleFormatHandler: FormatHandler&lt;ZoomScaleFormat&gt; = {
-    parse: (format, element) =&gt; {
-        const originalWidth = element.getBoundingClientRect().width;
-        const visualWidth = element.offsetWidth;
-&nbsp;
-        format.zoomScale =
-            visualWidth &gt; 0 &amp;&amp; originalWidth &gt; 0
-                ? Math.round((originalWidth / visualWidth) * 100) / 100
-                : 1;
-    },
-    apply: () =&gt; {},
-};
+export function getSelectionRootNode(rangeEx: SelectionRangeEx | undefined): Node | undefined {
+    return !rangeEx
+        ? undefined
+        : rangeEx.type == SelectionRangeTypes.Normal
+        ? rangeEx.ranges[0]<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ommonAncestorContainer
+        : rangeEx.type == SelectionRangeTypes.TableSelection
+        ? rangeEx.table
+        : rangeEx.type == SelectionRangeTypes.ImageSelection
+        ? rangeEx.image
+        : <span class="branch-1 cbranch-no" title="branch not covered" >undefined;</span>
+}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -118,7 +112,7 @@ export const zoomScaleFormatHandler: FormatHandler&lt;ZoomScaleFormat&gt; = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jun 30 2023 19:24:26 GMT+0000 (Coordinated Universal Time)
+                at Sat Jul 01 2023 05:44:59 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
