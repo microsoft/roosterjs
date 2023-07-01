@@ -2,7 +2,6 @@ import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
 import { CreateElementData } from 'roosterjs-editor-types';
-import { TEF_CLASS_NAME } from './TableEditor';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -25,8 +24,7 @@ export default function createTableResizer(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        className: TEF_CLASS_NAME,
-        style: `position: absolute; cursor: ${
+        style: `position: fixed; cursor: ${
             isRTL ? 'ne' : 'nw'
         }-resize; user-select: none; border: 1px solid #808080`,
     };
@@ -37,7 +35,7 @@ export default function createTableResizer(
 
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
-    table.insertAdjacentElement('afterend', div);
+    document.body.appendChild(div);
 
     const context: DragAndDropContext = {
         isRTL,
@@ -140,12 +138,13 @@ function onDragging(
 }
 
 function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
-    const { table, isRTL, zoomScale } = context;
+    const { table, isRTL } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
 
     if (rect) {
-        isRTL
-            ? (trigger.style.marginRight = `${(rect.right - rect.left) / zoomScale}px`)
-            : (trigger.style.marginLeft = `${(rect.right - rect.left) / zoomScale}px`);
+        trigger.style.top = `${rect.bottom}px`;
+        trigger.style.left = isRTL
+            ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
+            : `${rect.right}px`;
     }
 }

@@ -87,6 +87,7 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                 processPastedContentWacComponents(ev);
                 break;
             case KnownPasteSourceType.ExcelOnline:
+            case KnownPasteSourceType.ExcelDesktop:
                 if (
                     event.pasteType === PasteType.Normal ||
                     event.pasteType === PasteType.MergeFormat
