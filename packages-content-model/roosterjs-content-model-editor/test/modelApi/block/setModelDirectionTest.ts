@@ -108,6 +108,8 @@ describe('setModelDirection', () => {
                         levels: [
                             {
                                 listType: 'OL',
+                                dataset: {},
+                                format: {},
                             },
                         ],
                         blocks: [
@@ -135,6 +137,8 @@ describe('setModelDirection', () => {
                         levels: [
                             {
                                 listType: 'OL',
+                                dataset: {},
+                                format: {},
                             },
                         ],
                         blocks: [
@@ -169,7 +173,10 @@ describe('setModelDirection', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                direction: 'rtl',
+                                dataset: {},
+                                format: {
+                                    direction: 'rtl',
+                                },
                             },
                         ],
                         blocks: [
@@ -197,7 +204,10 @@ describe('setModelDirection', () => {
                         levels: [
                             {
                                 listType: 'OL',
-                                direction: 'rtl',
+                                dataset: {},
+                                format: {
+                                    direction: 'rtl',
+                                },
                             },
                         ],
                         blocks: [

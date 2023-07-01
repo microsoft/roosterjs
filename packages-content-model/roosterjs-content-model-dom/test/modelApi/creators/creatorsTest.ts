@@ -358,7 +358,7 @@ describe('Creators', () => {
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
             blocks: [],
-            levels: [{ listType: 'OL' }],
+            levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 isSelected: true,
@@ -376,7 +376,7 @@ describe('Creators', () => {
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
             blocks: [],
-            levels: [{ listType: 'OL' }],
+            levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 isSelected: true,

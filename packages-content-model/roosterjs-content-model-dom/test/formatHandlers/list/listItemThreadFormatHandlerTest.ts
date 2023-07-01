@@ -64,7 +64,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         const li = document.createElement('li');
 
         ol.appendChild(li);
-        context.listFormat.levels = [{}];
+        context.listFormat.levels = [{ listType: 'OL', format: {}, dataset: {} }];
         context.listFormat.threadItemCounts = [1];
 
         listItemThreadFormatHandler.parse(format, li, context, {});
@@ -72,7 +72,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(format).toEqual({});
         expect(context.listFormat).toEqual({
             threadItemCounts: [2],
-            levels: [{}],
+            levels: [{ listType: 'OL', format: {}, dataset: {} }],
         });
     });
 
@@ -84,7 +84,8 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [1];
@@ -97,6 +98,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -110,7 +113,8 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [3, 2, 1];
@@ -123,6 +127,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -137,7 +143,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             {},
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [3, 2, 1];
@@ -151,6 +158,8 @@ describe('listItemThreadFormatHandler.parse', () => {
                 {},
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -166,6 +175,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             {},
             {
                 listType: 'OL',
+                format: {},
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [1];
@@ -181,6 +192,8 @@ describe('listItemThreadFormatHandler.parse', () => {
                 {},
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });

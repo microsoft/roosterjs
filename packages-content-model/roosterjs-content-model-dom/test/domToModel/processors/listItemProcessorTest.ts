@@ -41,7 +41,7 @@ describe('listItemProcessor', () => {
 
         li.style.display = 'block';
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -54,7 +54,9 @@ describe('listItemProcessor', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     blocks: [],
-                    levels: [{ listType: 'UL', displayForDummyItem: 'block' }],
+                    levels: [
+                        { listType: 'UL', format: { displayForDummyItem: 'block' }, dataset: {} },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
                 },
@@ -66,7 +68,7 @@ describe('listItemProcessor', () => {
         const group = createContentModelDocument();
         const li = document.createElement('li');
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -83,6 +85,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -102,7 +106,7 @@ describe('listItemProcessor', () => {
 
         li.style.fontSize = '10px';
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -119,6 +123,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -139,7 +145,7 @@ describe('listItemProcessor', () => {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode('test'));
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -169,6 +175,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -187,7 +195,7 @@ describe('listItemProcessor', () => {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode('test'));
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
         context.blockFormat.lineHeight = '2';
@@ -218,6 +226,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -241,7 +251,7 @@ describe('listItemProcessor', () => {
         div.appendChild(document.createTextNode('test'));
         li.appendChild(div);
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
         context.blockFormat.lineHeight = '2';
@@ -277,6 +287,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -297,7 +309,7 @@ describe('listItemProcessor', () => {
         li.appendChild(document.createTextNode('test'));
         li.style.lineHeight = '2';
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -327,6 +339,8 @@ describe('listItemProcessor', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -383,7 +397,7 @@ describe('listItemProcessor without format handlers', () => {
 
         li.style.display = 'block';
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -396,7 +410,7 @@ describe('listItemProcessor without format handlers', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     blocks: [],
-                    levels: [{ listType: 'UL' }],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
                 },
@@ -408,7 +422,7 @@ describe('listItemProcessor without format handlers', () => {
         const group = createContentModelDocument();
         const li = document.createElement('li');
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -425,6 +439,8 @@ describe('listItemProcessor without format handlers', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -444,7 +460,7 @@ describe('listItemProcessor without format handlers', () => {
 
         li.style.fontSize = '10px';
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -461,6 +477,8 @@ describe('listItemProcessor without format handlers', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -481,7 +499,7 @@ describe('listItemProcessor without format handlers', () => {
         const li = document.createElement('li');
         li.appendChild(document.createTextNode('test'));
 
-        context.listFormat.levels = [{ listType: 'UL' }];
+        context.listFormat.levels = [{ listType: 'UL', format: {}, dataset: {} }];
         context.listFormat.listParent = group;
         context.listFormat.threadItemCounts = [0];
 
@@ -511,6 +529,8 @@ describe('listItemProcessor without format handlers', () => {
                     levels: [
                         {
                             listType: 'UL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {

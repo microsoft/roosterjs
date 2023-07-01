@@ -58,7 +58,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -95,7 +95,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -126,7 +126,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -153,7 +153,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [{ listType: 'OL', dataset: {}, format: { orderedStyleType: 2 } }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -186,8 +186,8 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [
-                        { listType: 'OL', startNumberOverride: 1 },
-                        { listType: 'UL', unorderedStyleType: 3 },
+                        { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
+                        { listType: 'UL', dataset: {}, format: { unorderedStyleType: 3 } },
                     ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
@@ -216,8 +216,8 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [
-                        { listType: 'OL', startNumberOverride: 1 },
-                        { listType: 'UL', unorderedStyleType: 4 },
+                        { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
+                        { listType: 'UL', dataset: {}, format: { unorderedStyleType: 4 } },
                     ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
@@ -250,7 +250,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -270,7 +270,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -291,7 +291,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -317,7 +317,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [{ listType: 'OL', dataset: {}, format: { orderedStyleType: 2 } }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -337,7 +337,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [{ listType: 'OL', dataset: {}, format: { orderedStyleType: 2 } }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -358,7 +358,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [{ listType: 'OL', dataset: {}, format: { orderedStyleType: 2 } }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {

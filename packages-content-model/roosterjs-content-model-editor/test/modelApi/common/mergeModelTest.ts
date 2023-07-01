@@ -320,6 +320,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -348,6 +350,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -386,6 +390,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -456,6 +462,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -495,6 +503,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -598,8 +608,11 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                unorderedStyleType: 2,
+                            },
                         },
                     ],
                     formatHolder: {
@@ -628,8 +641,11 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                unorderedStyleType: 2,
+                            },
                         },
                     ],
                     formatHolder: {
@@ -658,13 +674,19 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                unorderedStyleType: 2,
+                            },
                         },
                         {
                             listType: 'UL',
-                            startNumberOverride: 5,
-                            unorderedStyleType: 6,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 5,
+                                unorderedStyleType: 6,
+                            },
                         },
                     ],
                     formatHolder: {
@@ -698,8 +720,11 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                unorderedStyleType: 2,
+                            },
                         },
                     ],
                     formatHolder: {
@@ -1584,6 +1609,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [
@@ -1633,7 +1660,7 @@ describe('mergeModel', () => {
                         isSelected: true,
                         segmentType: 'SelectionMarker',
                     },
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [
                         {
                             blockType: 'Paragraph',

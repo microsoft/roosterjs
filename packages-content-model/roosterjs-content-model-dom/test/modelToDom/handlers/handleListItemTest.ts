@@ -1,13 +1,14 @@
 import * as applyFormat from '../../../lib/modelToDom/utils/applyFormat';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { handleList as originalHandleList } from '../../../lib/modelToDom/handlers/handleList';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
+import { listItemMetadataFormatHandler } from '../../../lib/formatHandlers/list/listItemMetadataFormatHandler';
 import {
     ContentModelBlockGroup,
     ContentModelListItem,
-    ContentModelListItemLevelFormat,
     ModelToDomContext,
     ContentModelBlockHandler,
     ContentModelHandler,
@@ -65,7 +66,7 @@ describe('handleListItem', () => {
     it('OL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ol');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -91,12 +92,14 @@ describe('handleListItem', () => {
                 {
                     node: parent,
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(4);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
@@ -112,7 +115,13 @@ describe('handleListItem', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItem,
-            listItem.levels[0],
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            [listItemMetadataFormatHandler.apply],
+            listItem.levels[0].dataset,
             context
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
@@ -127,7 +136,7 @@ describe('handleListItem', () => {
     it('UL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ul');
-        const listItem = createListItem([{ listType: 'UL' }]);
+        const listItem = createListItem([createListLevel('UL')]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -153,6 +162,8 @@ describe('handleListItem', () => {
                 {
                     node: parent,
                     listType: 'UL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -221,11 +232,7 @@ describe('handleListItem', () => {
 
     it('list item with alignment', () => {
         const parent = document.createElement('div');
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         listItem.format.textAlign = 'center';
 
@@ -249,6 +256,8 @@ describe('handleListItem', () => {
                 {
                     node: parent.firstChild as HTMLOListElement,
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -320,7 +329,7 @@ describe('handleListItem without format handler', () => {
     it('OL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ol');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -346,6 +355,8 @@ describe('handleListItem without format handler', () => {
                 {
                     node: parent,
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -382,7 +393,7 @@ describe('handleListItem without format handler', () => {
     it('UL parent', () => {
         const fragment = document.createDocumentFragment();
         const parent = document.createElement('ul');
-        const listItem = createListItem([{ listType: 'UL' }]);
+        const listItem = createListItem([createListLevel('UL')]);
 
         fragment.appendChild(parent);
         context.listFormat.threadItemCounts = [0];
@@ -408,6 +419,8 @@ describe('handleListItem without format handler', () => {
                 {
                     node: parent,
                     listType: 'UL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -442,7 +455,7 @@ describe('handleListItem without format handler', () => {
     });
 
     it('UL with refNode', () => {
-        const listItem = createListItem([{ listType: 'UL' }]);
+        const listItem = createListItem([createListLevel('UL')]);
         const br = document.createElement('br');
         const parent = document.createElement('div');
 
@@ -465,9 +478,7 @@ describe('handleListItem without format handler', () => {
     });
 
     it('With onNodeCreated', () => {
-        const listLevel0: ContentModelListItemLevelFormat = {
-            listType: 'OL',
-        };
+        const listLevel0 = createListLevel('OL');
         const listItem: ContentModelListItem = {
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',

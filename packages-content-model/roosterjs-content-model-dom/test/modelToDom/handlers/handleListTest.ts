@@ -1,13 +1,10 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
+import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
-import {
-    ContentModelListItem,
-    ContentModelListItemLevelFormat,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 describe('handleList', () => {
     let context: ModelToDomContext;
@@ -35,11 +32,7 @@ describe('handleList', () => {
     });
 
     it('Empty context, single UL list item', () => {
-        const listItem = createListItem([
-            {
-                listType: 'UL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('UL')]);
 
         handleList(document, parent, listItem, context, null);
 
@@ -53,17 +46,15 @@ describe('handleList', () => {
                 {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
     });
 
     it('Empty context, single OL list item', () => {
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         handleList(document, parent, listItem, context, null);
         const possibleResults = [
@@ -84,6 +75,8 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -91,11 +84,7 @@ describe('handleList', () => {
 
     it('Context has OL, single OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
@@ -121,12 +110,7 @@ describe('handleList', () => {
 
     itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-                orderedStyleType: 2,
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL', { orderedStyleType: 2 })]);
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
@@ -147,7 +131,10 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: parent.childNodes[1],
-                    orderedStyleType: 2,
+                    dataset: {},
+                    format: {
+                        orderedStyleType: 2,
+                    },
                 },
             ],
         });
@@ -156,13 +143,8 @@ describe('handleList', () => {
     itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-            {
-                listType: 'OL',
-                orderedStyleType: 2,
-            },
+            createListLevel('OL'),
+            createListLevel('OL', { orderedStyleType: 2 }),
         ]);
 
         context.listFormat.threadItemCounts = [1];
@@ -184,11 +166,16 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: existingOL,
+                    dataset: {},
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
-                    orderedStyleType: 2,
+                    dataset: {},
+                    format: {
+                        orderedStyleType: 2,
+                    },
                 },
             ],
         });
@@ -197,13 +184,10 @@ describe('handleList', () => {
     itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
-            {
-                listType: 'OL',
+            createListLevel('OL', {
                 unorderedStyleType: 3,
-            },
-            {
-                listType: 'OL',
-            },
+            }),
+            createListLevel('OL'),
         ]);
 
         context.listFormat.threadItemCounts = [1];
@@ -225,11 +209,16 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
-                    unorderedStyleType: 3,
+                    dataset: {},
+                    format: {
+                        unorderedStyleType: 3,
+                    },
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -241,11 +230,7 @@ describe('handleList', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
@@ -266,6 +251,8 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: existingOL1,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -277,11 +264,7 @@ describe('handleList', () => {
         parent.appendChild(existingOL1);
         existingOL1.appendChild(existingOL2);
 
-        const listItem = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         context.listFormat.threadItemCounts = [1];
         context.listFormat.nodeStack = [
@@ -309,6 +292,8 @@ describe('handleList', () => {
                 {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -321,13 +306,8 @@ describe('handleList', () => {
         existingOL1.appendChild(existingOL2);
 
         const listItem = createListItem([
-            {
-                listType: 'UL',
-            },
-            {
-                listType: 'OL',
-                startNumberOverride: 3,
-            },
+            createListLevel('UL'),
+            createListLevel('OL', { startNumberOverride: 3 }),
         ]);
 
         context.listFormat.threadItemCounts = [1, 1];
@@ -358,11 +338,16 @@ describe('handleList', () => {
                 {
                     listType: 'UL',
                     node: existingOL1,
+                    dataset: {},
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: existingOL1.childNodes[1] as HTMLElement,
-                    startNumberOverride: 3,
+                    dataset: {},
+                    format: {
+                        startNumberOverride: 3,
+                    },
                 },
             ],
         });
@@ -442,6 +427,8 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -473,6 +460,8 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -534,7 +523,10 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: parent.childNodes[1],
-                    orderedStyleType: 2,
+                    dataset: {},
+                    format: {
+                        orderedStyleType: 2,
+                    },
                 },
             ],
         });
@@ -569,11 +561,16 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: existingOL,
+                    dataset: {},
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
-                    orderedStyleType: 2,
+                    dataset: {},
+                    format: {
+                        orderedStyleType: 2,
+                    },
                 },
             ],
         });
@@ -608,11 +605,16 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
-                    unorderedStyleType: 3,
+                    dataset: {},
+                    format: {
+                        unorderedStyleType: 3,
+                    },
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -649,6 +651,8 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: existingOL1,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -693,6 +697,8 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -733,11 +739,16 @@ describe('handleList without format handlers', () => {
                 {
                     listType: 'UL',
                     node: existingOL1,
+                    dataset: {},
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: existingOL1.childNodes[1] as HTMLElement,
-                    startNumberOverride: 3,
+                    dataset: {},
+                    format: {
+                        startNumberOverride: 3,
+                    },
                 },
             ],
         });
@@ -844,6 +855,8 @@ describe('handleList handles metadata', () => {
                 {
                     node: parent.firstChild as HTMLElement,
                     listType: 'OL',
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -887,10 +900,14 @@ describe('handleList handles metadata', () => {
                 {
                     listType: 'OL',
                     node: existingOL,
+                    dataset: {},
+                    format: {},
                 },
                 {
                     listType: 'OL',
                     node: existingOL.firstChild as HTMLElement,
+                    dataset: {},
+                    format: {},
                 },
             ],
         });
@@ -898,12 +915,8 @@ describe('handleList handles metadata', () => {
     });
 
     it('With onNodeCreated', () => {
-        const listLevel0: ContentModelListItemLevelFormat = {
-            listType: 'OL',
-        };
-        const listLevel1: ContentModelListItemLevelFormat = {
-            listType: 'UL',
-        };
+        const listLevel0 = createListLevel('OL');
+        const listLevel1 = createListLevel('UL');
         const listItem: ContentModelListItem = {
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
