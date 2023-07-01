@@ -33,6 +33,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         if (
             stackLevel.listType != itemLevel.listType ||
+            stackLevel.dataset?.editingInfo != itemLevel.dataset.editingInfo ||
             (itemLevel.listType == 'OL' && typeof itemLevel.format.startNumberOverride === 'number')
         ) {
             break;

@@ -187,7 +187,7 @@ describe('align left', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',

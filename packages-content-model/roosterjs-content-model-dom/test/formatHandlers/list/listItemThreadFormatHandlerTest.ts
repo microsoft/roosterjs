@@ -33,14 +33,14 @@ describe('listItemThreadFormatHandler.parse', () => {
         const li = document.createElement('li');
 
         ul.appendChild(li);
-        context.listFormat.levels = [{}];
+        context.listFormat.levels = [{ listType: 'UL', dataset: {}, format: {} }];
 
         listItemThreadFormatHandler.parse(format, li, context, {});
 
         expect(format).toEqual({});
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
-            levels: [{}],
+            levels: [{ listType: 'UL', dataset: {}, format: {} }],
         });
     });
 
@@ -140,7 +140,7 @@ describe('listItemThreadFormatHandler.parse', () => {
 
         ol.appendChild(li);
         context.listFormat.levels = [
-            {},
+            { listType: 'UL', format: {}, dataset: {} },
             {
                 listType: 'OL',
                 format: { startNumberOverride: 3 },
@@ -155,7 +155,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [3, 3],
             levels: [
-                {},
+                { listType: 'UL', format: {}, dataset: {} },
                 {
                     listType: 'OL',
                     format: {},
@@ -172,7 +172,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         ol.appendChild(li);
         li.style.display = 'block';
         context.listFormat.levels = [
-            {},
+            { listType: 'UL', format: {}, dataset: {} },
             {
                 listType: 'OL',
                 format: {},
@@ -189,7 +189,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             levels: [
-                {},
+                { listType: 'UL', format: {}, dataset: {} },
                 {
                     listType: 'OL',
                     format: {},

@@ -1,4 +1,5 @@
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
+import { setListType } from '../../../lib/modelApi/list/setListType';
 import {
     createBr,
     createContentModelDocument,
@@ -9,7 +10,6 @@ import {
     createParagraph,
     createText,
 } from 'roosterjs-content-model-dom';
-import { setListType } from '../../../lib/modelApi/list/setListType';
 
 describe('indent', () => {
     let normalizeContentModelSpy: jasmine.Spy;
@@ -265,7 +265,7 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [para1],
                     formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
                     format: {},
@@ -273,7 +273,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
                     format: {},

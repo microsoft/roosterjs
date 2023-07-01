@@ -77,6 +77,8 @@ describe('handleListItem', () => {
             {
                 node: parent,
                 listType: 'OL',
+                dataset: {},
+                format: {},
             },
         ];
 
@@ -162,14 +164,12 @@ describe('handleListItem', () => {
                 {
                     node: parent,
                     listType: 'UL',
-                    format: {},
-                    dataset: {},
                 },
             ],
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(4);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.segment,
@@ -185,7 +185,13 @@ describe('handleListItem', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItem,
-            listItem.levels[0],
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            [listItemMetadataFormatHandler.apply],
+            listItem.levels[0].dataset,
             context
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
@@ -288,7 +294,6 @@ describe('handleListItem without format handler', () => {
             },
             formatApplierOverride: {
                 listItemThread: null,
-                listItemMetadata: null,
             },
         });
 
@@ -355,14 +360,12 @@ describe('handleListItem without format handler', () => {
                 {
                     node: parent,
                     listType: 'OL',
-                    format: {},
-                    dataset: {},
                 },
             ],
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(4);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItemElement,
@@ -378,7 +381,13 @@ describe('handleListItem without format handler', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItem,
-            listItem.levels[0],
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            [listItemMetadataFormatHandler.apply],
+            listItem.levels[0].dataset,
             context
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
@@ -419,14 +428,12 @@ describe('handleListItem without format handler', () => {
                 {
                     node: parent,
                     listType: 'UL',
-                    format: {},
-                    dataset: {},
                 },
             ],
         });
         expect(handleList).toHaveBeenCalledTimes(1);
         expect(handleList).toHaveBeenCalledWith(document, parent, listItem, context, null);
-        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(3);
+        expect(applyFormat.applyFormat).toHaveBeenCalledTimes(4);
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItemElement,
@@ -442,7 +449,13 @@ describe('handleListItem without format handler', () => {
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
             context.formatAppliers.listItem,
-            listItem.levels[0],
+            listItem.levels[0].format,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalledWith(
+            parent.firstChild as HTMLElement,
+            [listItemMetadataFormatHandler.apply],
+            listItem.levels[0].dataset,
             context
         );
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);

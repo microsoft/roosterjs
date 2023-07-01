@@ -304,11 +304,15 @@ describe('indent', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const listItem = createListItem([
-            createListLevel('OL', {
-                startNumberOverride: 2,
-                orderedStyleType: 3,
-                unorderedStyleType: 4,
-            }),
+            createListLevel(
+                'OL',
+                {
+                    startNumberOverride: 2,
+                },
+                {
+                    editingInfo: JSON.stringify({ orderedStyleType: 3, unorderedStyleType: 4 }),
+                }
+            ),
         ]);
 
         para1.segments.push(text1);
@@ -332,14 +336,17 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    orderedStyleType: 3,
+                                    unorderedStyleType: 4,
+                                }),
+                            },
                             format: {
                                 startNumberOverride: 2,
-                                orderedStyleType: 3,
-                                unorderedStyleType: 4,
                             },
                         },
-                        { listType: 'OL' },
+                        { listType: 'OL', dataset: {}, format: {} },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -848,11 +855,13 @@ describe('outdent', () => {
         const para1 = createParagraph();
         const text1 = createText('test1');
         const listItem = createListItem([
-            createListLevel('OL', {
-                startNumberOverride: 1,
-                orderedStyleType: 2,
-                unorderedStyleType: 3,
-            }),
+            createListLevel(
+                'OL',
+                {
+                    startNumberOverride: 1,
+                },
+                { editingInfo: JSON.stringify({ orderedStyleType: 2, unorderedStyleType: 3 }) }
+            ),
             createListLevel('UL'),
         ]);
 
@@ -871,11 +880,14 @@ describe('outdent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            dataset: {},
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    orderedStyleType: 2,
+                                    unorderedStyleType: 3,
+                                }),
+                            },
                             format: {
                                 startNumberOverride: 1,
-                                orderedStyleType: 2,
-                                unorderedStyleType: 3,
                             },
                         },
                     ],
