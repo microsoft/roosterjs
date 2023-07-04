@@ -1,289 +1,150 @@
-import { adjustWordSelection } from '../../../lib/modelApi/selection/adjustWordSelection';
-import {
-    ContentModelBlock,
-    ContentModelDocument,
-    ContentModelSegment,
-} from 'roosterjs-content-model-types';
+import { adjustTrailingSpaceSelection } from '../../../lib/publicApi/utils/adjustTrailingSpaceSelection';
+import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 
-const defaultMarker: ContentModelSegment = {
-    segmentType: 'SelectionMarker',
-    format: {},
-    isSelected: true,
-};
-
-describe('adjustWordSelection', () => {
+describe('adjustTrailingSpaceSelection', () => {
     function runTest(
-        model: ContentModelDocument,
-        result: ContentModelSegment[],
-        modelResult: ContentModelDocument
+        segment: ContentModelSegment,
+        paragraph: ContentModelParagraph,
+        result: [ContentModelSegment | null, ContentModelParagraph | null]
     ) {
-        const adjustedResult = adjustWordSelection(model, defaultMarker);
+        const adjustedResult = adjustTrailingSpaceSelection(segment, paragraph);
         expect(adjustedResult).toEqual(result);
-        expect(model).toEqual(modelResult);
-        expect(adjustedResult).toContain(defaultMarker);
     }
 
-    describe('Apply format -', () => {
-        it('Adjust No Words', () => {
-            //'|'
-            const model: ContentModelDocument = {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [defaultMarker],
-                    },
-                ],
+    describe('Adjust trailing space -', () => {
+        it('No trailing space', () => {
+            const segment: ContentModelSegment = {
+                segmentType: 'Text',
+                text: 'test',
+                format: {},
             };
-            runTest(model, [defaultMarker], {
-                blockGroupType: 'Document',
-                blocks: [
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
                     {
-                        blockType: 'Paragraph',
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
                         format: {},
-                        segments: [defaultMarker],
                     },
+                    segment,
                 ],
-            });
+                format: {},
+            };
+            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
+                segment,
+                paragraph,
+            ];
+            runTest(segment, paragraph, result);
         });
 
-        it('Adjust Spaces', () => {
-            //'    |    '
-            const model: ContentModelDocument = {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: '    ',
-                                format: {},
-                            },
-                            defaultMarker,
-                            {
-                                segmentType: 'Text',
-                                text: '    ',
-                                format: {},
-                            },
-                        ],
-                    },
-                ],
+        it('With trailing space', () => {
+            const segment: ContentModelSegment = {
+                segmentType: 'Text',
+                text: 'test.     ',
+                format: {},
             };
-            runTest(model, [defaultMarker], {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: '    ',
-                                format: {},
-                            },
-                            defaultMarker,
-                            {
-                                segmentType: 'Text',
-                                text: '    ',
-                                format: {},
-                            },
-                        ],
-                    },
-                ],
-            });
-        });
-
-        it('Adjust Single Word - Before', () => {
-            //'|Word'
-            const model: ContentModelDocument = {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            defaultMarker,
-                            {
-                                segmentType: 'Text',
-                                text: 'Word',
-                                format: {},
-                            },
-                        ],
-                    },
-                ],
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [segment],
+                format: {},
             };
-            runTest(model, [defaultMarker], {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            defaultMarker,
-                            {
-                                segmentType: 'Text',
-                                text: 'Word',
-                                format: {},
-                            },
-                        ],
-                    },
-                ],
-            });
-        });
-
-        it('Adjust Single Word - Middle', () => {
-            //'Wo|rd'
-            const result: ContentModelSegment[] = [
+            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
                 {
                     segmentType: 'Text',
-                    text: 'Wo',
+                    text: 'test.',
                     format: {},
                 },
-                defaultMarker,
                 {
-                    segmentType: 'Text',
-                    text: 'rd',
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test.',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: '     ',
+                            format: {},
+                        },
+                    ],
                     format: {},
                 },
             ];
-            runTest(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            segments: result,
-                        },
-                    ],
-                },
-                result,
-                {
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            segments: result,
-                        },
-                    ],
-                }
-            );
+            runTest(segment, paragraph, result);
         });
 
-        it('Adjust Single Word - After', () => {
-            //'Word|'
-            const model: ContentModelDocument = {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Paragraph',
-                        format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'Word',
-                                format: {},
-                            },
-                            defaultMarker,
-                        ],
-                    },
-                ],
+        it('Formatted text with trailing space', () => {
+            const segment: ContentModelSegment = {
+                segmentType: 'Text',
+                text: 'test.',
+                format: { underline: true },
             };
-            runTest(model, [defaultMarker], {
-                blockGroupType: 'Document',
-                blocks: [
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
                     {
-                        blockType: 'Paragraph',
+                        segmentType: 'Text',
+                        text: 'test.',
+                        format: { underline: true },
+                    },
+                    {
+                        segmentType: 'Text',
+                        text: '     ',
                         format: {},
-                        segments: [
-                            {
-                                segmentType: 'Text',
-                                text: 'Word',
-                                format: {},
-                            },
-                            defaultMarker,
-                        ],
                     },
                 ],
-            });
+                format: {},
+            };
+            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
+                segment,
+                paragraph,
+            ];
+            runTest(segment, paragraph, result);
         });
 
-        it('Adjust Multiple Words', () => {
-            //'Subject Ve|rb Object'
-            const result: ContentModelSegment[] = [
+        it('Formatted trailing space segment', () => {
+            const segment: ContentModelSegment = {
+                segmentType: 'Text',
+                text: '     ',
+                format: {},
+            };
+            const paragraph: ContentModelParagraph = {
+                blockType: 'Paragraph',
+                segments: [
+                    {
+                        segmentType: 'Text',
+                        text: 'test.',
+                        format: { underline: true, fontWeight: 'bold' },
+                    },
+                    {
+                        segmentType: 'Text',
+                        text: '     ',
+                        format: {},
+                    },
+                ],
+                format: {},
+            };
+            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
                 {
                     segmentType: 'Text',
-                    text: 'Ve',
+                    text: '     ',
                     format: {},
                 },
-                defaultMarker,
                 {
-                    segmentType: 'Text',
-                    text: 'rb',
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test.',
+                            format: { underline: true, fontWeight: 'bold' },
+                        },
+                        segment,
+                    ],
                     format: {},
                 },
             ];
-            runTest(
-                {
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'Subject Ve',
-                                    format: {},
-                                },
-                                defaultMarker,
-                                {
-                                    segmentType: 'Text',
-                                    text: 'rb Object',
-                                    format: {},
-                                },
-                            ],
-                        },
-                    ],
-                },
-                result,
-                {
-                    blockGroupType: 'Document',
-                    blocks: [
-                        {
-                            blockType: 'Paragraph',
-                            format: {},
-                            segments: [
-                                {
-                                    segmentType: 'Text',
-                                    text: 'Subject ',
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: 'Ve',
-                                    format: {},
-                                },
-                                defaultMarker,
-                                {
-                                    segmentType: 'Text',
-                                    text: 'rb',
-                                    format: {},
-                                },
-                                {
-                                    segmentType: 'Text',
-                                    text: ' Object',
-                                    format: {},
-                                },
-                            ],
-                        },
-                    ],
-                }
-            );
+            runTest(segment, paragraph, result);
         });
     });
 });

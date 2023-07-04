@@ -1,5 +1,5 @@
-import { createText } from 'roosterjs-content-model-dom';
 import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
+import { createText } from 'roosterjs-content-model-dom';
 
 /**
  * Remove trailing space from the selection
@@ -17,11 +17,11 @@ export function adjustTrailingSpaceSelection(
             segment.text = text;
             const trailingSpacingSegment = createText(trailingSpacing);
             trailingSpacingSegment.format = {};
-            trailingSpacingSegment.isSelected = false;
             paragraph.segments.push(trailingSpacingSegment);
         } else {
             const trailingSpacingSegment = paragraph.segments[paragraph.segments.length - 1];
             if (
+                segment === trailingSpacingSegment &&
                 trailingSpacingSegment.segmentType == 'Text' &&
                 trailingSpacingSegment.text.trim().length == 0
             ) {
