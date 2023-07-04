@@ -1,4 +1,4 @@
-import { adjustTrailingSpaceSelection } from '../../modelApi/selection/adjustTrailingSpaceSelection';
+import { adjustTrailingSpaceSelection } from './adjustTrailingSpaceSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
@@ -48,42 +48,42 @@ export function formatSegmentWithContentModel(
             }
         }
 
-        //When double click a word or sentence a trailing space will be selected as well, so separate the trailing space in another segment
-        //and only format the text
-        let formattedSegmentsAndParagraphs: [
-            ContentModelSegment,
-            ContentModelParagraph | null
-        ][] = [];
-        segmentAndParagraphs.forEach(([segment, paragraph]) => {
-            const segmentAndParagraph = adjustTrailingSpaceSelection(segment, paragraph);
-            if (segmentAndParagraph) {
-                formattedSegmentsAndParagraphs.push(segmentAndParagraph);
-            }
-        });
-
         const formatsAndSegments: [
             ContentModelSegmentFormat,
             ContentModelSegment | null,
             ContentModelParagraph | null
         ][] = pendingFormat
             ? [[pendingFormat, null, null]]
-            : formattedSegmentsAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
+            : segmentAndParagraphs.map(item => {
+                  return [item[0].format, item[0], item[1]];
+              });
 
+        // If multiple segments are selected, we ignore the check for the empty text segment asn return true directly
+        // Then only the result of segmentHasStyleCallback will be used to determine whether to turn on/off the style
         const isTurningOff = segmentHasStyleCallback
-            ? formatsAndSegments.every(([format, segment, paragraph]) =>
-                  segmentHasStyleCallback(format, segment, paragraph)
-              )
+            ? formatsAndSegments.every(([format, segment, paragraph]) => {
+                  if (
+                      formatsAndSegments.length == 1 ||
+                      segment?.segmentType != 'Text' ||
+                      segment.text.trim().length > 0
+                  ) {
+                      return segmentHasStyleCallback(format, segment, paragraph);
+                  } else {
+                      return true;
+                  }
+              })
             : false;
 
-        formatsAndSegments.forEach(([format, segment]) =>
-            toggleStyleCallback(format, !isTurningOff, segment)
-        );
+        formatsAndSegments.forEach(([format, segment, paragraph]) => {
+            toggleStyleCallback(format, !isTurningOff, segment);
+            adjustTrailingSpaceSelection(segment, paragraph);
+        });
 
         if (!pendingFormat && isCollapsedSelection) {
             const pos = editor.getFocusedPosition();
 
             if (pos) {
-                setPendingFormat(editor, formattedSegmentsAndParagraphs[0][0].format, pos);
+                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos);
             }
         }
 
