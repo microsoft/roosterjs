@@ -54,11 +54,9 @@ export function formatSegmentWithContentModel(
             ContentModelParagraph | null
         ][] = pendingFormat
             ? [[pendingFormat, null, null]]
-            : segmentAndParagraphs.map(item => {
-                  return [item[0].format, item[0], item[1]];
-              });
+            : segmentAndParagraphs.map(item => [item[0].format, item[0], item[1]]);
 
-        // If multiple segments are selected, we ignore the check for the empty text segment asn return true directly
+        // If multiple segments are selected, we ignore the check for the empty text segment and return true directly
         // Then only the result of segmentHasStyleCallback will be used to determine whether to turn on/off the style
         const isTurningOff = segmentHasStyleCallback
             ? formatsAndSegments.every(([format, segment, paragraph]) => {
