@@ -42,7 +42,6 @@ export { SpacingFormat } from './format/formatParts/SpacingFormat';
 export { TableLayoutFormat } from './format/formatParts/TableLayoutFormat';
 export { LinkFormat } from './format/formatParts/LinkFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
-export { ZoomScaleFormat } from './format/formatParts/ZoomScaleFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
@@ -114,12 +113,7 @@ export {
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';
-export {
-    DomToModelSelectionContext,
-    DomToModelRegularSelection,
-    DomToModelTableSelection,
-    DomToModelImageSelection,
-} from './context/DomToModelSelectionContext';
+export { DomToModelSelectionContext } from './context/DomToModelSelectionContext';
 export { EditorContext } from './context/EditorContext';
 export {
     DomToModelFormatContext,

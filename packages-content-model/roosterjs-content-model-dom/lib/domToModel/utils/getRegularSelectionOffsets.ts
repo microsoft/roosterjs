@@ -1,4 +1,5 @@
 import { DomToModelContext } from 'roosterjs-content-model-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Get offset numbers of a regular (range based) selection.
@@ -11,14 +12,11 @@ export function getRegularSelectionOffsets(
     context: DomToModelContext,
     currentContainer: Node
 ): [number, number] {
-    let startOffset =
-        context.regularSelection?.startContainer == currentContainer
-            ? context.regularSelection.startOffset!
-            : -1;
-    let endOffset =
-        context.regularSelection?.endContainer == currentContainer
-            ? context.regularSelection.endOffset!
-            : -1;
+    const range =
+        context.rangeEx?.type == SelectionRangeTypes.Normal ? context.rangeEx.ranges[0] : null;
+
+    let startOffset = range?.startContainer == currentContainer ? range.startOffset : -1;
+    let endOffset = range?.endContainer == currentContainer ? range.endOffset! : -1;
 
     return [startOffset, endOffset];
 }
