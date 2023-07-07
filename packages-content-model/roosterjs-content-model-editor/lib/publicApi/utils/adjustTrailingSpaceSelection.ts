@@ -9,7 +9,7 @@ import { createText } from 'roosterjs-content-model-dom';
 export function adjustTrailingSpaceSelection(
     segment: ContentModelSegment | null,
     paragraph: ContentModelParagraph | null,
-    isSegmentATrailingSpace: boolean
+    isTrailingSpace: boolean
 ): [ContentModelSegment | null, ContentModelParagraph | null] {
     if (segment && segment.segmentType == 'Text' && paragraph) {
         const text = segment.text.trimRight();
@@ -21,7 +21,7 @@ export function adjustTrailingSpaceSelection(
             paragraph.segments.push(trailingSpacingSegment);
         } else {
             const trailingSpacingSegment = paragraph.segments[paragraph.segments.length - 1];
-            if (isSegmentATrailingSpace) {
+            if (isTrailingSpace) {
                 trailingSpacingSegment.format = {};
             }
         }
