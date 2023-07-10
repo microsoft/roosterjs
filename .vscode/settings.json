@@ -73,6 +73,7 @@
         "textinput",
         "Toggleable",
         "toposort",
+        "Trailingspace",
         "unlocalized",
         "usemap",
         "valign",

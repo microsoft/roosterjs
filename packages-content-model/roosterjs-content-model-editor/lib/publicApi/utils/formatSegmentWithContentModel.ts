@@ -37,7 +37,6 @@ export function formatSegmentWithContentModel(
 
         if (isCollapsedSelection) {
             const para = segmentAndParagraphs[0][1];
-
             segmentAndParagraphs = adjustWordSelection(model, segmentAndParagraphs[0][0]).map(x => [
                 x,
                 para,
@@ -69,7 +68,9 @@ export function formatSegmentWithContentModel(
             : false;
 
         formatsAndSegments.forEach(([format, segment, paragraph]) => {
-            toggleStyleCallback(format, !isTurningOff, segment);
+            if (segment?.isSelected) {
+                toggleStyleCallback(format, !isTurningOff, segment);
+            }
         });
 
         if (!pendingFormat && isCollapsedSelection) {
