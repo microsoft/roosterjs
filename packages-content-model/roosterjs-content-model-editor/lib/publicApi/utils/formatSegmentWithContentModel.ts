@@ -46,6 +46,10 @@ export function formatSegmentWithContentModel(
             if (segmentAndParagraphs.length > 1) {
                 isCollapsedSelection = false;
             }
+        } else {
+            segmentAndParagraphs.map(([segment, paragraph]) => {
+                return adjustTrailingSpaceSelection(segment, paragraph);
+            });
         }
 
         const formatsAndSegments: [
@@ -60,17 +64,12 @@ export function formatSegmentWithContentModel(
         // Then only the result of segmentHasStyleCallback will be used to determine whether to turn on/off the style
         const isTurningOff = segmentHasStyleCallback
             ? formatsAndSegments.every(([format, segment, paragraph]) => {
-                  if (!isATrailingSpace(segment, paragraph)) {
-                      return segmentHasStyleCallback(format, segment, paragraph);
-                  } else {
-                      return true;
-                  }
+                  return segmentHasStyleCallback(format, segment, paragraph);
               })
             : false;
 
         formatsAndSegments.forEach(([format, segment, paragraph]) => {
             toggleStyleCallback(format, !isTurningOff, segment);
-            adjustTrailingSpaceSelection(segment, paragraph, isATrailingSpace(segment, paragraph));
         });
 
         if (!pendingFormat && isCollapsedSelection) {
@@ -89,19 +88,3 @@ export function formatSegmentWithContentModel(
         }
     });
 }
-
-const isATrailingSpace = (
-    segment: ContentModelSegment | null,
-    paragraph: ContentModelParagraph | null
-) => {
-    if (segment && paragraph && segment.segmentType === 'Text') {
-        return (
-            segment.text.trim().length === 0 &&
-            paragraph.segments.length > 0 &&
-            paragraph.segments[paragraph.segments.length - 1] === segment &&
-            !!paragraph.segments[paragraph.segments.length - 2].isSelected
-        );
-    } else {
-        return false;
-    }
-};

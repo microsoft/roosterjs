@@ -8,8 +8,7 @@ import { createText } from 'roosterjs-content-model-dom';
  */
 export function adjustTrailingSpaceSelection(
     segment: ContentModelSegment | null,
-    paragraph: ContentModelParagraph | null,
-    isTrailingSpace: boolean
+    paragraph: ContentModelParagraph | null
 ): [ContentModelSegment | null, ContentModelParagraph | null] {
     if (segment && segment.segmentType == 'Text' && paragraph) {
         const text = segment.text.trimRight();
@@ -21,10 +20,26 @@ export function adjustTrailingSpaceSelection(
             paragraph.segments.push(trailingSpacingSegment);
         } else {
             const trailingSpacingSegment = paragraph.segments[paragraph.segments.length - 1];
-            if (isTrailingSpace) {
+            if (isATrailingSpace(segment, paragraph)) {
                 trailingSpacingSegment.format = {};
             }
         }
     }
     return [segment, paragraph];
 }
+
+const isATrailingSpace = (
+    segment: ContentModelSegment | null,
+    paragraph: ContentModelParagraph | null
+) => {
+    if (segment && paragraph && segment.segmentType === 'Text') {
+        return (
+            segment.text.trim().length === 0 &&
+            paragraph.segments.length > 0 &&
+            paragraph.segments[paragraph.segments.length - 1] === segment &&
+            !!paragraph.segments[paragraph.segments.length - 2].isSelected
+        );
+    } else {
+        return false;
+    }
+};
