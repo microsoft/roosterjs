@@ -74,9 +74,15 @@ export default function paste(
             ...event.domToModelOption,
             disableCacheElement: true,
             additionalFormatParsers: {
-                ...event.domToModelOption,
-                block: [...(applyCurrentFormat ? [blockElementParser] : [])],
-                listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
+                ...event.domToModelOption.additionalFormatParsers,
+                block: [
+                    ...(event.domToModelOption.additionalFormatParsers?.block || []),
+                    ...(applyCurrentFormat ? [blockElementParser] : []),
+                ],
+                listLevel: [
+                    ...(event.domToModelOption.additionalFormatParsers?.listLevel || []),
+                    ...(applyCurrentFormat ? [blockElementParser] : []),
+                ],
             },
         }
     );
