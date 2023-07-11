@@ -24,6 +24,7 @@ export default function insertTable(
     table.cellPadding = '1';
     for (let i = 0; i < rows; i++) {
         let tr = document.createElement('tr') as HTMLTableRowElement;
+        tr.style.verticalAlign = 'top';
         table.appendChild(tr);
         for (let j = 0; j < columns; j++) {
             let td = document.createElement('td') as HTMLTableCellElement;

@@ -23,6 +23,7 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
+    verticalAlign: 'top',
 };
 
 /**
@@ -47,6 +48,7 @@ export function applyTableFormat(
         delete table.cachedElement;
 
         clearCache(rows);
+        setRowAlignment(rows, effectiveMetadata);
         formatBorders(rows, effectiveMetadata);
         formatBackgroundColors(rows, effectiveMetadata, bgColorOverrides);
         setFirstColumnFormat(rows, effectiveMetadata, bgColorOverrides);
@@ -63,6 +65,14 @@ function clearCache(rows: ContentModelTableRow[]) {
         });
 
         delete row.cachedElement;
+    });
+}
+
+function setRowAlignment(rows: ContentModelTableRow[], format: TableMetadataFormat) {
+    rows.forEach(row => {
+        row.cells.forEach(cell => {
+            cell.format.verticalAlign = format.verticalAlign ?? 'top';
+        });
     });
 }
 
