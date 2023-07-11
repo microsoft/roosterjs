@@ -47,7 +47,7 @@ export function formatSegmentWithContentModel(
             }
         } else {
             segmentAndParagraphs.map(([segment, paragraph]) => {
-                return adjustTrailingSpaceSelection(segment, paragraph);
+                adjustTrailingSpaceSelection(segment, paragraph);
             });
         }
 
@@ -68,9 +68,7 @@ export function formatSegmentWithContentModel(
             : false;
 
         formatsAndSegments.forEach(([format, segment, paragraph]) => {
-            if (segment?.isSelected) {
-                toggleStyleCallback(format, !isTurningOff, segment);
-            }
+            toggleStyleCallback(format, !isTurningOff, segment);
         });
 
         if (!pendingFormat && isCollapsedSelection) {

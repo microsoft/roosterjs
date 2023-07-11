@@ -21,14 +21,13 @@ export function adjustTrailingSpaceSelection(
             isTrailingspace(segment, paragraph)
         ) {
             segment.format = lastTextSegment.format;
-            segment.isSelected = false;
+            paragraph.segments.pop();
         } else if (index) {
             const text = segment.text.trimRight();
             const trailingSpacing = segment.text.substring(text.length);
             if (text && trailingSpacing) {
                 segment.text = text;
                 const trailingSpacingSegment = createText(trailingSpacing);
-                trailingSpacingSegment.isSelected = false;
                 paragraph.segments.push(trailingSpacingSegment);
             }
         }
