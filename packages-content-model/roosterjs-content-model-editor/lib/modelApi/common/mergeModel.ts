@@ -131,6 +131,9 @@ function mergeParagraph(
 
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
+        if (newParagraph.segmentFormat) {
+            delete newParagraph.segmentFormat;
+        }
     }
 }
 
