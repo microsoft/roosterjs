@@ -172,7 +172,6 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
             });
         }
     },
-    defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
 /**
