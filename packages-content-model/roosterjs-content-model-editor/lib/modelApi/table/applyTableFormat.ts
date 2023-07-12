@@ -48,12 +48,9 @@ export function applyTableFormat(
         delete table.cachedElement;
 
         clearCache(rows);
-        setRowAlignment(rows, effectiveMetadata);
-        formatBorders(rows, effectiveMetadata);
-        formatBackgroundColors(rows, effectiveMetadata, bgColorOverrides);
+        formatCells(rows, effectiveMetadata, bgColorOverrides);
         setFirstColumnFormat(rows, effectiveMetadata, bgColorOverrides);
         setHeaderRowFormat(rows, effectiveMetadata, bgColorOverrides);
-
         return effectiveMetadata;
     });
 }
@@ -65,14 +62,6 @@ function clearCache(rows: ContentModelTableRow[]) {
         });
 
         delete row.cachedElement;
-    });
-}
-
-function setRowAlignment(rows: ContentModelTableRow[], format: TableMetadataFormat) {
-    rows.forEach(row => {
-        row.cells.forEach(cell => {
-            cell.format.verticalAlign = format.verticalAlign ?? 'top';
-        });
     });
 }
 
@@ -160,16 +149,29 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
     [TableBorderFormat.CLEAR]: () => [true, true, true, true],
 };
 
-function formatBorders(rows: ContentModelTableRow[], format: TableMetadataFormat) {
+/*
+ * Apply vertical align, borders, and background color to all cells in the table
+ */
+function formatCells(
+    rows: ContentModelTableRow[],
+    format: TableMetadataFormat,
+    bgColorOverrides: boolean[][]
+) {
+    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+
     rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, cellIndex) => {
+        row.cells.forEach((cell, colIndex) => {
+            // Format Vertical Align
+            cell.format.verticalAlign = format.verticalAlign ?? 'top';
+
+            // Format Borders
             const transparentBorderMatrix = BorderFormatters[
                 format.tableBorderFormat as TableBorderFormat
             ]({
                 firstRow: rowIndex === 0,
                 lastRow: rowIndex === rows.length - 1,
-                firstColumn: cellIndex === 0,
-                lastColumn: cellIndex === row.cells.length - 1,
+                firstColumn: colIndex === 0,
+                lastColumn: colIndex === row.cells.length - 1,
             });
 
             const formatColor = [
@@ -188,19 +190,8 @@ function formatBorders(rows: ContentModelTableRow[], format: TableMetadataFormat
                     color: borderColor,
                 });
             });
-        });
-    });
-}
 
-function formatBackgroundColors(
-    rows: ContentModelTableRow[],
-    format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
-) {
-    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
-
-    rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, colIndex) => {
+            // Format Background Color
             if (!bgColorOverrides[rowIndex][colIndex]) {
                 const color =
                     hasBandedRows || hasBandedColumns
@@ -221,24 +212,26 @@ function setFirstColumnFormat(
     format: Partial<TableMetadataFormat>,
     bgColorOverrides: boolean[][]
 ) {
-    rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, cellIndex) => {
-            if (format.hasFirstColumn && cellIndex === 0) {
-                cell.isHeader = true;
+    if (format.hasFirstColumn) {
+        rows.forEach((row, rowIndex) => {
+            row.cells.forEach((cell, cellIndex) => {
+                if (cellIndex === 0) {
+                    cell.isHeader = true;
 
-                if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
-                    setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(cell, null /*color*/);
-                }
+                    if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
+                        setBorderColor(cell.format, 'borderTop');
+                        setTableCellBackgroundColor(cell, null /*color*/);
+                    }
 
-                if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
-                    setBorderColor(cell.format, 'borderBottom');
+                    if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
+                        setBorderColor(cell.format, 'borderBottom');
+                    }
+                } else {
+                    cell.isHeader = false;
                 }
-            } else {
-                cell.isHeader = false;
-            }
+            });
         });
-    });
+    }
 }
 
 function setHeaderRowFormat(
