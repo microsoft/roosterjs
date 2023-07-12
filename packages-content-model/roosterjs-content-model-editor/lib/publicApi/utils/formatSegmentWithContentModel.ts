@@ -46,9 +46,7 @@ export function formatSegmentWithContentModel(
                 isCollapsedSelection = false;
             }
         } else {
-            segmentAndParagraphs.map(([segment, paragraph]) => {
-                adjustTrailingSpaceSelection(segment, paragraph);
-            });
+            segmentAndParagraphs = adjustTrailingSpaceSelection(segmentAndParagraphs);
         }
 
         const formatsAndSegments: [

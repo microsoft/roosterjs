@@ -3,148 +3,352 @@ import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-mo
 
 describe('adjustTrailingSpaceSelection', () => {
     function runTest(
-        segment: ContentModelSegment,
-        paragraph: ContentModelParagraph,
-        result: [ContentModelSegment | null, ContentModelParagraph | null]
+        segmentAndParagraphs: [ContentModelSegment, ContentModelParagraph | null][],
+        result: [ContentModelSegment | null, ContentModelParagraph | null][]
     ) {
-        const adjustedResult = adjustTrailingSpaceSelection(segment, paragraph);
+        const adjustedResult = adjustTrailingSpaceSelection(segmentAndParagraphs);
         expect(adjustedResult).toEqual(result);
     }
 
     describe('Adjust trailing space -', () => {
         it('No trailing space', () => {
             const segment: ContentModelSegment = {
+                format: { underline: true },
+                isSelected: true,
                 segmentType: 'Text',
                 text: 'test',
-                format: {},
-            };
-            const paragraph: ContentModelParagraph = {
-                blockType: 'Paragraph',
-                segments: [
-                    {
-                        segmentType: 'SelectionMarker',
-                        isSelected: true,
-                        format: {},
-                    },
-                    segment,
-                ],
-                format: {},
-            };
-            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
-                segment,
-                paragraph,
-            ];
-            runTest(segment, paragraph, result);
-        });
-
-        it('With trailing space', () => {
-            const segment: ContentModelSegment = {
-                segmentType: 'Text',
-                text: 'test.     ',
-                format: {},
             };
             const paragraph: ContentModelParagraph = {
                 blockType: 'Paragraph',
                 segments: [segment],
                 format: {},
             };
-            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
-                {
-                    segmentType: 'Text',
-                    text: 'test.',
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test.',
-                            format: {},
-                        },
-                        {
-                            segmentType: 'Text',
-                            text: '     ',
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                },
+            const segmentAndParagraphs: [ContentModelSegment, ContentModelParagraph | null][] = [
+                [segment, paragraph],
             ];
-            runTest(segment, paragraph, result);
+            const result: [ContentModelSegment, ContentModelParagraph | null][] = [
+                [segment, paragraph],
+            ];
+            runTest(segmentAndParagraphs, result);
         });
 
-        it('Formatted text with trailing space', () => {
-            const segment: ContentModelSegment = {
-                segmentType: 'Text',
-                text: 'test.',
-                format: { underline: true },
-            };
-            const paragraph: ContentModelParagraph = {
-                blockType: 'Paragraph',
-                segments: [
+        it('With trailing space', () => {
+            const segmentAndParagraphs: [ContentModelSegment, ContentModelParagraph | null][] = [
+                [
                     {
                         segmentType: 'Text',
-                        text: 'test.',
-                        format: { underline: true },
+                        text: 'test.      ',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
                     },
                     {
-                        segmentType: 'Text',
-                        text: '     ',
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test.',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '      ',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
                         format: {},
                     },
                 ],
-                format: {},
-            };
-            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
-                segment,
-                paragraph,
             ];
-            runTest(segment, paragraph, result);
-        });
-
-        it('Formatted trailing space segment', () => {
-            const segment: ContentModelSegment = {
-                segmentType: 'Text',
-                text: '     ',
-                format: {},
-            };
-            const paragraph: ContentModelParagraph = {
-                blockType: 'Paragraph',
-                segments: [
+            const result: [ContentModelSegment | null, ContentModelParagraph | null][] = [
+                [
                     {
                         segmentType: 'Text',
                         text: 'test.',
-                        format: { underline: true, fontWeight: 'bold' },
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
                     },
                     {
-                        segmentType: 'Text',
-                        text: '     ',
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test.',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '      ',
+                                format: {},
+                                isSelected: true,
+                            },
+                        ],
                         format: {},
                     },
                 ],
-                format: {},
-            };
-            const result: [ContentModelSegment | null, ContentModelParagraph | null] = [
-                {
-                    segmentType: 'Text',
-                    text: '     ',
-                    format: {},
-                },
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test.',
-                            format: { underline: true, fontWeight: 'bold' },
-                        },
-                        segment,
-                    ],
-                    format: {},
-                },
             ];
-            runTest(segment, paragraph, result);
+            runTest(segmentAndParagraphs, result);
+        });
+
+        it('Only trailing space selected', () => {
+            const segmentAndParagraphs: [
+                ContentModelSegment | null,
+                ContentModelParagraph | null
+            ][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: '    ',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test. ',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '    ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            const result: [ContentModelSegment | null, ContentModelParagraph | null][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: '    ',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test. ',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '    ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            runTest(segmentAndParagraphs, result);
+        });
+
+        it('Space between two words', () => {
+            const segmentAndParagraphs: [
+                ContentModelSegment | null,
+                ContentModelParagraph | null
+            ][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'aaaaa   bbbbb',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaaaa   bbbbb',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            const result: [ContentModelSegment | null, ContentModelParagraph | null][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'aaaaa   bbbbb',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'aaaaa   bbbbb',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            runTest(segmentAndParagraphs, result);
+        });
+
+        it('Multiline selection', () => {
+            const segmentAndParagraphs: [
+                ContentModelSegment | null,
+                ContentModelParagraph | null
+            ][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'test.       ',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test.       ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'multi. line.     ',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'multi. line.     ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            const result: [ContentModelSegment | null, ContentModelParagraph | null][] = [
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'test.',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test.',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '       ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+                [
+                    {
+                        segmentType: 'Text',
+                        text: 'multi. line.',
+                        format: {
+                            underline: true,
+                        },
+                        isSelected: true,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'multi. line.',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: '     ',
+                                format: {
+                                    underline: true,
+                                },
+                                isSelected: true,
+                            },
+                        ],
+                        format: {},
+                    },
+                ],
+            ];
+            runTest(segmentAndParagraphs, result);
         });
     });
 });

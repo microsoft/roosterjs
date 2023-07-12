@@ -7,42 +7,36 @@ import { createText } from 'roosterjs-content-model-dom';
  * @internal
  */
 export function adjustTrailingSpaceSelection(
-    segment: ContentModelSegment,
-    paragraph: ContentModelParagraph | null
-): [ContentModelSegment, ContentModelParagraph | null] {
-    if (segment.segmentType == 'Text' && paragraph) {
-        const index = paragraph?.segments.indexOf(segment) == paragraph?.segments.length - 1;
-        const lastTextSegment = paragraph?.segments[paragraph?.segments.length - 2];
-        if (
-            index &&
-            lastTextSegment &&
-            lastTextSegment.isSelected &&
-            lastTextSegment.segmentType === 'Text' &&
-            isTrailingspace(segment, paragraph)
-        ) {
-            segment.format = lastTextSegment.format;
-            paragraph.segments.pop();
-        } else if (index) {
-            const text = segment.text.trimRight();
-            const trailingSpacing = segment.text.substring(text.length);
-            if (text && trailingSpacing) {
-                segment.text = text;
-                const trailingSpacingSegment = createText(trailingSpacing);
-                paragraph.segments.push(trailingSpacingSegment);
+    segmentAndParagraphs: [ContentModelSegment, ContentModelParagraph | null][]
+): [ContentModelSegment, ContentModelParagraph | null][] {
+    let result: [ContentModelSegment, ContentModelParagraph | null][] = [];
+    const length = segmentAndParagraphs.length;
+
+    for (let j = length - 1; j >= 0; j--) {
+        const paragraph = segmentAndParagraphs[j][1];
+        const segmentLength = paragraph ? paragraph.segments.length : 0;
+        if (paragraph) {
+            for (let i = segmentLength - 1; i >= 0; i--) {
+                const seg = paragraph.segments[i];
+                if (seg.segmentType !== 'Text') {
+                    return segmentAndParagraphs;
+                } else if (seg.isSelected) {
+                    const text = seg.text;
+                    const newText = text.trimRight();
+                    if (text.length > newText.length && newText.length > 0) {
+                        seg.text = newText;
+                        const newSeg = createText(text.substring(newText.length), seg.format);
+                        newSeg.isSelected = true;
+                        paragraph.segments.splice(i + 1, 0, newSeg);
+                    }
+                    if (newText.length > 0 || i !== segmentLength - 1) {
+                        result = [...result, [seg, paragraph]];
+                    } else if (!paragraph.segments[i - 1].isSelected) {
+                        result = [...result, [seg, paragraph]];
+                    }
+                }
             }
         }
     }
-    return [segment, paragraph];
-}
-
-function isTrailingspace(segment: ContentModelSegment, paragraph: ContentModelParagraph | null) {
-    if (
-        segment.segmentType == 'Text' &&
-        segment.text.trim().length === 0 &&
-        paragraph &&
-        paragraph.segments.length > 0 &&
-        paragraph.segments[paragraph.segments.length - 1] === segment
-    ) {
-        return true;
-    }
+    return result;
 }
