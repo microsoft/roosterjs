@@ -1,7 +1,8 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
 import getFormatState from '../../../lib/publicApi/format/getFormatState';
-import { FormatState } from 'roosterjs-editor-types';
+import { createRange } from 'roosterjs-editor-dom';
+import { FormatState, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     createContentModelDocument,
@@ -46,7 +47,15 @@ describe('getFormatState', () => {
                 });
 
                 if (selectedNode) {
-                    context.selectionRootNode = selectedNode;
+                    context.rangeEx = {
+                        type: SelectionRangeTypes.Normal,
+                        ranges: [
+                            {
+                                commonAncestorContainer: selectedNode,
+                            } as any,
+                        ],
+                        areAllCollapsed: false,
+                    };
                 }
 
                 context.elementProcessors.child(model, editorDiv, context);

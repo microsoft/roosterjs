@@ -28,9 +28,13 @@ describe('End to end test for DOM => Model', () => {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(div1, context, {
-            disableCacheElement: true,
-        });
+        const model = domToContentModel(
+            div1,
+            {
+                disableCacheElement: true,
+            },
+            context
+        );
 
         expect(model).toEqual(expectedModel);
 

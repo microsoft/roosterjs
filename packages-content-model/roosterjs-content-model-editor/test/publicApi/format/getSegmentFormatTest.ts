@@ -34,27 +34,20 @@ describe('getSegmentFormat', () => {
                 editorDiv.innerHTML = html;
 
                 const selectedNode = editorDiv.querySelector('#' + selectedNodeId);
-                const context = createDomToModelContext(undefined, {
-                    ...(options || {}),
-                    selectionRange: selectedNode
+                const range =
+                    selectedNode &&
+                    createRange(selectedNode, PositionType.Begin, selectedNode, PositionType.End);
+                const context = createDomToModelContext(
+                    undefined,
+                    options,
+                    range
                         ? {
                               type: SelectionRangeTypes.Normal,
-                              ranges: [
-                                  createRange(
-                                      selectedNode,
-                                      PositionType.Begin,
-                                      selectedNode,
-                                      PositionType.End
-                                  ),
-                              ],
-                              areAllCollapsed: false,
+                              ranges: [range],
+                              areAllCollapsed: range.collapsed,
                           }
-                        : undefined,
-                });
-
-                if (selectedNode) {
-                    context.selectionRootNode = selectedNode;
-                }
+                        : undefined
+                );
 
                 context.elementProcessors.child(model, editorDiv, context);
 
