@@ -15,7 +15,6 @@ import {
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     cacheGetEventData,
     contains,
     getTagOfNode,
