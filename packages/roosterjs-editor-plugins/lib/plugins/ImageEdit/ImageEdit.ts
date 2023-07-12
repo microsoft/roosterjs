@@ -410,7 +410,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, false /* selectImage */);
+        this.setEditingImage(null, true /* selectImage */);
     };
     /**
      * Create editing wrapper for the image
@@ -480,6 +480,7 @@ export default class ImageEdit implements EditorPlugin {
             });
 
             this.shadowSpan.style.verticalAlign = 'bottom';
+            this.shadowSpan.style.fontSize = '24px';
 
             shadowRoot.appendChild(wrapper);
         }
