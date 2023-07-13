@@ -37,12 +37,13 @@ export default function setColor(
     adjustTextColor?: boolean,
     darkColorHandler?: DarkColorHandler | null
 ) {
-    color = typeof color == 'string' ? color : color.lightModeColor;
+    const lightColor = typeof color == 'string' ? color : color.lightModeColor;
+    const darkColor = typeof color == 'string' ? undefined : color.darkModeColor;
 
-    internalSetColor(element, isBackground, color, darkColorHandler);
+    internalSetColor(element, isBackground, lightColor, darkColorHandler, darkColor);
 
-    if (isBackground && adjustTextColor && color != TRANSPARENT) {
-        const lightness = calculateLightness(color);
+    if (isBackground && adjustTextColor && lightColor != TRANSPARENT) {
+        const lightness = calculateLightness(lightColor);
         const textColor =
             lightness < DARK_COLORS_LIGHTNESS
                 ? WHITE
@@ -85,14 +86,16 @@ function internalSetColor(
     element: HTMLElement,
     isBackground: boolean,
     color: string,
-    darkColorHandler?: DarkColorHandler | null
+    darkColorHandler?: DarkColorHandler | null,
+    darkColor?: string
 ) {
     const propName = getColorAttrName(isBackground, 'css');
 
     if (darkColorHandler) {
         color = darkColorHandler.registerColor(
             color,
-            false /*isDarkMode, since we are passing in a light mode color, so we should pass false here*/
+            false /*isDarkMode, since we are passing in a light mode color, so we should pass false here*/,
+            darkColor
         );
     }
 
