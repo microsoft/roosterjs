@@ -1,5 +1,4 @@
 import cloneCellStyles from '../../lib/table/cloneCellStyles';
-import { saveTableCellMetadata } from '../../lib/table/tableCellInfo';
 
 describe('cloneCellStyles', () => {
     function runTest(style: string) {
