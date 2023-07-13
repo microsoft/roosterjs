@@ -1,5 +1,6 @@
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
 import { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
+import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,
@@ -29,9 +30,11 @@ export function reducedModelChildProcessor(
     parent: ParentNode,
     context: FormatStateContext
 ) {
-    if (context.selectionRootNode) {
+    const selectionRootNode = getSelectionRootNode(context.rangeEx);
+
+    if (selectionRootNode) {
         if (!context.nodeStack) {
-            context.nodeStack = createNodeStack(parent, context.selectionRootNode);
+            context.nodeStack = createNodeStack(parent, selectionRootNode);
         }
 
         const stackChild = context.nodeStack.pop();

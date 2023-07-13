@@ -17,7 +17,6 @@ describe('domToContentModel', () => {
                 child: childProcessor,
             },
             defaultStyles: {},
-            zoomScaleFormat: {},
             segmentFormat: {},
         } as any) as DomToModelContext;
 
@@ -32,7 +31,7 @@ describe('domToContentModel', () => {
                 fontSize: '10pt',
             },
         };
-        const model = domToContentModel(rootElement, editorContext, options);
+        const model = domToContentModel(rootElement, options, editorContext);
         const result: ContentModelDocument = {
             blockGroupType: 'Document',
             blocks: [],
@@ -45,7 +44,8 @@ describe('domToContentModel', () => {
         expect(createDomToModelContext.createDomToModelContext).toHaveBeenCalledTimes(1);
         expect(createDomToModelContext.createDomToModelContext).toHaveBeenCalledWith(
             editorContext,
-            options
+            options,
+            undefined
         );
         expect(elementProcessor).not.toHaveBeenCalled();
         expect(childProcessor).toHaveBeenCalledTimes(1);
