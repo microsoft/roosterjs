@@ -220,7 +220,7 @@ describe('ImageEdit | rotate and flip', () => {
         editor.select(image);
         plugin.setEditingImage(image, ImageEditOperation.Resize);
         expect(editor.getContent()).toBe(
-            '<span style="vertical-align: bottom;"><img id="IMAGE_ID" src="test"></span>'
+            '<span style="vertical-align: bottom; font-size: 24px;"><img id="IMAGE_ID" src="test"></span>'
         );
     });
 });
