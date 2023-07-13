@@ -26,6 +26,11 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     verticalAlign: 'top',
 };
 
+type MetaOverrides = {
+    bgColorOverrides: boolean[][];
+    vAlignOverrides: boolean[][];
+};
+
 /**
  * @internal
  */
@@ -44,13 +49,16 @@ export function applyTableFormat(
         };
 
         const bgColorOverrides = updateBgColorOverrides(rows, !keepCellShade);
+        const vAlignOverrides = updateVAlignOverrides(rows);
+
+        const metaOverrides: MetaOverrides = { bgColorOverrides, vAlignOverrides };
 
         delete table.cachedElement;
 
         clearCache(rows);
-        formatCells(rows, effectiveMetadata, bgColorOverrides);
-        setFirstColumnFormat(rows, effectiveMetadata, bgColorOverrides);
-        setHeaderRowFormat(rows, effectiveMetadata, bgColorOverrides);
+        formatCells(rows, effectiveMetadata, metaOverrides);
+        setFirstColumnFormat(rows, effectiveMetadata, metaOverrides);
+        setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
         return effectiveMetadata;
     });
 }
@@ -82,6 +90,25 @@ function updateBgColorOverrides(rows: ContentModelTableRow[], forceClear: boolea
                     currentRow.push(!!metadata?.bgColorOverride);
                 }
 
+                return metadata;
+            });
+        });
+    });
+
+    return result;
+}
+
+function updateVAlignOverrides(rows: ContentModelTableRow[]): boolean[][] {
+    const result: boolean[][] = [];
+
+    rows.forEach(row => {
+        const currentRow: boolean[] = [];
+
+        result.push(currentRow);
+
+        row.cells.forEach(cell => {
+            updateTableCellMetadata(cell, metadata => {
+                currentRow.push(!!metadata?.vAlignOverride);
                 return metadata;
             });
         });
@@ -155,15 +182,12 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
 function formatCells(
     rows: ContentModelTableRow[],
     format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
+    metaOverrides: MetaOverrides
 ) {
     const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
 
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
-            // Format Vertical Align
-            cell.format.verticalAlign = format.verticalAlign ?? 'top';
-
             // Format Borders
             const transparentBorderMatrix = BorderFormatters[
                 format.tableBorderFormat as TableBorderFormat
@@ -192,7 +216,7 @@ function formatCells(
             });
 
             // Format Background Color
-            if (!bgColorOverrides[rowIndex][colIndex]) {
+            if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
                 const color =
                     hasBandedRows || hasBandedColumns
                         ? (hasBandedColumns && colIndex % 2 != 0) ||
@@ -203,6 +227,11 @@ function formatCells(
 
                 setTableCellBackgroundColor(cell, color);
             }
+
+            // Format Vertical Align
+            if (!metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
+                cell.format.verticalAlign = 'top';
+            }
         });
     });
 }
@@ -210,7 +239,7 @@ function formatCells(
 function setFirstColumnFormat(
     rows: ContentModelTableRow[],
     format: Partial<TableMetadataFormat>,
-    bgColorOverrides: boolean[][]
+    metaOverrides: MetaOverrides
 ) {
     if (format.hasFirstColumn) {
         rows.forEach((row, rowIndex) => {
@@ -218,7 +247,7 @@ function setFirstColumnFormat(
                 if (cellIndex === 0) {
                     cell.isHeader = true;
 
-                    if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
+                    if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                         setBorderColor(cell.format, 'borderTop');
                         setTableCellBackgroundColor(cell, null /*color*/);
                     }
@@ -237,7 +266,7 @@ function setFirstColumnFormat(
 function setHeaderRowFormat(
     rows: ContentModelTableRow[],
     format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
+    metaOverrides: MetaOverrides
 ) {
     const rowIndex = 0;
 
@@ -245,7 +274,7 @@ function setHeaderRowFormat(
         cell.isHeader = format.hasHeaderRow;
 
         if (format.hasHeaderRow && format.headerRowColor) {
-            if (!bgColorOverrides[rowIndex][cellIndex]) {
+            if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                 setTableCellBackgroundColor(cell, format.headerRowColor);
             }
 
