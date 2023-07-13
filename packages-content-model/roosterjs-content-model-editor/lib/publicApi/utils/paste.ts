@@ -67,7 +67,7 @@ export default function paste(
         ...event.domToModelOption,
         disableCacheElement: true,
         additionalFormatParsers: {
-            ...event.domToModelOption,
+            ...event.domToModelOption.additionalFormatParsers,
             block: [
                 ...(event.domToModelOption.additionalFormatParsers?.block || []),
                 ...(applyCurrentFormat ? [blockElementParser] : []),
