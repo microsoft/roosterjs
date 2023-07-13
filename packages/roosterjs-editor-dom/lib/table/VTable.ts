@@ -4,6 +4,7 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../jsUtils/toArray';
+import { getTableCellMetadata, saveTableCellMetadata } from './tableCellInfo';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 import { removeMetadata } from '../metadata/metadata';
 import {
@@ -490,6 +491,8 @@ export default class VTable {
                     const cell = this.cells[i][j].td;
                     if (isVertical && cell) {
                         cell.style?.setProperty('vertical-align', alignmentType);
+                        const meta = getTableCellMetadata(cell);
+                        saveTableCellMetadata(cell, { ...meta, ...{ verticalAlign: true } });
                     } else if (cell) {
                         cell.style?.setProperty('text-align', alignmentType);
                     }
