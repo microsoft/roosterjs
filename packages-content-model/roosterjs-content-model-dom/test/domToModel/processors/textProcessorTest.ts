@@ -5,6 +5,7 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { DomToModelContext } from 'roosterjs-content-model-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 
 describe('textProcessor', () => {
@@ -356,12 +357,18 @@ describe('textProcessor', () => {
         const text = document.createTextNode('test');
 
         context.link = { format: { href: '/test' }, dataset: {} };
-        context.regularSelection = {
-            startContainer: text,
-            startOffset: 2,
-            endContainer: text,
-            endOffset: 2,
-            isSelectionCollapsed: true,
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                {
+                    startContainer: text,
+                    startOffset: 2,
+                    endContainer: text,
+                    endOffset: 2,
+                    collapsed: true,
+                } as any,
+            ],
+            areAllCollapsed: true,
         };
 
         textProcessor(doc, text, context);

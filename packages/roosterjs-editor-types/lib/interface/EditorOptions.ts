@@ -1,4 +1,5 @@
 import CorePlugins from './CorePlugins';
+import DarkColorHandler from './DarkColorHandler';
 import DefaultFormat from './DefaultFormat';
 import EditorPlugin from './EditorPlugin';
 import Rect from './Rect';
@@ -72,7 +73,12 @@ export default interface EditorOptions {
      * If you want to change this behavior, you may define a different function here.
      * It takes in the impacted HTMLElement
      */
-    onExternalContentTransform?: (htmlIn: HTMLElement) => void;
+    onExternalContentTransform?: (
+        element: HTMLElement,
+        fromDarkMode: boolean,
+        toDarkMode: boolean,
+        darkColorHandler: DarkColorHandler
+    ) => void;
 
     /**
      * A util function to transform light mode color to dark mode color

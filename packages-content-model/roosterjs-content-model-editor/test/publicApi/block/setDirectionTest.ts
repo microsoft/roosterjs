@@ -99,10 +99,6 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
-                            marginLeft: undefined,
-                            marginRight: undefined,
-                            paddingLeft: undefined,
-                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -149,10 +145,6 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
-                            marginLeft: undefined,
-                            marginRight: undefined,
-                            paddingLeft: undefined,
-                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -262,10 +254,6 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
-                            marginLeft: undefined,
-                            marginRight: undefined,
-                            paddingLeft: undefined,
-                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -280,10 +268,6 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
-                            marginLeft: undefined,
-                            marginRight: undefined,
-                            paddingLeft: undefined,
-                            paddingRight: undefined,
                         },
                         segments: [
                             {
@@ -385,10 +369,6 @@ describe('setDirection', () => {
                         blockType: 'Paragraph',
                         format: {
                             direction: 'rtl',
-                            marginLeft: undefined,
-                            marginRight: undefined,
-                            paddingLeft: undefined,
-                            paddingRight: undefined,
                         },
                         segments: [
                             {

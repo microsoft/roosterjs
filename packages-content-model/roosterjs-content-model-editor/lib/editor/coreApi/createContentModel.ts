@@ -28,18 +28,24 @@ function internalCreateContentModel(
     option: DomToModelOption | undefined
 ) {
     const context: DomToModelOption = {
-        selectionRange: core.api.getSelectionRangeEx(core),
         ...core.defaultDomToModelOptions,
-        ...(option || {}),
-        processorOverride: {
-            table: tablePreProcessor,
-            ...(option?.processorOverride || {}),
-        },
+        ...option,
+    };
+
+    context.processorOverride = {
+        table: tablePreProcessor,
+        ...context.processorOverride,
+        ...option?.processorOverride,
     };
 
     if (!core.reuseModel) {
         context.disableCacheElement = true;
     }
 
-    return domToContentModel(core.contentDiv, core.api.createEditorContext(core), context);
+    return domToContentModel(
+        core.contentDiv,
+        context,
+        core.api.createEditorContext(core),
+        core.api.getSelectionRangeEx(core)
+    );
 }

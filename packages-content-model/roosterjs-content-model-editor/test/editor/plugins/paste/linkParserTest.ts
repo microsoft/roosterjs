@@ -22,16 +22,7 @@ describe('link parser test', () => {
             link: [parseLink],
         };
 
-        const model = domToContentModel(
-            fragment,
-            {
-                isDarkMode: false,
-            },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-            }
-        );
+        const model = domToContentModel(fragment, event.domToModelOption);
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }

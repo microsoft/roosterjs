@@ -19,16 +19,9 @@ describe('processPastedContentFromWacTest', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(
-            fragment,
-            {
-                isDarkMode: false,
-            },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-            }
-        );
+        const model = domToContentModel(fragment, {
+            ...event.domToModelOption,
+        });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -130,17 +123,10 @@ describe('wordOnlineHandler', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(
-            fragment,
-            {
-                isDarkMode: false,
-            },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-                disableCacheElement: true,
-            }
-        );
+        const model = domToContentModel(fragment, {
+            ...event.domToModelOption,
+            disableCacheElement: true,
+        });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }

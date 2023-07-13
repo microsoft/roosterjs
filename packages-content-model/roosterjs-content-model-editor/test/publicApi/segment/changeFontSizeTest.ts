@@ -343,19 +343,11 @@ describe('changeFontSize', () => {
 
         const editor = ({
             createContentModel: (option: any) =>
-                domToContentModel(
-                    div,
-                    { isDarkMode: false },
-                    {
-                        selectionRange: {
-                            type: SelectionRangeTypes.Normal,
-                            areAllCollapsed: false,
-                            ranges: [createRange(sub)],
-                        },
-                        includeRoot: true,
-                        ...option,
-                    }
-                ),
+                domToContentModel(div, option, undefined, {
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [createRange(sub)],
+                    areAllCollapsed: false,
+                }),
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
@@ -370,18 +362,15 @@ describe('changeFontSize', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segmentFormat: { fontSize: '20pt' },
                         segments: [
                             {
                                 segmentType: 'Text',
                                 text: 'test',
-                                format: {
-                                    fontSize: '22pt',
-                                    superOrSubScriptSequence: 'sub',
-                                },
+                                format: { superOrSubScriptSequence: 'sub' },
                                 isSelected: true,
                             },
                         ],
+                        isImplicit: true,
                     },
                 ],
             },

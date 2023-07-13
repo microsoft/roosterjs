@@ -8,7 +8,7 @@ export interface EditorContext {
     /**
      * Whether current content is in dark mode
      */
-    isDarkMode: boolean;
+    isDarkMode?: boolean;
 
     /**
      * Default format of editor
@@ -24,4 +24,14 @@ export interface EditorContext {
      * Whether to handle delimiters in Content Model
      */
     addDelimiterForEntity?: boolean;
+
+    /**
+     * Zoom scale number
+     */
+    zoomScale?: number;
+
+    /**
+     * Whether the content is in Right-to-left from root level
+     */
+    isRootRtl?: boolean;
 }
