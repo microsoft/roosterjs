@@ -7,11 +7,6 @@ describe('cloneCellStyles', () => {
         const styledCell = document.createElement('td');
         styledCell.setAttribute('style', style);
         cloneCellStyles(cell, styledCell);
-        console.log(
-            'FAILED:',
-            cell.getAttribute('data-editing-info'),
-            styledCell.getAttribute('data-editing-info')
-        );
         expect(cell.getAttribute('style')).toEqual(style);
         expect(cell.getAttribute('data-editing-info')).toBe(
             styledCell.getAttribute('data-editing-info')

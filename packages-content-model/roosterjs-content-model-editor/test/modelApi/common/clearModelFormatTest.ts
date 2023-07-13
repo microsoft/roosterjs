@@ -737,6 +737,7 @@ describe('clearModelFormat', () => {
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
                                         borderLeft: '1px solid #ABABAB',
+                                        verticalAlign: 'top',
                                     },
                                     dataset: {},
                                     blocks: [],
@@ -753,6 +754,7 @@ describe('clearModelFormat', () => {
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
                                         borderLeft: '1px solid #ABABAB',
+                                        verticalAlign: 'top',
                                     },
                                     dataset: {},
                                     blocks: [],
@@ -767,6 +769,7 @@ describe('clearModelFormat', () => {
                 },
             ],
         });
+        console.log('FAILED:', 'model', model);
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([[table, true]]);
