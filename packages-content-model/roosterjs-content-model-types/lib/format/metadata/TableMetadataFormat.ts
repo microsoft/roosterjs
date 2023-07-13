@@ -59,8 +59,4 @@ export type TableMetadataFormat = {
      * Table Borders Type
      */
     tableBorderFormat?: TableBorderFormat | CompatibleTableBorderFormat;
-    /**
-     * Vertical alignment for each row
-     */
-    verticalAlign?: 'top' | 'middle' | 'bottom';
 };

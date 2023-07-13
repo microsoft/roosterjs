@@ -23,7 +23,6 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
-    verticalAlign: 'top',
 };
 
 type MetaOverrides = {
