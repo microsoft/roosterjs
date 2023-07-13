@@ -492,7 +492,7 @@ export default class VTable {
                     if (isVertical && cell) {
                         cell.style?.setProperty('vertical-align', alignmentType);
                         const meta = getTableCellMetadata(cell);
-                        saveTableCellMetadata(cell, { ...meta, ...{ verticalAlign: true } });
+                        saveTableCellMetadata(cell, { ...meta, ...{ vAlignOverride: true } });
                     } else if (cell) {
                         cell.style?.setProperty('text-align', alignmentType);
                     }
