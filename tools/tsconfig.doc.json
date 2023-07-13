@@ -6,17 +6,19 @@
         "baseUrl": "..",
         "jsx": "react",
         "paths": {
-            "*": ["packages/*", "packages-ui/*"]
+            "*": ["packages/*", "packages-ui/*", "packages-content-model/*"]
         },
         "rootDir": "..",
         "downlevelIteration": true,
+        "importHelpers": true,
         "lib": ["es6", "dom"]
     },
     "include": [
-        "../packages/**/*.ts",
-        "../packages-ui/**/*.ts",
-        "../packages-ui/**/*.tsx",
-        "../packages/roosterjs-editor-types-compatible/**/*.ts"
+        "../packages/**/lib/**/*.ts",
+        "../packages-ui/**/lib/**/*.ts",
+        "../packages-ui/**/lib/**/*.tsx",
+        "../packages/roosterjs-editor-types-compatible/**/lib/**/*.ts",
+        "../packages-content-model/**/lib/**/*.ts"
     ],
     "typedocOptions": {
         "entryPoints": [
@@ -28,7 +30,11 @@
             "../packages/roosterjs-editor-plugins/lib/index.ts",
             "../packages/roosterjs-color-utils/lib/index.ts",
             "../packages-ui/roosterjs-react/lib/index.ts",
-            "../packages/roosterjs/lib/index.ts"
+            "../packages/roosterjs/lib/index.ts",
+            "../packages-content-model/roosterjs-content-model-types/lib/index.ts",
+            "../packages-content-model/roosterjs-content-model-dom/lib/index.ts",
+            "../packages-content-model/roosterjs-content-model-editor/lib/index.ts",
+            "../packages-content-model/roosterjs-content-model/lib/index.ts"
         ],
         "plugin": ["typedoc-plugin-remove-references", "typedoc-plugin-external-module-map"],
         "out": "../dist/deploy/docs",

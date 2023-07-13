@@ -9,6 +9,7 @@ const {
     allPackages,
     distPath,
     runNode,
+    packagesContentModelPath,
 } = require('./common');
 
 function buildMjs() {
@@ -18,7 +19,7 @@ function buildMjs() {
         typescriptPath +
             ` -p ${path.join(
                 packagesPath,
-                'tsconfig.build.json'
+                'tsconfig.json'
             )} -t es5 --moduleResolution node -m esnext`,
         packagesPath
     );
@@ -30,7 +31,14 @@ function buildMjs() {
             )} -t es5 --moduleResolution node -m esnext`,
         packagesPath
     );
-
+    runNode(
+        typescriptPath +
+            ` -p ${path.join(
+                packagesContentModelPath,
+                'tsconfig.json'
+            )} -t es5 --moduleResolution node -m esnext`,
+        packagesPath
+    );
     allPackages.forEach(packageName => {
         const packagePath = path.join(distPath, packageName);
         fs.renameSync(`${packagePath}/lib`, `${packagePath}/lib-mjs`);

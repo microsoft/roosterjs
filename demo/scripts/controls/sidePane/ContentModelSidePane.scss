@@ -1,0 +1,69 @@
+@import '../theme//contentModelEditorTheme.scss';
+
+.sidePane {
+    display: flex;
+    flex-direction: column;
+    overflow: auto hidden;
+    border: solid 1px $primaryBorder;
+}
+
+.title {
+    font-family: 'Tahoma';
+    font-size: 12pt;
+    font-weight: bold;
+    background-color: $primaryColor;
+    color: white;
+    padding: 2px;
+    border: solid 1px white;
+    cursor: pointer;
+    flex: 0 0 auto;
+    &:hover {
+        background-color: $primaryLighter;
+    }
+}
+
+.activePane {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    .bodyContainer {
+        flex: 1 1 auto;
+        display: flex;
+        position: relative;
+        .body {
+            position: absolute;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            display: flex;
+            flex-direction: column;
+            font-family: Arial, Helvetica, sans-serif;
+            padding: 10px;
+            overflow-y: auto;
+        }
+    }
+}
+
+.inactivePane {
+    flex: 0 0 auto;
+    .bodyContainer {
+        height: 0;
+        overflow: hidden;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    .sidePane {
+        color: #00bbcc;
+        border: solid 1px $primaryBorderDark;
+    }
+
+    .title {
+        background-color: $primaryColorDark;
+        color: #333333;
+        &:hover {
+            background-color: $primaryLighterDark;
+        }
+    }
+}

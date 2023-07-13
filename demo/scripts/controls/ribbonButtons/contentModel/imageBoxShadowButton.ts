@@ -1,6 +1,5 @@
-import { isContentModelEditor } from 'roosterjs-content-model';
+import { isContentModelEditor, setImageBoxShadow } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
-import { setImageBoxShadow } from 'roosterjs-content-model';
 
 const STYLES_NAMES: Record<string, string> = {
     noShadow: 'noShadow',
@@ -43,7 +42,7 @@ export const imageBoxShadowButton: RibbonButton<'buttonNameImageBoxSHadow'> = {
     },
     onClick: (editor, size) => {
         if (isContentModelEditor(editor)) {
-            setImageBoxShadow(editor, STYLES[size]);
+            setImageBoxShadow(editor, STYLES[size], STYLES[size].length ? '4px' : null);
         }
         return true;
     },

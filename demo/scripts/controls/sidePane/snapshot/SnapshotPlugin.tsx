@@ -78,14 +78,14 @@ export default class SnapshotPlugin implements SidePanePlugin {
 
     private onMove = (step: number) => {
         const snapshot = this.snapshotService.move(step);
-        this.onRestoreSnapshot(snapshot);
+        this.onRestoreSnapshot(snapshot, false);
     };
 
-    private onRestoreSnapshot = (snapshot: Snapshot) => {
+    private onRestoreSnapshot = (snapshot: Snapshot, triggerContentChangedEvent: boolean) => {
         this.editorInstance.focus();
         this.editorInstance.setContent(
             this.component.snapshotToString(snapshot),
-            false /*triggerContentChangedEvent*/
+            triggerContentChangedEvent
         );
     };
 

@@ -1,7 +1,6 @@
 import * as React from 'react';
-import { ContentModelDocument } from 'roosterjs-content-model';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { ContentModelDocumentView } from '../../contentModel/components/model/ContentModelDocumentView';
-import { contentModelRibbonButton } from './buttons/contentModelRibbonButton';
 import { exportButton } from './buttons/exportButton';
 import { refreshButton } from './buttons/refreshButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
@@ -26,7 +25,7 @@ export default class ContentModelPane extends React.Component<
     constructor(props: ContentModelPaneProps) {
         super(props);
 
-        this.contentModelButtons = [refreshButton, exportButton, contentModelRibbonButton];
+        this.contentModelButtons = [refreshButton, exportButton];
 
         this.state = {
             model: null,

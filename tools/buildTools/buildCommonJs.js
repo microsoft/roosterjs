@@ -9,14 +9,22 @@ const {
     distPath,
     packagesPath,
     packagesUiPath,
+    packagesContentModelPath,
     allPackages,
 } = require('./common');
 
 function buildCommonJs() {
     const typescriptPath = path.join(nodeModulesPath, 'typescript/lib/tsc.js');
 
-    runNode(typescriptPath + ` --build`, packagesPath);
+    runNode(
+        typescriptPath +
+            ` -p ${path.join(
+                packagesPath,
+                'tsconfig.json'
+            )} -t es5 --moduleResolution node -m commonjs`
+    );
     runNode(typescriptPath, packagesUiPath);
+    runNode(typescriptPath, packagesContentModelPath);
 
     allPackages.forEach(packageName => {
         const copy = fileName => {

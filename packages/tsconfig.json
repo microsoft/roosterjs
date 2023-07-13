@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "strict": true,
         "target": "es5",
         "module": "commonjs",
         "outDir": "../dist",
@@ -11,43 +12,13 @@
         "preserveConstEnums": true,
         "noUnusedLocals": true,
         "downlevelIteration": true,
+        "importHelpers": true,
         "baseUrl": ".",
         "paths": {
             "*": ["*"]
         },
         "rootDir": ".",
-        "composite": true,
         "lib": ["es6", "dom"]
     },
-
-    "references": [
-        {
-            "path": "roosterjs-editor-types/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-editor-types-compatible/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-editor-dom/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-editor-core/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-editor-api/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-editor-plugins/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-color-utils/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs/tsconfig.child.json"
-        },
-        {
-            "path": "roosterjs-content-model/tsconfig.child.json"
-        }
-    ],
-    "include": []
+    "include": ["./*/lib/**/*.ts"]
 }

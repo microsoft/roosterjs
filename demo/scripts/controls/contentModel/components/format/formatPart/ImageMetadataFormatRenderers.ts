@@ -1,6 +1,6 @@
 import { createTextFormatRenderer } from '../utils/createTextFormatRenderer';
 import { FormatRenderer } from '../utils/FormatRenderer';
-import { ImageMetadataFormat } from 'roosterjs-content-model';
+import { ImageMetadataFormat } from 'roosterjs-content-model-types';
 
 export const ImageMetadataFormatRenderers: FormatRenderer<ImageMetadataFormat>[] = [
     createTextFormatRenderer<ImageMetadataFormat>(

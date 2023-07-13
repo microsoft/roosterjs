@@ -39,6 +39,10 @@ export interface TableSelectionRange
      * Coordinates of first and last Cell
      */
     coordinates: TableSelection | undefined;
+    /**
+     * Whether the whole table is selected
+     */
+    isWholeTableSelected?: boolean;
 }
 
 /**

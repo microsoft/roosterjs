@@ -3,7 +3,14 @@ import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
 import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
-import { getComputedStyle, normalizeRect, Position, VTable } from 'roosterjs-editor-dom';
+import {
+    contains,
+    getComputedStyle,
+    normalizeRect,
+    Position,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 import {
     ChangeSource,
     IEditor,
@@ -12,8 +19,11 @@ import {
     CreateElementData,
 } from 'roosterjs-editor-types';
 
-const INSERTER_HOVER_OFFSET = 5;
-
+const INSERTER_HOVER_OFFSET = 6;
+const enum TOP_OR_SIDE {
+    top = 0,
+    side = 1,
+}
 /**
  * @internal
  *
@@ -53,14 +63,14 @@ export default class TableEditor {
     private verticalResizer: TableEditFeature | null = null;
 
     // 5 - Resize whole table
-    private tableResizer: TableEditFeature | null;
+    private tableResizer: TableEditFeature | null = null;
 
     // 6 - Select whole table
-    private tableSelector: TableEditFeature | null;
+    private tableSelector: TableEditFeature | null = null;
 
     private isRTL: boolean;
-    private start: NodePosition;
-    private end: NodePosition;
+    private start: NodePosition | null = null;
+    private end: NodePosition | null = null;
     private isCurrentlyEditing: boolean;
 
     constructor(
@@ -71,26 +81,10 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        contentDiv?: EventTarget
+        private contentDiv?: EventTarget | null
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
-        const zoomScale = editor.getZoomScale();
-        this.tableResizer = createTableResizer(
-            table,
-            zoomScale,
-            this.isRTL,
-            this.onStartTableResize,
-            this.onFinishEditing,
-            this.onShowHelperElement
-        );
-        this.tableSelector = createTableSelector(
-            table,
-            zoomScale,
-            editor,
-            this.onSelect,
-            this.onShowHelperElement,
-            contentDiv
-        );
+        this.setEditorFeatures();
         this.isCurrentlyEditing = false;
     }
 
@@ -105,7 +99,46 @@ export default class TableEditor {
         return this.isCurrentlyEditing;
     }
 
+    isOwnedElement(node: Node) {
+        return [
+            this.tableResizer,
+            this.tableSelector,
+            this.horizontalInserter,
+            this.verticalInserter,
+            this.horizontalResizer,
+            this.verticalResizer,
+        ]
+            .filter(feature => !!feature?.div)
+            .some(feature => contains(feature?.div, node, true /* treatSameNodeAsContain */));
+    }
+
     onMouseMove(x: number, y: number) {
+        //Get Cell [0,0]
+        const firstCell = this.table.rows[0]?.cells[0];
+
+        if (!firstCell) {
+            return;
+        }
+
+        const firstCellRect = normalizeRect(firstCell.getBoundingClientRect());
+
+        if (!firstCellRect) {
+            return;
+        }
+
+        //Determine if cursor is on top or side
+        const topOrSide =
+            y <= firstCellRect.top + INSERTER_HOVER_OFFSET
+                ? TOP_OR_SIDE.top
+                : this.isRTL
+                ? x >= firstCellRect.right - INSERTER_HOVER_OFFSET
+                    ? TOP_OR_SIDE.side
+                    : undefined
+                : x <= firstCellRect.left + INSERTER_HOVER_OFFSET
+                ? TOP_OR_SIDE.side
+                : undefined;
+
+        // i is row index, j is column index
         for (let i = 0; i < this.table.rows.length; i++) {
             const tr = this.table.rows[i];
             let j = 0;
@@ -118,27 +151,27 @@ export default class TableEditor {
                     continue;
                 }
 
+                // Determine the cell the cursor is in range of
                 const lessThanBottom = y <= tdRect.bottom;
-                const lessThanRight = this.isRTL ? x >= tdRect.right : x <= tdRect.right;
+                const lessThanRight = this.isRTL
+                    ? x <= tdRect.right + INSERTER_HOVER_OFFSET
+                    : x <= tdRect.right;
+                const moreThanLeft = this.isRTL
+                    ? x >= tdRect.left
+                    : x >= tdRect.left - INSERTER_HOVER_OFFSET;
 
-                if (lessThanRight && lessThanBottom) {
+                if (lessThanBottom && lessThanRight && moreThanLeft) {
                     const isOnLeftOrRight = this.isRTL
                         ? tdRect.right <= tableRect.right && tdRect.right >= tableRect.right - 1
                         : tdRect.left >= tableRect.left && tdRect.left <= tableRect.left + 1;
-                    if (i === 0 && y <= tdRect.top + INSERTER_HOVER_OFFSET) {
+                    if (i === 0 && topOrSide == TOP_OR_SIDE.top) {
                         const center = (tdRect.left + tdRect.right) / 2;
                         const isOnRightHalf = this.isRTL ? x < center : x > center;
                         this.setInserterTd(
                             isOnRightHalf ? td : tr.cells[j - 1],
                             false /*isHorizontal*/
                         );
-                    } else if (
-                        j == 0 &&
-                        (this.isRTL
-                            ? x >= tdRect.right - INSERTER_HOVER_OFFSET
-                            : x <= tdRect.left + INSERTER_HOVER_OFFSET) &&
-                        isOnLeftOrRight
-                    ) {
+                    } else if (j === 0 && topOrSide == TOP_OR_SIDE.side && isOnLeftOrRight) {
                         const tdAbove = this.table.rows[i - 1]?.cells[0];
                         const tdAboveRect = tdAbove
                             ? normalizeRect(tdAbove.getBoundingClientRect())
@@ -169,6 +202,33 @@ export default class TableEditor {
             if (j < tr.cells.length) {
                 break;
             }
+        }
+
+        this.setEditorFeatures();
+    }
+
+    private setEditorFeatures() {
+        if (!this.tableSelector) {
+            this.tableSelector = createTableSelector(
+                this.table,
+                this.editor.getZoomScale(),
+                this.editor,
+                this.onSelect,
+                this.getOnMouseOut,
+                this.onShowHelperElement,
+                this.contentDiv
+            );
+        }
+
+        if (!this.tableResizer) {
+            this.tableResizer = createTableResizer(
+                this.table,
+                this.editor.getZoomScale(),
+                this.isRTL,
+                this.onStartTableResize,
+                this.onFinishEditing,
+                this.onShowHelperElement
+            );
         }
     }
 
@@ -204,7 +264,7 @@ export default class TableEditor {
      * create or remove TableInserter
      * @param td td to attach to, set this to null to remove inserters (both horizontal and vertical)
      */
-    private setInserterTd(td: HTMLTableCellElement, isHorizontal?: boolean) {
+    private setInserterTd(td: HTMLTableCellElement | null, isHorizontal?: boolean) {
         const inserter = isHorizontal ? this.horizontalInserter : this.verticalInserter;
         if (td === null || (inserter && inserter.node != td)) {
             this.disposeTableInserter();
@@ -217,6 +277,7 @@ export default class TableEditor {
                 this.isRTL,
                 !!isHorizontal,
                 this.onInserted,
+                this.getOnMouseOut,
                 this.onShowHelperElement
             );
             if (isHorizontal) {
@@ -265,8 +326,12 @@ export default class TableEditor {
 
     private onFinishEditing = (): false => {
         this.editor.focus();
-        this.editor.select(this.start, this.end);
-        this.editor.addUndoSnapshot(null /*callback*/, ChangeSource.Format);
+
+        if (this.start && this.end) {
+            this.editor.select(this.start, this.end);
+        }
+
+        this.editor.addUndoSnapshot(undefined /*callback*/, ChangeSource.Format);
         this.onChanged();
         this.isCurrentlyEditing = false;
 
@@ -330,5 +395,19 @@ export default class TableEditor {
                 this.editor.select(table, selection);
             }
         }
+    };
+
+    private getOnMouseOut = (feature: HTMLElement) => {
+        return (ev: MouseEvent) => {
+            if (
+                feature &&
+                ev.relatedTarget != feature &&
+                safeInstanceOf(this.contentDiv, 'HTMLElement') &&
+                safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
+                !contains(this.contentDiv, ev.relatedTarget, true /* treatSameNodeAsContain */)
+            ) {
+                this.dispose();
+            }
+        };
     };
 }

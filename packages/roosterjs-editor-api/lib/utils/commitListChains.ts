@@ -14,7 +14,14 @@ export default function commitListChains(editor: IEditor, chains: VListChain[]) 
         const shouldReuseAllAncestorListElements = editor.isFeatureEnabled(
             ExperimentalFeatures.ReuseAllAncestorListElements
         );
-        chains.forEach(chain => chain.commit(shouldReuseAllAncestorListElements));
+        const shouldDisableListChain = editor.isFeatureEnabled(
+            ExperimentalFeatures.DisableListChain
+        );
+
+        chains.forEach(chain =>
+            chain.commit(shouldReuseAllAncestorListElements, shouldDisableListChain)
+        );
+
         if (start && end) {
             editor.select(start, end);
         }

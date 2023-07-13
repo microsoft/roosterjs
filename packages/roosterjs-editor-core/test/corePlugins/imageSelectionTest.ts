@@ -4,6 +4,7 @@ import {
     IEditor,
     EditorOptions,
     SelectionRangeTypes,
+    ImageSelectionRange,
     PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
@@ -17,6 +18,7 @@ describe('ImageSelectionPlugin |', () => {
     let editor: IEditor;
     let id = 'imageSelectionContainerId';
     let imageId = 'imageSelectionId';
+    let imageId2 = 'imageSelectionId2';
     let imageSelection: ImageSelection;
     let editorIsFeatureEnabled: any;
 
@@ -62,19 +64,6 @@ describe('ImageSelectionPlugin |', () => {
 
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
-    it('should be triggered in mouse up right click', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        simulateMouseEvent('mousedown', target!, 2);
-        simulateMouseEvent('mouseup', target!, 2);
-        editor.focus();
-
-        const selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.Normal);
         expect(selection.areAllCollapsed).toBe(false);
     });
 
@@ -141,6 +130,45 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
+    it('should handle contextMenu', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        const contextMenuEvent = contextMenu(target!);
+        imageSelection.onPluginEvent(contextMenuEvent);
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
+    it('should change image selection contextMenu', () => {
+        editor.setContent(`<img id=${imageId}></img><img id=${imageId2}></img>`);
+        const target = document.getElementById(imageId);
+        const secondTarget = document.getElementById(imageId2);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(secondTarget);
+        const contextMenuEvent = contextMenu(target!);
+        imageSelection.onPluginEvent(contextMenuEvent);
+        const selection = editor.getSelectionRangeEx() as ImageSelectionRange;
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+
+        expect(selection.image.id).toBe(imageId);
+    });
+
+    it('should not change image selection contextMenu', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const contextMenuEvent = contextMenu(target!);
+        imageSelection.onPluginEvent(contextMenuEvent);
+        spyOn(editor, 'select');
+        expect(editor.select).not.toHaveBeenCalled();
+    });
+
     const keyDown = (key: string): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
@@ -160,6 +188,16 @@ describe('ImageSelectionPlugin |', () => {
                 preventDefault: () => {},
                 stopPropagation: () => {},
             },
+        };
+    };
+
+    const contextMenu = (target: HTMLElement): PluginEvent => {
+        return {
+            eventType: PluginEventType.ContextMenu,
+            rawEvent: <any>{
+                target: target,
+            },
+            items: [],
         };
     };
 

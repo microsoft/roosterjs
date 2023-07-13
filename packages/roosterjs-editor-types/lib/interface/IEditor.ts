@@ -209,6 +209,7 @@ export default interface IEditor {
      * @param pasteAsText Force pasting as plain text. Default value is false
      * @param applyCurrentStyle True if apply format of current selection to the pasted content,
      * false to keep original format.  Default value is false. When pasteAsText is true, this parameter is ignored
+     * @param pasteAsImage: When set to true, if the clipboardData contains a imageDataUri will paste the image to the editor
      */
     paste(
         clipboardData: ClipboardData,
@@ -510,7 +511,7 @@ export default interface IEditor {
      * If it is not cached before, query from DOM and cache the result into the event object
      * @returns A content traverser, or null if editor never got focus before
      */
-    getContentSearcherOfCursor(event?: PluginEvent): IPositionContentSearcher | null;
+    getContentSearcherOfCursor(event?: PluginEvent | null): IPositionContentSearcher | null;
 
     /**
      * Run a callback function asynchronously

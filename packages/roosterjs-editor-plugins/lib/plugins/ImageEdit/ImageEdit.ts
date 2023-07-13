@@ -10,6 +10,7 @@ import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
 import {
     arrayPush,
     Browser,
@@ -133,6 +134,11 @@ export default class ImageEdit implements EditorPlugin {
      * The span element that wraps the image and opens shadow dom
      */
     private isCropping: boolean = false;
+
+    /**
+     * If the image is a gif, this is the png source of the gif image
+     */
+    private pngSource: string | null = null;
 
     /**
      * Create a new instance of ImageEdit
@@ -287,13 +293,19 @@ export default class ImageEdit implements EditorPlugin {
             // When there is image in editing, clean up any cached objects and elements
             this.clearDndHelpers();
 
+            // If the image is a gif we change the editing image to a new png image, then we need to change the
+            // image source to the original gif image
+            if (this.pngSource) {
+                this.clonedImage.src = this.editInfo.src;
+            }
+
             // Apply the changes, and add undo snapshot if necessary
             applyChange(
                 this.editor,
                 this.image,
                 this.editInfo,
                 this.lastSrc,
-                this.wasResized,
+                this.wasResized || this.isCropping,
                 this.clonedImage
             );
 
@@ -306,6 +318,7 @@ export default class ImageEdit implements EditorPlugin {
                 this.editor.select(this.image);
             }
 
+            this.pngSource = null;
             this.image = null;
             this.editInfo = null;
             this.lastSrc = null;
@@ -320,6 +333,9 @@ export default class ImageEdit implements EditorPlugin {
 
             // Get initial edit info
             this.editInfo = getEditInfoFromImage(image);
+
+            //Check if the image is a gif and convert it to a png
+            this.pngSource = tryToConvertGifToPng(this.editInfo);
 
             //Check if the image was resized by the user
             this.wasResized = checkIfImageWasResized(this.image);
@@ -405,6 +421,8 @@ export default class ImageEdit implements EditorPlugin {
             this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
             this.clonedImage.removeAttribute('id');
             this.clonedImage.style.removeProperty('max-width');
+            this.clonedImage.style.width = this.editInfo.widthPx + 'px';
+            this.clonedImage.style.height = this.editInfo.heightPx + 'px';
             this.wrapper = createElement(
                 KnownCreateElementDataIndex.ImageEditWrapper,
                 this.image.ownerDocument
@@ -417,7 +435,7 @@ export default class ImageEdit implements EditorPlugin {
 
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
-                this.clonedImage.src = this.editInfo.src;
+                this.clonedImage.src = this.pngSource ?? this.editInfo.src;
                 setFlipped(
                     this.clonedImage,
                     this.editInfo.flippedHorizontal,
@@ -741,10 +759,10 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
 
 function setFlipped(
     element: HTMLImageElement,
-    flipppedHorizontally?: boolean,
-    flipppedVertically?: boolean
+    flippedHorizontally?: boolean,
+    flippedVertically?: boolean
 ) {
-    element.style.transform = `scale(${flipppedHorizontally ? '-1' : '1'}, ${
-        flipppedVertically ? '-1' : '1'
+    element.style.transform = `scale(${flippedHorizontally ? '-1' : '1'}, ${
+        flippedVertically ? '-1' : '1'
     })`;
 }

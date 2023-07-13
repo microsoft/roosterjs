@@ -101,7 +101,7 @@ describe('Table Selector Tests', () => {
                     x: 7,
                 },
             });
-            expect(selection.ranges.length).toBe(8);
+            expect(selection.ranges.length).toBe(1);
         }
     });
 
@@ -123,6 +123,7 @@ describe('Table Selector Tests', () => {
             1,
             editor,
             () => {},
+            () => () => {},
             () => {},
             <EventTarget>node
         );

@@ -1,5 +1,4 @@
 import commitListChains from '../utils/commitListChains';
-import getFormatState from './getFormatState';
 import {
     addDelimiters,
     applyFormat,
@@ -69,8 +68,6 @@ export default function insertEntity(
 
     commitEntity(wrapper, type, isReadonly);
 
-    const currentFormat = getFormatState(editor);
-
     if (!editor.contains(wrapper)) {
         let currentRange: Range | null = null;
         let contentPosition:
@@ -131,30 +128,14 @@ export default function insertEntity(
     if (isBlock) {
         // Insert an extra empty line for block entity to make sure
         // user can still put cursor below the entity.
-        const formatOnSpan = editor.isFeatureEnabled(ExperimentalFeatures.DefaultFormatInSpan);
-        const newLine = createElement(
-            formatOnSpan
-                ? KnownCreateElementDataIndex.EmptyLineFormatInSpan
-                : KnownCreateElementDataIndex.EmptyLine,
-            editor.getDocument()
-        );
+        const newLine = createElement(KnownCreateElementDataIndex.EmptyLine, editor.getDocument());
 
         wrapper.parentNode?.insertBefore(newLine!, wrapper.nextSibling);
 
-        const formatNode = formatOnSpan ? newLine?.querySelector('span') : newLine;
-
-        if (formatNode) {
+        if (newLine) {
             applyFormat(
-                formatNode as HTMLElement,
-                {
-                    backgroundColor: currentFormat.backgroundColor,
-                    textColor: currentFormat.textColor,
-                    bold: currentFormat.isBold,
-                    fontFamily: currentFormat.fontName,
-                    fontSize: currentFormat.fontSize,
-                    italic: currentFormat.isItalic,
-                    underline: currentFormat.isUnderline,
-                },
+                newLine as HTMLElement,
+                editor.getDefaultFormat(),
                 editor.isDarkMode(),
                 editor.getDarkColorHandler()
             );
