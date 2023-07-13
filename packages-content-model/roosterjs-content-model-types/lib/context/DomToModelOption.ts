@@ -4,22 +4,11 @@ import {
     FormatParsers,
     FormatParsersPerCategory,
 } from './DomToModelSettings';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Options for creating DomToModelContext
  */
 export interface DomToModelOption {
-    /**
-     * True to create content model from the root element itself, false to create from all child nodes of root. @default false
-     */
-    includeRoot?: boolean;
-
-    /**
-     * Selection range to be included in Content Model
-     */
-    selectionRange?: SelectionRangeEx;
-
     /**
      * Overrides default element processors
      */

@@ -20,17 +20,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentFromWordDesktop(event);
 
-        const model = domToContentModel(
-            fragment,
-            {
-                isDarkMode: false,
-            },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-                disableCacheElement: true,
-            }
-        );
+        const model = domToContentModel(fragment, {
+            ...event.domToModelOption,
+            disableCacheElement: true,
+        });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }

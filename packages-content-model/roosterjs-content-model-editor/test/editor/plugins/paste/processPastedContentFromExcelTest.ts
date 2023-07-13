@@ -22,17 +22,10 @@ describe('processPastedContentFromExcelTest', () => {
         event.clipboardData.html = source;
         processPastedContentFromExcel(event, (s: string) => s);
 
-        const model = domToContentModel(
-            fragment,
-            {
-                isDarkMode: false,
-            },
-            {
-                ...event.domToModelOption,
-                includeRoot: true,
-                disableCacheElement: true,
-            }
-        );
+        const model = domToContentModel(fragment, {
+            ...event.domToModelOption,
+            disableCacheElement: true,
+        });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }

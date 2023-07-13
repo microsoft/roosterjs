@@ -63,21 +63,15 @@ export default function paste(
         event
     );
 
-    const pasteModel = domToContentModel(
-        fragment,
-        {
-            defaultFormat: editor.getDefaultFormat(),
-        },
-        {
+    const pasteModel = domToContentModel(fragment, {
+        ...event.domToModelOption,
+        disableCacheElement: true,
+        additionalFormatParsers: {
             ...event.domToModelOption,
-            disableCacheElement: true,
-            additionalFormatParsers: {
-                ...event.domToModelOption,
-                block: [...(applyCurrentFormat ? [blockElementParser] : [])],
-                listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
-            },
-        }
-    );
+            block: [...(applyCurrentFormat ? [blockElementParser] : [])],
+            listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
+        },
+    });
 
     if (pasteModel) {
         formatWithContentModel(
