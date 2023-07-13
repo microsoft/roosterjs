@@ -769,7 +769,6 @@ describe('clearModelFormat', () => {
                 },
             ],
         });
-        console.log('FAILED:', 'model', model);
         expect(blocks).toEqual([]);
         expect(segments).toEqual([]);
         expect(tables).toEqual([[table, true]]);
