@@ -46,6 +46,7 @@ export function formatSegmentWithContentModel(
                 isCollapsedSelection = false;
             }
         } else {
+            console.log(segmentAndParagraphs);
             segmentAndParagraphs = adjustTrailingSpaceSelection(segmentAndParagraphs);
         }
 

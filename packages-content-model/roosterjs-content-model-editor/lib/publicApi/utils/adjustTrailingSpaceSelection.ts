@@ -15,11 +15,12 @@ export function adjustTrailingSpaceSelection(
     for (let j = length - 1; j >= 0; j--) {
         const paragraph = segmentAndParagraphs[j][1];
         const segmentLength = paragraph ? paragraph.segments.length : 0;
+
         if (paragraph) {
             for (let i = segmentLength - 1; i >= 0; i--) {
                 const seg = paragraph.segments[i];
                 if (seg.segmentType !== 'Text') {
-                    return segmentAndParagraphs;
+                    break;
                 } else if (seg.isSelected) {
                     const text = seg.text;
                     const newText = text.trimRight();
@@ -28,15 +29,27 @@ export function adjustTrailingSpaceSelection(
                         const newSeg = createText(text.substring(newText.length), seg.format);
                         newSeg.isSelected = true;
                         paragraph.segments.splice(i + 1, 0, newSeg);
-                    }
-                    if (newText.length > 0 || i !== segmentLength - 1) {
-                        result = [...result, [seg, paragraph]];
-                    } else if (!paragraph.segments[i - 1].isSelected) {
-                        result = [...result, [seg, paragraph]];
+                        result.push([newSeg, paragraph]);
+                    } else if (
+                        newText.length == 0 &&
+                        (paragraph.segments[i - 1]?.isSelected ||
+                            paragraph.segments[i + 1]?.isSelected)
+                    ) {
+                        result.push([seg, paragraph]);
                     }
                 }
             }
         }
     }
-    return result;
+
+    result.forEach(trailing => {
+        const index = segmentAndParagraphs.findIndex(
+            segmentAndParagraph => segmentAndParagraph[0] === trailing[0]
+        );
+        if (index >= 0) {
+            segmentAndParagraphs.splice(index, 1);
+        }
+    });
+
+    return segmentAndParagraphs;
 }
