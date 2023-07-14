@@ -14,6 +14,8 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         const maxHeight = element.style.maxHeight;
         const minWidth = element.style.minWidth;
         const minHeight = element.style.minHeight;
+        const transform = element.style.transform;
+        const transformOrigin = element.style.transformOrigin;
 
         if (width) {
             format.width = width;
@@ -32,6 +34,12 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         }
         if (minHeight) {
             format.minHeight = minHeight;
+        }
+        if (transform) {
+            format.transform = transform;
+        }
+        if (transformOrigin) {
+            format.transformOrigin = transformOrigin;
         }
     },
     apply: (format, element) => {
@@ -52,6 +60,12 @@ export const sizeFormatHandler: FormatHandler<SizeFormat> = {
         }
         if (format.minHeight) {
             element.style.minHeight = format.minHeight;
+        }
+        if (format.transform) {
+            element.style.transform = format.transform;
+        }
+        if (format.transformOrigin) {
+            element.style.transformOrigin = format.transformOrigin;
         }
     },
 };

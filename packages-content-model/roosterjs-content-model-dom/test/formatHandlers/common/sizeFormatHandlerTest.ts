@@ -84,6 +84,25 @@ describe('sizeFormatHandler.parse', () => {
             maxHeight: '40px',
         });
     });
+
+    it('Element with width and height in both style and attribute', () => {
+        const element = document.createElement('div');
+
+        element.style.transform = 'scale(2, 2)';
+        element.style.transformOrigin = 'left top';
+
+        element.setAttribute('width', '30');
+        element.setAttribute('height', '40');
+
+        sizeFormatHandler.parse(format, element, context, {});
+
+        expect(format).toEqual({
+            width: '30px',
+            height: '40px',
+            transform: 'scale(2, 2)',
+            transformOrigin: 'left top',
+        });
+    });
 });
 
 describe('sizeFormatHandler.apply', () => {
@@ -119,6 +138,16 @@ describe('sizeFormatHandler.apply', () => {
         format.height = '20px';
         sizeFormatHandler.apply(format, div, context);
         expect(div.outerHTML).toBe('<div style="width: 10px; height: 20px;"></div>');
+    });
+
+    it('Has min/max size', () => {
+        format.transform = 'scale(1)';
+        format.transformOrigin = 'left top';
+
+        sizeFormatHandler.apply(format, div, context);
+        expect(div.outerHTML).toBe(
+            '<div style="transform: scale(1); transform-origin: left top;"></div>'
+        );
     });
 
     it('Has min/max size', () => {
