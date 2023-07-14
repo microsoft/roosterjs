@@ -88,6 +88,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         return (
             event.eventType == PluginEventType.KeyDown &&
             event.rawEvent.which == Keys.BACKSPACE &&
+            !event.rawEvent.ctrlKey &&
             this.canUndoAutoComplete()
         );
     }
@@ -135,7 +136,7 @@ export default class UndoPlugin implements PluginWithState<UndoPluginState> {
         // since we want the state prior to deletion restorable
         // Ignore if keycombo is ALT+BACKSPACE
         if ((evt.which == Keys.BACKSPACE && !evt.altKey) || evt.which == Keys.DELETE) {
-            if (evt.which == Keys.BACKSPACE && this.canUndoAutoComplete()) {
+            if (evt.which == Keys.BACKSPACE && !evt.ctrlKey && this.canUndoAutoComplete()) {
                 evt.preventDefault();
                 this.editor?.undo();
                 this.state.autoCompletePosition = null;
