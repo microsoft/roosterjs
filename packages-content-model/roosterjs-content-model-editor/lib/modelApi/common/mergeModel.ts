@@ -122,7 +122,7 @@ function mergeParagraph(
     const { paragraph, marker } = markerPosition;
     const newParagraph = mergeToCurrentParagraph
         ? paragraph
-        : splitParagraph(markerPosition, newPara);
+        : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
     if (segmentIndex >= 0) {
@@ -131,6 +131,10 @@ function mergeParagraph(
 
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
+    }
+
+    if (!mergeToCurrentParagraph) {
+        newParagraph.format = newPara.format;
     }
 }
 
@@ -195,7 +199,7 @@ function mergeTable(
 }
 
 function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
-    splitParagraph(markerPosition, newList);
+    splitParagraph(markerPosition, newList.format);
 
     const { path, paragraph } = markerPosition;
 
@@ -215,14 +219,13 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
     }
 }
 
-function splitParagraph(markerPosition: InsertPoint, newBlock: ContentModelBlock) {
+function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModelBlockFormat) {
     const { paragraph, marker, path } = markerPosition;
-    const paragraphFormat: ContentModelBlockFormat = { ...paragraph.format };
     const segmentIndex = paragraph.segments.indexOf(marker);
     const paraIndex = path[0].blocks.indexOf(paragraph);
     const newParagraph = createParagraph(
         false /*isImplicit*/,
-        { ...paragraphFormat, ...(newBlock.blockType == 'Table' ? {} : newBlock.format) },
+        { ...paragraph.format, ...newParaFormat },
         paragraph.segmentFormat
     );
 
@@ -267,7 +270,7 @@ function splitParagraph(markerPosition: InsertPoint, newBlock: ContentModelBlock
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition, block);
+    const newPara = splitParagraph(markerPosition, block.format);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
