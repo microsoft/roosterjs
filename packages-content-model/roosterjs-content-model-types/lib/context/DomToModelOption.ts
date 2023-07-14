@@ -1,4 +1,3 @@
-import { SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     DefaultStyleMap,
     ElementProcessorMap,
@@ -10,11 +9,6 @@ import {
  * Options for creating DomToModelContext
  */
 export interface DomToModelOption {
-    /**
-     * Selection range to be included in Content Model
-     */
-    selectionRange?: SelectionRangeEx;
-
     /**
      * Overrides default element processors
      */

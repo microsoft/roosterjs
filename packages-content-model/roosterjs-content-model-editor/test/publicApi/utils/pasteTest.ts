@@ -20,9 +20,6 @@ describe('Paste ', () => {
     let getDocument: jasmine.Spy;
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
-    let isDarkMode: jasmine.Spy;
-    let getDarkColorHandler: jasmine.Spy;
-    let getDefaultFormat: jasmine.Spy;
     let undoSnapshotResult: any;
 
     const mockedPos = 'POS' as any;
@@ -54,13 +51,10 @@ describe('Paste ', () => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
-        isDarkMode = jasmine.createSpy('isDarkMode');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getSelectionRange = jasmine.createSpy('getSelectionRange');
-        getDarkColorHandler = jasmine.createSpy('getDarkColorHandler');
-        getDefaultFormat = jasmine.createSpy('getDefaultFormat');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
@@ -78,9 +72,6 @@ describe('Paste ', () => {
             getDocument,
             getTrustedHTMLHandler,
             triggerPluginEvent,
-            isDarkMode,
-            getDarkColorHandler,
-            getDefaultFormat,
         } as any) as IContentModelEditor;
     });
 
@@ -95,13 +86,10 @@ describe('Paste ', () => {
         expect(setContentModel).toHaveBeenCalled();
         expect(focus).toHaveBeenCalled();
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(isDarkMode).toHaveBeenCalled();
         expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalled();
         expect(getSelectionRange).toHaveBeenCalled();
-        expect(getDarkColorHandler).toHaveBeenCalled();
-        expect(getDefaultFormat).toHaveBeenCalled();
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);

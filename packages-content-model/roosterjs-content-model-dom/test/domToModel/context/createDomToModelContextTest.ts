@@ -2,7 +2,6 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { DomToModelListFormat, EditorContext } from 'roosterjs-content-model-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     defaultFormatParsers,
     getFormatParsers,
@@ -28,7 +27,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -58,7 +56,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -88,7 +85,6 @@ describe('createDomToModelContext', () => {
             ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
             listFormat,
             link: {
@@ -107,157 +103,14 @@ describe('createDomToModelContext', () => {
         });
     });
 
-    it('with normal selection', () => {
-        const mockNode = ('Node' as any) as Node;
-        const mockedRange = ({
-            startContainer: 'DIV 1',
-            startOffset: 0,
-            endContainer: 'DIV 2',
-            endOffset: 1,
-            collapsed: false,
-            commonAncestorContainer: mockNode,
-        } as any) as Range;
-        const context = createDomToModelContext(undefined, {
-            selectionRange: {
-                type: SelectionRangeTypes.Normal,
-                ranges: [mockedRange],
-                areAllCollapsed: false,
-            },
-        });
+    it('with selection context', () => {
+        const selectionContext = { name: 'SelectionContext' } as any;
+        const context = createDomToModelContext(undefined, undefined, selectionContext);
 
         expect(context).toEqual({
-            ...editorContext,
             segmentFormat: {},
             blockFormat: {},
-            zoomScaleFormat: {},
             isInSelection: false,
-            regularSelection: {
-                startContainer: 'DIV 1' as any,
-                startOffset: 0,
-                endContainer: 'DIV 2' as any,
-                endOffset: 1,
-                isSelectionCollapsed: false,
-            },
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            selectionRootNode: mockNode,
-            allowCacheElement: true,
-            ...contextOptions,
-        });
-    });
-
-    it('with table selection', () => {
-        const mockTable = ('Table' as any) as HTMLTableElement;
-        const context = createDomToModelContext(undefined, {
-            selectionRange: {
-                type: SelectionRangeTypes.TableSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                table: mockTable,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
-            },
-        });
-
-        expect(context).toEqual({
-            ...editorContext,
-            segmentFormat: {},
-            blockFormat: {},
-            zoomScaleFormat: {},
-            isInSelection: false,
-            tableSelection: {
-                table: mockTable,
-                firstCell: { x: 1, y: 2 },
-                lastCell: { x: 3, y: 4 },
-            },
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            selectionRootNode: mockTable,
-            allowCacheElement: true,
-            ...contextOptions,
-        });
-    });
-
-    it('with image selection', () => {
-        const mockImage = ('Image' as any) as HTMLImageElement;
-        const context = createDomToModelContext(undefined, {
-            selectionRange: {
-                type: SelectionRangeTypes.ImageSelection,
-                ranges: [],
-                areAllCollapsed: false,
-                image: mockImage,
-            },
-        });
-
-        expect(context).toEqual({
-            ...editorContext,
-            segmentFormat: {},
-            blockFormat: {},
-            zoomScaleFormat: {},
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            isInSelection: false,
-            imageSelection: {
-                image: mockImage,
-            },
-            listFormat,
-            selectionRootNode: mockImage,
-            allowCacheElement: true,
-            ...contextOptions,
-        });
-    });
-
-    it('with base parameters and wrong selection 1', () => {
-        const context = createDomToModelContext(
-            {
-                isDarkMode: true,
-            },
-            {
-                selectionRange: {
-                    type: SelectionRangeTypes.Normal,
-                    ranges: [],
-                    areAllCollapsed: true,
-                },
-            }
-        );
-
-        expect(context).toEqual({
-            isDarkMode: true,
-            isInSelection: false,
-            blockFormat: {},
-            zoomScaleFormat: {},
-            segmentFormat: {},
             listFormat,
             link: {
                 format: {},
@@ -272,45 +125,7 @@ describe('createDomToModelContext', () => {
             },
             allowCacheElement: true,
             ...contextOptions,
-        });
-    });
-
-    it('with base parameters and wrong selection 2', () => {
-        const context = createDomToModelContext(
-            {
-                isDarkMode: true,
-            },
-            {
-                selectionRange: {
-                    type: SelectionRangeTypes.TableSelection,
-                    ranges: [],
-                    areAllCollapsed: false,
-                    table: null!,
-                    coordinates: null!,
-                },
-            }
-        );
-
-        expect(context).toEqual({
-            isDarkMode: true,
-            isInSelection: false,
-            blockFormat: {},
-            zoomScaleFormat: {},
-            segmentFormat: {},
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            listFormat,
-            allowCacheElement: true,
-            ...contextOptions,
+            rangeEx: selectionContext,
         });
     });
 

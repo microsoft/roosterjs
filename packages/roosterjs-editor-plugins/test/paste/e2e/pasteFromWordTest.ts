@@ -1,6 +1,5 @@
 import * as convertPastedContentFromWord from '../../../lib/plugins/Paste/wordConverter/convertPastedContentFromWord';
 import { Browser } from 'roosterjs-editor-dom';
-import { Browser } from 'roosterjs-editor-dom';
 import { ClipboardData, IEditor } from 'roosterjs-editor-types';
 import { initEditor } from '../../TestHelper';
 import { Paste } from '../../../lib/index';
