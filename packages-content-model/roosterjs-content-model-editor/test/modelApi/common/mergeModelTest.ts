@@ -2220,27 +2220,27 @@ describe('mergeModel', () => {
                             '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                     },
                 },
-                Object({
+                {
                     blockType: 'Paragraph',
                     segments: [
-                        Object({
+                        {
                             segmentType: 'Text',
                             text: 'Test',
-                            format: Object({
+                            format: {
                                 fontFamily: 'Calibri',
                                 fontSize: '11pt',
                                 textColor: 'black',
                                 fontWeight: 'bold',
-                            }),
-                        }),
-                        Object({
+                            },
+                        },
+                        {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: Object({}),
-                        }),
+                            format: {},
+                        },
                     ],
-                    format: Object({}),
-                }),
+                    format: {},
+                },
             ],
         });
     });
