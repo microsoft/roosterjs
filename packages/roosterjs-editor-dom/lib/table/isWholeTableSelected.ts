@@ -13,7 +13,11 @@ export default function isWholeTableSelected(vTable: VTable, selection: TableSel
     }
     const { firstCell, lastCell } = selection;
     const rowsLength = vTable.cells.length - 1;
-    const colIndex = vTable.cells[rowsLength].length - 1;
+    const rowCells = vTable.cells[rowsLength];
+    if (!rowCells) {
+        return false;
+    }
+    const colIndex = rowCells.length - 1;
     const firstX = firstCell.x;
     const firstY = firstCell.y;
     const lastX = lastCell.x;
