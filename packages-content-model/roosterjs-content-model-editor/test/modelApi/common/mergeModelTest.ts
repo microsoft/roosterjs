@@ -1968,4 +1968,280 @@ describe('mergeModel', () => {
             format: MockedFormat,
         });
     });
+
+    it('Merge Table + Paragraph', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
 });
