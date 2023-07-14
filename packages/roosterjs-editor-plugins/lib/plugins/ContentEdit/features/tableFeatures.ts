@@ -15,7 +15,6 @@ import {
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';
 import {
-    Browser,
     cacheGetEventData,
     contains,
     getTagOfNode,
@@ -172,7 +171,6 @@ const UpDownInTable: BuildInEditFeature<PluginKeyboardEvent> = {
             });
         }
     },
-    defaultDisabled: !Browser.isChrome && !Browser.isSafari,
 };
 
 /**

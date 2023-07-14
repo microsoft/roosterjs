@@ -29,17 +29,21 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, editorContext, {
-            selectionRange: {
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            {
+                processorOverride: {
+                    table: tablePreProcessor,
+                },
+                disableCacheElement: true,
+            },
+            editorContext,
+            {
                 type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
                 ranges: [],
-            },
-            processorOverride: {
-                table: tablePreProcessor,
-            },
-            disableCacheElement: true,
-        });
+                areAllCollapsed: true,
+            }
+        );
     });
 
     it('domToContentModel, with Reuse Content Model dont add disableCacheElement option', () => {
@@ -57,16 +61,20 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, editorContext, {
-            selectionRange: {
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            {
+                processorOverride: {
+                    table: tablePreProcessor,
+                },
+            },
+            editorContext,
+            {
                 type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
                 ranges: [],
-            },
-            processorOverride: {
-                table: tablePreProcessor,
-            },
-        });
+                areAllCollapsed: true,
+            }
+        );
     });
 
     it('setContentModel with normal selection', () => {

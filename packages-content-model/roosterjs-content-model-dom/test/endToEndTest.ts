@@ -28,9 +28,13 @@ describe('End to end test for DOM => Model', () => {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(div1, context, {
-            disableCacheElement: true,
-        });
+        const model = domToContentModel(
+            div1,
+            {
+                disableCacheElement: true,
+            },
+            context
+        );
 
         expect(model).toEqual(expectedModel);
 
@@ -839,6 +843,33 @@ describe('End to end test for DOM => Model', () => {
                 ],
             },
             '<h1>aa</h1><h2>bb</h2><h3 style="margin: 50px;">cc</h3>'
+        );
+    });
+
+    it('Header with format from context', () => {
+        runTest(
+            '<div style="font-size: 16px"><h1 style="font-size: 40px">test</h1></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                        ],
+                        decorator: {
+                            tagName: 'h1',
+                            format: { fontSize: '40px', fontWeight: 'bold' },
+                        },
+                    },
+                ],
+            },
+            '<h1 style="font-size: 40px;">test</h1>'
         );
     });
 
