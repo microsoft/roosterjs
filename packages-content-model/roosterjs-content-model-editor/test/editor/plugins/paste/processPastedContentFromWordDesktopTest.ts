@@ -1131,10 +1131,13 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '0in',
-                                marginRight: '0in',
-                                marginBottom: undefined,
-                                marginLeft: undefined,
+                                format: {
+                                    marginTop: '0in',
+                                    marginRight: '0in',
+                                    marginBottom: undefined,
+                                    marginLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {
