@@ -12,7 +12,6 @@ import {
     handleImagePaste,
     handleTextPaste,
     moveChildNodes,
-    Position,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
@@ -46,8 +45,6 @@ export default function paste(
         clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
     }
 
-    const range = editor.getSelectionRange();
-    const position = range && Position.getStart(range);
     const event = createBeforePasteEvent(
         editor,
         clipboardData,
@@ -57,7 +54,7 @@ export default function paste(
     const fragment = createFragmentFromClipboardData(
         editor,
         clipboardData,
-        position,
+        null /* position */,
         pasteAsText,
         pasteAsImage,
         event
@@ -67,9 +64,15 @@ export default function paste(
         ...event.domToModelOption,
         disableCacheElement: true,
         additionalFormatParsers: {
-            ...event.domToModelOption,
-            block: [...(applyCurrentFormat ? [blockElementParser] : [])],
-            listLevel: [...(applyCurrentFormat ? [blockElementParser] : [])],
+            ...event.domToModelOption.additionalFormatParsers,
+            block: [
+                ...(event.domToModelOption.additionalFormatParsers?.block || []),
+                ...(applyCurrentFormat ? [blockElementParser] : []),
+            ],
+            listLevel: [
+                ...(event.domToModelOption.additionalFormatParsers?.listLevel || []),
+                ...(applyCurrentFormat ? [blockElementParser] : []),
+            ],
         },
     });
 

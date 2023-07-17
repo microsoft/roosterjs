@@ -86,4 +86,46 @@ describe('headingProcessor', () => {
             ],
         });
     });
+
+    it('header with format from context', () => {
+        const group = createContentModelDocument();
+        const h1 = document.createElement('h1');
+
+        h1.style.fontSize = '40px';
+        h1.textContent = 'test';
+        context.segmentFormat.fontSize = '20px';
+
+        headingProcessor(group, h1, context);
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: { fontSize: '40px', fontWeight: 'bold' },
+                    },
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: 'test',
+                        },
+                    ],
+                },
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                    isImplicit: true,
+                },
+            ],
+        });
+
+        expect(context.segmentFormat).toEqual({
+            fontSize: '20px',
+        });
+    });
 });
