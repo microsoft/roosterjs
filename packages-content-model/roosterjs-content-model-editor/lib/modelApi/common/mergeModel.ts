@@ -131,6 +131,12 @@ function mergeParagraph(
 
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
+        if (newParagraph.segmentFormat) {
+            newParagraph.segmentFormat = {
+                ...newParagraph.segmentFormat,
+                ...newPara.decorator.format,
+            };
+        }
     }
 }
 
