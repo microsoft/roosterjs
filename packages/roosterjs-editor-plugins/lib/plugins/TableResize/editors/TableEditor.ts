@@ -331,7 +331,7 @@ export default class TableEditor {
             this.editor.select(this.start, this.end);
         }
 
-        this.editor.addUndoSnapshot(undefined /*callback*/, ChangeSource.Format);
+        this.editor.addUndoSnapshot(() => {}, ChangeSource.Format); // Pass in an empty callback to make sure ContentChangedEvent is triggered
         this.onChanged();
         this.isCurrentlyEditing = false;
 
