@@ -54,7 +54,6 @@ describe('Paste ', () => {
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
-        getSelectionRange = jasmine.createSpy('getSelectionRange');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
@@ -89,7 +88,6 @@ describe('Paste ', () => {
         expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalled();
-        expect(getSelectionRange).toHaveBeenCalled();
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);

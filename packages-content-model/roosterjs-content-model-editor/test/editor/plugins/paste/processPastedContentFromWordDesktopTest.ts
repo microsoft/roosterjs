@@ -96,7 +96,6 @@ describe('processPastedContentFromWordDesktopTest', () => {
         let source = '<span>Test<span style="mso-comment-continuation:3">Test</span></span>';
         runTest(source, 'TestTest', {
             blockGroupType: 'Document',
-
             blocks: [
                 {
                     blockType: 'Paragraph',
@@ -942,6 +941,105 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     ],
                 }
             );
+        });
+
+        it('Lists with margins', () => {
+            const source =
+                '<p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in;font-size:12pt;font-family:Calibri, sans-serif">Test</p><p style="margin:0in 0in 0in 0.5in;font-size:12pt;font-family:Calibri, sans-serif;text-indent:-.25in;mso-list:l0 level1 lfo1"><span style="font-family:Symbol;mso-fareast-font-family:Symbol;mso-bidi-font-family:Symbol"><span style="mso-list:Ignore">·<span style="font:7.0pt &quot;Times New Roman&quot;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;\n</span></span></span>TEST</p>';
+            runTest(source, undefined, {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test',
+                                format: {
+                                    fontFamily: 'Calibri, sans-serif',
+                                    fontSize: '12pt',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginTop: '0in',
+                            marginRight: '0in',
+                            marginBottom: '0in',
+                            marginLeft: '0in',
+                        },
+                        segmentFormat: {
+                            fontFamily: 'Calibri, sans-serif',
+                            fontSize: '12pt',
+                        },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'Test',
+                                format: {
+                                    fontFamily: 'Calibri, sans-serif',
+                                    fontSize: '12pt',
+                                },
+                            },
+                        ],
+                        format: {
+                            marginTop: '0in',
+                            marginRight: '0in',
+                            marginBottom: '0in',
+                            marginLeft: '0in',
+                        },
+                        segmentFormat: {
+                            fontFamily: 'Calibri, sans-serif',
+                            fontSize: '12pt',
+                        },
+                        decorator: { tagName: 'p', format: {} },
+                    },
+                    {
+                        blockType: 'BlockGroup',
+                        blockGroupType: 'ListItem',
+                        blocks: [
+                            {
+                                blockType: 'Paragraph',
+                                segments: [
+                                    {
+                                        segmentType: 'Text',
+                                        text: 'TEST',
+                                        format: {
+                                            fontFamily: 'Calibri, sans-serif',
+                                            fontSize: '12pt',
+                                        },
+                                    },
+                                ],
+                                format: {},
+                                isImplicit: true,
+                            },
+                        ],
+                        levels: [
+                            {
+                                listType: 'UL',
+                                marginTop: '0in',
+                                marginRight: '0in',
+                                marginBottom: undefined,
+                                marginLeft: undefined,
+                            },
+                        ],
+                        formatHolder: {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        format: {
+                            marginTop: '0in',
+                            marginRight: undefined,
+                            marginBottom: '0in',
+                            marginLeft: undefined,
+                        },
+                    },
+                ],
+            });
         });
 
         /**
