@@ -23,6 +23,8 @@ import {
     ContentModelTable,
 } from 'roosterjs-content-model-types';
 
+const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
+
 /**
  * @internal
  * Options to specify how to merge models
@@ -131,11 +133,8 @@ function mergeParagraph(
 
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
-        if (newParagraph.segmentFormat) {
-            newParagraph.segmentFormat = {
-                ...newParagraph.segmentFormat,
-                ...newPara.decorator.format,
-            };
+        if (HeadingTags.indexOf(newParagraph.decorator.tagName) > -1) {
+            delete newParagraph.segmentFormat;
         }
     }
 }
