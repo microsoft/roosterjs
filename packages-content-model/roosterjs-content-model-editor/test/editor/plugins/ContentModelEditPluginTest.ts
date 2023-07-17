@@ -186,6 +186,18 @@ describe('ContentModelEditPlugin', () => {
             );
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
+
+        it('SelectionChanged event should clear cached model', () => {
+            const plugin = new ContentModelEditPlugin();
+
+            plugin.initialize(editor);
+            plugin.onPluginEvent({
+                eventType: PluginEventType.SelectionChanged,
+                selectionRangeEx: null!,
+            });
+
+            expect(cacheContentModel).toHaveBeenCalledWith(null);
+        });
     });
 
     describe('onPluginEvent, no need to go through Content Model', () => {
