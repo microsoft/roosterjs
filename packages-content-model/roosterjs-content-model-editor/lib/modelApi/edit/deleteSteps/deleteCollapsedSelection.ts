@@ -4,7 +4,7 @@ import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
 import { DeleteResult, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
-import { setParagraphNotImplicit } from 'roosterjs-content-model-dom/lib';
+import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return (context, onDeleteEntity) => {
