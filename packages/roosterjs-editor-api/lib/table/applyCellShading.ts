@@ -1,11 +1,11 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
+import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import {
     getTableCellMetadata,
     safeInstanceOf,
     saveTableCellMetadata,
     setColor,
 } from 'roosterjs-editor-dom';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * Set background color of cells.
@@ -31,7 +31,7 @@ export default function applyCellShading(editor: IEditor, color: string | ModeIn
                     const meta = getTableCellMetadata(region.rootNode);
                     saveTableCellMetadata(region.rootNode, {
                         ...meta,
-                        ...{ bgColorOverride: true },
+                        bgColorOverride: true,
                     });
                 }
             });

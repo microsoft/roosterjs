@@ -148,7 +148,7 @@ export {
     createArrayDefinition,
     createObjectDefinition,
 } from './metadata/definitionCreators';
-export { getMetadata, setMetadata, removeMetadata } from './metadata/metadata';
+export { getMetadata, setMetadata, removeMetadata, removeAllMetadata } from './metadata/metadata';
 
 export { default as arrayPush } from './jsUtils/arrayPush';
 export { default as getObjectKeys } from './jsUtils/getObjectKeys';
