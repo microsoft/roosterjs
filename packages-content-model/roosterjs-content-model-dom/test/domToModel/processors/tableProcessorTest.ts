@@ -437,20 +437,22 @@ describe('tableProcessor with format', () => {
             colSpan: 1,
             rowSpan: 1,
             tagName: 'TD',
-            style: {},
+            style: {
+                getPropertyValue: (): string | null => null,
+            },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableCellElement;
         const mockedTr = {
             tagName: 'tr',
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             getAttribute: () => '',
             cells: [mockedTd],
         };
         const mockedTable = ({
             tagName: 'table',
             rows: [mockedTr],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -499,21 +501,21 @@ describe('tableProcessor with format', () => {
             rows: [
                 {
                     tagName: 'tr',
-                    style: {},
+                    style: { getPropertyValue: (): string | null => null },
                     getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: (): string | null => null },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -540,21 +542,21 @@ describe('tableProcessor with format', () => {
             rows: [
                 {
                     tagName: 'tr',
-                    style: {},
+                    style: { getPropertyValue: (): string | null => null },
                     getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: (): string | null => null },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -612,21 +614,21 @@ describe('tableProcessor', () => {
             rows: [
                 {
                     tagName: 'tr',
-                    style: {},
+                    style: { getPropertyValue: (): string | null => null },
                     getAttribute: () => '',
                     cells: [
                         {
                             colSpan: 1,
                             rowSpan: 1,
                             tagName: 'TD',
-                            style: {},
+                            style: { getPropertyValue: (): string | null => null },
                             dataset: {},
                             getAttribute: () => '',
                         },
                     ],
                 },
             ],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -647,20 +649,25 @@ describe('tableProcessor', () => {
             tagName: 'TD',
             style: {
                 color: 'red',
+                getPropertyValue: (name: string) => {
+                    return name == 'color' ? 'red' : null;
+                },
             },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableCellElement;
         const mockedTr = ({
             tagName: 'tr',
-            style: {},
+            style: {
+                getPropertyValue: (): string | null => null,
+            },
             getAttribute: () => '',
             cells: [mockedTd],
         } as any) as HTMLTableRowElement;
         const mockedTable = ({
             tagName: 'table',
             rows: [mockedTr],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;
@@ -711,7 +718,7 @@ describe('tableProcessor', () => {
         const mockedTable = ({
             tagName: 'table',
             rows: [],
-            style: {},
+            style: { getPropertyValue: (): string | null => null },
             dataset: {},
             getAttribute: () => '',
         } as any) as HTMLTableElement;

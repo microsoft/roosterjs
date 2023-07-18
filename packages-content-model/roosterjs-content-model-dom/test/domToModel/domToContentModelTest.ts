@@ -26,7 +26,6 @@ describe('domToContentModel', () => {
         const rootElement = document.createElement('div');
         const options = {};
         const editorContext: EditorContext = {
-            isDarkMode: false,
             defaultFormat: {
                 fontSize: '10pt',
             },

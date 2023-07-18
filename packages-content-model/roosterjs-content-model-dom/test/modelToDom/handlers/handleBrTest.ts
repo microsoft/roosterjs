@@ -32,7 +32,9 @@ describe('handleSegment', () => {
 
         handleBr(document, parent, br, context);
 
-        expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
+        expect(parent.innerHTML).toBe(
+            '<span style="color: var(--darkColor_red, red);"><br></span>'
+        );
     });
 
     it('With onNodeCreated', () => {
@@ -45,7 +47,9 @@ describe('handleSegment', () => {
         context.onNodeCreated = onNodeCreated;
         handleBr(document, parent, br, context);
 
-        expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
+        expect(parent.innerHTML).toBe(
+            '<span style="color: var(--darkColor_red, red);"><br></span>'
+        );
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(br);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('br'));
     });

@@ -153,7 +153,7 @@ describe('setTableCellShade', () => {
                                 spanLeft: false,
                                 format: {
                                     backgroundColor: 'red',
-                                    textColor: '#000000',
+                                    adjustTextColor: true,
                                 },
                                 dataset: {
                                     editingInfo: '{"bgColorOverride":true}',
@@ -167,7 +167,7 @@ describe('setTableCellShade', () => {
                                 spanLeft: false,
                                 format: {
                                     backgroundColor: 'red',
-                                    textColor: '#000000',
+                                    adjustTextColor: true,
                                 },
                                 dataset: {
                                     editingInfo: '{"bgColorOverride":true}',
@@ -262,7 +262,7 @@ describe('setTableCellShade', () => {
                                 spanLeft: false,
                                 format: {
                                     backgroundColor: 'red',
-                                    textColor: '#000000',
+                                    adjustTextColor: true,
                                 },
                                 dataset: {
                                     editingInfo: '{"bgColorOverride":true}',
@@ -363,7 +363,7 @@ describe('setTableCellShade', () => {
                                 spanLeft: false,
                                 format: {
                                     backgroundColor: 'red',
-                                    textColor: '#000000',
+                                    adjustTextColor: true,
                                 },
                                 isSelected: true,
                                 dataset: {

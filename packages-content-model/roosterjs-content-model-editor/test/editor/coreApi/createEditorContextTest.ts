@@ -32,7 +32,6 @@ describe('createEditorContext', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             darkColorHandler,
             defaultFormat,
             addDelimiterForEntity,
@@ -82,7 +81,6 @@ describe('createEditorContext - checkZoomScale', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
@@ -99,7 +97,6 @@ describe('createEditorContext - checkZoomScale', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
@@ -116,7 +113,6 @@ describe('createEditorContext - checkZoomScale', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
@@ -166,7 +162,6 @@ describe('createEditorContext - checkRootDir', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
@@ -181,7 +176,6 @@ describe('createEditorContext - checkRootDir', () => {
         const context = createEditorContext(core);
 
         expect(context).toEqual({
-            isDarkMode,
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,

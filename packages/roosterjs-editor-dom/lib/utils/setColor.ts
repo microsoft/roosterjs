@@ -73,8 +73,8 @@ export function getColor(
     ignoreUnknownColorForDark?: boolean
 ): string {
     const color =
-        element.style.getPropertyValue(getColorAttrName(isBackground, 'css')) ??
-        element.getAttribute(getColorAttrName(isBackground, 'html')) ??
+        element.style.getPropertyValue(getColorAttrName(isBackground, 'css')) ||
+        element.getAttribute(getColorAttrName(isBackground, 'html')) ||
         '';
 
     return darkColorHandler

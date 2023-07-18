@@ -56,14 +56,14 @@ describe('FormatUtils', () => {
         setTextColor(editor, mockColor);
 
         expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.color).toBe(
-            mockColor
+            'var(--darkColor_red, red)'
         );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
-        expect(element.style.color).toBe(mockColor);
+        expect(element.style.color).toBe('var(--darkColor_red, red)');
     });
 
     it('setBackgroundColor() triggers the applyInlineStyle method in editor', () => {
@@ -73,14 +73,14 @@ describe('FormatUtils', () => {
         setBackgroundColor(editor, mockColor);
 
         expect((<any>editor).core.pendingFormatState.pendableFormatSpan.style.backgroundColor).toBe(
-            mockColor
+            'var(--darkColor_red, red)'
         );
         expect(applyInlineStyle.default).toHaveBeenCalled();
 
         let style = (<jasmine.Spy>applyInlineStyle.default).calls.argsFor(0)[1];
         let element = document.createElement('div');
         style(element);
-        expect(element.style.backgroundColor).toBe(mockColor);
+        expect(element.style.backgroundColor).toBe('var(--darkColor_red, red)');
     });
 
     it('setFontName() triggers the applyInlineStyle method in editor', () => {

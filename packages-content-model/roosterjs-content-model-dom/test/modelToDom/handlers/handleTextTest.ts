@@ -35,7 +35,9 @@ describe('handleText', () => {
 
         handleText(document, parent, text, context);
 
-        expect(parent.innerHTML).toBe('<span style="color: red;">test</span>');
+        expect(parent.innerHTML).toBe(
+            '<span style="color: var(--darkColor_red, red);">test</span>'
+        );
     });
 
     it('Text segment with link', () => {

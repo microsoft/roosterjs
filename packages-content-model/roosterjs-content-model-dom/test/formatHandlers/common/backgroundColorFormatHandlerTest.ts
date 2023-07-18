@@ -87,13 +87,14 @@ describe('backgroundColorFormatHandler.apply', () => {
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div style="background-color: red;"></div>');
+        expect(div.outerHTML).toBe(
+            '<div style="background-color: var(--darkColor_red, red);"></div>'
+        );
     });
 
     it('Simple color in dark mode', () => {
         format.backgroundColor = 'red';
-        context.isDarkMode = true;
-        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s);
+        context.darkColorHandler = new DarkColorHandlerImpl(div, s => 'darkMock:' + s, true);
 
         backgroundColorFormatHandler.apply(format, div, context);
 

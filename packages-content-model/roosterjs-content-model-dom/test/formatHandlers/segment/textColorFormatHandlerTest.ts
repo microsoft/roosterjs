@@ -112,17 +112,16 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, div, context);
 
-        expect(div.outerHTML).toBe('<div style="color: red;"></div>');
+        expect(div.outerHTML).toBe('<div style="color: var(--darkColor_red, red);"></div>');
     });
 
     it('Simple color in dark mode', () => {
         format.textColor = 'red';
-        context.isDarkMode = true;
+        context.darkColorHandler.isDarkMode = true;
 
         textColorFormatHandler.apply(format, div, context);
 
         const result = [
-            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
             '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
         ].indexOf(div.outerHTML);
 
@@ -152,6 +151,6 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, a, context);
 
-        expect(a.outerHTML).toBe('<a style="color: red;"></a>');
+        expect(a.outerHTML).toBe('<a style="color: var(--darkColor_red, red);"></a>');
     });
 });

@@ -1,4 +1,5 @@
 import { Editor } from 'roosterjs-editor-core';
+import { getDarkColor } from 'roosterjs-color-utils';
 import {
     DefaultFormat,
     EditorPlugin,
@@ -25,6 +26,7 @@ export function initEditor(
             fontFamily: 'arial',
             fontSize: '12pt',
         },
+        getDarkColor,
         experimentalFeatures: experimentalFeatures || [],
     });
 

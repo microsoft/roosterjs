@@ -31,11 +31,9 @@ describe('addUndoSnapshot', () => {
                 html: 'test',
                 metadata: {
                     type: 0,
-                    isDarkMode: false,
                     start: [],
                     end: [],
                 },
-                knownColors: [],
                 entityStates: undefined,
             },
             false
@@ -52,11 +50,9 @@ describe('addUndoSnapshot', () => {
                 html: 'test1',
                 metadata: {
                     type: 0,
-                    isDarkMode: false,
                     start: [],
                     end: [],
                 },
-                knownColors: [],
                 entityStates: undefined,
             },
             false
@@ -97,14 +93,12 @@ describe('addUndoSnapshot', () => {
 
         expect(snapshot1).toEqual({
             html: 'result 1',
-            metadata: { type: 0, isDarkMode: false, start: [], end: [] },
-            knownColors: [],
+            metadata: { type: 0, start: [], end: [] },
             entityStates: undefined,
         });
         expect(snapshot2).toEqual({
             html: 'result 2',
-            metadata: { type: 0, isDarkMode: false, start: [], end: [] },
-            knownColors: [],
+            metadata: { type: 0, start: [], end: [] },
             entityStates: undefined,
         });
         expect(core.undo.isNested).toBeFalsy();
@@ -263,11 +257,9 @@ describe('addUndoSnapshot', () => {
                 html: '',
                 metadata: {
                     type: SelectionRangeTypes.Normal,
-                    isDarkMode: true,
                     start: [],
                     end: [],
                 },
-                knownColors: [],
                 entityStates: undefined,
             },
             false
@@ -280,7 +272,6 @@ describe('addUndoSnapshot', () => {
                 getSelectionRangeEx: () =>
                     <any>{
                         type: SelectionRangeTypes.Normal,
-                        isDarkMode: false,
                         ranges: [{}],
                     },
             },
@@ -300,10 +291,8 @@ describe('addUndoSnapshot', () => {
                 html: '',
                 metadata: {
                     type: SelectionRangeTypes.Normal,
-                    isDarkMode: false,
                     ...selectionPath,
                 },
-                knownColors: [],
                 entityStates: undefined,
             },
             false
@@ -323,7 +312,6 @@ describe('addUndoSnapshot', () => {
                         table: {
                             id: 'tableId',
                         },
-                        isDarkMode: false,
                         coordinates,
                     },
             },
@@ -338,10 +326,8 @@ describe('addUndoSnapshot', () => {
                 metadata: {
                     type: SelectionRangeTypes.TableSelection,
                     tableId: 'tableId',
-                    isDarkMode: false,
                     ...coordinates,
                 },
-                knownColors: [],
                 entityStates: undefined,
             },
             false

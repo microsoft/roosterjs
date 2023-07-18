@@ -52,6 +52,6 @@ describe('InsertTable', () => {
         editor.select(range);
         insertTable(editor, 1, 1);
 
-        expect(target?.style.backgroundColor).toBe('transparent');
+        expect(target?.style.backgroundColor).toBe('var(--darkColor_transparent, transparent)');
     });
 });

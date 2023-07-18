@@ -443,7 +443,7 @@ describe('Text Features |', () => {
             it('Should handle event, all paragraph selected', () => {
                 runShouldHandleTest(
                     TextFeatures.outdentWhenTabText,
-                    '<div><blockquote><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p></blockquote><br></div>',
+                    '<div><blockquote><p id="p1" style="font-size:14px;">Lorem ipsum dolort.</p><p id="p2" style="font-size:14px;">Nullam molestie iaculis .</p></blockquote><br></div>',
                     () => {
                         const p1 = editor.getDocument().getElementById('p1');
                         const p2 = editor.getDocument().getElementById('p2');
@@ -460,7 +460,7 @@ describe('Text Features |', () => {
             it('Should not handle event, all paragraph selected but not under blockquote', () => {
                 runShouldHandleTest(
                     TextFeatures.outdentWhenTabText,
-                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    '<div><p id="p1" style="font-size:14px;">Lorem ipsum dolort.</p><p id="p2" style="font-size:14px;">Nullam molestie iaculis .</p><br></div>',
                     () => {
                         const p1 = editor.getDocument().getElementById('p1');
                         const p2 = editor.getDocument().getElementById('p2');
@@ -478,7 +478,7 @@ describe('Text Features |', () => {
                 editor = TestHelper.initEditor(TEST_ID, null);
                 runShouldHandleTest(
                     TextFeatures.outdentWhenTabText,
-                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    '<div><p id="p1" style="font-size:14px;">Lorem ipsum dolort.</p><p id="p2" style="font-size:14px;">Nullam molestie iaculis .</p><br></div>',
                     () => {
                         const element = editor.getDocument().getElementById('p1');
                         const range = new Range();
@@ -492,7 +492,7 @@ describe('Text Features |', () => {
             it('Should handle event, not all paragraph selected', () => {
                 runShouldHandleTest(
                     TextFeatures.outdentWhenTabText,
-                    '<div><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p><br></div>',
+                    '<div><p id="p1" style="font-size:14px;">Lorem ipsum dolort.</p><p id="p2" style="font-size:14px;">Nullam molestie iaculis .</p><br></div>',
                     () => {
                         const p1 = editor.getDocument().getElementById('p1');
                         const p2 = editor.getDocument().getElementById('p2');
@@ -510,7 +510,7 @@ describe('Text Features |', () => {
             it('Handle Event when all paragraph selected', () => {
                 runHandleTest(
                     TextFeatures.outdentWhenTabText,
-                    '<div><blockquote><p id="p1" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Lorem ipsum dolort.</p><p id="p2" style="margin:0px 0px 15px;text-align:justify;font-family:&quot;Open Sans&quot;, Arial, sans-serif;font-size:14px;background-color:rgb(255, 255, 255)">Nullam molestie iaculis .</p></blockquote><br></div>',
+                    '<div><blockquote><p id="p1">Lorem ipsum dolort.</p><p id="p2">Nullam molestie iaculis .</p></blockquote><br></div>',
                     () => {
                         const p1 = editor.getDocument().getElementById('p1');
                         const p2 = editor.getDocument().getElementById('p2');
@@ -520,7 +520,7 @@ describe('Text Features |', () => {
 
                         editor.select(range);
                     },
-                    '<div><p id="p1" style="margin: 0px 0px 15px; text-align: justify; font-family: &quot;Open Sans&quot;, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">Lorem ipsum dolort.</p><p id="p2" style="margin: 0px 0px 15px; text-align: justify; font-family: &quot;Open Sans&quot;, Arial, sans-serif; font-size: 14px; background-color: rgb(255, 255, 255);">Nullam molestie iaculis .</p><br></div>'
+                    '<div><p id="p1">Lorem ipsum dolort.</p><p id="p2">Nullam molestie iaculis .</p><br></div>'
                 );
             });
         });

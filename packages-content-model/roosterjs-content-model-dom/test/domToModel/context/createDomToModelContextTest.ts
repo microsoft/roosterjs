@@ -46,9 +46,7 @@ describe('createDomToModelContext', () => {
     });
 
     it('with content model context', () => {
-        const editorContext: EditorContext = {
-            isDarkMode: true,
-        };
+        const editorContext: EditorContext = {};
 
         const context = createDomToModelContext(editorContext);
 
@@ -75,9 +73,7 @@ describe('createDomToModelContext', () => {
     });
 
     it('with content model context', () => {
-        const editorContext: EditorContext = {
-            isDarkMode: true,
-        };
+        const editorContext: EditorContext = {};
 
         const context = createDomToModelContext(editorContext);
 

@@ -45,7 +45,7 @@ describe('setTableCellBackgroundColor', () => {
             blockGroupType: 'TableCell',
             format: {
                 backgroundColor: '#ffffff',
-                textColor: '#000000',
+                adjustTextColor: true,
             },
             isHeader: false,
             spanAbove: false,
@@ -66,7 +66,7 @@ describe('setTableCellBackgroundColor', () => {
             blockGroupType: 'TableCell',
             format: {
                 backgroundColor: '#ffffff',
-                textColor: '#000000',
+                adjustTextColor: true,
             },
             isHeader: false,
             spanAbove: false,
@@ -87,7 +87,7 @@ describe('setTableCellBackgroundColor', () => {
             blockGroupType: 'TableCell',
             format: {
                 backgroundColor: '#000000',
-                textColor: '#ffffff',
+                adjustTextColor: true,
             },
             isHeader: false,
             spanAbove: false,
@@ -108,7 +108,7 @@ describe('setTableCellBackgroundColor', () => {
             blockGroupType: 'TableCell',
             format: {
                 backgroundColor: 'rgb(0,0,0)',
-                textColor: '#ffffff',
+                adjustTextColor: true,
             },
             isHeader: false,
             spanAbove: false,
@@ -129,7 +129,7 @@ describe('setTableCellBackgroundColor', () => {
             blockGroupType: 'TableCell',
             format: {
                 backgroundColor: 'wrong',
-                textColor: '#000000',
+                adjustTextColor: true,
             },
             isHeader: false,
             spanAbove: false,

@@ -464,10 +464,10 @@ describe('handleTable', () => {
 
         expect(
             [
-                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;"></td></tr></tbody></table>',
-                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: red; word-break: break-all; color: blue; box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
-            ].indexOf(parent.innerHTML) >= 0
-        ).toBeTrue();
+                '<table><tbody><tr><td data-editing-info="{}" style="width: 100px; height: 200px; background-color: var(--darkColor_red, red); word-break: break-all; color: var(--darkColor_blue, blue); box-sizing: border-box;"></td></tr></tbody></table>',
+                '<table><tbody><tr><td style="width: 100px; height: 200px; background-color: var(--darkColor_red, red); word-break: break-all; color: var(--darkColor_blue, blue); box-sizing: border-box;" data-editing-info="{}"></td></tr></tbody></table>',
+            ].indexOf(parent.innerHTML)
+        ).toBeGreaterThanOrEqual(0, parent.innerHTML);
     });
 
     it('With cached TD, do not apply table cell related styles', () => {
@@ -528,7 +528,7 @@ describe('handleTable', () => {
         handleTable(document, parent, table, context, null);
 
         expect(parent.innerHTML).toBe(
-            '<table><tbody><tr style="background-color: red;"><td></td></tr></tbody></table>'
+            '<table><tbody><tr style="background-color: var(--darkColor_red, red);"><td></td></tr></tbody></table>'
         );
     });
 

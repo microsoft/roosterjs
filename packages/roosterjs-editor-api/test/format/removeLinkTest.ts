@@ -5,7 +5,7 @@ import { IEditor } from 'roosterjs-editor-types';
 describe('removeLink()', () => {
     let testID = 'removeLink';
     let originalContent =
-        '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);"><a href="#">link</a></div>';
+        '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;"><a href="#">link</a></div>';
     let editor: IEditor;
 
     beforeEach(() => {
@@ -27,7 +27,7 @@ describe('removeLink()', () => {
 
         // Assert
         expect(editor.getContent()).toBe(
-            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(0, 0, 0);">link</div>'
+            '<div id="text" style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt;">link</div>'
         );
     });
 });

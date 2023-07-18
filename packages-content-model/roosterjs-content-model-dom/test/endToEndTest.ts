@@ -14,7 +14,6 @@ describe('End to end test for DOM => Model', () => {
 
     beforeEach(() => {
         context = {
-            isDarkMode: false,
             darkColorHandler: new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s),
         };
     });
@@ -139,7 +138,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<ul style="margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: black;"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: black;">2</span></li></ul>'
+            '<ul style="margin-bottom: 0in;"><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: var(--darkColor_black, black);"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: var(--darkColor_black, black);">1</span></li><li style="margin-right: 0in; margin-left: 0in; font-family: Calibri, sans-serif; font-size: 11pt; color: var(--darkColor_black, black);"><span style="font-family: Calibri, sans-serif; font-size: 11pt; color: var(--darkColor_black, black);">2</span></li></ul>'
         );
     });
 
@@ -417,7 +416,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<span style="background-color: red;"><b>aa</b></span><div><b>bb</b></div><span style="background-color: red;"><b>cc</b></span>'
+            '<span style="background-color: var(--darkColor_red, red);"><b>aa</b></span><div><b>bb</b></div><span style="background-color: var(--darkColor_red, red);"><b>cc</b></span>'
         );
     });
 
@@ -497,7 +496,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<span style="background-color: red;"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: red;"><b>cc</b></span>'
+            '<span style="background-color: var(--darkColor_red, red);"><b>aa</b></span><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><span style="background-color: var(--darkColor_red, red);"><b>cc</b></span>'
         );
     });
 
@@ -586,7 +585,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div style="background-color: red; display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
+            '<div style="background-color: var(--darkColor_red, red); display: block;"><b>aa</b><table><tbody><tr><td><b>bb</b></td></tr></tbody></table><b>cc</b></div>'
         );
     });
 
@@ -1116,7 +1115,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div><span style="color: red;">aaaa</span></div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div></blockquote><div><span style="color: red;">cccc</span></div><div><span style="color: red;">aaaa</span></div><div style="margin-right: 40px; margin-left: 40px;"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: rgb(102, 102, 102);">bbbbbb</span></div><div><span style="color: red;">cccc</span></div>'
+            '<div><span style="color: var(--darkColor_red, red);">aaaa</span></div><blockquote style="padding-left: 10px; border-left: 3px solid rgb(200, 200, 200);"><div><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: var(--darkColor_rgb_102__102__102_, rgb(102, 102, 102));">bbbbbb</span></div></blockquote><div><span style="color: var(--darkColor_red, red);">cccc</span></div><div><span style="color: var(--darkColor_red, red);">aaaa</span></div><div style="margin-right: 40px; margin-left: 40px;"><span style="font-family: Calibri, Arial, Helvetica, sans-serif; font-size: 12pt; color: var(--darkColor_rgb_102__102__102_, rgb(102, 102, 102));">bbbbbb</span></div><div><span style="color: var(--darkColor_red, red);">cccc</span></div>'
         );
     });
 
@@ -1263,8 +1262,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<div align="center" style="background-color: red;">test1</div>test2',
-            '<div style="background-color: red;" align="center">test1</div>test2'
+            '<div align="center" style="background-color: var(--darkColor_red, red);">test1</div>test2',
+            '<div style="background-color: var(--darkColor_red, red);" align="center">test1</div>test2'
         );
     });
 
@@ -1557,8 +1556,8 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<span style="color: red;"><a href="#" style="color: red; display: block;">test</a></span>',
-            '<span style="color: red;"><a style="color: red; display: block;" href="#">test</a></span>'
+            '<span style="color: var(--darkColor_red, red);"><a href="#" style="color: var(--darkColor_red, red); display: block;">test</a></span>',
+            '<span style="color: var(--darkColor_red, red);"><a style="color: var(--darkColor_red, red); display: block;" href="#">test</a></span>'
         );
     });
 
@@ -1752,7 +1751,7 @@ describe('End to end test for DOM => Model', () => {
                     },
                 ],
             },
-            '<a href="#">before</a><span style="color: red;"><a href="#" style="color: red;">test</a></span><a href="#">after</a>'
+            '<a href="#">before</a><span style="color: var(--darkColor_red, red);"><a href="#" style="color: var(--darkColor_red, red);">test</a></span><a href="#">after</a>'
         );
     });
 });

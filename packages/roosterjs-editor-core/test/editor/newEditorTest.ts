@@ -129,79 +129,96 @@ describe('Editor', () => {
         });
         const core: EditorCore = (<any>editor).core;
 
-        expect(core).toBeDefined();
+        expect(core).toBeDefined('Core');
 
-        expect(core.contentDiv).toBe(div);
+        expect(core.contentDiv).toBe(div, 'Content Div');
 
-        expect(div.innerHTML).toBe('<div>test content</div>');
+        expect(div.innerHTML).toBe('<div>test content</div>', 'InnerHTML');
 
-        expect(core.api.addUndoSnapshot).toBe(addUndoSnapshot);
-        expect(core.api.attachDomEvent).toBe(attachDomEvent);
-        expect(core.api.createPasteFragment).toBe(createPasteFragment);
-        expect(core.api.ensureTypeInContainer).toBe(ensureTypeInContainer);
-        expect(core.api.focus).toBe(myFocus);
-        expect(core.api.getContent).toBe(getContent);
-        expect(core.api.getSelectionRange).toBe(getSelectionRange);
-        expect(core.api.getStyleBasedFormatState).toBe(getStyleBasedFormatState);
-        expect(core.api.hasFocus).toBe(hasFocus);
-        expect(core.api.insertNode).toBe(insertNode);
-        expect(core.api.restoreUndoSnapshot).toBe(restoreUndoSnapshot);
-        expect(core.api.selectRange).toBe(selectRange);
-        expect(core.api.setContent).toBe(setContent);
-        expect(core.api.transformColor).toBe(transformColor);
-        expect(core.api.triggerEvent).toBe(triggerEvent);
+        expect(core.api.addUndoSnapshot).toBe(addUndoSnapshot, 'addUndoSnapshot');
+        expect(core.api.attachDomEvent).toBe(attachDomEvent, 'attachDomEvent');
+        expect(core.api.createPasteFragment).toBe(createPasteFragment, 'createPasteFragment');
+        expect(core.api.ensureTypeInContainer).toBe(ensureTypeInContainer, 'ensureTypeInContainer');
+        expect(core.api.focus).toBe(myFocus, 'myFocus');
+        expect(core.api.getContent).toBe(getContent, 'getContent');
+        expect(core.api.getSelectionRange).toBe(getSelectionRange, 'getSelectionRange');
+        expect(core.api.getStyleBasedFormatState).toBe(
+            getStyleBasedFormatState,
+            'getStyleBasedFormatState'
+        );
+        expect(core.api.hasFocus).toBe(hasFocus, 'hasFocus');
+        expect(core.api.insertNode).toBe(insertNode, 'insertNode');
+        expect(core.api.restoreUndoSnapshot).toBe(restoreUndoSnapshot, 'resotreUndoSnapshot');
+        expect(core.api.selectRange).toBe(selectRange, 'selectRange');
+        expect(core.api.setContent).toBe(setContent, 'setContent');
+        expect(core.api.transformColor).toBe(transformColor, 'transformColor');
+        expect(core.api.triggerEvent).toBe(triggerEvent, 'triggerEvent');
 
-        expect(core.plugins.map(p => p.getName())).toEqual([
-            'TypeInContainer',
-            'Edit',
-            'PendingFormatState',
-            'test plugin',
-            'Undo',
-            'DOMEvent',
-            'test mouse up',
-            'CopyPaste',
-            'Entity',
-            'ImageSelection',
-            'NormalizeTable',
-            'Lifecycle',
-        ]);
+        expect(core.plugins.map(p => p.getName())).toEqual(
+            [
+                'TypeInContainer',
+                'Edit',
+                'PendingFormatState',
+                'test plugin',
+                'Undo',
+                'DOMEvent',
+                'test mouse up',
+                'CopyPaste',
+                'Entity',
+                'ImageSelection',
+                'NormalizeTable',
+                'Lifecycle',
+            ],
+            'plugins'
+        );
 
-        expect(core.domEvent).toEqual({
-            isInIME: false,
-            scrollContainer: scrollContaner,
-            selectionRange: null,
-            stopPrintableKeyboardEventPropagation: false,
-            contextMenuProviders: [],
-            tableSelectionRange: null,
-            imageSelectionRange: null,
-        });
+        expect(core.domEvent).toEqual(
+            {
+                isInIME: false,
+                scrollContainer: scrollContaner,
+                selectionRange: null,
+                stopPrintableKeyboardEventPropagation: false,
+                contextMenuProviders: [],
+                tableSelectionRange: null,
+                imageSelectionRange: null,
+            },
+            'domEvent'
+        );
         if (!Browser.isChrome) {
-            expect(core.edit).toEqual({
-                features: {},
-            });
+            expect(core.edit).toEqual(
+                {
+                    features: {},
+                },
+                'edit'
+            );
         }
-        expect(core.entity).toEqual({
-            entityMap: {},
-        });
-        expect(core.lifecycle.customData).toEqual({});
+        expect(core.entity).toEqual(
+            {
+                entityMap: {},
+            },
+            'entity'
+        );
+        expect(core.lifecycle.customData).toEqual({}, 'customData');
         expect(core.lifecycle.isDarkMode).toBeTrue();
-        expect(core.lifecycle.onExternalContentTransform).toBe(myTransform);
-        expect(core.lifecycle.defaultFormat).toBeDefined();
+        expect(core.lifecycle.defaultFormat).toBeDefined('defaultFormat');
         expect(core.lifecycle.defaultFormat.bold).toBeTrue();
-        expect(core.pendingFormatState).toEqual({
-            pendableFormatPosition: null,
-            pendableFormatState: null,
-            pendableFormatSpan: null,
-        });
+        expect(core.pendingFormatState).toEqual(
+            {
+                pendableFormatPosition: null,
+                pendableFormatState: null,
+                pendableFormatSpan: null,
+            },
+            'pendingFormatState'
+        );
         expect(core.undo.isRestoring).toBeFalse();
         expect(core.undo.hasNewContent).toBeFalse();
         expect(core.undo.isNested).toBeFalse();
         expect(core.undo.autoCompletePosition).toBeNull();
-        expect(core.undo.snapshotsService.addSnapshot).toBeDefined();
-        expect(core.undo.snapshotsService.canMove).toBeDefined();
-        expect(core.undo.snapshotsService.canUndoAutoComplete).toBeDefined();
-        expect(core.undo.snapshotsService.clearRedo).toBeDefined();
-        expect(core.undo.snapshotsService.move).toBeDefined();
+        expect(core.undo.snapshotsService.addSnapshot).toBeDefined('addSnapshot');
+        expect(core.undo.snapshotsService.canMove).toBeDefined('canMove');
+        expect(core.undo.snapshotsService.canUndoAutoComplete).toBeDefined('canUndoAutoComplete');
+        expect(core.undo.snapshotsService.clearRedo).toBeDefined('clearRedo');
+        expect(core.undo.snapshotsService.move).toBeDefined('move');
     });
 
     it('create Editor with initial content as a table with colgroup', () => {

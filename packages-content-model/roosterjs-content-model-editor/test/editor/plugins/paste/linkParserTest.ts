@@ -27,15 +27,7 @@ describe('link parser test', () => {
             expect(model).toEqual(expectedModel);
         }
 
-        contentModelToDom(
-            document,
-            div,
-            model,
-            {
-                isDarkMode: false,
-            },
-            {}
-        );
+        contentModelToDom(document, div, model);
 
         //Assert
         if (expected) {

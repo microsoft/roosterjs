@@ -66,7 +66,7 @@ describe('applyCellShading', () => {
         cell = document.querySelector('#test_tsc').querySelector('td');
         // Assert
         expect(cell?.style.backgroundColor.replace(' ', '')).toEqual(
-            'rgb(0, 255, 255)'.replace(' ', '')
+            'var(--darkColor__00ffff,#00ffff)'
         );
         expect(cell?.getAttribute('data-editing-info')).toBeDefined();
     });

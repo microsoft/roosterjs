@@ -145,7 +145,7 @@ describe('DarkColorHandlerImpl.registerColor', () => {
     });
 
     it('simple color, light mode', () => {
-        runTest('red', false, undefined, 'red', {}, []);
+        runTest('red', false, undefined, 'var(--darkColor_red, red)', {}, []);
     });
 
     it('empty color, dark mode', () => {
@@ -185,7 +185,7 @@ describe('DarkColorHandlerImpl.registerColor', () => {
     });
 
     it('var color, light mode', () => {
-        runTest('var(--aa, bb)', false, undefined, 'bb', {}, []);
+        runTest('var(--aa, bb)', false, undefined, 'var(--aa, bb)', {}, []);
     });
 
     it('var color, dark mode', () => {
@@ -264,7 +264,10 @@ describe('DarkColorHandlerImpl.reset', () => {
 
         handler.reset();
 
-        expect((handler as any).knownColors).toEqual({});
+        expect((handler as any).knownColors).toEqual({
+            '--aa': { lightModeColor: 'bb', darkModeColor: 'cc' },
+            '--dd': { lightModeColor: 'ee', darkModeColor: 'ff' },
+        });
         expect(removeProperty).toHaveBeenCalledTimes(2);
         expect(removeProperty).toHaveBeenCalledWith('--aa');
         expect(removeProperty).toHaveBeenCalledWith('--dd');

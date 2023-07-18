@@ -61,7 +61,11 @@ describe('handleSegmentDecorator', () => {
 
         context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
-        runTest(link, undefined, '<a href="http://test.com/test" style="color: red;">test</a>');
+        runTest(
+            link,
+            undefined,
+            '<a href="http://test.com/test" style="color: var(--darkColor_red, red);">test</a>'
+        );
     });
 
     it('link without underline', () => {
@@ -206,7 +210,7 @@ describe('handleSegmentDecorator', () => {
         runTest(
             link,
             undefined,
-            '<a href="http://test.com/test" style="background-color: red;">test</a>'
+            '<a href="http://test.com/test" style="background-color: var(--darkColor_red, red);">test</a>'
         );
     });
 });

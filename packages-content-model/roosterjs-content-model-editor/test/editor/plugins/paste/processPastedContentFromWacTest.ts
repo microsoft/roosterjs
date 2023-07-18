@@ -26,15 +26,7 @@ describe('processPastedContentFromWacTest', () => {
             expect(model).toEqual(expectedModel);
         }
 
-        contentModelToDom(
-            document,
-            div,
-            model,
-            {
-                isDarkMode: false,
-            },
-            {}
-        );
+        contentModelToDom(document, div, model);
 
         //Assert
         if (expected) {
@@ -131,15 +123,7 @@ describe('wordOnlineHandler', () => {
             expect(model).toEqual(expectedModel);
         }
 
-        contentModelToDom(
-            document,
-            div,
-            model,
-            {
-                isDarkMode: false,
-            },
-            {}
-        );
+        contentModelToDom(document, div, model);
 
         //Assert
         if (expected) {

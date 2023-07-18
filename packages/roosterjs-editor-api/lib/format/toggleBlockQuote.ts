@@ -22,6 +22,7 @@ export default function toggleBlockQuote(editor: IEditor, styler?: (element: HTM
         nodes => {
             const wrapper = wrap(nodes, BLOCKQUOTE_TAG);
             (styler || DEFAULT_STYLER)(wrapper);
+            editor.transformToDarkColor(wrapper);
         },
         () => editor.queryElements('blockquote', QueryScope.OnSelection, unwrap).length == 0,
         'toggleBlockQuote'
