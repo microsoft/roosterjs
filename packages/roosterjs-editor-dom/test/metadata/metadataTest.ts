@@ -1,10 +1,5 @@
 import { CustomizeDefinition, DefinitionType } from 'roosterjs-editor-types';
-import {
-    getMetadata,
-    removeAllMetadata,
-    removeMetadata,
-    setMetadata,
-} from '../../lib/metadata/metadata';
+import { getMetadata, removeMetadata, setMetadata } from '../../lib/metadata/metadata';
 
 describe('metadata', () => {
     it('getMetadata gets a valid metadata', () => {
@@ -133,7 +128,7 @@ describe('removeAllMetadata', () => {
         const obj = { x: 1, y: 'test' };
         const div = document.createElement('div');
         div.setAttribute('data-editing-info', JSON.stringify(obj));
-        removeAllMetadata(div);
+        removeMetadata(div);
         expect(div.outerHTML).toBe('<div></div>');
     });
 });
