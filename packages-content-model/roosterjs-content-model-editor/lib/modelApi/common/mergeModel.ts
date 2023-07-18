@@ -132,6 +132,10 @@ function mergeParagraph(
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
     }
+
+    if (!mergeToCurrentParagraph) {
+        newParagraph.format = newPara.format;
+    }
 }
 
 function mergeTable(
