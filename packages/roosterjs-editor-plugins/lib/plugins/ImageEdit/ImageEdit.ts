@@ -476,7 +476,7 @@ export default class ImageEdit implements EditorPlugin {
         if (this.image) {
             this.shadowSpan = wrap(this.image, 'span');
             if (this.shadowSpan) {
-                const shadowRoot = this.shadowSpan?.attachShadow({
+                const shadowRoot = this.shadowSpan.attachShadow({
                     mode: 'open',
                 });
 
