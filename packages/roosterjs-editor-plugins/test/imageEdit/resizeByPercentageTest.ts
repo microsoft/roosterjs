@@ -107,5 +107,5 @@ describe('resizeByPercentage', () => {
 });
 
 function createImage() {
-    return `<img id="${IMG_ID}" src="${IMG_SRC}"/>`;
+    return `<img id="${IMG_ID}" style="width: 30px; height: 30px;" src="${IMG_SRC}"/>`;
 }
