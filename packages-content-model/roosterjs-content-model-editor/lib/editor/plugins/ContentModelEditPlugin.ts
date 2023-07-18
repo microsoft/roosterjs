@@ -96,6 +96,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
 
                 case PluginEventType.ContentChanged:
                 case PluginEventType.MouseUp:
+                case PluginEventType.SelectionChanged:
                     this.editor.cacheContentModel(null);
                     break;
             }
