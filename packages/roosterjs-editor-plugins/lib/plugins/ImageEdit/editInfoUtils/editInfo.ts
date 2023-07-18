@@ -1,6 +1,6 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import ImageEditInfo from '../types/ImageEditInfo';
-import { getMetadata, removeMetadata, setMetadata } from 'roosterjs-editor-dom';
+import { getMetadata, removeAllMetadata, setMetadata } from 'roosterjs-editor-dom';
 
 /**
  * @internal
@@ -21,7 +21,7 @@ export function saveEditInfo(image: HTMLImageElement, editInfo: ImageEditInfo) {
  */
 export function deleteEditInfo(image: HTMLImageElement) {
     if (image) {
-        removeMetadata(image);
+        removeAllMetadata(image);
     }
 }
 

@@ -31,6 +31,7 @@ const DEFAULT_FORMAT: Required<TableFormat> = {
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
     keepCellShade: false,
+    verticalAlign: 'top',
 };
 
 /**

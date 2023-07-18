@@ -23,6 +23,7 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
+    verticalAlign: 'top',
 };
 
 type MetaOverrides = {
@@ -47,10 +48,7 @@ export function applyTableFormat(
             ...(newFormat || {}),
         };
 
-        const bgColorOverrides = updateBgColorOverrides(rows, !keepCellShade);
-        const vAlignOverrides = updateVAlignOverrides(rows);
-
-        const metaOverrides: MetaOverrides = { bgColorOverrides, vAlignOverrides };
+        const metaOverrides: MetaOverrides = updateOverrides(rows, !keepCellShade);
 
         delete table.cachedElement;
 
@@ -72,48 +70,32 @@ function clearCache(rows: ContentModelTableRow[]) {
     });
 }
 
-function updateBgColorOverrides(rows: ContentModelTableRow[], forceClear: boolean): boolean[][] {
-    const result: boolean[][] = [];
+function updateOverrides(rows: ContentModelTableRow[], forceClear: boolean): MetaOverrides {
+    const overrides: MetaOverrides = { bgColorOverrides: [], vAlignOverrides: [] };
 
     rows.forEach(row => {
-        const currentRow: boolean[] = [];
+        const bgColorOverrides: boolean[] = [];
+        const vAlignOverrides: boolean[] = [];
 
-        result.push(currentRow);
+        overrides.bgColorOverrides.push(bgColorOverrides);
+        overrides.vAlignOverrides.push(vAlignOverrides);
 
         row.cells.forEach(cell => {
             updateTableCellMetadata(cell, metadata => {
                 if (metadata && forceClear) {
-                    currentRow.push(false);
+                    bgColorOverrides.push(false);
                     delete metadata.bgColorOverride;
                 } else {
-                    currentRow.push(!!metadata?.bgColorOverride);
+                    bgColorOverrides.push(!!metadata?.bgColorOverride);
                 }
+                vAlignOverrides.push(!!metadata?.vAlignOverride);
 
                 return metadata;
             });
         });
     });
 
-    return result;
-}
-
-function updateVAlignOverrides(rows: ContentModelTableRow[]): boolean[][] {
-    const result: boolean[][] = [];
-
-    rows.forEach(row => {
-        const currentRow: boolean[] = [];
-
-        result.push(currentRow);
-
-        row.cells.forEach(cell => {
-            updateTableCellMetadata(cell, metadata => {
-                currentRow.push(!!metadata?.vAlignOverride);
-                return metadata;
-            });
-        });
-    });
-
-    return result;
+    return overrides;
 }
 
 type ShouldUseTransparentBorder = (indexProp: {
@@ -222,14 +204,14 @@ function formatCells(
                           (hasBandedRows && rowIndex % 2 != 0)
                             ? bgColorOdd
                             : bgColorEven
-                        : bgColorEven;
+                        : bgColorEven; /* bgColorEven is the default color */
 
                 setTableCellBackgroundColor(cell, color);
             }
 
             // Format Vertical Align
             if (!metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
-                cell.format.verticalAlign = 'top';
+                cell.format.verticalAlign = format.verticalAlign;
             }
         });
     });

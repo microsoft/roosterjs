@@ -34,6 +34,7 @@ const TableFormatMetadata = createObjectDefinition<Required<TableFormat>>(
             TableBorderFormat.CLEAR /* last table border format, , TODO: Use Min/Max to specify valid values */
         ),
         keepCellShade: createBooleanDefinition(true /** isOptional */),
+        verticalAlign: NullStringDefinition,
     },
     false /* isOptional */,
     true /** allowNull */
