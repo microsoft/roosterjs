@@ -15,7 +15,7 @@ const TABLE_HEADER_TAG_NAME = 'TH';
 export default function applyTableFormat(
     table: HTMLTableElement,
     cells: VCell[][],
-    format: Required<TableFormat>,
+    format: Partial<TableFormat>,
     darkColorHandler?: DarkColorHandler | null
 ) {
     if (!format) {
