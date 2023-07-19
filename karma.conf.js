@@ -123,8 +123,8 @@ module.exports = function (config) {
                     './node_modules',
                 ],
             },
-            // Workaround karma-webpack issue 493
-            // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-779919412
+            // Workaround karma-webpack issue https://github.com/ryanclark/karma-webpack/issues/493
+            // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-780411348
             optimization: {
                 splitChunks: false,
             },
