@@ -23,7 +23,7 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
-    verticalAlign: 'top',
+    verticalAlign: null,
 };
 
 type MetaOverrides = {
@@ -210,7 +210,7 @@ function formatCells(
             }
 
             // Format Vertical Align
-            if (!metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
+            if (format.verticalAlign && !metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
                 cell.format.verticalAlign = format.verticalAlign;
             }
         });

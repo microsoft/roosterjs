@@ -62,5 +62,5 @@ export type TableMetadataFormat = {
     /**
      * Vertical alignment for each row
      */
-    verticalAlign?: 'top' | 'middle' | 'bottom';
+    verticalAlign?: 'top' | 'middle' | 'bottom' | null;
 };

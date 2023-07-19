@@ -18,7 +18,7 @@ import {
 } from 'roosterjs-editor-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
-const DEFAULT_FORMAT: Partial<TableFormat> = {
+const DEFAULT_FORMAT: Required<TableFormat> = {
     topBorderColor: '#ABABAB',
     bottomBorderColor: '#ABABAB',
     verticalBorderColor: '#ABABAB',
@@ -31,6 +31,7 @@ const DEFAULT_FORMAT: Partial<TableFormat> = {
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
     keepCellShade: false,
+    verticalAlign: null,
 };
 
 /**
@@ -60,7 +61,7 @@ export default class VTable {
     /**
      * Current format of the table
      */
-    formatInfo: Partial<TableFormat> | null = null;
+    formatInfo: Required<TableFormat> | null = null;
 
     private trs: HTMLTableRowElement[] = [];
 
