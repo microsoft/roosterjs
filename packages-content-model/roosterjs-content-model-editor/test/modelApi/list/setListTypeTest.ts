@@ -517,4 +517,34 @@ describe('indent', () => {
             ],
         });
     });
+
+    it('Change style type to existing list', () => {
+        const group = createContentModelDocument();
+        const list1 = createListItem([{ listType: 'OL' }]);
+        const para1 = createParagraph();
+        const br = createBr();
+
+        para1.segments.push(br);
+        list1.blocks.push(para1);
+        group.blocks.push(list1);
+
+        br.isSelected = true;
+
+        const result = setListType(group, 'UL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [{ listType: 'UL' }],
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    format: {},
+                },
+            ],
+        });
+    });
 });
