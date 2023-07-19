@@ -475,14 +475,16 @@ export default class ImageEdit implements EditorPlugin {
     private insertImageWrapper(wrapper: HTMLSpanElement) {
         if (this.image) {
             this.shadowSpan = wrap(this.image, 'span');
-            const shadowRoot = this.shadowSpan.attachShadow({
-                mode: 'open',
-            });
+            if (this.shadowSpan) {
+                const shadowRoot = this.shadowSpan.attachShadow({
+                    mode: 'open',
+                });
 
-            this.shadowSpan.style.verticalAlign = 'bottom';
-            this.shadowSpan.style.fontSize = '24px';
+                this.shadowSpan.style.verticalAlign = 'bottom';
+                this.shadowSpan.style.fontSize = '24px';
 
-            shadowRoot.appendChild(wrapper);
+                shadowRoot.appendChild(wrapper);
+            }
         }
     }
 
