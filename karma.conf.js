@@ -24,7 +24,6 @@ const allPreprocessors = Object.keys(testEntries).reduce((value, entry) => {
     return value;
 }, {});
 
-const path = require('path');
 const rootPath = __dirname;
 
 module.exports = function (config) {
@@ -111,6 +110,7 @@ module.exports = function (config) {
 
         webpack: {
             mode: 'development',
+            devtool: 'inline-source-map',
             module: {
                 rules,
             },
@@ -123,8 +123,10 @@ module.exports = function (config) {
                     './node_modules',
                 ],
             },
-            output: {
-                path: path.join(__dirname, 'dist/karma'),
+            // Workaround karma-webpack issue 493
+            // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-779919412
+            optimization: {
+                splitChunks: false,
             },
         },
 
