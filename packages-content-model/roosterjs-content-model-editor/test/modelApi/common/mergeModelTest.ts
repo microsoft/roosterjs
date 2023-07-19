@@ -1973,7 +1973,12 @@ describe('mergeModel', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
 
-        const para1 = createParagraph(false, undefined, { fontFamily: 'Arial', fontSize: '15px' });
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+        });
         const marker = createSelectionMarker();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -1983,7 +1988,11 @@ describe('mergeModel', () => {
 
         const heading = createParagraph(false, undefined, undefined, {
             tagName: 'h1',
-            format: {},
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '16pt',
+                textColor: 'aliceblue',
+            },
         });
         heading.segments.push(createText('sourceTest1'), createText('sourceTest2'));
 
@@ -2008,7 +2017,15 @@ describe('mergeModel', () => {
                         { segmentType: 'Text', text: 'test2', format: {} },
                     ],
                     format: {},
-                    decorator: { tagName: 'h1', format: {} },
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontFamily: 'Calibri',
+                            fontSize: '16pt',
+                            textColor: 'aliceblue',
+                        },
+                    },
+                    segmentFormat: { backgroundColor: 'red' },
                 },
             ],
         });

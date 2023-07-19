@@ -2,6 +2,7 @@ import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeTable } from '../table/normalizeTable';
 import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
@@ -134,7 +135,14 @@ function mergeParagraph(
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
         if (HeadingTags.indexOf(newParagraph.decorator.tagName) > -1) {
-            delete newParagraph.segmentFormat;
+            const keys: (keyof ContentModelSegmentFormat)[] = getObjectKeys(
+                newParagraph.decorator.format
+            );
+            keys.forEach(key => {
+                if (newParagraph.segmentFormat?.[key]) {
+                    delete newParagraph.segmentFormat[key];
+                }
+            });
         }
     }
 }
