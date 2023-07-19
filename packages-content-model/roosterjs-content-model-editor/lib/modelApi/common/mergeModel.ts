@@ -145,6 +145,10 @@ function mergeParagraph(
             });
         }
     }
+
+    if (!mergeToCurrentParagraph) {
+        newParagraph.format = newPara.format;
+    }
 }
 
 function mergeTable(

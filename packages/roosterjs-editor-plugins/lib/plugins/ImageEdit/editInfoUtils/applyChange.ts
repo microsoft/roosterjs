@@ -75,5 +75,8 @@ export default function applyChange(
     if (wasResizedOrCropped || state == ImageEditInfoState.FullyChanged) {
         image.width = targetWidth;
         image.height = targetHeight;
+        // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
+        image.style.removeProperty('width');
+        image.style.removeProperty('height');
     }
 }
