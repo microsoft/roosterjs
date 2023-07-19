@@ -23,6 +23,7 @@ const allPreprocessors = Object.keys(testEntries).reduce((value, entry) => {
     value[testEntries[entry]] = ['webpack', 'sourcemap'];
     return value;
 }, {});
+const files = [testEntries['Content Model'], testEntries['Original RoosterJs'], testEntries['UI']];
 
 const rootPath = __dirname;
 
@@ -92,7 +93,7 @@ module.exports = function (config) {
             clearContext: false,
         },
         browsers: launcher,
-        files: [currentFile],
+        files: files,
         frameworks: ['jasmine'],
         preprocessors: allPreprocessors,
         port: 9876,
@@ -142,8 +143,6 @@ module.exports = function (config) {
             dir: './dist/deploy/coverage',
         };
     }
-
-    console.log('Run ' + currentEntry + ' test cases...');
 
     config.set(settings);
 };
