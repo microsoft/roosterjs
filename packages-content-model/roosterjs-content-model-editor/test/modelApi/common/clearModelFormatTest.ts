@@ -721,7 +721,7 @@ describe('clearModelFormat', () => {
                     format: { useBorderBox: undefined, borderCollapse: undefined },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":"top"}',
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
                     widths: [],
                     rows: [
@@ -737,7 +737,6 @@ describe('clearModelFormat', () => {
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
                                         borderLeft: '1px solid #ABABAB',
-                                        verticalAlign: 'top',
                                     },
                                     dataset: {},
                                     blocks: [],
@@ -754,7 +753,6 @@ describe('clearModelFormat', () => {
                                         borderRight: '1px solid #ABABAB',
                                         borderBottom: '1px solid #ABABAB',
                                         borderLeft: '1px solid #ABABAB',
-                                        verticalAlign: 'top',
                                     },
                                     dataset: {},
                                     blocks: [],
