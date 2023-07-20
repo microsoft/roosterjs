@@ -2269,6 +2269,7 @@ describe('mergeModel', () => {
                 fontFamily: 'Calibri',
                 fontSize: '16pt',
                 textColor: 'aliceblue',
+                italic: true,
             },
         });
         heading.segments.push(createText('sourceTest1'), createText('sourceTest2'));
@@ -2300,9 +2301,10 @@ describe('mergeModel', () => {
                             fontFamily: 'Calibri',
                             fontSize: '16pt',
                             textColor: 'aliceblue',
+                            italic: true,
                         },
                     },
-                    segmentFormat: { backgroundColor: 'red', italic: false },
+                    segmentFormat: { backgroundColor: 'red' },
                 },
             ],
         });
