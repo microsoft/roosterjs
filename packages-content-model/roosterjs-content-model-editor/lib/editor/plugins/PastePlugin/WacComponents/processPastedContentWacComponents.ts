@@ -202,7 +202,7 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
-    addParser(ev.domToModelOption, 'block', wacBlockParser);
+    addParser(ev.domToModelOption, 'container', wacBlockParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
@@ -262,7 +262,6 @@ const wacBlockParser: FormatParser<ContentModelBlockFormat> = (
     element: HTMLElement
 ) => {
     if (element.classList.contains(TABLE_CONTAINER) && element.style.marginLeft.startsWith('-')) {
-        element.style.marginLeft = '0px';
         delete format.marginLeft;
     }
 };
