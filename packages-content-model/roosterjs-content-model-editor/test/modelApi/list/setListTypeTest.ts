@@ -562,7 +562,7 @@ describe('indent', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     blocks: [para1],
-                    levels: [{ listType: 'UL' }],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
                 },
