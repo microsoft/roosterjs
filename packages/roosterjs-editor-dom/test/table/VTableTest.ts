@@ -662,11 +662,11 @@ describe('VTable.edit', () => {
     itFirefoxOnly('Simple table, AlignCellTop', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellTop,
-            '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table><tr><td id="id1" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId1(
             TableOperation.AlignCellTop,
-            '<table><tr><td id="id1" style="vertical-align: top;">1</td><td>2</td></tr><tr><td style="vertical-align: top;">3</td><td id="id2">4</td></tr></table>',
+            '<table><tr><td id="id1" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">3</td><td id="id2">4</td></tr></table>',
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
     });
@@ -674,11 +674,11 @@ describe('VTable.edit', () => {
     itFirefoxOnly('Simple table, AlignCellMiddle', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellMiddle,
-            '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table><tr><td id="id1" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId1(
             TableOperation.AlignCellMiddle,
-            '<table><tr><td id="id1" style="vertical-align: middle;">1</td><td>2</td></tr><tr><td style="vertical-align: middle;">3</td><td id="id2">4</td></tr></table>',
+            '<table><tr><td id="id1" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">3</td><td id="id2">4</td></tr></table>',
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
     });
@@ -686,11 +686,11 @@ describe('VTable.edit', () => {
     itFirefoxOnly('Simple table, AlignCellBottom', () => {
         runSimpleTableTestOnId1(
             TableOperation.AlignCellBottom,
-            '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
+            '<table><tr><td id="id1" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td>3</td><td id="id2">4</td></tr></table>'
         );
         runSimpleTableTestOnId1(
             TableOperation.AlignCellBottom,
-            '<table><tr><td id="id1" style="vertical-align: bottom;">1</td><td>2</td></tr><tr><td style="vertical-align: bottom;">3</td><td id="id2">4</td></tr></table>',
+            '<table><tr><td id="id1" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td>2</td></tr><tr><td style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">3</td><td id="id2">4</td></tr></table>',
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
     });
@@ -980,11 +980,11 @@ describe('VTable.edit', () => {
         runComplexTableTest(
             TableOperation.AlignCellTop,
             [
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: top;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
@@ -994,11 +994,11 @@ describe('VTable.edit', () => {
         runComplexTableTest(
             TableOperation.AlignCellMiddle,
             [
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: middle;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );
@@ -1008,11 +1008,11 @@ describe('VTable.edit', () => {
         runComplexTableTest(
             TableOperation.AlignCellBottom,
             [
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
-                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
+                '<table><tr><td id="id1" rowspan="2" style="vertical-align: bottom;" data-editing-info="{&quot;vAlignOverride&quot;:true}">1</td><td id="id2" colspan="2">2</td></tr><tr><td id="id3">3</td><td id="id4" rowspan="2">4</td></tr><tr><td id="id5" colspan="2">5</td></tr></table>',
             ],
             { firstCell: { x: 0, y: 0 }, lastCell: { x: 0, y: 1 } }
         );

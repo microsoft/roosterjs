@@ -1,4 +1,4 @@
-import { saveTableCellMetadata } from './tableCellInfo';
+import { getTableCellMetadata, saveTableCellMetadata } from './tableCellInfo';
 /**
  * Clone css styles from a element an set to another.
  * @param cell cell that will receive the styles
@@ -12,8 +12,9 @@ export default function cloneCellStyles(
     const styles = styledCell.getAttribute('style');
     if (styles) {
         cell.setAttribute('style', styles);
-        saveTableCellMetadata(cell, {
-            bgColorOverride: true,
-        });
+        const meta = getTableCellMetadata(styledCell);
+        if (meta) {
+            saveTableCellMetadata(cell, { ...meta });
+        }
     }
 }
