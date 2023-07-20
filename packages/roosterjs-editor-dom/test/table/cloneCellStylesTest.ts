@@ -7,7 +7,9 @@ describe('cloneCellStyles', () => {
         styledCell.setAttribute('style', style);
         cloneCellStyles(cell, styledCell);
         expect(cell.getAttribute('style')).toEqual(style);
-        expect(cell.getAttribute('data-editing-info')).toBe('{"bgColorOverride":true}');
+        expect(cell.getAttribute('data-editing-info')).toBe(
+            styledCell.getAttribute('data-editing-info')
+        );
     }
 
     it('cloneCellStyles | should clone style and add metadata', () => {
