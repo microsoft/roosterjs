@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50.65% </span>
+                <span class="strong">51.88% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/154</span>
+                <span class='fraction'>83/160</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">35.67% </span>
+                <span class="strong">37.13% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>56/157</span>
+                <span class='fraction'>62/167</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">50.33% </span>
+                <span class="strong">51.57% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>77/153</span>
+                <span class='fraction'>82/159</span>
             </div>
         
             
@@ -415,7 +415,27 @@
 <a name='L356'></a><a href='#L356'>356</a>
 <a name='L357'></a><a href='#L357'>357</a>
 <a name='L358'></a><a href='#L358'>358</a>
-<a name='L359'></a><a href='#L359'>359</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L359'></a><a href='#L359'>359</a>
+<a name='L360'></a><a href='#L360'>360</a>
+<a name='L361'></a><a href='#L361'>361</a>
+<a name='L362'></a><a href='#L362'>362</a>
+<a name='L363'></a><a href='#L363'>363</a>
+<a name='L364'></a><a href='#L364'>364</a>
+<a name='L365'></a><a href='#L365'>365</a>
+<a name='L366'></a><a href='#L366'>366</a>
+<a name='L367'></a><a href='#L367'>367</a>
+<a name='L368'></a><a href='#L368'>368</a>
+<a name='L369'></a><a href='#L369'>369</a>
+<a name='L370'></a><a href='#L370'>370</a>
+<a name='L371'></a><a href='#L371'>371</a>
+<a name='L372'></a><a href='#L372'>372</a>
+<a name='L373'></a><a href='#L373'>373</a>
+<a name='L374'></a><a href='#L374'>374</a>
+<a name='L375'></a><a href='#L375'>375</a>
+<a name='L376'></a><a href='#L376'>376</a>
+<a name='L377'></a><a href='#L377'>377</a>
+<a name='L378'></a><a href='#L378'>378</a>
+<a name='L379'></a><a href='#L379'>379</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -456,6 +476,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">57x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -474,6 +507,8 @@
 <span class="cline-any cline-yes">16x</span>
 <span class="cline-any cline-yes">37x</span>
 <span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">51x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -502,6 +537,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">51x</span>
+<span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -798,7 +838,7 @@ export default function applyTableFormat(
     }
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
-    setCellColor(cells, format, darkColorHandler);
+    setCellFormat(cells, format, darkColorHandler);
     setFirstColumnFormat(cells, format);
     setHeaderRowFormat(cells, format, darkColorHandler);
 }
@@ -817,11 +857,24 @@ function hasCellShade(cell: VCell) {
 }
 &nbsp;
 /**
- * Set color to the table
+ * Check if the cell has vertical align
+ * @param cell
+ * @returns
+ */
+function hasValign(cell: VCell) {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (!cell.td) {
+<span class="cstat-no" title="statement not covered" >        return false;</span>
+    }
+&nbsp;
+    return !!getTableCellMetadata(cell.td)<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-1 cbranch-no" title="branch not covered" >?.v</span>AlignOverride;</span>
+}
+&nbsp;
+/**
+ * Set color and vertical align to the table
  * @param format the format that must be applied
  * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
-function setCellColor(
+function setCellFormat(
     cells: VCell[][],
     format: TableFormat,
     darkColorHandler?: DarkColorHandler | null
@@ -831,35 +884,42 @@ function setCellColor(
     const shouldColorWholeTable = !hasBandedRows &amp;&amp; bgColorOdd === bgColorEven ? <span class="branch-0 cbranch-no" title="branch not covered" >true </span>: false;
     cells.forEach((row, index) =&gt; {
         row.forEach(cell =&gt; {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td &amp;&amp; !hasCellShade(cell)) {
-                if (hasBandedRows) {
-                    const backgroundColor = color(index);
-                    setColor(
-                        cell.td,
-                        backgroundColor || TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
-                } else <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldColorWholeTable) {
-<span class="cstat-no" title="statement not covered" >                    setColor(</span>
-                        cell.td,
-                        format.bgColorOdd || TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
-                } else {
-                    setColor(
-                        cell.td,
-                        TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (cell.td) {
+                // Set cell color
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (!hasCellShade(cell)) {
+                    if (hasBandedRows) {
+                        const backgroundColor = color(index);
+                        setColor(
+                            cell.td,
+                            backgroundColor || TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (shouldColorWholeTable) {
+<span class="cstat-no" title="statement not covered" >                        setColor(</span>
+                            cell.td,
+                            format.bgColorOdd || TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    } else {
+                        setColor(
+                            cell.td,
+                            TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    }
+                }
+                // Set cell vertical align
+                if (format.verticalAlign &amp;&amp; !hasValign(cell)) {
+                    cell.td.style.verticalAlign = format.verticalAlign;
                 }
             }
         });
@@ -1138,7 +1198,7 @@ function getBorderStyle(style?: string | null) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jul 20 2023 14:45:02 GMT+0000 (Coordinated Universal Time)
+                at Thu Jul 20 2023 17:17:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>14/14</span>
+                <span class='fraction'>18/18</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>26/26</span>
             </div>
         
             
@@ -122,7 +122,16 @@
 <a name='L63'></a><a href='#L63'>63</a>
 <a name='L64'></a><a href='#L64'>64</a>
 <a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L66'></a><a href='#L66'>66</a>
+<a name='L67'></a><a href='#L67'>67</a>
+<a name='L68'></a><a href='#L68'>68</a>
+<a name='L69'></a><a href='#L69'>69</a>
+<a name='L70'></a><a href='#L70'>70</a>
+<a name='L71'></a><a href='#L71'>71</a>
+<a name='L72'></a><a href='#L72'>72</a>
+<a name='L73'></a><a href='#L73'>73</a>
+<a name='L74'></a><a href='#L74'>74</a>
+<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -141,18 +150,18 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">821x</span>
+<span class="cline-any cline-yes">1029x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">821x</span>
-<span class="cline-any cline-yes">821x</span>
+<span class="cline-any cline-yes">1029x</span>
+<span class="cline-any cline-yes">1029x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">821x</span>
-<span class="cline-any cline-yes">820x</span>
-<span class="cline-any cline-yes">96x</span>
-<span class="cline-any cline-yes">724x</span>
-<span class="cline-any cline-yes">722x</span>
+<span class="cline-any cline-yes">1029x</span>
+<span class="cline-any cline-yes">1028x</span>
+<span class="cline-any cline-yes">118x</span>
+<span class="cline-any cline-yes">910x</span>
+<span class="cline-any cline-yes">908x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -172,9 +181,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">84x</span>
-<span class="cline-any cline-yes">83x</span>
-<span class="cline-any cline-yes">83x</span>
+<span class="cline-any cline-yes">94x</span>
+<span class="cline-any cline-yes">93x</span>
+<span class="cline-any cline-yes">93x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -184,8 +193,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">50x</span>
+<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">43x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import validate from './validate';
 import { Definition } from 'roosterjs-editor-types';
@@ -248,9 +266,18 @@ export function setMetadata&lt;T&gt;(element: HTMLElement, metadata: T, def?: De
 /**
  * Remove metadata from the given element if any
  * @param element The element to remove metadata from
+ * @param metadataKey The metadata key to remove, if none provided it will delete all metadata
  */
-export function removeMetadata(element: HTMLElement) {
-    delete element.dataset[MetadataDataSetName];
+export function removeMetadata&lt;T&gt;(element: HTMLElement, metadataKey?: string) {
+    if (metadataKey) {
+        const currentMetadata: any = getMetadata&lt;T&gt;(element);
+        if (currentMetadata) {
+            delete currentMetadata[metadataKey];
+            element.dataset[MetadataDataSetName] = JSON.stringify(currentMetadata);
+        }
+    } else {
+        delete element.dataset[MetadataDataSetName];
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -259,7 +286,7 @@ export function removeMetadata(element: HTMLElement) {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Jul 20 2023 14:45:02 GMT+0000 (Coordinated Universal Time)
+                at Thu Jul 20 2023 17:17:33 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
