@@ -21,7 +21,7 @@ const initialState: BuildInPluginState = {
         tableEditMenu: true,
         contextMenu: true,
         autoFormat: true,
-        contentModelPaste: false,
+        contentModelPaste: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},
@@ -33,6 +33,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ReusableContentModel,
         ExperimentalFeatures.EditWithContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
+        ExperimentalFeatures.ContentModelPaste,
     ],
     isRtl: false,
 };
