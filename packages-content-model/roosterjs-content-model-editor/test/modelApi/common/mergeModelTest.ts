@@ -2254,6 +2254,7 @@ describe('mergeModel', () => {
             fontSize: '15px',
             backgroundColor: 'red',
             textColor: 'blue',
+            italic: false,
         });
         const marker = createSelectionMarker();
         const text1 = createText('test1');
@@ -2301,7 +2302,7 @@ describe('mergeModel', () => {
                             textColor: 'aliceblue',
                         },
                     },
-                    segmentFormat: { backgroundColor: 'red' },
+                    segmentFormat: { backgroundColor: 'red', italic: false },
                 },
             ],
         });
