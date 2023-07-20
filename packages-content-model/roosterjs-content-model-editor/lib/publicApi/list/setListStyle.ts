@@ -16,12 +16,13 @@ export default function setListStyle(editor: IContentModelEditor, style: ListMet
 
         if (listItem) {
             const listItems = findListItemsInSameThread(model, listItem);
+            const levelIndex = listItem.levels.length - 1;
 
             listItems.forEach(listItem => {
-                const lastLevel = listItem.levels[listItem.levels.length - 1];
+                const level = listItem.levels[levelIndex];
 
-                if (lastLevel) {
-                    updateListMetadata(lastLevel, metadata => Object.assign({}, metadata, style));
+                if (level) {
+                    updateListMetadata(level, metadata => Object.assign({}, metadata, style));
                 }
             });
 

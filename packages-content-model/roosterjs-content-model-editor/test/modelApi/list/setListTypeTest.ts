@@ -542,7 +542,7 @@ describe('indent', () => {
 
     it('Change style type to existing list', () => {
         const group = createContentModelDocument();
-        const list1 = createListItem([{ listType: 'OL' }]);
+        const list1 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const br = createBr();
 
