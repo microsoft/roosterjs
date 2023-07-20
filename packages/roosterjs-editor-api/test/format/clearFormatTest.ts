@@ -231,7 +231,7 @@ describe('clearAutodetectFormat tests', () => {
     TestHelper.itFirefoxOnly('removes text format when selecting a cell of a table', () => {
         editor.setContent(TABLE_TEST);
         const expectedFormat =
-            ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in">asdfadf<span style="color:red"><o:p>&nbsp;</o:p></span></p> ';
+            ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in">asdfadf<span style="color: var(--darkColor_red, red);"><o:p>&nbsp;</o:p></span></p> ';
 
         let table: HTMLTableElement = doc.getElementById('testTable') as HTMLTableElement;
         let cell = table.rows[0].cells[2];
@@ -451,7 +451,7 @@ describe('clearAutodetectFormat tests with defaultFormat | ', () => {
             },
             () => {
                 const expectedFormat =
-                    ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in"><b><span style="font-family: arial; font-size: 12pt;">asdfadf</span></b><span style="color:red"><o:p>&nbsp;</o:p></span></p> ';
+                    ' <p style="margin:0in 0in 8pt;font-size:11pt;font-family:Calibri, sans-serif;margin-bottom:0in"><b><span style="font-family: arial; font-size: 12pt;">asdfadf</span></b><span style="color: var(--darkColor_red, red);"><o:p>&nbsp;</o:p></span></p> ';
                 let table: HTMLTableElement = doc.getElementById('testTable') as HTMLTableElement;
                 let cell = table.rows[0].cells[2];
                 table = doc.getElementsByTagName('table')[0] as HTMLTableElement;
