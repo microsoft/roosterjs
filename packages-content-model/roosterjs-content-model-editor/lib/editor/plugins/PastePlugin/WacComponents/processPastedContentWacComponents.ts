@@ -3,6 +3,7 @@ import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentM
 import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
 import {
+    ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
     ContentModelSegmentFormat,
@@ -18,6 +19,7 @@ const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 const EMPTY_TEXT_RUN = 'EmptyTextRun';
 const END_OF_PARAGRAPH = 'EOP';
 const PARAGRAPH = 'Paragraph';
+const TABLE_CONTAINER = 'TableContainer';
 
 const TEMP_ELEMENTS_CLASSES = [
     'TableInsertRowGapBlank',
@@ -42,6 +44,7 @@ const CLASSES_TO_KEEP = [
     PARAGRAPH,
     'WACImageContainer',
     'WACImageBorder',
+    TABLE_CONTAINER,
 ];
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
@@ -206,6 +209,7 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
+    addParser(ev.domToModelOption, 'block', wacBlockParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
@@ -257,5 +261,15 @@ const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = 
         context.defaultElementProcessors.ol?.(group, element as HTMLOListElement, context);
     } else {
         context.defaultElementProcessors.ul?.(group, element as HTMLUListElement, context);
+    }
+};
+
+const wacBlockParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.classList.contains(TABLE_CONTAINER) && element.style.marginLeft.startsWith('-')) {
+        element.style.marginLeft = '0px';
+        delete format.marginLeft;
     }
 };

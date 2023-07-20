@@ -1463,4 +1463,11 @@ describe('wordOnlineHandler', () => {
             '<p>it went:&nbsp;&nbsp;</p><ol start="1"><li><p>Test</p></li><li><p>Test.&nbsp;</p></li><li><div><br></div></li></ol>'
         );
     });
+
+    it('Table Container with negative margin left', () => {
+        runTest(
+            '<div class="TableContainer" style="margin-left: -5px">Test</div>',
+            '<div style="margin-left: 0px;">Test</div>'
+        );
+    });
 });
