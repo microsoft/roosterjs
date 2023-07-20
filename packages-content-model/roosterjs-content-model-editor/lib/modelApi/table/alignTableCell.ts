@@ -33,8 +33,7 @@ export function alignTableCell(
         | CompatibleTableOperation.AlignCellRight
         | CompatibleTableOperation.AlignCellTop
         | CompatibleTableOperation.AlignCellMiddle
-        | CompatibleTableOperation.AlignCellBottom,
-    isVAlignOverride?: boolean
+        | CompatibleTableOperation.AlignCellBottom
 ) {
     const sel = getSelectedCells(table);
 
@@ -53,7 +52,7 @@ export function alignTableCell(
                     format.textAlign = textAlign || format.textAlign;
                     format.verticalAlign = verticalAlign || format.verticalAlign;
 
-                    if (isVAlignOverride) {
+                    if (verticalAlign) {
                         updateTableCellMetadata(cell, metadata => {
                             metadata = metadata || {};
                             metadata.vAlignOverride = true;

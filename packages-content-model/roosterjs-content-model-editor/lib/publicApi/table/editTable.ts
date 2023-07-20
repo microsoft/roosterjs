@@ -37,7 +37,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                 case TableOperation.AlignCellTop:
                 case TableOperation.AlignCellMiddle:
                 case TableOperation.AlignCellBottom:
-                    alignTableCell(tableModel, operation, true /*isVAlignOverride*/);
+                    alignTableCell(tableModel, operation);
                     break;
                 case TableOperation.AlignCenter:
                 case TableOperation.AlignLeft:
