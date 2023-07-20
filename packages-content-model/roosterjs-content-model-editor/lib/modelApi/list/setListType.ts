@@ -1,4 +1,4 @@
-import { getOperationalBlocks, OperationalBlocks } from '../selection/collectSelections';
+import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
 import {
     createListItem,
@@ -21,11 +21,10 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
         ['ListItem'],
         [] // Set stop types to be empty so we can find list items even cross the boundary of table, then we can always operation on the list item if any
     );
-    const alreadyInExpectedType = paragraphOrListItems.every(
-        ({ block }) =>
-            (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem') &&
-                block.levels[block.levels.length - 1]?.listType == listType) ||
-            !shouldTurnOnList(paragraphOrListItems, block)
+    const alreadyInExpectedType = paragraphOrListItems.every(({ block }) =>
+        isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')
+            ? block.levels[block.levels.length - 1]?.listType == listType
+            : shouldIgnoreBlock(block)
     );
     let existingListItems: ContentModelListItem[] = [];
     let hasIgnoredParagraphBefore = false;
@@ -44,7 +43,7 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
             const index = parent.blocks.indexOf(block);
 
             if (index >= 0) {
-                if (shouldTurnOnList(paragraphOrListItems, block)) {
+                if (paragraphOrListItems.length == 1 || !shouldIgnoreBlock(block)) {
                     const prevBlock = parent.blocks[index - 1];
                     const segmentFormat =
                         (block.blockType == 'Paragraph' && block.segments[0]?.format) || {};
@@ -96,14 +95,9 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
     return paragraphOrListItems.length > 0;
 }
 
-function shouldTurnOnList(
-    blocks: OperationalBlocks<ContentModelListItem>[],
-    block: ContentModelBlock
-): boolean {
+function shouldIgnoreBlock(block: ContentModelBlock) {
     return (
-        blocks.length == 1 ||
-        (block.blockType == 'Paragraph' &&
-            block.segments.length > 0 &&
-            block.segments.some(x => x.segmentType != 'Br' && x.segmentType != 'SelectionMarker'))
+        block.blockType != 'Paragraph' ||
+        block.segments.every(x => x.segmentType == 'Br' || x.segmentType == 'SelectionMarker')
     );
 }
