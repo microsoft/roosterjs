@@ -6,4 +6,8 @@ export type TableCellMetadataFormat = {
      * Override default background color
      */
     bgColorOverride?: boolean;
+    /**
+     * Override default vertical align value
+     */
+    vAlignOverride?: boolean;
 };

@@ -269,6 +269,7 @@ describe('retrieveModelFormatState', () => {
                 bgColorOdd: '#ABABAB20',
                 headerRowColor: '#ABABAB',
                 tableBorderFormat: 0,
+                verticalAlign: null,
             },
         });
     });
