@@ -53,7 +53,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
-                    {this.renderPluginItem('cutPasteListChain', 'CutPasteListChainPlugin')}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem(
