@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96.67% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>28/28</span>
+                <span class='fraction'>29/30</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.65% </span>
+                <span class="strong">93.1% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>22/23</span>
+                <span class='fraction'>27/29</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>3/3</span>
+                <span class='fraction'>2/2</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">96.55% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>27/27</span>
+                <span class='fraction'>28/29</span>
             </div>
         
             
@@ -135,16 +135,9 @@
 <a name='L76'></a><a href='#L76'>76</a>
 <a name='L77'></a><a href='#L77'>77</a>
 <a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a>
-<a name='L81'></a><a href='#L81'>81</a>
-<a name='L82'></a><a href='#L82'>82</a>
-<a name='L83'></a><a href='#L83'>83</a>
-<a name='L84'></a><a href='#L84'>84</a>
-<a name='L85'></a><a href='#L85'>85</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L79'></a><a href='#L79'>79</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,7 +173,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -196,8 +188,22 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-yes">111x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">111x</span>
@@ -207,31 +213,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">149x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">111x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
+import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 import {
     ContentModelBlockHandler,
     ContentModelListItem,
-    ContentModelListItemLevelFormat,
-    DatasetFormat,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 &nbsp;
@@ -261,9 +248,8 @@ export const handleList: ContentModelBlockHandler&lt;ContentModelListItem&gt; = 
 &nbsp;
         if (
             stackLevel.listType != itemLevel.listType ||
-            stackLevel.orderedStyleType != itemLevel.orderedStyleType ||
-            stackLevel.unorderedStyleType != itemLevel.unorderedStyleType ||
-            (itemLevel.listType == 'OL' &amp;&amp; typeof itemLevel.startNumberOverride === 'number')
+            stackLevel.dataset?.editingInfo != itemLevel.dataset.editingInfo ||
+            (itemLevel.listType == 'OL' &amp;&amp; typeof itemLevel.format.startNumberOverride === 'number')
         ) {
             break;
         }
@@ -280,9 +266,23 @@ export const handleList: ContentModelBlockHandler&lt;ContentModelListItem&gt; = 
 &nbsp;
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
 &nbsp;
-        applyFormat(newList, context.formatAppliers.listLevel, level, context);
+        // TODO: Move this out into roosterjs-content-model-editor package
+        updateListMetadata(level, metadata =&gt; {
+            applyFormat(newList, [listLevelMetadataFormatHandler.apply], metadata || {}, context);
 &nbsp;
-        handleMetadata(level, newList, context);
+            <span class="missing-if-branch" title="if path not taken" >I</span>if (
+                metadata &amp;&amp;
+                typeof metadata.orderedStyleType == 'undefined' &amp;&amp;
+                typeof metadata.unorderedStyleType == 'undefined'
+            ) {
+<span class="cstat-no" title="statement not covered" >                metadata = null;</span>
+            }
+&nbsp;
+            return metadata;
+        });
+&nbsp;
+        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
+        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 &nbsp;
         nodeStack.push({ node: newList, ...level });
 &nbsp;
@@ -291,24 +291,6 @@ export const handleList: ContentModelBlockHandler&lt;ContentModelListItem&gt; = 
 &nbsp;
     return refNode;
 };
-&nbsp;
-function handleMetadata(
-    level: ContentModelListItemLevelFormat,
-    newList: HTMLElement,
-    context: ModelToDomContext
-) {
-    const dataset: DatasetFormat = {};
-&nbsp;
-    updateListMetadata({ dataset }, () =&gt;
-        typeof level.orderedStyleType === 'number' || typeof level.unorderedStyleType === 'number'
-            ? {
-                  orderedStyleType: level.orderedStyleType,
-                  unorderedStyleType: level.unorderedStyleType,
-              }
-            : null
-    );
-    applyFormat(newList, context.formatAppliers.dataset, dataset, context);
-}
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -316,7 +298,7 @@ function handleMetadata(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Jul 21 2023 16:42:13 GMT+0000 (Coordinated Universal Time)
+                at Fri Jul 21 2023 17:15:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
