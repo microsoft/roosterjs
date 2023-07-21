@@ -25,7 +25,7 @@ export function setModelDirection(model: ContentModelDocument, direction: 'ltr' 
 
             items.forEach(item => {
                 item.levels.forEach(level => {
-                    level.direction = direction;
+                    level.format.direction = direction;
                 });
 
                 item.blocks.forEach(block => internalSetDirection(block.format, direction));

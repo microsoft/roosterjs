@@ -6,6 +6,7 @@ import {
     createContentModelDocument,
     createDivider,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -252,8 +253,8 @@ describe('mergeModel', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
 
-        const list1 = createListItem([{ listType: 'OL' }]);
-        const list2 = createListItem([{ listType: 'OL' }]);
+        const list1 = createListItem([createListLevel('OL')]);
+        const list2 = createListItem([createListLevel('OL')]);
 
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -320,6 +321,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -348,6 +351,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -386,6 +391,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -418,8 +425,8 @@ describe('mergeModel', () => {
         const newText2 = createText('newText2');
         const newPara3 = createParagraph();
         const newText3 = createText('newText3');
-        const newList1 = createListItem([{ listType: 'OL' }]);
-        const newList2 = createListItem([{ listType: 'OL' }]);
+        const newList1 = createListItem([createListLevel('OL')]);
+        const newList2 = createListItem([createListLevel('OL')]);
 
         newPara1.segments.push(newText1);
         newPara2.segments.push(newText2);
@@ -456,6 +463,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -495,6 +504,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -534,10 +545,18 @@ describe('mergeModel', () => {
         const text21 = createText('test21');
         const text22 = createText('test22');
         const list1 = createListItem([
-            { listType: 'OL', startNumberOverride: 1, unorderedStyleType: 2 },
+            createListLevel(
+                'OL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 1, unorderedStyleType: 2 }) }
+            ),
         ]);
         const list2 = createListItem([
-            { listType: 'OL', startNumberOverride: 1, unorderedStyleType: 2 },
+            createListLevel(
+                'OL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 1, unorderedStyleType: 2 }) }
+            ),
         ]);
 
         para1.segments.push(text11);
@@ -558,11 +577,23 @@ describe('mergeModel', () => {
         const newPara2 = createParagraph();
         const newText2 = createText('newText2');
         const newList1 = createListItem([
-            { listType: 'UL', startNumberOverride: 3, unorderedStyleType: 4 },
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
         ]);
         const newList2 = createListItem([
-            { listType: 'UL', startNumberOverride: 3, unorderedStyleType: 4 },
-            { listType: 'UL', startNumberOverride: 5, unorderedStyleType: 6 },
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 5, unorderedStyleType: 6 }) }
+            ),
         ]);
 
         newPara1.segments.push(newText1);
@@ -598,8 +629,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -628,8 +664,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -658,13 +699,23 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                         {
                             listType: 'UL',
-                            startNumberOverride: 5,
-                            unorderedStyleType: 6,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 5,
+                                    unorderedStyleType: 6,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -698,8 +749,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -1584,6 +1640,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [
@@ -1633,7 +1691,7 @@ describe('mergeModel', () => {
                         isSelected: true,
                         segmentType: 'SelectionMarker',
                     },
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [
                         {
                             blockType: 'Paragraph',

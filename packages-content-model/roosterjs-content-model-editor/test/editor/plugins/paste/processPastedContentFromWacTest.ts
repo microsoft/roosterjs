@@ -176,8 +176,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -207,8 +210,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -238,13 +244,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -290,8 +302,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -321,13 +336,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -357,18 +378,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -417,8 +447,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -448,13 +481,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -484,18 +523,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -530,13 +578,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -566,18 +620,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -632,8 +695,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -663,13 +729,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -699,18 +771,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'OL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -745,18 +826,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'OL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -791,13 +881,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -906,8 +1002,11 @@ describe('wordOnlineHandler', () => {
                             levels: [
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -937,13 +1036,19 @@ describe('wordOnlineHandler', () => {
                             levels: [
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -972,19 +1077,19 @@ describe('wordOnlineHandler', () => {
                             ],
                             levels: [
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -1394,8 +1499,11 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginLeft: undefined,
-                                paddingLeft: undefined,
+                                format: {
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {
@@ -1431,8 +1539,11 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginLeft: undefined,
-                                paddingLeft: undefined,
+                                format: {
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {

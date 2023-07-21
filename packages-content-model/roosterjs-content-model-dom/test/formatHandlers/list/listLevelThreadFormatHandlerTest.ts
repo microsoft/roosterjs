@@ -84,6 +84,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
+                format: {},
+                dataset: {},
             },
         ];
 
@@ -95,6 +97,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -107,6 +111,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
+                format: {},
+                dataset: {},
             },
         ];
 
@@ -118,6 +124,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -130,6 +138,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
+                format: {},
+                dataset: {},
             },
         ];
 
@@ -142,6 +152,8 @@ describe('listLevelThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
