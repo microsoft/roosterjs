@@ -2,12 +2,11 @@ import * as React from 'react';
 import BuildInPluginState, { BuildInPluginProps } from '../../BuildInPluginState';
 import Code from './Code';
 import ContentEditFeatures from './ContentEditFeatures';
+import ContentModelEditorCode from './codes/ContentModelEditorCode';
 import ContentModelExperimentalFeaturesPane from './ContentModelExperimentalFeatures';
 import ContentModelPlugins from './ContentModelPlugins';
 import DefaultFormatPane from './DefaultFormat';
-import EditorCode from './codes/EditorCode';
 import MainPaneBase from '../../MainPaneBase';
-import ReactEditorCode from './codes/ReactEditorCode';
 
 const htmlStart =
     '<html>\n' +
@@ -24,22 +23,10 @@ const htmlButtons =
 const darkButton = '<button id=buttonDark>Dark Mode</button>\n';
 const htmlEnd =
     '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
+    '<script src="https://microsoft.github.io/roosterjs/rooster-content-model-min.js"></script>\n' +
     '</body>\n' +
     '</html>';
 
-const htmlRoosterReact =
-    '<html>\n' +
-    '<body>\n' +
-    '<div id="root"></div>\n' +
-    '<script src="https://unpkg.com/react@16/umd/react.development.js"></script>\n' +
-    '<script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>\n' +
-    '<script src="https://cdnjs.cloudflare.com/ajax/libs/fluentui-react/8.60.1/fluentui-react.min.js"></script>\n' +
-    '<script src="https://microsoft.github.io/roosterjs/rooster-min.js"></script>\n' +
-    '<script src="https://microsoft.github.io/roosterjs/rooster-react-min.js"></script>\n' +
-    '</body>\n' +
-    '</html>';
-
-const cssRoosterReact = '.editor { border: solid 1px black; width: 100%; height: 600px}';
 export default class ContentModelOptionsPane extends React.Component<
     BuildInPluginProps,
     BuildInPluginState
@@ -56,11 +43,8 @@ export default class ContentModelOptionsPane extends React.Component<
         return (
             <div>
                 <div>
-                    <button onClick={this.onExportRooster}>Try roosterjs in CodePen</button>
-                </div>
-                <div>
-                    <button onClick={this.onExportRoosterReact}>
-                        Try roosterjs-react in CodePen
+                    <button onClick={this.onExportRoosterContentModel}>
+                        Try roosterjs Content Model Editor in CodePen
                     </button>
                 </div>
                 <div>
@@ -166,27 +150,12 @@ export default class ContentModelOptionsPane extends React.Component<
         }
     };
 
-    private onExportRooster = () => {
-        let editor = new EditorCode(this.state);
+    private onExportRoosterContentModel = () => {
+        let editor = new ContentModelEditorCode(this.state);
         let code = editor.getCode();
         let json = {
             title: 'RoosterJs',
             html: this.getHtml(),
-            head: '',
-            js: code,
-            js_pre_processor: 'typescript',
-        };
-        this.exportData.current.value = JSON.stringify(json);
-        this.exportForm.current.submit();
-    };
-
-    private onExportRoosterReact = () => {
-        let editor = new ReactEditorCode(this.state);
-        let code = editor.getCode();
-        let json = {
-            title: 'RoosterJs React',
-            html: htmlRoosterReact,
-            css: cssRoosterReact,
             head: '',
             js: code,
             js_pre_processor: 'typescript',
