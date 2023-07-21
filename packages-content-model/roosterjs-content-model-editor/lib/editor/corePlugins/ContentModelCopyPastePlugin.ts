@@ -9,7 +9,6 @@ import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDecorator,
-    ContentModelListItemLevelFormat,
     ContentModelSegment,
     ContentModelTableRow,
 } from 'roosterjs-content-model-types';
@@ -261,7 +260,6 @@ export const onNodeCreated = (
         | ContentModelBlockGroup
         | ContentModelSegment
         | ContentModelDecorator
-        | ContentModelListItemLevelFormat
         | ContentModelTableRow,
     node: Node
 ): void => {

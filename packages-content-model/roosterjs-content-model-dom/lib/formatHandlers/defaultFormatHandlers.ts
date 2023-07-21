@@ -16,12 +16,9 @@ import { italicFormatHandler } from './segment/italicFormatHandler';
 import { letterSpacingFormatHandler } from './segment/letterSpacingFormatHandler';
 import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
-import { listItemMetadataFormatHandler } from './list/listItemMetadataFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
-import { listLevelMetadataFormatHandler } from './list/listLevelMetadataFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
 import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
-import { listTypeFormatHandler } from './list/listTypeFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
@@ -69,12 +66,9 @@ const defaultFormatHandlerMap: FormatHandlers = {
     letterSpacing: letterSpacingFormatHandler,
     lineHeight: lineHeightFormatHandler,
     link: linkFormatHandler,
-    listItemMetadata: listItemMetadataFormatHandler,
     listItemThread: listItemThreadFormatHandler,
-    listLevelMetadata: listLevelMetadataFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
     listStylePosition: listStylePositionFormatHandler,
-    listType: listTypeFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
@@ -121,12 +115,10 @@ const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: sharedBlockFormats,
-    listItem: ['listItemThread', 'listItemMetadata'],
+    listItem: ['listItemThread'],
     listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
     listLevel: [
-        'listType',
         'listLevelThread',
-        'listLevelMetadata',
         'direction',
         'textAlign',
         'margin',

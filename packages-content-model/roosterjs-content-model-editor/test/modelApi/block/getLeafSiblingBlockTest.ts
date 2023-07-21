@@ -4,6 +4,7 @@ import {
     createFormatContainer,
     createGeneralSegment,
     createListItem,
+    createListLevel,
     createParagraph,
     createTable,
     createTableCell,
@@ -183,8 +184,8 @@ describe('getLeafSiblingBlock', () => {
         const quote2 = createFormatContainer('blockquote', { backgroundColor: '5' });
         const quote3 = createFormatContainer('blockquote', { backgroundColor: '6' });
         const list1 = createListItem([]);
-        const list2 = createListItem([{ listType: 'OL' }]);
-        const list3 = createListItem([{ listType: 'UL' }]);
+        const list2 = createListItem([createListLevel('OL')]);
+        const list3 = createListItem([createListLevel('UL')]);
         const model = createContentModelDocument();
 
         list1.blocks.push(block1);
