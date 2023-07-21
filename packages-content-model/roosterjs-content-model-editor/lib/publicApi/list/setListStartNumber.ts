@@ -13,7 +13,7 @@ export default function setListStartNumber(editor: IContentModelEditor, value: n
         const level = listItem?.levels[listItem?.levels.length - 1];
 
         if (level) {
-            level.startNumberOverride = value;
+            level.format.startNumberOverride = value;
 
             return true;
         } else {

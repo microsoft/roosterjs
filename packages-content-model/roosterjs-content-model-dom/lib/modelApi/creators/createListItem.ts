@@ -1,7 +1,8 @@
+import { createListLevel } from './createListLevel';
 import { createSelectionMarker } from './createSelectionMarker';
 import {
     ContentModelListItem,
-    ContentModelListItemLevelFormat,
+    ContentModelListLevel,
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
@@ -11,14 +12,16 @@ import {
  * @param format @optional The format of this model
  */
 export function createListItem(
-    levels: ContentModelListItemLevelFormat[],
+    levels: ContentModelListLevel[],
     format?: ContentModelSegmentFormat
 ): ContentModelListItem {
     return {
         blockType: 'BlockGroup',
         blockGroupType: 'ListItem',
         blocks: [],
-        levels: levels ? levels.map(level => ({ ...level })) : [],
+        levels: levels
+            ? levels.map(level => createListLevel(level.listType, level.format, level.dataset))
+            : [],
         formatHolder: createSelectionMarker(format),
         format: {},
     };

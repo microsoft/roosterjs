@@ -83,6 +83,9 @@ export default function paste(
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
                     mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
+                    mergeTable:
+                        pasteModel.blocks.length === 1 &&
+                        pasteModel.blocks[0].blockType === 'Table',
                 });
                 return true;
             },

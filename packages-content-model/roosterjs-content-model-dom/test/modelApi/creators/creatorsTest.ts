@@ -7,6 +7,7 @@ import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneral
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createImage } from '../../../lib/modelApi/creators/createImage';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
+import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createParagraphDecorator } from '../../../lib/modelApi/creators/createParagraphDecorator';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
@@ -14,7 +15,7 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import {
-    ContentModelListItemLevelFormat,
+    ContentModelListLevel,
     ContentModelSegmentFormat,
     ContentModelTableCellFormat,
 } from 'roosterjs-content-model-types';
@@ -351,14 +352,14 @@ describe('Creators', () => {
 
     it('createListItem with format and levels', () => {
         const format: ContentModelSegmentFormat = { fontSize: 'a' };
-        const levels: ContentModelListItemLevelFormat[] = [{ listType: 'OL' }];
+        const levels: ContentModelListLevel[] = [{ listType: 'OL', dataset: {}, format: {} }];
         const listItem = createListItem(levels, format);
 
         expect(listItem).toEqual({
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
             blocks: [],
-            levels: [{ listType: 'OL' }],
+            levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 isSelected: true,
@@ -369,14 +370,14 @@ describe('Creators', () => {
 
         format.fontSize = 'b';
         levels[0].listType = 'UL';
-        levels.push({ listType: 'UL' });
+        levels.push(createListLevel('UL'));
 
         // format and levels in list item should not be impacted by the change of format and levels object
         expect(listItem).toEqual({
             blockType: 'BlockGroup',
             blockGroupType: 'ListItem',
             blocks: [],
-            levels: [{ listType: 'OL' }],
+            levels: [{ listType: 'OL', dataset: {}, format: {} }],
             formatHolder: {
                 segmentType: 'SelectionMarker',
                 isSelected: true,
