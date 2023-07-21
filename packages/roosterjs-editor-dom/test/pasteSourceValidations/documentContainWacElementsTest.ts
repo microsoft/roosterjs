@@ -21,35 +21,42 @@ describe('documentContainWacElements |', () => {
     });
 
     [
-        'OutlineElement',
-        'NumberListStyle',
-        'WACImageContainer',
-        'ListContainerWrapper',
-        'BulletListStyle',
         'TableInsertRowGapBlank',
         'TableColumnResizeHandle',
         'TableCellTopBorderHandle',
         'TableCellLeftBorderHandle',
         'TableHoverColumnHandle',
         'TableHoverRowHandle',
-        'ListMarkerWrappingSpan',
-        'TableCellContent',
-        'Paragraph',
-        'WACImageContainer',
-        'WACImageBorder',
-        'TableContainer',
-        'LineBreakBlob',
-        'TableWordWrap',
     ].forEach(className => {
         it('documentContainWacElementsTest_' + className, () => {
             const fragment = document.createDocumentFragment();
+
+            const div = document.createElement('div');
+            div.className = className;
+            const table = document.createElement('table');
+            const row = document.createElement('tr');
+            const cell = document.createElement('td');
+
+            cell.appendChild(div);
+            row.appendChild(cell);
+            table.appendChild(row);
+            fragment.appendChild(table);
+
+            const result = documentContainWacElements(<getSourceInputParams>{ fragment });
+
+            expect(result).toBeTrue();
+        });
+
+        it('documentContainWacElementsTest_element not contained in table_' + className, () => {
+            const fragment = document.createDocumentFragment();
+
             const div = document.createElement('div');
             div.className = className;
             fragment.appendChild(div);
 
             const result = documentContainWacElements(<getSourceInputParams>{ fragment });
 
-            expect(result).toBeTrue();
+            expect(result).toBeFalse();
         });
     });
 });

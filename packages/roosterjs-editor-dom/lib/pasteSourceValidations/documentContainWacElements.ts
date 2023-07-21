@@ -1,30 +1,17 @@
 import type { getSourceFunction, getSourceInputParams } from './getPasteSource';
 
-const WORD_CLASSES = [
-    'OutlineElement',
-    'NumberListStyle',
-    'WACImageContainer',
-    'ListContainerWrapper',
-    'BulletListStyle',
+const WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES = [
     'TableInsertRowGapBlank',
     'TableColumnResizeHandle',
     'TableCellTopBorderHandle',
     'TableCellLeftBorderHandle',
     'TableHoverColumnHandle',
     'TableHoverRowHandle',
-    'ListMarkerWrappingSpan',
-    'TableCellContent',
-    'Paragraph',
-    'WACImageContainer',
-    'WACImageBorder',
-    'TableContainer',
-    'LineBreakBlob',
-    'TableWordWrap',
 ];
 
 const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,' +
-    WORD_CLASSES.map(c => '.' + c).join(',');
+    WORD_ONLINE_TABLE_TEMP_ELEMENT_CLASSES.map(c => `table div[class^="${c}"]`).join(',');
 
 /**
  * @internal
