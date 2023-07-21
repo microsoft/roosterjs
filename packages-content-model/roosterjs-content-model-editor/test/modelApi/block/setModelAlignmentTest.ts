@@ -2,6 +2,7 @@ import { setModelAlignment } from '../../../lib/modelApi/block/setModelAlignment
 import {
     createContentModelDocument,
     createListItem,
+    createListLevel,
     createParagraph,
     createTable,
     createTableCell,
@@ -166,7 +167,7 @@ describe('align left', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -186,7 +187,7 @@ describe('align left', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [para1, para2, para3],
                     formatHolder: {
                         segmentType: 'SelectionMarker',
@@ -211,7 +212,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -246,6 +247,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -324,7 +327,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -359,6 +362,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -435,7 +440,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -470,6 +475,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -546,7 +553,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -583,6 +590,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -664,7 +673,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -701,6 +710,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
@@ -782,7 +793,7 @@ describe('align left', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const text4 = createText('test4');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const table = createTable(2);
         table.rows[0].cells.push(createTableCell(1, 1, false));
         table.rows[0].cells.push(createTableCell(1, 1, false));
@@ -820,6 +831,8 @@ describe('align left', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [para1, para2, para3],
