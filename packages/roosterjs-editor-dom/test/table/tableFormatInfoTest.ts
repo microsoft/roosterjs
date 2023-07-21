@@ -16,10 +16,11 @@ const format: TableFormat = {
     hasBandedRows: false,
     hasBandedColumns: false,
     keepCellShade: false,
+    verticalAlign: 'top',
 };
 
 const expectedTableInfo =
-    '{"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bgColorEven":"#0C64C020","bgColorOdd":null,"headerRowColor":null,"tableBorderFormat":0, "hasHeaderRow": false, "hasFirstColumn": false, "hasBandedRows": false, "hasBandedColumns": false, "keepCellShade": false}';
+    '{"topBorderColor":"#0C64C0","bottomBorderColor":"#0C64C0","verticalBorderColor":"#0C64C0","bgColorEven":"#0C64C020","bgColorOdd":null,"headerRowColor":null,"tableBorderFormat":0, "hasHeaderRow": false, "hasFirstColumn": false, "hasBandedRows": false, "hasBandedColumns": false, "keepCellShade": false, "verticalAlign": "top"}';
 
 function createTable(format: TableFormat) {
     let div = document.createElement('div');

@@ -53,4 +53,8 @@ export default interface TableFormat {
      * If true, the new format will not overlay cells that has color applied
      */
     keepCellShade?: boolean;
+    /**
+     * Vertical alignment for each row
+     */
+    verticalAlign?: 'top' | 'middle' | 'bottom' | null;
 }

@@ -25,6 +25,7 @@
         "test:debug": "node tools/build.js normalize & karma start --no-single-run --chrome",
         "test:coverage": "node tools/build.js normalize & karma start --coverage --firefox --chrome",
         "test:cm": "node tools/build.js normalize & karma start --no-single-run --chrome --contentmodel",
+        "test:cm:firefox": "node tools/build.js normalize & karma start --no-single-run --firefox --contentmodel",
         "test:r": "node tools/build.js normalize & karma start --no-single-run --chrome --roosterjs",
         "test:ui": "node tools/build.js normalize & karma start --no-single-run --chrome --ui",
         "publish": "node tools/build.js clean normalize tslint buildcommonjs buildamd buildmjs dts pack packprod builddemo builddoc publish"

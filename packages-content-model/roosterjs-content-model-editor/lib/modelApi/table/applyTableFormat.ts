@@ -23,6 +23,12 @@ const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
     bgColorOdd: '#ABABAB20',
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
+    verticalAlign: null,
+};
+
+type MetaOverrides = {
+    bgColorOverrides: boolean[][];
+    vAlignOverrides: boolean[][];
 };
 
 /**
@@ -42,16 +48,14 @@ export function applyTableFormat(
             ...(newFormat || {}),
         };
 
-        const bgColorOverrides = updateBgColorOverrides(rows, !keepCellShade);
+        const metaOverrides: MetaOverrides = updateOverrides(rows, !keepCellShade);
 
         delete table.cachedElement;
 
         clearCache(rows);
-        formatBorders(rows, effectiveMetadata);
-        formatBackgroundColors(rows, effectiveMetadata, bgColorOverrides);
-        setFirstColumnFormat(rows, effectiveMetadata, bgColorOverrides);
-        setHeaderRowFormat(rows, effectiveMetadata, bgColorOverrides);
-
+        formatCells(rows, effectiveMetadata, metaOverrides);
+        setFirstColumnFormat(rows, effectiveMetadata, metaOverrides);
+        setHeaderRowFormat(rows, effectiveMetadata, metaOverrides);
         return effectiveMetadata;
     });
 }
@@ -66,29 +70,32 @@ function clearCache(rows: ContentModelTableRow[]) {
     });
 }
 
-function updateBgColorOverrides(rows: ContentModelTableRow[], forceClear: boolean): boolean[][] {
-    const result: boolean[][] = [];
+function updateOverrides(rows: ContentModelTableRow[], removeCellShade: boolean): MetaOverrides {
+    const overrides: MetaOverrides = { bgColorOverrides: [], vAlignOverrides: [] };
 
     rows.forEach(row => {
-        const currentRow: boolean[] = [];
+        const bgColorOverrides: boolean[] = [];
+        const vAlignOverrides: boolean[] = [];
 
-        result.push(currentRow);
+        overrides.bgColorOverrides.push(bgColorOverrides);
+        overrides.vAlignOverrides.push(vAlignOverrides);
 
         row.cells.forEach(cell => {
             updateTableCellMetadata(cell, metadata => {
-                if (metadata && forceClear) {
-                    currentRow.push(false);
+                if (metadata && removeCellShade) {
+                    bgColorOverrides.push(false);
                     delete metadata.bgColorOverride;
                 } else {
-                    currentRow.push(!!metadata?.bgColorOverride);
+                    bgColorOverrides.push(!!metadata?.bgColorOverride);
                 }
+                vAlignOverrides.push(!!metadata?.vAlignOverride);
 
                 return metadata;
             });
         });
     });
 
-    return result;
+    return overrides;
 }
 
 type ShouldUseTransparentBorder = (indexProp: {
@@ -150,16 +157,26 @@ const BorderFormatters: Record<TableBorderFormat, ShouldUseTransparentBorder> = 
     [TableBorderFormat.CLEAR]: () => [true, true, true, true],
 };
 
-function formatBorders(rows: ContentModelTableRow[], format: TableMetadataFormat) {
+/*
+ * Apply vertical align, borders, and background color to all cells in the table
+ */
+function formatCells(
+    rows: ContentModelTableRow[],
+    format: TableMetadataFormat,
+    metaOverrides: MetaOverrides
+) {
+    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
+
     rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, cellIndex) => {
+        row.cells.forEach((cell, colIndex) => {
+            // Format Borders
             const transparentBorderMatrix = BorderFormatters[
                 format.tableBorderFormat as TableBorderFormat
             ]({
                 firstRow: rowIndex === 0,
                 lastRow: rowIndex === rows.length - 1,
-                firstColumn: cellIndex === 0,
-                lastColumn: cellIndex === row.cells.length - 1,
+                firstColumn: colIndex === 0,
+                lastColumn: colIndex === row.cells.length - 1,
             });
 
             const formatColor = [
@@ -178,29 +195,23 @@ function formatBorders(rows: ContentModelTableRow[], format: TableMetadataFormat
                     color: borderColor,
                 });
             });
-        });
-    });
-}
 
-function formatBackgroundColors(
-    rows: ContentModelTableRow[],
-    format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
-) {
-    const { hasBandedRows, hasBandedColumns, bgColorOdd, bgColorEven } = format;
-
-    rows.forEach((row, rowIndex) => {
-        row.cells.forEach((cell, colIndex) => {
-            if (!bgColorOverrides[rowIndex][colIndex]) {
+            // Format Background Color
+            if (!metaOverrides.bgColorOverrides[rowIndex][colIndex]) {
                 const color =
                     hasBandedRows || hasBandedColumns
                         ? (hasBandedColumns && colIndex % 2 != 0) ||
                           (hasBandedRows && rowIndex % 2 != 0)
                             ? bgColorOdd
                             : bgColorEven
-                        : bgColorEven;
+                        : bgColorEven; /* bgColorEven is the default color */
 
                 setTableCellBackgroundColor(cell, color);
+            }
+
+            // Format Vertical Align
+            if (format.verticalAlign && !metaOverrides.vAlignOverrides[rowIndex][colIndex]) {
+                cell.format.verticalAlign = format.verticalAlign;
             }
         });
     });
@@ -209,14 +220,14 @@ function formatBackgroundColors(
 function setFirstColumnFormat(
     rows: ContentModelTableRow[],
     format: Partial<TableMetadataFormat>,
-    bgColorOverrides: boolean[][]
+    metaOverrides: MetaOverrides
 ) {
     rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, cellIndex) => {
             if (format.hasFirstColumn && cellIndex === 0) {
                 cell.isHeader = true;
 
-                if (rowIndex !== 0 && !bgColorOverrides[rowIndex][cellIndex]) {
+                if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                     setBorderColor(cell.format, 'borderTop');
                     setTableCellBackgroundColor(cell, null /*color*/);
                 }
@@ -234,7 +245,7 @@ function setFirstColumnFormat(
 function setHeaderRowFormat(
     rows: ContentModelTableRow[],
     format: TableMetadataFormat,
-    bgColorOverrides: boolean[][]
+    metaOverrides: MetaOverrides
 ) {
     const rowIndex = 0;
 
@@ -242,7 +253,7 @@ function setHeaderRowFormat(
         cell.isHeader = format.hasHeaderRow;
 
         if (format.hasHeaderRow && format.headerRowColor) {
-            if (!bgColorOverrides[rowIndex][cellIndex]) {
+            if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                 setTableCellBackgroundColor(cell, format.headerRowColor);
             }
 

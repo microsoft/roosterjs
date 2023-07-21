@@ -23,7 +23,7 @@ export default function applyTableFormat(
     }
     table.style.borderCollapse = 'collapse';
     setBordersType(cells, format);
-    setCellColor(cells, format, darkColorHandler);
+    setCellFormat(cells, format, darkColorHandler);
     setFirstColumnFormat(cells, format);
     setHeaderRowFormat(cells, format, darkColorHandler);
 }
@@ -42,11 +42,24 @@ function hasCellShade(cell: VCell) {
 }
 
 /**
- * Set color to the table
+ * Check if the cell has vertical align
+ * @param cell
+ * @returns
+ */
+function hasValign(cell: VCell) {
+    if (!cell.td) {
+        return false;
+    }
+
+    return !!getTableCellMetadata(cell.td)?.vAlignOverride;
+}
+
+/**
+ * Set color and vertical align to the table
  * @param format the format that must be applied
  * @param darkColorHandler An object to handle dark background colors, if not passed the cell background color will not be set
  */
-function setCellColor(
+function setCellFormat(
     cells: VCell[][],
     format: TableFormat,
     darkColorHandler?: DarkColorHandler | null
@@ -56,35 +69,42 @@ function setCellColor(
     const shouldColorWholeTable = !hasBandedRows && bgColorOdd === bgColorEven ? true : false;
     cells.forEach((row, index) => {
         row.forEach(cell => {
-            if (cell.td && !hasCellShade(cell)) {
-                if (hasBandedRows) {
-                    const backgroundColor = color(index);
-                    setColor(
-                        cell.td,
-                        backgroundColor || TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
-                } else if (shouldColorWholeTable) {
-                    setColor(
-                        cell.td,
-                        format.bgColorOdd || TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
-                } else {
-                    setColor(
-                        cell.td,
-                        TRANSPARENT,
-                        true /** isBackgroundColor*/,
-                        undefined /** isDarkMode **/,
-                        true /** shouldAdaptFontColor */,
-                        darkColorHandler
-                    );
+            if (cell.td) {
+                // Set cell color
+                if (!hasCellShade(cell)) {
+                    if (hasBandedRows) {
+                        const backgroundColor = color(index);
+                        setColor(
+                            cell.td,
+                            backgroundColor || TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    } else if (shouldColorWholeTable) {
+                        setColor(
+                            cell.td,
+                            format.bgColorOdd || TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    } else {
+                        setColor(
+                            cell.td,
+                            TRANSPARENT,
+                            true /** isBackgroundColor*/,
+                            undefined /** isDarkMode **/,
+                            true /** shouldAdaptFontColor */,
+                            darkColorHandler
+                        );
+                    }
+                }
+                // Set cell vertical align
+                if (format.verticalAlign && !hasValign(cell)) {
+                    cell.td.style.verticalAlign = format.verticalAlign;
                 }
             }
         });
