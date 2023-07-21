@@ -59,4 +59,36 @@ describe('documentContainWacElements |', () => {
             expect(result).toBeFalse();
         });
     });
+
+    it('ul[class^="BulletListStyle"]>.OutlineElement', () => {
+        const fragment = document.createDocumentFragment();
+
+        const ul = document.createElement('ul');
+        const li = document.createElement('li');
+        ul.className = 'BulletListStyle';
+        li.className = 'OutlineElement';
+
+        ul.appendChild(li);
+        fragment.appendChild(ul);
+
+        const result = documentContainWacElements(<getSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
+
+    it('ol[class^="NumberListStyle"]>.OutlineElement', () => {
+        const fragment = document.createDocumentFragment();
+
+        const ol = document.createElement('ol');
+        const li = document.createElement('li');
+        ol.className = 'NumberListStyle';
+        li.className = 'OutlineElement';
+
+        ol.appendChild(li);
+        fragment.appendChild(ol);
+
+        const result = documentContainWacElements(<getSourceInputParams>{ fragment });
+
+        expect(result).toBeTrue();
+    });
 });
