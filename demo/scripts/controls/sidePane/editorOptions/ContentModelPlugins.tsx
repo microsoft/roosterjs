@@ -31,7 +31,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.linkTitle = value)
                         )
                     )}
-                    {this.renderPluginItem('paste', 'Paste Plugin')}
                     {this.renderPluginItem(
                         'watermark',
                         'Watermark Plugin',
@@ -53,7 +52,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.forcePreserveRatio = value)
                         )
                     )}
-                    {this.renderPluginItem('cutPasteListChain', 'CutPasteListChainPlugin')}
                     {this.renderPluginItem('tableResize', 'Table Resize Plugin')}
                     {this.renderPluginItem('customReplace', 'Custom Replace Plugin (autocomplete)')}
                     {this.renderPluginItem(
