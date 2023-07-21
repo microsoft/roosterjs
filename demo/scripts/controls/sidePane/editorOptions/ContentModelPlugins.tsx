@@ -31,7 +31,6 @@ export default class ContentModelPlugins extends React.Component<PluginsProps, {
                             (state, value) => (state.linkTitle = value)
                         )
                     )}
-                    {this.renderPluginItem('paste', 'Paste Plugin')}
                     {this.renderPluginItem(
                         'watermark',
                         'Watermark Plugin',

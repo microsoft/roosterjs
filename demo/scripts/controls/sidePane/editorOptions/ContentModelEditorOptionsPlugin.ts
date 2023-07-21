@@ -9,7 +9,7 @@ const initialState: BuildInPluginState = {
     pluginList: {
         contentEdit: true,
         hyperlink: true,
-        paste: true,
+        paste: false,
         watermark: false,
         imageEdit: true,
         cutPasteListChain: false,
