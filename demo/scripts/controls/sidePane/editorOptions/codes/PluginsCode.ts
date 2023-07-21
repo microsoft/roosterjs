@@ -8,7 +8,7 @@ import {
     CustomReplaceCode,
     CutPasteListChainCode,
     ImageEditCode,
-    PasteCode,
+    ContentModelPasteCode,
     TableResizeCode,
 } from './SimplePluginCode';
 
@@ -22,7 +22,7 @@ export default class PluginsCode extends CodeElement {
         this.plugins = [
             pluginList.contentEdit && new ContentEditCode(state.contentEditFeatures),
             pluginList.hyperlink && new HyperLinkCode(state.linkTitle),
-            pluginList.paste && new PasteCode(),
+            pluginList.contentModelPaste && new ContentModelPasteCode(),
             pluginList.watermark && new WatermarkCode(this.state.watermarkText),
             pluginList.imageEdit && new ImageEditCode(),
             pluginList.cutPasteListChain && new CutPasteListChainCode(),

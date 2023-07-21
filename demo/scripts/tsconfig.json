@@ -31,7 +31,7 @@
             "roosterjs-content-model-types/lib/*": [
                 "packages-content-model/roosterjs-content-model-dom/lib/*"
             ],
-            "roosterjs-content-model": [
+            "roosterjs-content-model-dom": [
                 "packages-content-model/roosterjs-content-model-dom/lib/index"
             ],
             "roosterjs-content-model-dom/lib/*": [

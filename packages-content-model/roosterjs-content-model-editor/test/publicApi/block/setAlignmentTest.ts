@@ -852,6 +852,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [],
@@ -871,6 +873,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [
@@ -901,6 +905,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [
@@ -941,6 +947,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [
@@ -971,6 +979,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [
@@ -1011,6 +1021,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [
@@ -1043,6 +1055,8 @@ describe('setAlignment in list', () => {
                 levels: [
                     {
                         listType: 'OL',
+                        dataset: {},
+                        format: {},
                     },
                 ],
                 blocks: [

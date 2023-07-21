@@ -3,6 +3,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { ListMetadataFormat } from 'roosterjs-content-model-types';
+import { updateListMetadata } from 'roosterjs-content-model-dom';
 
 /**
  * Set style of list items with in same thread of current item
@@ -18,12 +19,10 @@ export default function setListStyle(editor: IContentModelEditor, style: ListMet
             const levelIndex = listItem.levels.length - 1;
 
             listItems.forEach(listItem => {
-                if (style.orderedStyleType !== undefined) {
-                    listItem.levels[levelIndex].orderedStyleType = style.orderedStyleType;
-                }
+                const level = listItem.levels[levelIndex];
 
-                if (style.unorderedStyleType !== undefined) {
-                    listItem.levels[levelIndex].unorderedStyleType = style.unorderedStyleType;
+                if (level) {
+                    updateListMetadata(level, metadata => Object.assign({}, metadata, style));
                 }
             });
 
