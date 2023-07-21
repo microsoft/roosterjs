@@ -1,4 +1,4 @@
-import FormatPainterPlugin from '../../contentModel/plugins/FormatPainterPlugin';
+import ContentModelFormatPainterPlugin from '../../contentModel/plugins/ContentModelFormatPainterPlugin';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
 import { RibbonButton } from 'roosterjs-react';
 
@@ -12,7 +12,7 @@ export const formatPainterButton: RibbonButton<'formatPainter'> = {
     iconName: 'Brush',
     onClick: editor => {
         if (isContentModelEditor(editor)) {
-            FormatPainterPlugin.startFormatPainter(editor);
+            ContentModelFormatPainterPlugin.startFormatPainter(editor);
         }
         return true;
     },
