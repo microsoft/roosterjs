@@ -1,4 +1,4 @@
-import { commitEntity } from 'roosterjs-editor-dom';
+import { Browser, commitEntity } from 'roosterjs-editor-dom';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
@@ -368,5 +368,109 @@ describe('handleBlockGroupChildren', () => {
         expect(parent.innerHTML).toBe(
             '<div><br></div><span class="_Entity _EType_MyEntity _EReadonly_0"></span>'
         );
+    });
+
+    it('Paragraph between two list items, do not continue numbering', () => {
+        const group: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'List1',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            orderedStyleType: 1,
+                            unorderedStyleType: 1,
+                            listType: 'OL',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [
+                                {
+                                    segmentType: 'Text',
+                                    text: 'List2',
+                                    format: {},
+                                },
+                            ],
+                            format: {},
+                            isImplicit: true,
+                        },
+                    ],
+                    levels: [
+                        {
+                            orderedStyleType: 1,
+                            unorderedStyleType: 1,
+                            listType: 'OL',
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Br',
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+
+        handleBlockGroupChildren(document, parent, group, context);
+
+        expect(parent.outerHTML).toBe(
+            Browser.isChrome
+                ? '<div><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}" style="list-style-type: decimal;"><li>List1</li></ol><div><br></div><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}" style="list-style-type: decimal;"><li>List2</li></ol><div><br></div></div>'
+                : '<div><ol style="list-style-type: decimal;" data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}" start="1"><li>List1</li></ol><div><br></div><ol style="list-style-type: decimal;" data-editing-info="{&quot;orderedStyleType&quot;:1,&quot;unorderedStyleType&quot;:1}" start="1"><li>List2</li></ol><div><br></div></div>'
+        );
+        expect(handleBlock).toHaveBeenCalledTimes(6);
     });
 });

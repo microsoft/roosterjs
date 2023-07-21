@@ -42,6 +42,9 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
             refNode = next;
         }
     } finally {
+        if (listFormat.nodeStack.length === 0) {
+            listFormat.threadItemCounts = [];
+        }
         listFormat.nodeStack = nodeStack;
     }
 };
