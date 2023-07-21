@@ -91,7 +91,9 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event.rawEvent);
+                    if (!event.handledByEditFeature) {
+                        this.handleKeyDownEvent(this.editor, event.rawEvent);
+                    }
                     break;
 
                 case PluginEventType.ContentChanged:
