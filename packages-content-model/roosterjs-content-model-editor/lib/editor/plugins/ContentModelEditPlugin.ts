@@ -2,6 +2,19 @@ import handleKeyDownEvent from '../../publicApi/editing/handleKeyDownEvent';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import {
+    EditorPlugin,
+    EntityOperationEvent,
+    ExperimentalFeatures,
+    IEditor,
+    Keys,
+    NodePosition,
+    NodeType,
+    PluginEvent,
+    PluginEventType,
+    PluginKeyDownEvent,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
@@ -14,18 +27,6 @@ import {
     isModifierKey,
     Position,
 } from 'roosterjs-editor-dom';
-import {
-    EditorPlugin,
-    EntityOperationEvent,
-    ExperimentalFeatures,
-    IEditor,
-    Keys,
-    NodePosition,
-    NodeType,
-    PluginEvent,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -91,11 +92,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(
-                        this.editor,
-                        event.rawEvent,
-                        event.handledByEditFeature
-                    );
+                    this.handleKeyDownEvent(this.editor, event);
                     break;
 
                 case PluginEventType.ContentChanged:
@@ -116,17 +113,14 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(
-        editor: IContentModelEditor,
-        rawEvent: KeyboardEvent,
-        handledByEditFeature: boolean
-    ) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+        const rawEvent = event.rawEvent;
         const which = rawEvent.which;
 
         if (!this.editWithContentModel || rawEvent.defaultPrevented) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else if (!rawEvent.defaultPrevented && !handledByEditFeature) {
+        } else if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
                 case Keys.BACKSPACE:
