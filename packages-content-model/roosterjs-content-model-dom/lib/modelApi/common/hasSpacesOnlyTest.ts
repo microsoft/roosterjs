@@ -1,4 +1,4 @@
-import { hasSpacesOnly } from '../../lib/modelApi/common/hasSpacesOnly';
+import { hasSpacesOnly } from '../../../lib/modelApi/common/hasSpacesOnly';
 
 describe('hasSpacesOnly', () => {
     it('Empty string', () => {
