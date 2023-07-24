@@ -178,13 +178,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
                         removeContentForAndroid(editor);
-                        paste(
-                            editor,
-                            clipboardData,
-                            false /*pasteAsText*/,
-                            false /*applyCurrentStyle*/,
-                            false /*pasteAsImage*/
-                        );
+                        paste(editor, clipboardData);
                     }
                 });
             }

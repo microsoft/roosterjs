@@ -36,8 +36,7 @@ export default function paste(
     clipboardData: ClipboardData,
     pasteAsText: boolean = false,
     applyCurrentFormat: boolean = false,
-    pasteAsImage: boolean = false,
-    nativePaste: boolean = false
+    pasteAsImage: boolean = false
 ) {
     if (clipboardData.snapshotBeforePaste) {
         // Restore original content before paste a new one
@@ -49,8 +48,7 @@ export default function paste(
     const event = createBeforePasteEvent(
         editor,
         clipboardData,
-        getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage),
-        nativePaste
+        getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage)
     );
 
     const fragment = createFragmentFromClipboardData(
@@ -102,8 +100,7 @@ export default function paste(
 function createBeforePasteEvent(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    pasteType: PasteType,
-    nativePaste: boolean = false
+    pasteType: PasteType
 ): ContentModelBeforePasteEvent {
     const options = createDefaultHtmlSanitizerOptions();
 
