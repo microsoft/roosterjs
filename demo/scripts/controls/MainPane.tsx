@@ -3,7 +3,6 @@ import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import EditorOptionsPlugin from './sidePane/editorOptions/EditorOptionsPlugin';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
-import FormatPainterPlugin from './contentModel/plugins/FormatPainterPlugin';
 import FormatStatePlugin from './sidePane/formatState/FormatStatePlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
@@ -102,7 +101,6 @@ class MainPane extends MainPaneBase {
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
-    private formatPainterPlugin: FormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
     private mainWindowButtons: RibbonButton<RibbonStringKeys>[];
     private popoutWindowButtons: RibbonButton<RibbonStringKeys>[];
@@ -118,7 +116,6 @@ class MainPane extends MainPaneBase {
         this.ribbonPlugin = createRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        this.formatPainterPlugin = new FormatPainterPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
 
         this.mainWindowButtons = getButtons([
@@ -183,7 +180,6 @@ class MainPane extends MainPaneBase {
             this.ribbonPlugin,
             this.pasteOptionPlugin,
             this.emojiPlugin,
-            this.formatPainterPlugin,
             this.sampleEntityPlugin,
         ];
 
