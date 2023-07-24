@@ -2,6 +2,11 @@ import handleKeyDownEvent from '../../publicApi/editing/handleKeyDownEvent';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
+import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
+import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     EditorPlugin,
     EntityOperationEvent,
@@ -15,11 +20,6 @@ import {
     PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     getObjectKeys,
     isBlockElement,
