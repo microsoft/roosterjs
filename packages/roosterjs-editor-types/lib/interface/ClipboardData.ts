@@ -61,4 +61,9 @@ export default interface ClipboardData {
      * To allow custom paste type, pass the allowed types to EditorOptions.allowedCustomPasteType
      */
     customValues: Record<string, string>;
+
+    /**
+     * If true, the event was triggered by a native paste event (keyboard or native context menu paste)
+     */
+    readonly pasteNativeEvent: boolean;
 }

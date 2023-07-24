@@ -165,7 +165,13 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                 event as ClipboardEvent,
                 clipboardData => {
                     if (editor && !editor.isDisposed()) {
-                        editor.paste(clipboardData);
+                        editor.paste(
+                            clipboardData,
+                            false /*pasteAsText*/,
+                            false /*applyCurrentStyle*/,
+                            false /*pasteAsImage*/,
+                            true /*nativePaste */
+                        );
                     }
                 },
                 {
@@ -180,7 +186,8 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                         }
                     },
                 },
-                this.editor.getSelectionRange() ?? undefined
+                this.editor.getSelectionRange() ?? undefined,
+                true /*pasteNativeEvent*/
             );
         }
     };

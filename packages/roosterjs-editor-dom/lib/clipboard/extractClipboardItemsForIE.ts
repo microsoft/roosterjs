@@ -21,7 +21,8 @@ import {
 export default function extractClipboardItemsForIE(
     dataTransfer: DataTransfer,
     callback: (data: ClipboardData) => void,
-    options?: ExtractClipboardItemsForIEOptions
+    options?: ExtractClipboardItemsForIEOptions,
+    pasteNativeEvent: boolean = false
 ) {
     const clipboardData: ClipboardData = {
         types: dataTransfer.types ? toArray(dataTransfer.types) : [],
@@ -30,6 +31,7 @@ export default function extractClipboardItemsForIE(
         files: [],
         rawHtml: null,
         customValues: {},
+        pasteNativeEvent,
     };
 
     for (let i = 0; i < (dataTransfer.files ? dataTransfer.files.length : 0); i++) {

@@ -13,7 +13,7 @@ import { HtmlAlignFormatRenderer } from '../format/formatPart/HtmlAlignFormatRen
 import { MetadataView } from '../format/MetadataView';
 import { PaddingFormatRenderer } from '../format/formatPart/PaddingFormatRenderer';
 import { SizeFormatRenderers } from '../format/formatPart/SizeFormatRenderers';
-import { TableCellMetadataFormatRender } from '../format/formatPart/TableCellMetadataFormatRender';
+import { TableCellMetadataFormatRenders } from '../format/formatPart/TableCellMetadataFormatRenders';
 import { TextAlignFormatRenderer } from '../format/formatPart/TextAlignFormatRenderer';
 import { TextColorFormatRenderer } from '../format/formatPart/TextColorFormatRenderer';
 import { useProperty } from '../../hooks/useProperty';
@@ -102,7 +102,7 @@ export function ContentModelTableCellView(props: { cell: ContentModelTableCell }
         return (
             <MetadataView
                 model={cell}
-                renderers={[TableCellMetadataFormatRender]}
+                renderers={TableCellMetadataFormatRenders}
                 updater={updateTableCellMetadata}
             />
         );

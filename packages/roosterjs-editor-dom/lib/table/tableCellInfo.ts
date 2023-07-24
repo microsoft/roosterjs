@@ -3,7 +3,7 @@ import { getMetadata, setMetadata } from '../metadata/metadata';
 import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 const BooleanDefinition = createBooleanDefinition(
-    false /** isOptional */,
+    true /** isOptional */,
     undefined /** value */,
     true /** allowNull */
 );
@@ -11,6 +11,7 @@ const BooleanDefinition = createBooleanDefinition(
 const TableCellFormatMetadata = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {
         bgColorOverride: BooleanDefinition,
+        vAlignOverride: BooleanDefinition,
     },
     false /* isOptional */,
     true /** allowNull */

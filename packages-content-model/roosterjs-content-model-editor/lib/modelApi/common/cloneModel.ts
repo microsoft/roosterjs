@@ -24,6 +24,7 @@ import type {
     ContentModelGeneralSegment,
     ContentModelText,
     ContentModelTableRow,
+    ContentModelListLevel,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -235,13 +236,18 @@ function cloneListItem(item: ContentModelListItem): ContentModelListItem {
     return Object.assign(
         {
             formatHolder: cloneSelectionMarker(formatHolder),
-            levels: levels.map(x => Object.assign({}, x)),
+            levels: levels.map(cloneListLevel),
         },
         cloneBlockBase(item),
         cloneBlockGroupBase(item)
     );
 }
 
+function cloneListLevel(level: ContentModelListLevel): ContentModelListLevel {
+    const { listType } = level;
+
+    return Object.assign({ listType }, cloneModelWithFormat(level), cloneModelWithDataset(level));
+}
 function cloneDivider(divider: ContentModelDivider): ContentModelDivider {
     const { tagName, isSelected, cachedElement } = divider;
 

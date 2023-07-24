@@ -2,6 +2,7 @@ import { setModelIndentation } from '../../../lib/modelApi/block/setModelIndenta
 import {
     createContentModelDocument,
     createListItem,
+    createListLevel,
     createParagraph,
     createText,
 } from 'roosterjs-content-model-dom';
@@ -261,7 +262,7 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -281,7 +282,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -300,7 +304,15 @@ describe('indent', () => {
         const text2 = createText('test2');
         const text3 = createText('test3');
         const listItem = createListItem([
-            { listType: 'OL', startNumberOverride: 2, orderedStyleType: 3, unorderedStyleType: 4 },
+            createListLevel(
+                'OL',
+                {
+                    startNumberOverride: 2,
+                },
+                {
+                    editingInfo: JSON.stringify({ orderedStyleType: 3, unorderedStyleType: 4 }),
+                }
+            ),
         ]);
 
         para1.segments.push(text1);
@@ -324,11 +336,17 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 2,
-                            orderedStyleType: 3,
-                            unorderedStyleType: 4,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    orderedStyleType: 3,
+                                    unorderedStyleType: 4,
+                                }),
+                            },
+                            format: {
+                                startNumberOverride: 2,
+                            },
                         },
-                        { listType: 'OL' },
+                        { listType: 'OL', dataset: {}, format: {} },
                     ],
                     blocks: [para1, para2, para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
@@ -343,9 +361,9 @@ describe('indent', () => {
         const group = createContentModelDocument();
         const para2 = createParagraph();
         const text2 = createText('test2');
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }]);
-        const listItem3 = createListItem([{ listType: 'OL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL')]);
+        const listItem3 = createListItem([createListLevel('OL')]);
 
         para2.segments.push(text2);
         listItem2.blocks.push(para2);
@@ -364,7 +382,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -383,9 +404,9 @@ describe('indent', () => {
         const text1 = createText('test2');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }]);
-        const listItem3 = createListItem([{ listType: 'OL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL')]);
+        const listItem3 = createListItem([createListLevel('OL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -410,7 +431,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para1, para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -418,7 +442,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -436,9 +463,9 @@ describe('indent', () => {
         const text1 = createText('test2');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }]);
-        const listItem3 = createListItem([{ listType: 'UL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL')]);
+        const listItem3 = createListItem([createListLevel('UL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -463,7 +490,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para1, para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -471,7 +501,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'UL' }, { listType: 'UL' }],
+                    levels: [
+                        { listType: 'UL', dataset: {}, format: {} },
+                        { listType: 'UL', dataset: {}, format: {} },
+                    ],
                     blocks: [para3],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -490,8 +523,8 @@ describe('indent', () => {
         const text1 = createText('test2');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'UL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('UL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);
@@ -516,7 +549,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para1],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -524,7 +560,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'UL' }, { listType: 'UL' }],
+                    levels: [
+                        { listType: 'UL', dataset: {}, format: {} },
+                        { listType: 'UL', dataset: {}, format: {} },
+                    ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     format: {},
@@ -790,7 +829,7 @@ describe('outdent', () => {
         const group = createContentModelDocument();
         const para1 = createParagraph();
         const text1 = createText('test1');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para1.segments.push(text1);
         listItem.blocks.push(para1);
@@ -816,8 +855,14 @@ describe('outdent', () => {
         const para1 = createParagraph();
         const text1 = createText('test1');
         const listItem = createListItem([
-            { listType: 'OL', startNumberOverride: 1, orderedStyleType: 2, unorderedStyleType: 3 },
-            { listType: 'UL' },
+            createListLevel(
+                'OL',
+                {
+                    startNumberOverride: 1,
+                },
+                { editingInfo: JSON.stringify({ orderedStyleType: 2, unorderedStyleType: 3 }) }
+            ),
+            createListLevel('UL'),
         ]);
 
         para1.segments.push(text1);
@@ -835,9 +880,15 @@ describe('outdent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            orderedStyleType: 2,
-                            unorderedStyleType: 3,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    orderedStyleType: 2,
+                                    unorderedStyleType: 3,
+                                }),
+                            },
+                            format: {
+                                startNumberOverride: 1,
+                            },
                         },
                     ],
                 },
@@ -854,7 +905,7 @@ describe('outdent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem = createListItem([{ listType: 'UL' }]);
+        const listItem = createListItem([createListLevel('UL')]);
 
         para1.segments.push(text1);
         para2.segments.push(text2);

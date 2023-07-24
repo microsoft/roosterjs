@@ -34,6 +34,7 @@ const TableFormatDefinition = createObjectDefinition<Required<TableMetadataForma
             TableBorderFormat.DEFAULT /* first table border format, TODO: Use Min/Max to specify valid values */,
             TableBorderFormat.CLEAR /* last table border format, , TODO: Use Min/Max to specify valid values */
         ),
+        verticalAlign: NullStringDefinition,
     },
     false /* isOptional */,
     true /** allowNull */

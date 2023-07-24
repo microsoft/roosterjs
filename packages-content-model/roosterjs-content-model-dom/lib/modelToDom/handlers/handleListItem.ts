@@ -1,6 +1,8 @@
 import { applyFormat } from '../utils/applyFormat';
+import { listItemMetadataFormatHandler } from '../../formatHandlers/list/listItemMetadataFormatHandler';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
+import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 import {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -32,7 +34,14 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     if (level) {
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
-        applyFormat(li, context.formatAppliers.listItem, level, context);
+        applyFormat(li, context.formatAppliers.listItem, level.format, context);
+
+        // TODO: Move this out into roosterjs-content-model-editor package
+        updateListMetadata(level, metadata => {
+            applyFormat(li, [listItemMetadataFormatHandler.apply], metadata || {}, context);
+
+            return metadata;
+        });
 
         context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
     } else {

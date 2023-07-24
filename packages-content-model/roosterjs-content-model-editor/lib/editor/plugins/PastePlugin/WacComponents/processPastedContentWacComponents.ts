@@ -3,6 +3,7 @@ import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentM
 import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
 import {
+    ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
     ContentModelSegmentFormat,
@@ -15,9 +16,8 @@ const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,span.WACImageBorder';
 const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 
-const EMPTY_TEXT_RUN = 'EmptyTextRun';
-const END_OF_PARAGRAPH = 'EOP';
 const PARAGRAPH = 'Paragraph';
+const TABLE_CONTAINER = 'TableContainer';
 
 const TEMP_ELEMENTS_CLASSES = [
     'TableInsertRowGapBlank',
@@ -35,13 +35,13 @@ const CLASSES_TO_KEEP = [
     'WACImageContainer',
     'ListContainerWrapper',
     'BulletListStyle',
-    END_OF_PARAGRAPH,
-    EMPTY_TEXT_RUN,
     ...TEMP_ELEMENTS_CLASSES,
     'TableCellContent',
     PARAGRAPH,
     'WACImageContainer',
     'WACImageBorder',
+    TABLE_CONTAINER,
+    'LineBreakBlob',
 ];
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
@@ -88,11 +88,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
         return;
     }
 
-    if (
-        (element.classList.contains(END_OF_PARAGRAPH) &&
-            element.previousElementSibling?.classList.contains(EMPTY_TEXT_RUN)) ||
-        TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))
-    ) {
+    if (TEMP_ELEMENTS_CLASSES.some(className => element.classList.contains(className))) {
         return;
     } else if (shouldClearListContext(elementTag, element, context)) {
         const { listFormat } = context;
@@ -206,6 +202,7 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
     addParser(ev.domToModelOption, 'listItem', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
+    addParser(ev.domToModelOption, 'container', wacBlockParser);
 
     setProcessor(ev.domToModelOption, 'element', wacElementProcessor);
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
@@ -257,5 +254,14 @@ const wacListProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement> = 
         context.defaultElementProcessors.ol?.(group, element as HTMLOListElement, context);
     } else {
         context.defaultElementProcessors.ul?.(group, element as HTMLUListElement, context);
+    }
+};
+
+const wacBlockParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.classList.contains(TABLE_CONTAINER) && element.style.marginLeft.startsWith('-')) {
+        delete format.marginLeft;
     }
 };

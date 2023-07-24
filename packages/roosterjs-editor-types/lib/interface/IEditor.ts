@@ -215,7 +215,8 @@ export default interface IEditor {
         clipboardData: ClipboardData,
         pasteAsText?: boolean,
         applyCurrentFormat?: boolean,
-        pasteAsImage?: boolean
+        pasteAsImage?: boolean,
+        nativePaste?: boolean
     ): void;
 
     //#endregion

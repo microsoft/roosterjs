@@ -42,6 +42,8 @@ export default function insertTable(
                 setBackgroundColor(editor, 'transparent');
             }
             let vtable = new VTable(table);
+            // Assign default vertical align
+            format = format || { verticalAlign: 'top' };
             vtable.applyFormat(format || {});
             vtable.writeBack();
             editor.insertNode(table);

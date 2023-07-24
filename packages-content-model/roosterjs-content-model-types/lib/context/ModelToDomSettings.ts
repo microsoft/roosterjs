@@ -12,7 +12,6 @@ import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
 import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
 import { ContentModelImage } from '../segment/ContentModelImage';
 import { ContentModelListItem } from '../group/ContentModelListItem';
-import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
@@ -147,7 +146,6 @@ export type OnNodeCreated = (
         | ContentModelBlockGroup
         | ContentModelSegment
         | ContentModelDecorator
-        | ContentModelListItemLevelFormat
         | ContentModelTableRow,
     node: Node
 ) => void;

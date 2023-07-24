@@ -36,7 +36,8 @@ export default function paste(
     clipboardData: ClipboardData,
     pasteAsText: boolean = false,
     applyCurrentFormat: boolean = false,
-    pasteAsImage: boolean = false
+    pasteAsImage: boolean = false,
+    nativePaste: boolean = false
 ) {
     if (clipboardData.snapshotBeforePaste) {
         // Restore original content before paste a new one
@@ -48,7 +49,8 @@ export default function paste(
     const event = createBeforePasteEvent(
         editor,
         clipboardData,
-        getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage)
+        getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage),
+        nativePaste
     );
 
     const fragment = createFragmentFromClipboardData(
@@ -83,6 +85,9 @@ export default function paste(
             model => {
                 mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
                     mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
+                    mergeTable:
+                        pasteModel.blocks.length === 1 &&
+                        pasteModel.blocks[0].blockType === 'Table',
                 });
                 return true;
             },
@@ -97,7 +102,8 @@ export default function paste(
 function createBeforePasteEvent(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    pasteType: PasteType
+    pasteType: PasteType,
+    nativePaste: boolean = false
 ): ContentModelBeforePasteEvent {
     const options = createDefaultHtmlSanitizerOptions();
 

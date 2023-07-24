@@ -6,6 +6,7 @@ import { updateMetadata } from 'roosterjs-content-model-dom';
 const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {
         bgColorOverride: createBooleanDefinition(true /** isOptional */),
+        vAlignOverride: createBooleanDefinition(true /** isOptional */),
     },
     false /* isOptional */,
     true /** allowNull */

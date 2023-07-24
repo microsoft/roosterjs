@@ -27,7 +27,8 @@ export default function extractClipboardEvent(
     event: ClipboardEvent,
     callback: (clipboardData: ClipboardData) => void,
     options?: ExtractClipboardEventOption,
-    rangeBeforePaste?: Range
+    rangeBeforePaste?: Range,
+    pasteNativeEvent: boolean = false
 ) {
     const dataTransfer =
         event.clipboardData ||
@@ -35,14 +36,14 @@ export default function extractClipboardEvent(
 
     if (dataTransfer.items) {
         event.preventDefault();
-        extractClipboardItems(toArray(dataTransfer.items), options).then(
+        extractClipboardItems(toArray(dataTransfer.items), options, pasteNativeEvent).then(
             (clipboardData: ClipboardData) => {
                 removeContents(rangeBeforePaste);
                 callback(clipboardData);
             }
         );
     } else {
-        extractClipboardItemsForIE(dataTransfer, callback, options);
+        extractClipboardItemsForIE(dataTransfer, callback, options, pasteNativeEvent);
     }
 }
 

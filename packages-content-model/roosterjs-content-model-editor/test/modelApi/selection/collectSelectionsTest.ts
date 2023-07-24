@@ -14,6 +14,7 @@ import {
     createEntity,
     createFormatContainer,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -708,7 +709,7 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with list selection', () => {
         const group = createContentModelDocument();
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text = createText('test');
 
@@ -725,8 +726,8 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with multiple list selection', () => {
         const group = createContentModelDocument();
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('test1');
@@ -748,7 +749,7 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with selection that is not start from list', () => {
         const group = createContentModelDocument();
-        const listItem2 = createListItem([{ listType: 'OL' }]);
+        const listItem2 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('test1');
