@@ -1,10 +1,6 @@
 import { ContentModelParagraph } from 'roosterjs-content-model-types';
-import {
-    isPunctuation,
-    isSpace,
-    isWhiteSpacePreserved,
-    normalizeText,
-} from 'roosterjs-content-model-dom';
+import { isPunctuation, isSpace, normalizeText } from '../../../domUtils/stringUtil';
+import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
 import {
     DeleteResult,
     DeleteSelectionContext,
