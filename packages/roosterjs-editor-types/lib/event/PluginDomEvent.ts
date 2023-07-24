@@ -159,7 +159,8 @@ export type CompatiblePluginMouseEvent =
  * This interface represents a PluginEvent wrapping native KeyDown event
  */
 export interface CompatiblePluginKeyDownEvent
-    extends PluginDomEventBase<CompatiblePluginEventType.KeyDown, KeyboardEvent> {}
+    extends PluginKeyDownEventData,
+        PluginDomEventBase<CompatiblePluginEventType.KeyDown, KeyboardEvent> {}
 
 /**
  * This interface represents a PluginEvent wrapping native KeyPress event

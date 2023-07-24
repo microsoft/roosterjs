@@ -64,8 +64,9 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
         let hasFunctionKey = false;
         let features: GenericContentEditFeature<PluginEvent>[] | null = null;
         let ctrlOrMeta = false;
+        const isKeyDownEvent = event.eventType == PluginEventType.KeyDown;
 
-        if (event.eventType == PluginEventType.KeyDown) {
+        if (isKeyDownEvent) {
             const rawEvent = event.rawEvent;
             const range = this.editor?.getSelectionRange();
 
@@ -86,6 +87,9 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
                 feature.shouldHandleEvent(event, this.editor, ctrlOrMeta)
             ) {
                 feature.handleEvent(event, this.editor);
+                if (isKeyDownEvent) {
+                    event.handledByEditFeature = true;
+                }
                 break;
             }
         }
