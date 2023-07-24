@@ -202,6 +202,8 @@ export default class EventViewPane extends React.Component<
                                 ? JSON.stringify(event.clipboardData.linkPreview)
                                 : ''
                         )}
+                        Paste from keyboard or native context menu:
+                        {event.clipboardData.pasteNativeEvent ? ' true' : ' false'}
                         {getObjectKeys(event.clipboardData.customValues).map(contentType =>
                             this.renderPasteContent(
                                 contentType,
