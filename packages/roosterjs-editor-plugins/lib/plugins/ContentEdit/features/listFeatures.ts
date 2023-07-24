@@ -41,6 +41,7 @@ import {
     NumberingListType,
     BulletListType,
     IPositionContentSearcher,
+    PluginEventType,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -599,6 +600,9 @@ const MergeListOnBackspaceAfterList: BuildInEditFeature<PluginKeyboardEvent> = {
         return false;
     },
     handleEvent: (event, editor) => {
+        if (event.eventType == PluginEventType.KeyDown) {
+            event.handledByEditFeature = true;
+        }
         editor.runAsync(editor => {
             const previousList = cacheGetEventData<HTMLOListElement | HTMLUListElement | null>(
                 event,
