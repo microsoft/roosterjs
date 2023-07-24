@@ -26,6 +26,8 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
             );
             const { listFormat } = context;
 
+            parseFormat(element, context.formatParsers.dataset, level.dataset, context);
+
             // TODO: Move this out into roosterjs-content-model-editor package
             updateListMetadata(level, metadata => {
                 metadata = metadata || {};
@@ -41,7 +43,6 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
                 return metadata;
             });
 
-            parseFormat(element, context.formatParsers.dataset, level.dataset, context);
             parseFormat(element, context.formatParsers.listLevel, level.format, context);
             parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
