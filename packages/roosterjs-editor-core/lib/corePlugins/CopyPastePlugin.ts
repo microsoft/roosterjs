@@ -180,8 +180,7 @@ export default class CopyPastePlugin implements PluginWithState<CopyPastePluginS
                         }
                     },
                 },
-                this.editor.getSelectionRange() ?? undefined,
-                true /*pasteNativeEvent*/
+                this.editor.getSelectionRange() ?? undefined
             );
         }
     };

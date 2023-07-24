@@ -54,7 +54,7 @@ export default function extractClipboardItems(
         files: [],
         rawHtml: null,
         customValues: {},
-        pasteNativeEvent,
+        pasteNativeEvent: pasteNativeEvent,
     };
 
     return Promise.all(

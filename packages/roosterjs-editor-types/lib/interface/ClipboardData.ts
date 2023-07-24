@@ -65,5 +65,5 @@ export default interface ClipboardData {
     /**
      * If true, the event was triggered by a native paste event (keyboard or native context menu paste)
      */
-    readonly pasteNativeEvent: boolean;
+    readonly pasteNativeEvent?: boolean;
 }
