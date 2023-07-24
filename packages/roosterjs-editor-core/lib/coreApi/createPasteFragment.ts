@@ -21,8 +21,8 @@ import {
  * @param position The position to paste to
  * @param pasteAsText True to force use plain text as the content to paste, false to choose HTML or Image if any
  * @param applyCurrentStyle True if apply format of current selection to the pasted content,
- * @param pasteAsImage True if the image should be pasted as image
  * false to keep original format
+ * @param pasteAsImage True if the image should be pasted as image
  */
 export const createPasteFragment: CreatePasteFragment = (
     core: EditorCore,
