@@ -220,7 +220,7 @@ describe('ImageEdit | rotate and flip', () => {
         editor.select(image);
         plugin.setEditingImage(image, ImageEditOperation.Resize);
         expect(editor.getContent()).toBe(
-            '<span style="vertical-align: bottom;"><img id="IMAGE_ID" src="test"></span>'
+            '<span style="vertical-align: bottom; font-size: 24px;"><img id="IMAGE_ID" src="test"></span>'
         );
     });
 });
@@ -342,5 +342,19 @@ describe('ImageEdit | wrapper', () => {
         const shadowRoot = imageParent?.shadowRoot;
         const imageShadow = shadowRoot?.querySelector('img');
         expect(imageShadow?.style.maxWidth).toBe('');
+    });
+
+    it('image selection, cloned image should use style width/height attributes', () => {
+        const IMG_ID = 'IMAGE_ID';
+        const content = `<img id="${IMG_ID}" style="width: 300px; height: 300px" src='test'/>`;
+        editor.setContent(content);
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        editor.focus();
+        editor.select(image);
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const imageShadow = shadowRoot?.querySelector('img');
+        expect(imageShadow?.style.height).toBe('300px');
+        expect(imageShadow?.style.width).toBe('300px');
     });
 });

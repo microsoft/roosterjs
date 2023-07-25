@@ -35,6 +35,16 @@ export interface PluginScrollEventData {
 }
 
 /**
+ * Data of PluginKeyDownEvent
+ */
+export interface PluginKeyDownEventData {
+    /**
+     * Whether this event is handled by edit feature
+     */
+    handledByEditFeature: boolean;
+}
+
+/**
  * A base interface of all DOM events
  */
 export interface PluginDomEventBase<
@@ -79,7 +89,8 @@ export type PluginMouseEvent = PluginMouseDownEvent | PluginMouseUpEvent | Plugi
  * This interface represents a PluginEvent wrapping native KeyDown event
  */
 export interface PluginKeyDownEvent
-    extends PluginDomEventBase<PluginEventType.KeyDown, KeyboardEvent> {}
+    extends PluginKeyDownEventData,
+        PluginDomEventBase<PluginEventType.KeyDown, KeyboardEvent> {}
 
 /**
  * This interface represents a PluginEvent wrapping native KeyPress event
@@ -148,7 +159,8 @@ export type CompatiblePluginMouseEvent =
  * This interface represents a PluginEvent wrapping native KeyDown event
  */
 export interface CompatiblePluginKeyDownEvent
-    extends PluginDomEventBase<CompatiblePluginEventType.KeyDown, KeyboardEvent> {}
+    extends PluginKeyDownEventData,
+        PluginDomEventBase<CompatiblePluginEventType.KeyDown, KeyboardEvent> {}
 
 /**
  * This interface represents a PluginEvent wrapping native KeyPress event

@@ -1,6 +1,7 @@
 import { ContentModelTable } from 'roosterjs-content-model-types';
 import { getSelectedCells } from './getSelectedCells';
 import { TableOperation } from 'roosterjs-editor-types';
+import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 const TextAlignValueMap: Partial<Record<TableOperation, 'start' | 'center' | 'end'>> = {
@@ -50,6 +51,14 @@ export function alignTableCell(
 
                     format.textAlign = textAlign || format.textAlign;
                     format.verticalAlign = verticalAlign || format.verticalAlign;
+
+                    if (verticalAlign) {
+                        updateTableCellMetadata(cell, metadata => {
+                            metadata = metadata || {};
+                            metadata.vAlignOverride = true;
+                            return metadata;
+                        });
+                    }
                 }
             }
         }

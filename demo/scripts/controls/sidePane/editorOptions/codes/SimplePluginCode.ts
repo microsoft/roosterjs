@@ -1,18 +1,24 @@
 import CodeElement from './CodeElement';
 
 class SimplePluginCode extends CodeElement {
-    constructor(private name: string) {
+    constructor(private name: string, private namespace: string = 'roosterjs') {
         super();
     }
 
     getCode() {
-        return `new roosterjs.${this.name}()`;
+        return `new ${this.namespace}.${this.name}()`;
     }
 }
 
 export class PasteCode extends SimplePluginCode {
     constructor() {
         super('Paste');
+    }
+}
+
+export class ContentModelPasteCode extends SimplePluginCode {
+    constructor() {
+        super('ContentModelPastePlugin', 'roosterjsContentModel');
     }
 }
 
