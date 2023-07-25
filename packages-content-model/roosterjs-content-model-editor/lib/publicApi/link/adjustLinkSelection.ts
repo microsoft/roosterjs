@@ -1,7 +1,7 @@
+import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setSelection } from '../../modelApi/selection/setSelection';
 

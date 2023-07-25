@@ -52,16 +52,6 @@ export function getSelectedSegmentsAndParagraphs(
 /**
  * @internal
  */
-export function getSelectedSegments(
-    model: ContentModelDocument,
-    includingFormatHolder: boolean
-): ContentModelSegment[] {
-    return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
-}
-
-/**
- * @internal
- */
 export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     const result: ContentModelParagraph[] = [];
