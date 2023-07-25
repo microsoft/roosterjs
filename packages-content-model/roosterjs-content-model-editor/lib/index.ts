@@ -16,8 +16,6 @@ export {
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
-export { MergeModelOption } from '../lib/modelApi/common/mergeModel';
-export { OnDeleteEntity } from '../lib/modelApi/edit/utils/DeleteSelectionStep';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';

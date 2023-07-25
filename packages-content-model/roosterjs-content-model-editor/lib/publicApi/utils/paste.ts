@@ -81,17 +81,16 @@ export default function paste(
             editor,
             'Paste',
             model => {
-                (event.customizedMerge ?? mergeModel)(
-                    model,
-                    pasteModel,
-                    getOnDeleteEntityCallback(editor),
-                    {
+                if (event.customizedMerge) {
+                    event.customizedMerge(model, pasteModel);
+                } else {
+                    mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
                         mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
                         mergeTable:
                             pasteModel.blocks.length === 1 &&
                             pasteModel.blocks[0].blockType === 'Table',
-                    }
-                );
+                    });
+                }
                 return true;
             },
             {
@@ -122,6 +121,7 @@ function createBeforePasteEvent(
         htmlAttributes: {},
         domToModelOption: {},
         pasteType: pasteType,
+        customizedMerge: (model, pasteModel) => false,
     };
 }
 

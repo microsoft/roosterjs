@@ -1,6 +1,4 @@
 import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
-import { MergeModelOption } from '../../modelApi/common/mergeModel';
-import { OnDeleteEntity } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import {
     BeforePasteEvent,
     BeforePasteEventData,
@@ -18,12 +16,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
-    customizedMerge?: (
-        target: ContentModelDocument,
-        source: ContentModelDocument,
-        onDeleteEntity: OnDeleteEntity,
-        options?: MergeModelOption
-    ) => boolean;
+    customizedMerge?: (target: ContentModelDocument, source: ContentModelDocument) => boolean;
 }
 
 /**

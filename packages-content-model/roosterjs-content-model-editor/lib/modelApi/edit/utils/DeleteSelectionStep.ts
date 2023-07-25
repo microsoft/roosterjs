@@ -38,6 +38,7 @@ export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
 }
 
 /**
+ * @internal
  * A callback for deleteSelection API to decide how to handle an entity
  * @param entity The entity to delete
  * @param operation The operation of entity
