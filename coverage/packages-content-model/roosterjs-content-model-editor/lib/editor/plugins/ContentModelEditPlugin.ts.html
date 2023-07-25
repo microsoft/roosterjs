@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96% </span>
+                <span class="strong">96.04% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>96/100</span>
+                <span class='fraction'>97/101</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">83.64% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>90/108</span>
+                <span class='fraction'>92/110</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">95.79% </span>
+                <span class="strong">95.83% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>91/95</span>
+                <span class='fraction'>92/96</span>
             </div>
         
             
@@ -323,7 +323,9 @@
 <a name='L264'></a><a href='#L264'>264</a>
 <a name='L265'></a><a href='#L265'>265</a>
 <a name='L266'></a><a href='#L266'>266</a>
-<a name='L267'></a><a href='#L267'>267</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L267'></a><a href='#L267'>267</a>
+<a name='L268'></a><a href='#L268'>268</a>
+<a name='L269'></a><a href='#L269'>269</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -332,19 +334,20 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -409,8 +412,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">66x</span>
-<span class="cline-any cline-yes">66x</span>
+<span class="cline-any cline-yes">76x</span>
+<span class="cline-any cline-yes">76x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -422,8 +425,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">18x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -438,6 +441,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
@@ -599,13 +603,6 @@ import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendin
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
-import {
     EditorPlugin,
     EntityOperationEvent,
     ExperimentalFeatures,
@@ -615,8 +612,16 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
+    PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 &nbsp;
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -682,7 +687,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 &nbsp;
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event.rawEvent);
+                    this.handleKeyDownEvent(this.editor, event);
                     break;
 &nbsp;
                 case PluginEventType.ContentChanged:
@@ -703,13 +708,14 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 &nbsp;
-    private handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+        const rawEvent = event.rawEvent;
         const which = rawEvent.which;
 &nbsp;
         if (!this.editWithContentModel || rawEvent.defaultPrevented) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (!rawEvent.defaultPrevented) {
+        } else <span class="missing-if-branch" title="else path not taken" >E</span>if (!rawEvent.defaultPrevented &amp;&amp; !event.handledByEditFeature) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
                 case Keys.BACKSPACE:
@@ -862,7 +868,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Jul 25 2023 04:32:25 GMT+0000 (Coordinated Universal Time)
+                at Tue Jul 25 2023 13:41:20 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
