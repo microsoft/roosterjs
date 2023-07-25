@@ -81,12 +81,17 @@ export default function paste(
             editor,
             'Paste',
             model => {
-                mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
-                    mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-                    mergeTable:
-                        pasteModel.blocks.length === 1 &&
-                        pasteModel.blocks[0].blockType === 'Table',
-                });
+                (event.customizedMerge ?? mergeModel)(
+                    model,
+                    pasteModel,
+                    getOnDeleteEntityCallback(editor),
+                    {
+                        mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
+                        mergeTable:
+                            pasteModel.blocks.length === 1 &&
+                            pasteModel.blocks[0].blockType === 'Table',
+                    }
+                );
                 return true;
             },
             {
@@ -117,6 +122,7 @@ function createBeforePasteEvent(
         htmlAttributes: {},
         domToModelOption: {},
         pasteType: pasteType,
+        customizedMerge: undefined,
     };
 }
 
