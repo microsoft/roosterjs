@@ -69,6 +69,7 @@ export {
     PluginScrollEventData,
     PluginMouseUpEventData,
     PluginContextMenuEventData,
+    PluginKeyDownEventData,
 } from './PluginDomEvent';
 export { PluginEvent } from './PluginEvent';
 export {
