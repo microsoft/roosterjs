@@ -122,7 +122,6 @@ function createBeforePasteEvent(
         htmlAttributes: {},
         domToModelOption: {},
         pasteType: pasteType,
-        customizedMerge: undefined,
     };
 }
 
