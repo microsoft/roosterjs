@@ -49,6 +49,4 @@ export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { defaultImplicitFormatMap } from './formatHandlers/utils/defaultStyles';
 
-export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
-
 export { createDomToModelContext } from './domToModel/context/createDomToModelContext';
