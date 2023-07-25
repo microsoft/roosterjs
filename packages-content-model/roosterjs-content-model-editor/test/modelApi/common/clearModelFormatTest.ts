@@ -4,6 +4,7 @@ import {
     createDivider,
     createFormatContainer,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -367,11 +368,7 @@ describe('clearModelFormat', () => {
 
     it('Model with collapsed selection under list', () => {
         const model = createContentModelDocument();
-        const list = createListItem([
-            {
-                listType: 'OL',
-            },
-        ]);
+        const list = createListItem([createListLevel('OL')]);
         const para = createParagraph(false, { lineHeight: '10px' });
         const marker = createSelectionMarker();
 
@@ -463,7 +460,7 @@ describe('clearModelFormat', () => {
 
     it('Model with selection under list', () => {
         const model = createContentModelDocument();
-        const list = createListItem([{ listType: 'OL' }], { fontSize: '20px' });
+        const list = createListItem([createListLevel('OL')], { fontSize: '20px' });
         const para = createParagraph(false, { lineHeight: '10px' });
         const text = createText('test', { textColor: 'green' });
 
@@ -525,7 +522,7 @@ describe('clearModelFormat', () => {
         const model = createContentModelDocument({
             fontSize: '10px',
         });
-        const list = createListItem([{ listType: 'OL' }], { fontSize: '20px' });
+        const list = createListItem([createListLevel('OL')], { fontSize: '20px' });
         const para = createParagraph(false, { lineHeight: '10px' });
         const text = createText('test', { textColor: 'green' });
 
@@ -721,7 +718,7 @@ describe('clearModelFormat', () => {
                     format: { useBorderBox: undefined, borderCollapse: undefined },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
                     widths: [],
                     rows: [

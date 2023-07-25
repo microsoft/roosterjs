@@ -11,6 +11,7 @@ import {
     createFormatContainer,
     createImage,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -98,7 +99,7 @@ describe('retrieveModelFormatState', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para = createParagraph();
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const marker = createSelectionMarker(segmentFormat);
 
         spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
@@ -269,6 +270,7 @@ describe('retrieveModelFormatState', () => {
                 bgColorOdd: '#ABABAB20',
                 headerRowColor: '#ABABAB',
                 tableBorderFormat: 0,
+                verticalAlign: null,
             },
         });
     });

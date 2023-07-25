@@ -78,7 +78,8 @@ describe('End to end test for DOM => Model', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginBottom: '0in',
+                                format: { marginBottom: '0in' },
+                                dataset: {},
                             },
                         ],
                         format: {
@@ -119,7 +120,8 @@ describe('End to end test for DOM => Model', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginBottom: '0in',
+                                format: { marginBottom: '0in' },
+                                dataset: {},
                             },
                         ],
                         format: {
@@ -159,7 +161,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -178,7 +180,10 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                        levels: [
+                            { listType: 'OL', format: {}, dataset: {} },
+                            { listType: 'OL', format: {}, dataset: {} },
+                        ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -197,7 +202,13 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL', displayForDummyItem: 'block' }],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { displayForDummyItem: 'block' },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -216,7 +227,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,

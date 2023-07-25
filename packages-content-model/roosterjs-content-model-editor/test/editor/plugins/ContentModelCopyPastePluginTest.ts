@@ -523,7 +523,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 Array.from(clipboardEvent.clipboardData!.items),
                 {
                     allowedCustomPasteType,
-                }
+                },
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
@@ -553,7 +554,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 Array.from(clipboardEvent.clipboardData!.items),
                 {
                     allowedCustomPasteType,
-                }
+                },
+                true
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });

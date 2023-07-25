@@ -24,7 +24,7 @@ export default function insertTable(
     editor: IContentModelEditor,
     columns: number,
     rows: number,
-    format?: TableMetadataFormat
+    format?: Partial<TableMetadataFormat>
 ) {
     formatWithContentModel(editor, 'insertTable', model => {
         const onDeleteEntity = getOnDeleteEntityCallback(editor);
@@ -35,6 +35,8 @@ export default function insertTable(
             const table = createTableStructure(doc, columns, rows);
 
             normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
+            // Assign default vertical align
+            format = format || { verticalAlign: 'top' };
             applyTableFormat(table, format);
             mergeModel(model, doc, onDeleteEntity, {
                 insertPosition,

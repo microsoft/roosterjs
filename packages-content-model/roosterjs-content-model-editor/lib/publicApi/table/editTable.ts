@@ -29,15 +29,16 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
 
         if (tableModel) {
             switch (operation) {
-                case TableOperation.AlignCellBottom:
-                case TableOperation.AlignCellCenter:
                 case TableOperation.AlignCellLeft:
-                case TableOperation.AlignCellMiddle:
+                case TableOperation.AlignCellCenter:
                 case TableOperation.AlignCellRight:
-                case TableOperation.AlignCellTop:
                     alignTableCell(tableModel, operation);
                     break;
-
+                case TableOperation.AlignCellTop:
+                case TableOperation.AlignCellMiddle:
+                case TableOperation.AlignCellBottom:
+                    alignTableCell(tableModel, operation);
+                    break;
                 case TableOperation.AlignCenter:
                 case TableOperation.AlignLeft:
                 case TableOperation.AlignRight:

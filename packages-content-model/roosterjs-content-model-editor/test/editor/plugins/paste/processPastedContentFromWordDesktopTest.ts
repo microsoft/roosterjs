@@ -219,8 +219,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -253,7 +256,10 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -294,8 +300,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -328,12 +337,18 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -374,8 +389,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -408,16 +426,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -458,8 +485,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -492,16 +522,25 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '1em',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginTop: '1em',
+                                    marginBottom: undefined,
+                                },
                             },
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                             {
                                 listType: 'UL',
-                                marginBottom: undefined,
+                                dataset: {},
+                                format: {
+                                    marginBottom: undefined,
+                                },
                             },
                         ],
                         formatHolder: {
@@ -559,23 +598,35 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                 ],
                                                 formatHolder: {
@@ -605,18 +656,27 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                 ],
                                                 formatHolder: {
@@ -646,13 +706,19 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                 ],
                                                 formatHolder: {
@@ -682,28 +748,43 @@ describe('processPastedContentFromWordDesktopTest', () => {
                                                 levels: [
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                     {
                                                         listType: 'UL',
-                                                        marginTop: '1em',
-                                                        marginBottom: undefined,
+                                                        dataset: {},
+                                                        format: {
+                                                            marginTop: '1em',
+                                                            marginBottom: undefined,
+                                                        },
                                                     },
                                                 ],
                                                 formatHolder: {
@@ -790,8 +871,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -821,13 +905,19 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -857,19 +947,28 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginTop: '1em',
-                                    marginBottom: undefined,
-                                    marginLeft: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginTop: '1em',
+                                        marginBottom: undefined,
+                                        marginLeft: undefined,
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -903,24 +1002,36 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginTop: '1em',
-                                    marginBottom: undefined,
-                                    marginLeft: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginTop: '1em',
+                                        marginBottom: undefined,
+                                        marginLeft: undefined,
+                                    },
                                 },
                                 {
                                     listType: 'OL',
-                                    marginLeft: undefined,
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginLeft: undefined,
+                                        marginBottom: undefined,
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -1012,10 +1123,13 @@ describe('processPastedContentFromWordDesktopTest', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginTop: '0in',
-                                marginRight: '0in',
-                                marginBottom: undefined,
-                                marginLeft: undefined,
+                                format: {
+                                    marginTop: '0in',
+                                    marginRight: '0in',
+                                    marginBottom: undefined,
+                                    marginLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {
@@ -1080,9 +1194,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginTop: '1em',
-                                    marginBottom: undefined,
-                                    startNumberOverride: 1,
+                                    dataset: {},
+                                    format: {
+                                        marginTop: '1em',
+                                        marginBottom: undefined,
+                                        startNumberOverride: 1,
+                                    },
                                 },
                             ],
                             formatHolder: {
@@ -1112,8 +1229,11 @@ describe('processPastedContentFromWordDesktopTest', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    marginTop: '1em',
-                                    marginBottom: undefined,
+                                    dataset: {},
+                                    format: {
+                                        marginTop: '1em',
+                                        marginBottom: undefined,
+                                    },
                                 },
                             ],
                             formatHolder: {

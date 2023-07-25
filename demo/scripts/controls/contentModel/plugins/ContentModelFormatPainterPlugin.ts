@@ -14,7 +14,7 @@ interface FormatPainterFormatHolder {
     format: ContentModelSegmentFormat | null;
 }
 
-export default class FormatPainterPlugin implements EditorPlugin {
+export default class ContentModelFormatPainterPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     getName() {

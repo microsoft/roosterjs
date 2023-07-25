@@ -59,7 +59,16 @@ export function setMetadata<T>(element: HTMLElement, metadata: T, def?: Definiti
 /**
  * Remove metadata from the given element if any
  * @param element The element to remove metadata from
+ * @param metadataKey The metadata key to remove, if none provided it will delete all metadata
  */
-export function removeMetadata(element: HTMLElement) {
-    delete element.dataset[MetadataDataSetName];
+export function removeMetadata<T>(element: HTMLElement, metadataKey?: string) {
+    if (metadataKey) {
+        const currentMetadata: any = getMetadata<T>(element);
+        if (currentMetadata) {
+            delete currentMetadata[metadataKey];
+            element.dataset[MetadataDataSetName] = JSON.stringify(currentMetadata);
+        }
+    } else {
+        delete element.dataset[MetadataDataSetName];
+    }
 }

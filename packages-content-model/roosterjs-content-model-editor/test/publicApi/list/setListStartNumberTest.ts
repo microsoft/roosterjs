@@ -57,7 +57,7 @@ describe('setListStartNumber', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -94,7 +94,7 @@ describe('setListStartNumber', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -125,7 +125,7 @@ describe('setListStartNumber', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -152,7 +152,7 @@ describe('setListStartNumber', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', startNumberOverride: 2 }],
+                    levels: [{ listType: 'OL', dataset: {}, format: { startNumberOverride: 2 } }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -184,7 +184,10 @@ describe('setListStartNumber', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', startNumberOverride: 1 }, { listType: 'UL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
+                        { listType: 'UL', dataset: {}, format: {} },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -212,8 +215,8 @@ describe('setListStartNumber', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [
-                        { listType: 'OL', startNumberOverride: 1 },
-                        { listType: 'UL', startNumberOverride: 2 },
+                        { listType: 'OL', dataset: {}, format: { startNumberOverride: 1 } },
+                        { listType: 'UL', dataset: {}, format: { startNumberOverride: 2 } },
                     ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [

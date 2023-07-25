@@ -2,11 +2,11 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
 import ContentModelEditorOptionsPlugin from './sidePane/editorOptions/ContentModelEditorOptionsPlugin';
+import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
 import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
-import FormatPainterPlugin from './contentModel/plugins/FormatPainterPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
@@ -92,7 +92,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
     private pasteOptionPlugin: EditorPlugin;
     private emojiPlugin: EditorPlugin;
     private toggleablePlugins: EditorPlugin[] | null = null;
-    private formatPainterPlugin: FormatPainterPlugin;
+    private formatPainterPlugin: ContentModelFormatPainterPlugin;
     private sampleEntityPlugin: SampleEntityPlugin;
 
     constructor(props: {}) {
@@ -108,7 +108,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.contentModelRibbonPlugin = new ContentModelRibbonPlugin();
         this.pasteOptionPlugin = createPasteOptionPlugin();
         this.emojiPlugin = createEmojiPlugin();
-        this.formatPainterPlugin = new FormatPainterPlugin();
+        this.formatPainterPlugin = new ContentModelFormatPainterPlugin();
         this.sampleEntityPlugin = new SampleEntityPlugin();
         this.state = {
             showSidePane: window.location.hash != '',

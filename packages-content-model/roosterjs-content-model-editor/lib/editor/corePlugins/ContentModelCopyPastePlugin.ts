@@ -9,7 +9,6 @@ import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDecorator,
-    ContentModelListItemLevelFormat,
     ContentModelSegment,
     ContentModelTableRow,
 } from 'roosterjs-content-model-types';
@@ -167,9 +166,13 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
 
             if (dataTransfer?.items) {
                 event.preventDefault();
-                extractClipboardItems(toArray(dataTransfer.items), {
-                    allowedCustomPasteType: this.state.allowedCustomPasteType,
-                }).then((clipboardData: ClipboardData) => {
+                extractClipboardItems(
+                    toArray(dataTransfer.items),
+                    {
+                        allowedCustomPasteType: this.state.allowedCustomPasteType,
+                    },
+                    true /*pasteNativeEvent*/
+                ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
                         removeContentForAndroid(editor);
                         paste(editor, clipboardData);
@@ -258,7 +261,6 @@ export const onNodeCreated = (
         | ContentModelBlockGroup
         | ContentModelSegment
         | ContentModelDecorator
-        | ContentModelListItemLevelFormat
         | ContentModelTableRow,
     node: Node
 ): void => {

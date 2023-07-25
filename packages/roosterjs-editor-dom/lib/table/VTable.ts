@@ -4,6 +4,7 @@ import moveChildNodes from '../utils/moveChildNodes';
 import normalizeRect from '../utils/normalizeRect';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import toArray from '../jsUtils/toArray';
+import { getTableCellMetadata, saveTableCellMetadata } from './tableCellInfo';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 import { removeMetadata } from '../metadata/metadata';
 import {
@@ -30,6 +31,7 @@ const DEFAULT_FORMAT: Required<TableFormat> = {
     headerRowColor: '#ABABAB',
     tableBorderFormat: TableBorderFormat.DEFAULT,
     keepCellShade: false,
+    verticalAlign: null,
 };
 
 /**
@@ -199,7 +201,7 @@ export default class VTable {
         cells?.forEach(row => {
             row.forEach(cell => {
                 if (cell.td) {
-                    removeMetadata(cell.td);
+                    removeMetadata(cell.td, 'bgColorOverride');
                 }
             });
         });
@@ -490,6 +492,8 @@ export default class VTable {
                     const cell = this.cells[i][j].td;
                     if (isVertical && cell) {
                         cell.style?.setProperty('vertical-align', alignmentType);
+                        const meta = getTableCellMetadata(cell);
+                        saveTableCellMetadata(cell, { ...meta, vAlignOverride: true });
                     } else if (cell) {
                         cell.style?.setProperty('text-align', alignmentType);
                     }
