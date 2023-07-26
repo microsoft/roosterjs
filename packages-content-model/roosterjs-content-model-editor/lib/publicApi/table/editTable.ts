@@ -104,9 +104,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                     break;
             }
 
-            if (parent) {
-                ensureSelection(model, parent, tableModel);
-            }
+            ensureTableSelection(model, parent, tableModel);
 
             normalizeTable(tableModel);
 
@@ -121,22 +119,13 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
     });
 }
 
-function ensureSelection(
+function ensureTableSelection(
     model: ContentModelDocument,
-    parent: ContentModelBlockGroup,
+    parent: ContentModelBlockGroup | undefined,
     table: ContentModelTable
 ) {
-    const marker = createSelectionMarker(model.format);
-    let paragraph: ContentModelParagraph | undefined;
-
-    if (table.rows.length == 0 && parent) {
-        const index = parent.blocks.indexOf(table);
-
-        if (index >= 0) {
-            paragraph = createEmptyParagraph(model);
-            parent.blocks.splice(index, 1, paragraph);
-        }
-    } else if (!hasSelectionInBlock(table)) {
+    if (!hasSelectionInBlock(table)) {
+        let paragraph: ContentModelParagraph | undefined;
         const firstCell = table.rows.filter(row => row.cells.length > 0)[0]?.cells[0];
 
         if (firstCell) {
@@ -148,13 +137,22 @@ function ensureSelection(
                 paragraph = createEmptyParagraph(model);
                 firstCell.blocks.push(paragraph);
             }
-        }
-    }
+        } else if (parent) {
+            const index = parent.blocks.indexOf(table);
 
-    if (paragraph) {
-        setParagraphNotImplicit(paragraph);
-        paragraph.segments.unshift(marker);
-        setSelection(model, marker);
+            if (index >= 0) {
+                paragraph = createEmptyParagraph(model);
+                parent.blocks.splice(index, 1, paragraph);
+            }
+        }
+
+        if (paragraph) {
+            const marker = createSelectionMarker(model.format);
+
+            paragraph.segments.unshift(marker);
+            setParagraphNotImplicit(paragraph);
+            setSelection(model, marker);
+        }
     }
 }
 
