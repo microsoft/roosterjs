@@ -16,6 +16,7 @@ const dts = require('./buildTools/dts');
 const buildDemoStep = require('./buildTools/buildDemo');
 const buildDocumentStep = require('./buildTools/buildDocument');
 const publishStep = require('./buildTools/publish');
+const buildTestStep = require('./buildTools/buildTest');
 const allTasks = [
     tslintStep,
     cleanStep,
@@ -24,6 +25,7 @@ const allTasks = [
     buildAmdStep,
     buildMjsStep,
     buildCommonJsStep,
+    buildTestStep,
     pack.commonJsDebug,
     pack.commonJsProduction,
     pack.amdDebug,
@@ -56,6 +58,7 @@ const commands = [
     'buildamd', // Build in AMD mode
     'buildmjs', // Build in ESM/MJS mode
     'buildcommonjs', // Build in CommonJs mode
+    'buildtest', // Build test code
     'pack', // Run webpack to generate standalone .js files
     'packprod', // Run webpack to generate standalone .js files in production mode
     'dts', // Generate type definition files (.d.ts)
