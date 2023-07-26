@@ -64,7 +64,7 @@
         "sass": "^1.49.8",
         "sass-loader": "8.0.2",
         "toposort": "2.0.2",
-        "ts-loader": "7.0.2",
+        "ts-loader": "9.4.4",
         "tslib": "^2.3.1",
         "tslint": "6.1.2",
         "tslint-eslint-rules": "5.4.0",
