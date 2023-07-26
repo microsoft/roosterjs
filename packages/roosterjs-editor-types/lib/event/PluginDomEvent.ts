@@ -41,7 +41,7 @@ export interface PluginKeyDownEventData {
     /**
      * Whether this event is handled by edit feature
      */
-    handledByEditFeature: boolean;
+    handledByEditFeature?: boolean;
 }
 
 /**

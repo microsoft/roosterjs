@@ -1,10 +1,9 @@
 {
     "compilerOptions": {
-        "strict": true,
-        "jsx": "react",
+        "strict": false,
         "target": "es5",
         "module": "commonjs",
-        "outDir": "../dist",
+        "noEmit": true,
         "sourceMap": true,
         "inlineSources": true,
         "declaration": true,
@@ -12,12 +11,14 @@
         "noImplicitAny": true,
         "preserveConstEnums": true,
         "noUnusedLocals": true,
+        "downlevelIteration": true,
+        "importHelpers": true,
         "baseUrl": ".",
         "paths": {
-            "*": ["*", "../dist/*"]
+            "*": ["*"]
         },
-        "rootDir": ".",
+        "rootDir": "..",
         "lib": ["es6", "dom"]
     },
-    "include": ["./*/lib/**/*.ts", "./*/lib/**/*.tsx"]
+    "include": ["./*/test/**/*.ts"]
 }
