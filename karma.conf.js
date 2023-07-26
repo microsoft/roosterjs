@@ -49,6 +49,22 @@ module.exports = function (config) {
         launcher.push('Firefox');
     }
 
+    const tsConfig = {
+        compilerOptions: {
+            rootDir: rootPath,
+            declaration: false,
+            strict: false,
+            paths: {
+                '*': [
+                    '*',
+                    rootPath + '/packages/*',
+                    rootPath + '/packages-ui/*',
+                    rootPath + '/packages-content-model/*',
+                ],
+            },
+        },
+    };
+
     const rules = runCoverage
         ? [
               {
@@ -57,30 +73,21 @@ module.exports = function (config) {
                       { loader: '@jsdevtools/coverage-istanbul-loader' },
                       {
                           loader: 'ts-loader',
-                          options: {
-                              compilerOptions: {
-                                  rootDir: rootPath,
-                                  declaration: false,
-                              },
-                          },
+                          options: tsConfig,
                       },
                   ],
               },
               {
                   test: /test(\\|\/).*\.ts$/,
                   loader: 'ts-loader',
-                  options: {
-                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
-                  },
+                  options: tsConfig,
               },
           ]
         : [
               {
                   test: /\.ts$/,
                   loader: 'ts-loader',
-                  options: {
-                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
-                  },
+                  options: tsConfig,
               },
           ];
 
