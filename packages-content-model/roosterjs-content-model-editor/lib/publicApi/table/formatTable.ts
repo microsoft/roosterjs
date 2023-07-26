@@ -16,7 +16,7 @@ export default function formatTable(
     keepCellShade?: boolean
 ) {
     formatWithContentModel(editor, 'formatTable', model => {
-        const tableModel = getFirstSelectedTable(model);
+        const [tableModel] = getFirstSelectedTable(model);
 
         if (tableModel) {
             applyTableFormat(tableModel, format, keepCellShade);
