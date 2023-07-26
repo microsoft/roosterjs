@@ -6,7 +6,6 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 import { Position } from 'roosterjs-editor-dom';
 import {
     EntityOperation,
-    ExperimentalFeatures,
     Keys,
     PluginEventType,
     SelectionRangeTypes,
@@ -15,21 +14,16 @@ import {
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
     let cacheContentModel: jasmine.Spy;
-    let isFeatureEnabled: jasmine.Spy;
     let getContentModelDefaultFormat: jasmine.Spy;
 
     beforeEach(() => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
-        isFeatureEnabled = jasmine
-            .createSpy('isFeatureEnabled')
-            .and.callFake(f => f == ExperimentalFeatures.EditWithContentModel);
         getContentModelDefaultFormat = jasmine
             .createSpy('getContentModelDefaultFormat')
             .and.returnValue({});
 
         editor = ({
             cacheContentModel,
-            isFeatureEnabled,
             getContentModelDefaultFormat,
             getSelectionRangeEx: () =>
                 ({
@@ -73,40 +67,6 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
             expect(cacheContentModel).not.toHaveBeenCalled();
-        });
-
-        it('Backspace, feature is not enabled', () => {
-            const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.BACKSPACE } as any;
-
-            isFeatureEnabled.and.returnValue(false);
-
-            plugin.initialize(editor);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
-            });
-
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
-        });
-
-        it('Delete, feature is not enabled', () => {
-            const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.DELETE } as any;
-
-            isFeatureEnabled.and.returnValue(false);
-
-            plugin.initialize(editor);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
-            });
-
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
         it('Other key', () => {
@@ -303,7 +263,6 @@ describe('ContentModelEditPlugin for default format', () => {
     let getSelectionRangeEx: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
     let setPendingFormatSpy: jasmine.Spy;
-    let isFeatureEnabledSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
     let addUndoSnapshotSpy: jasmine.Spy;
 
@@ -311,9 +270,6 @@ describe('ContentModelEditPlugin for default format', () => {
         setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
         getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx');
-        isFeatureEnabledSpy = jasmine
-            .createSpy('isFeatureEnabled')
-            .and.callFake(f => f == ExperimentalFeatures.EditWithContentModel);
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
         addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
@@ -325,7 +281,6 @@ describe('ContentModelEditPlugin for default format', () => {
             getContentModelDefaultFormat: () => ({
                 fontFamily: 'Arial',
             }),
-            isFeatureEnabled: isFeatureEnabledSpy,
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
         } as any) as IContentModelEditor;

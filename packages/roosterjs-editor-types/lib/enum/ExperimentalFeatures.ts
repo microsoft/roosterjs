@@ -124,6 +124,18 @@ export const enum ExperimentalFeatures {
      */
     DefaultFormatOnContainer = 'DefaultFormatOnContainer',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
+     */
+    ReusableContentModel = 'ReusableContentModel',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
+
     //#endregion
 
     /**
@@ -143,16 +155,6 @@ export const enum ExperimentalFeatures {
      * is the one closest to the item.
      */
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
-
-    /**
-     * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
-     */
-    ReusableContentModel = 'ReusableContentModel',
-
-    /**
-     * Handle keyboard editing event with Content Model
-     */
-    EditWithContentModel = 'EditWithContentModel',
 
     /**
      * Delete table with Backspace key with the whole was selected with table selector
