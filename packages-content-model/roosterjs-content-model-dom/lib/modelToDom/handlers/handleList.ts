@@ -51,6 +51,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
 
+        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
+
         // TODO: Move this out into roosterjs-content-model-editor package
         updateListMetadata(level, metadata => {
             applyFormat(newList, [listLevelMetadataFormatHandler.apply], metadata || {}, context);
@@ -65,8 +67,6 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
             return metadata;
         });
-
-        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
         applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 
         nodeStack.push({ node: newList, ...level });
