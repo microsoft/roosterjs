@@ -42,7 +42,9 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
         imageEdit,
         cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
-        tableResize: pluginList.tableResize ? new TableResize() : null,
+        tableResize: pluginList.tableResize
+            ? new TableResize(undefined, initState.container)
+            : null,
         customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
         autoFormat: pluginList.autoFormat ? new AutoFormat() : null,
         listEditMenu:

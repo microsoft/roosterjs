@@ -30,7 +30,8 @@ export default class TableResize implements EditorPlugin {
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void
+        ) => void,
+        private container?: HTMLElement
     ) {}
 
     /**
@@ -136,7 +137,7 @@ export default class TableResize implements EditorPlugin {
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                e?.currentTarget
+                this.container || e?.currentTarget
             );
         }
     }

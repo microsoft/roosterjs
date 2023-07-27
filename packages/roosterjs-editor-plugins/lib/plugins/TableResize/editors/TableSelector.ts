@@ -49,9 +49,7 @@ export default function createTableSelector(
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
 
     const container: HTMLElement | undefined =
-        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement')
-            ? contentDiv
-            : editor.getScrollContainer();
+        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
 
     container.insertAdjacentElement('afterend', div);
 

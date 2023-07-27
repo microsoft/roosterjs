@@ -45,9 +45,7 @@ export default function createTableResizer(
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
 
     const container: HTMLElement | undefined =
-        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement')
-            ? contentDiv
-            : editor.getScrollContainer();
+        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
 
     container.insertAdjacentElement('afterend', div);
 

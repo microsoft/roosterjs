@@ -151,6 +151,7 @@ export default class OptionsPane extends React.Component<BuildInPluginProps, Bui
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
             isRtl: this.state.isRtl,
+            container: this.state.container,
         };
 
         if (callback) {
