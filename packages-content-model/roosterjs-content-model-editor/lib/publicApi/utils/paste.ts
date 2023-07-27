@@ -1,11 +1,11 @@
 import ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
-import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import { NodePosition } from 'roosterjs-editor-types';
 import {
     createDefaultHtmlSanitizerOptions,
     getPasteType,
@@ -81,8 +81,8 @@ export default function paste(
             editor,
             'Paste',
             model => {
-                if (event.customizedMerge) {
-                    event.customizedMerge(model, pasteModel);
+                if (event.customizedMerge.customMerge) {
+                    event.customizedMerge.customMerge(model, pasteModel);
                 } else {
                     mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
                         mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
@@ -121,7 +121,7 @@ function createBeforePasteEvent(
         htmlAttributes: {},
         domToModelOption: {},
         pasteType: pasteType,
-        customizedMerge: (model, pasteModel) => false,
+        customizedMerge: {},
     };
 }
 
@@ -131,7 +131,7 @@ function createFragmentFromClipboardData(
     position: NodePosition | null,
     pasteAsText: boolean,
     pasteAsImage: boolean,
-    event: BeforePasteEvent
+    event: ContentModelBeforePasteEvent
 ) {
     const { fragment } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
