@@ -7,6 +7,7 @@ import { createContentModel } from '../../lib/editor/coreApi/createContentModel'
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import { getSelectionRangeEx } from '../../lib/editor/coreApi/getSelectionRangeEx';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 
@@ -67,6 +68,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                getSelectionRangeEx,
             },
             originalApi: {
                 a: 'b',
@@ -128,6 +130,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                getSelectionRangeEx,
             },
             originalApi: {
                 a: 'b',
@@ -202,6 +205,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                getSelectionRangeEx,
             },
             originalApi: {
                 a: 'b',
@@ -262,6 +266,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                getSelectionRangeEx,
             },
             originalApi: {
                 a: 'b',
@@ -324,6 +329,7 @@ describe('createContentModelEditorCore', () => {
                 createEditorContext,
                 createContentModel,
                 setContentModel,
+                getSelectionRangeEx,
             },
             originalApi: {
                 a: 'b',
