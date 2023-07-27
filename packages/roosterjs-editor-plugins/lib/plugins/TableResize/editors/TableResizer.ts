@@ -1,7 +1,13 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
+import { CreateElementData, IEditor } from 'roosterjs-editor-types';
+import {
+    createElement,
+    normalizeRect,
+    safeInstanceOf,
+    VTable,
+    getComputedStyle,
+} from 'roosterjs-editor-dom';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -13,18 +19,20 @@ const MIN_CELL_HEIGHT = 20;
 export default function createTableResizer(
     table: HTMLTableElement,
     zoomScale: number,
-    isRTL: boolean,
+    editor: IEditor,
     onStart: () => void,
     onDragEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    ) => void,
+    contentDiv?: EventTarget | null
 ): TableEditFeature | null {
     const document = table.ownerDocument;
+    const isRTL = getComputedStyle(table, 'direction') == 'rtl';
     const createElementData = {
         tag: 'div',
-        style: `position: fixed; cursor: ${
+        style: `position: absolute; cursor: ${
             isRTL ? 'ne' : 'nw'
         }-resize; user-select: none; border: 1px solid #808080`,
     };
@@ -35,7 +43,13 @@ export default function createTableResizer(
 
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
-    document.body.appendChild(div);
+
+    const container: HTMLElement | undefined =
+        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement')
+            ? contentDiv
+            : editor.getScrollContainer();
+
+    container.insertAdjacentElement('afterend', div);
 
     const context: DragAndDropContext = {
         isRTL,
@@ -44,7 +58,7 @@ export default function createTableResizer(
         onStart,
     };
 
-    setResizeDivPosition(context, div);
+    setResizeDivPosition(context, div, container);
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
@@ -55,7 +69,9 @@ export default function createTableResizer(
             onDragging,
             onDragEnd,
         },
-        zoomScale
+        zoomScale,
+        undefined,
+        container
     );
 
     return { node: table, div, featureHandler };
@@ -137,14 +153,25 @@ function onDragging(
     }
 }
 
-function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
-    const { table, isRTL } = context;
+function setResizeDivPosition(
+    context: DragAndDropContext,
+    trigger: HTMLElement,
+    container?: HTMLElement
+) {
+    const { table, isRTL, zoomScale } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
+    const containerRect = container && normalizeRect(container.getBoundingClientRect());
 
-    if (rect) {
-        trigger.style.top = `${rect.bottom}px`;
-        trigger.style.left = isRTL
-            ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
-            : `${rect.right}px`;
+    if (rect && containerRect) {
+        trigger.style.scale = `${1 / zoomScale}`;
+        trigger.style.transformOrigin = 'top left';
+        if (isRTL) {
+            trigger.style.left = `${
+                (rect.left - containerRect.left - TABLE_RESIZER_LENGTH - 1) / zoomScale
+            }px`;
+        } else {
+            trigger.style.left = `${(rect.right - containerRect.left - 1) / zoomScale}px`;
+        }
+        trigger.style.top = `${(rect.bottom - containerRect.top - 1) / zoomScale}px`;
     }
 }

@@ -224,10 +224,11 @@ export default class TableEditor {
             this.tableResizer = createTableResizer(
                 this.table,
                 this.editor.getZoomScale(),
-                this.isRTL,
+                this.editor,
                 this.onStartTableResize,
                 this.onFinishEditing,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                this.contentDiv
             );
         }
     }
