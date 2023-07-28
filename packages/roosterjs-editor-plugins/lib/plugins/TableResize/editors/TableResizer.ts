@@ -1,13 +1,7 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
 import { CreateElementData, IEditor } from 'roosterjs-editor-types';
-import {
-    createElement,
-    normalizeRect,
-    safeInstanceOf,
-    VTable,
-    getComputedStyle,
-} from 'roosterjs-editor-dom';
+import { createElement, normalizeRect, VTable, getComputedStyle } from 'roosterjs-editor-dom';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -26,7 +20,7 @@ export default function createTableResizer(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    contentDiv?: EventTarget | null
+    contentDiv?: HTMLElement | null
 ): TableEditFeature | null {
     const document = table.ownerDocument;
     const isRTL = getComputedStyle(table, 'direction') == 'rtl';
@@ -44,8 +38,7 @@ export default function createTableResizer(
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
 
-    const container: HTMLElement | undefined =
-        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
+    const container = contentDiv ?? document.body;
 
     container.appendChild(div);
     const setDivPosition = container == document.body ? setBodyDivPosition : setResizeDivPosition;

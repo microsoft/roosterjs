@@ -25,7 +25,7 @@ export default function createTableSelector(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    contentDiv?: EventTarget | null
+    contentDiv?: HTMLElement
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -48,8 +48,7 @@ export default function createTableSelector(
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
 
-    const container: HTMLElement | undefined =
-        contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
+    const container = contentDiv ?? document.body;
 
     container.appendChild(div);
     const setDivPosition = container == document.body ? setBodyDivPosition : setSelectorDivPosition;

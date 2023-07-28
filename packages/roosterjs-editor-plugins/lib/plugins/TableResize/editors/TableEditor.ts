@@ -81,7 +81,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private contentDiv?: HTMLElement | EventTarget | null
+        private contentDiv?: HTMLElement
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.setEditorFeatures();

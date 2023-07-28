@@ -134,13 +134,14 @@ export default class TableResize implements EditorPlugin {
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
             const container = this.containerId
                 ? this.editor.getDocument().querySelector(this.containerId)
-                : document.body;
+                : undefined;
+
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                container
+                safeInstanceOf(container, 'HTMLElement') ? container : undefined
             );
         }
     }
