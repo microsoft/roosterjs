@@ -34,7 +34,7 @@ export default interface BuildInPluginState {
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
     isRtl: boolean;
-    container: HTMLElement;
+    container: string;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

@@ -177,7 +177,7 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
 
         return (
             <div className={styles.editorContainer}>
-                <div style={editorStyles}>
+                <div style={editorStyles} id="EditorContainer">
                     {this.state.editorCreator && (
                         <Rooster
                             className={styles.editor}

@@ -35,7 +35,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
     ],
     isRtl: false,
-    container: null,
+    container: '#' + 'EditorContainer',
 };
 
 export default class ContentModelEditorOptionsPlugin extends SidePanePluginImpl<
