@@ -1,4 +1,3 @@
-import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipboard/createFragmentFromClipboardData';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
@@ -25,7 +24,6 @@ describe('Paste ', () => {
     const mockedPos = 'POS' as any;
 
     let div: HTMLDivElement;
-    let fragment = document.createDocumentFragment();
 
     const clipboardData: ClipboardData = {
         types: ['image/png', 'text/html'],
@@ -38,7 +36,6 @@ describe('Paste ', () => {
 
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
-        spyOn(createFragmentFromClipboardData, 'default').and.returnValue(fragment);
 
         div = document.createElement('div');
         document.body.appendChild(div);
