@@ -544,6 +544,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
             ...data,
         } as any) as PluginEventFromType<T>;
         core.api.triggerEvent(core, event, broadcast);
+
         return event;
     }
 
