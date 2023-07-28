@@ -24,7 +24,7 @@ export default function insertImage(editor: IContentModelEditor, imageFileOrSrc:
 
 function insertImageWithSrc(editor: IContentModelEditor, src: string) {
     formatWithContentModel(editor, 'insertImage', model => {
-        const image = createImage(src);
+        const image = createImage(src, { backgroundColor: '' });
         const doc = createContentModelDocument();
 
         addSegment(doc, image);

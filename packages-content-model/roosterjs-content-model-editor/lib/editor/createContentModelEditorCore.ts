@@ -9,6 +9,7 @@ import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
+import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
@@ -95,6 +96,7 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
+    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
 
     if (
         isFeatureEnabled(
