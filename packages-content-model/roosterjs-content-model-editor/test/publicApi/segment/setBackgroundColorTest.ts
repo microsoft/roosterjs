@@ -150,6 +150,12 @@ describe('setBackgroundColor', () => {
                                 format: {
                                     backgroundColor: 'red',
                                 },
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
+                                format: {
+                                    backgroundColor: 'red',
+                                },
                                 isSelected: true,
                             },
                         ],
@@ -189,6 +195,12 @@ describe('setBackgroundColor', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
+                                format: {
+                                    backgroundColor: 'red',
+                                },
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
                                 format: {
                                     backgroundColor: 'red',
                                 },
@@ -240,11 +252,16 @@ describe('setBackgroundColor', () => {
                                 format: {
                                     backgroundColor: 'red',
                                 },
-                                isSelected: true,
                             },
                             {
                                 segmentType: 'Text',
                                 text: 'test',
+                                format: {
+                                    backgroundColor: 'red',
+                                },
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
                                 format: {
                                     backgroundColor: 'red',
                                 },
@@ -299,7 +316,6 @@ describe('setBackgroundColor', () => {
                                 segmentType: 'Text',
                                 text: 'test',
                                 format: { backgroundColor: 'red' },
-                                isSelected: true,
                             },
                             {
                                 segmentType: 'Text',
@@ -309,6 +325,10 @@ describe('setBackgroundColor', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
+                                format: { backgroundColor: 'red' },
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
                                 format: { backgroundColor: 'red' },
                                 isSelected: true,
                             },
@@ -349,6 +369,10 @@ describe('setBackgroundColor', () => {
                             {
                                 segmentType: 'Text',
                                 text: 'test',
+                                format: {},
+                            },
+                            {
+                                segmentType: 'SelectionMarker',
                                 format: {},
                                 isSelected: true,
                             },
