@@ -81,7 +81,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private contentDiv?: EventTarget | null
+        private contentDiv?: HTMLElement | EventTarget | null
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.setEditorFeatures();
@@ -403,9 +403,9 @@ export default class TableEditor {
             if (
                 feature &&
                 ev.relatedTarget != feature &&
-                safeInstanceOf(this.contentDiv, 'HTMLElement') &&
+                safeInstanceOf(ev.currentTarget, 'HTMLElement') &&
                 safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
-                !contains(this.contentDiv, ev.relatedTarget, true /* treatSameNodeAsContain */)
+                !contains(ev.currentTarget, ev.relatedTarget, true /* treatSameNodeAsContain */)
             ) {
                 this.dispose();
             }

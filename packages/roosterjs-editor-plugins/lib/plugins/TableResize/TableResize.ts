@@ -31,7 +31,7 @@ export default class TableResize implements EditorPlugin {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private container?: HTMLElement
+        private containerId?: string
     ) {}
 
     /**
@@ -132,12 +132,15 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
+            const container = this.containerId
+                ? this.editor.getDocument().querySelector(this.containerId)
+                : document.body;
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                this.container || e?.currentTarget
+                container
             );
         }
     }

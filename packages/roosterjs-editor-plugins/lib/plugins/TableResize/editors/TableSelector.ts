@@ -51,7 +51,8 @@ export default function createTableSelector(
     const container: HTMLElement | undefined =
         contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
 
-    container.insertAdjacentElement('afterend', div);
+    container.appendChild(div);
+    const setDivPosition = container == document.body ? setBodyDivPosition : setSelectorDivPosition;
 
     const context: TableSelectorContext = {
         table,
@@ -60,7 +61,7 @@ export default function createTableSelector(
         isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 
-    setSelectorDivPosition(context, div, container);
+    setDivPosition(context, div, container);
 
     const onDragEnd = (context: TableSelectorContext, event: MouseEvent): false => {
         if (event.target == div) {
@@ -72,7 +73,7 @@ export default function createTableSelector(
     const featureHandler = new TableSelectorFeature(
         div,
         context,
-        setSelectorDivPosition,
+        setDivPosition,
         {
             onDragEnd,
         },
@@ -143,8 +144,22 @@ function setSelectorDivPosition(
         }px`;
 
         trigger.style.top = `${
-            (rect.top - containerRect.top - TABLE_SELECTOR_LENGTH - 2) / zoomScale
+            (rect.top - containerRect.top - TABLE_SELECTOR_LENGTH - 1) / zoomScale
         }px`;
+    }
+}
+
+// Retain old behavior for insertion in body
+function setBodyDivPosition(
+    context: TableSelectorContext,
+    trigger: HTMLElement,
+    container?: HTMLElement
+) {
+    const { rect } = context;
+    if (rect) {
+        trigger.style.position = 'fixed';
+        trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
+        trigger.style.left = `${rect.left - TABLE_SELECTOR_LENGTH - 2}px`;
     }
 }
 

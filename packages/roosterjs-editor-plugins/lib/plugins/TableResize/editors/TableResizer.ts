@@ -47,7 +47,8 @@ export default function createTableResizer(
     const container: HTMLElement | undefined =
         contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') ? contentDiv : document.body;
 
-    container.insertAdjacentElement('afterend', div);
+    container.appendChild(div);
+    const setDivPosition = container == document.body ? setBodyDivPosition : setResizeDivPosition;
 
     const context: DragAndDropContext = {
         isRTL,
@@ -56,12 +57,12 @@ export default function createTableResizer(
         onStart,
     };
 
-    setResizeDivPosition(context, div, container);
+    setDivPosition(context, div, container);
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        setResizeDivPosition,
+        setDivPosition,
         {
             onDragStart,
             onDragging,
@@ -171,5 +172,23 @@ function setResizeDivPosition(
             trigger.style.left = `${(rect.right - containerRect.left - 1) / zoomScale}px`;
         }
         trigger.style.top = `${(rect.bottom - containerRect.top - 1) / zoomScale}px`;
+    }
+}
+
+// Retain old behavior for insertion in body
+function setBodyDivPosition(
+    context: DragAndDropContext,
+    trigger: HTMLElement,
+    container?: HTMLElement
+) {
+    const { table, isRTL } = context;
+    const rect = normalizeRect(table.getBoundingClientRect());
+
+    if (rect) {
+        trigger.style.position = 'fixed';
+        trigger.style.top = `${rect.bottom}px`;
+        trigger.style.left = isRTL
+            ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
+            : `${rect.right}px`;
     }
 }
