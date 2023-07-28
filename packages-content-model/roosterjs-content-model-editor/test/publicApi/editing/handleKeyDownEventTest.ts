@@ -29,9 +29,6 @@ describe('handleKeyDownEvent', () => {
             handleKeyboardEventResult,
             'handleKeyboardEventResult'
         );
-        spyOn(handleKeyboardEventResult, 'getOnDeleteEntityCallback').and.returnValue(
-            mockedCallback
-        );
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
     });
 
@@ -67,11 +64,6 @@ describe('handleKeyDownEvent', () => {
             calledTimes
         );
 
-        expect(handleKeyboardEventResult.getOnDeleteEntityCallback).toHaveBeenCalledWith(
-            editor,
-            mockedEvent,
-            []
-        );
         expect(deleteSelectionSpy).toHaveBeenCalledWith(input, mockedCallback, expectedSteps);
         expect(handleKeyboardEventResult.handleKeyboardEventResult).toHaveBeenCalledWith(
             editor,

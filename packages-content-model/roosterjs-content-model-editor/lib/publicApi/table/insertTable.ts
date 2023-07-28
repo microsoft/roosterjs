@@ -3,7 +3,6 @@ import { createContentModelDocument, createSelectionMarker } from 'roosterjs-con
 import { createTableStructure } from '../../modelApi/table/createTableStructure';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
@@ -26,9 +25,8 @@ export default function insertTable(
     rows: number,
     format?: Partial<TableMetadataFormat>
 ) {
-    formatWithContentModel(editor, 'insertTable', model => {
-        const onDeleteEntity = getOnDeleteEntityCallback(editor);
-        const insertPosition = deleteSelection(model, onDeleteEntity).insertPoint;
+    formatWithContentModel(editor, 'insertTable', (model, context) => {
+        const insertPosition = deleteSelection(model, [], context).insertPoint;
 
         if (insertPosition) {
             const doc = createContentModelDocument();
@@ -38,7 +36,7 @@ export default function insertTable(
             // Assign default vertical align
             format = format || { verticalAlign: 'top' };
             applyTableFormat(table, format);
-            mergeModel(model, doc, onDeleteEntity, {
+            mergeModel(model, doc, context, {
                 insertPosition,
                 mergeFormat: 'mergeAll',
             });

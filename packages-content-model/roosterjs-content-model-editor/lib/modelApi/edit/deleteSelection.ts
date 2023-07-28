@@ -1,12 +1,12 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
+import { FormatWithContentModelContext } from '../../publicApi/utils/formatWithContentModel';
 import {
     DeleteResult,
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,
     ValidDeleteSelectionContext,
-    OnDeleteEntity,
 } from './utils/DeleteSelectionStep';
 
 /**
@@ -14,10 +14,10 @@ import {
  */
 export function deleteSelection(
     model: ContentModelDocument,
-    onDeleteEntity: OnDeleteEntity,
-    additionalSteps: (DeleteSelectionStep | null)[] = []
+    additionalSteps: (DeleteSelectionStep | null)[] = [],
+    formatContext?: FormatWithContentModelContext
 ): DeleteSelectionResult {
-    const context = deleteExpandedSelection(model, onDeleteEntity);
+    const context = deleteExpandedSelection(model, formatContext);
 
     additionalSteps.forEach(step => {
         if (
@@ -25,7 +25,7 @@ export function deleteSelection(
             isValidDeleteSelectionContext(context) &&
             context.deleteResult == DeleteResult.NotDeleted
         ) {
-            step(context, onDeleteEntity);
+            step(context);
         }
     });
 

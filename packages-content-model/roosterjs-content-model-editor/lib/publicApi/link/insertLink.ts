@@ -1,7 +1,6 @@
 import { ChangeSource } from 'roosterjs-editor-types';
 import { ContentModelLink } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegments } from '../../modelApi/selection/collectSelections';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
@@ -60,7 +59,7 @@ export default function insertLink(
         formatWithContentModel(
             editor,
             'insertLink',
-            model => {
+            (model, context) => {
                 const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
                 const originalText = segments
                     .map(x => (x.segmentType == 'Text' ? x.text : ''))
@@ -95,9 +94,7 @@ export default function insertLink(
                         links.push(segment.link);
                     }
 
-                    mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
-                        mergeFormat: 'mergeAll',
-                    });
+                    mergeModel(model, doc, context);
                 }
 
                 return segments.length > 0;

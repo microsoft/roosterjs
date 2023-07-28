@@ -1,8 +1,7 @@
-import { ContentModelEntity, ContentModelParagraph } from 'roosterjs-content-model-types';
-import { EntityOperation } from 'roosterjs-editor-types';
+import { ContentModelParagraph } from 'roosterjs-content-model-types';
+import { FormatWithContentModelContext } from '../../../publicApi/utils/formatWithContentModel';
 import { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
 import { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
-import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * @internal
@@ -28,6 +27,7 @@ export interface DeleteSelectionResult {
 export interface DeleteSelectionContext extends DeleteSelectionResult {
     lastParagraph?: ContentModelParagraph;
     lastTableContext?: TableSelectionContext;
+    formatContext?: FormatWithContentModelContext;
 }
 
 /**
@@ -39,27 +39,5 @@ export interface ValidDeleteSelectionContext extends DeleteSelectionContext {
 
 /**
  * @internal
- * A callback for deleteSelection API to decide how to handle an entity
- * @param entity The entity to delete
- * @param operation The operation of entity
- * @returns True means we want to keep this entity, so deleteSelection() will not remove it. Otherwise false,
- * the entity will be removed from Content Model
  */
-export type OnDeleteEntity = (
-    entity: ContentModelEntity,
-    operation:
-        | EntityOperation.RemoveFromStart
-        | EntityOperation.RemoveFromEnd
-        | EntityOperation.Overwrite
-        | CompatibleEntityOperation.RemoveFromStart
-        | CompatibleEntityOperation.RemoveFromEnd
-        | CompatibleEntityOperation.Overwrite
-) => boolean;
-
-/**
- * @internal
- */
-export type DeleteSelectionStep = (
-    context: ValidDeleteSelectionContext,
-    onDeleteEntity: OnDeleteEntity
-) => void;
+export type DeleteSelectionStep = (context: ValidDeleteSelectionContext) => void;

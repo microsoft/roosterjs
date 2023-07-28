@@ -3,7 +3,6 @@ import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import {
@@ -80,8 +79,8 @@ export default function paste(
         formatWithContentModel(
             editor,
             'Paste',
-            model => {
-                mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
+            (model, context) => {
+                mergeModel(model, pasteModel, context, {
                     mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
                     mergeTable:
                         pasteModel.blocks.length === 1 &&

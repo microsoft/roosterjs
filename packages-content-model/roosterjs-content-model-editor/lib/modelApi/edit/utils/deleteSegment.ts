@@ -1,9 +1,9 @@
 import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { FormatWithContentModelContext } from '../../../publicApi/utils/formatWithContentModel';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
 import { normalizeText } from '../../../domUtils/stringUtil';
-import { OnDeleteEntity } from './DeleteSelectionStep';
 
 /**
  * @internal
@@ -11,7 +11,7 @@ import { OnDeleteEntity } from './DeleteSelectionStep';
 export function deleteSegment(
     paragraph: ContentModelParagraph,
     segmentToDelete: ContentModelSegment,
-    onDeleteEntity: OnDeleteEntity,
+    context?: FormatWithContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
     const segments = paragraph.segments;
@@ -39,8 +39,12 @@ export function deleteSegment(
                 : isBackward
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
-            if (operation !== undefined && !onDeleteEntity(segmentToDelete, operation)) {
+            if (operation !== undefined) {
                 segments.splice(index, 1);
+                context?.deleteEntities.push({
+                    entity: segmentToDelete,
+                    operation,
+                });
             }
 
             return true;

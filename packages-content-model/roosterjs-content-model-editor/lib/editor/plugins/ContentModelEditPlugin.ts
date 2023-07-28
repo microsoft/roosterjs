@@ -3,13 +3,11 @@ import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     EditorPlugin,
-    EntityOperationEvent,
     ExperimentalFeatures,
     IEditor,
     Keys,
@@ -39,7 +37,6 @@ const ProcessKey = 'Process';
  */
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
-    private triggeredEntityEvents: EntityOperationEvent[] = [];
     private editWithContentModel = false;
     private hasDefaultFormat = false;
 
@@ -87,10 +84,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.EntityOperation:
-                    this.handleEntityOperationEvent(this.editor, event);
-                    break;
-
                 case PluginEventType.KeyDown:
                     this.handleKeyDownEvent(this.editor, event);
                     break;
@@ -101,15 +94,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     this.editor.cacheContentModel(null);
                     break;
             }
-        }
-    }
-
-    private handleEntityOperationEvent(editor: IContentModelEditor, event: EntityOperationEvent) {
-        if (event.rawEvent?.type == 'keydown') {
-            // If we see an entity operation event triggered from keydown event, it means the event can be triggered from original
-            // EntityFeatures or EntityPlugin, so we don't need to trigger the same event again from ContentModel.
-            // TODO: This is a temporary solution. Once Content Model can fully replace Entity Features, we can remove this.
-            this.triggeredEntityEvents.push(event);
         }
     }
 
@@ -130,7 +114,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                         rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
 
                     if (this.shouldDeleteWithContentModel(range, rawEvent)) {
-                        handleKeyDownEvent(editor, rawEvent, this.triggeredEntityEvents);
+                        handleKeyDownEvent(editor, rawEvent);
                     } else {
                         editor.cacheContentModel(null);
                     }
@@ -148,10 +132,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     editor.cacheContentModel(null);
                     break;
             }
-        }
-
-        if (this.triggeredEntityEvents.length > 0) {
-            this.triggeredEntityEvents = [];
         }
     }
 
@@ -171,15 +151,8 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             }
         }
 
-        formatWithContentModel(editor, 'input', model => {
-            const result = deleteSelection(
-                model,
-                getOnDeleteEntityCallback(
-                    editor,
-                    undefined /*rawEvent*/,
-                    this.triggeredEntityEvents
-                )
-            );
+        formatWithContentModel(editor, 'input', (model, context) => {
+            const result = deleteSelection(model, [], context);
 
             if (result.deleteResult == DeleteResult.Range) {
                 normalizeContentModel(model);
