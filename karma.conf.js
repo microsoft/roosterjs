@@ -54,6 +54,7 @@ module.exports = function (config) {
             rootDir: rootPath,
             declaration: false,
             strict: false,
+            downlevelIteration: true,
             paths: {
                 '*': [
                     '*',
