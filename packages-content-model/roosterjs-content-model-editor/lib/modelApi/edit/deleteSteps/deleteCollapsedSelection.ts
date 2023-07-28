@@ -4,6 +4,7 @@ import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
 import { DeleteResult, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
+import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return (context, onDeleteEntity) => {
@@ -20,6 +21,10 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
         if (segmentToDelete) {
             if (deleteSegment(paragraph, segmentToDelete, onDeleteEntity, direction)) {
                 context.deleteResult = DeleteResult.SingleChar;
+
+                // It is possible that we have deleted everything from this paragraph, so we need to mark it as not implicit
+                // to avoid losing its format. See https://github.com/microsoft/roosterjs/issues/1953
+                setParagraphNotImplicit(paragraph);
             }
         } else if ((blockToDelete = getLeafSiblingBlock(path, paragraph, isForward))) {
             const { block, path, siblingSegment } = blockToDelete;

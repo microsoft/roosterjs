@@ -4,7 +4,7 @@ import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { areSameFormats } from '../utils/areSameFormats';
 import { createText } from '../../modelApi/creators/createText';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
-import { hasSpacesOnly } from '../../domUtils/stringUtil';
+import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
 import {
     ContentModelBlockGroup,
     DomToModelContext,

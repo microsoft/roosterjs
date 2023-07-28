@@ -114,7 +114,17 @@ describe('metadata', () => {
 });
 
 describe('removeMetadata', () => {
-    it('removeElement', () => {
+    it('remove one Element', () => {
+        const obj = { x: 1, y: 'test' };
+        const div = document.createElement('div');
+        div.setAttribute('data-editing-info', JSON.stringify(obj));
+        removeMetadata(div, 'y');
+        expect(div.outerHTML).toBe('<div data-editing-info="{&quot;x&quot;:1}"></div>');
+    });
+});
+
+describe('removeAllMetadata', () => {
+    it('removeAllElements', () => {
         const obj = { x: 1, y: 'test' };
         const div = document.createElement('div');
         div.setAttribute('data-editing-info', JSON.stringify(obj));

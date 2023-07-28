@@ -30,6 +30,7 @@ export default function extractClipboardItemsForIE(
         files: [],
         rawHtml: null,
         customValues: {},
+        pasteNativeEvent: true,
     };
 
     for (let i = 0; i < (dataTransfer.files ? dataTransfer.files.length : 0); i++) {

@@ -79,7 +79,8 @@ describe('End to end test for DOM => Model', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginBottom: '0in',
+                                format: { marginBottom: '0in' },
+                                dataset: {},
                             },
                         ],
                         format: {
@@ -120,7 +121,8 @@ describe('End to end test for DOM => Model', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginBottom: '0in',
+                                format: { marginBottom: '0in' },
+                                dataset: {},
                             },
                         ],
                         format: {
@@ -160,7 +162,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -179,7 +181,10 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                        levels: [
+                            { listType: 'OL', format: {}, dataset: {} },
+                            { listType: 'OL', format: {}, dataset: {} },
+                        ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -198,7 +203,13 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL', displayForDummyItem: 'block' }],
+                        levels: [
+                            {
+                                listType: 'OL',
+                                format: { displayForDummyItem: 'block' },
+                                dataset: {},
+                            },
+                        ],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -217,7 +228,7 @@ describe('End to end test for DOM => Model', () => {
                                 isImplicit: true,
                             },
                         ],
-                        levels: [{ listType: 'OL' }],
+                        levels: [{ listType: 'OL', format: {}, dataset: {} }],
                         formatHolder: {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
@@ -843,6 +854,33 @@ describe('End to end test for DOM => Model', () => {
                 ],
             },
             '<h1>aa</h1><h2>bb</h2><h3 style="margin: 50px;">cc</h3>'
+        );
+    });
+
+    it('Header with format from context', () => {
+        runTest(
+            '<div style="font-size: 16px"><h1 style="font-size: 40px">test</h1></div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                        ],
+                        decorator: {
+                            tagName: 'h1',
+                            format: { fontSize: '40px', fontWeight: 'bold' },
+                        },
+                    },
+                ],
+            },
+            '<h1 style="font-size: 40px;">test</h1>'
         );
     });
 

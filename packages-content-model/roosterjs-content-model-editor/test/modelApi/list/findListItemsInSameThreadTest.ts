@@ -3,6 +3,7 @@ import {
     createContentModelDocument,
     createFormatContainer,
     createListItem,
+    createListLevel,
     createParagraph,
 } from 'roosterjs-content-model-dom';
 
@@ -29,9 +30,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items, in the same thread', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('OL')]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -44,9 +45,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items, not in the same thread by start number - 1', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL', startNumberOverride: 1 }]);
-        const item3 = createListItem([{ listType: 'OL', startNumberOverride: 2 }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
+        const item3 = createListItem([createListLevel('OL', { startNumberOverride: 2 })]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -59,9 +60,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items, not in the same thread by start number - 2', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL', startNumberOverride: 1 }]);
-        const item2 = createListItem([{ listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'OL', startNumberOverride: 2 }]);
+        const item1 = createListItem([createListLevel('OL', { startNumberOverride: 1 })]);
+        const item2 = createListItem([createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('OL', { startNumberOverride: 2 })]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -74,9 +75,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items, not in the same thread by list type', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'UL' }]);
-        const item3 = createListItem([{ listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('UL')]);
+        const item3 = createListItem([createListLevel('OL')]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -89,11 +90,11 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items in the same thread, with interrupting UL', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'UL' }]);
-        const item3 = createListItem([{ listType: 'OL' }]);
-        const currentItem4 = createListItem([{ listType: 'UL' }]);
-        const currentItem5 = createListItem([{ listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('UL')]);
+        const item3 = createListItem([createListLevel('OL')]);
+        const currentItem4 = createListItem([createListLevel('UL')]);
+        const currentItem5 = createListItem([createListLevel('OL')]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -108,9 +109,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple list items in the same thread, with interrupting paragraph', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
 
@@ -127,7 +128,7 @@ describe('findListItemsInSameThread', () => {
 
     it('Single UL', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'UL' }]);
+        const item1 = createListItem([createListLevel('UL')]);
 
         group.blocks.push(item1);
 
@@ -138,9 +139,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple UL', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'UL' }]);
-        const item2 = createListItem([{ listType: 'UL' }]);
-        const item3 = createListItem([{ listType: 'UL' }]);
+        const item1 = createListItem([createListLevel('UL')]);
+        const item2 = createListItem([createListLevel('UL')]);
+        const item3 = createListItem([createListLevel('UL')]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -153,11 +154,11 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple UL interrupted by Para', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'UL' }]);
-        const item2 = createListItem([{ listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'UL' }]);
-        const currentItem4 = createListItem([{ listType: 'OL' }]);
-        const currentItem5 = createListItem([{ listType: 'UL' }]);
+        const item1 = createListItem([createListLevel('UL')]);
+        const item2 = createListItem([createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('UL')]);
+        const currentItem4 = createListItem([createListLevel('OL')]);
+        const currentItem5 = createListItem([createListLevel('UL')]);
 
         group.blocks.push(item1);
         group.blocks.push(item2);
@@ -172,9 +173,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple UL interrupted by OL', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'UL' }]);
-        const item2 = createListItem([{ listType: 'UL' }]);
-        const item3 = createListItem([{ listType: 'UL' }]);
+        const item1 = createListItem([createListLevel('UL')]);
+        const item2 = createListItem([createListLevel('UL')]);
+        const item3 = createListItem([createListLevel('UL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
 
@@ -191,9 +192,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple UL under different group', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'UL' }]);
-        const item2 = createListItem([{ listType: 'UL' }]);
-        const item3 = createListItem([{ listType: 'UL' }]);
+        const item1 = createListItem([createListLevel('UL')]);
+        const item2 = createListItem([createListLevel('UL')]);
+        const item3 = createListItem([createListLevel('UL')]);
         const quote1 = createFormatContainer('blockquote');
         const quote3 = createFormatContainer('blockquote');
 
@@ -211,9 +212,9 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple OL under different group', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL')]);
+        const item3 = createListItem([createListLevel('OL')]);
         const quote1 = createFormatContainer('blockquote');
         const quote3 = createFormatContainer('blockquote');
 
@@ -231,9 +232,13 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple OL with different levels - 1', () => {
         const group = createContentModelDocument();
-        const item1 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
-        const item3 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);
+        const item1 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const item3 = createListItem([
+            createListLevel('OL'),
+            createListLevel('OL'),
+            createListLevel('OL'),
+        ]);
         const quote1 = createFormatContainer('blockquote');
         const quote3 = createFormatContainer('blockquote');
 
@@ -251,9 +256,13 @@ describe('findListItemsInSameThread', () => {
 
     it('Multiple OL with different levels - 1', () => {
         const group = createContentModelDocument();
-        const item3 = createListItem([{ listType: 'OL' }]);
-        const item2 = createListItem([{ listType: 'OL' }, { listType: 'OL' }]);
-        const item1 = createListItem([{ listType: 'OL' }, { listType: 'OL' }, { listType: 'OL' }]);
+        const item3 = createListItem([createListLevel('OL')]);
+        const item2 = createListItem([createListLevel('OL'), createListLevel('OL')]);
+        const item1 = createListItem([
+            createListLevel('OL'),
+            createListLevel('OL'),
+            createListLevel('OL'),
+        ]);
         const quote1 = createFormatContainer('blockquote');
         const quote3 = createFormatContainer('blockquote');
 

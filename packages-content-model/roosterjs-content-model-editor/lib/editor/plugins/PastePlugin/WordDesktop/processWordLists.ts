@@ -1,9 +1,15 @@
-import { addBlock, createListItem, parseFormat } from 'roosterjs-content-model-dom';
 import { getStyles } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
 import {
+    addBlock,
+    createListItem,
+    createListLevel,
+    parseFormat,
+} from 'roosterjs-content-model-dom';
+import {
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
+    ContentModelListLevel,
     DomToModelContext,
     DomToModelListFormat,
     FormatParser,
@@ -13,13 +19,12 @@ import {
 const MSO_LIST = 'mso-list';
 const MSO_LIST_IGNORE = 'ignore';
 const LOOKUP_DEPTH = 5;
-const OL_TAG = 'OL';
 const WORD_FIRST_LIST = 'l0';
 
 interface WordDesktopListFormat extends DomToModelListFormat {
     wordLevel?: number | '';
     wordList?: string;
-    wordKnownLevels?: Map<string, ContentModelListItemLevelFormat[]>;
+    wordKnownLevels?: Map<string, ContentModelListLevel[]>;
 }
 
 /**
@@ -38,7 +43,7 @@ export function processWordList(
 ) {
     const listFormat = context.listFormat as WordDesktopListFormat;
     if (!listFormat.wordKnownLevels) {
-        listFormat.wordKnownLevels = new Map<string, ContentModelListItemLevelFormat[]>();
+        listFormat.wordKnownLevels = new Map<string, ContentModelListLevel[]>();
     }
     const wordListStyle = styles[MSO_LIST] || '';
 
@@ -65,10 +70,8 @@ export function processWordList(
         const listType = getFakeBulletTagName(fakeBullet);
 
         // Create the new level of the list item and parse the format
-        const newLevel: ContentModelListItemLevelFormat = {
-            listType,
-        };
-        parseFormat(element, context.formatParsers.listLevel, newLevel, context);
+        const newLevel: ContentModelListLevel = createListLevel(listType);
+        parseFormat(element, context.formatParsers.listLevel, newLevel.format, context);
 
         // If the list format is in a different level, update the array so we get the new item
         // To be in the same level as the provided level metadata.
@@ -105,15 +108,19 @@ function processAsListItem(
     fakeBullet: string
 ) {
     const listItem = createListItem(listFormat.levels, context.segmentFormat);
+    const lastLevel = listItem.levels[listItem.levels.length - 1];
 
     parseFormat(element, context.formatParsers.segmentOnBlock, context.segmentFormat, context);
     parseFormat(element, context.formatParsers.listItemElement, listItem.format, context);
-    parseFormat(
-        element,
-        [startNumberOverrideParser(fakeBullet)],
-        listItem.levels[listItem.levels.length - 1],
-        context
-    );
+
+    if (lastLevel?.listType == 'OL') {
+        parseFormat(
+            element,
+            [startNumberOverrideParser(fakeBullet)],
+            listItem.levels[listItem.levels.length - 1].format,
+            context
+        );
+    }
 
     context.elementProcessors.child(listItem, element, context);
     addBlock(group, listItem);
@@ -128,7 +135,7 @@ function startNumberOverrideParser(
             wordLevel,
             wordList,
         } = context.listFormat as WordDesktopListFormat;
-        if (format.listType == OL_TAG && typeof wordLevel === 'number' && wordList) {
+        if (typeof wordLevel === 'number' && wordList) {
             const start = parseInt(fakeBullet);
             if (start != undefined && !isNaN(start) && !wordKnownLevels?.has(wordList)) {
                 format.startNumberOverride = start;

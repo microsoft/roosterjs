@@ -7,6 +7,7 @@ import {
     createGeneralBlock,
     createGeneralSegment,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -1235,7 +1236,7 @@ describe('iterateSelections', () => {
 
     it('includeListFormatHolder=anySegment', () => {
         const doc = createContentModelDocument();
-        const list = createListItem([{ listType: 'OL' }]);
+        const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -1261,7 +1262,7 @@ describe('iterateSelections', () => {
 
     it('includeListFormatHolder=allSegment', () => {
         const doc = createContentModelDocument();
-        const list = createListItem([{ listType: 'OL' }]);
+        const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -1280,7 +1281,7 @@ describe('iterateSelections', () => {
 
     it('includeListFormatHolder=allSegment 2', () => {
         const doc = createContentModelDocument();
-        const list = createListItem([{ listType: 'OL' }]);
+        const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');
@@ -1307,7 +1308,7 @@ describe('iterateSelections', () => {
 
     it('includeListFormatHolder=never', () => {
         const doc = createContentModelDocument();
-        const list = createListItem([{ listType: 'OL' }]);
+        const list = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text1 = createText('test1');
         const text2 = createText('test2');

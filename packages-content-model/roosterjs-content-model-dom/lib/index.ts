@@ -13,6 +13,7 @@ export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
+export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 
 export { createBr } from './modelApi/creators/createBr';
@@ -30,6 +31,7 @@ export { createGeneralSegment } from './modelApi/creators/createGeneralSegment';
 export { createGeneralBlock } from './modelApi/creators/createGeneralBlock';
 export { createEntity } from './modelApi/creators/createEntity';
 export { createDivider } from './modelApi/creators/createDivider';
+export { createListLevel } from './modelApi/creators/createListLevel';
 
 export { addBlock } from './modelApi/common/addBlock';
 export { addCode } from './modelApi/common/addDecorators';
@@ -46,7 +48,5 @@ export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplici
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { defaultImplicitFormatMap } from './formatHandlers/utils/defaultStyles';
-
-export { isPunctuation, isSpace, normalizeText } from './domUtils/stringUtil';
 
 export { createDomToModelContext } from './domToModel/context/createDomToModelContext';

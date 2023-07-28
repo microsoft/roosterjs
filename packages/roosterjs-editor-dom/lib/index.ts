@@ -21,7 +21,6 @@ export { default as applyTextStyle } from './inlineElements/applyTextStyle';
 export { default as extractClipboardEvent } from './clipboard/extractClipboardEvent';
 export { default as extractClipboardItems } from './clipboard/extractClipboardItems';
 export { default as extractClipboardItemsForIE } from './clipboard/extractClipboardItemsForIE';
-export { default as createFragmentFromClipboardData } from './clipboard/createFragmentFromClipboardData';
 export { default as handleImagePaste } from './clipboard/handleImagePaste';
 export { default as handleTextPaste } from './clipboard/handleTextPaste';
 export { default as retrieveMetadataFromClipboard } from './clipboard/retrieveMetadataFromClipboard';
@@ -75,6 +74,7 @@ export { default as VListChain } from './list/VListChain';
 export { default as setListItemStyle } from './list/setListItemStyle';
 export { getTableFormatInfo } from './table/tableFormatInfo';
 export { saveTableCellMetadata } from './table/tableCellInfo';
+export { getTableCellMetadata } from './table/tableCellInfo';
 
 export { default as getRegionsFromRange } from './region/getRegionsFromRange';
 export { default as getSelectedBlockElementsInRegion } from './region/getSelectedBlockElementsInRegion';

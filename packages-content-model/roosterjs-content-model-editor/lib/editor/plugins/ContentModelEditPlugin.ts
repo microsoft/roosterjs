@@ -8,13 +8,6 @@ import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendin
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
-import {
     EditorPlugin,
     EntityOperationEvent,
     ExperimentalFeatures,
@@ -24,8 +17,16 @@ import {
     NodeType,
     PluginEvent,
     PluginEventType,
+    PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -91,11 +92,12 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event.rawEvent);
+                    this.handleKeyDownEvent(this.editor, event);
                     break;
 
                 case PluginEventType.ContentChanged:
                 case PluginEventType.MouseUp:
+                case PluginEventType.SelectionChanged:
                     this.editor.cacheContentModel(null);
                     break;
             }
@@ -111,13 +113,14 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+        const rawEvent = event.rawEvent;
         const which = rawEvent.which;
 
         if (!this.editWithContentModel || rawEvent.defaultPrevented) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else if (!rawEvent.defaultPrevented) {
+        } else if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
                 case Keys.BACKSPACE:

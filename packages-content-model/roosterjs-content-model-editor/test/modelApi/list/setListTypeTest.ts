@@ -6,6 +6,7 @@ import {
     createFormatContainer,
     createImage,
     createListItem,
+    createListLevel,
     createParagraph,
     createText,
 } from 'roosterjs-content-model-dom';
@@ -64,10 +65,13 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            direction: undefined,
-                            textAlign: undefined,
-                            marginTop: undefined,
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                            },
+                            dataset: {},
                         },
                     ],
                     blocks: [para],
@@ -104,7 +108,7 @@ describe('indent', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
-        const listItem = createListItem([{ listType: 'UL' }]);
+        const listItem = createListItem([createListLevel('UL')]);
 
         para.segments.push(text);
         listItem.blocks.push(para);
@@ -120,7 +124,7 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', format: {}, dataset: {} }],
                     blocks: [para],
                     formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
                     format: {},
@@ -134,7 +138,7 @@ describe('indent', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para.segments.push(text);
         listItem.blocks.push(para);
@@ -164,7 +168,7 @@ describe('indent', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para.segments.push(text);
         listItem.blocks.push(para);
@@ -187,7 +191,7 @@ describe('indent', () => {
         const group = createContentModelDocument();
         const para = createParagraph();
         const text = createText('test');
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
 
         para.isImplicit = true;
         para.segments.push(text);
@@ -235,8 +239,8 @@ describe('indent', () => {
         const text1 = createText('test1');
         const text2 = createText('test2');
         const text3 = createText('test3');
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }, { listType: 'UL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL'), createListLevel('UL')]);
         const quote = createFormatContainer('blockquote');
 
         para1.segments.push(text1);
@@ -261,7 +265,7 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [para1],
                     formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
                     format: {},
@@ -269,7 +273,10 @@ describe('indent', () => {
                 {
                     blockGroupType: 'ListItem',
                     blockType: 'BlockGroup',
-                    levels: [{ listType: 'OL' }, { listType: 'OL' }],
+                    levels: [
+                        { listType: 'OL', dataset: {}, format: {} },
+                        { listType: 'OL', dataset: {}, format: {} },
+                    ],
                     blocks: [para2],
                     formatHolder: { segmentType: 'SelectionMarker', format: {}, isSelected: true },
                     format: {},
@@ -285,10 +292,13 @@ describe('indent', () => {
                             levels: [
                                 {
                                     listType: 'OL',
-                                    startNumberOverride: undefined,
-                                    direction: undefined,
-                                    textAlign: undefined,
-                                    marginTop: undefined,
+                                    format: {
+                                        startNumberOverride: undefined,
+                                        direction: undefined,
+                                        textAlign: undefined,
+                                        marginTop: undefined,
+                                    },
+                                    dataset: {},
                                 },
                             ],
                             blocks: [para3],
@@ -344,10 +354,13 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            direction: 'rtl',
-                            textAlign: 'start',
-                            marginTop: undefined,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                direction: 'rtl',
+                                textAlign: 'start',
+                                marginTop: undefined,
+                            },
                         },
                     ],
                     blocks: [para],
@@ -419,11 +432,14 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            direction: undefined,
-                            textAlign: undefined,
-                            marginTop: undefined,
-                            marginBottom: '0',
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                                marginBottom: '0',
+                            },
                         },
                     ],
                     formatHolder: {
@@ -445,10 +461,13 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            direction: undefined,
-                            textAlign: undefined,
-                            startNumberOverride: undefined,
-                            marginTop: '0',
+                            dataset: {},
+                            format: {
+                                direction: undefined,
+                                textAlign: undefined,
+                                startNumberOverride: undefined,
+                                marginTop: '0',
+                            },
                         },
                     ],
                     formatHolder: {
@@ -496,10 +515,13 @@ describe('indent', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            direction: undefined,
-                            textAlign: undefined,
-                            marginTop: undefined,
+                            dataset: {},
+                            format: {
+                                startNumberOverride: 1,
+                                direction: undefined,
+                                textAlign: undefined,
+                                marginTop: undefined,
+                            },
                         },
                     ],
                     formatHolder: {
@@ -514,6 +536,36 @@ describe('indent', () => {
                     format: {},
                 },
                 para3,
+            ],
+        });
+    });
+
+    it('Change style type to existing list', () => {
+        const group = createContentModelDocument();
+        const list1 = createListItem([createListLevel('OL')]);
+        const para1 = createParagraph();
+        const br = createBr();
+
+        para1.segments.push(br);
+        list1.blocks.push(para1);
+        group.blocks.push(list1);
+
+        br.isSelected = true;
+
+        const result = setListType(group, 'UL');
+
+        expect(result).toBeTrue();
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [para1],
+                    levels: [{ listType: 'UL', format: {}, dataset: {} }],
+                    formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
+                    format: {},
+                },
             ],
         });
     });
