@@ -31,10 +31,9 @@ const compatibleEnumPath = path.join(
 );
 
 function collectPackages(startPath) {
-    const packagePaths = glob.sync(
-        path.relative(rootPath, path.join(startPath, '**', 'package.json')),
-        { nocase: true }
-    );
+    const packagePaths = glob
+        .sync(path.relative(rootPath, path.join(startPath, '**', 'package.json')), { nocase: true })
+        .filter(x => x.indexOf('node_modules') < 0);
 
     const packageNames = packagePaths.map(path =>
         path.replace('packages/', '').replace('/package.json', '')
@@ -135,7 +134,7 @@ function getWebpackExternalCallback(externalLibraryPairs, internalLibraries) {
         ...externalLibraryPairs,
     ]);
 
-    return (_, request, callback) => {
+    return ({ request }, callback) => {
         for (const [key, value] of externalMap) {
             if (key instanceof RegExp && key.test(request)) {
                 return callback(null, request.replace(key, value));

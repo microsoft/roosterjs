@@ -172,6 +172,7 @@ describe('changeImage', () => {
                                 src: testUrl,
                                 isSelected: true,
                                 dataset: {},
+                                alt: '',
                                 format: {
                                     boxShadow: '0px 0px 3px 3px #aaaaaa',
                                     width: '',

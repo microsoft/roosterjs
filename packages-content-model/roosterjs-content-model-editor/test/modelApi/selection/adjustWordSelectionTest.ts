@@ -575,6 +575,8 @@ describe('adjustWordSelection', () => {
                         levels: [
                             {
                                 listType: 'UL',
+                                dataset: {},
+                                format: {},
                             },
                         ],
                         formatHolder: {
@@ -603,6 +605,8 @@ describe('adjustWordSelection', () => {
                         levels: [
                             {
                                 listType: 'UL',
+                                dataset: {},
+                                format: {},
                             },
                         ],
                         formatHolder: {

@@ -1,12 +1,9 @@
 import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
+import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
+import { normalizeText } from '../../../domUtils/stringUtil';
 import { OnDeleteEntity } from './DeleteSelectionStep';
-import {
-    isWhiteSpacePreserved,
-    normalizeSingleSegment,
-    normalizeText,
-} from 'roosterjs-content-model-dom';
 
 /**
  * @internal

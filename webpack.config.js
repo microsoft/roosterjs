@@ -63,7 +63,7 @@ module.exports = {
             },
         ],
     },
-    externals: function (context, request, callback) {
+    externals: function ({ request }, callback) {
         for (const [key, value] of externalMap) {
             if (key instanceof RegExp && key.test(request)) {
                 return callback(null, request.replace(key, value));
@@ -74,7 +74,6 @@ module.exports = {
 
         callback();
     },
-    watch: true,
     stats: 'minimal',
     devServer: {
         host: '0.0.0.0', // This makes the server public so that others can test by http://hostname ...

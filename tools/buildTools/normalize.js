@@ -38,7 +38,7 @@ function normalize() {
             }
         });
 
-        if (packageJson.version) {
+        if (packageJson.version && packageJson.version != '0.0.0') {
             knownCustomizedPackages[packageName] = packageJson.version;
         } else {
             packageJson.version = version;

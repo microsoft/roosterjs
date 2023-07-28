@@ -343,4 +343,18 @@ describe('ImageEdit | wrapper', () => {
         const imageShadow = shadowRoot?.querySelector('img');
         expect(imageShadow?.style.maxWidth).toBe('');
     });
+
+    it('image selection, cloned image should use style width/height attributes', () => {
+        const IMG_ID = 'IMAGE_ID';
+        const content = `<img id="${IMG_ID}" style="width: 300px; height: 300px" src='test'/>`;
+        editor.setContent(content);
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        editor.focus();
+        editor.select(image);
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const imageShadow = shadowRoot?.querySelector('img');
+        expect(imageShadow?.style.height).toBe('300px');
+        expect(imageShadow?.style.width).toBe('300px');
+    });
 });
