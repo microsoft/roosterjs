@@ -6,6 +6,12 @@
         "url": "https://github.com/Microsoft/roosterjs"
     },
     "license": "MIT",
+    "private": true,
+    "workspaces": [
+        "packages/*",
+        "packages-ui/*",
+        "packages-content-model/*"
+    ],
     "scripts": {
         "clean": "node tools/build.js clean",
         "dts": "node tools/build.js clean normalize buildcommonjs dts",
