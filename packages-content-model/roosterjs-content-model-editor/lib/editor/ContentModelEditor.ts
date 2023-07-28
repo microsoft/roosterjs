@@ -55,6 +55,7 @@ export default class ContentModelEditor
 
         if (!core.lifecycle.shadowEditFragment) {
             core.cachedModel = model || undefined;
+            core.cachedRangeEx = undefined;
         }
     }
 

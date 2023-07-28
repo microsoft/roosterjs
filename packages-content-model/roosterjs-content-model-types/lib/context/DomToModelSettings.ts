@@ -95,7 +95,7 @@ export type ElementProcessorMap = {
         /**
          * Processor for Inline Readonly Delimiters
          */
-        delimiter?: ElementProcessor<HTMLSpanElement>;
+        delimiter?: ElementProcessor<Node>;
     };
 
 /**
