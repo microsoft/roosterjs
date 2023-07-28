@@ -24,12 +24,12 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
                 range && getSelectionPath(core.contentDiv, range);
             core.lifecycle.shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
         } else {
+            core.lifecycle.shadowEditFragment = null;
+            core.lifecycle.shadowEditSelectionPath = null;
+
             if (core.cachedModel) {
                 core.api.setContentModel(core, core.cachedModel);
             }
-
-            core.lifecycle.shadowEditFragment = null;
-            core.lifecycle.shadowEditSelectionPath = null;
         }
     }
 };
