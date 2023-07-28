@@ -125,7 +125,7 @@ describe('Table Selector Tests', () => {
             () => {},
             () => () => {},
             () => {},
-            <EventTarget>node
+            <HTMLElement>node
         );
 
         //Assert
