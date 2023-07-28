@@ -1,9 +1,8 @@
 import * as processPastedContentWacComponents from '../../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 import paste from '../../../../../lib/publicApi/utils/paste';
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
-import { initEditor } from './cmPasteFromExcelTest';
-import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_WORD_Online_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -22,13 +21,110 @@ const clipboardData = <ClipboardData>(<any>{
 });
 
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IContentModelEditor | undefined;
+    let triggerPluginEvent: jasmine.Spy;
+    let createContentModel: jasmine.Spy;
+    let setContentModel: jasmine.Spy;
+    let mockedModel: ContentModelDocument;
+    let setContent: jasmine.Spy;
+    let getDocument: jasmine.Spy;
+    let getTrustedHTMLHandler: jasmine.Spy;
+    let addUndoSnapshot: any;
+    let focus: jasmine.Spy;
 
     beforeEach(() => {
-        editor = initEditor(ID);
+        const node = document.createElement('div');
+        node.id = ID;
+        node.innerHTML = clipboardData.rawHtml!;
+        document.body.insertBefore(node, document.body.childNodes[0]);
+
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
+            eventType: PluginEventType.BeforePaste,
+            clipboardData: clipboardData,
+            fragment: document,
+            sanitizingOption: {
+                additionalGlobalStyleNodes: [],
+            } as any,
+            htmlBefore: '',
+            htmlAfter: '',
+            htmlAttributes: {},
+            domToModelOption: {
+                additionalFormatParsers: {},
+            },
+            pasteType: PasteType.Normal,
+        });
+        mockedModel = ({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'bb',
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        } as any) as ContentModelDocument;
+        createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
+        setContentModel = jasmine.createSpy('setContentModel');
+        setContent = jasmine.createSpy('setContent');
+        getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+        getTrustedHTMLHandler = jasmine
+            .createSpy('getTrustedHTMLHandler')
+            .and.returnValue((html: string) => html);
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+        focus = jasmine.createSpy('focus');
+
+        editor = ({
+            focus,
+            createContentModel,
+            setContentModel,
+            triggerPluginEvent,
+            setContent,
+            getDocument,
+            getTrustedHTMLHandler,
+            addUndoSnapshot,
+        } as any) as IContentModelEditor;
     });
 
     afterEach(() => {
+        editor = undefined;
         document.getElementById(ID)?.remove();
     });
 
@@ -38,12 +134,7 @@ describe(ID, () => {
             'processPastedContentWacComponents'
         ).and.callThrough();
 
-        paste(editor, clipboardData);
-        editor.createContentModel({
-            processorOverride: {
-                table: tableProcessor,
-            },
-        });
+        paste(editor!, clipboardData);
 
         expect(
             processPastedContentWacComponents.processPastedContentWacComponents

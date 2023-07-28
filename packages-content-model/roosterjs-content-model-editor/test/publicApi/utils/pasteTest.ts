@@ -2,7 +2,7 @@ import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipb
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData, PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -44,7 +44,6 @@ describe('Paste ', () => {
         document.body.appendChild(div);
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
-
         addUndoSnapshot = jasmine
             .createSpy('addUndoSnapshot')
             .and.callFake(callback => (undoSnapshotResult = callback()));
@@ -53,7 +52,21 @@ describe('Paste ', () => {
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
+            eventType: PluginEventType.BeforePaste,
+            clipboardData: clipboardData,
+            fragment: document.createDocumentFragment(),
+            sanitizingOption: {
+                additionalGlobalStyleNodes: [],
+            },
+            htmlBefore: '',
+            htmlAfter: '',
+            htmlAttributes: {},
+            domToModelOption: {
+                additionalFormatParsers: {},
+            },
+            pasteType: PasteType.Normal,
+        });
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')

@@ -58,5 +58,7 @@ export default function getPasteSource(
         }
     });
 
+    console.log('getPasteSource result', result);
+
     return result ?? KnownPasteSourceType.Default;
 }

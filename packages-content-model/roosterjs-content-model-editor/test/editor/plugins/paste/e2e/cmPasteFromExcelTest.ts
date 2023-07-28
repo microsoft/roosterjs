@@ -3,8 +3,14 @@ import ContentModelEditor from '../../../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import paste from '../../../../../lib/publicApi/utils/paste';
 import { Browser } from 'roosterjs-editor-dom';
-import { ClipboardData, ExperimentalFeatures } from 'roosterjs-editor-types';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { tableProcessor } from 'roosterjs-content-model-dom';
+import {
+    ClipboardData,
+    ExperimentalFeatures,
+    PasteType,
+    PluginEventType,
+} from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     IContentModelEditor,
@@ -28,6 +34,9 @@ export function initEditor(id: string) {
     return editor as IContentModelEditor;
 }
 
+const EXCEL_DESKTOP_ATTRIBUTE_NAME = 'xmlns:x';
+const EXCEL_ATTRIBUTE_VALUE = 'urn:schemas-microsoft-com:office:excel';
+
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{
     types: ['image/png', 'text/plain', 'text/html'],
@@ -43,14 +52,116 @@ const clipboardData = <ClipboardData>(<any>{
     snapshotBeforePaste: '<div><br></div><!--{"start":[0,0],"end":[0,0]}-->',
 });
 
+const body = document.createElement('body');
+const html = document.createElement('html');
+document.body.appendChild(html);
+html.appendChild(body);
+
 describe(ID, () => {
-    let editor: IContentModelEditor = undefined!;
+    let editor: IContentModelEditor | undefined;
+    let triggerPluginEvent: jasmine.Spy;
+    let createContentModel: jasmine.Spy;
+    let setContentModel: jasmine.Spy;
+    let mockedModel: ContentModelDocument;
+    let setContent: jasmine.Spy;
+    let getDocument: jasmine.Spy;
+    let getTrustedHTMLHandler: jasmine.Spy;
+    let addUndoSnapshot: any;
+    let focus: jasmine.Spy;
 
     beforeEach(() => {
-        editor = initEditor(ID);
+        const node = document.createElement('div');
+        node.id = ID;
+        node.innerHTML = clipboardData.rawHtml!;
+        node.setAttribute(EXCEL_DESKTOP_ATTRIBUTE_NAME, EXCEL_ATTRIBUTE_VALUE);
+        document.body.insertBefore(node, document.body.childNodes[0]);
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
+            eventType: PluginEventType.BeforePaste,
+            clipboardData: clipboardData,
+            fragment: document,
+            sanitizingOption: {
+                additionalGlobalStyleNodes: [],
+            } as any,
+            htmlBefore: '',
+            htmlAfter: '',
+            htmlAttributes: { EXCEL_DESKTOP_ATTRIBUTE_NAME },
+            domToModelOption: {
+                additionalFormatParsers: {},
+            },
+            pasteType: PasteType.Normal,
+        });
+        mockedModel = ({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [],
+                },
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            format: {},
+                            height: 0,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'bb',
+                                                    format: {
+                                                        fontWeight: 'bold',
+                                                    },
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        } as any) as ContentModelDocument;
+        createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
+        setContentModel = jasmine.createSpy('setContentModel');
+        setContent = jasmine.createSpy('setContent');
+        getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+        getTrustedHTMLHandler = jasmine
+            .createSpy('getTrustedHTMLHandler')
+            .and.returnValue((html: string) => html);
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
+        focus = jasmine.createSpy('focus');
+
+        editor = ({
+            focus,
+            createContentModel,
+            setContentModel,
+            triggerPluginEvent,
+            setContent,
+            getDocument,
+            getTrustedHTMLHandler,
+            addUndoSnapshot,
+        } as any) as IContentModelEditor;
     });
 
     afterEach(() => {
+        editor = undefined;
         document.getElementById(ID)?.remove();
     });
 
@@ -60,8 +171,7 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData);
-        editor.createContentModel({});
+        paste(editor!, clipboardData);
 
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
@@ -72,8 +182,8 @@ describe(ID, () => {
         }
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
-        paste(editor, clipboardData, false, false, true);
-        const model = editor.createContentModel({
+        paste(editor!, clipboardData, false, false, true);
+        const model = editor!.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },
