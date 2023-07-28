@@ -2,6 +2,7 @@ import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 
 let div: HTMLElement;
@@ -176,8 +177,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -207,8 +211,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -238,13 +245,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -290,8 +303,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -321,13 +337,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -357,18 +379,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -417,8 +448,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -448,13 +482,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -484,18 +524,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -530,13 +579,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -566,18 +621,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -632,8 +696,11 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -663,13 +730,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -699,18 +772,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'OL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -745,18 +827,27 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'OL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -791,13 +882,19 @@ describe('wordOnlineHandler', () => {
                                 levels: [
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                     {
                                         listType: 'UL',
-                                        paddingLeft: undefined,
-                                        marginLeft: undefined,
+                                        format: {
+                                            paddingLeft: undefined,
+                                            marginLeft: undefined,
+                                        },
+                                        dataset: {},
                                     },
                                 ],
                                 formatHolder: {
@@ -906,8 +1003,11 @@ describe('wordOnlineHandler', () => {
                             levels: [
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -937,13 +1037,19 @@ describe('wordOnlineHandler', () => {
                             levels: [
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                                 {
                                     listType: 'UL',
-                                    marginLeft: undefined,
-                                    paddingLeft: undefined,
+                                    format: {
+                                        marginLeft: undefined,
+                                        paddingLeft: undefined,
+                                    },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -972,19 +1078,19 @@ describe('wordOnlineHandler', () => {
                             ],
                             levels: [
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                                 {
-                                    marginLeft: undefined,
                                     listType: 'UL',
-                                    paddingLeft: undefined,
+                                    format: { marginLeft: undefined, paddingLeft: undefined },
+                                    dataset: {},
                                 },
                             ],
                             formatHolder: {
@@ -1394,8 +1500,11 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginLeft: undefined,
-                                paddingLeft: undefined,
+                                format: {
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {
@@ -1431,8 +1540,11 @@ describe('wordOnlineHandler', () => {
                         levels: [
                             {
                                 listType: 'UL',
-                                marginLeft: undefined,
-                                paddingLeft: undefined,
+                                format: {
+                                    marginLeft: undefined,
+                                    paddingLeft: undefined,
+                                },
+                                dataset: {},
                             },
                         ],
                         formatHolder: {
@@ -1461,6 +1573,1180 @@ describe('wordOnlineHandler', () => {
         runTest(
             '<div class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1448465497" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{224}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">it went:&nbsp;</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="1"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="1" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="1079168982" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{230}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8"><span class="NormalTextRun SCXW152957598 BCX8">Test</span></span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"><span class="ListMarker BCX8 SCXW152957598"></span></span></li></ol></div><div class="ListContainerWrapper SCXW152957598 BCX8"><ol class="NumberListStyle1 SCXW152957598 BCX8" role="list" start="2"><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><p class="Paragraph SCXW152957598 BCX8" paraid="500697608" paraeid="{96fbc754-61d4-42f8-b9cb-d86b35e3a21c}{239}"><span data-contrast="auto" xml:lang="EN-US" lang="EN-US" class="TextRun SCXW152957598 BCX8">Test.</span><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}">&nbsp;</span></p><span class="ListMarkerWrappingSpan BCX8 SCXW152957598"></span></li><li data-leveltext="%1." data-font="Arial" data-listid="10" data-list-defn-props="{&quot;335552541&quot;:0,&quot;335559684&quot;:-1,&quot;335559685&quot;:720,&quot;335559991&quot;:360,&quot;469769242&quot;:[65533,0],&quot;469777803&quot;:&quot;left&quot;,&quot;469777804&quot;:&quot;%1.&quot;,&quot;469777815&quot;:&quot;hybridMultilevel&quot;}" aria-setsize="-1" data-aria-posinset="2" data-aria-level="1" role="listitem" class="OutlineElement Ltr BCX8 SCXW152957598"><div><span class="EOP SCXW152957598 BCX8" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559739&quot;:160,&quot;335559740&quot;:259}"><br></span></div></li></ol></div>',
             '<p>it went:&nbsp;&nbsp;</p><ol start="1"><li><p>Test</p></li><li><p>Test.&nbsp;</p></li><li><div><br></div></li></ol>'
+        );
+    });
+
+    it('Table Container with negative margin left', () => {
+        runTest(
+            '<div class="TableContainer" style="margin-left: -5px">Test</div>',
+            '<div>Test</div>',
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [{ segmentType: 'Text', text: 'Test', format: {} }],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    itChromeOnly('Table with merged cells.', () => {
+        const result: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'FormatContainer',
+                    tagName: 'div',
+                    blocks: [
+                        {
+                            blockType: 'BlockGroup',
+                            blockGroupType: 'FormatContainer',
+                            tagName: 'div',
+                            blocks: [
+                                {
+                                    blockType: 'Table',
+                                    rows: [
+                                        {
+                                            height: 0,
+                                            format: {},
+                                            cells: [
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'BlockGroup',
+                                                            blockGroupType: 'FormatContainer',
+                                                            tagName: 'div',
+                                                            blocks: [
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: 'ODSP',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '20pt',
+                                                                                italic: false,
+                                                                                fontWeight: 'bold',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '41.85px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '20pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '41.85px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Br',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '20pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '41.85px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: 'xFun',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '20pt',
+                                                                                italic: false,
+                                                                                fontWeight: 'bold',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '41.85px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '20pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '41.85px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
+                                                            format: {
+                                                                direction: 'ltr',
+                                                                textAlign: 'start',
+                                                                whiteSpace: 'normal',
+                                                                marginTop: '0px',
+                                                                marginRight: '0px',
+                                                                marginBottom: '0px',
+                                                                marginLeft: '0px',
+                                                                paddingTop: '0px',
+                                                                paddingRight: '6px',
+                                                                paddingBottom: '0px',
+                                                                paddingLeft: '6px',
+                                                            },
+                                                        },
+                                                    ],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        backgroundColor: 'rgb(21, 96, 130)',
+                                                        width: '312px',
+                                                        borderTop: '1px solid',
+                                                        borderRight: '0px none',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '1px solid',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: false,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '69905',
+                                                    },
+                                                },
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'BlockGroup',
+                                                            blockGroupType: 'FormatContainer',
+                                                            tagName: 'div',
+                                                            blocks: [
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                'Title of Announcement',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '21.5pt',
+                                                                                italic: false,
+                                                                                fontWeight: 'bold',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '44.175px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '21.5pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '44.175px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
+                                                            format: {
+                                                                direction: 'ltr',
+                                                                textAlign: 'start',
+                                                                whiteSpace: 'normal',
+                                                                marginTop: '0px',
+                                                                marginRight: '0px',
+                                                                marginBottom: '0px',
+                                                                marginLeft: '0px',
+                                                                paddingTop: '0px',
+                                                                paddingRight: '6px',
+                                                                paddingBottom: '0px',
+                                                                paddingLeft: '6px',
+                                                            },
+                                                        },
+                                                    ],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        backgroundColor: 'rgb(21, 96, 130)',
+                                                        width: '312px',
+                                                        borderTop: '1px solid',
+                                                        borderRight: '1px solid',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '0px none',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: false,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '69905',
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            height: 0,
+                                            format: {},
+                                            cells: [
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'BlockGroup',
+                                                            blockGroupType: 'FormatContainer',
+                                                            tagName: 'div',
+                                                            blocks: [
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: 'Announcement ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif',
+                                                                                fontSize: '14pt',
+                                                                                italic: false,
+                                                                                fontWeight: 'bold',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '24.4125px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif',
+                                                                                fontSize: '14pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(255, 255, 255)',
+                                                                                lineHeight:
+                                                                                    '24.4125px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
+                                                            format: {
+                                                                direction: 'ltr',
+                                                                textAlign: 'start',
+                                                                whiteSpace: 'normal',
+                                                                marginTop: '0px',
+                                                                marginRight: '0px',
+                                                                marginBottom: '0px',
+                                                                marginLeft: '0px',
+                                                                paddingTop: '0px',
+                                                                paddingRight: '6px',
+                                                                paddingBottom: '0px',
+                                                                paddingLeft: '6px',
+                                                            },
+                                                        },
+                                                    ],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        backgroundColor: 'rgb(0, 0, 0)',
+                                                        width: '624px',
+                                                        borderTop: '1px solid rgb(0, 0, 0)',
+                                                        borderRight: '1px solid',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '1px solid',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: false,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '69905',
+                                                    },
+                                                },
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        backgroundColor: 'rgb(0, 0, 0)',
+                                                        width: '624px',
+                                                        borderTop: '1px solid rgb(0, 0, 0)',
+                                                        borderRight: '1px solid',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '1px solid',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: true,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '69905',
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                        {
+                                            height: 0,
+                                            format: {},
+                                            cells: [
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [
+                                                        {
+                                                            blockType: 'BlockGroup',
+                                                            blockGroupType: 'FormatContainer',
+                                                            tagName: 'div',
+                                                            blocks: [
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: 'Hello  ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                '[Brief description of change]',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Br',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                '[What changed and how it benefits devs] ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                '[Any action needed by devs] ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                '[Link to Documentation ]',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Br',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: '  ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight: '21px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                                {
+                                                                    blockType: 'Paragraph',
+                                                                    segments: [
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text:
+                                                                                '[What comes next if something comes next]',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Br',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    'WordVisiCarriageReturn_MSFontService, "Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                        {
+                                                                            segmentType: 'Text',
+                                                                            text: ' ',
+                                                                            format: {
+                                                                                letterSpacing:
+                                                                                    'normal',
+                                                                                fontFamily:
+                                                                                    '"Segoe UI", "Segoe UI_EmbeddedFont", "Segoe UI_MSFontService", sans-serif',
+                                                                                fontSize: '12pt',
+                                                                                italic: false,
+                                                                                fontWeight:
+                                                                                    'normal',
+                                                                                textColor:
+                                                                                    'rgb(0, 0, 0)',
+                                                                                lineHeight:
+                                                                                    '23.7333px',
+                                                                            },
+                                                                        },
+                                                                    ],
+                                                                    format: {
+                                                                        direction: 'ltr',
+                                                                        textAlign: 'start',
+                                                                        whiteSpace: 'pre-wrap',
+                                                                        marginLeft: '0px',
+                                                                        marginRight: '0px',
+                                                                        marginTop: '0px',
+                                                                        marginBottom: '0px',
+                                                                        paddingLeft: '0px',
+                                                                        paddingRight: '0px',
+                                                                        backgroundColor:
+                                                                            'transparent',
+                                                                        paddingTop: '0px',
+                                                                        paddingBottom: '0px',
+                                                                    },
+                                                                    segmentFormat: {
+                                                                        fontWeight: 'normal',
+                                                                        textColor: 'windowtext',
+                                                                        italic: false,
+                                                                    },
+                                                                    decorator: {
+                                                                        tagName: 'p',
+                                                                        format: {},
+                                                                    },
+                                                                },
+                                                            ],
+                                                            format: {
+                                                                direction: 'ltr',
+                                                                textAlign: 'start',
+                                                                whiteSpace: 'normal',
+                                                                marginTop: '0px',
+                                                                marginRight: '0px',
+                                                                marginBottom: '0px',
+                                                                marginLeft: '0px',
+                                                                paddingTop: '0px',
+                                                                paddingRight: '6px',
+                                                                paddingBottom: '0px',
+                                                                paddingLeft: '6px',
+                                                            },
+                                                        },
+                                                    ],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        borderTop: '1px solid rgb(0, 0, 0)',
+                                                        borderRight: '1px solid rgb(0, 0, 0)',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '1px solid rgb(0, 0, 0)',
+                                                        verticalAlign: 'top',
+                                                        width: '624px',
+                                                        backgroundColor: 'transparent',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: false,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '4369',
+                                                    },
+                                                },
+                                                {
+                                                    blockGroupType: 'TableCell',
+                                                    blocks: [],
+                                                    format: {
+                                                        direction: 'ltr',
+                                                        textAlign: 'start',
+                                                        whiteSpace: 'normal',
+                                                        borderTop: '1px solid rgb(0, 0, 0)',
+                                                        borderRight: '1px solid rgb(0, 0, 0)',
+                                                        borderBottom: '1px solid rgb(0, 0, 0)',
+                                                        borderLeft: '1px solid rgb(0, 0, 0)',
+                                                        verticalAlign: 'top',
+                                                        width: '624px',
+                                                        backgroundColor: 'transparent',
+                                                        paddingTop: '0px',
+                                                        paddingRight: '0px',
+                                                        paddingBottom: '0px',
+                                                        paddingLeft: '0px',
+                                                    },
+                                                    spanLeft: true,
+                                                    spanAbove: false,
+                                                    isHeader: false,
+                                                    dataset: {
+                                                        celllook: '4369',
+                                                    },
+                                                },
+                                            ],
+                                        },
+                                    ],
+                                    format: {
+                                        direction: 'ltr',
+                                        textAlign: 'start',
+                                        whiteSpace: 'normal',
+                                        backgroundColor: 'transparent',
+                                        marginTop: '0px',
+                                        marginRight: '0px',
+                                        marginBottom: '0px',
+                                        marginLeft: '0px',
+                                        width: '0px',
+                                        tableLayout: 'fixed',
+                                        borderCollapse: true,
+                                    } as any,
+                                    widths: [],
+                                    dataset: {
+                                        tablelook: '1696',
+                                        tablestyle: 'MsoTableGrid',
+                                    },
+                                },
+                            ],
+                            format: {
+                                direction: 'ltr',
+                                textAlign: 'start',
+                                whiteSpace: 'normal',
+                                marginTop: '2px',
+                                marginRight: '0px',
+                                marginBottom: '2px',
+                                display: 'flex',
+                                paddingTop: '0px',
+                                paddingRight: '0px',
+                                paddingBottom: '0px',
+                                paddingLeft: '0px',
+                            },
+                        },
+                    ],
+                    format: {
+                        direction: 'ltr',
+                        textAlign: 'start',
+                        whiteSpace: 'normal',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        marginTop: '0px',
+                        marginRight: '0px',
+                        marginBottom: '0px',
+                        marginLeft: '0px',
+                        paddingTop: '0px',
+                        paddingRight: '0px',
+                        paddingBottom: '0px',
+                        paddingLeft: '0px',
+                    },
+                },
+            ],
+        };
+
+        runTest(
+            '<div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr; color: rgb(0, 0, 0); font-family: &quot;Segoe UI&quot;, &quot;Segoe UI Web&quot;, Arial, Verdana, sans-serif; font-size: 12px; font-style: normal; font-variant-ligatures: normal; font-variant-caps: normal; font-weight: 400; letter-spacing: normal; orphans: 2; text-align: start; text-indent: 0px; text-transform: none; widows: 2; word-spacing: 0px; -webkit-text-stroke-width: 0px; white-space: normal; background-color: rgb(255, 255, 255); text-decoration-thickness: initial; text-decoration-style: initial; text-decoration-color: initial;" class="OutlineElement Ltr BCX8 SCXW253660117"><div style="margin: 2px 0px 2px -5px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; position: relative; display: flex; justify-content: flex-start;" class="TableContainer Ltr BCX8 SCXW253660117"><table style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; table-layout: fixed; width: 0px; overflow: visible; border-collapse: collapse; empty-cells: show; position: relative; background: transparent; border-spacing: 0px;" aria-rowcount="3" data-tablelook="1696" data-tablestyle="MsoTableGrid" border="1" class="Table Ltr TableWordWrap BCX8 SCXW253660117"><tbody style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="BCX8 SCXW253660117"><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 87px;" aria-rowindex="1" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(21, 96, 130); width: 312px; border-width: 1px 0px 1px 1px; border-style: solid none solid solid; border-top-color: initial; border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" data-celllook="69905" role="rowheader" class="TableCellBorderSelection FirstRow FirstCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedWhite SimilarityUnreviewedWhite SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 20px; height: 12px; top: -12.5px; left: auto; cursor: pointer; z-index: 4; text-align: center; display: inline-block; background-color: transparent; right: -10px;" class="TableHoverColumnHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 0.5px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -3.5px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 0.5px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun BookmarkStart SCXW253660117 BCX8">ODSP</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 20pt; line-height: 41.85px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">xFun</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 20pt; line-height: 41.85px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(21, 96, 130); width: 312px; border-width: 1px 1px 1px 0px; border-style: solid solid solid none; border-top-color: initial; border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" data-celllook="69905" role="columnheader" class="TableCellBorderSelection FirstRow LastCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorWhite SimilarityReviewedWhite SimilarityUnreviewedWhite SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 20px; height: 12px; top: -12.5px; left: auto; cursor: pointer; z-index: 4; text-align: center; display: inline-block; background-color: transparent; right: -10.5px;" class="TableHoverColumnHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -3.5px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: 0px; width: calc(100% + 0.5px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: 0px; width: calc(100% + 0.5px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 21.5pt; line-height: 44.175px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Title of Announcement</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 21.5pt; line-height: 44.175px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 27px;" aria-rowindex="2" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: middle; overflow: visible; position: relative; background-color: rgb(0, 0, 0); width: 624px; border-width: 1px; border-style: solid; border-top-color: rgb(0, 0, 0); border-right-color: initial; border-bottom-color: rgb(0, 0, 0); border-left-color: initial; border-image: initial;" colspan="2" data-celllook="69905" role="rowheader" class="TableCellBorderSelection FirstCol LastCol LowContrastShading BCX8 AdvancedProofingDarkMode ContextualSpellingDarkMode SpellingErrorDarkMode SimilarityReviewedLightMode SimilarityUnreviewedDarkMode SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 1px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(255, 255, 255); font-size: 14pt; line-height: 24.4125px; font-family: Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif; font-weight: bold;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Announcement&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 14pt; line-height: 24.4125px; font-family: Aptos_MSFontService, Aptos_MSFontService_EmbeddedFont, Aptos_MSFontService_MSFontService, sans-serif; color: rgb(255, 255, 255);" data-ccp-props="{&quot;201341983&quot;:0,&quot;335559740&quot;:279}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr><tr style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; height: 20px;" aria-rowindex="3" role="row" class="TableRow BCX8 SCXW253660117"><td style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; vertical-align: top; overflow: visible; position: relative; background-color: transparent; width: 624px; border: 1px solid rgb(0, 0, 0);" colspan="2" data-celllook="4369" role="rowheader" class="TableCellBorderSelection FirstCol LastCol LastRow BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; display: flex; overflow: visible; width: 15px; height: 10px; cursor: pointer; z-index: 5; background-color: transparent; bottom: -5.5px; left: -15.5px;" class="TableHoverRowHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; width: 7px; z-index: 1; background-repeat: repeat; cursor: pointer; height: calc(100% + 1px); left: -4px; top: -0.5px;" class="TableCellLeftBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 1; background-repeat: repeat; background-color: transparent; cursor: pointer; left: -0.5px; width: calc(100% + 1px); top: -4px;" class="TableCellTopBorderHandle BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; bottom: 0px; overflow: visible; width: 7px; top: -0.5px; z-index: 3; background-repeat: repeat; height: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/hD55E5E9C2AD2E4F5_resources/1033/ColResize.cur&quot;), pointer; right: -4px;" class="TableColumnResizeHandle BCX8 SCXW253660117"></div><div style="margin: -3px 0px 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; position: absolute; overflow: visible; height: 7px; z-index: 3; background-repeat: repeat; background-color: transparent; left: -0.5px; width: calc(100% + 1px); cursor: url(&quot;https://res-1-sdf.cdn.office.net:443/officeonline/we/s/h1E5273DBAA04AEF6_resources/1033/RowResize.cur&quot;), pointer; bottom: -4px;" class="TableInsertRowGapBlank BCX8 SCXW253660117"></div><div style="margin: 0px; padding: 0px 6px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible;" class="TableCellContent BCX8 SCXW253660117"><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">Hello&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Brief description of change]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun EmptyTextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[What changed and how it </span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">benefits</span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"> </span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; background-repeat: repeat-x; background-position: left bottom; background-image: var(--urlSpellingErrorV2); border-bottom: 1px solid transparent;" class="NormalTextRun SpellingErrorV2Themed SCXW253660117 BCX8">devs</span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Any action needed by devs]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8"></span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[Link to Documentation ]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">&nbsp;</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 21px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:291}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div><div style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow: visible; cursor: text; clear: both; position: relative; direction: ltr;" class="OutlineElement Ltr BCX8 SCXW253660117"><p style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; overflow-wrap: break-word; white-space: pre-wrap; font-weight: normal; font-style: normal; vertical-align: baseline; font-kerning: none; background-color: transparent; color: windowtext; text-align: left; text-indent: 0px;" class="Paragraph SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent;" class="NormalTextRun SCXW253660117 BCX8">[What comes next if something comes next]</span></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: WordVisiCarriageReturn_MSFontService, &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" class="LineBreakBlob BlobObject DragDrop SCXW253660117 BCX8"><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8">&nbsp;</span><br style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; white-space: pre !important;" class="SCXW253660117 BCX8"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-variant-ligatures: none !important; color: rgb(0, 0, 0); font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif;" class="TextRun EmptyTextRun SCXW253660117 BCX8" lang="EN-US" data-contrast="none"></span><span style="margin: 0px; padding: 0px; user-select: text; -webkit-user-drag: none; -webkit-tap-highlight-color: transparent; font-size: 12pt; line-height: 23.7333px; font-family: &quot;Segoe UI&quot;, &quot;Segoe UI_EmbeddedFont&quot;, &quot;Segoe UI_MSFontService&quot;, sans-serif; color: rgb(0, 0, 0);" data-ccp-props="{&quot;201341983&quot;:1,&quot;335559740&quot;:356}" class="EOP SCXW253660117 BCX8">&nbsp;</span></p></div></div></td></tr></tbody></table></div></div>',
+            undefined,
+            result
         );
     });
 });

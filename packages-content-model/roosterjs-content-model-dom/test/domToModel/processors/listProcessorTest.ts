@@ -27,7 +27,9 @@ describe('listProcessor', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{ listType: 'UL' }]);
+            expect(context.listFormat.levels).toEqual([
+                { listType: 'UL', format: {}, dataset: {} },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
             expect(context.segmentFormat).toEqual({});
         });
@@ -52,7 +54,9 @@ describe('listProcessor', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{ listType: 'OL' }]);
+            expect(context.listFormat.levels).toEqual([
+                { listType: 'OL', format: {}, dataset: {} },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
             expect(context.segmentFormat).toEqual({});
         });
@@ -81,7 +85,9 @@ describe('listProcessor', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{ listType: 'OL' }]);
+            expect(context.listFormat.levels).toEqual([
+                { listType: 'OL', format: {}, dataset: {} },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([0]);
             expect(context.segmentFormat).toEqual({
                 textColor: 'red',
@@ -166,7 +172,7 @@ describe('listProcessor', () => {
         expect(pushSpy).toHaveBeenCalledTimes(2);
         expect(popSpy).toHaveBeenCalledTimes(2);
 
-        expect(pushSpy).toHaveBeenCalledWith({ listType: 'UL' });
+        expect(pushSpy).toHaveBeenCalledWith({ listType: 'UL', format: {}, dataset: {} });
     });
 
     it('list has margin, padding, and style position', () => {
@@ -194,15 +200,18 @@ describe('listProcessor', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            marginTop: '1px',
-                            marginRight: '1px',
-                            marginBottom: '1px',
-                            marginLeft: '1px',
-                            paddingTop: '2px',
-                            paddingRight: '2px',
-                            paddingBottom: '2px',
-                            paddingLeft: '2px',
-                            listStylePosition: 'inside',
+                            format: {
+                                marginTop: '1px',
+                                marginRight: '1px',
+                                marginBottom: '1px',
+                                marginLeft: '1px',
+                                paddingTop: '2px',
+                                paddingRight: '2px',
+                                paddingBottom: '2px',
+                                paddingLeft: '2px',
+                                listStylePosition: 'inside',
+                            },
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -238,10 +247,13 @@ describe('listProcessor', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            marginTop: '0px',
-                            marginBottom: '0px',
-                            marginLeft: '0px',
-                            marginRight: '0px',
+                            format: {
+                                marginTop: '0px',
+                                marginBottom: '0px',
+                                marginLeft: '0px',
+                                marginRight: '0px',
+                            },
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -269,9 +281,7 @@ describe('listProcessor without format handlers', () => {
                 child: childProcessor,
             },
             formatParserOverride: {
-                listType: null,
                 listLevelThread: null,
-                listLevelMetadata: null,
             },
         });
     });
@@ -282,7 +292,9 @@ describe('listProcessor without format handlers', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{}]);
+            expect(context.listFormat.levels).toEqual([
+                { listType: 'UL', dataset: {}, format: {} },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
             expect(context.segmentFormat).toEqual({});
         });
@@ -307,7 +319,13 @@ describe('listProcessor without format handlers', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{}]);
+            expect(context.listFormat.levels).toEqual([
+                {
+                    listType: 'OL',
+                    dataset: {},
+                    format: {},
+                },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
             expect(context.segmentFormat).toEqual({});
         });
@@ -336,7 +354,9 @@ describe('listProcessor without format handlers', () => {
 
         childProcessor.and.callFake((group, parent, context) => {
             expect(context.listFormat.listParent).toBe(group);
-            expect(context.listFormat.levels).toEqual([{}]);
+            expect(context.listFormat.levels).toEqual([
+                { listType: 'OL', dataset: {}, format: {} },
+            ]);
             expect(context.listFormat.threadItemCounts).toEqual([]);
             expect(context.segmentFormat).toEqual({
                 textColor: 'red',
@@ -421,7 +441,7 @@ describe('listProcessor without format handlers', () => {
         expect(pushSpy).toHaveBeenCalledTimes(2);
         expect(popSpy).toHaveBeenCalledTimes(2);
 
-        expect(pushSpy).toHaveBeenCalledWith({});
+        expect(pushSpy).toHaveBeenCalledWith({ listType: 'UL', dataset: {}, format: {} });
     });
 });
 
@@ -446,6 +466,8 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ]);
         });
@@ -468,8 +490,10 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    orderedStyleType: 1,
-                    unorderedStyleType: 2,
+                    format: {},
+                    dataset: {
+                        editingInfo: JSON.stringify({ orderedStyleType: 1, unorderedStyleType: 2 }),
+                    },
                 },
             ]);
         });
@@ -482,16 +506,19 @@ describe('listProcessor process metadata', () => {
     it('OL with invalid metadata', () => {
         const ol = document.createElement('ol');
         const group = createContentModelDocument();
-
-        ol.dataset.editingInfo = JSON.stringify({
+        const metadata = JSON.stringify({
             orderedStyleType: true,
             unorderedStyleType: 100,
         });
+
+        ol.dataset.editingInfo = metadata;
 
         childProcessor.and.callFake((group, element, context) => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ]);
         });
@@ -514,8 +541,13 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    orderedStyleType: NumberingListType.Max,
-                    unorderedStyleType: BulletListType.Max,
+                    format: {},
+                    dataset: {
+                        editingInfo: JSON.stringify({
+                            orderedStyleType: NumberingListType.Max,
+                            unorderedStyleType: BulletListType.Max,
+                        }),
+                    },
                 },
             ]);
         });
@@ -528,16 +560,19 @@ describe('listProcessor process metadata', () => {
     it('OL with metadata that has value at the out of range', () => {
         const ol = document.createElement('ol');
         const group = createContentModelDocument();
-
-        ol.dataset.editingInfo = JSON.stringify({
+        const editingInfo = JSON.stringify({
             orderedStyleType: NumberingListType.Max + 1,
             unorderedStyleType: BulletListType.Max + 1,
         });
+
+        ol.dataset.editingInfo = editingInfo;
 
         childProcessor.and.callFake((group, element, context) => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
+                    dataset: {},
+                    format: {},
                 },
             ]);
         });
@@ -560,7 +595,10 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    orderedStyleType: NumberingListType.Max,
+                    format: {},
+                    dataset: {
+                        editingInfo: JSON.stringify({ orderedStyleType: NumberingListType.Max }),
+                    },
                 },
             ]);
         });
@@ -593,7 +631,10 @@ describe('listProcessor process metadata', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            direction: 'rtl',
+                            dataset: {},
+                            format: {
+                                direction: 'rtl',
+                            },
                         },
                     ],
                     formatHolder: {

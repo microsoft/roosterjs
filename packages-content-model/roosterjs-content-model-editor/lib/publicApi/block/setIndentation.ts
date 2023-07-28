@@ -1,5 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
 
 /**
@@ -16,7 +17,15 @@ export default function setIndentation(
     formatWithContentModel(
         editor,
         'setIndentation',
-        model => setModelIndentation(model, indentation, length),
+        model => {
+            const result = setModelIndentation(model, indentation, length);
+
+            if (result) {
+                normalizeContentModel(model);
+            }
+
+            return result;
+        },
         {
             preservePendingFormat: true,
         }

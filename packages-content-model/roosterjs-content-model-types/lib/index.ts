@@ -45,7 +45,6 @@ export { SizeFormat } from './format/formatParts/SizeFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
-export { ListTypeFormat } from './format/formatParts/ListTypeFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';
@@ -91,6 +90,7 @@ export { ContentModelCode } from './decorator/ContentModelCode';
 export { ContentModelLink } from './decorator/ContentModelLink';
 export { ContentModelParagraphDecorator } from './decorator/ContentModelParagraphDecorator';
 export { ContentModelDecorator } from './decorator/ContentModelDecorator';
+export { ContentModelListLevel } from './decorator/ContentModelListLevel';
 
 export { Selectable } from './selection/Selectable';
 

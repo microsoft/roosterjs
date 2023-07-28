@@ -4,6 +4,7 @@ import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendin
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
+    ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentFormat,
@@ -17,14 +18,16 @@ export function formatSegmentWithContentModel(
     toggleStyleCallback: (
         format: ContentModelSegmentFormat,
         isTuringOn: boolean,
-        segment: ContentModelSegment | null
+        segment: ContentModelSegment | null,
+        paragraph: ContentModelParagraph | null
     ) => void,
     segmentHasStyleCallback?: (
         format: ContentModelSegmentFormat,
         segment: ContentModelSegment | null,
         paragraph: ContentModelParagraph | null
     ) => boolean,
-    includingFormatHolder?: boolean
+    includingFormatHolder?: boolean,
+    afterFormatCallback?: (model: ContentModelDocument) => void
 ) {
     formatWithContentModel(editor, apiName, model => {
         let segmentAndParagraphs = getSelectedSegmentsAndParagraphs(model, !!includingFormatHolder);
@@ -60,9 +63,11 @@ export function formatSegmentWithContentModel(
               )
             : false;
 
-        formatsAndSegments.forEach(([format, segment]) =>
-            toggleStyleCallback(format, !isTurningOff, segment)
+        formatsAndSegments.forEach(([format, segment, paragraph]) =>
+            toggleStyleCallback(format, !isTurningOff, segment, paragraph)
         );
+
+        afterFormatCallback?.(model);
 
         if (!pendingFormat && isCollapsedSelection) {
             const pos = editor.getFocusedPosition();

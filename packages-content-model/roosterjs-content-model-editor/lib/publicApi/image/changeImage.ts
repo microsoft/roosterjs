@@ -25,6 +25,7 @@ export default function changeImage(editor: IContentModelEditor, file: File) {
                     image.dataset = {};
                     image.format.width = '';
                     image.format.height = '';
+                    image.alt = '';
                 },
                 {
                     image: selection.image,

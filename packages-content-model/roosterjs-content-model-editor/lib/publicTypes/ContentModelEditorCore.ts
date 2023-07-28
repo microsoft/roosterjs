@@ -1,4 +1,4 @@
-import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -80,6 +80,11 @@ export interface ContentModelEditorCore extends EditorCore {
      * When reuse Content Model is allowed, we cache the Content Model object here after created
      */
     cachedModel?: ContentModelDocument;
+
+    /**
+     * Cached selection range ex. This range only exist when cached model exists and it has selection
+     */
+    cachedRangeEx?: SelectionRangeEx;
 
     /**
      * Default format used by Content Model. This is calculated from lifecycle.defaultFormat

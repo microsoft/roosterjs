@@ -33,14 +33,14 @@ describe('listItemThreadFormatHandler.parse', () => {
         const li = document.createElement('li');
 
         ul.appendChild(li);
-        context.listFormat.levels = [{}];
+        context.listFormat.levels = [{ listType: 'UL', dataset: {}, format: {} }];
 
         listItemThreadFormatHandler.parse(format, li, context, {});
 
         expect(format).toEqual({});
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
-            levels: [{}],
+            levels: [{ listType: 'UL', dataset: {}, format: {} }],
         });
     });
 
@@ -64,7 +64,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         const li = document.createElement('li');
 
         ol.appendChild(li);
-        context.listFormat.levels = [{}];
+        context.listFormat.levels = [{ listType: 'OL', format: {}, dataset: {} }];
         context.listFormat.threadItemCounts = [1];
 
         listItemThreadFormatHandler.parse(format, li, context, {});
@@ -72,7 +72,7 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(format).toEqual({});
         expect(context.listFormat).toEqual({
             threadItemCounts: [2],
-            levels: [{}],
+            levels: [{ listType: 'OL', format: {}, dataset: {} }],
         });
     });
 
@@ -84,7 +84,8 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [1];
@@ -97,6 +98,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -110,7 +113,8 @@ describe('listItemThreadFormatHandler.parse', () => {
         context.listFormat.levels = [
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [3, 2, 1];
@@ -123,6 +127,8 @@ describe('listItemThreadFormatHandler.parse', () => {
             levels: [
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -134,10 +140,11 @@ describe('listItemThreadFormatHandler.parse', () => {
 
         ol.appendChild(li);
         context.listFormat.levels = [
-            {},
+            { listType: 'UL', format: {}, dataset: {} },
             {
                 listType: 'OL',
-                startNumberOverride: 3,
+                format: { startNumberOverride: 3 },
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [3, 2, 1];
@@ -148,9 +155,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [3, 3],
             levels: [
-                {},
+                { listType: 'UL', format: {}, dataset: {} },
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });
@@ -163,9 +172,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         ol.appendChild(li);
         li.style.display = 'block';
         context.listFormat.levels = [
-            {},
+            { listType: 'UL', format: {}, dataset: {} },
             {
                 listType: 'OL',
+                format: {},
+                dataset: {},
             },
         ];
         context.listFormat.threadItemCounts = [1];
@@ -178,9 +189,11 @@ describe('listItemThreadFormatHandler.parse', () => {
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             levels: [
-                {},
+                { listType: 'UL', format: {}, dataset: {} },
                 {
                     listType: 'OL',
+                    format: {},
+                    dataset: {},
                 },
             ],
         });

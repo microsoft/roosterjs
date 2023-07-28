@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+        "strict": false,
+        "target": "es5",
+        "module": "commonjs",
+        "noEmit": true,
+        "sourceMap": true,
+        "inlineSources": true,
+        "declaration": true,
+        "removeComments": false,
+        "noImplicitAny": true,
+        "preserveConstEnums": true,
+        "noUnusedLocals": true,
+        "downlevelIteration": true,
+        "importHelpers": true,
+        "baseUrl": ".",
+        "paths": {
+            "*": ["*"]
+        },
+        "rootDir": "..",
+        "lib": ["es6", "dom"]
+    },
+    "include": ["./*/test/**/*.ts"]
+}
