@@ -19,7 +19,7 @@ export const listItemThreadFormatHandler: FormatHandler<ListThreadFormat> = {
             listFormat.levels.forEach(level => {
                 // Delete restart number so next list item doesn't need to have this value.
                 // Then it will be treated as a continuous list item to the previous one
-                delete level.startNumberOverride;
+                delete level.format.startNumberOverride;
             });
         }
     },

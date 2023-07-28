@@ -200,11 +200,17 @@ describe('cloneModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            textAlign: 'center',
+                            dataset: {},
+                            format: {
+                                textAlign: 'center',
+                            },
                         },
                         {
                             listType: 'UL',
-                            direction: 'rtl',
+                            dataset: {},
+                            format: {
+                                direction: 'rtl',
+                            },
                         },
                     ],
                     blocks: [

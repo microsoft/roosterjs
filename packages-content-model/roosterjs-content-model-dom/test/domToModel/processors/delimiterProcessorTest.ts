@@ -1,8 +1,10 @@
 import * as delimiterProcessorFile from '../../../lib/domToModel/processors/childProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { createRange } from 'roosterjs-editor-dom';
 import { delimiterProcessor } from '../../../lib/domToModel/processors/delimiterProcessor';
 import { DomToModelContext } from 'roosterjs-content-model-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('delimiterProcessor', () => {
     let context: DomToModelContext;
@@ -13,16 +15,56 @@ describe('delimiterProcessor', () => {
 
     it('Delimiter', () => {
         const doc = createContentModelDocument();
-        const br = document.createElement('span');
-        br.append(document.createTextNode(''));
+        const span = document.createElement('span');
+        span.append(document.createTextNode(''));
         spyOn(delimiterProcessorFile, 'handleRegularSelection');
 
-        delimiterProcessor(doc, br, context);
+        delimiterProcessor(doc, span, context);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
             blocks: [],
         });
-        expect(delimiterProcessorFile.handleRegularSelection).toHaveBeenCalledTimes(2);
+        expect(delimiterProcessorFile.handleRegularSelection).toHaveBeenCalledTimes(3);
+    });
+
+    it('Delimiter with selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const span = document.createElement('span');
+        const span2 = document.createElement('span');
+        const div = document.createElement('div');
+
+        span.appendChild(text);
+
+        div.appendChild(span);
+        div.appendChild(span2);
+
+        context.rangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [createRange(text, 0, span2, 0)],
+            areAllCollapsed: false,
+        };
+
+        delimiterProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    isImplicit: true,
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context.isInSelection).toBeTrue();
     });
 });

@@ -49,6 +49,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -61,6 +62,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -74,6 +76,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: html,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -87,6 +90,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -103,6 +107,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${type};base64,${stringValue}`,
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -118,6 +123,7 @@ describe('extractClipboardItems', () => {
             files: [file],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -138,6 +144,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -159,6 +166,7 @@ describe('extractClipboardItems', () => {
             files: [pdfFile, textFile],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -185,6 +193,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -222,6 +231,7 @@ describe('extractClipboardItems', () => {
             imageDataUri: `data:${imageType};base64,${stringValue1}`,
             rawHtml: html,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -240,6 +250,7 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: html,
             customValues: {},
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -265,6 +276,7 @@ describe('extractClipboardItems', () => {
             customValues: {
                 known: customInput,
             },
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -298,6 +310,7 @@ describe('extractClipboardItems', () => {
                 ['link-preview']: customValue,
             },
             linkPreview: linkPreview,
+            pasteNativeEvent: undefined,
         });
     });
 
@@ -311,6 +324,25 @@ describe('extractClipboardItems', () => {
             files: [],
             rawHtml: null,
             customValues: {},
+            pasteNativeEvent: undefined,
+        });
+    });
+
+    it('trigger from native', async () => {
+        const svg = '<svg>test</svg>';
+        const clipboardData = await extractClipboardItems(
+            [createStringItem('image/svg+xml', svg)],
+            undefined,
+            true
+        );
+        expect(clipboardData).toEqual({
+            types: [],
+            text: '',
+            image: null,
+            files: [],
+            rawHtml: null,
+            customValues: {},
+            pasteNativeEvent: true,
         });
     });
 });

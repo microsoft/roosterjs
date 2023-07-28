@@ -1,12 +1,9 @@
+import { ContentModelListLevel, ElementProcessor } from 'roosterjs-content-model-types';
+import { createListLevel } from '../../modelApi/creators/createListLevel';
+import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
-    ContentModelListItemLevelFormat,
-    DatasetFormat,
-    DomToModelContext,
-    ElementProcessor,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -23,11 +20,30 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
             paragraph: 'shallowCloneForGroup',
         },
         () => {
-            const level: ContentModelListItemLevelFormat = { ...context.blockFormat };
+            const level: ContentModelListLevel = createListLevel(
+                element.tagName as 'OL' | 'UL',
+                context.blockFormat
+            );
             const { listFormat } = context;
 
-            processMetadata(element, context, level);
-            parseFormat(element, context.formatParsers.listLevel, level, context);
+            parseFormat(element, context.formatParsers.dataset, level.dataset, context);
+            parseFormat(element, context.formatParsers.listLevel, level.format, context);
+
+            // TODO: Move this out into roosterjs-content-model-editor package
+            updateListMetadata(level, metadata => {
+                metadata = metadata || {};
+                parseFormat(element, [listLevelMetadataFormatHandler.parse], metadata, context);
+
+                if (
+                    typeof metadata.orderedStyleType == 'undefined' &&
+                    typeof metadata.unorderedStyleType == 'undefined'
+                ) {
+                    metadata = null;
+                }
+
+                return metadata;
+            });
+
             parseFormat(element, context.formatParsers.segment, context.segmentFormat, context);
 
             const originalListParent = listFormat.listParent;
@@ -44,16 +60,3 @@ export const listProcessor: ElementProcessor<HTMLOListElement | HTMLUListElement
         }
     );
 };
-
-function processMetadata(
-    element: HTMLOListElement | HTMLUListElement,
-    context: DomToModelContext,
-    level: ContentModelListItemLevelFormat
-) {
-    const dataset: DatasetFormat = {};
-    parseFormat(element, context.formatParsers.dataset, dataset, context);
-    updateListMetadata({ dataset }, metadata => {
-        Object.assign(level, metadata || {});
-        return null;
-    });
-}

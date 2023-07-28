@@ -94,7 +94,9 @@ describe('insertImage', () => {
                             {
                                 segmentType: 'Image',
                                 src: testUrl,
-                                format: {},
+                                format: {
+                                    backgroundColor: '',
+                                },
                                 dataset: {},
                             },
                             {
@@ -133,7 +135,9 @@ describe('insertImage', () => {
                             {
                                 segmentType: 'Image',
                                 src: testUrl,
-                                format: {},
+                                format: {
+                                    backgroundColor: '',
+                                },
                                 dataset: {},
                             },
                             {
@@ -179,6 +183,7 @@ describe('insertImage', () => {
                                 format: {
                                     fontFamily: 'Test',
                                     fontSize: '20px',
+                                    backgroundColor: '',
                                 },
                                 dataset: {},
                             },

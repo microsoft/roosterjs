@@ -1,6 +1,19 @@
 import * as iterateSelections from '../../../lib/modelApi/selection/iterateSelections';
 import { TableSelectionContext } from '../../../lib/publicTypes/selection/TableSelectionContext';
 import {
+    createContentModelDocument,
+    createDivider,
+    createEntity,
+    createFormatContainer,
+    createListItem,
+    createListLevel,
+    createParagraph,
+    createSelectionMarker,
+    createTable,
+    createTableCell,
+    createText,
+} from 'roosterjs-content-model-dom';
+import {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelBlockGroupType,
@@ -8,17 +21,6 @@ import {
     ContentModelSegment,
     ContentModelTable,
 } from 'roosterjs-content-model-types';
-import {
-    createContentModelDocument,
-    createDivider,
-    createEntity,
-    createFormatContainer,
-    createListItem,
-    createParagraph,
-    createSelectionMarker,
-    createTable,
-    createText,
-} from 'roosterjs-content-model-dom';
 import {
     getSelectedSegments,
     getSelectedParagraphs,
@@ -527,7 +529,10 @@ describe('getSelectedParagraphs', () => {
 });
 
 describe('getFirstSelectedTable', () => {
-    function runTest(selections: SelectionInfo[], expectedResult: ContentModelTable | undefined) {
+    function runTest(
+        selections: SelectionInfo[],
+        expectedResult: [ContentModelTable | undefined, ContentModelBlockGroup | undefined]
+    ) {
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             selections.forEach(({ path, tableContext, block, segments }) => {
                 callback(path, tableContext, block, segments);
@@ -542,7 +547,7 @@ describe('getFirstSelectedTable', () => {
     }
 
     it('Empty selection', () => {
-        runTest([], undefined);
+        runTest([], [undefined, undefined]);
     });
 
     it('Single table selection in context', () => {
@@ -560,7 +565,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            table
+            [table, undefined]
         );
     });
 
@@ -574,7 +579,7 @@ describe('getFirstSelectedTable', () => {
                     block: table,
                 },
             ],
-            table
+            [table, undefined]
         );
     });
 
@@ -595,7 +600,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            table1
+            [table1, undefined]
         );
     });
 
@@ -614,7 +619,7 @@ describe('getFirstSelectedTable', () => {
                     block: table2,
                 },
             ],
-            table1
+            [table1, undefined]
         );
     });
 
@@ -643,7 +648,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            table1
+            [table1, undefined]
         );
     });
 
@@ -662,8 +667,42 @@ describe('getFirstSelectedTable', () => {
                     block: table1,
                 },
             ],
-            table1
+            [table1, undefined]
         );
+    });
+
+    it('With parent, whole table is selected', () => {
+        const table1 = createTable(1);
+        const cell = createTableCell();
+        const doc = createContentModelDocument();
+
+        cell.isSelected = true;
+
+        table1.rows[0].cells.push(cell);
+        doc.blocks.push(table1);
+
+        const result = getFirstSelectedTable(doc);
+
+        expect(result).toEqual([table1, doc]);
+    });
+
+    it('With parent, things under table is selected', () => {
+        const table1 = createTable(1);
+        const cell = createTableCell();
+        const doc = createContentModelDocument();
+
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        para.segments.push(marker);
+        cell.blocks.push(para);
+
+        table1.rows[0].cells.push(cell);
+        doc.blocks.push(table1);
+
+        const result = getFirstSelectedTable(doc);
+
+        expect(result).toEqual([table1, doc]);
     });
 });
 
@@ -708,7 +747,7 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with list selection', () => {
         const group = createContentModelDocument();
-        const listItem = createListItem([{ listType: 'OL' }]);
+        const listItem = createListItem([createListLevel('OL')]);
         const para = createParagraph();
         const text = createText('test');
 
@@ -725,8 +764,8 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with multiple list selection', () => {
         const group = createContentModelDocument();
-        const listItem1 = createListItem([{ listType: 'OL' }]);
-        const listItem2 = createListItem([{ listType: 'OL' }]);
+        const listItem1 = createListItem([createListLevel('OL')]);
+        const listItem2 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('test1');
@@ -748,7 +787,7 @@ describe('getFirstSelectedListItem', () => {
 
     it('Group with selection that is not start from list', () => {
         const group = createContentModelDocument();
-        const listItem2 = createListItem([{ listType: 'OL' }]);
+        const listItem2 = createListItem([createListLevel('OL')]);
         const para1 = createParagraph();
         const para2 = createParagraph();
         const text1 = createText('test1');

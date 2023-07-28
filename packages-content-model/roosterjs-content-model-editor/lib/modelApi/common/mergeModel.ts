@@ -2,6 +2,7 @@ import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeTable } from '../table/normalizeTable';
 import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
@@ -22,6 +23,8 @@ import {
     ContentModelSegmentFormat,
     ContentModelTable,
 } from 'roosterjs-content-model-types';
+
+const HeadingTags = ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'];
 
 /**
  * @internal
@@ -131,6 +134,20 @@ function mergeParagraph(
 
     if (newPara.decorator) {
         newParagraph.decorator = { ...newPara.decorator };
+        if (HeadingTags.indexOf(newParagraph.decorator.tagName) > -1) {
+            const sourceKeys: (keyof ContentModelSegmentFormat)[] = getObjectKeys(
+                newParagraph.decorator.format
+            );
+            const segmentDecoratorKeys: (keyof ContentModelSegmentFormat)[] = getObjectKeys(
+                newParagraph.segmentFormat || {}
+            );
+
+            sourceKeys.forEach(key => {
+                if (segmentDecoratorKeys.indexOf(key) > -1) {
+                    delete newParagraph.segmentFormat?.[key];
+                }
+            });
+        }
     }
 
     if (!mergeToCurrentParagraph) {

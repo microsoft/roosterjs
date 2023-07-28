@@ -75,7 +75,7 @@ function parseExports(exports) {
     }
 }
 
-function defaultExternalHandler(_, __, callback) {
+function defaultExternalHandler(_, callback) {
     callback();
 }
 
@@ -86,7 +86,7 @@ function parseFrom(from, currentFileName, baseDir, projDir, externalHandler) {
         var currentPath = path.dirname(currentFileName);
         importFileName = path.resolve(currentPath, from + '.d.ts');
     } else {
-        (externalHandler || defaultExternalHandler)(null, from, (_, replacement) => {
+        (externalHandler || defaultExternalHandler)({ request: from }, (_, replacement) => {
             if (replacement) {
                 replacedName = replacement;
             } else if (AllowedCrossPackageImport[from]) {

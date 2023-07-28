@@ -21,5 +21,8 @@ export const setContentModel: SetContentModel = (core, model, option) => {
 
     if (!core.lifecycle.shadowEditFragment) {
         core.api.select(core, range);
+        core.cachedRangeEx = range || undefined;
     }
+
+    return range;
 };
