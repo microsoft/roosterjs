@@ -25,8 +25,12 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
     const snapshot = core.undo.snapshotsService.move(step);
 
     if (snapshot && snapshot.html != null) {
+        const originalIsNested = core.undo.isNested;
+
         try {
             core.undo.isRestoring = true;
+            core.undo.isNested = true;
+
             core.api.setContent(
                 core,
                 snapshot.html,
@@ -68,6 +72,7 @@ export const restoreUndoSnapshot: RestoreUndoSnapshot = (core: EditorCore, step:
             });
         } finally {
             core.undo.isRestoring = false;
+            core.undo.isNested = originalIsNested;
         }
     }
 };
