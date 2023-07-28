@@ -78,6 +78,10 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         if (!ev.domToModelOption) {
             return;
         }
+
+        ev.customizedMerge = (target, source) => {
+            console.log('customizedMerge');
+        };
         const pasteSource = getPasteSource(event, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:

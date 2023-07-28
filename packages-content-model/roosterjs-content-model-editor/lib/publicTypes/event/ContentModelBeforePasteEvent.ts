@@ -16,9 +16,7 @@ export interface ContentModelBeforePasteEventData extends BeforePasteEventData {
     /**
      * customizedMerge Customized merge function to use when merging the paste fragment into the editor
      */
-    customizedMerge: {
-        customMerge?: (target: ContentModelDocument, source: ContentModelDocument) => void;
-    };
+    customizedMerge?: (target: ContentModelDocument, source: ContentModelDocument) => void;
 }
 
 /**
