@@ -8,12 +8,14 @@ import { handleRegularSelection } from './childProcessor';
  * @param element
  * @param context
  */
-export const delimiterProcessor: ElementProcessor<HTMLSpanElement> = (group, element, context) => {
+export const delimiterProcessor: ElementProcessor<Node> = (group, element, context) => {
     let index = 0;
     const [nodeStartOffset, nodeEndOffset] = getRegularSelectionOffsets(context, element);
 
     for (let child = element.firstChild; child; child = child.nextSibling) {
         handleRegularSelection(index, context, group, nodeStartOffset, nodeEndOffset);
+
+        delimiterProcessor(group, child, context);
         index++;
     }
 
