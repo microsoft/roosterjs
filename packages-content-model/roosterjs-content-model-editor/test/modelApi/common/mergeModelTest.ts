@@ -6,6 +6,7 @@ import {
     createContentModelDocument,
     createDivider,
     createListItem,
+    createListLevel,
     createParagraph,
     createSelectionMarker,
     createTable,
@@ -252,8 +253,8 @@ describe('mergeModel', () => {
         const majorModel = createContentModelDocument();
         const sourceModel = createContentModelDocument();
 
-        const list1 = createListItem([{ listType: 'OL' }]);
-        const list2 = createListItem([{ listType: 'OL' }]);
+        const list1 = createListItem([createListLevel('OL')]);
+        const list2 = createListItem([createListLevel('OL')]);
 
         const para1 = createParagraph();
         const para2 = createParagraph();
@@ -320,6 +321,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -348,6 +351,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -386,6 +391,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            format: {},
+                            dataset: {},
                         },
                     ],
                     formatHolder: {
@@ -418,8 +425,8 @@ describe('mergeModel', () => {
         const newText2 = createText('newText2');
         const newPara3 = createParagraph();
         const newText3 = createText('newText3');
-        const newList1 = createListItem([{ listType: 'OL' }]);
-        const newList2 = createListItem([{ listType: 'OL' }]);
+        const newList1 = createListItem([createListLevel('OL')]);
+        const newList2 = createListItem([createListLevel('OL')]);
 
         newPara1.segments.push(newText1);
         newPara2.segments.push(newText2);
@@ -456,6 +463,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -495,6 +504,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -534,10 +545,18 @@ describe('mergeModel', () => {
         const text21 = createText('test21');
         const text22 = createText('test22');
         const list1 = createListItem([
-            { listType: 'OL', startNumberOverride: 1, unorderedStyleType: 2 },
+            createListLevel(
+                'OL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 1, unorderedStyleType: 2 }) }
+            ),
         ]);
         const list2 = createListItem([
-            { listType: 'OL', startNumberOverride: 1, unorderedStyleType: 2 },
+            createListLevel(
+                'OL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 1, unorderedStyleType: 2 }) }
+            ),
         ]);
 
         para1.segments.push(text11);
@@ -558,11 +577,23 @@ describe('mergeModel', () => {
         const newPara2 = createParagraph();
         const newText2 = createText('newText2');
         const newList1 = createListItem([
-            { listType: 'UL', startNumberOverride: 3, unorderedStyleType: 4 },
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
         ]);
         const newList2 = createListItem([
-            { listType: 'UL', startNumberOverride: 3, unorderedStyleType: 4 },
-            { listType: 'UL', startNumberOverride: 5, unorderedStyleType: 6 },
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 3, unorderedStyleType: 4 }) }
+            ),
+            createListLevel(
+                'UL',
+                {},
+                { editingInfo: JSON.stringify({ startNumberOverride: 5, unorderedStyleType: 6 }) }
+            ),
         ]);
 
         newPara1.segments.push(newText1);
@@ -598,8 +629,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -628,8 +664,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -658,13 +699,23 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                         {
                             listType: 'UL',
-                            startNumberOverride: 5,
-                            unorderedStyleType: 6,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 5,
+                                    unorderedStyleType: 6,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -698,8 +749,13 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
-                            startNumberOverride: 1,
-                            unorderedStyleType: 2,
+                            dataset: {
+                                editingInfo: JSON.stringify({
+                                    startNumberOverride: 1,
+                                    unorderedStyleType: 2,
+                                }),
+                            },
+                            format: {},
                         },
                     ],
                     formatHolder: {
@@ -1584,6 +1640,8 @@ describe('mergeModel', () => {
                     levels: [
                         {
                             listType: 'OL',
+                            dataset: {},
+                            format: {},
                         },
                     ],
                     blocks: [
@@ -1633,7 +1691,7 @@ describe('mergeModel', () => {
                         isSelected: true,
                         segmentType: 'SelectionMarker',
                     },
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     blocks: [
                         {
                             blockType: 'Paragraph',
@@ -1966,6 +2024,347 @@ describe('mergeModel', () => {
                 },
             ],
             format: MockedFormat,
+        });
+    });
+
+    it('Merge Table + Paragraph', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 22,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Br',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {
+                                        borderTop: '1px solid rgb(171, 171, 171)',
+                                        borderRight: '1px solid rgb(171, 171, 171)',
+                                        borderBottom: '1px solid rgb(171, 171, 171)',
+                                        borderLeft: '1px solid rgb(171, 171, 171)',
+                                        width: '120px',
+                                        height: '22px',
+                                        useBorderBox: true,
+                                    },
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [120, 120, 120],
+                    dataset: {
+                        editingInfo:
+                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {
+                                fontFamily: 'Calibri',
+                                fontSize: '11pt',
+                                textColor: 'black',
+                                fontWeight: 'bold',
+                            },
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Merge Paragraph with default format and a Heading element', () => {
+        const majorModel = createContentModelDocument();
+        const sourceModel = createContentModelDocument();
+
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const heading = createParagraph(false, undefined, undefined, {
+            tagName: 'h1',
+            format: {
+                fontFamily: 'Calibri',
+                fontSize: '16pt',
+                textColor: 'aliceblue',
+                italic: true,
+            },
+        });
+        heading.segments.push(createText('sourceTest1'), createText('sourceTest2'));
+
+        sourceModel.blocks.push(heading);
+
+        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        { segmentType: 'Text', text: 'test1', format: {} },
+                        { segmentType: 'Text', text: 'sourceTest1', format: {} },
+                        { segmentType: 'Text', text: 'sourceTest2', format: {} },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'h1',
+                        format: {
+                            fontFamily: 'Calibri',
+                            fontSize: '16pt',
+                            textColor: 'aliceblue',
+                            italic: true,
+                        },
+                    },
+                    segmentFormat: { backgroundColor: 'red' },
+                },
+            ],
         });
     });
 });

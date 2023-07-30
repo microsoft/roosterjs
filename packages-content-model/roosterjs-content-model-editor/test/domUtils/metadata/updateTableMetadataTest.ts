@@ -62,6 +62,7 @@ describe('updateTableMetadata', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
+            verticalAlign: 'top',
         };
         const table: ContentModelTable = {
             blockType: 'Table',
@@ -101,6 +102,7 @@ describe('updateTableMetadata', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
+            verticalAlign: 'top',
         };
         const table: ContentModelTable = {
             blockType: 'Table',
@@ -143,6 +145,7 @@ describe('updateTableMetadata', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
+            verticalAlign: 'top',
         };
         const table: ContentModelTable = {
             blockType: 'Table',
@@ -190,6 +193,7 @@ describe('updateTableMetadata', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
+            verticalAlign: 'top',
         };
         const table: ContentModelTable = {
             blockType: 'Table',
@@ -261,6 +265,7 @@ describe('updateTableMetadata', () => {
             bgColorEven: 'yellow',
             bgColorOdd: 'gray',
             tableBorderFormat: TableBorderFormat.DEFAULT,
+            verticalAlign: 'top',
         };
         const table: ContentModelTable = {
             blockType: 'Table',

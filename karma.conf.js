@@ -24,7 +24,6 @@ const allPreprocessors = Object.keys(testEntries).reduce((value, entry) => {
     return value;
 }, {});
 
-const path = require('path');
 const rootPath = __dirname;
 
 module.exports = function (config) {
@@ -50,6 +49,23 @@ module.exports = function (config) {
         launcher.push('Firefox');
     }
 
+    const tsConfig = {
+        compilerOptions: {
+            rootDir: rootPath,
+            declaration: false,
+            strict: false,
+            downlevelIteration: true,
+            paths: {
+                '*': [
+                    '*',
+                    rootPath + '/packages/*',
+                    rootPath + '/packages-ui/*',
+                    rootPath + '/packages-content-model/*',
+                ],
+            },
+        },
+    };
+
     const rules = runCoverage
         ? [
               {
@@ -58,30 +74,21 @@ module.exports = function (config) {
                       { loader: '@jsdevtools/coverage-istanbul-loader' },
                       {
                           loader: 'ts-loader',
-                          options: {
-                              compilerOptions: {
-                                  rootDir: rootPath,
-                                  declaration: false,
-                              },
-                          },
+                          options: tsConfig,
                       },
                   ],
               },
               {
                   test: /test(\\|\/).*\.ts$/,
                   loader: 'ts-loader',
-                  options: {
-                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
-                  },
+                  options: tsConfig,
               },
           ]
         : [
               {
                   test: /\.ts$/,
                   loader: 'ts-loader',
-                  options: {
-                      compilerOptions: { rootDir: rootPath, strict: false, declaration: false },
-                  },
+                  options: tsConfig,
               },
           ];
 
@@ -111,6 +118,7 @@ module.exports = function (config) {
 
         webpack: {
             mode: 'development',
+            devtool: 'inline-source-map',
             module: {
                 rules,
             },
@@ -123,8 +131,10 @@ module.exports = function (config) {
                     './node_modules',
                 ],
             },
-            output: {
-                path: path.join(__dirname, 'dist/karma'),
+            // Workaround karma-webpack issue https://github.com/ryanclark/karma-webpack/issues/493
+            // Got this solution from https://github.com/ryanclark/karma-webpack/issues/493#issuecomment-780411348
+            optimization: {
+                splitChunks: false,
             },
         },
 

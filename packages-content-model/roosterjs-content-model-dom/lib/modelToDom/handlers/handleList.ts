@@ -1,10 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
+import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
 import {
     ContentModelBlockHandler,
     ContentModelListItem,
-    ContentModelListItemLevelFormat,
-    DatasetFormat,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
@@ -34,9 +33,8 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         if (
             stackLevel.listType != itemLevel.listType ||
-            stackLevel.orderedStyleType != itemLevel.orderedStyleType ||
-            stackLevel.unorderedStyleType != itemLevel.unorderedStyleType ||
-            (itemLevel.listType == 'OL' && typeof itemLevel.startNumberOverride === 'number')
+            stackLevel.dataset?.editingInfo != itemLevel.dataset.editingInfo ||
+            (itemLevel.listType == 'OL' && typeof itemLevel.format.startNumberOverride === 'number')
         ) {
             break;
         }
@@ -53,9 +51,23 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
 
-        applyFormat(newList, context.formatAppliers.listLevel, level, context);
+        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
 
-        handleMetadata(level, newList, context);
+        // TODO: Move this out into roosterjs-content-model-editor package
+        updateListMetadata(level, metadata => {
+            applyFormat(newList, [listLevelMetadataFormatHandler.apply], metadata || {}, context);
+
+            if (
+                metadata &&
+                typeof metadata.orderedStyleType == 'undefined' &&
+                typeof metadata.unorderedStyleType == 'undefined'
+            ) {
+                metadata = null;
+            }
+
+            return metadata;
+        });
+        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 
         nodeStack.push({ node: newList, ...level });
 
@@ -64,21 +76,3 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
     return refNode;
 };
-
-function handleMetadata(
-    level: ContentModelListItemLevelFormat,
-    newList: HTMLElement,
-    context: ModelToDomContext
-) {
-    const dataset: DatasetFormat = {};
-
-    updateListMetadata({ dataset }, () =>
-        typeof level.orderedStyleType === 'number' || typeof level.unorderedStyleType === 'number'
-            ? {
-                  orderedStyleType: level.orderedStyleType,
-                  unorderedStyleType: level.unorderedStyleType,
-              }
-            : null
-    );
-    applyFormat(newList, context.formatAppliers.dataset, dataset, context);
-}

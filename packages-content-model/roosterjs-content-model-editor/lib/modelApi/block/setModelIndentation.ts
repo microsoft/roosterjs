@@ -1,10 +1,10 @@
+import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import { parseValueWithUnit } from 'roosterjs-content-model-dom';
 import {
     ContentModelDocument,
     ContentModelListItem,
-    ContentModelListItemLevelFormat,
+    ContentModelListLevel,
 } from 'roosterjs-content-model-types';
 
 const IndentStepInPixel = 40;
@@ -27,14 +27,14 @@ export function setModelIndentation(
     paragraphOrListItem.forEach(({ block }) => {
         if (isBlockGroupOfType<ContentModelListItem>(block, 'ListItem')) {
             if (isIndent) {
-                const newLevel: ContentModelListItemLevelFormat = {
-                    ...block.levels[block.levels.length - 1],
-                };
+                const lastLevel = block.levels[block.levels.length - 1];
+                const newLevel: ContentModelListLevel = createListLevel(
+                    lastLevel?.listType || 'UL',
+                    lastLevel?.format
+                );
 
                 // New level is totally new, no need to have these attributes for now
-                delete newLevel.startNumberOverride;
-                delete newLevel.orderedStyleType;
-                delete newLevel.unorderedStyleType;
+                delete newLevel.format.startNumberOverride;
 
                 block.levels.push(newLevel);
             } else {

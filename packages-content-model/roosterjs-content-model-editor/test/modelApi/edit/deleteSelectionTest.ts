@@ -4650,4 +4650,46 @@ describe('deleteSelection - backward', () => {
             ],
         });
     });
+
+    it('Delete under an implicit paragraph', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text1 = createText('t');
+
+        para.isImplicit = true;
+        para.segments.push(text1, marker);
+        model.blocks.push(para);
+
+        const result = deleteSelection(model, onDeleteEntityMock, [
+            backwardDeleteCollapsedSelection,
+        ]);
+
+        expect(result.deleteResult).toBe(DeleteResult.SingleChar);
+
+        expect(result.insertPoint).toEqual({
+            marker: marker,
+            paragraph: para,
+            path: [model],
+            tableContext: undefined,
+        });
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    isImplicit: false,
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });

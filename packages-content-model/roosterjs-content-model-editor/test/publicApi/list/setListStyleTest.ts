@@ -58,7 +58,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -95,7 +95,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -126,7 +126,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -153,7 +153,13 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
+                            format: {},
+                        },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -186,8 +192,16 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [
-                        { listType: 'OL', startNumberOverride: 1 },
-                        { listType: 'UL', unorderedStyleType: 3 },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ startNumberOverride: 1 }) },
+                            format: {},
+                        },
+                        {
+                            listType: 'UL',
+                            dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) },
+                            format: {},
+                        },
                     ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
@@ -216,8 +230,16 @@ describe('setListStyle', () => {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
                     levels: [
-                        { listType: 'OL', startNumberOverride: 1 },
-                        { listType: 'UL', unorderedStyleType: 4 },
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ startNumberOverride: 1 }) },
+                            format: {},
+                        },
+                        {
+                            listType: 'UL',
+                            dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 4 }) },
+                            format: {},
+                        },
                     ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
@@ -250,7 +272,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -270,7 +292,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -291,7 +313,7 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL' }],
+                    levels: [{ listType: 'OL', dataset: {}, format: {} }],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -317,7 +339,13 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
+                            format: {},
+                        },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -337,7 +365,13 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
+                            format: {},
+                        },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {
@@ -358,7 +392,13 @@ describe('setListStyle', () => {
                 {
                     blockType: 'BlockGroup',
                     blockGroupType: 'ListItem',
-                    levels: [{ listType: 'OL', orderedStyleType: 2 }],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            dataset: { editingInfo: JSON.stringify({ orderedStyleType: 2 }) },
+                            format: {},
+                        },
+                    ],
                     formatHolder: { segmentType: 'SelectionMarker', isSelected: true, format: {} },
                     blocks: [
                         {

@@ -31,6 +31,7 @@ import { italicButton } from './italicButton';
 import { listStartNumberButton } from './listStartNumberButton';
 import { ltrButton } from './ltrButton';
 import { numberedListButton } from './numberedListButton';
+import { pasteButton } from './pasteButton';
 import { popout } from '../popout';
 import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
@@ -109,6 +110,7 @@ const buttons = [
     spacingButton,
     spaceBeforeButton,
     spaceAfterButton,
+    pasteButton,
 ];
 
 export default function ContentModelRibbon(props: {
