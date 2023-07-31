@@ -133,8 +133,6 @@ function createBeforePasteEventAndFragment(
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData
 ) {
-    // Step 1: Trigger BeforePasteEvent so that plugins can do proper change before paste
-    // and create the proper fragment for paste
     const event = {
         eventType: PluginEventType.BeforePaste,
         ...eventData,
@@ -162,13 +160,14 @@ function createBeforePasteEventAndFragment(
         handleTextPaste(text, position, fragment);
     }
 
+    // Step 5: Trigger BeforePasteEvent so that plugins can do proper change before paste
     const pluginEvent = editor.triggerPluginEvent(
         PluginEventType.BeforePaste,
         eventData,
         true /* broadcast */
     ) as ContentModelBeforePasteEvent;
 
-    // Step 4. Sanitize the fragment before paste to make sure the content is safe
+    // Step 5. Sanitize the fragment before paste to make sure the content is safe
     sanitizePasteContent(event, position);
 
     return { fragment, pluginEvent };
