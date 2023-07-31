@@ -50,7 +50,6 @@ export default function createTableSelector(
     const container = contentDiv ?? document.body;
 
     container.appendChild(div);
-    const setDivPosition = container == document.body ? setBodyDivPosition : setBodyDivPosition;
     const context: TableSelectorContext = {
         table,
         zoomScale,
@@ -58,7 +57,7 @@ export default function createTableSelector(
         isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 
-    setDivPosition(context, div, container);
+    setBodyDivPosition(context, div, container);
 
     const onDragEnd = (context: TableSelectorContext, event: MouseEvent): false => {
         if (event.target == div) {
@@ -70,7 +69,7 @@ export default function createTableSelector(
     const featureHandler = new TableSelectorFeature(
         div,
         context,
-        setDivPosition,
+        setBodyDivPosition,
         {
             onDragEnd,
         },
@@ -122,27 +121,6 @@ class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, Table
             this.div.removeEventListener('mouseout', this.onMouseOut);
         }
         this.onMouseOut = null;
-    }
-}
-
-function setSelectorDivPosition(
-    context: TableSelectorContext,
-    trigger: HTMLElement,
-    container?: HTMLElement
-) {
-    const { rect, zoomScale } = context;
-    const containerRect = container && normalizeRect(container.getBoundingClientRect());
-    if (rect && containerRect) {
-        trigger.style.scale = `${1 / zoomScale}`;
-
-        trigger.style.transformOrigin = 'top left';
-        trigger.style.left = `${
-            (rect.left - containerRect.left - TABLE_SELECTOR_LENGTH - 1) / zoomScale
-        }px`;
-
-        trigger.style.top = `${
-            (rect.top - containerRect.top - TABLE_SELECTOR_LENGTH - 1) / zoomScale
-        }px`;
     }
 }
 

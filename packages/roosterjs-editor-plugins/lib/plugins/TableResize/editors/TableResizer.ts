@@ -40,7 +40,6 @@ export default function createTableResizer(
     const container = contentDiv ?? document.body;
 
     container.appendChild(div);
-    const setDivPosition = container == document.body ? setBodyDivPosition : setBodyDivPosition;
 
     const context: DragAndDropContext = {
         isRTL,
@@ -49,12 +48,12 @@ export default function createTableResizer(
         onStart,
     };
 
-    setDivPosition(context, div, container);
+    setBodyDivPosition(context, div, container);
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        setDivPosition,
+        setBodyDivPosition,
         {
             onDragStart,
             onDragging,
@@ -141,29 +140,6 @@ function onDragging(
         return true;
     } else {
         return false;
-    }
-}
-
-function setResizeDivPosition(
-    context: DragAndDropContext,
-    trigger: HTMLElement,
-    container?: HTMLElement
-) {
-    const { table, isRTL, zoomScale } = context;
-    const rect = normalizeRect(table.getBoundingClientRect());
-    const containerRect = container && normalizeRect(container.getBoundingClientRect());
-
-    if (rect && containerRect) {
-        trigger.style.scale = `${1 / zoomScale}`;
-        trigger.style.transformOrigin = 'top left';
-        if (isRTL) {
-            trigger.style.left = `${
-                (rect.left - containerRect.left - TABLE_RESIZER_LENGTH - 1) / zoomScale
-            }px`;
-        } else {
-            trigger.style.left = `${(rect.right - containerRect.left - 1) / zoomScale}px`;
-        }
-        trigger.style.top = `${(rect.bottom - containerRect.top - 1) / zoomScale}px`;
     }
 }
 
