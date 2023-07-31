@@ -1,4 +1,4 @@
-import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -82,6 +82,11 @@ export interface ContentModelEditorCore extends EditorCore {
     cachedModel?: ContentModelDocument;
 
     /**
+     * Cached selection range ex. This range only exist when cached model exists and it has selection
+     */
+    cachedRangeEx?: SelectionRangeEx;
+
+    /**
      * Default format used by Content Model. This is calculated from lifecycle.defaultFormat
      */
     defaultFormat: ContentModelSegmentFormat;
@@ -95,11 +100,6 @@ export interface ContentModelEditorCore extends EditorCore {
      * Default Content Model to DOM options
      */
     defaultModelToDomOptions: ModelToDomOption;
-
-    /**
-     * Whether reuse Content Model is allowed
-     */
-    reuseModel: boolean;
 
     /**
      * Whether adding delimiter for entity is allowed

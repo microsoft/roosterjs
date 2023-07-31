@@ -27,7 +27,7 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelFormatPlugin implements EditorPlugin {
+export default class ContentModelPastePlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**

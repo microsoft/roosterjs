@@ -518,7 +518,7 @@ describe('listProcessor process metadata', () => {
                 {
                     listType: 'OL',
                     format: {},
-                    dataset: { editingInfo: metadata },
+                    dataset: {},
                 },
             ]);
         });
@@ -571,7 +571,7 @@ describe('listProcessor process metadata', () => {
             expect(context.listFormat.levels).toEqual([
                 {
                     listType: 'OL',
-                    dataset: { editingInfo },
+                    dataset: {},
                     format: {},
                 },
             ]);

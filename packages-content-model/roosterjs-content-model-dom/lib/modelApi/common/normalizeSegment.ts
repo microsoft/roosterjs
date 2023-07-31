@@ -1,4 +1,4 @@
-import { hasSpacesOnly } from '../../domUtils/stringUtil';
+import { hasSpacesOnly } from './hasSpacesOnly';
 import {
     ContentModelParagraph,
     ContentModelSegment,
