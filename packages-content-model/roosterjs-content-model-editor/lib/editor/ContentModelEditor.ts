@@ -53,7 +53,7 @@ export default class ContentModelEditor
     cacheContentModel(model: ContentModelDocument | null) {
         const core = this.getCore();
 
-        if (core.reuseModel && !core.lifecycle.shadowEditFragment) {
+        if (!core.lifecycle.shadowEditFragment) {
             core.cachedModel = model || undefined;
             core.cachedRangeEx = undefined;
         }
