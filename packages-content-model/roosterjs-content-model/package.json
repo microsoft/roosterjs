@@ -8,6 +8,7 @@
         "roosterjs-editor-core": "",
         "roosterjs-content-model-types": "",
         "roosterjs-content-model-dom": "",
+        "roosterjs-content-model-core": "",
         "roosterjs-content-model-editor": "",
         "roosterjs-color-utils": ""
     },
