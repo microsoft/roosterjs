@@ -42,6 +42,7 @@ export { default as setListStartNumber } from './publicApi/list/setListStartNumb
 export { default as hasSelectionInBlock } from './publicApi/selection/hasSelectionInBlock';
 export { default as hasSelectionInSegment } from './publicApi/selection/hasSelectionInSegment';
 export { default as hasSelectionInBlockGroup } from './publicApi/selection/hasSelectionInBlockGroup';
+export { default as getSelectedSegments } from './publicApi/selection/getSelectedSegments';
 export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';

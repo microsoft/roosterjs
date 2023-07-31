@@ -1,7 +1,7 @@
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData, PasteType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -50,11 +50,33 @@ describe('Paste ', () => {
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
+            clipboardData,
+            fragment: document.createDocumentFragment(),
+            sanitizingOption: {
+                elementCallbacks: {},
+                attributeCallbacks: {},
+                cssStyleCallbacks: {},
+                additionalTagReplacements: {},
+                additionalAllowedAttributes: [],
+                additionalAllowedCssClasses: [],
+                additionalDefaultStyleValues: {},
+                additionalGlobalStyleNodes: [],
+                additionalPredefinedCssForElement: {},
+                preserveHtmlComments: false,
+                unknownTagReplacement: null,
+            },
+            htmlBefore: '',
+            htmlAfter: '',
+            htmlAttributes: {},
+            domToModelOption: {},
+            pasteType: PasteType.Normal,
+        });
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
+
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
 
         editor = ({
