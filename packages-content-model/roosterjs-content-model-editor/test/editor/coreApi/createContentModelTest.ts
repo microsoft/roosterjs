@@ -41,80 +41,9 @@ describe('createContentModel', () => {
         } as any) as ContentModelEditorCore;
     });
 
-    it('Not reuse model, no shadow edit', () => {
-        const option: DomToModelOption = { disableCacheElement: true };
-
-        const model = createContentModel(core, option);
-
-        expect(createEditorContext).toHaveBeenCalledWith(core);
-        expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(
-            mockedDiv,
-            {
-                ...option,
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            mockedEditorContext,
-            null
-        );
-        expect(model).toBe(mockedModel);
-    });
-
-    it('Not reuse model, no shadow edit, with default options', () => {
-        const defaultOption = { o: 'OPTION', disableCacheElement: true } as any;
-        const option: DomToModelOption = {};
-
-        core.defaultDomToModelOptions = defaultOption;
-
-        const model = createContentModel(core, option);
-
-        expect(createEditorContext).toHaveBeenCalledWith(core);
-        expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(
-            mockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-                ...defaultOption,
-            },
-            mockedEditorContext,
-            null
-        );
-        expect(model).toBe(mockedModel);
-    });
-
-    it('Not reuse model, no shadow edit, with default options and additional option', () => {
-        const defaultOption = { o: 'OPTION', disableCacheElement: true } as any;
-        const additionalOption = { o: 'OPTION1', o2: 'OPTION2' } as any;
-
-        core.defaultDomToModelOptions = defaultOption;
-
-        const model = createContentModel(core, additionalOption);
-
-        expect(createEditorContext).toHaveBeenCalledWith(core);
-        expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(
-            mockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-                ...defaultOption,
-                ...additionalOption,
-            },
-            mockedEditorContext,
-            null
-        );
-        expect(model).toBe(mockedModel);
-    });
-
     it('Reuse model, no cache, no shadow edit', () => {
         const option: DomToModelOption = { disableCacheElement: false };
 
-        core.reuseModel = true;
         core.cachedModel = undefined;
 
         const model = createContentModel(core, option);
@@ -137,9 +66,6 @@ describe('createContentModel', () => {
 
     it('Reuse model, no shadow edit', () => {
         const option: DomToModelOption = {};
-
-        core.reuseModel = true;
-
         const model = createContentModel(core, option);
 
         expect(createEditorContext).not.toHaveBeenCalled();
@@ -151,7 +77,6 @@ describe('createContentModel', () => {
     it('Reuse model, with cache, with shadow edit', () => {
         const option: DomToModelOption = {};
 
-        core.reuseModel = true;
         core.lifecycle.shadowEditFragment = {} as any;
 
         const model = createContentModel(core, option);
@@ -206,7 +131,6 @@ describe('createContentModel with selection', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             undefined,
             {
@@ -239,7 +163,6 @@ describe('createContentModel with selection', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             undefined,
             {
@@ -270,7 +193,6 @@ describe('createContentModel with selection', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             undefined,
             {
@@ -295,7 +217,6 @@ describe('createContentModel with selection', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             undefined,
             {
@@ -319,7 +240,6 @@ describe('createContentModel with selection', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             undefined,
             {
