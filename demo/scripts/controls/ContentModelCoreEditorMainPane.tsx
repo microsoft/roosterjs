@@ -10,8 +10,8 @@ import MainPaneBase from './MainPaneBase';
 import SidePane from './sidePane/SidePane';
 import SnapshotPlugin from './sidePane/snapshot/SnapshotPlugin';
 import TitleBar from './titleBar/TitleBar';
+import { ContentModelEditor2 } from 'roosterjs-content-model-core';
 import { ContentModelRibbonPlugin } from './ribbonButtons/contentModel/ContentModelRibbonPlugin';
-import { CoreEditor } from 'roosterjs-content-model-core';
 import { EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 import { PartialTheme } from '@fluentui/react/lib/Theme';
 import { RibbonPlugin } from 'roosterjs-react';
@@ -163,7 +163,7 @@ class ContentModelCoreEditorMainPane extends MainPaneBase {
         // this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new CoreEditor(div) as any,
+                new ContentModelEditor2(div) as any,
         });
     }
 
