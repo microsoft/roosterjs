@@ -53,7 +53,7 @@ export default function paste(
         getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage)
     );
 
-    const { pluginEvent, fragment } = createBeforePasteEventAndFragment(
+    const { pluginEvent, fragment } = triggerPluginEventAndCreatePasteFragment(
         editor,
         clipboardData,
         null /* position */,
@@ -125,14 +125,18 @@ function createBeforePasteEventData(
     };
 }
 
-function createBeforePasteEventAndFragment(
+/**
+ * This function is used to create a BeforePasteEvent object after trigger the event, so other plugins can modify the event object
+ * This function will also create a DocumentFragment for paste.
+ */
+function triggerPluginEventAndCreatePasteFragment(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
     position: NodePosition | null,
     pasteAsText: boolean,
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData
-) {
+): { pluginEvent: ContentModelBeforePasteEvent; fragment: DocumentFragment } {
     const event = {
         eventType: PluginEventType.BeforePaste,
         ...eventData,
