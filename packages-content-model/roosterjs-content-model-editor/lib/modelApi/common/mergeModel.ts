@@ -233,6 +233,20 @@ function mergeList(markerPosition: InsertPoint, newList: ContentModelListItem) {
         listItem?.levels.forEach((level, i) => {
             newList.levels[i] = { ...level };
         });
+    } else {
+        const paragraphIndex = listParent.blocks.indexOf(newList);
+        const elementBeforePara = listParent.blocks[paragraphIndex - 1];
+
+        if (
+            elementBeforePara?.blockType !== 'BlockGroup' ||
+            elementBeforePara.blockGroupType !== 'ListItem'
+        ) {
+            newList.levels.some(level => {
+                if (level.format.startNumberOverride == undefined) {
+                    level.format.startNumberOverride = 1;
+                }
+            });
+        }
     }
 }
 
@@ -251,7 +265,12 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
     }
 
     if (paraIndex >= 0) {
-        path[0].blocks.splice(paraIndex + 1, 0, newParagraph);
+        const shouldRemovePara = paragraph.segments.length == 0;
+        path[0].blocks.splice(
+            shouldRemovePara ? paraIndex : paraIndex + 1,
+            shouldRemovePara ? 1 : 0,
+            newParagraph
+        );
     }
 
     const listItemIndex = getClosestAncestorBlockGroupIndex(
