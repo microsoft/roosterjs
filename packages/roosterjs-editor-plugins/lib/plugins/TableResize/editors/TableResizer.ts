@@ -25,7 +25,7 @@ export default function createTableResizer(
     const isRTL = getComputedStyle(table, 'direction') == 'rtl';
     const createElementData = {
         tag: 'div',
-        style: `position: absolute; cursor: ${
+        style: `position: fixed; cursor: ${
             isRTL ? 'ne' : 'nw'
         }-resize; user-select: none; border: 1px solid #808080`,
     };
@@ -40,7 +40,7 @@ export default function createTableResizer(
     const container = contentDiv ?? document.body;
 
     container.appendChild(div);
-    const setDivPosition = container == document.body ? setBodyDivPosition : setResizeDivPosition;
+    const setDivPosition = container == document.body ? setBodyDivPosition : setBodyDivPosition;
 
     const context: DragAndDropContext = {
         isRTL,

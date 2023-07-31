@@ -36,8 +36,7 @@ export default function createTableSelector(
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
-        style:
-            'position: absolute; cursor: all-scroll; user-select: none; border: 1px solid #808080',
+        style: 'position: fixed; cursor: all-scroll; user-select: none; border: 1px solid #808080',
     };
 
     onShowHelperElement?.(createElementData, 'TableSelector');
@@ -51,8 +50,7 @@ export default function createTableSelector(
     const container = contentDiv ?? document.body;
 
     container.appendChild(div);
-    const setDivPosition = container == document.body ? setBodyDivPosition : setSelectorDivPosition;
-
+    const setDivPosition = container == document.body ? setBodyDivPosition : setBodyDivPosition;
     const context: TableSelectorContext = {
         table,
         zoomScale,
