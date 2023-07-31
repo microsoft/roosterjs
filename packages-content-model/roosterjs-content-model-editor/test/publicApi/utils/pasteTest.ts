@@ -76,7 +76,6 @@ describe('Paste ', () => {
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
-
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
 
         editor = ({
