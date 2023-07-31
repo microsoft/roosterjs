@@ -102,11 +102,6 @@ export interface ContentModelEditorCore extends EditorCore {
     defaultModelToDomOptions: ModelToDomOption;
 
     /**
-     * Whether reuse Content Model is allowed
-     */
-    reuseModel: boolean;
-
-    /**
      * Whether adding delimiter for entity is allowed
      */
     addDelimiterForEntity: boolean;
