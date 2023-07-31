@@ -160,7 +160,7 @@ function createBeforePasteEventAndFragment(
         handleTextPaste(text, position, fragment);
     }
 
-    // Step 5: Trigger BeforePasteEvent so that plugins can do proper change before paste
+    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
     const pluginEvent = editor.triggerPluginEvent(
         PluginEventType.BeforePaste,
         eventData,
