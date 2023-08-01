@@ -216,8 +216,8 @@ export default class TableEditor {
                 this.onSelect,
                 this.getOnMouseOut,
                 this.onShowHelperElement,
-                this.anchorContainer,
-                this.contentDiv
+                this.contentDiv,
+                this.anchorContainer
             );
         }
 
@@ -228,8 +228,8 @@ export default class TableEditor {
                 this.onStartTableResize,
                 this.onFinishEditing,
                 this.onShowHelperElement,
-                this.anchorContainer,
-                this.contentDiv
+                this.contentDiv,
+                this.anchorContainer
             );
         }
     }

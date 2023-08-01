@@ -24,8 +24,8 @@ export default function createTableSelector(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    anchorContainer?: HTMLElement,
-    contentDiv?: EventTarget | null
+    contentDiv?: EventTarget | null,
+    anchorContainer?: HTMLElement
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 

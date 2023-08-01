@@ -120,7 +120,6 @@ describe('Table Selector Tests', () => {
         //Act
         const result = createTableSelector(
             target as HTMLTableElement,
-            1,
             editor,
             () => {},
             () => () => {},
