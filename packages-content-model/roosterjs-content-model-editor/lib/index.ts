@@ -72,6 +72,7 @@ export { default as ContentModelEditPlugin } from './editor/plugins/ContentModel
 export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
+export { default as ContentModelCustomPastePlugin } from './editor/plugins/ContentModelCustomPastePlugin';
 export {
     createContentModelEditorCore,
     promoteToContentModelEditorCore,

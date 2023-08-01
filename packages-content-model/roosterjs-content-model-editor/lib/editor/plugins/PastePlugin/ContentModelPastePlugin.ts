@@ -78,6 +78,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         if (!ev.domToModelOption) {
             return;
         }
+
         const pasteSource = getPasteSource(event, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:

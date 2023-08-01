@@ -1,7 +1,6 @@
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildInPluginState';
 import { AutoFormat } from 'roosterjs-editor-plugins/lib/AutoFormat';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
-import { ContentModelPastePlugin } from 'roosterjs-content-model-editor';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
 import { EditorPlugin } from 'roosterjs-editor-types';
@@ -11,6 +10,10 @@ import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
 import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
+import {
+    ContentModelCustomPastePlugin,
+    ContentModelPastePlugin,
+} from 'roosterjs-content-model-editor';
 import {
     createContextMenuPlugin,
     createImageEditMenuProvider,
@@ -57,6 +60,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
                 : null,
         contextMenu: pluginList.contextMenu ? createContextMenuPlugin() : null,
         contentModelPaste: pluginList.contentModelPaste ? new ContentModelPastePlugin() : null,
+        customPaste: pluginList.customPaste ? new ContentModelCustomPastePlugin() : null,
     };
 
     return Object.values(plugins);
