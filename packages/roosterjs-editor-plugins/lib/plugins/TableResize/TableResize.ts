@@ -25,7 +25,8 @@ export default class TableResize implements EditorPlugin {
      * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
      * To customize the helper element, add this callback and change the attributes of elementData then it
      * will be picked up by TableResize code
-     * @param containerSelector An optional selector string to specify the container to host the plugin.
+     * @param anchorContainerSelector An optional selector string to specify the container to host the plugin.
+     * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
      * If not specified, the plugin will be inserted in document.body
      */
     constructor(
@@ -33,7 +34,7 @@ export default class TableResize implements EditorPlugin {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private containerSelector?: string
+        private anchorContainerSelector?: string
     ) {}
 
     /**
@@ -134,8 +135,8 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
-            const container = this.containerSelector
-                ? this.editor.getDocument().querySelector(this.containerSelector)
+            const container = this.anchorContainerSelector
+                ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
                 : undefined;
 
             this.tableEditor = new TableEditor(
@@ -143,7 +144,8 @@ export default class TableResize implements EditorPlugin {
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
-                safeInstanceOf(container, 'HTMLElement') ? container : undefined
+                safeInstanceOf(container, 'HTMLElement') ? container : undefined,
+                e?.currentTarget
             );
         }
     }

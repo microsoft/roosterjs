@@ -81,7 +81,8 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
-        private contentDiv?: HTMLElement
+        private anchorContainer?: HTMLElement,
+        private contentDiv?: EventTarget | null
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
         this.setEditorFeatures();
@@ -211,11 +212,11 @@ export default class TableEditor {
         if (!this.tableSelector) {
             this.tableSelector = createTableSelector(
                 this.table,
-                this.editor.getZoomScale(),
                 this.editor,
                 this.onSelect,
                 this.getOnMouseOut,
                 this.onShowHelperElement,
+                this.anchorContainer,
                 this.contentDiv
             );
         }
@@ -223,10 +224,11 @@ export default class TableEditor {
         if (!this.tableResizer) {
             this.tableResizer = createTableResizer(
                 this.table,
-                this.editor.getZoomScale(),
+                this.editor,
                 this.onStartTableResize,
                 this.onFinishEditing,
                 this.onShowHelperElement,
+                this.anchorContainer,
                 this.contentDiv
             );
         }
@@ -402,9 +404,9 @@ export default class TableEditor {
             if (
                 feature &&
                 ev.relatedTarget != feature &&
-                safeInstanceOf(ev.currentTarget, 'HTMLElement') &&
+                safeInstanceOf(this.contentDiv, 'HTMLElement') &&
                 safeInstanceOf(ev.relatedTarget, 'HTMLElement') &&
-                !contains(ev.currentTarget, ev.relatedTarget, true /* treatSameNodeAsContain */)
+                !contains(this.contentDiv, ev.relatedTarget, true /* treatSameNodeAsContain */)
             ) {
                 this.dispose();
             }
