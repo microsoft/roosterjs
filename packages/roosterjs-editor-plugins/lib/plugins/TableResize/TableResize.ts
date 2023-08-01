@@ -25,12 +25,16 @@ export default class TableResize implements EditorPlugin {
      * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
      * To customize the helper element, add this callback and change the attributes of elementData then it
      * will be picked up by TableResize code
+     * @param anchorContainerSelector An optional selector string to specify the container to host the plugin.
+     * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
+     * If not specified, the plugin will be inserted in document.body
      */
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) => void
+        ) => void,
+        private anchorContainerSelector?: string
     ) {}
 
     /**
@@ -131,11 +135,16 @@ export default class TableResize implements EditorPlugin {
         }
 
         if (!this.tableEditor && table && this.editor && table.rows.length > 0) {
+            const container = this.anchorContainerSelector
+                ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
+                : undefined;
+
             this.tableEditor = new TableEditor(
                 this.editor,
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
+                safeInstanceOf(container, 'HTMLElement') ? container : undefined,
                 e?.currentTarget
             );
         }

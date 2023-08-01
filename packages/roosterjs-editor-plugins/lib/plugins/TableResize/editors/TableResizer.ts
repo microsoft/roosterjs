@@ -1,7 +1,13 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
+import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import {
+    createElement,
+    getComputedStyle,
+    normalizeRect,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -12,16 +18,25 @@ const MIN_CELL_HEIGHT = 20;
  */
 export default function createTableResizer(
     table: HTMLTableElement,
-    zoomScale: number,
-    isRTL: boolean,
+    editor: IEditor,
     onStart: () => void,
     onDragEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    ) => void,
+    contentDiv?: EventTarget | null,
+    anchorContainer?: HTMLElement
 ): TableEditFeature | null {
+    const rect = normalizeRect(table.getBoundingClientRect());
+
+    if (!isTableBottomVisible(editor, rect, contentDiv)) {
+        return null;
+    }
+
     const document = table.ownerDocument;
+    const isRTL = getComputedStyle(table, 'direction') == 'rtl';
+    const zoomScale = editor.getZoomScale();
     const createElementData = {
         tag: 'div',
         style: `position: fixed; cursor: ${
@@ -35,7 +50,8 @@ export default function createTableResizer(
 
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
-    document.body.appendChild(div);
+
+    (anchorContainer || document.body).appendChild(div);
 
     const context: DragAndDropContext = {
         isRTL,
@@ -44,12 +60,12 @@ export default function createTableResizer(
         onStart,
     };
 
-    setResizeDivPosition(context, div);
+    setDivPosition(context, div);
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        setResizeDivPosition,
+        setDivPosition,
         {
             onDragStart,
             onDragging,
@@ -137,7 +153,7 @@ function onDragging(
     }
 }
 
-function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
     const { table, isRTL } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -147,4 +163,23 @@ function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement)
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
             : `${rect.right}px`;
     }
+}
+
+function isTableBottomVisible(
+    editor: IEditor,
+    rect: Rect | null,
+    contentDiv?: EventTarget | null
+): boolean {
+    const visibleViewport = editor.getVisibleViewport();
+    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+        const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
+
+        return (
+            !!containerRect &&
+            containerRect.bottom >= rect.bottom &&
+            visibleViewport.bottom >= rect.bottom
+        );
+    }
+
+    return true;
 }
