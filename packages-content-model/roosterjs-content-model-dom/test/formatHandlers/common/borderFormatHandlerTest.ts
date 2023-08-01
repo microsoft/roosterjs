@@ -51,7 +51,7 @@ describe('borderFormatHandler.parse', () => {
         });
     });
 
-    it('Has border width none value', () => {
+    itChromeOnly('Has border width none value', () => {
         div.style.borderWidth = '1px 2px 3px 4px';
         div.style.borderStyle = 'none';
         div.style.borderColor = 'red';

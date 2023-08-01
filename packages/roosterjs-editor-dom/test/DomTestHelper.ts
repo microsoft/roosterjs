@@ -121,3 +121,8 @@ export function itChromeOnly(
     const func = Browser.isChrome ? it : xit;
     return func(expectation, assertion, timeout);
 }
+
+export function expectHtml(actualHtml: string, expectedHtml: string | string[]) {
+    expectedHtml = Array.isArray(expectedHtml) ? expectedHtml : [expectedHtml];
+    expect(expectedHtml.indexOf(actualHtml)).toBeGreaterThanOrEqual(0, actualHtml);
+}
