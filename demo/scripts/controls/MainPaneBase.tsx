@@ -176,8 +176,8 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
         this.updateContentPlugin.forceUpdate();
 
         return (
-            <div className={styles.editorContainer}>
-                <div style={editorStyles} id="EditorContainer">
+            <div className={styles.editorContainer} id="EditorContainer">
+                <div style={editorStyles}>
                     {this.state.editorCreator && (
                         <Rooster
                             className={styles.editor}
