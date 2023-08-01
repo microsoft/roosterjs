@@ -74,8 +74,7 @@ export default function createTableSelector(
             onDragEnd,
         },
         context.zoomScale,
-        getOnMouseOut,
-        undefined
+        getOnMouseOut
     );
 
     return { div, featureHandler, node: table };

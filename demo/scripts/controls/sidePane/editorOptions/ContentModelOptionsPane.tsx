@@ -138,7 +138,7 @@ export default class ContentModelOptionsPane extends React.Component<
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
             isRtl: this.state.isRtl,
-            container: this.state.container,
+            tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
         };
 
         if (callback) {

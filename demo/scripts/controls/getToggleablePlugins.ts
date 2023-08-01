@@ -43,7 +43,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
         cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
         tableResize: pluginList.tableResize
-            ? new TableResize(undefined, initState.container)
+            ? new TableResize(undefined, initState.tableFeaturesContainerSelector)
             : null,
         customReplace: pluginList.customReplace ? new CustomReplacePlugin() : null,
         autoFormat: pluginList.autoFormat ? new AutoFormat() : null,

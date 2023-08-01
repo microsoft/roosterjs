@@ -71,8 +71,7 @@ export default function createTableResizer(
             onDragging,
             onDragEnd,
         },
-        zoomScale,
-        undefined
+        zoomScale
     );
 
     return { node: table, div, featureHandler };
@@ -159,7 +158,6 @@ function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
     const rect = normalizeRect(table.getBoundingClientRect());
 
     if (rect) {
-        trigger.style.position = 'fixed';
         trigger.style.top = `${rect.bottom}px`;
         trigger.style.left = isRTL
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
