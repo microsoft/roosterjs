@@ -3,6 +3,7 @@ import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { handleList as originalHandleList } from '../../../lib/modelToDom/handlers/handleList';
 import { handleListItem } from '../../../lib/modelToDom/handlers/handleListItem';
 import { listItemMetadataFormatHandler } from '../../../lib/formatHandlers/list/listItemMetadataFormatHandler';
@@ -249,10 +250,7 @@ describe('handleListItem', () => {
             '<div><ol style="flex-direction: column; display: flex;" start="1"><li style="align-self: center;"></li></ol></div>',
         ];
 
-        expect(expectedResult.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, expectedResult);
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
