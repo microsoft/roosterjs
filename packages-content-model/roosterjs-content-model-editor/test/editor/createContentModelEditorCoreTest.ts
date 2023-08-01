@@ -54,7 +54,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
-                typeInContainer: undefined,
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
         });
@@ -64,7 +64,7 @@ describe('createContentModelEditorCore', () => {
                 defaultFormat: {},
             },
             api: {
-                switchShadowEdit: mockedSwitchShadowEdit,
+                switchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
@@ -87,7 +87,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            reuseModel: false,
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -105,7 +104,6 @@ describe('createContentModelEditorCore', () => {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
-            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         };
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -117,7 +115,6 @@ describe('createContentModelEditorCore', () => {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
-            experimentalFeatures: [ExperimentalFeatures.EditWithContentModel],
         });
 
         expect(core).toEqual({
@@ -126,7 +123,7 @@ describe('createContentModelEditorCore', () => {
                 defaultFormat: {},
             },
             api: {
-                switchShadowEdit: mockedSwitchShadowEdit,
+                switchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
@@ -149,7 +146,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            reuseModel: false,
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -174,10 +170,6 @@ describe('createContentModelEditorCore', () => {
             },
         };
 
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) => feature == ExperimentalFeatures.EditWithContentModel
-        );
-
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
@@ -201,7 +193,7 @@ describe('createContentModelEditorCore', () => {
                 },
             },
             api: {
-                switchShadowEdit: mockedSwitchShadowEdit,
+                switchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
@@ -224,7 +216,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: 'red',
                 backgroundColor: 'blue',
             },
-            reuseModel: false,
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -233,19 +224,11 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Reuse model', () => {
-        mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModel);
-
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
         };
-
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) =>
-                feature == ExperimentalFeatures.EditWithContentModel ||
-                feature == ExperimentalFeatures.ReusableContentModel
-        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -258,7 +241,7 @@ describe('createContentModelEditorCore', () => {
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
+                experimentalFeatures: [],
                 defaultFormat: {},
             },
             api: {
@@ -285,7 +268,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            reuseModel: true,
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -305,9 +287,7 @@ describe('createContentModelEditorCore', () => {
         };
 
         spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) =>
-                feature == ExperimentalFeatures.EditWithContentModel ||
-                feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
+            (features, feature) => feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
         );
 
         const core = createContentModelEditorCore(contentDiv, options);
@@ -325,7 +305,7 @@ describe('createContentModelEditorCore', () => {
                 defaultFormat: {},
             },
             api: {
-                switchShadowEdit: mockedSwitchShadowEdit,
+                switchShadowEdit,
                 createEditorContext,
                 createContentModel,
                 setContentModel,
@@ -348,7 +328,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            reuseModel: false,
             addDelimiterForEntity: true,
             contentDiv: {
                 style: {},
