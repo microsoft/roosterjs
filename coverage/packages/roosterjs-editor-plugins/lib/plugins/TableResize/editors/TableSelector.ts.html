@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.44% </span>
+                <span class="strong">84.78% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/45</span>
+                <span class='fraction'>39/46</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">73.91% </span>
+                <span class="strong">76% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>17/23</span>
+                <span class='fraction'>19/25</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">84.09% </span>
+                <span class="strong">84.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/44</span>
+                <span class='fraction'>38/45</span>
             </div>
         
             
@@ -189,10 +189,29 @@
 <a name='L130'></a><a href='#L130'>130</a>
 <a name='L131'></a><a href='#L131'>131</a>
 <a name='L132'></a><a href='#L132'>132</a>
-<a name='L133'></a><a href='#L133'>133</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L133'></a><a href='#L133'>133</a>
+<a name='L134'></a><a href='#L134'>134</a>
+<a name='L135'></a><a href='#L135'>135</a>
+<a name='L136'></a><a href='#L136'>136</a>
+<a name='L137'></a><a href='#L137'>137</a>
+<a name='L138'></a><a href='#L138'>138</a>
+<a name='L139'></a><a href='#L139'>139</a>
+<a name='L140'></a><a href='#L140'>140</a>
+<a name='L141'></a><a href='#L141'>141</a>
+<a name='L142'></a><a href='#L142'>142</a>
+<a name='L143'></a><a href='#L143'>143</a>
+<a name='L144'></a><a href='#L144'>144</a>
+<a name='L145'></a><a href='#L145'>145</a>
+<a name='L146'></a><a href='#L146'>146</a>
+<a name='L147'></a><a href='#L147'>147</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -221,6 +240,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -232,9 +252,11 @@
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -261,6 +283,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -278,6 +301,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -324,8 +352,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
-import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import {
+    createElement,
+    normalizeRect,
+    safeInstanceOf,
+    getComputedStyle,
+} from 'roosterjs-editor-dom';
 &nbsp;
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -335,7 +368,6 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
  */
 export default function createTableSelector(
     table: HTMLTableElement,
-    zoomScale: number,
     editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) =&gt; void,
     getOnMouseOut: (feature: HTMLElement) =&gt; (ev: MouseEvent) =&gt; void,
@@ -343,7 +375,8 @@ export default function createTableSelector(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) =&gt; void,
-    contentDiv?: EventTarget | null
+    contentDiv?: EventTarget | null,
+    anchorContainer?: HTMLElement
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 &nbsp;
@@ -351,6 +384,7 @@ export default function createTableSelector(
         return null;
     }
 &nbsp;
+    const zoomScale = editor.getZoomScale();
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
@@ -364,15 +398,17 @@ export default function createTableSelector(
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
-    document.body.appendChild(div);
+&nbsp;
+    (anchorContainer || document.body).appendChild(div);
 &nbsp;
     const context: TableSelectorContext = {
         table,
         zoomScale,
         rect,
+        isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 &nbsp;
-    setSelectorDivPosition(context, div);
+    setDivPosition(context, div);
 &nbsp;
     const onDragEnd = <span class="fstat-no" title="function not covered" >(c</span>ontext: TableSelectorContext, event: MouseEvent): false =&gt; {
 <span class="cstat-no" title="statement not covered" >        if (event.target == div) {</span>
@@ -384,11 +420,11 @@ export default function createTableSelector(
     const featureHandler = new TableSelectorFeature(
         div,
         context,
-        setSelectorDivPosition,
+        setDivPosition,
         {
             onDragEnd,
         },
-        zoomScale,
+        context.zoomScale,
         getOnMouseOut
     );
 &nbsp;
@@ -399,6 +435,7 @@ interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
+    isRTL: boolean;
 }
 &nbsp;
 interface TableSelectorInitValue {
@@ -411,11 +448,16 @@ class TableSelectorFeature extends DragAndDropHelper&lt;TableSelectorContext, Ta
     constructor(
         private div: HTMLElement,
         context: TableSelectorContext,
-        onSubmit: (context: TableSelectorContext, trigger: HTMLElement) =&gt; void,
+        onSubmit: (
+            context: TableSelectorContext,
+            trigger: HTMLElement,
+            container?: HTMLElement
+        ) =&gt; void,
         handler: DragAndDropHandler&lt;TableSelectorContext, TableSelectorInitValue&gt;,
         zoomScale: number,
         getOnMouseOut: (feature: HTMLElement) =&gt; (ev: MouseEvent) =&gt; void,
-        forceMobile?: boolean
+        forceMobile?: boolean | undefined,
+        container?: HTMLElement
     ) {
         super(div, context, onSubmit, handler, zoomScale, forceMobile);
         this.onMouseOut = getOnMouseOut(div);
@@ -431,7 +473,7 @@ class TableSelectorFeature extends DragAndDropHelper&lt;TableSelectorContext, Ta
     }
 }
 &nbsp;
-function setSelectorDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
+function setDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
     const { rect } = context;
     <span class="missing-if-branch" title="else path not taken" >E</span>if (rect) {
         trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
@@ -460,7 +502,7 @@ function isTableTopVisible(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 01 2023 20:31:17 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 01 2023 21:17:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>

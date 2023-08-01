@@ -115,13 +115,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Resize<span class="tsd-signature-symbol">(</span>onShowHelperElement<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>elementData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.createelementdata.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateElementData</a>, helperType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;CellResizer&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableInserter&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableResizer&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableSelector&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.tableresize.html" class="tsd-signature-type" data-tsd-kind="Class">TableResize</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Table<wbr>Resize<span class="tsd-signature-symbol">(</span>onShowHelperElement<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-symbol">(</span>elementData<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.createelementdata.html" class="tsd-signature-type" data-tsd-kind="Interface">CreateElementData</a>, helperType<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;CellResizer&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableInserter&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableResizer&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;TableSelector&quot;</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span>, anchorContainerSelector<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.tableresize.html" class="tsd-signature-type" data-tsd-kind="Class">TableResize</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d0a934b/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L21">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/457305f/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L21">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:21</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -160,6 +160,14 @@
 										</li>
 									</ul>
 								</li>
+								<li>
+									<h5><span class="tsd-flag ts-flagOptional">Optional</span> anchorContainerSelector: <span class="tsd-signature-type">string</span></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>An optional selector string to specify the container to host the plugin.
+											The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
+										If not specified, the plugin will be inserted in document.body</p>
+									</div>
+								</li>
 							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.tableresize.html" class="tsd-signature-type" data-tsd-kind="Class">TableResize</a></h4>
 						</li>
@@ -179,7 +187,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d0a934b/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L70">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:70</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/457305f/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L74">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -202,7 +210,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d0a934b/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L39">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:39</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/457305f/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L43">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:43</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -225,7 +233,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d0a934b/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L47">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:47</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/457305f/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L51">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:51</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -257,7 +265,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/d0a934b/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L82">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:82</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/457305f/packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts#L86">packages/roosterjs-editor-plugins/lib/plugins/TableResize/TableResize.ts:86</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">

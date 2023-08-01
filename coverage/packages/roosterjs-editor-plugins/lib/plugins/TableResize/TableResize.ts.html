@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">52.78% </span>
+                <span class="strong">52.7% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>38/72</span>
+                <span class='fraction'>39/74</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">19.7% </span>
+                <span class="strong">18.57% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>13/66</span>
+                <span class='fraction'>13/70</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.22% </span>
+                <span class="strong">55.07% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>37/67</span>
+                <span class='fraction'>38/69</span>
             </div>
         
             
@@ -230,7 +230,16 @@
 <a name='L171'></a><a href='#L171'>171</a>
 <a name='L172'></a><a href='#L172'>172</a>
 <a name='L173'></a><a href='#L173'>173</a>
-<a name='L174'></a><a href='#L174'>174</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L174'></a><a href='#L174'>174</a>
+<a name='L175'></a><a href='#L175'>175</a>
+<a name='L176'></a><a href='#L176'>176</a>
+<a name='L177'></a><a href='#L177'>177</a>
+<a name='L178'></a><a href='#L178'>178</a>
+<a name='L179'></a><a href='#L179'>179</a>
+<a name='L180'></a><a href='#L180'>180</a>
+<a name='L181'></a><a href='#L181'>181</a>
+<a name='L182'></a><a href='#L182'>182</a>
+<a name='L183'></a><a href='#L183'>183</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -258,11 +267,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -367,6 +380,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -430,12 +448,16 @@ export default class TableResize implements EditorPlugin {
      * @param onShowHelperElement An optional callback to allow customize helper element of table resizing.
      * To customize the helper element, add this callback and change the attributes of elementData then it
      * will be picked up by TableResize code
+     * @param anchorContainerSelector An optional selector string to specify the container to host the plugin.
+     * The container must not be affected by transform: scale(), otherwise the position calculation will be wrong.
+     * If not specified, the plugin will be inserted in document.body
      */
     constructor(
         private onShowHelperElement?: (
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-        ) =&gt; void
+        ) =&gt; void,
+        private anchorContainerSelector?: string
     ) {}
 &nbsp;
     /**
@@ -536,11 +558,16 @@ export default class TableResize implements EditorPlugin {
         }
 &nbsp;
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.tableEditor &amp;&amp; table &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >this.editor </span>&amp;&amp; <span class="branch-3 cbranch-no" title="branch not covered" >table.rows.length &gt; 0)</span> {
+            const container = <span class="cstat-no" title="statement not covered" >this.anchorContainerSelector</span>
+                ? this.editor.getDocument().querySelector(this.anchorContainerSelector)
+                : undefined;
+&nbsp;
 <span class="cstat-no" title="statement not covered" >            this.tableEditor = new TableEditor(</span>
                 this.editor,
                 table,
                 this.invalidateTableRects,
                 this.onShowHelperElement,
+                safeInstanceOf(container, 'HTMLElement') ? container : undefined,
                 e?.currentTarget
             );
         }
@@ -583,7 +610,7 @@ function <span class="fstat-no" title="function not covered" >isMouseEvent(</spa
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 01 2023 20:31:17 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 01 2023 21:17:00 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
