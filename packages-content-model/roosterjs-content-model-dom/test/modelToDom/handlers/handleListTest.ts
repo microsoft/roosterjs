@@ -3,8 +3,8 @@ import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { expectHtml, itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { handleList } from '../../../lib/modelToDom/handlers/handleList';
-import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 
 describe('handleList', () => {
     let context: ModelToDomContext;
@@ -62,10 +62,7 @@ describe('handleList', () => {
             '<div><ol start="1"></ol></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [
@@ -277,10 +274,8 @@ describe('handleList', () => {
             '<div><ul><ol></ol></ul><ol start="2"></ol></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -322,10 +317,7 @@ describe('handleList', () => {
             '<div><ul><ol></ol><ol start="3"></ol></ul></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
 
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 2],
@@ -432,10 +424,8 @@ describe('handleList without format handlers', () => {
             '<div><ol start="1"></ol></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -634,10 +624,8 @@ describe('handleList without format handlers', () => {
             '<div><ul><ol></ol></ul><ol start="2"></ol></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -726,11 +714,10 @@ describe('handleList handles metadata', () => {
         const possibleResults = [
             '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" style="list-style-type: upper-alpha;"></ol>', // Chrome
             '<ol style="list-style-type: upper-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+            '<ol start="1" style="list-style-type: upper-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}"></ol>', // Firefox 116+
         ];
-        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.innerHTML
-        );
+
+        expectHtml(parent.innerHTML, possibleResults);
     });
 
     it('OL with metadata with simple value', () => {
@@ -752,12 +739,10 @@ describe('handleList handles metadata', () => {
         const possibleResults = [
             '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: lower-alpha;"></ol>', // Chrome
             '<ol style="list-style-type: lower-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" start="1"></ol>', // Firefox
+            '<ol start="1" style="list-style-type: lower-alpha;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ol>', // Firefox 116+
         ];
 
-        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.innerHTML
-        );
+        expectHtml(parent.innerHTML, possibleResults);
     });
 
     it('UL with metadata with simple value', () => {
@@ -780,10 +765,7 @@ describe('handleList handles metadata', () => {
             '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}" style="list-style-type: circle;"></ul>', // Chrome
             '<ul style="list-style-type: circle;" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ul>', // Firefox
         ];
-        expect(possibleResults.indexOf(parent.innerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.innerHTML
-        );
+        expectHtml(parent.innerHTML, possibleResults);
     });
 
     it('OL with refNode', () => {
@@ -796,10 +778,8 @@ describe('handleList handles metadata', () => {
 
         const possibleResults = ['<div><ol start="1"></ol><br></div>'];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [0],
             nodeStack: [
@@ -834,10 +814,8 @@ describe('handleList handles metadata', () => {
             '<div><ol><ol start="1"></ol></ol><br></div>', //Firefox
         ];
 
-        expect(possibleResults.indexOf(parent.outerHTML)).toBeGreaterThanOrEqual(
-            0,
-            parent.outerHTML
-        );
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
             threadItemCounts: [1, 0],
             nodeStack: [
