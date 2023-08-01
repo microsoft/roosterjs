@@ -29,7 +29,7 @@
         "test": "node tools/build.js normalize & karma start --chrome",
         "test:chrome": "node tools/build.js normalize & karma start --chrome",
         "test:firefox": "node tools/build.js normalize & karma start --firefox",
-        "test:debug": "node tools/build.js normalize & karma start --no-single-run --chrome",
+        "test:debug": "node tools/build.js normalize & karma start --no-single-run  --firefox",
         "test:coverage": "node tools/build.js normalize & karma start --coverage --firefox --chrome",
         "test:cm": "node tools/build.js normalize & karma start --no-single-run --chrome --contentmodel",
         "test:cm:firefox": "node tools/build.js normalize & karma start --no-single-run --firefox --contentmodel",
