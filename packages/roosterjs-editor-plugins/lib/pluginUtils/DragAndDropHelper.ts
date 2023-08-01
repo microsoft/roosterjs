@@ -86,15 +86,10 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
     constructor(
         private trigger: HTMLElement,
         private context: TContext,
-        private onSubmit: (
-            context: TContext,
-            trigger: HTMLElement,
-            container?: HTMLElement
-        ) => void,
+        private onSubmit: (context: TContext, trigger: HTMLElement) => void,
         private handler: DragAndDropHandler<TContext, TInitValue>,
         private zoomScale: number,
-        forceMobile?: boolean,
-        private container?: HTMLElement
+        forceMobile?: boolean
     ) {
         this.dndMouse =
             forceMobile || Browser.isMobileOrTablet
@@ -144,7 +139,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
             this.initValue &&
             this.handler.onDragging?.(this.context, e as MouseEvent, this.initValue, deltaX, deltaY)
         ) {
-            this.onSubmit?.(this.context, this.trigger, this.container);
+            this.onSubmit?.(this.context, this.trigger);
         }
     };
 
@@ -152,7 +147,7 @@ export default class DragAndDropHelper<TContext, TInitValue> implements Disposab
         e.preventDefault();
         this.removeDocumentEvents();
         if (this.handler.onDragEnd?.(this.context, e as MouseEvent, this.initValue)) {
-            this.onSubmit?.(this.context, this.trigger, this.container);
+            this.onSubmit?.(this.context, this.trigger);
         }
     };
 }
