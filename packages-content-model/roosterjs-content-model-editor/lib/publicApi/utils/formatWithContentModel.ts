@@ -1,12 +1,12 @@
-import { ChangeSource } from 'roosterjs-editor-types';
+import { ChangeSource, SelectionRangeEx } from 'roosterjs-editor-types';
+import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 import {
     ContentModelDocument,
     DomToModelOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 
 /**
  * @internal
@@ -43,6 +43,11 @@ export interface FormatWithContentModelOptions {
      * Optional callback to get an object used for change data in ContentChangedEvent
      */
     getChangeData?: () => any;
+
+    /**
+     * When specified, use this selection range to override current selection inside editor
+     */
+    selectionOverride?: SelectionRangeEx;
 }
 
 /**
@@ -61,6 +66,7 @@ export function formatWithContentModel(
         getChangeData,
         skipUndoSnapshot,
         changeSource,
+        selectionOverride,
     } = options || {};
     const domToModelOption: DomToModelOption | undefined = useReducedModel
         ? {
@@ -69,7 +75,8 @@ export function formatWithContentModel(
               },
           }
         : undefined;
-    const model = editor.createContentModel(domToModelOption);
+
+    const model = editor.createContentModel(domToModelOption, selectionOverride);
 
     if (callback(model)) {
         const callback = () => {
@@ -107,6 +114,8 @@ export function formatWithContentModel(
             );
         }
 
-        editor.cacheContentModel?.(model);
+        if (!selectionOverride) {
+            editor.cacheContentModel?.(model);
+        }
     }
 }
