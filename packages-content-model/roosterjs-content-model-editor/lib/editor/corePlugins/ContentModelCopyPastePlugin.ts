@@ -2,7 +2,7 @@ import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { contentModelToDom } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from 'roosterjs-content-model-editor/lib/publicApi/utils/formatWithContentModel';
+import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
