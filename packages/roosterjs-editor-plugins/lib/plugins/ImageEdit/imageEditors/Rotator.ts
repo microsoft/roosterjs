@@ -44,34 +44,43 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
  * Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
  * Fix it by reduce the distance from image to rotate handle
  */
-export function updateRotateHandlePosition(
+export function updateRotateHandleState(
     editorRect: Rect,
     rotateCenter: HTMLElement,
-    rotateHandle: HTMLElement
+    rotateHandle: HTMLElement,
+    isSmallImage: boolean
 ) {
-    const rotateHandleRect = rotateHandle.getBoundingClientRect();
+    if (isSmallImage) {
+        rotateCenter.style.display = 'none';
+        rotateHandle.style.display = 'none';
+        return;
+    } else {
+        rotateCenter.style.display = '';
+        rotateHandle.style.display = '';
+        const rotateHandleRect = rotateHandle.getBoundingClientRect();
 
-    if (rotateHandleRect) {
-        const top = rotateHandleRect.top - editorRect.top;
-        const left = rotateHandleRect.left - editorRect.left;
-        const right = rotateHandleRect.right - editorRect.right;
-        const bottom = rotateHandleRect.bottom - editorRect.bottom;
-        let adjustedDistance = Number.MAX_SAFE_INTEGER;
-        if (top <= 0) {
-            adjustedDistance = top;
-        } else if (left <= 0) {
-            adjustedDistance = left;
-        } else if (right >= 0) {
-            adjustedDistance = right;
-        } else if (bottom >= 0) {
-            adjustedDistance = bottom;
+        if (rotateHandleRect) {
+            const top = rotateHandleRect.top - editorRect.top;
+            const left = rotateHandleRect.left - editorRect.left;
+            const right = rotateHandleRect.right - editorRect.right;
+            const bottom = rotateHandleRect.bottom - editorRect.bottom;
+            let adjustedDistance = Number.MAX_SAFE_INTEGER;
+            if (top <= 0) {
+                adjustedDistance = top;
+            } else if (left <= 0) {
+                adjustedDistance = left;
+            } else if (right >= 0) {
+                adjustedDistance = right;
+            } else if (bottom >= 0) {
+                adjustedDistance = bottom;
+            }
+
+            const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
+            const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
+            rotateCenter.style.top = -rotateGap + 'px';
+            rotateCenter.style.height = rotateGap + 'px';
+            rotateHandle.style.top = -rotateTop + 'px';
         }
-
-        const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-        const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-        rotateCenter.style.top = -rotateGap + 'px';
-        rotateCenter.style.height = rotateGap + 'px';
-        rotateHandle.style.top = -rotateTop + 'px';
     }
 }
 

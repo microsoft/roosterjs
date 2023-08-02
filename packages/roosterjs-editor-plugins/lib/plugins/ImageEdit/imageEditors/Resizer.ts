@@ -161,12 +161,9 @@ export function getCornerResizeHTML(
  * Get HTML for resize handles on the sides
  */
 export function getSideResizeHTML(
-    { borderColor: resizeBorderColor, isSmallImage: isSmallImage }: ImageHtmlOptions,
+    { borderColor: resizeBorderColor }: ImageHtmlOptions,
     onShowResizeHandle?: OnShowResizeHandle
 ): CreateElementData[] | null {
-    if (isSmallImage) {
-        return null;
-    }
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y => {

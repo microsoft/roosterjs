@@ -11,7 +11,7 @@ import DragAndDropContext, {
 import {
     getRotateHTML,
     Rotator,
-    updateRotateHandlePosition,
+    updateRotateHandleState,
 } from '../../lib/plugins/ImageEdit/imageEditors/Rotator';
 
 const ROTATE_SIZE = 32;
@@ -140,7 +140,7 @@ describe('updateRotateHandlePosition', () => {
         };
         editorGetVisibleViewport.and.returnValue(viewport);
 
-        updateRotateHandlePosition(viewport, rotateCenter, rotateHandle);
+        updateRotateHandleState(viewport, rotateCenter, rotateHandle, false);
 
         expect(rotateCenter.style.top).toBe(rotateCenterTop);
         expect(rotateCenter.style.height).toBe(rotateCenterHeight);

@@ -8,7 +8,7 @@ import ImageEditInfo from './types/ImageEditInfo';
 import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
-import { getRotateHTML, Rotator, updateRotateHandlePosition } from './imageEditors/Rotator';
+import { getRotateHTML, Rotator, updateRotateHandleState } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
 import {
@@ -87,7 +87,12 @@ const DARK_MODE_BGCOLOR = '#333';
 /**
  * The biggest area of image with 4 handles
  */
-const MAX_SMALL_SIZE_IMAGE = 10000;
+const MAX_SMALL_SIZE_IMAGE = 20000;
+
+/**
+ * The smallest value of hight or width to make side handle and rotate handle visible
+ */
+const MIN_HEIGHT_WIDTH = 100;
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping
@@ -451,7 +456,7 @@ export default class ImageEdit implements EditorPlugin {
                 rotateHandleBackColor: this.editor.isDarkMode()
                     ? DARK_MODE_BGCOLOR
                     : LIGHT_MODE_BGCOLOR,
-                isSmallImage: isASmallImage(this.editInfo!),
+                isSmallImage: isASmallImage(this.editInfo.widthPx, this.editInfo.heightPx),
             };
             const htmlData: CreateElementData[] = [getResizeBordersHTML(options)];
 
@@ -598,9 +603,12 @@ export default class ImageEdit implements EditorPlugin {
                 }
 
                 const viewport = this.editor?.getVisibleViewport();
+                const isSmall = isASmallImage(targetWidth, targetHeight);
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandlePosition(viewport, rotateCenter, rotateHandle);
+                    updateRotateHandleState(viewport, rotateCenter, rotateHandle, isSmall);
                 }
+
+                updateSideHandlesVisibility(resizeHandles, isSmall);
 
                 updateHandleCursor(resizeHandles, angleRad);
             }
@@ -714,10 +722,19 @@ function rotateHandles(angleRad: number, y: string = '', x: string = ''): string
  * @param angleRad The angle that the image was rotated.
  */
 function updateHandleCursor(handles: HTMLElement[], angleRad: number) {
-    handles.map(handle => {
-        const y = handle.dataset.y;
-        const x = handle.dataset.x;
+    handles.forEach(handle => {
+        const { y, x } = handle.dataset;
         handle.style.cursor = `${rotateHandles(angleRad, y, x)}-resize`;
+    });
+}
+
+function updateSideHandlesVisibility(handles: HTMLElement[], isSmall: boolean) {
+    handles.forEach(handle => {
+        const { y, x } = handle.dataset;
+        const coordinate = (y ?? '') + (x ?? '');
+        const directions = ['n', 's', 'e', 'w'];
+        const isSideHandle = directions.indexOf(coordinate) > -1;
+        handle.style.display = isSideHandle && isSmall ? 'none' : '';
     });
 }
 
@@ -748,9 +765,14 @@ function isFixedNumberValue(value: string | number) {
     return !isNaN(numberValue);
 }
 
-function isASmallImage(editInfo: ImageEditInfo): boolean {
-    const { widthPx, heightPx } = editInfo;
-    return widthPx && heightPx && widthPx * widthPx < MAX_SMALL_SIZE_IMAGE ? true : false;
+function isASmallImage(widthPx: number, heightPx: number): boolean {
+    return widthPx &&
+        heightPx &&
+        (widthPx * widthPx < MAX_SMALL_SIZE_IMAGE ||
+            widthPx < MIN_HEIGHT_WIDTH ||
+            heightPx < MIN_HEIGHT_WIDTH)
+        ? true
+        : false;
 }
 
 function getColorString(color: string | ModeIndependentColor, isDarkMode: boolean): string {
