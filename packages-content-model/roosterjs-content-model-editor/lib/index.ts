@@ -53,7 +53,6 @@ export { default as setImageBorder } from './publicApi/image/setImageBorder';
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
-export { default as getSegmentFormat } from './publicApi/format/getSegmentFormat';
 export { default as applyPendingFormat } from './publicApi/format/applyPendingFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
 export { default as insertLink } from './publicApi/link/insertLink';
