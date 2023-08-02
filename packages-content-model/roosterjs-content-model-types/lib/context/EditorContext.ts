@@ -34,4 +34,10 @@ export interface EditorContext {
      * Whether the content is in Right-to-left from root level
      */
     isRootRtl?: boolean;
+
+    /**
+     * Whether put the source element into Content Model when possible.
+     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
+     */
+    allowCacheElement?: boolean;
 }

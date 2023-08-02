@@ -17,7 +17,7 @@ export const createContentModel: CreateContentModel = (core, option) => {
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
-        cachedModel = cloneModel(cachedModel);
+        cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
     }
 
     return cachedModel || internalCreateContentModel(core, option);

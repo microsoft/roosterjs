@@ -40,7 +40,6 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -69,7 +68,6 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -98,7 +96,6 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            allowCacheElement: true,
             ...contextOptions,
         });
     });
@@ -123,7 +120,6 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            allowCacheElement: true,
             ...contextOptions,
             rangeEx: selectionContext,
         });

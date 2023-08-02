@@ -64,7 +64,6 @@ export default function paste(
 
     const pasteModel = domToContentModel(fragment, {
         ...pluginEvent.domToModelOption,
-        disableCacheElement: true,
         additionalFormatParsers: {
             ...pluginEvent.domToModelOption.additionalFormatParsers,
             block: [

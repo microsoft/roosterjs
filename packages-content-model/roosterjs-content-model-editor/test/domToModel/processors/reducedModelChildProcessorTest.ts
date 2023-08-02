@@ -8,7 +8,6 @@ describe('reducedModelChildProcessor', () => {
 
     beforeEach(() => {
         context = createDomToModelContext(undefined, {
-            disableCacheElement: true,
             processorOverride: {
                 child: reducedModelChildProcessor,
             },
