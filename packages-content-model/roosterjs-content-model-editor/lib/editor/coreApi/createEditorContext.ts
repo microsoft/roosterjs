@@ -13,6 +13,7 @@ export const createEditorContext: CreateEditorContext = core => {
         defaultFormat: defaultFormat,
         darkColorHandler: darkColorHandler,
         addDelimiterForEntity: addDelimiterForEntity,
+        allowCacheElement: true,
     };
 
     checkRootRtl(contentDiv, context);

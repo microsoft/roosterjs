@@ -1,12 +1,12 @@
 import { ChangeSource } from 'roosterjs-editor-types';
+import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 import {
     ContentModelDocument,
     DomToModelOption,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 
 /**
  * @internal
@@ -54,6 +54,8 @@ export function formatWithContentModel(
     callback: (model: ContentModelDocument) => boolean,
     options?: FormatWithContentModelOptions
 ) {
+    editor.focus();
+
     const {
         useReducedModel,
         onNodeCreated,
@@ -73,7 +75,6 @@ export function formatWithContentModel(
 
     if (callback(model)) {
         const callback = () => {
-            editor.focus();
             if (model) {
                 editor.setContentModel(model, { onNodeCreated });
             }

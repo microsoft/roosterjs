@@ -55,7 +55,6 @@ export function createDomToModelContext(
 
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
-        allowCacheElement: !options?.disableCacheElement,
     };
 
     if (editorContext?.isRootRtl) {
