@@ -81,6 +81,7 @@ export default class TableEditor {
             elementData: CreateElementData,
             helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
         ) => void,
+        private anchorContainer?: HTMLElement,
         private contentDiv?: EventTarget | null
     ) {
         this.isRTL = getComputedStyle(table, 'direction') == 'rtl';
@@ -211,23 +212,24 @@ export default class TableEditor {
         if (!this.tableSelector) {
             this.tableSelector = createTableSelector(
                 this.table,
-                this.editor.getZoomScale(),
                 this.editor,
                 this.onSelect,
                 this.getOnMouseOut,
                 this.onShowHelperElement,
-                this.contentDiv
+                this.contentDiv,
+                this.anchorContainer
             );
         }
 
         if (!this.tableResizer) {
             this.tableResizer = createTableResizer(
                 this.table,
-                this.editor.getZoomScale(),
-                this.isRTL,
+                this.editor,
                 this.onStartTableResize,
                 this.onFinishEditing,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                this.contentDiv,
+                this.anchorContainer
             );
         }
     }

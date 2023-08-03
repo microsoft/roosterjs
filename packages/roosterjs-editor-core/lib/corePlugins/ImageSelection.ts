@@ -57,6 +57,7 @@ export default class ImageSelection implements EditorPlugin {
                     const target = event.rawEvent.target;
                     if (
                         safeInstanceOf(target, 'HTMLImageElement') &&
+                        target.isContentEditable &&
                         event.rawEvent.button === mouseLeftButton
                     ) {
                         this.editor.select(target);
