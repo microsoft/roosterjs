@@ -3,11 +3,11 @@ import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
 import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-editor/lib/modelApi/common/getClosestAncestorBlockGroupIndex';
+import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { InsertPoint } from 'roosterjs-content-model/lib';
-import { setSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/setSelection';
+import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
+import { setSelection } from '../../modelApi/selection/setSelection';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -20,14 +20,38 @@ import {
 const BlockEntityTag = 'div';
 const InlineEntityTag = 'span';
 
+/**
+ * Options for insertEntity API
+ */
 export interface InsertEntityOptions {
+    /**
+     * Content node of the entity. If not passed, an empty entity will be created
+     */
     contentNode?: Node;
+
+    /**
+     * Whether move focus after entity after insert
+     */
     focusAfterEntity?: boolean;
+
+    /**
+     * "Display" value of the entity wrapper. By default, block entity will have no display, inline entity will have display: inline-block
+     */
     wrapperDisplay?: 'inline' | 'block' | 'none' | 'inline-block';
 }
 
 /**
- * Insert a block entity into editor
+ * Insert an entity into editor
+ * @param editor The Content Model editor
+ * @param type Type of entity
+ * @param isBlock True to insert a block entity, false to insert an inline entity
+ * @param position Position of the entity to insert. It can be
+ * "focus": insert at current focus. If insert a block entity, it will be inserted under the paragraph where focus is
+ * "begin": insert at beginning of content. When insert an inline entity, it will be wrapped with a paragraph.
+ * "end": insert at end of content. When insert an inline entity, it will be wrapped with a paragraph.
+ * selectionRangeEx: Use this range instead of current focus position to insert. After insert, focus will be moved to
+ * the beginning of this range (when focusAfterEntity is not set to true) or after the new entity (when focusAfterEntity is set to true)
+ * @param options Move options to insert. See InsertEntityOptions
  */
 export default function insertEntity(
     editor: IContentModelEditor,
@@ -39,6 +63,17 @@ export default function insertEntity(
 
 /**
  * Insert a block entity into editor
+ * @param editor The Content Model editor
+ * @param type Type of entity
+ * @param isBlock Must be true for a block entity
+ * @param position Position of the entity to insert. It can be
+ * "focus": insert at current focus. If insert a block entity, it will be inserted under the paragraph where focus is
+ * "begin": insert at beginning of content. When insert an inline entity, it will be wrapped with a paragraph.
+ * "end": insert at end of content. When insert an inline entity, it will be wrapped with a paragraph.
+ * "regionRootForBlock": insert at the root level of current region
+ * selectionRangeEx: Use this range instead of current focus position to insert. After insert, focus will be moved to
+ * the beginning of this range (when focusAfterEntity is not set to true) or after the new entity (when focusAfterEntity is set to true)
+ * @param options Move options to insert. See InsertEntityOptions
  */
 export default function insertEntity(
     editor: IContentModelEditor,
