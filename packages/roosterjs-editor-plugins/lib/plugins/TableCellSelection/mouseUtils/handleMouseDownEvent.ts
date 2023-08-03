@@ -24,7 +24,12 @@ export function handleMouseDownEvent(
     state: TableCellSelectionState,
     editor: IEditor
 ) {
-    const { which, shiftKey } = event.rawEvent;
+    const { which, shiftKey, target } = event.rawEvent;
+    const table = editor.getElementAtCursor('table', target as Node, event);
+
+    if (table && !table.isContentEditable) {
+        return;
+    }
 
     const td = editor.getElementAtCursor(TABLE_CELL_SELECTOR);
     if (which == RIGHT_CLICK && state.tableSelection && state.vTable && td) {
