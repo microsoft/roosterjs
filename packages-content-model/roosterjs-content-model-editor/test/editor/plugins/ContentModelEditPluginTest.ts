@@ -50,7 +50,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -65,7 +65,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -118,20 +118,9 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent: { which: Keys.DELETE } as any,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(
-                editor,
-                { which: Keys.DELETE } as any,
-                [
-                    {
-                        eventType: PluginEventType.EntityOperation,
-                        operation: EntityOperation.Overwrite,
-                        rawEvent: {
-                            type: 'keydown',
-                        } as any,
-                        entity: wrapper,
-                    },
-                ]
-            );
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, {
+                which: Keys.DELETE,
+            } as any);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
@@ -139,11 +128,9 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledTimes(2);
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(
-                editor,
-                { which: Keys.DELETE } as any,
-                []
-            );
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, {
+                which: Keys.DELETE,
+            } as any);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -230,7 +217,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -251,7 +238,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent, []);
+            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
     });

@@ -10,6 +10,7 @@ describe('setIndentation', () => {
     beforeEach(() => {
         editor = ({
             createContentModel: () => fakeModel,
+            focus: jasmine.createSpy('focus'),
         } as any) as IContentModelEditor;
     });
 

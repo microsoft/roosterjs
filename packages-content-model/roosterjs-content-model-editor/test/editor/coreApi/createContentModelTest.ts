@@ -42,7 +42,7 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, no cache, no shadow edit', () => {
-        const option: DomToModelOption = { disableCacheElement: false };
+        const option: DomToModelOption = {};
 
         core.cachedModel = undefined;
 
@@ -53,7 +53,6 @@ describe('createContentModel', () => {
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             mockedDiv,
             {
-                disableCacheElement: false,
                 processorOverride: {
                     table: tablePreProcessor,
                 },
@@ -81,7 +80,9 @@ describe('createContentModel', () => {
 
         const model = createContentModel(core, option);
 
-        expect(cloneModelSpy).toHaveBeenCalledWith(mockedCachedMode);
+        expect(cloneModelSpy).toHaveBeenCalledWith(mockedCachedMode, {
+            includeCachedElement: true,
+        });
         expect(createEditorContext).not.toHaveBeenCalled();
         expect(getSelectionRangeEx).not.toHaveBeenCalled();
         expect(domToContentModelSpy).not.toHaveBeenCalled();

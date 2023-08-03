@@ -6,6 +6,7 @@ import { ChangeSource, Keys } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     backwardDeleteWordSelection,
     forwardDeleteWordSelection,
@@ -21,17 +22,8 @@ import {
 
 describe('handleKeyDownEvent', () => {
     let deleteSelectionSpy: jasmine.Spy;
-    let mockedCallback = 'CALLBACK' as any;
-    let handleKeyboardEventResultSpy: jasmine.Spy;
 
     beforeEach(() => {
-        handleKeyboardEventResultSpy = spyOn(
-            handleKeyboardEventResult,
-            'handleKeyboardEventResult'
-        );
-        spyOn(handleKeyboardEventResult, 'getOnDeleteEntityCallback').and.returnValue(
-            mockedCallback
-        );
         deleteSelectionSpy = spyOn(deleteSelection, 'deleteSelection');
     });
 
@@ -46,13 +38,12 @@ describe('handleKeyDownEvent', () => {
         deleteSelectionSpy.and.returnValue({
             deleteResult: expectedDelete,
         });
-        handleKeyboardEventResultSpy.and.returnValue(
-            expectedDelete == DeleteResult.Range || expectedDelete == DeleteResult.SingleChar
-        );
 
-        const mockedEvent = {
+        const preventDefault = jasmine.createSpy('preventDefault');
+        const mockedEvent = ({
             which: key,
-        } as KeyboardEvent;
+            preventDefault,
+        } as any) as KeyboardEvent;
 
         let editor: any;
 
@@ -60,25 +51,18 @@ describe('handleKeyDownEvent', () => {
             'handleBackspaceKey',
             newEditor => {
                 editor = newEditor;
-                handleKeyDownEvent(editor, mockedEvent, []);
+                handleKeyDownEvent(editor, mockedEvent);
             },
             input,
             expectedResult,
             calledTimes
         );
 
-        expect(handleKeyboardEventResult.getOnDeleteEntityCallback).toHaveBeenCalledWith(
-            editor,
-            mockedEvent,
-            []
-        );
-        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, mockedCallback, expectedSteps);
-        expect(handleKeyboardEventResult.handleKeyboardEventResult).toHaveBeenCalledWith(
-            editor,
-            input,
-            mockedEvent,
-            expectedDelete
-        );
+        expect(deleteSelectionSpy).toHaveBeenCalledWith(input, expectedSteps, {
+            deletedEntities: [],
+            rawEvent: mockedEvent,
+            skipUndoSnapshot: true,
+        });
     }
 
     it('Empty model, forward', () => {
@@ -377,38 +361,40 @@ describe('handleKeyDownEvent', () => {
 
     it('Check parameter of formatWithContentModel, forward', () => {
         const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+        const addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
 
-        const editor = 'EDITOR' as any;
+        const editor = ({
+            addUndoSnapshot,
+        } as any) as IContentModelEditor;
         const which = Keys.DELETE;
         const event = {
             which,
         } as any;
-        const triggeredEvents = 'EVENTS' as any;
 
-        handleKeyDownEvent(editor, event, triggeredEvents);
+        handleKeyDownEvent(editor, event);
 
         expect(spy.calls.argsFor(0)[0]).toBe(editor);
         expect(spy.calls.argsFor(0)[1]).toBe('handleDeleteKey');
-        expect(spy.calls.argsFor(0)[3]?.skipUndoSnapshot).toBe(true);
+        expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
         expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
     });
 
     it('Check parameter of formatWithContentModel, backward', () => {
         const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
+        const preventDefault = jasmine.createSpy('preventDefault');
 
         const editor = 'EDITOR' as any;
         const which = Keys.BACKSPACE;
         const event = {
             which,
+            preventDefault,
         } as any;
-        const triggeredEvents = 'EVENTS' as any;
 
-        handleKeyDownEvent(editor, event, triggeredEvents);
+        handleKeyDownEvent(editor, event);
 
         expect(spy.calls.argsFor(0)[0]).toBe(editor);
         expect(spy.calls.argsFor(0)[1]).toBe('handleBackspaceKey');
-        expect(spy.calls.argsFor(0)[3]?.skipUndoSnapshot).toBe(true);
         expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
         expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
     });
