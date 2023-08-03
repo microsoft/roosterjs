@@ -3,7 +3,6 @@ import { cloneModel } from '../../modelApi/common/cloneModel';
 import { contentModelToDom } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import type {
@@ -20,7 +19,6 @@ import {
     createRange,
     extractClipboardItems,
     toArray,
-    Browser,
     wrap,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
@@ -149,11 +147,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         formatWithContentModel(
                             editor as IContentModelEditor,
                             'cut',
-                            model => {
-                                deleteSelection(
-                                    model,
-                                    getOnDeleteEntityCallback(editor as IContentModelEditor)
-                                );
+                            (model, context) => {
+                                deleteSelection(model, [], context);
 
                                 return true;
                             },
@@ -183,7 +178,6 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     true /*pasteNativeEvent*/
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        removeContentForAndroid(editor);
                         paste(editor, clipboardData);
                     }
                 });
@@ -224,16 +218,11 @@ function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
     tempDiv.style.display = 'none';
     moveChildNodes(tempDiv);
 }
+
 function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
-function removeContentForAndroid(editor: IContentModelEditor) {
-    if (Browser.isAndroid) {
-        const model = editor.createContentModel();
-        deleteSelection(model, getOnDeleteEntityCallback(editor));
-        editor.setContentModel(model);
-    }
-}
+
 function selectionExToRange(
     selection: SelectionRangeEx | null,
     tempDiv: HTMLDivElement

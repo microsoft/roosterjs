@@ -4,7 +4,7 @@ import { deleteSegment } from '../utils/deleteSegment';
 /**
  * @internal
  */
-export const deleteAllSegmentBefore: DeleteSelectionStep = (context, onDeleteEntity) => {
+export const deleteAllSegmentBefore: DeleteSelectionStep = context => {
     const { paragraph, marker } = context.insertPoint;
     const index = paragraph.segments.indexOf(marker);
 
@@ -13,7 +13,7 @@ export const deleteAllSegmentBefore: DeleteSelectionStep = (context, onDeleteEnt
 
         segment.isSelected = true;
 
-        if (deleteSegment(paragraph, segment, onDeleteEntity)) {
+        if (deleteSegment(paragraph, segment, context.formatContext)) {
             context.deleteResult = DeleteResult.Range;
         }
     }

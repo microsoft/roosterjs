@@ -12,7 +12,7 @@ describe('setListStyle', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (editor, apiName, callback) => {
                 expect(apiName).toBe('setListStyle');
-                const result = callback(input);
+                const result = callback(input, { deletedEntities: [] });
 
                 expect(result).toBe(expectedResult);
             }
