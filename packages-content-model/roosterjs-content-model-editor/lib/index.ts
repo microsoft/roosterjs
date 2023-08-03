@@ -64,7 +64,7 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 export { default as setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
-export { default as insertEntity } from './publicApi/entity/insertEntity';
+export { default as insertEntity, InsertEntityOptions } from './publicApi/entity/insertEntity';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';

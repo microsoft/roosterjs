@@ -1,10 +1,13 @@
-import { ChangeSource, Entity, NodePosition, SelectionRangeEx } from 'roosterjs-editor-types';
+import { ChangeSource, Entity, SelectionRangeEx } from 'roosterjs-editor-types';
 import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
-import { createBr, createParagraph } from 'roosterjs-content-model-dom';
+import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
+import { getClosestAncestorBlockGroupIndex } from 'roosterjs-content-model-editor/lib/modelApi/common/getClosestAncestorBlockGroupIndex';
 import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { InsertPoint } from 'roosterjs-content-model/lib';
+import { setSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/setSelection';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -30,7 +33,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: boolean,
-    position: 'focus' | 'begin' | 'end' | NodePosition,
+    position: 'focus' | 'begin' | 'end' | SelectionRangeEx,
     options?: InsertEntityOptions
 ): Entity;
 
@@ -41,7 +44,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: true,
-    position: 'focus' | 'begin' | 'end' | 'regionRootForBlock' | NodePosition,
+    position: 'focus' | 'begin' | 'end' | 'regionRootForBlock' | SelectionRangeEx,
     options?: InsertEntityOptions
 ): Entity;
 
@@ -59,9 +62,7 @@ export default function insertEntity(
     const wrapper = editor.getDocument().createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
 
-    if (display) {
-        wrapper.style.display = display;
-    }
+    wrapper.style.setProperty('display', display || null);
 
     if (contentNode) {
         wrapper.appendChild(contentNode);
@@ -89,63 +90,78 @@ export default function insertEntity(
         editor,
         'insertEntity',
         model => {
-            const insertPoint = deleteSelection(model, getOnDeleteEntityCallback(editor))
-                .insertPoint;
+            let blockParent: ContentModelBlockGroup | undefined;
+            let blockIndex = -1;
+            let ip: InsertPoint | null;
 
-            switch (position) {
-                case 'begin':
-                case 'end':
-                    insertBlock(
-                        model,
-                        isBlock ? entityModel : wrapWithParagraph(entityModel, model.format),
-                        position == 'begin' ? 0 : model.blocks.length
-                    );
-                    break;
+            if (position == 'begin' || position == 'end') {
+                blockParent = model;
+                blockIndex = position == 'begin' ? 0 : model.blocks.length;
+            } else if (
+                (ip = deleteSelection(model, getOnDeleteEntityCallback(editor)).insertPoint)
+            ) {
+                const { marker, paragraph, path } = ip;
 
-                case 'regionRootForBlock':
-                    break;
+                if (!isBlock) {
+                    const index = paragraph.segments.indexOf(marker);
 
-                case 'focus':
-                    if (insertPoint) {
-                        const { marker, paragraph, path } = insertPoint;
-
-                        if (isBlock) {
-                            const index = path[0].blocks.indexOf(paragraph);
-
-                            if (index >= 0) {
-                                const newBlocks =
-                                    index == path[0].blocks.length - 1
-                                        ? [
-                                              entityModel,
-                                              createParagraph(
-                                                  false /*isImplicit*/,
-                                                  undefined,
-                                                  model.format
-                                              ),
-                                          ]
-                                        : [entityModel];
-
-                                path[0].blocks.splice(index + 1, 0, ...newBlocks);
-                            }
-                        } else {
-                            const index = paragraph.segments.indexOf(marker);
-
-                            if (index >= 0) {
-                                paragraph.segments.splice(
-                                    focusAfterEntity ? index : index + 1,
-                                    0,
-                                    entityModel
-                                );
-                            }
-                        }
+                    if (index >= 0) {
+                        paragraph.segments.splice(
+                            focusAfterEntity ? index : index + 1,
+                            0,
+                            entityModel
+                        );
                     }
-                    break;
+                } else {
+                    const pathIndex =
+                        position == 'regionRootForBlock'
+                            ? getClosestAncestorBlockGroupIndex(path, ['TableCell', 'Document'])
+                            : 0;
+                    blockParent = path[pathIndex];
+                    const child = path[pathIndex - 1];
+                    const directChild: ContentModelBlock =
+                        child?.blockGroupType == 'FormatContainer' ||
+                        child?.blockGroupType == 'General' ||
+                        child?.blockGroupType == 'ListItem'
+                            ? child
+                            : paragraph;
+                    const childIndex = blockParent.blocks.indexOf(directChild);
+                    blockIndex = childIndex >= 0 ? childIndex + 1 : -1;
+                }
+            }
+
+            if (blockIndex >= 0 && blockParent) {
+                const nextBlock = blockParent.blocks[blockIndex];
+                const blocksToInsert = [
+                    isBlock ? entityModel : wrapWithParagraph(entityModel, model.format),
+                ];
+                let nextParagraph: ContentModelParagraph;
+
+                if (nextBlock?.blockType == 'Paragraph') {
+                    nextParagraph = nextBlock;
+                } else {
+                    nextParagraph = createParagraph(false /*isImplicit*/, {}, model.format);
+                    nextParagraph.segments.push(createBr(model.format));
+                    blocksToInsert.push(nextParagraph);
+                }
+
+                blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
+
+                if (focusAfterEntity) {
+                    const marker = createSelectionMarker(
+                        nextParagraph.segments[0]?.format || model.format
+                    );
+
+                    nextParagraph.segments.unshift(marker);
+                    setSelection(model, marker, marker);
+                }
             }
 
             return true;
         },
         {
             selectionOverride: selectionOverride,
+            skipUndoSnapshot: true,
         }
     );
 
@@ -170,20 +186,4 @@ function wrapWithParagraph(
     para.segments.push(segment);
 
     return para;
-}
-
-function insertBlock(
-    parent: ContentModelBlockGroup,
-    block: ContentModelBlock,
-    index: number
-): ContentModelParagraph | null {
-    const newPara = index == parent.blocks.length ? wrapWithParagraph(createBr()) : null;
-
-    parent.blocks.splice(index, 0, block);
-
-    if (newPara) {
-        parent.blocks.splice(index + 1, 0, newPara);
-    }
-
-    return newPara;
 }
