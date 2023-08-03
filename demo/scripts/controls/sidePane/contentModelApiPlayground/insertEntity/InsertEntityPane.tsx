@@ -121,7 +121,7 @@ export default class InsertEntityPane extends React.Component<ApiPaneProps, Inse
                         entityType,
                         true,
                         insertAtRoot
-                            ? 'regionRootForBlock'
+                            ? 'root'
                             : insertAtTop
                             ? 'begin'
                             : insertAtBottom
