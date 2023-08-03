@@ -85,11 +85,6 @@ const LIGHT_MODE_BGCOLOR = 'white';
 const DARK_MODE_BGCOLOR = '#333';
 
 /**
- * The biggest area of image with 4 handles
- */
-const MAX_SMALL_SIZE_IMAGE = 20000;
-
-/**
  * The smallest value of hight or width to make side handle and rotate handle visible
  */
 const MIN_HEIGHT_WIDTH = 100;
@@ -766,11 +761,7 @@ function isFixedNumberValue(value: string | number) {
 }
 
 function isASmallImage(widthPx: number, heightPx: number): boolean {
-    return widthPx &&
-        heightPx &&
-        (widthPx * widthPx < MAX_SMALL_SIZE_IMAGE ||
-            widthPx < MIN_HEIGHT_WIDTH ||
-            heightPx < MIN_HEIGHT_WIDTH)
+    return widthPx && heightPx && (widthPx < MIN_HEIGHT_WIDTH || heightPx < MIN_HEIGHT_WIDTH)
         ? true
         : false;
 }
