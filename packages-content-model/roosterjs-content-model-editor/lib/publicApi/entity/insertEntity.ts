@@ -4,7 +4,6 @@ import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-cont
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getClosestAncestorBlockGroupIndex } from '../../modelApi/common/getClosestAncestorBlockGroupIndex';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { setSelection } from '../../modelApi/selection/setSelection';
@@ -124,7 +123,7 @@ export default function insertEntity(
     formatWithContentModel(
         editor,
         'insertEntity',
-        model => {
+        (model, context) => {
             let blockParent: ContentModelBlockGroup | undefined;
             let blockIndex = -1;
             let ip: InsertPoint | null;
@@ -132,9 +131,7 @@ export default function insertEntity(
             if (position == 'begin' || position == 'end') {
                 blockParent = model;
                 blockIndex = position == 'begin' ? 0 : model.blocks.length;
-            } else if (
-                (ip = deleteSelection(model, getOnDeleteEntityCallback(editor)).insertPoint)
-            ) {
+            } else if ((ip = deleteSelection(model, [], context).insertPoint)) {
                 const { marker, paragraph, path } = ip;
 
                 if (!isBlock) {
@@ -192,11 +189,12 @@ export default function insertEntity(
                 }
             }
 
+            context.skipUndoSnapshot = true;
+
             return true;
         },
         {
             selectionOverride: selectionOverride,
-            skipUndoSnapshot: true,
         }
     );
 
