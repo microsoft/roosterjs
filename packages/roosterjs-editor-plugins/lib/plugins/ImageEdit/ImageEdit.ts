@@ -10,6 +10,7 @@ import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandleState } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
+import { MIN_HEIGHT_WIDTH } from './constants/constants';
 import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
 import {
     arrayPush,
@@ -83,11 +84,6 @@ const ImageEditHTMLMap = {
  */
 const LIGHT_MODE_BGCOLOR = 'white';
 const DARK_MODE_BGCOLOR = '#333';
-
-/**
- * The smallest value of hight or width to make side handle and rotate handle visible
- */
-const MIN_HEIGHT_WIDTH = 100;
 
 /**
  * ImageEdit plugin provides the ability to edit an inline image in editor, including image resizing, rotation and cropping

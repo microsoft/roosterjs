@@ -4,12 +4,13 @@ import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { RotateInfo } from '../types/ImageEditInfo';
-
-const ROTATE_SIZE = 32;
-const ROTATE_GAP = 15;
-const DEG_PER_RAD = 180 / Math.PI;
-const DEFAULT_ROTATE_HANDLE_HEIGHT = ROTATE_SIZE / 2 + ROTATE_GAP;
-const ROTATE_ICON_MARGIN = 8;
+import {
+    DEFAULT_ROTATE_HANDLE_HEIGHT,
+    DEG_PER_RAD,
+    ROTATE_GAP,
+    ROTATE_ICON_MARGIN,
+    ROTATE_SIZE,
+} from '../constants/constants';
 
 /**
  * @internal

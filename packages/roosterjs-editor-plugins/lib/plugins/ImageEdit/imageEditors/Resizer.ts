@@ -4,6 +4,7 @@ import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
 import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
+import { RESIZE_HANDLE_MARGIN, RESIZE_HANDLE_SIZE, Xs, Ys } from '../constants/constants';
 
 /**
  * An optional callback to allow customize resize handle element of image resizing.
@@ -18,10 +19,6 @@ const enum HandleTypes {
     SquareHandles,
     CircularHandlesCorner,
 }
-const RESIZE_HANDLE_SIZE = 10;
-const RESIZE_HANDLE_MARGIN = 3;
-const Xs: DNDDirectionX[] = ['w', '', 'e'];
-const Ys: DnDDirectionY[] = ['s', '', 'n'];
 
 /**
  * @internal
