@@ -2,7 +2,6 @@ import * as React from 'react';
 import apiEntries, { ApiPlaygroundReactComponent } from './apiEntries';
 import ApiPaneProps from './ApiPaneProps';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from 'roosterjs-content-model-editor';
 import { PluginEvent } from 'roosterjs-editor-types';
 import { SidePaneElement } from '../SidePaneElement';
 
@@ -16,7 +15,6 @@ export default class ApiPlaygroundPane extends React.Component<ApiPaneProps, Api
     implements SidePaneElement {
     private select = React.createRef<HTMLSelectElement>();
     private pane = React.createRef<ApiPlaygroundReactComponent>();
-    private readonly isContentModel: boolean = false;
     constructor(props: ApiPaneProps) {
         super(props);
         this.state = { current: 'empty' };
