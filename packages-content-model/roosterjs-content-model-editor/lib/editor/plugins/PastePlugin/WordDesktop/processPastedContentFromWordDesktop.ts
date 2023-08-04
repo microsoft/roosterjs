@@ -11,6 +11,7 @@ import {
     DomToModelContext,
     ElementProcessor,
     FormatParser,
+    TextIndentFormat,
 } from 'roosterjs-content-model-types';
 
 const PERCENTAGE_REGEX = /%/;
@@ -24,6 +25,7 @@ const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;
 export function processPastedContentFromWordDesktop(ev: ContentModelBeforePasteEvent) {
     setProcessor(ev.domToModelOption, 'element', wordDesktopElementProcessor);
     addParser(ev.domToModelOption, 'block', removeNonValidLineHeight);
+    addParser(ev.domToModelOption, 'block', removeNegativeTextIndentParser);
     addParser(ev.domToModelOption, 'listLevel', listLevelParser);
     addParser(ev.domToModelOption, 'listItemElement', listItemElementParser);
 
@@ -101,5 +103,11 @@ const listItemElementParser: FormatParser<ContentModelListItemFormat> = (
     }
     if (element.style.marginRight) {
         format.marginRight = undefined;
+    }
+};
+
+const removeNegativeTextIndentParser: FormatParser<TextIndentFormat> = (format, element) => {
+    if (format.textIndent?.startsWith('-')) {
+        format.textIndent = undefined;
     }
 };
