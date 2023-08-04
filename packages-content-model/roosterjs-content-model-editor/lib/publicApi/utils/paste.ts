@@ -139,7 +139,7 @@ function triggerPluginEventAndCreatePasteFragment(
     pasteAsText: boolean,
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData
-): ContentModelBeforePasteEvent | ContentModelBeforePasteEventData {
+): ContentModelBeforePasteEventData {
     const event = {
         eventType: PluginEventType.BeforePaste,
         ...eventData,
