@@ -20,11 +20,16 @@ describe('handleBlockGroupChildren', () => {
 
     beforeEach(() => {
         handleBlock = jasmine.createSpy('handleBlock').and.callFake(originalHandleBlock);
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                block: handleBlock,
+        context = createModelToDomContext(
+            {
+                allowCacheElement: true,
             },
-        });
+            {
+                modelHandlerOverride: {
+                    block: handleBlock,
+                },
+            }
+        );
         parent = document.createElement('div');
     });
 

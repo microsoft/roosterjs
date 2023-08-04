@@ -7,6 +7,7 @@ describe('handleDivider', () => {
 
     beforeEach(() => {
         context = createModelToDomContext();
+        context.allowCacheElement = true;
     });
 
     it('Simple HR', () => {
