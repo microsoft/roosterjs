@@ -127,7 +127,7 @@ export default class TableEditor {
             return;
         }
 
-        //Determine if cursor is on top or side
+        // Determine if cursor is on top or side
         const topOrSide =
             y <= firstCellRect.top + INSERTER_HOVER_OFFSET
                 ? TOP_OR_SIDE.top
@@ -138,14 +138,16 @@ export default class TableEditor {
                 : x <= firstCellRect.left + INSERTER_HOVER_OFFSET
                 ? TOP_OR_SIDE.side
                 : undefined;
+        const topOrSideBinary = topOrSide ? 1 : 0;
 
+        // Get whole table rect
+        const tableRect = normalizeRect(this.table.getBoundingClientRect());
         // i is row index, j is column index
         for (let i = 0; i < this.table.rows.length; i++) {
             const tr = this.table.rows[i];
             let j = 0;
             for (; j < tr.cells.length; j++) {
                 const td = tr.cells[j];
-                const tableRect = normalizeRect(this.table.getBoundingClientRect());
                 const tdRect = normalizeRect(td.getBoundingClientRect());
 
                 if (!tdRect || !tableRect) {
@@ -153,13 +155,14 @@ export default class TableEditor {
                 }
 
                 // Determine the cell the cursor is in range of
+                // Offset is only used for first row and column
                 const lessThanBottom = y <= tdRect.bottom;
                 const lessThanRight = this.isRTL
-                    ? x <= tdRect.right + INSERTER_HOVER_OFFSET
+                    ? x <= tdRect.right + INSERTER_HOVER_OFFSET * topOrSideBinary
                     : x <= tdRect.right;
                 const moreThanLeft = this.isRTL
                     ? x >= tdRect.left
-                    : x >= tdRect.left - INSERTER_HOVER_OFFSET;
+                    : x >= tdRect.left - INSERTER_HOVER_OFFSET * topOrSideBinary;
 
                 if (lessThanBottom && lessThanRight && moreThanLeft) {
                     const isOnLeftOrRight = this.isRTL
@@ -196,6 +199,7 @@ export default class TableEditor {
 
                     this.setResizingTd(td);
 
+                    //Cell found
                     break;
                 }
             }
@@ -205,6 +209,7 @@ export default class TableEditor {
             }
         }
 
+        // Create Selector and Resizer
         this.setEditorFeatures();
     }
 
@@ -248,7 +253,8 @@ export default class TableEditor {
                 true /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                this.anchorContainer
             );
             this.verticalResizer = createCellResizer(
                 td,
@@ -257,7 +263,8 @@ export default class TableEditor {
                 false /*isHorizontal*/,
                 this.onStartCellResize,
                 this.onFinishEditing,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                this.anchorContainer
             );
         }
     }
@@ -280,7 +287,8 @@ export default class TableEditor {
                 !!isHorizontal,
                 this.onInserted,
                 this.getOnMouseOut,
-                this.onShowHelperElement
+                this.onShowHelperElement,
+                this.anchorContainer
             );
             if (isHorizontal) {
                 this.horizontalInserter = newInserter;

@@ -19,7 +19,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let element = container.cachedElement;
+    let element = context.allowCacheElement ? container.cachedElement : undefined;
 
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
@@ -28,7 +28,10 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     } else if (!isBlockGroupEmpty(container)) {
         const containerNode = doc.createElement(container.tagName);
 
-        container.cachedElement = containerNode;
+        if (context.allowCacheElement) {
+            container.cachedElement = containerNode;
+        }
+
         parent.insertBefore(containerNode, refNode);
 
         stackFormat(context, container.tagName, () => {

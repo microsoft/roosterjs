@@ -33,7 +33,7 @@ export function contentModelToDom(
     doc: Document,
     root: Node,
     model: ContentModelDocument,
-    editorContext: EditorContext,
+    editorContext?: EditorContext,
     option?: ModelToDomOption
 ): SelectionRangeEx | null {
     const modelToDomContext = createModelToDomContext(editorContext, option);

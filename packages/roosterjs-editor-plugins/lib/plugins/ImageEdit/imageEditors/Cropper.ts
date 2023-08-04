@@ -1,20 +1,10 @@
 import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import { CreateElementData } from 'roosterjs-editor-types';
+import { CROP_HANDLE_SIZE, CROP_HANDLE_WIDTH, ROTATION, Xs, Ys } from '../constants/constants';
 import { CropInfo } from '../types/ImageEditInfo';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { rotateCoordinate } from './Resizer';
-
-const CROP_HANDLE_SIZE = 22;
-const CROP_HANDLE_WIDTH = 7;
-const Xs: DNDDirectionX[] = ['w', 'e'];
-const Ys: DnDDirectionY[] = ['s', 'n'];
-const ROTATION: Record<string, number> = {
-    sw: 0,
-    nw: 90,
-    ne: 180,
-    se: 270,
-};
 
 /**
  * @internal
