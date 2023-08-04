@@ -2,6 +2,7 @@ import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHand
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     BackgroundColorFormat,
     DomToModelContext,
@@ -97,11 +98,11 @@ describe('backgroundColorFormatHandler.apply', () => {
 
         backgroundColorFormatHandler.apply(format, div, context);
 
-        const result = [
+        const expectedResult = [
             '<div style="--darkColor_red:darkMock:red; background-color: var(--darkColor_red, red);"></div>',
             '<div style="--darkColor_red: darkMock:red; background-color: var(--darkColor_red, red);"></div>',
-        ].indexOf(div.outerHTML);
+        ];
 
-        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
+        expectHtml(div.outerHTML, expectedResult);
     });
 });

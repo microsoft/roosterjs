@@ -34,6 +34,7 @@ const initialState: BuildInPluginState = {
         ExperimentalFeatures.ContentModelPaste,
     ],
     isRtl: false,
+    tableFeaturesContainerSelector: '#' + 'EditorContainer',
 };
 
 export default class ContentModelEditorOptionsPlugin extends SidePanePluginImpl<

@@ -1,8 +1,13 @@
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditorFeature from './TableEditorFeature';
-import { createElement, normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
 import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import {
+    createElement,
+    normalizeRect,
+    safeInstanceOf,
+    getComputedStyle,
+} from 'roosterjs-editor-dom';
 
 const TABLE_SELECTOR_LENGTH = 12;
 const TABLE_SELECTOR_ID = '_Table_Selector';
@@ -12,7 +17,6 @@ const TABLE_SELECTOR_ID = '_Table_Selector';
  */
 export default function createTableSelector(
     table: HTMLTableElement,
-    zoomScale: number,
     editor: IEditor,
     onFinishDragging: (table: HTMLTableElement) => void,
     getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
@@ -20,7 +24,8 @@ export default function createTableSelector(
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
     ) => void,
-    contentDiv?: EventTarget | null
+    contentDiv?: EventTarget | null,
+    anchorContainer?: HTMLElement
 ): TableEditorFeature | null {
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -28,6 +33,7 @@ export default function createTableSelector(
         return null;
     }
 
+    const zoomScale = editor.getZoomScale();
     const document = table.ownerDocument;
     const createElementData = {
         tag: 'div',
@@ -41,15 +47,17 @@ export default function createTableSelector(
     div.id = TABLE_SELECTOR_ID;
     div.style.width = `${TABLE_SELECTOR_LENGTH}px`;
     div.style.height = `${TABLE_SELECTOR_LENGTH}px`;
-    document.body.appendChild(div);
+
+    (anchorContainer || document.body).appendChild(div);
 
     const context: TableSelectorContext = {
         table,
         zoomScale,
         rect,
+        isRTL: getComputedStyle(table, 'direction') == 'rtl',
     };
 
-    setSelectorDivPosition(context, div);
+    setDivPosition(context, div);
 
     const onDragEnd = (context: TableSelectorContext, event: MouseEvent): false => {
         if (event.target == div) {
@@ -61,11 +69,11 @@ export default function createTableSelector(
     const featureHandler = new TableSelectorFeature(
         div,
         context,
-        setSelectorDivPosition,
+        setDivPosition,
         {
             onDragEnd,
         },
-        zoomScale,
+        context.zoomScale,
         getOnMouseOut
     );
 
@@ -76,6 +84,7 @@ interface TableSelectorContext {
     table: HTMLTableElement;
     zoomScale: number;
     rect: Rect | null;
+    isRTL: boolean;
 }
 
 interface TableSelectorInitValue {
@@ -88,11 +97,16 @@ class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, Table
     constructor(
         private div: HTMLElement,
         context: TableSelectorContext,
-        onSubmit: (context: TableSelectorContext, trigger: HTMLElement) => void,
+        onSubmit: (
+            context: TableSelectorContext,
+            trigger: HTMLElement,
+            container?: HTMLElement
+        ) => void,
         handler: DragAndDropHandler<TableSelectorContext, TableSelectorInitValue>,
         zoomScale: number,
         getOnMouseOut: (feature: HTMLElement) => (ev: MouseEvent) => void,
-        forceMobile?: boolean
+        forceMobile?: boolean | undefined,
+        container?: HTMLElement
     ) {
         super(div, context, onSubmit, handler, zoomScale, forceMobile);
         this.onMouseOut = getOnMouseOut(div);
@@ -108,7 +122,7 @@ class TableSelectorFeature extends DragAndDropHelper<TableSelectorContext, Table
     }
 }
 
-function setSelectorDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
+function setDivPosition(context: TableSelectorContext, trigger: HTMLElement) {
     const { rect } = context;
     if (rect) {
         trigger.style.top = `${rect.top - TABLE_SELECTOR_LENGTH}px`;
