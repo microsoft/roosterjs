@@ -1,6 +1,7 @@
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {
     DomToModelContext,
@@ -121,11 +122,12 @@ describe('textColorFormatHandler.apply', () => {
 
         textColorFormatHandler.apply(format, div, context);
 
-        const result = [
+        const expectedResult = [
+            '<div style="--darkColor_red:darkMock: red; color: var(--darkColor_red, red);"></div>',
             '<div style="--darkColor_red: darkMock: red; color: var(--darkColor_red, red);"></div>',
-        ].indexOf(div.outerHTML);
+        ];
 
-        expect(result).toBeGreaterThanOrEqual(0, div.outerHTML);
+        expectHtml(div.outerHTML, expectedResult);
     });
 
     it('HyperLink without color', () => {

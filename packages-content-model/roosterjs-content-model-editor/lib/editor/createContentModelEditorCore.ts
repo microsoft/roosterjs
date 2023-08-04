@@ -9,6 +9,7 @@ import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-
 import { createContentModel } from './coreApi/createContentModel';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
+import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 
@@ -27,12 +28,7 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            typeInContainer: isFeatureEnabled(
-                options.experimentalFeatures,
-                ExperimentalFeatures.EditWithContentModel
-            )
-                ? new ContentModelTypeInContainerPlugin()
-                : undefined,
+            typeInContainer: new ContentModelTypeInContainerPlugin(),
             copyPaste: isFeatureEnabled(
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
@@ -81,10 +77,6 @@ function promoteContentModelInfo(
 
     cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
     cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
-    cmCore.reuseModel = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.ReusableContentModel
-    );
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
@@ -95,16 +87,8 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
-
-    if (
-        isFeatureEnabled(
-            cmCore.lifecycle.experimentalFeatures,
-            ExperimentalFeatures.ReusableContentModel
-        )
-    ) {
-        // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
-        cmCore.api.switchShadowEdit = switchShadowEdit;
-    }
+    cmCore.api.switchShadowEdit = switchShadowEdit;
+    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;

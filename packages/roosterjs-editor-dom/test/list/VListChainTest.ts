@@ -1,7 +1,7 @@
 import getBlockElementAtNode from '../../lib/blockElements/getBlockElementAtNode';
 import VListChain from '../../lib/list/VListChain';
 import VListItem from '../../lib/list/VListItem';
-import { itFirefoxOnly } from '../DomTestHelper';
+import { expectHtml, itFirefoxOnly } from '../DomTestHelper';
 import { ListType, PositionType } from 'roosterjs-editor-types';
 import { Position } from 'roosterjs-editor-dom';
 
@@ -24,7 +24,7 @@ describe('createListChains', () => {
         expect(chains).toEqual([]);
     });
 
-    function runTest(html: string, expectedHtml: string) {
+    function runTest(html: string, expectedHtml: string | string[]) {
         const div = document.createElement('div');
         document.body.appendChild(div);
         div.innerHTML = html;
@@ -39,7 +39,7 @@ describe('createListChains', () => {
             nameGenerator
         );
 
-        expect(div.innerHTML).toBe(expectedHtml);
+        expectHtml(div.innerHTML, expectedHtml);
         document.body.removeChild(div);
     }
 
@@ -71,42 +71,60 @@ describe('createListChains', () => {
     itFirefoxOnly('Two continuously lists', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li></ol><div>test</div><ol start="3"><li>item3</li></ol>',
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ol start="3" data-listchain="${CHAIN_NAME_PREFIX}0"><li>item3</li></ol>`,
+            ]
         );
     });
 
     itFirefoxOnly('Two list chains', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol><li>itemA</li><li>itemB</li></ol><ol start="4"><li>item4</li></ol><div>test</div><ol start="3"><li>itemC</li></ol>',
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1"><li>itemA</li><li>itemB</li></ol><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="4"><li>item4</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>itemC</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1"><li>itemA</li><li>itemB</li></ol><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="4"><li>item4</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>itemC</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li><li>item3</li></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1"><li>itemA</li><li>itemB</li></ol><ol start="4" data-listchain="${CHAIN_NAME_PREFIX}0"><li>item4</li></ol><div>test</div><ol start="3" data-listchain="${CHAIN_NAME_PREFIX}1"><li>itemC</li></ol>`,
+            ]
         );
     });
 
     itFirefoxOnly('Unordered list in a chain', () => {
         runTest(
             '<ol><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol start="3"><li>item3</li></ol>',
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="3"><li>item3</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><li>item2</li></ol><div>test</div><ul><li>test</li></ul><div>test</div><ol start="3" data-listchain="${CHAIN_NAME_PREFIX}0"><li>item3</li></ol>`,
+            ]
         );
     });
 
     itFirefoxOnly('Nested list', () => {
         runTest(
             '<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="2"><li>item2</li></ol>',
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="2"><li>item2</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="2"><li>item2</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="2" data-listchain="${CHAIN_NAME_PREFIX}0"><li>item2</li></ol>`,
+            ]
         );
     });
 
     itFirefoxOnly('Nested list for separated lists', () => {
         runTest(
             '<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="3"><li>item2</li></ol>',
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>item2</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol data-listchain="${CHAIN_NAME_PREFIX}1" start="3"><li>item2</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div>test</div><ol start="3" data-listchain="${CHAIN_NAME_PREFIX}1"><li>item2</li></ol>`,
+            ]
         );
     });
 
     itFirefoxOnly('Current node', () => {
         runTest(
             `<ol><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol start="2"><li>item2</li></ol>`,
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" data-listchainafter="true" start="2"><li>item2</li></ol>`
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol data-listchain="${CHAIN_NAME_PREFIX}0" data-listchainafter="true" start="2"><li>item2</li></ol>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item1</li><ol><li>item1.1</li><li>item1.2</li></ol></ol><div id="${CurrentNode}">test</div><ol start="2" data-listchain="${CHAIN_NAME_PREFIX}0" data-listchainafter="true"><li>item2</li></ol>`,
+            ]
         );
     });
 });
@@ -207,7 +225,7 @@ describe('VListChain.createVListAtNode', () => {
     function runTest(
         html: string,
         startNumber: number,
-        expectedHtml: string,
+        expectedHtml: string | string[],
         expectedItems: { listTypes: ListType[]; outerHTML: string }[]
     ) {
         const div = document.createElement('div');
@@ -239,7 +257,7 @@ describe('VListChain.createVListAtNode', () => {
             expect(vList).toBeNull();
         }
 
-        expect(div.innerHTML).toBe(expectedHtml);
+        expectHtml(div.innerHTML, expectedHtml);
 
         document.body.removeChild(div);
     }
@@ -257,7 +275,10 @@ describe('VListChain.createVListAtNode', () => {
         runTest(
             `<ol><li>item</li></ol><div id="${CurrentNode}">test</div>`,
             2,
-            `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item</li></ol><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="2"></ol><li id="${CurrentNode}">test</li>`,
+            [
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item</li></ol><ol data-listchain="${CHAIN_NAME_PREFIX}0" start="2"></ol><li id="${CurrentNode}">test</li>`,
+                `<ol data-listchain="${CHAIN_NAME_PREFIX}0"><li>item</li></ol><ol start="2" data-listchain="${CHAIN_NAME_PREFIX}0"></ol><li id="${CurrentNode}">test</li>`,
+            ],
             [
                 {
                     listTypes: [ListType.None],

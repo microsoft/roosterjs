@@ -8,24 +8,24 @@ import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendin
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
-import {
     EditorPlugin,
     EntityOperationEvent,
-    ExperimentalFeatures,
     IEditor,
     Keys,
     NodePosition,
     NodeType,
     PluginEvent,
     PluginEventType,
+    PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import {
+    getObjectKeys,
+    isBlockElement,
+    isCharacterValue,
+    isModifierKey,
+    Position,
+} from 'roosterjs-editor-dom';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -39,7 +39,6 @@ const ProcessKey = 'Process';
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
     private triggeredEntityEvents: EntityOperationEvent[] = [];
-    private editWithContentModel = false;
     private hasDefaultFormat = false;
 
     /**
@@ -58,9 +57,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
-        this.editWithContentModel = this.editor.isFeatureEnabled(
-            ExperimentalFeatures.EditWithContentModel
-        );
 
         const defaultFormat = this.editor.getContentModelDefaultFormat();
         this.hasDefaultFormat =
@@ -91,7 +87,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.KeyDown:
-                    this.handleKeyDownEvent(this.editor, event.rawEvent);
+                    this.handleKeyDownEvent(this.editor, event);
                     break;
 
                 case PluginEventType.ContentChanged:
@@ -112,13 +108,14 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         }
     }
 
-    private handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
+    private handleKeyDownEvent(editor: IContentModelEditor, event: PluginKeyDownEvent) {
+        const rawEvent = event.rawEvent;
         const which = rawEvent.which;
 
-        if (!this.editWithContentModel || rawEvent.defaultPrevented) {
+        if (rawEvent.defaultPrevented || event.handledByEditFeature) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
             editor.cacheContentModel(null /*model*/);
-        } else if (!rawEvent.defaultPrevented) {
+        } else {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
                 case Keys.BACKSPACE:

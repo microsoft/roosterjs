@@ -1,8 +1,7 @@
-import * as createFragmentFromClipboardData from 'roosterjs-editor-dom/lib/clipboard/createFragmentFromClipboardData';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import paste from '../../../lib/publicApi/utils/paste';
-import { ClipboardData } from 'roosterjs-editor-types';
+import { ClipboardData, PasteType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -25,7 +24,6 @@ describe('Paste ', () => {
     const mockedPos = 'POS' as any;
 
     let div: HTMLDivElement;
-    let fragment = document.createDocumentFragment();
 
     const clipboardData: ClipboardData = {
         types: ['image/png', 'text/html'],
@@ -38,7 +36,6 @@ describe('Paste ', () => {
 
     beforeEach(() => {
         spyOn(domToContentModel, 'domToContentModel').and.callThrough();
-        spyOn(createFragmentFromClipboardData, 'default').and.returnValue(fragment);
 
         div = document.createElement('div');
         document.body.appendChild(div);
@@ -53,8 +50,29 @@ describe('Paste ', () => {
         focus = jasmine.createSpy('focus');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         getContent = jasmine.createSpy('getContent');
-        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getDocument = jasmine.createSpy('getDocument').and.returnValue(document);
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent').and.returnValue({
+            clipboardData,
+            fragment: document.createDocumentFragment(),
+            sanitizingOption: {
+                elementCallbacks: {},
+                attributeCallbacks: {},
+                cssStyleCallbacks: {},
+                additionalTagReplacements: {},
+                additionalAllowedAttributes: [],
+                additionalAllowedCssClasses: [],
+                additionalDefaultStyleValues: {},
+                additionalGlobalStyleNodes: [],
+                additionalPredefinedCssForElement: {},
+                preserveHtmlComments: false,
+                unknownTagReplacement: null,
+            },
+            htmlBefore: '',
+            htmlAfter: '',
+            htmlAttributes: {},
+            domToModelOption: {},
+            pasteType: PasteType.Normal,
+        });
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);

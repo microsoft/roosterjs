@@ -6,5 +6,6 @@
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": ""
     },
+    "version": "0.0.0",
     "main": "./lib/index.ts"
 }

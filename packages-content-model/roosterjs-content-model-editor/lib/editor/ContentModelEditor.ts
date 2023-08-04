@@ -1,13 +1,13 @@
+import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { createContentModelEditorCore } from './createContentModelEditorCore';
+import { EditorBase } from 'roosterjs-editor-core';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
 } from 'roosterjs-content-model-types';
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
-import { createContentModelEditorCore } from './createContentModelEditorCore';
-import { EditorBase } from 'roosterjs-editor-core';
 
 /**
  * Editor for Content Model.
@@ -53,8 +53,9 @@ export default class ContentModelEditor
     cacheContentModel(model: ContentModelDocument | null) {
         const core = this.getCore();
 
-        if (core.reuseModel && !core.lifecycle.shadowEditFragment) {
+        if (!core.lifecycle.shadowEditFragment) {
             core.cachedModel = model || undefined;
+            core.cachedRangeEx = undefined;
         }
     }
 

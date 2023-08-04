@@ -52,16 +52,6 @@ export function getSelectedSegmentsAndParagraphs(
 /**
  * @internal
  */
-export function getSelectedSegments(
-    model: ContentModelDocument,
-    includingFormatHolder: boolean
-): ContentModelSegment[] {
-    return getSelectedSegmentsAndParagraphs(model, includingFormatHolder).map(x => x[0]);
-}
-
-/**
- * @internal
- */
 export function getSelectedParagraphs(model: ContentModelDocument): ContentModelParagraph[] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     const result: ContentModelParagraph[] = [];
@@ -123,19 +113,28 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
 /**
  * @internal
  */
-export function getFirstSelectedTable(model: ContentModelDocument): ContentModelTable | undefined {
+export function getFirstSelectedTable(
+    model: ContentModelDocument
+): [ContentModelTable | undefined, ContentModelBlockGroup | undefined] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     let table: ContentModelTable | undefined;
+    let parent: ContentModelBlockGroup | undefined;
 
     removeUnmeaningfulSelections(selections);
 
-    selections.forEach(({ block, tableContext }) => {
+    selections.forEach(({ block, tableContext, path }) => {
         if (!table) {
-            table = block?.blockType == 'Table' ? block : tableContext?.table;
+            if (block?.blockType == 'Table') {
+                table = block;
+                parent = path[0];
+            } else if (tableContext?.table) {
+                table = tableContext.table;
+                parent = path.filter(group => group.blocks.indexOf(tableContext.table) >= 0)[0];
+            }
         }
     });
 
-    return table;
+    return [table, parent];
 }
 
 /**
