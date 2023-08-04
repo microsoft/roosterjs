@@ -2,6 +2,7 @@ import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-cont
 import { deleteSelection } from '../edit/deleteSelection';
 import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
+import { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { setSelection } from '../selection/setSelection';
 import {
@@ -19,11 +20,11 @@ import {
  */
 export function insertEntityModel(
     model: ContentModelDocument,
-    context: FormatWithContentModelContext,
     entityModel: ContentModelEntity,
-    position: 'focus' | 'begin' | 'end' | 'root',
+    position: InsertEntityPosition,
     isBlock: boolean,
-    focusAfterEntity: boolean | undefined
+    focusAfterEntity?: boolean,
+    context?: FormatWithContentModelContext
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;
@@ -60,38 +61,45 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
-        const nextBlock = blockParent.blocks[blockIndex];
-        const blocksToInsert = [
-            isBlock ? entityModel : wrapWithParagraph(entityModel, model.format),
-        ];
-        let nextParagraph: ContentModelParagraph | undefined;
+        if (isBlock) {
+            const nextBlock = blockParent.blocks[blockIndex];
+            const blocksToInsert: ContentModelBlock[] = [entityModel];
+            let nextParagraph: ContentModelParagraph | undefined;
 
-        if (nextBlock?.blockType == 'Paragraph') {
-            nextParagraph = nextBlock;
-        } else if (!nextBlock || nextBlock.blockType == 'Entity' || focusAfterEntity) {
-            nextParagraph = createParagraph(false /*isImplicit*/, {}, model.format);
-            nextParagraph.segments.push(createBr(model.format));
-            blocksToInsert.push(nextParagraph);
-        }
+            if (nextBlock?.blockType == 'Paragraph') {
+                nextParagraph = nextBlock;
+            } else if (!nextBlock || nextBlock.blockType == 'Entity' || focusAfterEntity) {
+                nextParagraph = createParagraph(false /*isImplicit*/, {}, model.format);
+                nextParagraph.segments.push(createBr(model.format));
+                blocksToInsert.push(nextParagraph);
+            }
 
-        blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
+            blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
 
-        if (focusAfterEntity && nextParagraph) {
-            const marker = createSelectionMarker(nextParagraph.segments[0]?.format || model.format);
+            if (focusAfterEntity && nextParagraph) {
+                const marker = createSelectionMarker(
+                    nextParagraph.segments[0]?.format || model.format
+                );
 
-            nextParagraph.segments.unshift(marker);
-            setSelection(model, marker, marker);
+                nextParagraph.segments.unshift(marker);
+                setSelection(model, marker, marker);
+            }
+        } else {
+            const wrapperPara = createParagraph(
+                false /*isImplicit*/,
+                undefined /*format*/,
+                model.format
+            );
+
+            wrapperPara.segments.push(entityModel);
+            blockParent.blocks.splice(blockIndex, 0, wrapperPara);
+
+            if (focusAfterEntity) {
+                const marker = createSelectionMarker(model.format);
+
+                wrapperPara.segments.push(marker);
+                setSelection(model, marker, marker);
+            }
         }
     }
-}
-
-function wrapWithParagraph(
-    segment: ContentModelSegment,
-    defaultFormat?: ContentModelSegmentFormat
-): ContentModelParagraph {
-    const para = createParagraph(false /*isImplicit*/, undefined /*format*/, defaultFormat);
-
-    para.segments.push(segment);
-
-    return para;
 }
