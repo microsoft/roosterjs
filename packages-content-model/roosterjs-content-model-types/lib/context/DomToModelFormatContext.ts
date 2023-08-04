@@ -44,12 +44,6 @@ export interface DomToModelFormatContext {
      * Context of list that is currently processing
      */
     listFormat: DomToModelListFormat;
-
-    /**
-     * Whether put the source element into Content Model when possible.
-     * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
-     */
-    allowCacheElement?: boolean;
 }
 
 /**
