@@ -118,7 +118,6 @@ describe('wordOnlineHandler', () => {
 
         const model = domToContentModel(fragment, {
             ...event.domToModelOption,
-            disableCacheElement: true,
         });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);

@@ -1,14 +1,14 @@
-import {
-    ContentModelBlockGroup,
-    ContentModelHandler,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 import { createFormatContainer } from '../../../lib/modelApi/creators/createFormatContainer';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import { handleBlockGroupChildren as originalHandleBlockGroupChildren } from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
 import { handleFormatContainer } from '../../../lib/modelToDom/handlers/handleFormatContainer';
+import {
+    ContentModelBlockGroup,
+    ContentModelHandler,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 describe('handleFormatContainer', () => {
     let context: ModelToDomContext;
@@ -16,11 +16,16 @@ describe('handleFormatContainer', () => {
 
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                blockGroupChildren: handleBlockGroupChildren,
+        context = createModelToDomContext(
+            {
+                allowCacheElement: true,
             },
-        });
+            {
+                modelHandlerOverride: {
+                    blockGroupChildren: handleBlockGroupChildren,
+                },
+            }
+        );
     });
 
     it('Empty quote', () => {

@@ -21,7 +21,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let container = paragraph.cachedElement;
+    let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
     if (container) {
         refNode = reuseCachedElement(parent, container, refNode);
@@ -102,7 +102,9 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             refNode = container.nextSibling;
 
             if (needParagraphWrapper) {
-                paragraph.cachedElement = container;
+                if (context.allowCacheElement) {
+                    paragraph.cachedElement = container;
+                }
             } else {
                 unwrap(container);
             }
