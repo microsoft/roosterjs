@@ -30,12 +30,11 @@ const initialState: BuildInPluginState = {
     forcePreserveRatio: false,
     experimentalFeatures: [
         ExperimentalFeatures.AutoFormatList,
-        ExperimentalFeatures.ReusableContentModel,
-        ExperimentalFeatures.EditWithContentModel,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
         ExperimentalFeatures.ContentModelPaste,
     ],
     isRtl: false,
+    tableFeaturesContainerSelector: '#' + 'EditorContainer',
 };
 
 export default class ContentModelEditorOptionsPlugin extends SidePanePluginImpl<

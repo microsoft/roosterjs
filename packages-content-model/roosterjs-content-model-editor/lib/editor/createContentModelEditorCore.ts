@@ -28,12 +28,7 @@ export const createContentModelEditorCore: CoreCreator<
             new ContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            typeInContainer: isFeatureEnabled(
-                options.experimentalFeatures,
-                ExperimentalFeatures.EditWithContentModel
-            )
-                ? new ContentModelTypeInContainerPlugin()
-                : undefined,
+            typeInContainer: new ContentModelTypeInContainerPlugin(),
             copyPaste: isFeatureEnabled(
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
@@ -82,10 +77,6 @@ function promoteContentModelInfo(
 
     cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
     cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
-    cmCore.reuseModel = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.ReusableContentModel
-    );
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
@@ -96,17 +87,8 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
+    cmCore.api.switchShadowEdit = switchShadowEdit;
     cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
-
-    if (
-        isFeatureEnabled(
-            cmCore.lifecycle.experimentalFeatures,
-            ExperimentalFeatures.ReusableContentModel
-        )
-    ) {
-        // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
-        cmCore.api.switchShadowEdit = switchShadowEdit;
-    }
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;

@@ -2,6 +2,7 @@ import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
+import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import {
     ContentModelBlockFormat,
     ContentModelDocument,
@@ -46,7 +47,7 @@ describe('End to end test for DOM => Model', () => {
             expectedHTMLFirefox, //firefox
         ];
 
-        expect(possibleHTML.indexOf(div2.innerHTML)).toBeGreaterThanOrEqual(0, div2.innerHTML);
+        expectHtml(div2.innerHTML, possibleHTML);
     }
 
     it('List with margin', () => {

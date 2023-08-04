@@ -2,13 +2,8 @@ import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/c
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
+import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tablePreProcessor } from '../../lib/domToModel/processors/tablePreProcessor';
-import {
-    EditorPlugin,
-    ExperimentalFeatures,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -35,7 +30,6 @@ describe('ContentModelEditor', () => {
                 processorOverride: {
                     table: tablePreProcessor,
                 },
-                disableCacheElement: true,
             },
             editorContext,
             {
@@ -48,9 +42,7 @@ describe('ContentModelEditor', () => {
 
     it('domToContentModel, with Reuse Content Model dont add disableCacheElement option', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
-        });
+        const editor = new ContentModelEditor(div);
 
         const mockedResult = 'Result' as any;
 
@@ -174,9 +166,7 @@ describe('ContentModelEditor', () => {
 
     it('get model with cache', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
-        });
+        const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
         (editor as any).core.cachedModel = cachedModel;
@@ -191,9 +181,7 @@ describe('ContentModelEditor', () => {
 
     it('cache model', () => {
         const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            experimentalFeatures: [ExperimentalFeatures.ReusableContentModel],
-        });
+        const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
         editor.cacheContentModel(cachedModel);
