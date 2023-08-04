@@ -44,6 +44,7 @@ export function setModelIndentation(
             const { format } = block;
             const { marginLeft, marginRight, direction } = format;
             const isRtl = direction == 'rtl';
+
             const originalValue = parseValueWithUnit(isRtl ? marginRight : marginLeft);
             let newValue = (isIndent ? Math.ceil : Math.floor)(originalValue / length) * length;
 

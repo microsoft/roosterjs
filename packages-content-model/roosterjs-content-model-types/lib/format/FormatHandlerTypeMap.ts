@@ -25,6 +25,7 @@ import { SuperOrSubScriptFormat } from './formatParts/SuperOrSubScriptFormat';
 import { TableLayoutFormat } from './formatParts/TableLayoutFormat';
 import { TextAlignFormat } from './formatParts/TextAlignFormat';
 import { TextColorFormat } from './formatParts/TextColorFormat';
+import { TextIndentFormat } from './formatParts/TextIndentFormat';
 import { UnderlineFormat } from './formatParts/UnderlineFormat';
 import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 import { WhiteSpaceFormat } from './formatParts/WhiteSpaceFormat';
@@ -178,6 +179,11 @@ export interface FormatHandlerTypeMap {
      * Format for TextColorFormat, for Table Cell only
      */
     textColorOnTableCell: TextColorFormat;
+
+    /**
+     * Format for TextIndentFormat
+     */
+    textIndent: TextIndentFormat;
 
     /**
      * Format for UnderlineFormat

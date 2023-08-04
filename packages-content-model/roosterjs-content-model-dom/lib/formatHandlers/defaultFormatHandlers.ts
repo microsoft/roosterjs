@@ -29,6 +29,7 @@ import { tableSpacingFormatHandler } from './table/tableSpacingFormatHandler';
 import { textAlignFormatHandler } from './block/textAlignFormatHandler';
 import { textColorFormatHandler } from './segment/textColorFormatHandler';
 import { textColorOnTableCellFormatHandler } from './table/textColorOnTableCellFormatHandler';
+import { textIndentFormatHandler } from './block/textIndentFormatHandler';
 import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
@@ -79,6 +80,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     textAlign: textAlignFormatHandler,
     textColor: textColorFormatHandler,
     textColorOnTableCell: textColorOnTableCellFormatHandler,
+    textIndent: textIndentFormatHandler,
     underline: underlineFormatHandler,
     verticalAlign: verticalAlignFormatHandler,
     whiteSpace: whiteSpaceFormatHandler,
@@ -101,6 +103,7 @@ const elementBasedSegmentFormats: (keyof FormatHandlerTypeMap)[] = [
 const sharedBlockFormats: (keyof FormatHandlerTypeMap)[] = [
     'direction',
     'textAlign',
+    'textIndent',
     'lineHeight',
     'whiteSpace',
 ];

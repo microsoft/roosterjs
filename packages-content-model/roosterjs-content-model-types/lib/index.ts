@@ -35,6 +35,7 @@ export { HtmlAlignFormat } from './format/formatParts/HtmlAlignFormat';
 export { MarginFormat } from './format/formatParts/MarginFormat';
 export { PaddingFormat } from './format/formatParts/PaddingFormat';
 export { TextAlignFormat } from './format/formatParts/TextAlignFormat';
+export { TextIndentFormat } from './format/formatParts/TextIndentFormat';
 export { WhiteSpaceFormat } from './format/formatParts/WhiteSpaceFormat';
 export { DisplayFormat } from './format/formatParts/DisplayFormat';
 export { IdFormat } from './format/formatParts/IdFormat';
