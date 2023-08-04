@@ -18,9 +18,6 @@ export function initEditor(id: string) {
     let options: ContentModelEditorOptions = {
         plugins: [new ContentModelPastePlugin()],
         experimentalFeatures: [ExperimentalFeatures.ContentModelPaste],
-        defaultDomToModelOptions: {
-            disableCacheElement: true,
-        },
     };
 
     let editor = new ContentModelEditor(node as HTMLDivElement, options);
@@ -80,7 +77,6 @@ describe(ID, () => {
             processorOverride: {
                 table: tableProcessor,
             },
-            disableCacheElement: true,
         });
 
         expect(model).toEqual({
