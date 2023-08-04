@@ -20,7 +20,8 @@ export default function createCellResizer(
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    ) => void,
+    anchorContainer?: HTMLElement
 ): TableEditFeature | null {
     const document = td.ownerDocument;
     const createElementData = {
@@ -32,7 +33,7 @@ export default function createCellResizer(
 
     const div = createElement(createElementData, document) as HTMLDivElement;
 
-    document.body.appendChild(div);
+    (anchorContainer || document.body).appendChild(div);
 
     const context: DragAndDropContext = { td, isRTL, zoomScale, onStart };
     const setPosition = isHorizontal ? setHorizontalPosition : setVerticalPosition;
