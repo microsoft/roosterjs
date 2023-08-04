@@ -7,7 +7,9 @@ describe('handleEntity', () => {
     let context: ModelToDomContext;
 
     beforeEach(() => {
-        context = createModelToDomContext();
+        context = createModelToDomContext({
+            allowCacheElement: true,
+        });
         spyOn(addDelimiters, 'default').and.callThrough();
     });
 
