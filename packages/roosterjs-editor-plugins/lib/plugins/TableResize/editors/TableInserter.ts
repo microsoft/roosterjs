@@ -21,7 +21,8 @@ export default function createTableInserter(
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    ) => void,
+    anchorContainer?: HTMLElement
 ): TableEditFeature | null {
     const table = editor.getElementAtCursor('table', td);
 
@@ -61,7 +62,7 @@ export default function createTableInserter(
             (div.firstChild as HTMLElement).style.height = `${tableRect.bottom - tableRect.top}px`;
         }
 
-        document.body.appendChild(div);
+        (anchorContainer || document.body).appendChild(div);
 
         const handler = new TableInsertHandler(
             div,
