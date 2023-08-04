@@ -1317,7 +1317,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     },
                     {
                         blockType: 'Paragraph',
-                        segments: [txt1, marker],
+                        segments: [txt1, txt2],
                         format: {},
                     },
                 ],
@@ -1420,6 +1420,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                         segments: [marker, Entity],
                         format: {},
                     },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
                 ],
             },
             {
@@ -1428,6 +1433,11 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     {
                         blockType: 'Paragraph',
                         segments: [marker, Entity],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
                         format: {},
                     },
                 ],
@@ -1621,6 +1631,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                         blockType: 'Paragraph',
                         segments: [Entity],
                         format: {},
+                        segmentFormat: format,
                     },
                 ],
                 format,
@@ -1642,6 +1653,524 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
                     {
                         blockType: 'Paragraph',
                         segments: [txt1, marker, Entity, txt2],
+                        format: {},
+                    },
+                ],
+                format,
+            }
+        );
+    });
+});
+
+describe('insertEntityModel, inline element, focus after entity', () => {
+    const marker = createSelectionMarker();
+
+    function runTest(
+        createModel: () => ContentModelDocument,
+        topResult: ContentModelDocument,
+        bottomResult: ContentModelDocument,
+        focusResult: ContentModelDocument,
+        rootResult: ContentModelDocument
+    ) {
+        runTestGlobal(createModel(), 'begin', topResult, false, true);
+        runTestGlobal(createModel(), 'end', bottomResult, false, true);
+        runTestGlobal(createModel(), 'focus', focusResult, false, true);
+        runTestGlobal(createModel(), 'root', rootResult, false, true);
+    }
+
+    it('no selection', () => {
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para = createParagraph();
+
+                model.blocks.push(para);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('collapsed selection', () => {
+        const txt1 = createText('test1');
+        const txt2 = createText('test2');
+
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para = createParagraph();
+
+                para.segments.push(txt1, marker, txt2);
+                model.blocks.push(para);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker, txt2],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker, txt2],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Expanded selection', () => {
+        const txt1 = createText('test1');
+        const txt2 = createText('test2');
+
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para = createParagraph();
+
+                txt2.isSelected = true;
+
+                para.segments.push(txt1, txt2);
+                model.blocks.push(para);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Before another paragraph', () => {
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para1 = createParagraph();
+                const para2 = createParagraph();
+
+                para1.segments.push(marker);
+                model.blocks.push(para1, para2);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                ],
+            }
+        );
+    });
+
+    it('Before another divider', () => {
+        const divider = createDivider('hr');
+
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para1 = createParagraph();
+
+                para1.segments.push(marker);
+                model.blocks.push(para1, divider);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    divider,
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    divider,
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    divider,
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    divider,
+                ],
+            }
+        );
+    });
+
+    it('Before another entity', () => {
+        const entity2 = createEntity({} as any, true);
+
+        runTest(
+            () => {
+                const model = createContentModelDocument();
+                const para1 = createParagraph();
+
+                para1.segments.push(marker);
+                model.blocks.push(para1, entity2);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    entity2,
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [],
+                        format: {},
+                    },
+                    entity2,
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    entity2,
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker],
+                        format: {},
+                    },
+                    entity2,
+                ],
+            }
+        );
+    });
+
+    it('With default format', () => {
+        const txt1 = createText('test1');
+        const txt2 = createText('test2');
+        const format = {
+            fontSize: '10px',
+        };
+        const marker2 = createSelectionMarker(format);
+
+        runTest(
+            () => {
+                const model = createContentModelDocument(format);
+                const para = createParagraph();
+
+                para.segments.push(txt1, marker, txt2);
+                model.blocks.push(para);
+
+                return model;
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker2],
+                        format: {},
+                        segmentFormat: format,
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                ],
+                format,
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, txt2],
+                        format: {},
+                    },
+                    {
+                        blockType: 'Paragraph',
+                        segments: [Entity, marker2],
+                        format: {},
+                        segmentFormat: format,
+                    },
+                ],
+                format,
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker, txt2],
+                        format: {},
+                    },
+                ],
+                format,
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        segments: [txt1, Entity, marker, txt2],
                         format: {},
                     },
                 ],

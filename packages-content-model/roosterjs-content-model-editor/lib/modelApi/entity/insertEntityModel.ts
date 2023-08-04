@@ -11,8 +11,6 @@ import {
     ContentModelDocument,
     ContentModelEntity,
     ContentModelParagraph,
-    ContentModelSegment,
-    ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -61,10 +59,13 @@ export function insertEntityModel(
     }
 
     if (blockIndex >= 0 && blockParent) {
+        const blocksToInsert: ContentModelBlock[] = [];
+        let nextParagraph: ContentModelParagraph | undefined;
+
         if (isBlock) {
             const nextBlock = blockParent.blocks[blockIndex];
-            const blocksToInsert: ContentModelBlock[] = [entityModel];
-            let nextParagraph: ContentModelParagraph | undefined;
+
+            blocksToInsert.push(entityModel);
 
             if (nextBlock?.blockType == 'Paragraph') {
                 nextParagraph = nextBlock;
@@ -73,33 +74,25 @@ export function insertEntityModel(
                 nextParagraph.segments.push(createBr(model.format));
                 blocksToInsert.push(nextParagraph);
             }
-
-            blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
-
-            if (focusAfterEntity && nextParagraph) {
-                const marker = createSelectionMarker(
-                    nextParagraph.segments[0]?.format || model.format
-                );
-
-                nextParagraph.segments.unshift(marker);
-                setSelection(model, marker, marker);
-            }
         } else {
-            const wrapperPara = createParagraph(
+            nextParagraph = createParagraph(
                 false /*isImplicit*/,
                 undefined /*format*/,
                 model.format
             );
 
-            wrapperPara.segments.push(entityModel);
-            blockParent.blocks.splice(blockIndex, 0, wrapperPara);
+            nextParagraph.segments.push(entityModel);
+            blocksToInsert.push(nextParagraph);
+        }
 
-            if (focusAfterEntity) {
-                const marker = createSelectionMarker(model.format);
+        blockParent.blocks.splice(blockIndex, 0, ...blocksToInsert);
 
-                wrapperPara.segments.push(marker);
-                setSelection(model, marker, marker);
-            }
+        if (focusAfterEntity && nextParagraph) {
+            const marker = createSelectionMarker(nextParagraph.segments[0]?.format || model.format);
+            const segments = nextParagraph.segments;
+
+            isBlock ? segments.unshift(marker) : segments.push(marker);
+            setSelection(model, marker, marker);
         }
     }
 }
