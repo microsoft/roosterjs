@@ -239,4 +239,14 @@ describe('formatWithContentModel', () => {
             rawEvent: rawEvent,
         });
     });
+
+    it('With selectionOverride', () => {
+        const range = 'MockedRangeEx' as any;
+
+        formatWithContentModel(editor, apiName, () => true, {
+            selectionOverride: range,
+        });
+
+        expect(createContentModel).toHaveBeenCalledWith(undefined, range);
+    });
 });
