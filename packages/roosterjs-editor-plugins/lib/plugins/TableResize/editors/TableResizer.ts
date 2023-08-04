@@ -20,7 +20,7 @@ export default function createTableResizer(
     table: HTMLTableElement,
     editor: IEditor,
     onStart: () => void,
-    onDragEnd: () => false,
+    onEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
@@ -58,6 +58,10 @@ export default function createTableResizer(
         table,
         zoomScale,
         onStart,
+        onEnd,
+        div,
+        editor,
+        contentDiv,
     };
 
     setDivPosition(context, div);
@@ -65,7 +69,7 @@ export default function createTableResizer(
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        setDivPosition,
+        hideResizer, // Resizer is hidden while dragging only
         {
             onDragStart,
             onDragging,
@@ -82,6 +86,10 @@ interface DragAndDropContext {
     isRTL: boolean;
     zoomScale: number;
     onStart: () => void;
+    onEnd: () => false;
+    div: HTMLDivElement;
+    editor: IEditor;
+    contentDiv?: EventTarget | null;
 }
 
 interface DragAndDropInitValue {
@@ -153,6 +161,25 @@ function onDragging(
     }
 }
 
+function onDragEnd(
+    context: DragAndDropContext,
+    event: MouseEvent,
+    initValue: DragAndDropInitValue | undefined
+) {
+    if (
+        isTableBottomVisible(
+            context.editor,
+            normalizeRect(context.table.getBoundingClientRect()),
+            context.contentDiv
+        )
+    ) {
+        context.div.style.visibility = 'visible';
+        setDivPosition(context, context.div);
+    }
+    context.onEnd();
+    return false;
+}
+
 function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
     const { table, isRTL } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
@@ -163,6 +190,10 @@ function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
             : `${rect.right}px`;
     }
+}
+
+function hideResizer(context: DragAndDropContext, trigger: HTMLElement) {
+    trigger.style.visibility = 'hidden';
 }
 
 function isTableBottomVisible(
