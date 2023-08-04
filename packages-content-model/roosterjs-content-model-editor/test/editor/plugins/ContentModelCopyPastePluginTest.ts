@@ -177,10 +177,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -237,10 +234,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -292,10 +286,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -380,10 +371,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -439,10 +427,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();
@@ -496,10 +481,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                {
-                    isDarkMode: false,
-                    darkColorHandler: darkColorHandler,
-                },
+                undefined,
                 { onNodeCreated }
             );
             expect(createContentModelSpy).toHaveBeenCalled();

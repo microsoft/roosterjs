@@ -4,12 +4,16 @@ import ImageHtmlOptions from '../types/ImageHtmlOptions';
 import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { RotateInfo } from '../types/ImageEditInfo';
-
-const ROTATE_SIZE = 32;
-const ROTATE_GAP = 15;
-const DEG_PER_RAD = 180 / Math.PI;
-const DEFAULT_ROTATE_HANDLE_HEIGHT = ROTATE_SIZE / 2 + ROTATE_GAP;
-const ROTATE_ICON_MARGIN = 8;
+import {
+    DEFAULT_ROTATE_HANDLE_HEIGHT,
+    DEG_PER_RAD,
+    RESIZE_HANDLE_MARGIN,
+    ROTATE_GAP,
+    ROTATE_HANDLE_TOP,
+    ROTATE_ICON_MARGIN,
+    ROTATE_SIZE,
+    ROTATE_WIDTH,
+} from '../constants/constants';
 
 /**
  * @internal
@@ -44,34 +48,43 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
  * Move rotate handle. When image is very close to the border of editor, rotate handle may not be visible.
  * Fix it by reduce the distance from image to rotate handle
  */
-export function updateRotateHandlePosition(
+export function updateRotateHandleState(
     editorRect: Rect,
     rotateCenter: HTMLElement,
-    rotateHandle: HTMLElement
+    rotateHandle: HTMLElement,
+    isSmallImage: boolean
 ) {
-    const rotateHandleRect = rotateHandle.getBoundingClientRect();
+    if (isSmallImage) {
+        rotateCenter.style.display = 'none';
+        rotateHandle.style.display = 'none';
+        return;
+    } else {
+        rotateCenter.style.display = '';
+        rotateHandle.style.display = '';
+        const rotateHandleRect = rotateHandle.getBoundingClientRect();
 
-    if (rotateHandleRect) {
-        const top = rotateHandleRect.top - editorRect.top;
-        const left = rotateHandleRect.left - editorRect.left;
-        const right = rotateHandleRect.right - editorRect.right;
-        const bottom = rotateHandleRect.bottom - editorRect.bottom;
-        let adjustedDistance = Number.MAX_SAFE_INTEGER;
-        if (top <= 0) {
-            adjustedDistance = top;
-        } else if (left <= 0) {
-            adjustedDistance = left;
-        } else if (right >= 0) {
-            adjustedDistance = right;
-        } else if (bottom >= 0) {
-            adjustedDistance = bottom;
+        if (rotateHandleRect) {
+            const top = rotateHandleRect.top - editorRect.top;
+            const left = rotateHandleRect.left - editorRect.left;
+            const right = rotateHandleRect.right - editorRect.right;
+            const bottom = rotateHandleRect.bottom - editorRect.bottom;
+            let adjustedDistance = Number.MAX_SAFE_INTEGER;
+            if (top <= 0) {
+                adjustedDistance = top;
+            } else if (left <= 0) {
+                adjustedDistance = left;
+            } else if (right >= 0) {
+                adjustedDistance = right;
+            } else if (bottom >= 0) {
+                adjustedDistance = bottom;
+            }
+
+            const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
+            const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
+            rotateCenter.style.top = -rotateGap - RESIZE_HANDLE_MARGIN + 'px';
+            rotateCenter.style.height = rotateGap + 'px';
+            rotateHandle.style.top = -rotateTop + 'px';
         }
-
-        const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
-        const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-        rotateCenter.style.top = -rotateGap + 'px';
-        rotateCenter.style.height = rotateGap + 'px';
-        rotateHandle.style.top = -rotateTop + 'px';
     }
 }
 
@@ -88,12 +101,14 @@ export function getRotateHTML({
         {
             tag: 'div',
             className: ImageEditElementClass.RotateCenter,
-            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_GAP}px;height:${ROTATE_GAP}px;`,
+            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_HANDLE_TOP}px;height:${ROTATE_GAP}px;margin-left:${-ROTATE_WIDTH}px;`,
             children: [
                 {
                     tag: 'div',
                     className: ImageEditElementClass.RotateHandle,
-                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move;top:${-ROTATE_SIZE}px;`,
+                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${
+                        handleLeft + ROTATE_WIDTH
+                    }px;cursor:move;top:${-ROTATE_SIZE}px;`,
                     children: [getRotateIconHTML(borderColor)],
                 },
             ],

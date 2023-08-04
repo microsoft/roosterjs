@@ -24,7 +24,15 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    const { wrapper, id, type, isReadonly, format } = entityModel;
+    const { id, type, isReadonly, format } = entityModel;
+    let wrapper = entityModel.wrapper;
+
+    if (!context.allowCacheElement) {
+        wrapper = wrapper.cloneNode(true /*deep*/) as HTMLElement;
+        wrapper.style.color = wrapper.style.color || 'inherit';
+        wrapper.style.backgroundColor = wrapper.style.backgroundColor || 'inherit';
+    }
+
     const entity: Entity | null =
         id && type
             ? {

@@ -118,10 +118,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                {
-                    isDarkMode: false /* To force light mode on paste */,
-                    darkColorHandler: this.editor.getDarkColorHandler(),
-                },
+                undefined /*editorContext, leave it undefined to use default context since we don't need editor-related dark mode info for pasted content*/,
                 {
                     onNodeCreated,
                 }
