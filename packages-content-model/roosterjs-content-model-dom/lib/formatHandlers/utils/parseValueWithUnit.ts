@@ -5,12 +5,12 @@ const MarginValueRegex = /(-?\d+(\.\d+)?)([a-z]+|%)/;
 /**
  * Parse unit value with its unit
  * @param value The source value to parse
- * @param element The source element which has this unit value.
+ * @param currentSizePxOrElement The source element which has this unit value, or current font size (in px) from context.
  * @param resultUnit Unit for result, can be px or pt. @default px
  */
 export function parseValueWithUnit(
     value: string = '',
-    element?: HTMLElement,
+    currentSizePxOrElement?: number | HTMLElement,
     resultUnit: 'px' | 'pt' = 'px'
 ): number {
     const match = MarginValueRegex.exec(value);
@@ -28,13 +28,13 @@ export function parseValueWithUnit(
                 result = ptToPx(num);
                 break;
             case 'em':
-                result = element ? getFontSize(element) * num : 0;
+                result = getFontSize(currentSizePxOrElement) * num;
                 break;
             case 'ex':
-                result = element ? (getFontSize(element) * num) / 2 : 0;
+                result = (getFontSize(currentSizePxOrElement) * num) / 2;
                 break;
             case '%':
-                result = element ? (element.offsetWidth * num) / 100 : 0;
+                result = (getFontSize(currentSizePxOrElement) * num) / 100;
                 break;
             default:
                 // TODO: Support more unit if need
@@ -49,12 +49,18 @@ export function parseValueWithUnit(
     return result;
 }
 
-function getFontSize(element: HTMLElement) {
-    const styleInPt = getComputedStyle(element, 'font-size');
-    const floatInPt = parseFloat(styleInPt);
-    const floatInPx = ptToPx(floatInPt);
+function getFontSize(currentSizeOrElement?: number | HTMLElement): number {
+    if (typeof currentSizeOrElement === 'undefined') {
+        return 0;
+    } else if (typeof currentSizeOrElement === 'number') {
+        return currentSizeOrElement;
+    } else {
+        const styleInPt = getComputedStyle(currentSizeOrElement, 'font-size');
+        const floatInPt = parseFloat(styleInPt);
+        const floatInPx = ptToPx(floatInPt);
 
-    return floatInPx;
+        return floatInPx;
+    }
 }
 
 function ptToPx(pt: number): number {
