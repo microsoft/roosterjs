@@ -13,7 +13,7 @@ import {
  * @param option The option to customize the behavior of DOM to Content Model conversion
  */
 export const createContentModel: CreateContentModel = (core, option) => {
-    let cachedModel = core.reuseModel ? core.cachedModel : null;
+    let cachedModel = core.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
@@ -37,10 +37,6 @@ function internalCreateContentModel(
         ...context.processorOverride,
         ...option?.processorOverride,
     };
-
-    if (!core.reuseModel) {
-        context.disableCacheElement = true;
-    }
 
     return domToContentModel(
         core.contentDiv,
