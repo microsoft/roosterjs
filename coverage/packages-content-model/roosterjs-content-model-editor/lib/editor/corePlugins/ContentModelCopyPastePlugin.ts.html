@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">77.68% </span>
+                <span class="strong">77.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>87/112</span>
+                <span class='fraction'>86/111</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">55.56% </span>
+                <span class="strong">53.23% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>40/72</span>
+                <span class='fraction'>33/62</span>
             </div>
         
             
@@ -330,7 +330,11 @@
 <a name='L271'></a><a href='#L271'>271</a>
 <a name='L272'></a><a href='#L272'>272</a>
 <a name='L273'></a><a href='#L273'>273</a>
-<a name='L274'></a><a href='#L274'>274</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L274'></a><a href='#L274'>274</a>
+<a name='L275'></a><a href='#L275'>275</a>
+<a name='L276'></a><a href='#L276'>276</a>
+<a name='L277'></a><a href='#L277'>277</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -418,15 +422,13 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">8x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -457,9 +459,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -473,7 +472,6 @@
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
@@ -481,11 +479,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">3x</span>
-<span class="cline-any cline-yes">3x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -607,6 +613,7 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { contentModelToDom } from 'roosterjs-content-model-dom';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
+import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
@@ -697,9 +704,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
         }
         const selection = this.editor.getSelectionRangeEx();
         if (selection &amp;&amp; !selection.areAllCollapsed) {
-            const model = this.editor.createContentModel({
-                disableCacheElement: true,
-            });
+            const model = this.editor.createContentModel();
 &nbsp;
             const pasteModel = cloneModel(model);
             if (selection.type === SelectionRangeTypes.TableSelection) {
@@ -720,46 +725,50 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
                 });
             }
             const tempDiv = this.getTempDiv(this.editor);
-            const selectionAfterPaste = contentModelToDom(
+            const selectionForCopy = contentModelToDom(
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                {
-                    isDarkMode: false /* To force light mode on paste */,
-                    darkColorHandler: this.editor.getDarkColorHandler(),
-                },
+                undefined /*editorContext, leave it undefined to use default context since we don't need editor-related dark mode info for pasted content*/,
                 {
                     onNodeCreated,
                 }
             );
 &nbsp;
-            let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
+            let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
             <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
-                const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,
                     isCut,
-                });
+                }).range;
 &nbsp;
-                <span class="missing-if-branch" title="else path not taken" >E</span>if (cutCopyEvent.range) {
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
                     addRangeToSelection(newRange);
                 }
 &nbsp;
                 this.editor.runAsync(editor =&gt; {
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    <span class="missing-if-branch" title="else path not taken" >E</span>if (selectionAfterPaste) {
-                        this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>elect(selectionAfterPaste);
-                    }
+                    editor.select(selection);
+&nbsp;
                     if (isCut) {
-                        editor.addUndoSnapshot(() =&gt; {
-                            deleteSelection(
-                                model,
-                                getOnDeleteEntityCallback(editor as IContentModelEditor)
-                            );
-                            this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>etContentModel(model);
-                        }, ChangeSource.Cut);
+                        formatWithContentModel(
+                            editor as IContentModelEditor,
+                            'cut',
+                            model =&gt; {
+                                deleteSelection(
+                                    model,
+                                    getOnDeleteEntityCallback(editor as IContentModelEditor)
+                                );
+&nbsp;
+                                return true;
+                            },
+                            {
+                                changeSource: ChangeSource.Cut,
+                            }
+                        );
                     }
                 });
             }
@@ -883,7 +892,7 @@ export const onNodeCreated = <span class="fstat-no" title="function not covered"
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Aug 04 2023 18:52:55 GMT+0000 (Coordinated Universal Time)
+                at Fri Aug 04 2023 20:13:48 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
