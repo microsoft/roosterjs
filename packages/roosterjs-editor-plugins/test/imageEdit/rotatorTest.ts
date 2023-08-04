@@ -150,7 +150,7 @@ describe('updateRotateHandlePosition', () => {
     it('adjust rotate handle - ROTATOR HIDDEN ON TOP', () => {
         runTest(
             {
-                top: 1,
+                top: 0,
                 bottom: 3,
                 left: 3,
                 right: 5,
@@ -160,7 +160,7 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '0px',
+            '-6px',
             '0px',
             '0px'
         );
@@ -179,7 +179,7 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '-15px',
+            '-21px',
             '15px',
             '-32px'
         );
@@ -190,7 +190,7 @@ describe('updateRotateHandlePosition', () => {
             {
                 top: 2,
                 bottom: 3,
-                left: 1,
+                left: 0,
                 right: 5,
                 height: 2,
                 width: 2,
@@ -198,7 +198,7 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '0px',
+            '-6px',
             '0px',
             '0px'
         );
@@ -208,7 +208,7 @@ describe('updateRotateHandlePosition', () => {
         runTest(
             {
                 top: 2,
-                bottom: 201,
+                bottom: 200,
                 left: 1,
                 right: 5,
                 height: 2,
@@ -217,7 +217,7 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '0px',
+            '-6px',
             '0px',
             '0px'
         );
@@ -229,14 +229,14 @@ describe('updateRotateHandlePosition', () => {
                 top: 2,
                 bottom: 3,
                 left: 1,
-                right: 201,
+                right: 200,
                 height: 2,
                 width: 2,
                 x: 1,
                 y: 3,
                 toJSON: () => {},
             },
-            '0px',
+            '-6px',
             '0px',
             '0px'
         );

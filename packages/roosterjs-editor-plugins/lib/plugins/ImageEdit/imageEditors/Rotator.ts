@@ -7,9 +7,12 @@ import { RotateInfo } from '../types/ImageEditInfo';
 import {
     DEFAULT_ROTATE_HANDLE_HEIGHT,
     DEG_PER_RAD,
+    RESIZE_HANDLE_MARGIN,
     ROTATE_GAP,
+    ROTATE_HANDLE_TOP,
     ROTATE_ICON_MARGIN,
     ROTATE_SIZE,
+    ROTATE_WIDTH,
 } from '../constants/constants';
 
 /**
@@ -78,7 +81,7 @@ export function updateRotateHandleState(
 
             const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
             const rotateTop = Math.max(Math.min(ROTATE_SIZE, adjustedDistance - rotateGap), 0);
-            rotateCenter.style.top = -rotateGap + 'px';
+            rotateCenter.style.top = -rotateGap - RESIZE_HANDLE_MARGIN + 'px';
             rotateCenter.style.height = rotateGap + 'px';
             rotateHandle.style.top = -rotateTop + 'px';
         }
@@ -98,12 +101,14 @@ export function getRotateHTML({
         {
             tag: 'div',
             className: ImageEditElementClass.RotateCenter,
-            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_GAP}px;height:${ROTATE_GAP}px;`,
+            style: `position:absolute;left:50%;width:1px;background-color:${borderColor};top:${-ROTATE_HANDLE_TOP}px;height:${ROTATE_GAP}px;margin-left:${-ROTATE_WIDTH}px;`,
             children: [
                 {
                     tag: 'div',
                     className: ImageEditElementClass.RotateHandle,
-                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${handleLeft}px;cursor:move;top:${-ROTATE_SIZE}px;`,
+                    style: `position:absolute;background-color:${rotateHandleBackColor};border:solid 1px ${borderColor};border-radius:50%;width:${ROTATE_SIZE}px;height:${ROTATE_SIZE}px;left:-${
+                        handleLeft + ROTATE_WIDTH
+                    }px;cursor:move;top:${-ROTATE_SIZE}px;`,
                     children: [getRotateIconHTML(borderColor)],
                 },
             ],

@@ -160,7 +160,7 @@ export function getCornerResizeHTML(
 export function getSideResizeHTML(
     { borderColor: resizeBorderColor }: ImageHtmlOptions,
     onShowResizeHandle?: OnShowResizeHandle
-): CreateElementData[] | null {
+): CreateElementData[] {
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y => {
