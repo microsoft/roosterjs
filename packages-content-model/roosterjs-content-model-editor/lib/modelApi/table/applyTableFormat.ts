@@ -12,9 +12,9 @@ import {
 } from 'roosterjs-content-model-types';
 
 const DEFAULT_FORMAT: Required<TableMetadataFormat> = {
-    topBorderColor: '#ABABAB',
-    bottomBorderColor: '#ABABAB',
-    verticalBorderColor: '#ABABAB',
+    topBorderColor: '#000000',
+    bottomBorderColor: '#000000',
+    verticalBorderColor: '#000000',
     hasHeaderRow: false,
     hasFirstColumn: false,
     hasBandedRows: false,
