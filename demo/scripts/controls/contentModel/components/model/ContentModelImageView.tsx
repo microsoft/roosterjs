@@ -3,6 +3,7 @@ import { ContentModelCodeView } from './ContentModelCodeView';
 import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
 import { ContentModelLinkView } from './ContentModelLinkView';
 import { ContentModelView } from '../ContentModelView';
+import { FloatFormatRenderer } from '../format/formatPart/FloatFormatRenderer';
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { IdFormatRenderer } from '../format/formatPart/IdFormatRenderer';
@@ -22,6 +23,7 @@ const ImageFormatRenderers: FormatRenderer<ContentModelImageFormat>[] = [
     ...SizeFormatRenderers,
     MarginFormatRenderer,
     PaddingFormatRenderer,
+    FloatFormatRenderer,
 ];
 
 export function ContentModelImageView(props: { image: ContentModelImage }) {
