@@ -480,6 +480,27 @@ describe('createPasteFragment', () => {
         expect(html.trim()).toBe('teststring<img src="">teststring');
         expect(clipboardData.htmlFirstLevelChildTags).toEqual(['', 'IMG', '']);
     });
+
+    it('Skip triggerEvent on Plain text paste', () => {
+        const triggerEvent = jasmine.createSpy();
+        const core = createEditorCore(div, {
+            coreApiOverride: {
+                triggerEvent,
+            },
+        });
+
+        const clipboardData: ClipboardData = {
+            types: ['image/png', 'text/html'],
+            text: '',
+            image: null,
+            rawHtml: '<html>\r\n<body>teststring<img src="" />teststring</body>\r\n</html>',
+            customValues: {},
+            imageDataUri: null,
+        };
+        createPasteFragment(core, clipboardData, null, true /* plainText */, false, false);
+
+        expect(triggerEvent).not.toHaveBeenCalled();
+    });
 });
 
 function getHTML(fragment: DocumentFragment) {
