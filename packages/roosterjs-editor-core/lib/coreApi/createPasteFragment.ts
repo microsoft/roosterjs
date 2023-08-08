@@ -125,8 +125,10 @@ function createFragmentFromClipboardData(
         handleTextPaste(text, position, fragment);
     }
 
-    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
-    core.api.triggerEvent(core, event, true /*broadcast*/);
+    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
+    if (event.pasteType !== PasteType.AsPlainText) {
+        core.api.triggerEvent(core, event, true /*broadcast*/);
+    }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     sanitizePasteContent(event, position);
