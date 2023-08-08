@@ -710,7 +710,6 @@ describe('clearModelFormat', () => {
 
         clearModelFormat(model, blocks, segments, tables);
 
-        console.log('FAILED', model);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
