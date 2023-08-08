@@ -59,6 +59,114 @@ describe('fontSizeFormatHandler.parse', () => {
 
         expect(format.fontSize).toBe('20px');
     });
+
+    it('xx-small', () => {
+        div.style.fontSize = 'xx-small';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('6.75pt');
+    });
+    it('x-small', () => {
+        div.style.fontSize = 'x-small';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('7.5pt');
+    });
+    it('small', () => {
+        div.style.fontSize = 'small';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('9.75pt');
+    });
+    it('medium', () => {
+        div.style.fontSize = 'medium';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('12pt');
+    });
+    it('large', () => {
+        div.style.fontSize = 'large';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('13.5pt');
+    });
+    it('x-large', () => {
+        div.style.fontSize = 'x-large';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('18pt');
+    });
+    it('xx-large', () => {
+        div.style.fontSize = 'xx-large';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('24pt');
+    });
+    it('xxx-large', () => {
+        div.style.fontSize = 'xxx-large';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('36pt');
+    });
+
+    it('smaller without context', () => {
+        div.style.fontSize = 'smaller';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe(undefined);
+    });
+
+    it('smaller with context', () => {
+        div.style.fontSize = 'smaller';
+        context.segmentFormat.fontSize = '12pt';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('13.33px');
+    });
+
+    it('larger without context', () => {
+        div.style.fontSize = 'larger';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe(undefined);
+    });
+
+    it('larger with context', () => {
+        div.style.fontSize = 'larger';
+        context.segmentFormat.fontSize = '10pt';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('16px');
+    });
+
+    it('em without context', () => {
+        div.style.fontSize = '2em';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe(undefined);
+    });
+
+    it('em with context', () => {
+        div.style.fontSize = '2em';
+        context.segmentFormat.fontSize = '12pt';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('32px');
+    });
+
+    it('% without context', () => {
+        div.style.fontSize = '50%';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe(undefined);
+    });
+    it('% with context', () => {
+        div.style.fontSize = '50%';
+        context.segmentFormat.fontSize = '12pt';
+        fontSizeFormatHandler.parse(format, div, context, {});
+
+        expect(format.fontSize).toBe('8px');
+    });
 });
 
 describe('fontSizeFormatHandler.apply', () => {

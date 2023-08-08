@@ -64,7 +64,6 @@ const REMOVE_ENTITY_OPERATIONS: (EntityOperation | CompatibleEntityOperation)[] 
 export default class EntityPlugin implements PluginWithState<EntityPluginState> {
     private editor: IEditor | null = null;
     private state: EntityPluginState;
-    private disposer: (() => void) | null = null;
 
     /**
      * Construct a new instance of EntityPlugin
@@ -88,15 +87,12 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
      */
     initialize(editor: IEditor) {
         this.editor = editor;
-        this.disposer = this.editor.addDomEventHandler('dragstart', this.onDragStart);
     }
 
     /**
      * Dispose this plugin
      */
     dispose() {
-        this.disposer?.();
-        this.disposer = null;
         this.editor = null;
         this.state.entityMap = {};
     }
@@ -276,18 +272,6 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.triggerEvent(element as HTMLElement, EntityOperation.ReplaceTemporaryContent);
         });
     }
-
-    private onDragStart = (e: Event) => {
-        const dragEvent = e as DragEvent;
-        const entityWrapper = this.editor?.getElementAtCursor(
-            getEntitySelector(),
-            dragEvent.target as Node
-        );
-
-        if (entityWrapper && getEntityFromElement(entityWrapper)?.isReadonly) {
-            dragEvent.preventDefault();
-        }
-    };
 
     private checkRemoveEntityForRange(event: Event) {
         const editableEntityElements: HTMLElement[] = [];
