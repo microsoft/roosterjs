@@ -14,7 +14,6 @@ import {
  */
 export function deleteSelection(
     model: ContentModelDocument,
-
     additionalSteps: (DeleteSelectionStep | null)[] = [],
     formatContext?: FormatWithContentModelContext
 ): DeleteSelectionResult {
