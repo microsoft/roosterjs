@@ -664,7 +664,7 @@ describe('adjustWordSelection', () => {
                         widths: [120],
                         dataset: {
                             editingInfo:
-                                '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                                '{"topBorderColor":"#000000","bottomBorderColor":"#000000","verticalBorderColor":"#000000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                         },
                     },
                     {
@@ -721,7 +721,7 @@ describe('adjustWordSelection', () => {
                         widths: [120],
                         dataset: {
                             editingInfo:
-                                '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
+                                '{"topBorderColor":"#000000","bottomBorderColor":"#000000","verticalBorderColor":"#000000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0}',
                         },
                     },
                     {

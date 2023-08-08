@@ -710,6 +710,7 @@ describe('clearModelFormat', () => {
 
         clearModelFormat(model, blocks, segments, tables);
 
+        console.log('FAILED', model);
         expect(model).toEqual({
             blockGroupType: 'Document',
             blocks: [
@@ -718,7 +719,7 @@ describe('clearModelFormat', () => {
                     format: { useBorderBox: undefined, borderCollapse: undefined },
                     dataset: {
                         editingInfo:
-                            '{"topBorderColor":"#ABABAB","bottomBorderColor":"#ABABAB","verticalBorderColor":"#ABABAB","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
+                            '{"topBorderColor":"#000000","bottomBorderColor":"#000000","verticalBorderColor":"#000000","hasHeaderRow":false,"hasFirstColumn":false,"hasBandedRows":false,"hasBandedColumns":false,"bgColorEven":null,"bgColorOdd":"#ABABAB20","headerRowColor":"#ABABAB","tableBorderFormat":0,"verticalAlign":null}',
                     },
                     widths: [],
                     rows: [
@@ -730,10 +731,10 @@ describe('clearModelFormat', () => {
                                     blockGroupType: 'TableCell',
                                     format: {
                                         useBorderBox: undefined,
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000000',
+                                        borderRight: '1px solid #000000',
+                                        borderBottom: '1px solid #000000',
+                                        borderLeft: '1px solid #000000',
                                     },
                                     dataset: {},
                                     blocks: [],
@@ -746,10 +747,10 @@ describe('clearModelFormat', () => {
                                     blockGroupType: 'TableCell',
                                     format: {
                                         useBorderBox: undefined,
-                                        borderTop: '1px solid #ABABAB',
-                                        borderRight: '1px solid #ABABAB',
-                                        borderBottom: '1px solid #ABABAB',
-                                        borderLeft: '1px solid #ABABAB',
+                                        borderTop: '1px solid #000000',
+                                        borderRight: '1px solid #000000',
+                                        borderBottom: '1px solid #000000',
+                                        borderLeft: '1px solid #000000',
                                     },
                                     dataset: {},
                                     blocks: [],

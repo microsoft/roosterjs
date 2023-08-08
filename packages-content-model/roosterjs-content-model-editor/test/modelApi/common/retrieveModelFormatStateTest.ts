@@ -259,9 +259,9 @@ describe('retrieveModelFormatState', () => {
             isBlockQuote: false,
             isCodeInline: false,
             tableFormat: {
-                topBorderColor: '#ABABAB',
-                bottomBorderColor: '#ABABAB',
-                verticalBorderColor: '#ABABAB',
+                topBorderColor: '#000000',
+                bottomBorderColor: '#000000',
+                verticalBorderColor: '#000000',
                 hasHeaderRow: false,
                 hasFirstColumn: false,
                 hasBandedRows: false,

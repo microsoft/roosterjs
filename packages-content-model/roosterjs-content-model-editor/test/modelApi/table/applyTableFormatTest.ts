@@ -85,7 +85,7 @@ describe('applyTableFormat', () => {
     }
 
     it('Empty format', () => {
-        const B = '1px solid #ABABAB';
+        const B = '1px solid #000000';
         const U = (undefined as any) as string;
         runTest(
             undefined,
@@ -118,7 +118,7 @@ describe('applyTableFormat', () => {
     });
 
     it('FIRST_COLUMN_HEADER_EXTERNAL', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const B = '1px solid ' + BorderColor;
         const TC = 'transparent';
         const T = '1px none';
@@ -166,7 +166,7 @@ describe('applyTableFormat', () => {
     });
 
     it('NO_HEADER_BORDERS', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const B = '1px solid ' + BorderColor;
         const TC = 'transparent';
         const T = '1px none';
@@ -214,8 +214,8 @@ describe('applyTableFormat', () => {
     });
 
     it('NO_SIDE_BORDERS', () => {
-        const BC = '#ABABAB';
-        const BC2 = '#ABABAB20';
+        const BC = '#000000';
+        const BC2 = '#00000020';
         const B = '1px solid ' + BC;
         const TC = 'transparent';
         const T = '1px none';
@@ -263,7 +263,7 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_1', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const B = '1px solid ' + BorderColor;
         const TC = 'transparent';
         const T = '1px none';
@@ -311,7 +311,7 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_2', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const B = '1px solid ' + BorderColor;
         const TC = 'transparent';
         const T = '1px none';
@@ -359,7 +359,7 @@ describe('applyTableFormat', () => {
     });
 
     it('ESPECIAL_TYPE_3', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const B = '1px solid ' + BorderColor;
         const TC = 'transparent';
         const T = '1px none';
@@ -407,7 +407,7 @@ describe('applyTableFormat', () => {
     });
 
     it('CLEAR', () => {
-        const BorderColor = '#ABABAB';
+        const BorderColor = '#000000';
         const TC = 'transparent';
         const T = '1px none';
 
