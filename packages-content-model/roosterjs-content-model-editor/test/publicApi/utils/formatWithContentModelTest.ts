@@ -49,7 +49,7 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).not.toHaveBeenCalled();
-        expect(focus).not.toHaveBeenCalled();
+        expect(focus).toHaveBeenCalled();
     });
 
     it('Callback return true', () => {

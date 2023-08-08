@@ -1,22 +1,12 @@
 import { ChangeSource } from 'roosterjs-editor-types';
-import {
-    ContentModelDocument,
-    DomToModelOption,
-    OnNodeCreated,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, OnNodeCreated } from 'roosterjs-content-model-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
 
 /**
  * @internal
  */
 export interface FormatWithContentModelOptions {
-    /**
-     * When set to true, it will only create Content Model for selected content
-     */
-    useReducedModel?: boolean;
-
     /**
      * When set to true, if there is pending format, it will be preserved after this format operation is done
      */
@@ -54,26 +44,15 @@ export function formatWithContentModel(
     callback: (model: ContentModelDocument) => boolean,
     options?: FormatWithContentModelOptions
 ) {
-    const {
-        useReducedModel,
-        onNodeCreated,
-        preservePendingFormat,
-        getChangeData,
-        skipUndoSnapshot,
-        changeSource,
-    } = options || {};
-    const domToModelOption: DomToModelOption | undefined = useReducedModel
-        ? {
-              processorOverride: {
-                  child: reducedModelChildProcessor,
-              },
-          }
-        : undefined;
-    const model = editor.createContentModel(domToModelOption);
+    const { onNodeCreated, preservePendingFormat, getChangeData, skipUndoSnapshot, changeSource } =
+        options || {};
+
+    editor.focus();
+
+    const model = editor.createContentModel();
 
     if (callback(model)) {
         const callback = () => {
-            editor.focus();
             if (model) {
                 editor.setContentModel(model, { onNodeCreated });
             }
