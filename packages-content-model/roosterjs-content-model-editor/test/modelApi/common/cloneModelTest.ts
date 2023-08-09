@@ -2,7 +2,7 @@ import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 
 describe('cloneModel', () => {
-    function compareObjects(o1: any, o2: any) {
+    function compareObjects(o1: any, o2: any, allowCache: boolean, path: string = '/') {
         expect(typeof o2).toBe(typeof o1);
 
         if (typeof o1 == 'boolean' || typeof o1 == 'number' || typeof o1 == 'string') {
@@ -12,23 +12,41 @@ describe('cloneModel', () => {
         } else if (typeof o1 == 'object') {
             if (Array.isArray(o1)) {
                 expect(Array.isArray(o2)).toBeTrue();
-                expect(o2).not.toBe(o1);
-                expect(o2.length).toBe(o1.length);
+                expect(o2).not.toBe(o1, path);
+                expect(o2.length).toBe(o1.length, path);
 
                 for (let i = 0; i < o1.length; i++) {
-                    compareObjects(o1[i], o2[i]);
+                    compareObjects(o1[i], o2[i], allowCache, path + `[${i}]/`);
                 }
             } else if (o1 instanceof Node) {
-                expect(o2).toBe(o1);
+                expect(o2).toBe(o1, path);
             } else if (o1 === null) {
-                expect(o2).toBeNull();
+                expect(o2).toBeNull(path);
             } else {
-                expect(o2).not.toBe(o1);
+                expect(o2).not.toBe(o1, path);
 
                 const keys = new Set([...Object.keys(o1), ...Object.keys(o2)]);
 
                 keys.forEach(key => {
-                    compareObjects(o1[key], o2[key]);
+                    if (allowCache) {
+                        compareObjects(o1[key], o2[key], allowCache, path + key + '/');
+                    } else {
+                        switch (key) {
+                            case 'cachedElement':
+                                expect(o2[key]).toBeUndefined(path);
+                                break;
+
+                            case 'wrapper':
+                            case 'element':
+                                expect(o2[key]).not.toBe(o1[key], path);
+                                expect(o2[key]).toEqual(o1[key], path);
+                                break;
+
+                            default:
+                                compareObjects(o1[key], o2[key], allowCache, path + key + '/');
+                                break;
+                        }
+                    }
                 });
             }
         } else {
@@ -37,9 +55,11 @@ describe('cloneModel', () => {
     }
 
     function runTest(model: ContentModelDocument) {
-        const clone = cloneModel(model);
+        const cloneWithCache = cloneModel(model, { includeCachedElement: true });
+        const cloneWithoutCache = cloneModel(model);
 
-        compareObjects(model, clone);
+        compareObjects(model, cloneWithCache, true);
+        compareObjects(model, cloneWithoutCache, false);
     }
 
     it('Empty model', () => {

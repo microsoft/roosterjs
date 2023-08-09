@@ -6,6 +6,7 @@ import { boxShadowFormatHandler } from './common/boxShadowFormatHandler';
 import { datasetFormatHandler } from './common/datasetFormatHandler';
 import { directionFormatHandler } from './block/directionFormatHandler';
 import { displayFormatHandler } from './block/displayFormatHandler';
+import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
 import { FormatHandler } from './FormatHandler';
@@ -58,6 +59,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     dataset: datasetFormatHandler,
     direction: directionFormatHandler,
     display: displayFormatHandler,
+    float: floatFormatHandler,
     fontFamily: fontFamilyFormatHandler,
     fontSize: fontSizeFormatHandler,
     htmlAlign: htmlAlignFormatHandler,
@@ -164,7 +166,17 @@ const defaultFormatKeysPerCategory: {
     ],
     tableBorder: ['borderBox', 'tableSpacing'],
     tableCellBorder: ['borderBox'],
-    image: ['id', 'size', 'margin', 'padding', 'borderBox', 'border', 'boxShadow', 'display'],
+    image: [
+        'id',
+        'size',
+        'margin',
+        'padding',
+        'borderBox',
+        'border',
+        'boxShadow',
+        'display',
+        'float',
+    ],
     link: [
         'link',
         'textColor',

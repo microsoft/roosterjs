@@ -11,7 +11,7 @@ describe('setListStartNumber', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (editor, apiName, callback) => {
                 expect(apiName).toBe('setListStartNumber');
-                const result = callback(input);
+                const result = callback(input, { deletedEntities: [] });
 
                 expect(result).toBe(expectedResult);
             }

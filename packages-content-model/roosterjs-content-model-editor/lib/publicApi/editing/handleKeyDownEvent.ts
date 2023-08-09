@@ -1,12 +1,11 @@
 import { Browser } from 'roosterjs-editor-dom';
-import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
+import { ChangeSource, Keys } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
-    getOnDeleteEntityCallback,
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
     shouldDeleteWord,
@@ -25,27 +24,19 @@ import {
  * Handle KeyDown event
  * Currently only DELETE and BACKSPACE keys are supported
  */
-export default function handleKeyDownEvent(
-    editor: IContentModelEditor,
-    rawEvent: KeyboardEvent,
-    triggeredEntityEvents: EntityOperationEvent[]
-) {
+export default function handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
     const which = rawEvent.which;
 
     formatWithContentModel(
         editor,
         which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
-        model => {
-            const result = deleteSelection(
-                model,
-                getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
-                getDeleteSteps(rawEvent)
-            ).deleteResult;
+        (model, context) => {
+            const result = deleteSelection(model, getDeleteSteps(rawEvent), context).deleteResult;
 
-            return handleKeyboardEventResult(editor, model, rawEvent, result);
+            return handleKeyboardEventResult(editor, model, rawEvent, result, context);
         },
         {
-            skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
+            rawEvent,
             changeSource: ChangeSource.Keyboard,
             getChangeData: () => which,
         }

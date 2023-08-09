@@ -20,11 +20,16 @@ describe('handleParagraph', () => {
     beforeEach(() => {
         parent = document.createElement('div');
         handleSegment = jasmine.createSpy('handleSegment');
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                segment: handleSegment,
+        context = createModelToDomContext(
+            {
+                allowCacheElement: true,
             },
-        });
+            {
+                modelHandlerOverride: {
+                    segment: handleSegment,
+                },
+            }
+        );
     });
 
     function runTest(

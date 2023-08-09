@@ -7,7 +7,7 @@ import { deleteSegment } from '../utils/deleteSegment';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
-    return (context, onDeleteEntity) => {
+    return context => {
         const isForward = direction == 'forward';
         const { paragraph, marker, path, tableContext } = context.insertPoint;
         const segments = paragraph.segments;
@@ -19,7 +19,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
         let blockToDelete: BlockAndPath | null;
 
         if (segmentToDelete) {
-            if (deleteSegment(paragraph, segmentToDelete, onDeleteEntity, direction)) {
+            if (deleteSegment(paragraph, segmentToDelete, context.formatContext, direction)) {
                 context.deleteResult = DeleteResult.SingleChar;
 
                 // It is possible that we have deleted everything from this paragraph, so we need to mark it as not implicit
@@ -32,7 +32,7 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
             if (block.blockType == 'Paragraph') {
                 if (siblingSegment) {
                     // When selection is under general segment, need to check if it has a sibling sibling, and delete from it
-                    if (deleteSegment(block, siblingSegment, onDeleteEntity, direction)) {
+                    if (deleteSegment(block, siblingSegment, context.formatContext, direction)) {
                         context.deleteResult = DeleteResult.Range;
                     }
                 } else {
@@ -58,8 +58,8 @@ function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteS
                     deleteBlock(
                         path[0].blocks,
                         block,
-                        onDeleteEntity,
                         undefined /*replacement*/,
+                        context.formatContext,
                         direction
                     )
                 ) {

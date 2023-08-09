@@ -1,8 +1,9 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
-import { DeleteResult, DeleteSelectionContext, OnDeleteEntity } from '../utils/DeleteSelectionStep';
+import { DeleteResult, DeleteSelectionContext } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
+import { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 import { iterateSelections, IterateSelectionsOption } from '../../selection/iterateSelections';
 import {
     createBr,
@@ -24,11 +25,12 @@ const DeleteSelectionIteratingOptions: IterateSelectionsOption = {
  */
 export function deleteExpandedSelection(
     model: ContentModelDocument,
-    onDeleteEntity: OnDeleteEntity
+    formatContext?: FormatWithContentModelContext
 ): DeleteSelectionContext {
     const context: DeleteSelectionContext = {
         deleteResult: DeleteResult.NotDeleted,
         insertPoint: null,
+        formatContext,
     };
 
     iterateSelections(
@@ -70,7 +72,7 @@ export function deleteExpandedSelection(
                                 path,
                                 tableContext
                             );
-                        } else if (deleteSegment(block, segment, onDeleteEntity)) {
+                        } else if (deleteSegment(block, segment, context.formatContext)) {
                             context.deleteResult = DeleteResult.Range;
                         }
                     });
@@ -86,7 +88,7 @@ export function deleteExpandedSelection(
                 // Delete a whole block (divider, table, ...)
                 const blocks = path[0].blocks;
 
-                if (deleteBlock(blocks, block, onDeleteEntity, paragraph)) {
+                if (deleteBlock(blocks, block, paragraph, context.formatContext)) {
                     context.deleteResult = DeleteResult.Range;
                 }
             } else if (tableContext) {
