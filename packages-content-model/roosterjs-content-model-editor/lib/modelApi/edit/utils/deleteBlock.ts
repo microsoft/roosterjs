@@ -1,6 +1,6 @@
 import { ContentModelBlock } from 'roosterjs-content-model-types';
 import { EntityOperation } from 'roosterjs-editor-types';
-import { OnDeleteEntity } from './DeleteSelectionStep';
+import { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal
@@ -8,8 +8,8 @@ import { OnDeleteEntity } from './DeleteSelectionStep';
 export function deleteBlock(
     blocks: ContentModelBlock[],
     blockToDelete: ContentModelBlock,
-    onDeleteEntity: OnDeleteEntity,
     replacement?: ContentModelBlock,
+    context?: FormatWithContentModelContext,
     direction?: 'forward' | 'backward'
 ): boolean {
     const index = blocks.indexOf(blockToDelete);
@@ -29,8 +29,12 @@ export function deleteBlock(
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
 
-            if (operation !== undefined && !onDeleteEntity(blockToDelete, operation)) {
+            if (operation !== undefined) {
                 replacement ? blocks.splice(index, 1, replacement) : blocks.splice(index, 1);
+                context?.deletedEntities.push({
+                    entity: blockToDelete,
+                    operation,
+                });
             }
 
             return true;
