@@ -287,7 +287,8 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition, block.format);
+    const newParaFormat = block.blockType !== 'Paragraph' ? {} : block.format;
+    const newPara = splitParagraph(markerPosition, newParaFormat);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {
