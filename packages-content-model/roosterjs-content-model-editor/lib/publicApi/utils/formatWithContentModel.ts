@@ -77,9 +77,7 @@ export function formatWithContentModel(
             );
         }
 
-        if (!selectionOverride) {
-            editor.cacheContentModel?.(model);
-        }
+        editor.cacheContentModel?.(model);
     }
 }
 

@@ -23,6 +23,8 @@ describe('insertEntity', () => {
     let setPropertySpy: jasmine.Spy;
     let appendChildSpy: jasmine.Spy;
     let insertEntityModelSpy: jasmine.Spy;
+    let isDarkModeSpy: jasmine.Spy;
+    let transformToDarkColorSpy: jasmine.Spy;
 
     const type = 'Entity';
     const apiName = 'insertEntity';
@@ -35,6 +37,8 @@ describe('insertEntity', () => {
         setPropertySpy = jasmine.createSpy('setPropertySpy');
         appendChildSpy = jasmine.createSpy('appendChildSpy');
         insertEntityModelSpy = spyOn(insertEntityModel, 'insertEntityModel');
+        isDarkModeSpy = jasmine.createSpy('isDarkMode');
+        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
 
         wrapper = {
             style: {
@@ -60,6 +64,8 @@ describe('insertEntity', () => {
         editor = {
             triggerContentChangedEvent: triggerContentChangedEventSpy,
             getDocument: getDocumentSpy,
+            isDarkMode: isDarkModeSpy,
+            transformToDarkColor: transformToDarkColorSpy,
         } as any;
     });
 
@@ -96,6 +102,7 @@ describe('insertEntity', () => {
             ChangeSource.InsertEntity,
             newEntity
         );
+        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
@@ -133,6 +140,7 @@ describe('insertEntity', () => {
             ChangeSource.InsertEntity,
             newEntity
         );
+        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
@@ -177,6 +185,47 @@ describe('insertEntity', () => {
             ChangeSource.InsertEntity,
             newEntity
         );
+        expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+
+        expect(entity).toBe(newEntity);
+    });
+
+    it('In dark mode', () => {
+        isDarkModeSpy.and.returnValue(true);
+
+        const entity = insertEntity(editor, type, false, 'begin');
+
+        expect(createElementSpy).toHaveBeenCalledWith('span');
+        expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
+        expect(appendChildSpy).not.toHaveBeenCalled();
+        expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
+        expect(formatWithContentModelSpy.calls.argsFor(0)[3]).toEqual({
+            selectionOverride: undefined,
+        });
+        expect(insertEntityModelSpy).toHaveBeenCalledWith(
+            model,
+            {
+                segmentType: 'Entity',
+                blockType: 'Entity',
+                format: {},
+                id: undefined,
+                type: type,
+                isReadonly: true,
+                wrapper: wrapper,
+            },
+            'begin',
+            false,
+            true,
+            context
+        );
+        expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
+        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(
+            ChangeSource.InsertEntity,
+            newEntity
+        );
+        expect(transformToDarkColorSpy).toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
