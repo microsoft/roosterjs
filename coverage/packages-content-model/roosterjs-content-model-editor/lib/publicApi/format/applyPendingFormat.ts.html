@@ -25,7 +25,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>30/30</span>
+                <span class='fraction'>31/31</span>
             </div>
         
             
@@ -127,16 +127,7 @@
 <a name='L68'></a><a href='#L68'>68</a>
 <a name='L69'></a><a href='#L69'>69</a>
 <a name='L70'></a><a href='#L70'>70</a>
-<a name='L71'></a><a href='#L71'>71</a>
-<a name='L72'></a><a href='#L72'>72</a>
-<a name='L73'></a><a href='#L73'>73</a>
-<a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a>
-<a name='L76'></a><a href='#L76'>76</a>
-<a name='L77'></a><a href='#L77'>77</a>
-<a name='L78'></a><a href='#L78'>78</a>
-<a name='L79'></a><a href='#L79'>79</a>
-<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L71'></a><a href='#L71'>71</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -161,9 +152,6 @@
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -180,9 +168,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,13 +190,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
 <span class="cline-any cline-yes">4x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -239,59 +221,50 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
     if (format) {
         let isChanged = false;
 &nbsp;
-        formatWithContentModel(
-            editor,
-            'applyPendingFormat',
-            model =&gt; {
-                iterateSelections([model], (_, __, block, segments) =&gt; {
-                    if (
-                        block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph' &amp;&amp;
-                        segments<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength == 1 &amp;&amp;
-                        segments[0].segmentType == 'SelectionMarker'
-                    ) {
-                        const marker = segments[0];
-                        const index = block.segments.indexOf(marker);
-                        const previousSegment = block.segments[index - 1];
+        formatWithContentModel(editor, 'applyPendingFormat', (model, context) =&gt; {
+            iterateSelections([model], (_, __, block, segments) =&gt; {
+                if (
+                    block<span class="branch-0 cbranch-no" title="branch not covered" >?.b</span>lockType == 'Paragraph' &amp;&amp;
+                    segments<span class="branch-0 cbranch-no" title="branch not covered" >?.l</span>ength == 1 &amp;&amp;
+                    segments[0].segmentType == 'SelectionMarker'
+                ) {
+                    const marker = segments[0];
+                    const index = block.segments.indexOf(marker);
+                    const previousSegment = block.segments[index - 1];
 &nbsp;
-                        if (previousSegment?.segmentType == 'Text') {
-                            const text = previousSegment.text;
-                            const subStr = text.substr(-data.length, data.length);
+                    if (previousSegment?.segmentType == 'Text') {
+                        const text = previousSegment.text;
+                        const subStr = text.substr(-data.length, data.length);
 &nbsp;
-                            // For space, there can be &amp;#32 (space) or &amp;#160 (&amp;nbsp;), we treat them as the same
-                            if (
-                                subStr == data ||
-                                (data == ANSI_SPACE &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >subStr == NON_BREAK_SPACE)</span>
-                            ) {
-                                marker.format = { ...format };
-                                previousSegment.text = text.substring(0, text.length - data.length);
+                        // For space, there can be &amp;#32 (space) or &amp;#160 (&amp;nbsp;), we treat them as the same
+                        if (subStr == data || (data == ANSI_SPACE &amp;&amp; <span class="branch-2 cbranch-no" title="branch not covered" >subStr == NON_BREAK_SPACE)</span>) {
+                            marker.format = { ...format };
+                            previousSegment.text = text.substring(0, text.length - data.length);
 &nbsp;
-                                const newText = createText(
-                                    data == ANSI_SPACE ? <span class="branch-0 cbranch-no" title="branch not covered" >NON_BREAK_SPACE </span>: data,
-                                    {
-                                        ...previousSegment.format,
-                                        ...format,
-                                    }
-                                );
+                            const newText = createText(
+                                data == ANSI_SPACE ? <span class="branch-0 cbranch-no" title="branch not covered" >NON_BREAK_SPACE </span>: data,
+                                {
+                                    ...previousSegment.format,
+                                    ...format,
+                                }
+                            );
 &nbsp;
-                                block.segments.splice(index, 0, newText);
-                                setParagraphNotImplicit(block);
-                                isChanged = true;
-                            }
+                            block.segments.splice(index, 0, newText);
+                            setParagraphNotImplicit(block);
+                            isChanged = true;
                         }
                     }
-                    return true;
-                });
-&nbsp;
-                if (isChanged) {
-                    normalizeContentModel(model);
                 }
+                return true;
+            });
 &nbsp;
-                return isChanged;
-            },
-            {
-                skipUndoSnapshot: true,
+            if (isChanged) {
+                normalizeContentModel(model);
+                context.skipUndoSnapshot = true;
             }
-        );
+&nbsp;
+            return isChanged;
+        });
     }
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -301,7 +274,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 08 2023 21:15:34 GMT+0000 (Coordinated Universal Time)
+                at Wed Aug 09 2023 06:15:02 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

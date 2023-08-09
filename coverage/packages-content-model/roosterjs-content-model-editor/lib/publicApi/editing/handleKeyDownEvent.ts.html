@@ -116,16 +116,7 @@
 <a name='L57'></a><a href='#L57'>57</a>
 <a name='L58'></a><a href='#L58'>58</a>
 <a name='L59'></a><a href='#L59'>59</a>
-<a name='L60'></a><a href='#L60'>60</a>
-<a name='L61'></a><a href='#L61'>61</a>
-<a name='L62'></a><a href='#L62'>62</a>
-<a name='L63'></a><a href='#L63'>63</a>
-<a name='L64'></a><a href='#L64'>64</a>
-<a name='L65'></a><a href='#L65'>65</a>
-<a name='L66'></a><a href='#L66'>66</a>
-<a name='L67'></a><a href='#L67'>67</a>
-<a name='L68'></a><a href='#L68'>68</a>
-<a name='L69'></a><a href='#L69'>69</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L60'></a><a href='#L60'>60</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -133,7 +124,6 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -153,10 +143,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
@@ -165,16 +151,12 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -194,14 +176,13 @@
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { Browser } from 'roosterjs-editor-dom';
-import { ChangeSource, EntityOperationEvent, Keys } from 'roosterjs-editor-types';
+import { ChangeSource, Keys } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
-    getOnDeleteEntityCallback,
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
     shouldDeleteWord,
@@ -220,27 +201,19 @@ import {
  * Handle KeyDown event
  * Currently only DELETE and BACKSPACE keys are supported
  */
-export default function handleKeyDownEvent(
-    editor: IContentModelEditor,
-    rawEvent: KeyboardEvent,
-    triggeredEntityEvents: EntityOperationEvent[]
-) {
+export default function handleKeyDownEvent(editor: IContentModelEditor, rawEvent: KeyboardEvent) {
     const which = rawEvent.which;
 &nbsp;
     formatWithContentModel(
         editor,
         which == Keys.DELETE ? 'handleDeleteKey' : 'handleBackspaceKey',
-        model =&gt; {
-            const result = deleteSelection(
-                model,
-                getOnDeleteEntityCallback(editor, rawEvent, triggeredEntityEvents),
-                getDeleteSteps(rawEvent)
-            ).deleteResult;
+        (model, context) =&gt; {
+            const result = deleteSelection(model, getDeleteSteps(rawEvent), context).deleteResult;
 &nbsp;
-            return handleKeyboardEventResult(editor, model, rawEvent, result);
+            return handleKeyboardEventResult(editor, model, rawEvent, result, context);
         },
         {
-            skipUndoSnapshot: true, // No need to add undo snapshot for each key down event. We will trigger a ContentChanged event and let UndoPlugin decide when to add undo snapshot
+            rawEvent,
             changeSource: ChangeSource.Keyboard,
             getChangeData: () =&gt; which,
         }
@@ -268,7 +241,7 @@ function getDeleteSteps(rawEvent: KeyboardEvent): (DeleteSelectionStep | null)[]
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 08 2023 21:15:34 GMT+0000 (Coordinated Universal Time)
+                at Wed Aug 09 2023 06:15:02 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
