@@ -9,6 +9,7 @@ describe('toggleBlockQuote', () => {
 
     beforeEach(() => {
         editor = ({
+            focus: jasmine.createSpy('focus'),
             createContentModel: () => fakeModel,
         } as any) as IContentModelEditor;
     });

@@ -14,10 +14,6 @@ import {
     createText,
 } from 'roosterjs-content-model-dom';
 
-function onDeleteEntityMock() {
-    return false;
-}
-
 describe('mergeModel', () => {
     it('empty to single selection', () => {
         const majorModel = createContentModelDocument();
@@ -28,7 +24,7 @@ describe('mergeModel', () => {
         para.segments.push(marker);
         majorModel.blocks.push(para);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -68,7 +64,7 @@ describe('mergeModel', () => {
         para2.segments.push(text1, text2);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -118,7 +114,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -197,7 +193,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -292,7 +288,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara2);
         sourceModel.blocks.push(newPara3);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -439,7 +435,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -605,7 +601,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -793,7 +789,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -894,7 +890,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
         expect(majorModel).toEqual({
@@ -1011,9 +1007,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1148,9 +1149,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1274,9 +1280,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1383,13 +1394,18 @@ describe('mergeModel', () => {
         newPara.segments.push(newText);
         sourceModel.blocks.push(newPara);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            insertPosition: {
-                marker: marker2,
-                paragraph: para1,
-                path: [majorModel],
-            },
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                insertPosition: {
+                    marker: marker2,
+                    paragraph: para1,
+                    path: [majorModel],
+                },
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1461,9 +1477,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1518,9 +1539,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1581,9 +1607,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1671,9 +1702,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1745,7 +1781,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(divider);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1812,7 +1848,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1909,9 +1945,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1985,9 +2026,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2164,9 +2210,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2334,7 +2385,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(heading);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
