@@ -93,6 +93,10 @@ export default function insertEntity(
         }
     );
 
+    if (editor.isDarkMode()) {
+        editor.transformToDarkColor(wrapper);
+    }
+
     const newEntity = getEntityFromElement(wrapper);
 
     editor.triggerContentChangedEvent(ChangeSource.InsertEntity, newEntity);
