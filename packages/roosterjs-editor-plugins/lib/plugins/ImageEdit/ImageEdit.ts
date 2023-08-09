@@ -270,7 +270,7 @@ export default class ImageEdit implements EditorPlugin {
      */
     setEditingImage(image: null, selectImage?: boolean): void;
 
-    async setEditingImage(
+    setEditingImage(
         image: HTMLImageElement | null,
         operationOrSelect?: ImageEditOperation | CompatibleImageEditOperation | boolean
     ) {
@@ -331,7 +331,7 @@ export default class ImageEdit implements EditorPlugin {
             this.editInfo = getEditInfoFromImage(image);
 
             //Check if the image is a gif and convert it to a png
-            this.pngSource = await tryToConvertGifToPng(this.editInfo);
+            this.pngSource = tryToConvertGifToPng(this.editInfo);
 
             //Check if the image was resized by the user
             this.wasResized = checkIfImageWasResized(this.image);
