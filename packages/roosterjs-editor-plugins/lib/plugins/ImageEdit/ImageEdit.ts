@@ -270,7 +270,7 @@ export default class ImageEdit implements EditorPlugin {
      */
     setEditingImage(image: null, selectImage?: boolean): void;
 
-    setEditingImage(
+    async setEditingImage(
         image: HTMLImageElement | null,
         operationOrSelect?: ImageEditOperation | CompatibleImageEditOperation | boolean
     ) {
@@ -331,7 +331,7 @@ export default class ImageEdit implements EditorPlugin {
             this.editInfo = getEditInfoFromImage(image);
 
             //Check if the image is a gif and convert it to a png
-            this.pngSource = tryToConvertGifToPng(this.editInfo);
+            this.pngSource = await tryToConvertGifToPng(this.editInfo);
 
             //Check if the image was resized by the user
             this.wasResized = checkIfImageWasResized(this.image);
@@ -596,7 +596,14 @@ export default class ImageEdit implements EditorPlugin {
                 const viewport = this.editor?.getVisibleViewport();
                 const isSmall = isASmallImage(targetWidth, targetHeight);
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandleState(viewport, rotateCenter, rotateHandle, isSmall);
+                    updateRotateHandleState(
+                        viewport,
+                        angleRad,
+                        wrapper,
+                        rotateCenter,
+                        rotateHandle,
+                        isSmall
+                    );
                 }
 
                 updateSideHandlesVisibility(resizeHandles, isSmall);

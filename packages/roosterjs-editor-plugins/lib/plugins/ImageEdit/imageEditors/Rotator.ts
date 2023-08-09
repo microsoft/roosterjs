@@ -50,6 +50,8 @@ export const Rotator: DragAndDropHandler<DragAndDropContext, RotateInfo> = {
  */
 export function updateRotateHandleState(
     editorRect: Rect,
+    angleRad: number,
+    wrapper: HTMLElement,
     rotateCenter: HTMLElement,
     rotateHandle: HTMLElement,
     isSmallImage: boolean
@@ -62,20 +64,33 @@ export function updateRotateHandleState(
         rotateCenter.style.display = '';
         rotateHandle.style.display = '';
         const rotateHandleRect = rotateHandle.getBoundingClientRect();
+        const wrapperRect = wrapper.getBoundingClientRect();
 
-        if (rotateHandleRect) {
-            const top = rotateHandleRect.top - editorRect.top;
-            const left = rotateHandleRect.left - editorRect.left;
-            const right = rotateHandleRect.right - editorRect.right;
-            const bottom = rotateHandleRect.bottom - editorRect.bottom;
+        if (rotateHandleRect && wrapperRect) {
             let adjustedDistance = Number.MAX_SAFE_INTEGER;
-            if (top <= 0) {
+            const angle = angleRad * DEG_PER_RAD;
+            if (angle < 45 && angle > -45 && wrapperRect.top - editorRect.top < ROTATE_GAP) {
+                const top = rotateHandleRect.top - editorRect.top;
                 adjustedDistance = top;
-            } else if (left <= 0) {
+            } else if (
+                angle <= -80 &&
+                angle >= -100 &&
+                wrapperRect.left - editorRect.left < ROTATE_GAP
+            ) {
+                const left = rotateHandleRect.left - editorRect.left;
                 adjustedDistance = left;
-            } else if (right >= 0) {
+            } else if (
+                angle >= 80 &&
+                angle <= 100 &&
+                editorRect.right - wrapperRect.right < ROTATE_GAP
+            ) {
+                const right = rotateHandleRect.right - editorRect.right;
                 adjustedDistance = right;
-            } else if (bottom >= 0) {
+            } else if (
+                (angle <= -160 || angle >= 160) &&
+                editorRect.bottom - wrapperRect.bottom < ROTATE_GAP
+            ) {
+                const bottom = rotateHandleRect.bottom - editorRect.bottom;
                 adjustedDistance = bottom;
             }
 
