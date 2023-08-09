@@ -1,10 +1,9 @@
-import { AddUndoSnapshot } from '../coreEditor/ContentModelEditor2Core';
+import { AddUndoSnapshot, ContentModelEditor2Core } from '../coreEditor/ContentModelEditor2Core';
 import { EntityState } from 'roosterjs-editor-types';
 import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import {
     ContentChangedEvent,
     ContentMetadata,
-    EditorCore,
     PluginEventType,
     SelectionRangeEx,
     SelectionRangeTypes,
@@ -81,11 +80,11 @@ export const addUndoSnapshot: AddUndoSnapshot = (
 };
 
 function addUndoSnapshotInternal(
-    core: EditorCore,
+    core: ContentModelEditor2Core,
     canUndoByBackspace: boolean,
     entityStates?: EntityState[]
 ) {
-    if (!core.lifecycle.shadowEditFragment) {
+    if (!core.isInShadowEdit) {
         const rangeEx = core.api.getSelectionRangeEx(core);
         const isDarkMode = core.lifecycle.isDarkMode;
         const metadata = createContentMetadata(core.contentDiv, rangeEx, isDarkMode) || null;

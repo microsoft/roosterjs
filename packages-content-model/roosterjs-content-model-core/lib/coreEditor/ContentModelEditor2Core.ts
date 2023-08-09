@@ -1,9 +1,10 @@
+import { EditorPlugin2 } from './EditorPlugin2';
+import { PluginEvent2 } from './PluginEvent2';
 import {
     ChangeSource,
     ContentChangedData,
     DarkColorHandler,
     NodePosition,
-    PluginEvent,
     PositionType,
     SelectionPath,
     SelectionRangeEx,
@@ -100,7 +101,7 @@ export type Select = (
  */
 export type TriggerEvent = (
     core: ContentModelEditor2Core,
-    pluginEvent: PluginEvent,
+    pluginEvent: PluginEvent2,
     broadcast: boolean
 ) => void;
 
@@ -213,4 +214,6 @@ export interface ContentModelEditor2Core {
     darkColorHandler: DarkColorHandler;
 
     isInShadowEdit?: boolean;
+
+    plugins: EditorPlugin2[];
 }

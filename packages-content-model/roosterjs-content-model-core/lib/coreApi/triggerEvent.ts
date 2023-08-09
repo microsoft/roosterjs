@@ -1,4 +1,6 @@
-import { EditorPlugin, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { EditorPlugin2 } from '../coreEditor/EditorPlugin2';
+import { PluginEvent2 } from '../coreEditor/PluginEvent2';
+import { PluginEventType } from 'roosterjs-editor-types';
 import { TriggerEvent } from '../coreEditor/ContentModelEditor2Core';
 
 const allowedEventsInShadowEdit: PluginEventType[] = [
@@ -17,8 +19,7 @@ const allowedEventsInShadowEdit: PluginEventType[] = [
  */
 export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
     if (
-        (!core.lifecycle.shadowEditFragment ||
-            allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&
+        (!core.isInShadowEdit || allowedEventsInShadowEdit.indexOf(pluginEvent.eventType) >= 0) &&
         (broadcast || !core.plugins.some(plugin => handledExclusively(pluginEvent, plugin)))
     ) {
         core.plugins.forEach(plugin => {
@@ -29,7 +30,7 @@ export const triggerEvent: TriggerEvent = (core, pluginEvent, broadcast) => {
     }
 };
 
-function handledExclusively(event: PluginEvent, plugin: EditorPlugin): boolean {
+function handledExclusively(event: PluginEvent2, plugin: EditorPlugin2): boolean {
     if (plugin.onPluginEvent && plugin.willHandleEventExclusively?.(event)) {
         plugin.onPluginEvent(event);
         return true;

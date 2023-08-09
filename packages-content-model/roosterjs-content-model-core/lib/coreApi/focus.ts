@@ -8,7 +8,7 @@ import { PositionType } from 'roosterjs-editor-types';
  * @param core The EditorCore object
  */
 export const focus: Focus = core => {
-    if (!core.lifecycle.shadowEditFragment) {
+    if (!core.isInShadowEdit) {
         if (
             !core.api.hasFocus(core) ||
             !core.api.getSelectionRange(core, false /*tryGetFromCache*/)

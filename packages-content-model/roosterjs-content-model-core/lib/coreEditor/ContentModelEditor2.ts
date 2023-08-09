@@ -48,11 +48,14 @@ export class ContentModelEditor2 {
             defaultModelToDomOptions: option?.defaultModelToDomOptions || {},
             darkColorHandler: new DarkColorHandlerImpl(contentDiv, getDarkColor),
             defaultFormat: option?.defaultFormat || {},
+            plugins: [],
         };
 
         core.contentDiv.contentEditable = 'true';
 
         this.core = core;
+
+        core.plugins.forEach(plugin => plugin.initialize(this));
     }
 
     dispose() {
@@ -70,7 +73,7 @@ export class ContentModelEditor2 {
      * Get document which contains this editor
      * @returns The HTML document which contains this editor
      */
-    public getDocument(): Document {
+    getDocument(): Document {
         return this.getCore().contentDiv.ownerDocument;
     }
 
@@ -111,26 +114,9 @@ export class ContentModelEditor2 {
     /**
      * Focus to this editor, the selection was restored to where it was before, no unexpected scroll.
      */
-    public focus() {
+    focus() {
         const core = this.getCore();
         core.api.focus(core);
-    }
-
-    /**
-     * Get current focused position. Return null if editor doesn't have focus at this time.
-     */
-    public getFocusedPosition(): NodePosition | null {
-        let sel = this.getDocument().defaultView?.getSelection();
-        if (sel?.focusNode && this.contains(sel.focusNode)) {
-            return new Position(sel.focusNode, sel.focusOffset);
-        }
-
-        let range = this.getSelectionRange();
-        if (range) {
-            return Position.getStart(range);
-        }
-
-        return null;
     }
 
     /**
@@ -142,7 +128,7 @@ export class ContentModelEditor2 {
      * @returns the event object which is really passed into plugins. Some plugin may modify the event object so
      * the result of this function provides a chance to read the modified result
      */
-    public triggerPluginEvent<T extends PluginEventType>(
+    triggerPluginEvent<T extends PluginEventType>(
         eventType: T,
         data: PluginEventData<T>,
         broadcast: boolean = false
@@ -167,7 +153,7 @@ export class ContentModelEditor2 {
      * a ContentChangedEvent will be fired with change source equal to this value
      * @param canUndoByBackspace True if this action can be undone when user press Backspace key (aka Auto Complete).
      */
-    public addUndoSnapshot(
+    addUndoSnapshot(
         callback?: (start: NodePosition | null, end: NodePosition | null) => any,
         changeSource?: ChangeSource | string,
         canUndoByBackspace?: boolean,

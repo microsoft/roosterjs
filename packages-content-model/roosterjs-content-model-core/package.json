@@ -2,6 +2,8 @@
     "name": "roosterjs-content-model-core",
     "description": "Core editor for Content Model for roosterjs (Under development)",
     "dependencies": {
+        "roosterjs-content-model-types": "",
+        "roosterjs-content-model-dom": "",
         "roosterjs-editor-types": "",
         "roosterjs-editor-dom": ""
     },
