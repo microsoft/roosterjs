@@ -7,7 +7,6 @@ import { createEditorContext } from '../coreApi/createEditorContext';
 import { focus } from '../coreApi/focus';
 import { getDarkColor } from 'roosterjs-color-utils';
 import { getSelectionRangeEx } from '../coreApi/getSelectionRangeEx';
-import { Position } from 'roosterjs-editor-dom';
 import { select } from '../coreApi/select';
 import { setContentModel } from '../coreApi/setContentModel';
 import { triggerEvent } from '../coreApi/triggerEvent';
