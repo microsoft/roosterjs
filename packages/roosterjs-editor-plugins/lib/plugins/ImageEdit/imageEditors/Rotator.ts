@@ -69,6 +69,7 @@ export function updateRotateHandleState(
         if (rotateHandleRect && wrapperRect) {
             let adjustedDistance = Number.MAX_SAFE_INTEGER;
             const angle = angleRad * DEG_PER_RAD;
+
             if (angle < 45 && angle > -45 && wrapperRect.top - editorRect.top < ROTATE_GAP) {
                 const top = rotateHandleRect.top - editorRect.top;
                 adjustedDistance = top;
@@ -85,13 +86,13 @@ export function updateRotateHandleState(
                 editorRect.right - wrapperRect.right < ROTATE_GAP
             ) {
                 const right = rotateHandleRect.right - editorRect.right;
-                adjustedDistance = right;
+                adjustedDistance = Math.min(editorRect.right - wrapperRect.right, right);
             } else if (
                 (angle <= -160 || angle >= 160) &&
                 editorRect.bottom - wrapperRect.bottom < ROTATE_GAP
             ) {
                 const bottom = rotateHandleRect.bottom - editorRect.bottom;
-                adjustedDistance = bottom;
+                adjustedDistance = Math.min(editorRect.bottom - wrapperRect.bottom, bottom);
             }
 
             const rotateGap = Math.max(Math.min(ROTATE_GAP, adjustedDistance), 0);
