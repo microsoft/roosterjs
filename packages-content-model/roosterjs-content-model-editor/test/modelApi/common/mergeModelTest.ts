@@ -2436,7 +2436,6 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         const sourceModel: ContentModelDocument = createContentModelDocument();
-
         const newPara1 = createParagraph();
         const newText1 = createText('newText1');
         const newCell1 = createTableCell(false, false);
