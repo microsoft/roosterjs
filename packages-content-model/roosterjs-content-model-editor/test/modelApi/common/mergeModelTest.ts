@@ -2542,7 +2542,7 @@ describe('mergeModel', () => {
         });
     });
 
-    it('Merge Divider with styles into paragraph, paragraph after table should not inherit styles from table', () => {
+    it('Merge Divider with styles into paragraph, paragraph after table should not inherit styles from Divider', () => {
         const majorModel = createContentModelDocument();
         const para1 = createParagraph(false, undefined, {
             fontFamily: 'Arial',
@@ -2623,7 +2623,7 @@ describe('mergeModel', () => {
         });
     });
 
-    it('Merge ListItem with styles into paragraph, paragraph after table should not inherit styles from table', () => {
+    it('Merge ListItem with styles into paragraph, paragraph after table should not inherit styles from ListItem', () => {
         const majorModel = createContentModelDocument();
         const para1 = createParagraph(false, undefined, {
             fontFamily: 'Arial',
@@ -2728,7 +2728,7 @@ describe('mergeModel', () => {
         });
     });
 
-    it('Merge Entity with styles into paragraph, paragraph after table should not inherit styles from table', () => {
+    it('Merge Entity with styles into paragraph, paragraph after table should not inherit styles from Entity', () => {
         const majorModel = createContentModelDocument();
         const para1 = createParagraph(false, undefined, {
             fontFamily: 'Arial',
