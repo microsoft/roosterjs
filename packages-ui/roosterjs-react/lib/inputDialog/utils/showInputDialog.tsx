@@ -10,7 +10,13 @@ import {
 } from '../../common/index';
 
 /**
- * @internal
+ * Show a dialog with input items
+ * @param uiUtilities UI utilities to help render the dialog
+ * @param dialogTitleKey Localized string key for title of this dialog
+ * @param unlocalizedTitle Unlocalized title string of this dialog. It will be used if a valid localized string is not found using dialogTitleKey
+ * @param items Input items in this dialog
+ * @param strings Localized strings
+ * @param onChange An optional callback that will be invoked when input item value is changed
  */
 export default function showInputDialog<Strings extends string, ItemNames extends string>(
     uiUtilities: UIUtilities,
