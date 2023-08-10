@@ -5,6 +5,7 @@ import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 import {
     createContentModelDocument,
     createDivider,
+    createEntity,
     createListItem,
     createListLevel,
     createParagraph,
@@ -2414,6 +2415,395 @@ describe('mergeModel', () => {
                         },
                     },
                     segmentFormat: { backgroundColor: 'red' },
+                },
+            ],
+        });
+    });
+
+    it('Merge Table with styles into paragraph, paragraph after table should not inherit styles from table', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell1 = createTableCell(false, false);
+        const newTable1 = createTable(1, {
+            textAlign: 'start',
+            whiteSpace: 'normal',
+            borderTop: '1px solid black',
+            borderRight: '1px solid black',
+            borderBottom: '1px solid black',
+            borderLeft: '1px solid black',
+            backgroundColor: 'rgb(255, 255, 255)',
+            useBorderBox: true,
+            borderCollapse: true,
+        });
+
+        newPara1.segments.push(newText1);
+        newCell1.blocks.push(newPara1);
+        newTable1.rows[0].cells.push(newCell1);
+        sourceModel.blocks.push(newTable1);
+
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'newText1',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        textAlign: 'start',
+                        whiteSpace: 'normal',
+                        borderTop: '1px solid black',
+                        borderRight: '1px solid black',
+                        borderBottom: '1px solid black',
+                        borderLeft: '1px solid black',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [],
+                    dataset: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge Divider with styles into paragraph, paragraph after table should not inherit styles from Divider', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newDiv = createDivider('div', {
+            textAlign: 'start',
+            whiteSpace: 'normal',
+            borderTop: '1px solid black',
+            borderRight: '1px solid black',
+            borderBottom: '1px solid black',
+            borderLeft: '1px solid black',
+            backgroundColor: 'rgb(255, 255, 255)',
+        });
+
+        sourceModel.blocks.push(newDiv);
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        textAlign: 'start',
+                        whiteSpace: 'normal',
+                        borderTop: '1px solid black',
+                        borderRight: '1px solid black',
+                        borderBottom: '1px solid black',
+                        borderLeft: '1px solid black',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge ListItem with styles into paragraph, paragraph after table should not inherit styles from ListItem', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newList = createListItem([
+            createListLevel('OL', {
+                marginBottom: '100px',
+            }),
+        ]);
+        const para2 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const text3 = createText('test1');
+        newList.blocks.push(para2);
+        para2.segments.push(text3);
+
+        sourceModel.blocks.push(newList);
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                            format: {},
+                            segmentFormat: {
+                                fontFamily: 'Arial',
+                                fontSize: '15px',
+                                backgroundColor: 'red',
+                                textColor: 'blue',
+                                italic: false,
+                            },
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginBottom: '100px' },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge Entity with styles into paragraph, paragraph after table should not inherit styles from Entity', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newEntity = createEntity(document.createElement('div'), false, {
+            fontFamily: 'Corbel',
+            fontSize: '20px',
+            backgroundColor: 'blue',
+            textColor: 'aliceblue',
+            italic: true,
+        });
+
+        sourceModel.blocks.push(newEntity);
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {
+                        fontFamily: 'Corbel',
+                        fontSize: '20px',
+                        backgroundColor: 'blue',
+                        textColor: 'aliceblue',
+                        italic: true,
+                    },
+                    id: undefined,
+                    type: undefined,
+                    isReadonly: false,
+                    wrapper: newEntity.wrapper,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
                 },
             ],
         });
