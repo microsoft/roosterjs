@@ -1,9 +1,9 @@
+import { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelEntity,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import { EntityOperation } from 'roosterjs-editor-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -72,6 +72,11 @@ export interface FormatWithContentModelOptions {
      * Optional callback to get an object used for change data in ContentChangedEvent
      */
     getChangeData?: () => any;
+
+    /**
+     * When specified, use this selection range to override current selection inside editor
+     */
+    selectionOverride?: SelectionRangeEx;
 }
 
 /**
