@@ -23,12 +23,18 @@ export function formatWithContentModel(
     formatter: ContentModelFormatter,
     options?: FormatWithContentModelOptions
 ) {
-    const { onNodeCreated, preservePendingFormat, getChangeData, changeSource, rawEvent } =
-        options || {};
+    const {
+        onNodeCreated,
+        preservePendingFormat,
+        getChangeData,
+        changeSource,
+        rawEvent,
+        selectionOverride,
+    } = options || {};
 
     editor.focus();
 
-    const model = editor.createContentModel();
+    const model = editor.createContentModel(undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
         deletedEntities: [],
         rawEvent,
