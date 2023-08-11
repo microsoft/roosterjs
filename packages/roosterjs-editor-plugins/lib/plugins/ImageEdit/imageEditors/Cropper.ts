@@ -1,10 +1,16 @@
 import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
 import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import { CreateElementData } from 'roosterjs-editor-types';
-import { CROP_HANDLE_SIZE, CROP_HANDLE_WIDTH, ROTATION, Xs, Ys } from '../constants/constants';
 import { CropInfo } from '../types/ImageEditInfo';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { rotateCoordinate } from './Resizer';
+import {
+    CROP_HANDLE_SIZE,
+    CROP_HANDLE_WIDTH,
+    ROTATION,
+    XS_CROP,
+    YS_CROP,
+} from '../constants/constants';
 
 /**
  * @internal
@@ -96,7 +102,9 @@ export function getCropHTML(): CreateElementData[] {
         children: [],
     };
     if (containerHTML) {
-        Xs.forEach(x => Ys.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y))));
+        XS_CROP.forEach(x =>
+            YS_CROP.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y)))
+        );
     }
     return [containerHTML, overlayHTML, overlayHTML, overlayHTML, overlayHTML];
 }
