@@ -26,6 +26,7 @@ export function handleMouseDownEvent(
 ) {
     const { which, shiftKey, target, detail } = event.rawEvent;
     const table = editor.getElementAtCursor('table', target as Node, event);
+    const tripleClick = detail >= 3;
 
     if (table && !table.isContentEditable) {
         return;
@@ -58,40 +59,7 @@ export function handleMouseDownEvent(
         }
     }
     if (which == LEFT_CLICK) {
-        // Triple clicking a cell will select that cell
-        if (detail >= 3) {
-            editor.runAsync(editor => {
-                const sel = editor.getDocument().defaultView?.getSelection();
-                const first = getCellAtCursor(editor, sel?.anchorNode);
-                const firstTable = getTableAtCursor(editor, first);
-                const targetTable = getTableAtCursor(editor, first);
-                if (firstTable! == targetTable! && safeInstanceOf(first, 'HTMLTableCellElement')) {
-                    state.vTable = new VTable(first);
-                    const firstCord = getCellCoordinates(state.vTable, first);
-
-                    if (!firstCord) {
-                        return;
-                    }
-
-                    state.vTable.selection = {
-                        firstCell: firstCord,
-                        lastCell: firstCord,
-                    };
-
-                    state.firstTarget = first;
-                    state.lastTarget = first;
-                    selectTable(editor, state);
-
-                    state.tableSelection = true;
-                    state.firstTable = firstTable as HTMLTableElement;
-                    state.targetTable = targetTable;
-                    updateSelection(editor, first, 0);
-                }
-            });
-            return;
-        }
-
-        if (!shiftKey) {
+        if (!shiftKey && !tripleClick) {
             clearState(state, editor);
 
             if (getTableAtCursor(editor, event.rawEvent.target)) {
@@ -111,15 +79,16 @@ export function handleMouseDownEvent(
             }
         }
 
-        if (shiftKey) {
+        if (shiftKey || tripleClick) {
             editor.runAsync(editor => {
                 const sel = editor.getDocument().defaultView?.getSelection();
                 const first = getCellAtCursor(editor, sel?.anchorNode);
-                const last = getCellAtCursor(editor, sel?.focusNode);
+                // Triple clicking a cell will select that cell only
+                // make last the same as first to make sure we can select the cell
+                const last = tripleClick ? first : getCellAtCursor(editor, sel?.focusNode);
                 const firstTable = getTableAtCursor(editor, first);
-                const targetTable = getTableAtCursor(editor, first);
                 if (
-                    firstTable! == targetTable! &&
+                    firstTable &&
                     safeInstanceOf(first, 'HTMLTableCellElement') &&
                     safeInstanceOf(last, 'HTMLTableCellElement')
                 ) {
@@ -141,7 +110,7 @@ export function handleMouseDownEvent(
 
                     state.tableSelection = true;
                     state.firstTable = firstTable as HTMLTableElement;
-                    state.targetTable = targetTable;
+                    state.targetTable = firstTable;
                     updateSelection(editor, first, 0);
                 }
             });
