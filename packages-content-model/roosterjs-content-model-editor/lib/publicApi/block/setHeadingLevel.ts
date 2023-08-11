@@ -6,29 +6,29 @@ import {
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';
 
-type HeaderLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+type HeadingLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 
 /**
- * Set header level of selected paragraphs
- * @param editor The editor to set header level to
- * @param headerLevel Level of header, from 1 to 6. Set to 0 means set it back to a regular paragraph
+ * Set heading level of selected paragraphs
+ * @param editor The editor to set heading level to
+ * @param headingLevel Level of heading, from 1 to 6. Set to 0 means set it back to a regular paragraph
  */
-export default function setHeaderLevel(
+export default function setHeadingLevel(
     editor: IContentModelEditor,
-    headerLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
+    headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
-    formatParagraphWithContentModel(editor, 'setHeaderLevel', para => {
+    formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
         const tagName =
-            headerLevel > 0
-                ? (('h' + headerLevel) as HeaderLevelTags | null)
-                : getExistingHeaderHeaderTag(para.decorator);
-        const headerStyle =
+            headingLevel > 0
+                ? (('h' + headingLevel) as HeadingLevelTags | null)
+                : getExistingHeadingTag(para.decorator);
+        const headingStyle =
             (tagName && (defaultImplicitFormatMap[tagName] as ContentModelSegmentFormat)) || {};
 
-        if (headerLevel > 0) {
+        if (headingLevel > 0) {
             para.decorator = {
                 tagName: tagName!,
-                format: { ...headerStyle },
+                format: { ...headingStyle },
             };
 
             // Remove existing formats since tags have default font size and weight
@@ -42,11 +42,11 @@ export default function setHeaderLevel(
     });
 }
 
-function getExistingHeaderHeaderTag(
+function getExistingHeadingTag(
     decorator?: ContentModelParagraphDecorator
-): HeaderLevelTags | null {
+): HeadingLevelTags | null {
     const tag = decorator?.tagName || '';
     const level = parseInt(tag.substring(1));
 
-    return level >= 1 && level <= 6 ? (tag as HeaderLevelTags) : null;
+    return level >= 1 && level <= 6 ? (tag as HeadingLevelTags) : null;
 }

@@ -37,7 +37,7 @@ import { removeLinkButton } from './removeLinkButton';
 import { Ribbon, RibbonButton, RibbonPlugin } from 'roosterjs-react';
 import { rtlButton } from './rtlButton';
 import { setBulletedListStyleButton } from './setBulletedListStyleButton';
-import { setHeaderLevelButton } from './setHeaderLevelButton';
+import { setHeadingLevelButton } from './setHeadingLevelButton';
 import { setNumberedListStyleButton } from './setNumberedListStyleButton';
 import { setTableCellShadeButton } from './setTableCellShadeButton';
 import { setTableHeaderButton } from './setTableHeaderButton';
@@ -84,7 +84,7 @@ const buttons = [
     superscriptButton,
     subscriptButton,
     strikethroughButton,
-    setHeaderLevelButton,
+    setHeadingLevelButton,
     codeButton,
     ltrButton,
     rtlButton,

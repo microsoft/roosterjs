@@ -139,7 +139,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('Single selection with header', () => {
+    it('Single selection with heading', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para = createParagraph(false, undefined, undefined, {
@@ -157,6 +157,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            headingLevel: 1,
             headerLevel: 1,
             isBlockQuote: false,
             isCodeInline: false,
@@ -275,7 +276,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('With table header', () => {
+    it('With table heading', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const table = createTable(1);

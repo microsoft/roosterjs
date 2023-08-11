@@ -85,7 +85,13 @@ export interface ElementBasedFormatState {
     canAddImageAltText?: boolean;
 
     /**
-     * Header level (0-6, 0 means no header)
+     * Heading level (0-6, 0 means no heading)
+     */
+    headingLevel?: number;
+
+    /**
+     * @deprecated Use headingLevel instead
+     * Heading level (0-6, 0 means no heading)
      */
     headerLevel?: number;
 
