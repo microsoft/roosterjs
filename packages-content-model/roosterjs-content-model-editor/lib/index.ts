@@ -22,6 +22,10 @@ export {
     FormatWithContentModelOptions,
     ContentModelFormatter,
 } from './publicTypes/parameter/FormatWithContentModelContext';
+export {
+    InsertEntityOptions,
+    InsertEntityPosition,
+} from './publicTypes/parameter/InsertEntityOptions';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -69,6 +73,7 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 export { default as setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
+export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
