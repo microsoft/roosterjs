@@ -25,7 +25,7 @@ describe('ImageEdit | rotate and flip', () => {
     });
 
     function runRotateTest(angle: number, editInfo?: ImageEditInfo) {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_ROTATION';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
@@ -46,7 +46,7 @@ describe('ImageEdit | rotate and flip', () => {
         flippedVertical?: boolean,
         editInfo?: ImageEditInfo
     ) {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_FLIP';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
@@ -212,7 +212,7 @@ describe('ImageEdit | rotate and flip', () => {
     });
 
     it('start image editing', () => {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_EDITING';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
@@ -220,7 +220,7 @@ describe('ImageEdit | rotate and flip', () => {
         editor.select(image);
         plugin.setEditingImage(image, ImageEditOperation.Resize);
         expect(editor.getContent()).toBe(
-            '<span style="vertical-align: bottom; font-size: 24px;"><img id="IMAGE_ID" src="test"></span>'
+            '<span style="vertical-align: bottom; font-size: 24px;"><img id="IMAGE_ID_EDITING" src="test"></span>'
         );
     });
 });
@@ -271,7 +271,7 @@ describe('ImageEdit | plugin events | quitting', () => {
     };
 
     it('image selection quit editing', () => {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_QUIT';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
         editor.setContent(content);
@@ -286,7 +286,7 @@ describe('ImageEdit | plugin events | quitting', () => {
     });
 
     it('mousedown quit editing', () => {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
         editor.setContent(content);
@@ -314,7 +314,7 @@ describe('ImageEdit | plugin events | quitting', () => {
 
 describe('ImageEdit | wrapper', () => {
     let editor: IEditor;
-    const TEST_ID = 'imageEditTest';
+    const TEST_ID = 'imageEditTestWrapper';
     let plugin: ImageEdit;
 
     beforeEach(() => {
@@ -331,7 +331,7 @@ describe('ImageEdit | wrapper', () => {
     });
 
     it('image selection, remove max-width', () => {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_SELECTION';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
@@ -345,7 +345,7 @@ describe('ImageEdit | wrapper', () => {
     });
 
     it('image selection, cloned image should use style width/height attributes', () => {
-        const IMG_ID = 'IMAGE_ID';
+        const IMG_ID = 'IMAGE_ID_SELECTION_2';
         const content = `<img id="${IMG_ID}" style="width: 300px; height: 300px" src='test'/>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
