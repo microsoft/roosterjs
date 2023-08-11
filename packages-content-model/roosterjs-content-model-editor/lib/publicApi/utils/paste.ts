@@ -1,9 +1,14 @@
-import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
+import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { NodePosition } from 'roosterjs-editor-types';
+import {
+    ContentModelBlockFormat,
+    ContentModelDocument,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 import ContentModelBeforePasteEvent, {
     ContentModelBeforePasteEventData,
 } from '../../publicTypes/event/ContentModelBeforePasteEvent';
@@ -84,25 +89,39 @@ export default function paste(
         formatWithContentModel(
             editor,
             'Paste',
-            (model, context) => {
-                if (customizedMerge) {
-                    customizedMerge(model, pasteModel);
-                } else {
-                    mergeModel(model, pasteModel, context, {
-                        mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-                        mergeTable:
-                            pasteModel.blocks.length === 1 &&
-                            pasteModel.blocks[0].blockType === 'Table',
-                    });
-                }
-                return true;
-            },
+            (model, context) =>
+                mergePasteContent(model, context, pasteModel, applyCurrentFormat, customizedMerge),
             {
                 changeSource: ChangeSource.Paste,
                 getChangeData: () => clipboardData,
             }
         );
     }
+}
+
+/**
+ * @internal
+ * Export only for unit test
+ */
+export function mergePasteContent(
+    model: ContentModelDocument,
+    context: FormatWithContentModelContext,
+    pasteModel: ContentModelDocument,
+    applyCurrentFormat: boolean,
+    customizedMerge:
+        | undefined
+        | ((source: ContentModelDocument, target: ContentModelDocument) => void)
+): boolean {
+    if (customizedMerge) {
+        customizedMerge(model, pasteModel);
+    } else {
+        mergeModel(model, pasteModel, context, {
+            mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
+            mergeTable:
+                pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table',
+        });
+    }
+    return true;
 }
 
 function createBeforePasteEventData(
