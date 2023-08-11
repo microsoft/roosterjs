@@ -18,8 +18,9 @@ class RibbonPluginImpl implements RibbonPlugin {
     /**
      * Construct a new instance of RibbonPlugin object
      * @param delayUpdateTime The time to wait before refresh the button when user do some editing operation in editor
+     * @param ignoreImplicitStyles @optional Whether we should ignore implicit styles such as bold in heading. @default false
      */
-    constructor(private delayUpdateTime: number = 200) {}
+    constructor(private delayUpdateTime: number = 200, private ignoreImplicitStyles?: boolean) {}
 
     /**
      * Get a friendly name of this plugin
@@ -154,7 +155,11 @@ class RibbonPluginImpl implements RibbonPlugin {
 
     private updateFormat() {
         if (this.editor && this.onFormatChanged) {
-            const newFormatState = getFormatState(this.editor);
+            const newFormatState = getFormatState(
+                this.editor,
+                undefined /*event*/,
+                this.ignoreImplicitStyles
+            );
 
             if (
                 !this.formatState ||

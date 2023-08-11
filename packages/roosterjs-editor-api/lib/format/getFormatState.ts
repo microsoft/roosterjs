@@ -66,14 +66,19 @@ export function getElementBasedFormatState(
  * A format state is a collection of all format related states, e.g.,
  * bold, italic, underline, font name, font size, etc.
  * @param editor The editor instance
- * @param event (Optional) The plugin event, it stores the event cached data for looking up.
+ * @param event @optional The plugin event, it stores the event cached data for looking up.
  * In this function the event cache is used to get list state and header level. If not passed,
  * it will query the node within selection to get the info
+ * @param ignoreImplicitStyles @optional Whether we should ignore implicit styles such as bold in heading. @default false
  * @returns The format state at cursor
  */
-export default function getFormatState(editor: IEditor, event?: PluginEvent): FormatState {
+export default function getFormatState(
+    editor: IEditor,
+    event?: PluginEvent,
+    ignoreImplicitStyles?: boolean
+): FormatState {
     return {
-        ...editor.getPendableFormatState(false /* forceGetStateFromDom */),
+        ...editor.getPendableFormatState(false /* forceGetStateFromDom */, ignoreImplicitStyles),
         ...getElementBasedFormatState(editor, event),
         ...editor.getStyleBasedFormatState(),
         ...editor.getUndoState(),
