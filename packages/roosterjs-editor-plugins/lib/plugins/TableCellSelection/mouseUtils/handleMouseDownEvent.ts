@@ -90,6 +90,7 @@ export function handleMouseDownEvent(
             });
             return;
         }
+
         if (!shiftKey) {
             clearState(state, editor);
 
