@@ -14,11 +14,14 @@ export const ROTATION: Record<string, number> = {
     ne: 180,
     se: 270,
 };
+export const Xs: DNDDirectionX[] = ['w', '', 'e'];
+export const Ys: DnDDirectionY[] = ['s', '', 'n'];
+
 export const ROTATE_WIDTH = 1;
 export const ROTATE_HANDLE_TOP = ROTATE_GAP + RESIZE_HANDLE_MARGIN;
 export const CROP_HANDLE_SIZE = 22;
 export const CROP_HANDLE_WIDTH = 7;
-export const Xs: DNDDirectionX[] = ['w', '', 'e'];
-export const Ys: DnDDirectionY[] = ['s', '', 'n'];
+export const XS_CROP: DNDDirectionX[] = ['w', 'e'];
+export const YS_CROP: DnDDirectionY[] = ['s', 'n'];
 
 export const MIN_HEIGHT_WIDTH = 3 * RESIZE_HANDLE_SIZE + 2 * RESIZE_HANDLE_MARGIN;
