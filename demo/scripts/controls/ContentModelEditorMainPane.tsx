@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
+import ApiPlaygroundPlugin from './sidePane/contentModelApiPlayground/ApiPlaygroundPlugin';
 import ContentModelEditorOptionsPlugin from './sidePane/editorOptions/ContentModelEditorOptionsPlugin';
 import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';

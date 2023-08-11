@@ -20,7 +20,8 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
  */
 export type CreateContentModel = (
     core: ContentModelEditorCore,
-    option?: DomToModelOption
+    option?: DomToModelOption,
+    selectionOverride?: SelectionRangeEx
 ) => ContentModelDocument;
 
 /**
