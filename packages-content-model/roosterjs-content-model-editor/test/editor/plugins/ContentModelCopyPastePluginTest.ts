@@ -230,7 +230,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>table);
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
@@ -428,7 +428,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.cut?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>table);
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,

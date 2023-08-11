@@ -117,11 +117,30 @@ export function mergePasteContent(
     } else {
         mergeModel(model, pasteModel, context, {
             mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
-            mergeTable:
-                pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table',
+            mergeTable: shouldMergeTable(pasteModel),
         });
     }
     return true;
+}
+
+function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
+    // Should merge table if:
+    // Model only contains a table
+    if (pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table') {
+        return true;
+    }
+    // If model contains a table and a paragraph element after the table with a single BR segment.
+    if (
+        pasteModel.blocks.length == 2 &&
+        pasteModel.blocks[0].blockType === 'Table' &&
+        pasteModel.blocks[1].blockType === 'Paragraph' &&
+        pasteModel.blocks[1].segments.length === 1 &&
+        pasteModel.blocks[1].segments[0].segmentType === 'Br'
+    ) {
+        pasteModel.blocks.splice(1);
+        return true;
+    }
+    return false;
 }
 
 function createBeforePasteEventData(
