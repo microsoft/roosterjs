@@ -3,7 +3,7 @@
 <html lang="en">
 
 <head>
-    <title>Code coverage report for packages/roosterjs-editor-api/lib/format/toggleHeader.ts</title>
+    <title>Code coverage report for packages/roosterjs-editor-api/lib/format/setHeadingLevel.ts</title>
     <meta charset="utf-8" />
     <link rel="stylesheet" href="../../../../prettify.css" />
     <link rel="stylesheet" href="../../../../base.css" />
@@ -19,13 +19,13 @@
 <body>
 <div class='wrapper'>
     <div class='pad1'>
-        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages/roosterjs-editor-api/lib/format</a> toggleHeader.ts</h1>
+        <h1><a href="../../../../index.html">All files</a> / <a href="index.html">packages/roosterjs-editor-api/lib/format</a> setHeadingLevel.ts</h1>
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">16% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>3/24</span>
+                <span class='fraction'>4/25</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">12.5% </span>
+                <span class="strong">16% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>3/24</span>
+                <span class='fraction'>4/25</span>
             </div>
         
             
@@ -107,7 +107,13 @@
 <a name='L48'></a><a href='#L48'>48</a>
 <a name='L49'></a><a href='#L49'>49</a>
 <a name='L50'></a><a href='#L50'>50</a>
-<a name='L51'></a><a href='#L51'>51</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L51'></a><a href='#L51'>51</a>
+<a name='L52'></a><a href='#L52'>52</a>
+<a name='L53'></a><a href='#L53'>53</a>
+<a name='L54'></a><a href='#L54'>54</a>
+<a name='L55'></a><a href='#L55'>55</a>
+<a name='L56'></a><a href='#L56'>56</a>
+<a name='L57'></a><a href='#L57'>57</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -157,18 +163,24 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
 import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
 &nbsp;
 /**
- * Toggle header at selection
+ * Set heading level at selection
  * @param editor The editor instance
- * @param level The header level, can be a number from 0 to 6, in which 1 ~ 6 refers to
- * the HTML header element &amp;lt;H1&amp;gt; to &amp;lt;H6&amp;gt;, 0 means no header
+ * @param level The heading level, can be a number from 0 to 6, in which 1 ~ 6 refers to
+ * the HTML heading element &amp;lt;H1&amp;gt; to &amp;lt;H6&amp;gt;, 0 means no heading
  * if passed in param is outside the range, will be rounded to nearest number in the range
  */
-export default function <span class="fstat-no" title="function not covered" >toggleHeader(</span>editor: IEditor, level: number) {
+export default function <span class="fstat-no" title="function not covered" >setHeadingLevel(</span>editor: IEditor, level: number) {
 <span class="cstat-no" title="statement not covered" >    level = Math.min(Math.max(Math.round(level), 0), 6);</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    formatUndoSnapshot(</span>
@@ -177,15 +189,15 @@ export default function <span class="fstat-no" title="function not covered" >tog
 <span class="cstat-no" title="statement not covered" >            editor.focus();</span>
 &nbsp;
             let wrapped = <span class="cstat-no" title="statement not covered" >false;</span>
-<span class="cstat-no" title="statement not covered" >            editor.queryElements('H1,H2,H3,H4,H5,H6', QueryScope.OnSelection, <span class="fstat-no" title="function not covered" >header </span>=&gt; {</span>
+<span class="cstat-no" title="statement not covered" >            editor.queryElements('H1,H2,H3,H4,H5,H6', QueryScope.OnSelection, <span class="fstat-no" title="function not covered" >heading </span>=&gt; {</span>
 <span class="cstat-no" title="statement not covered" >                if (!wrapped) {</span>
 <span class="cstat-no" title="statement not covered" >                    editor.getDocument().execCommand(DocumentCommand.FormatBlock, false, '&lt;DIV&gt;');</span>
 <span class="cstat-no" title="statement not covered" >                    wrapped = true;</span>
                 }
 &nbsp;
                 const div = <span class="cstat-no" title="statement not covered" >editor.getDocument().createElement('div');</span>
-<span class="cstat-no" title="statement not covered" >                moveChildNodes(div, header);</span>
-<span class="cstat-no" title="statement not covered" >                editor.replaceNode(header, div);</span>
+<span class="cstat-no" title="statement not covered" >                moveChildNodes(div, heading);</span>
+<span class="cstat-no" title="statement not covered" >                editor.replaceNode(heading, div);</span>
             });
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            if (level &gt; 0) {</span>
@@ -207,6 +219,12 @@ export default function <span class="fstat-no" title="function not covered" >tog
         'toggleHeader'
     );
 }
+&nbsp;
+/**
+ * @deprecated Use setHeadingLevel instead
+ * Keep this for compatibility only, will be removed in next major release
+ */
+export const toggleHeader = setHeadingLevel;
 &nbsp;</pre></td></tr></table></pre>
 
                 <div class='push'></div><!-- for sticky footer -->
@@ -214,7 +232,7 @@ export default function <span class="fstat-no" title="function not covered" >tog
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Aug 11 2023 17:03:44 GMT+0000 (Coordinated Universal Time)
+                at Fri Aug 11 2023 22:06:56 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>

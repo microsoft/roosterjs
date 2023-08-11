@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">14.29% </span>
+                <span class="strong">13.79% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>4/28</span>
+                <span class='fraction'>4/29</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">15.38% </span>
+                <span class="strong">14.81% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>4/26</span>
+                <span class='fraction'>4/27</span>
             </div>
         
             
@@ -159,7 +159,9 @@
 <a name='L100'></a><a href='#L100'>100</a>
 <a name='L101'></a><a href='#L101'>101</a>
 <a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L103'></a><a href='#L103'>103</a>
+<a name='L104'></a><a href='#L104'>104</a>
+<a name='L105'></a><a href='#L105'>105</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -204,8 +206,10 @@
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -275,7 +279,7 @@ import {
  * Get element based Format State at cursor
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
+ * In this function the event cache is used to get list state and heading level. If not passed,
  * it will query the node within selection to get the info
  * @returns An ElementBasedFormatState object
  */
@@ -297,21 +301,23 @@ export function <span class="fstat-no" title="function not covered" >getElementB
 <span class="cstat-no" title="statement not covered" >        multiline = endingBlock &amp;&amp; startingBlock ? !endingBlock.equals(startingBlock) : false;</span>
     }
 &nbsp;
-    const headerTag = <span class="cstat-no" title="statement not covered" >getTagOfNode(</span>
+    const headingTag = <span class="cstat-no" title="statement not covered" >getTagOfNode(</span>
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', undefined /*startFrom*/, event)
     );
 &nbsp;
     const table = <span class="cstat-no" title="statement not covered" >editor.queryElements('table', QueryScope.OnSelection)[0];</span>
     const tableFormat = <span class="cstat-no" title="statement not covered" >table ? getTableFormatInfo(table) : undefined;</span>
-    const hasHeader = <span class="cstat-no" title="statement not covered" >table?.rows[0]</span>
+    const hasTableHeader = <span class="cstat-no" title="statement not covered" >table?.rows[0]</span>
         ? toArray(table.rows[0].cells).every(<span class="fstat-no" title="function not covered" >cell </span>=&gt; <span class="cstat-no" title="statement not covered" >getTagOfNode(cell) == 'TH')</span>
         : undefined;
+    const headingLevel = <span class="cstat-no" title="statement not covered" >(headingTag &amp;&amp; parseInt(headingTag[1])) || 0;</span>
 &nbsp;
 <span class="cstat-no" title="statement not covered" >    return {</span>
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         isMultilineSelection: multiline,
-        headerLevel: (headerTag &amp;&amp; parseInt(headerTag[1])) || 0,
+        headingLevel: headingLevel,
+        headerLevel: headingLevel,
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
@@ -319,7 +325,7 @@ export function <span class="fstat-no" title="function not covered" >getElementB
         isCodeBlock: !!editor.queryElements('pre&gt;code', QueryScope.OnSelection)[0],
         isInTable: !!table,
         tableFormat: tableFormat || {},
-        tableHasHeader: hasHeader,
+        tableHasHeader: hasTableHeader,
         canMergeTableCell: canMergeTableCell(editor),
     };
 }
@@ -330,7 +336,7 @@ export function <span class="fstat-no" title="function not covered" >getElementB
  * bold, italic, underline, font name, font size, etc.
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
+ * In this function the event cache is used to get list state and heading level. If not passed,
  * it will query the node within selection to get the info
  * @returns The format state at cursor
  */
@@ -370,7 +376,7 @@ const canMergeTableCell = <span class="fstat-no" title="function not covered" >(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Aug 11 2023 17:03:44 GMT+0000 (Coordinated Universal Time)
+                at Fri Aug 11 2023 22:06:56 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
