@@ -596,7 +596,14 @@ export default class ImageEdit implements EditorPlugin {
                 const viewport = this.editor?.getVisibleViewport();
                 const isSmall = isASmallImage(targetWidth, targetHeight);
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandleState(viewport, rotateCenter, rotateHandle, isSmall);
+                    updateRotateHandleState(
+                        viewport,
+                        angleRad,
+                        wrapper,
+                        rotateCenter,
+                        rotateHandle,
+                        isSmall
+                    );
                 }
 
                 updateSideHandlesVisibility(resizeHandles, isSmall);
