@@ -66,7 +66,21 @@ export type FontButtonStringKey = 'buttonNameFont';
 export type FontSizeButtonStringKey = 'buttonNameFontSize';
 
 /**
- * Key of localized strings of Header button
+ * Key of localized strings of Heading button
+ */
+export type HeadingButtonStringKey =
+    | 'buttonNameHeading'
+    | 'buttonNameHeading1'
+    | 'buttonNameHeading2'
+    | 'buttonNameHeading3'
+    | 'buttonNameHeading4'
+    | 'buttonNameHeading5'
+    | 'buttonNameHeading6'
+    | 'buttonNameNoHeading'
+    | MenuItemSplitterKey0;
+
+/**
+ * @deprecated Use HeadingButtonStringKey instead
  */
 export type HeaderButtonStringKey =
     | 'buttonNameHeader'
@@ -77,7 +91,7 @@ export type HeaderButtonStringKey =
     | 'buttonNameHeader5'
     | 'buttonNameHeader6'
     | 'buttonNameNoHeader'
-    | MenuItemSplitterKey0;
+    | HeadingButtonStringKey;
 
 /**
  * Key of localized strings of Increase font size button
@@ -203,6 +217,7 @@ export type AllButtonStringKeys =
     | FontButtonStringKey
     | FontSizeButtonStringKey
     | HeaderButtonStringKey
+    | HeadingButtonStringKey
     | IncreaseFontSizeButtonStringKey
     | IncreaseIndentButtonStringKey
     | InsertImageButtonStringKey
