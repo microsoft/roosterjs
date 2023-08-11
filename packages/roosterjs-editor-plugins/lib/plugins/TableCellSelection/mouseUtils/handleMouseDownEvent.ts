@@ -24,7 +24,7 @@ export function handleMouseDownEvent(
     state: TableCellSelectionState,
     editor: IEditor
 ) {
-    const { which, shiftKey, target } = event.rawEvent;
+    const { which, shiftKey, target, detail } = event.rawEvent;
     const table = editor.getElementAtCursor('table', target as Node, event);
 
     if (table && !table.isContentEditable) {
@@ -53,65 +53,98 @@ export function handleMouseDownEvent(
                     selection?.setBaseAndExtent(state.firstTarget, 0, state.lastTarget, 0);
                     selectTable(editor, state);
                 }
-
                 return;
             }
         }
     }
-    if (which == LEFT_CLICK && !shiftKey) {
-        clearState(state, editor);
+    if (which == LEFT_CLICK) {
+        // Triple clicking a cell will select that cell
+        if (detail >= 3) {
+            editor.runAsync(editor => {
+                const sel = editor.getDocument().defaultView?.getSelection();
+                const first = getCellAtCursor(editor, sel?.anchorNode);
+                const firstTable = getTableAtCursor(editor, first);
+                const targetTable = getTableAtCursor(editor, first);
+                if (firstTable! == targetTable! && safeInstanceOf(first, 'HTMLTableCellElement')) {
+                    state.vTable = new VTable(first);
+                    const firstCord = getCellCoordinates(state.vTable, first);
 
-        if (getTableAtCursor(editor, event.rawEvent.target)) {
-            const doc = editor.getDocument() || document;
+                    if (!firstCord) {
+                        return;
+                    }
 
-            const mouseUpListener = getOnMouseUp(state);
-            const mouseMoveListener = onMouseMove(state, editor);
-            doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-            doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
+                    state.vTable.selection = {
+                        firstCell: firstCord,
+                        lastCell: firstCord,
+                    };
 
-            state.mouseMoveDisposer = () => {
-                doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-                doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
-            };
+                    state.firstTarget = first;
+                    state.lastTarget = first;
+                    selectTable(editor, state);
 
-            state.startedSelection = true;
-        }
-    }
-
-    if (which == LEFT_CLICK && shiftKey) {
-        editor.runAsync(editor => {
-            const sel = editor.getDocument().defaultView?.getSelection();
-            const first = getCellAtCursor(editor, sel?.anchorNode);
-            const last = getCellAtCursor(editor, sel?.focusNode);
-            const firstTable = getTableAtCursor(editor, first);
-            const targetTable = getTableAtCursor(editor, first);
-            if (
-                firstTable! == targetTable! &&
-                safeInstanceOf(first, 'HTMLTableCellElement') &&
-                safeInstanceOf(last, 'HTMLTableCellElement')
-            ) {
-                state.vTable = new VTable(first);
-                const firstCord = getCellCoordinates(state.vTable, first);
-                const lastCord = getCellCoordinates(state.vTable, last);
-
-                if (!firstCord || !lastCord) {
-                    return;
+                    state.tableSelection = true;
+                    state.firstTable = firstTable as HTMLTableElement;
+                    state.targetTable = targetTable;
+                    updateSelection(editor, first, 0);
                 }
-                state.vTable.selection = {
-                    firstCell: firstCord,
-                    lastCell: lastCord,
+            });
+            return;
+        }
+        if (!shiftKey) {
+            clearState(state, editor);
+
+            if (getTableAtCursor(editor, event.rawEvent.target)) {
+                const doc = editor.getDocument() || document;
+
+                const mouseUpListener = getOnMouseUp(state);
+                const mouseMoveListener = onMouseMove(state, editor);
+                doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
+
+                state.mouseMoveDisposer = () => {
+                    doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                    doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
                 };
 
-                state.firstTarget = first;
-                state.lastTarget = last;
-                selectTable(editor, state);
-
-                state.tableSelection = true;
-                state.firstTable = firstTable as HTMLTableElement;
-                state.targetTable = targetTable;
-                updateSelection(editor, first, 0);
+                state.startedSelection = true;
             }
-        });
+        }
+
+        if (shiftKey) {
+            editor.runAsync(editor => {
+                const sel = editor.getDocument().defaultView?.getSelection();
+                const first = getCellAtCursor(editor, sel?.anchorNode);
+                const last = getCellAtCursor(editor, sel?.focusNode);
+                const firstTable = getTableAtCursor(editor, first);
+                const targetTable = getTableAtCursor(editor, first);
+                if (
+                    firstTable! == targetTable! &&
+                    safeInstanceOf(first, 'HTMLTableCellElement') &&
+                    safeInstanceOf(last, 'HTMLTableCellElement')
+                ) {
+                    state.vTable = new VTable(first);
+                    const firstCord = getCellCoordinates(state.vTable, first);
+                    const lastCord = getCellCoordinates(state.vTable, last);
+
+                    if (!firstCord || !lastCord) {
+                        return;
+                    }
+                    state.vTable.selection = {
+                        firstCell: firstCord,
+                        lastCell: lastCord,
+                    };
+
+                    state.firstTarget = first;
+                    state.lastTarget = last;
+                    selectTable(editor, state);
+
+                    state.tableSelection = true;
+                    state.firstTable = firstTable as HTMLTableElement;
+                    state.targetTable = targetTable;
+                    updateSelection(editor, first, 0);
+                }
+            });
+        }
     }
 }
 
