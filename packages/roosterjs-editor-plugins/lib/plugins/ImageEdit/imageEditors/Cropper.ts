@@ -8,8 +8,8 @@ import {
     CROP_HANDLE_SIZE,
     CROP_HANDLE_WIDTH,
     ROTATION,
-    Xs_CROP,
-    Ys_CROP,
+    XS_CROP,
+    YS_CROP,
 } from '../constants/constants';
 
 /**
@@ -102,8 +102,8 @@ export function getCropHTML(): CreateElementData[] {
         children: [],
     };
     if (containerHTML) {
-        Xs_CROP.forEach(x =>
-            Ys_CROP.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y)))
+        XS_CROP.forEach(x =>
+            YS_CROP.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y)))
         );
     }
     return [containerHTML, overlayHTML, overlayHTML, overlayHTML, overlayHTML];
