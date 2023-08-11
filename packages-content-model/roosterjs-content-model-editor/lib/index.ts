@@ -56,7 +56,7 @@ export { default as getSelectedSegments } from './publicApi/selection/getSelecte
 export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
-export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
+export { default as setHeadingLevel } from './publicApi/block/setHeadingLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 export { default as setSpacing } from './publicApi/block/setSpacing';
 export { default as setImageBorder } from './publicApi/image/setImageBorder';

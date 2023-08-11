@@ -87,7 +87,7 @@ describe('headingProcessor', () => {
         });
     });
 
-    it('header with format from context', () => {
+    it('heading with format from context', () => {
         const group = createContentModelDocument();
         const h1 = document.createElement('h1');
 
