@@ -16,6 +16,16 @@ export {
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
+export {
+    DeletedEntity,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+    ContentModelFormatter,
+} from './publicTypes/parameter/FormatWithContentModelContext';
+export {
+    InsertEntityOptions,
+    InsertEntityPosition,
+} from './publicTypes/parameter/InsertEntityOptions';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -53,7 +63,6 @@ export { default as setImageBorder } from './publicApi/image/setImageBorder';
 export { default as setImageBoxShadow } from './publicApi/image/setImageBoxShadow';
 export { default as changeImage } from './publicApi/image/changeImage';
 export { default as getFormatState } from './publicApi/format/getFormatState';
-export { default as getSegmentFormat } from './publicApi/format/getSegmentFormat';
 export { default as applyPendingFormat } from './publicApi/format/applyPendingFormat';
 export { default as clearFormat } from './publicApi/format/clearFormat';
 export { default as insertLink } from './publicApi/link/insertLink';
@@ -64,6 +73,8 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 export { default as setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
+export { default as insertEntity } from './publicApi/entity/insertEntity';
+export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';

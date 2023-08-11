@@ -46,6 +46,7 @@ export { SizeFormat } from './format/formatParts/SizeFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
+export { FloatFormat } from './format/formatParts/FloatFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';

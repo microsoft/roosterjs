@@ -1,79 +1,49 @@
-import { ChangeSource } from 'roosterjs-editor-types';
-import {
-    ContentModelDocument,
-    DomToModelOption,
-    OnNodeCreated,
-} from 'roosterjs-content-model-types';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { reducedModelChildProcessor } from '../../domToModel/processors/reducedModelChildProcessor';
+import {
+    ContentModelFormatter,
+    FormatWithContentModelContext,
+    FormatWithContentModelOptions,
+} from '../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
- * @internal
- */
-export interface FormatWithContentModelOptions {
-    /**
-     * When set to true, it will only create Content Model for selected content
-     */
-    useReducedModel?: boolean;
-
-    /**
-     * When set to true, if there is pending format, it will be preserved after this format operation is done
-     */
-    preservePendingFormat?: boolean;
-
-    /**
-     * When pass true, skip adding undo snapshot when write Content Model back to DOM
-     */
-    skipUndoSnapshot?: boolean;
-
-    /**
-     * Change source used for triggering a ContentChanged event. @default ChangeSource.Format.
-     */
-    changeSource?: string;
-
-    /**
-     * An optional callback that will be called when a DOM node is created
-     * @param modelElement The related Content Model element
-     * @param node The node created for this model element
-     */
-    onNodeCreated?: OnNodeCreated;
-
-    /**
-     * Optional callback to get an object used for change data in ContentChangedEvent
-     */
-    getChangeData?: () => any;
-}
-
-/**
- * @internal
+ * The general API to do format change with Content Model
+ * It will grab a Content Model for current editor content, and invoke a callback function
+ * to do format change. Then according to the return value, write back the modified content model into editor.
+ * If there is cached model, it will be used and updated.
+ * @param editor Content Model editor
+ * @param apiName Name of the format API
+ * @param formatter Formatter function, see ContentModelFormatter
+ * @param options More options, see FormatWithContentModelOptions
  */
 export function formatWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
-    callback: (model: ContentModelDocument) => boolean,
+    formatter: ContentModelFormatter,
     options?: FormatWithContentModelOptions
 ) {
     const {
-        useReducedModel,
         onNodeCreated,
         preservePendingFormat,
         getChangeData,
-        skipUndoSnapshot,
         changeSource,
+        rawEvent,
+        selectionOverride,
     } = options || {};
-    const domToModelOption: DomToModelOption | undefined = useReducedModel
-        ? {
-              processorOverride: {
-                  child: reducedModelChildProcessor,
-              },
-          }
-        : undefined;
-    const model = editor.createContentModel(domToModelOption);
 
-    if (callback(model)) {
+    editor.focus();
+
+    const model = editor.createContentModel(undefined /*option*/, selectionOverride);
+    const context: FormatWithContentModelContext = {
+        deletedEntities: [],
+        rawEvent,
+    };
+
+    if (formatter(model, context)) {
         const callback = () => {
-            editor.focus();
+            handleDeletedEntities(editor, context);
+
             if (model) {
                 editor.setContentModel(model, { onNodeCreated });
             }
@@ -90,11 +60,11 @@ export function formatWithContentModel(
             return getChangeData?.();
         };
 
-        if (skipUndoSnapshot) {
-            callback();
+        if (context.skipUndoSnapshot) {
+            const contentChangedEventData = callback();
 
             if (changeSource) {
-                editor.triggerContentChangedEvent(changeSource, getChangeData?.());
+                editor.triggerContentChangedEvent(changeSource, contentChangedEventData);
             }
         } else {
             editor.addUndoSnapshot(
@@ -109,4 +79,24 @@ export function formatWithContentModel(
 
         editor.cacheContentModel?.(model);
     }
+}
+
+function handleDeletedEntities(
+    editor: IContentModelEditor,
+    context: FormatWithContentModelContext
+) {
+    context.deletedEntities.forEach(({ entity, operation }) => {
+        if (entity.id && entity.type) {
+            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                entity: {
+                    id: entity.id,
+                    isReadonly: entity.isReadonly,
+                    type: entity.type,
+                    wrapper: entity.wrapper,
+                },
+                operation,
+                rawEvent: context.rawEvent,
+            });
+        }
+    });
 }

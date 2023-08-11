@@ -1,13 +1,17 @@
-import { FormatState, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { getFormatState, IContentModelEditor } from 'roosterjs-content-model-editor';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { LocalizedStrings, RibbonButton, RibbonPlugin, UIUtilities } from 'roosterjs-react';
+import { PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import {
+    ContentModelFormatState,
+    getFormatState,
+    IContentModelEditor,
+} from 'roosterjs-content-model-editor';
 
 export class ContentModelRibbonPlugin implements RibbonPlugin {
     private editor: IContentModelEditor | null = null;
-    private onFormatChanged: ((formatState: FormatState) => void) | null = null;
+    private onFormatChanged: ((formatState: ContentModelFormatState) => void) | null = null;
     private timer = 0;
-    private formatState: FormatState | null = null;
+    private formatState: ContentModelFormatState | null = null;
     private uiUtilities: UIUtilities | null = null;
 
     /**
@@ -68,7 +72,7 @@ export class ContentModelRibbonPlugin implements RibbonPlugin {
     /**
      * Register a callback to be invoked when format state of editor is changed, returns a disposer function.
      */
-    registerFormatChangedCallback(callback: (formatState: FormatState) => void) {
+    registerFormatChangedCallback(callback: (formatState: ContentModelFormatState) => void) {
         this.onFormatChanged = callback;
 
         return () => {

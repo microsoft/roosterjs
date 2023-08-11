@@ -1,11 +1,11 @@
 import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
+import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeTable } from '../table/normalizeTable';
-import { OnDeleteEntity } from '../edit/utils/DeleteSelectionStep';
 import {
     createListItem,
     createParagraph,
@@ -62,11 +62,11 @@ export interface MergeModelOption {
 export function mergeModel(
     target: ContentModelDocument,
     source: ContentModelDocument,
-    onDeleteEntity: OnDeleteEntity,
+    context?: FormatWithContentModelContext,
     options?: MergeModelOption
 ) {
     const insertPosition =
-        options?.insertPosition ?? deleteSelection(target, onDeleteEntity).insertPoint;
+        options?.insertPosition ?? deleteSelection(target, [], context).insertPoint;
 
     if (insertPosition) {
         if (options?.mergeFormat && options.mergeFormat != 'none') {
@@ -287,7 +287,8 @@ function splitParagraph(markerPosition: InsertPoint, newParaFormat: ContentModel
 
 function insertBlock(markerPosition: InsertPoint, block: ContentModelBlock) {
     const { path } = markerPosition;
-    const newPara = splitParagraph(markerPosition, block.format);
+    const newParaFormat = block.blockType !== 'Paragraph' ? {} : block.format;
+    const newPara = splitParagraph(markerPosition, newParaFormat);
     const blockIndex = path[0].blocks.indexOf(newPara);
 
     if (blockIndex >= 0) {

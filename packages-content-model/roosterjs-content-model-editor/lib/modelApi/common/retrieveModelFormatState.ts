@@ -136,6 +136,7 @@ function retrieveSegmentFormat(
     mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst);
     mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
     mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
+    mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst);
 
     mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst);
     mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);

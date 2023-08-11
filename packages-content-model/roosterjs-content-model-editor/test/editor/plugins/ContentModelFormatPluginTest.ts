@@ -40,6 +40,7 @@ describe('ContentModelFormatPlugin', () => {
 
         const setContentModel = jasmine.createSpy('setContentModel');
         const editor = ({
+            focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,
@@ -104,6 +105,7 @@ describe('ContentModelFormatPlugin', () => {
         addSegment(model, marker);
 
         const editor = ({
+            focus: jasmine.createSpy('focus'),
             createContentModel: () => model,
             setContentModel,
             isInIME: () => false,

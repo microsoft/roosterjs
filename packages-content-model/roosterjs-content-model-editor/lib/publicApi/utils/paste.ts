@@ -1,7 +1,6 @@
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { NodePosition } from 'roosterjs-editor-types';
@@ -53,7 +52,11 @@ export default function paste(
         getPasteType(pasteAsText, applyCurrentFormat, pasteAsImage)
     );
 
-    const { pluginEvent, fragment } = triggerPluginEventAndCreatePasteFragment(
+    const {
+        domToModelOption,
+        fragment,
+        customizedMerge,
+    } = triggerPluginEventAndCreatePasteFragment(
         editor,
         clipboardData,
         null /* position */,
@@ -63,15 +66,15 @@ export default function paste(
     );
 
     const pasteModel = domToContentModel(fragment, {
-        ...pluginEvent.domToModelOption,
+        ...domToModelOption,
         additionalFormatParsers: {
-            ...pluginEvent.domToModelOption.additionalFormatParsers,
+            ...domToModelOption.additionalFormatParsers,
             block: [
-                ...(pluginEvent.domToModelOption.additionalFormatParsers?.block || []),
+                ...(domToModelOption.additionalFormatParsers?.block || []),
                 ...(applyCurrentFormat ? [blockElementParser] : []),
             ],
             listLevel: [
-                ...(pluginEvent.domToModelOption.additionalFormatParsers?.listLevel || []),
+                ...(domToModelOption.additionalFormatParsers?.listLevel || []),
                 ...(applyCurrentFormat ? [blockElementParser] : []),
             ],
         },
@@ -81,11 +84,11 @@ export default function paste(
         formatWithContentModel(
             editor,
             'Paste',
-            model => {
-                if (pluginEvent.customizedMerge) {
-                    pluginEvent.customizedMerge(model, pasteModel);
+            (model, context) => {
+                if (customizedMerge) {
+                    customizedMerge(model, pasteModel);
                 } else {
-                    mergeModel(model, pasteModel, getOnDeleteEntityCallback(editor), {
+                    mergeModel(model, pasteModel, context, {
                         mergeFormat: applyCurrentFormat ? 'keepSourceEmphasisFormat' : 'none',
                         mergeTable:
                             pasteModel.blocks.length === 1 &&
@@ -120,7 +123,7 @@ function createBeforePasteEventData(
         htmlAfter: '',
         htmlAttributes: {},
         domToModelOption: {},
-        pasteType: pasteType,
+        pasteType,
     };
 }
 
@@ -135,7 +138,7 @@ function triggerPluginEventAndCreatePasteFragment(
     pasteAsText: boolean,
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData
-): { pluginEvent: ContentModelBeforePasteEvent; fragment: DocumentFragment } {
+): ContentModelBeforePasteEventData {
     const event = {
         eventType: PluginEventType.BeforePaste,
         ...eventData,
@@ -163,17 +166,20 @@ function triggerPluginEventAndCreatePasteFragment(
         handleTextPaste(text, position, fragment);
     }
 
-    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste
-    const pluginEvent = editor.triggerPluginEvent(
-        PluginEventType.BeforePaste,
-        eventData,
-        true /* broadcast */
-    ) as ContentModelBeforePasteEvent;
+    let pluginEvent: ContentModelBeforePasteEvent | undefined = undefined;
+    // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
+    if (event.pasteType !== PasteType.AsPlainText) {
+        pluginEvent = editor.triggerPluginEvent(
+            PluginEventType.BeforePaste,
+            eventData,
+            true /* broadcast */
+        ) as ContentModelBeforePasteEvent;
+    }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     sanitizePasteContent(event, position);
 
-    return { fragment, pluginEvent };
+    return pluginEvent || eventData;
 }
 
 /**
