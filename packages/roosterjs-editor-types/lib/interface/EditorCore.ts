@@ -188,11 +188,13 @@ export type GetStyleBasedFormatState = (
  * Get the pendable format such as underline and bold
  * @param core The EditorCore object
  * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+ * @param ignoreImplicitStyles Whether we should ignore implicit styles such as bold in heading. @default false
  * @return The pending format state of editor.
  */
 export type GetPendableFormatState = (
     core: EditorCore,
-    forceGetStateFromDOM: boolean
+    forceGetStateFromDOM: boolean,
+    ignoreImplicitStyles?: boolean
 ) => PendableFormatState;
 
 /**
@@ -402,7 +404,8 @@ export interface CoreApiMap {
     /**
      * Get the pendable format such as underline and bold
      * @param core The EditorCore object
-     *@param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @param ignoreImplicitStyles Whether we should ignore implicit styles such as bold in heading. @default false
      * @return The pending format state of editor.
      */
     getPendableFormatState: GetPendableFormatState;

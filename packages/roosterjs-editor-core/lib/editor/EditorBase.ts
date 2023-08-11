@@ -838,11 +838,15 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     /**
      * Get the pendable format such as underline and bold
      * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+     * @param ignoreImplicitStyles @optional Whether we should ignore implicit styles such as bold in heading. @default false
      * @returns The pending format state
      */
-    public getPendableFormatState(forceGetStateFromDOM: boolean = false): PendableFormatState {
+    public getPendableFormatState(
+        forceGetStateFromDOM: boolean = false,
+        ignoreImplicitStyles?: boolean
+    ): PendableFormatState {
         const core = this.getCore();
-        return core.api.getPendableFormatState(core, forceGetStateFromDOM);
+        return core.api.getPendableFormatState(core, forceGetStateFromDOM, ignoreImplicitStyles);
     }
 
     /**

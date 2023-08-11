@@ -564,9 +564,13 @@ export default interface IEditor {
     /**
      * Get the pendable format state from the current selection, including formats as underline, bold, italics
      * @param forceGetStateFromDOM If set to true, will not consider the cached format and will get the format state directly from DOM tree
+     * @param ignoreImplicitStyles @optional Whether we should ignore implicit styles such as bold in heading. @default false
      * @return The pending format state of editor.
      */
-    getPendableFormatState(forceGetStateFromDOM?: boolean): PendableFormatState;
+    getPendableFormatState(
+        forceGetStateFromDOM?: boolean,
+        ignoreImplicitStyles?: boolean
+    ): PendableFormatState;
 
     /**
      * Ensure user will type into a container element rather than into the editor content DIV directly

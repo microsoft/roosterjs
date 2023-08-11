@@ -17,11 +17,13 @@ import {
  * @internal
  * @param core The EditorCore object
  * @param forceGetStateFromDOM If set to true, will force get the format state from DOM tree.
+ * @param ignoreImplicitStyles Whether we should ignore implicit styles such as bold in heading. @default false
  * @returns The cached format state if it exists. If the cached position do not exist, search for pendable elements in the DOM tree and return the pendable format state.
  */
 export const getPendableFormatState: GetPendableFormatState = (
-    core: EditorCore,
-    forceGetStateFromDOM: boolean
+    core,
+    forceGetStateFromDOM,
+    ignoreImplicitStyles
 ): PendableFormatState => {
     const range = core.api.getSelectionRange(core, true /* tryGetFromCache*/);
     const cachedPendableFormatState = core.pendingFormatState.pendableFormatState;
@@ -36,23 +38,26 @@ export const getPendableFormatState: GetPendableFormatState = (
     if (range && cachedPendableFormatState && isSamePosition && !forceGetStateFromDOM) {
         return cachedPendableFormatState;
     } else {
-        return currentPosition ? queryCommandStateFromDOM(core, currentPosition) : {};
+        return currentPosition
+            ? queryCommandStateFromDOM(core, currentPosition, ignoreImplicitStyles)
+            : {};
     }
 };
 
 const PendableStyleCheckers: Record<
     PendableFormatNames,
-    (tagName: string, style: CSSStyleDeclaration) => boolean
+    (tagName: string, style: CSSStyleDeclaration, ignoreImplicitStyles?: boolean) => boolean
 > = {
-    isBold: (tag, style) =>
+    isBold: (tag, style, ignoreImplicitStyles) =>
         tag == 'B' ||
         tag == 'STRONG' ||
-        tag == 'H1' ||
-        tag == 'H2' ||
-        tag == 'H3' ||
-        tag == 'H4' ||
-        tag == 'H5' ||
-        tag == 'H6' ||
+        (!ignoreImplicitStyles &&
+            (tag == 'H1' ||
+                tag == 'H2' ||
+                tag == 'H3' ||
+                tag == 'H4' ||
+                tag == 'H5' ||
+                tag == 'H6')) ||
         parseInt(style.fontWeight) >= 700 ||
         ['bold', 'bolder'].indexOf(style.fontWeight) >= 0,
     isUnderline: (tag, style) => tag == 'U' || style.textDecoration.indexOf('underline') >= 0,
@@ -82,7 +87,8 @@ const CssFalsyCheckers: Record<PendableFormatNames, (style: CSSStyleDeclaration)
 
 function queryCommandStateFromDOM(
     core: EditorCore,
-    currentPosition: NodePosition
+    currentPosition: NodePosition,
+    ignoreImplicitStyles?: boolean
 ): PendableFormatState {
     let node: Node | null = currentPosition.node;
     let formatState: PendableFormatState = {};
@@ -93,7 +99,9 @@ function queryCommandStateFromDOM(
         if (tag && style) {
             getObjectKeys(PendableStyleCheckers).forEach(key => {
                 if (!(pendableKeys.indexOf(key) >= 0)) {
-                    formatState[key] = formatState[key] || PendableStyleCheckers[key](tag, style);
+                    formatState[key] =
+                        formatState[key] ||
+                        PendableStyleCheckers[key](tag, style, ignoreImplicitStyles);
                     if (CssFalsyCheckers[key](style)) {
                         pendableKeys.push(key);
                     }
