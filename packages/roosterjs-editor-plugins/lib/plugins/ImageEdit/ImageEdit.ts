@@ -211,8 +211,8 @@ export default class ImageEdit implements EditorPlugin {
                 const mouseTarget = e.rawEvent.target;
                 const button = e.rawEvent.button;
                 if (
-                    this.shadowSpan !== mouseTarget ||
-                    (this.shadowSpan === mouseTarget && button !== 0) ||
+                    this.clonedImage !== mouseTarget ||
+                    (this.clonedImage === mouseTarget && button !== 0) ||
                     this.isCropping
                 ) {
                     this.setEditingImage(null);
@@ -406,7 +406,7 @@ export default class ImageEdit implements EditorPlugin {
      * quit editing mode when editor lose focus
      */
     private onBlur = () => {
-        this.setEditingImage(null, false /* selectImage */);
+        //this.setEditingImage(null, false /* selectImage */);
     };
     /**
      * Create editing wrapper for the image
