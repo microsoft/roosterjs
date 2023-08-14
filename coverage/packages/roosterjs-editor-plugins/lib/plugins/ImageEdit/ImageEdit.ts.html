@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.47% </span>
+                <span class="strong">89.58% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>255/285</span>
+                <span class='fraction'>258/288</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">70.94% </span>
+                <span class="strong">70.76% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>166/234</span>
+                <span class='fraction'>167/236</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">89.01% </span>
+                <span class="strong">89.13% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>243/273</span>
+                <span class='fraction'>246/276</span>
             </div>
         
             
@@ -844,7 +844,9 @@
 <a name='L785'></a><a href='#L785'>785</a>
 <a name='L786'></a><a href='#L786'>786</a>
 <a name='L787'></a><a href='#L787'>787</a>
-<a name='L788'></a><a href='#L788'>788</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L788'></a><a href='#L788'>788</a>
+<a name='L789'></a><a href='#L789'>789</a>
+<a name='L790'></a><a href='#L790'>790</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1282,11 +1284,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1372,17 +1369,12 @@
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
-<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
@@ -1390,6 +1382,13 @@
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-yes">32x</span>
@@ -1401,6 +1400,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
@@ -1628,6 +1630,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-yes">32x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -2065,11 +2069,6 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             <span class="missing-if-branch" title="else path not taken" >E</span>if (this.clonedImage) {
                 this.clonedImage.src = this.pngSource<span class="branch-1 cbranch-no" title="branch not covered" ><span class="branch-0 cbranch-no" title="branch not covered" > ?? t</span></span>his.editInfo.src;
-                setFlipped(
-                    this.clonedImage,
-                    this.editInfo.flippedHorizontal,
-                    this.editInfo.flippedVertical
-                );
                 this.clonedImage.style.position = 'absolute';
             }
 &nbsp;
@@ -2158,6 +2157,8 @@ export default class ImageEdit implements EditorPlugin {
                 leftPercent,
                 rightPercent,
                 topPercent,
+                flippedHorizontal,
+                flippedVertical,
             } = this.editInfo;
 &nbsp;
             // Width/height of the image
@@ -2189,6 +2190,9 @@ export default class ImageEdit implements EditorPlugin {
             // Update size of the image
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
+&nbsp;
+            //Update flip direction
+            setFlipped(this.clonedImage.parentElement, flippedHorizontal, flippedVertical);
 &nbsp;
             <span class="missing-if-branch" title="if path not taken" >I</span>if (this.isCropping) {
                 // For crop, we also need to set position of the overlays
@@ -2410,13 +2414,15 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
 }
 &nbsp;
 function setFlipped(
-    element: HTMLImageElement,
+    element: HTMLElement | null,
     flippedHorizontally?: boolean,
     flippedVertically?: boolean
 ) {
-    element.style.transform = `scale(${flippedHorizontally ? '-1' : '1'}, ${
-        flippedVertically ? '-1' : '1'
-    })`;
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (element) {
+        element.style.transform = `scale(${flippedHorizontally ? -1 : 1}, ${
+            flippedVertically ? -1 : 1
+        })`;
+    }
 }
 &nbsp;</pre></td></tr></table></pre>
 
@@ -2425,7 +2431,7 @@ function setFlipped(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Aug 14 2023 20:19:33 GMT+0000 (Coordinated Universal Time)
+                at Mon Aug 14 2023 21:21:46 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
