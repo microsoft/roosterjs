@@ -113,9 +113,7 @@ export default class Paste implements EditorPlugin {
 }
 
 function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
-    chainSanitizerCallback(
-        sanitizingOption.cssStyleCallbacks,
-        'display',
-        (value: string) => value === 'flex'
-    );
+    chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
+        return value != 'flex'; // return whether we keep the style
+    });
 }
