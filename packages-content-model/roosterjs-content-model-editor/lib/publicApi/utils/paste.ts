@@ -124,12 +124,7 @@ export function mergePasteContent(
 }
 
 function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined {
-    // Should merge table if:
-    // Model only contains a table
-    if (pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table') {
-        return true;
-    }
-    // If model contains a table and a paragraph element after the table with a single BR segment.
+    // If model contains a table and a paragraph element after the table with a single BR segment, remove the Paragraph after the table
     if (
         pasteModel.blocks.length == 2 &&
         pasteModel.blocks[0].blockType === 'Table' &&
@@ -138,9 +133,9 @@ function shouldMergeTable(pasteModel: ContentModelDocument): boolean | undefined
         pasteModel.blocks[1].segments[0].segmentType === 'Br'
     ) {
         pasteModel.blocks.splice(1);
-        return true;
     }
-    return false;
+    // Only merge table when the document contain a single table.
+    return pasteModel.blocks.length === 1 && pasteModel.blocks[0].blockType === 'Table';
 }
 
 function createBeforePasteEventData(
