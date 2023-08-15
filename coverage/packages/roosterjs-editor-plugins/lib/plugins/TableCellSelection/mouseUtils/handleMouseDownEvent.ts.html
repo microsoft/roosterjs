@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.82% </span>
+                <span class="strong">82.11% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>99/121</span>
+                <span class='fraction'>101/123</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.04% </span>
+                <span class="strong">62.68% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>87/138</span>
+                <span class='fraction'>89/142</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.76% </span>
+                <span class="strong">82.91% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>96/116</span>
+                <span class='fraction'>97/117</span>
             </div>
         
             
@@ -315,7 +315,11 @@
 <a name='L256'></a><a href='#L256'>256</a>
 <a name='L257'></a><a href='#L257'>257</a>
 <a name='L258'></a><a href='#L258'>258</a>
-<a name='L259'></a><a href='#L259'>259</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L259'></a><a href='#L259'>259</a>
+<a name='L260'></a><a href='#L260'>260</a>
+<a name='L261'></a><a href='#L261'>261</a>
+<a name='L262'></a><a href='#L262'>262</a>
+<a name='L263'></a><a href='#L263'>263</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -343,6 +347,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-no">&nbsp;</span>
@@ -375,6 +380,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">26x</span>
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -399,7 +405,8 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -427,6 +434,7 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -599,8 +607,9 @@ export function handleMouseDownEvent(
     state: TableCellSelectionState,
     editor: IEditor
 ) {
-    const { which, shiftKey, target } = event.rawEvent;
+    const { which, shiftKey, target, detail } = event.rawEvent;
     const table = editor.getElementAtCursor('table', target as Node, event);
+    const tripleClick = detail &gt;= 3;
 &nbsp;
     <span class="missing-if-branch" title="if path not taken" >I</span>if (table &amp;&amp; !table.isContentEditable) {
 <span class="cstat-no" title="statement not covered" >        return;</span>
@@ -633,60 +642,63 @@ export function handleMouseDownEvent(
             }
         }
     }
-    if (which == LEFT_CLICK &amp;&amp; !shiftKey) {
-        clearState(state, editor);
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (which == LEFT_CLICK) {
+        if (!shiftKey &amp;&amp; !tripleClick) {
+            clearState(state, editor);
 &nbsp;
-        if (getTableAtCursor(editor, event.rawEvent.target)) {
-            const doc = editor.getDocument() || <span class="branch-1 cbranch-no" title="branch not covered" >document;</span>
+            if (getTableAtCursor(editor, event.rawEvent.target)) {
+                const doc = editor.getDocument() || <span class="branch-1 cbranch-no" title="branch not covered" >document;</span>
 &nbsp;
-            const mouseUpListener = getOnMouseUp(state);
-            const mouseMoveListener = onMouseMove(state, editor);
-            doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-            doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
+                const mouseUpListener = getOnMouseUp(state);
+                const mouseMoveListener = onMouseMove(state, editor);
+                doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
 &nbsp;
-            state.mouseMoveDisposer = () =&gt; {
-                doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-                doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
-            };
-&nbsp;
-            state.startedSelection = true;
-        }
-    }
-&nbsp;
-    if (which == LEFT_CLICK &amp;&amp; shiftKey) {
-        editor.runAsync(editor =&gt; {
-            const sel = editor.getDocument().defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelection();
-            const first = getCellAtCursor(editor, sel<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>nchorNode);
-            const last = getCellAtCursor(editor, sel<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ocusNode);
-            const firstTable = getTableAtCursor(editor, first);
-            const targetTable = getTableAtCursor(editor, first);
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (
-                firstTable! == targetTable! &amp;&amp;
-                safeInstanceOf(first, 'HTMLTableCellElement') &amp;&amp;
-                safeInstanceOf(last, 'HTMLTableCellElement')
-            ) {
-                state.vTable = new VTable(first);
-                const firstCord = getCellCoordinates(state.vTable, first);
-                const lastCord = getCellCoordinates(state.vTable, last);
-&nbsp;
-                <span class="missing-if-branch" title="if path not taken" >I</span>if (!firstCord || !lastCord) {
-<span class="cstat-no" title="statement not covered" >                    return;</span>
-                }
-                state.vTable.selection = {
-                    firstCell: firstCord,
-                    lastCell: lastCord,
+                state.mouseMoveDisposer = () =&gt; {
+                    doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                    doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
                 };
 &nbsp;
-                state.firstTarget = first;
-                state.lastTarget = last;
-                selectTable(editor, state);
-&nbsp;
-                state.tableSelection = true;
-                state.firstTable = firstTable as HTMLTableElement;
-                state.targetTable = targetTable;
-                updateSelection(editor, first, 0);
+                state.startedSelection = true;
             }
-        });
+        }
+&nbsp;
+        if (shiftKey || tripleClick) {
+            editor.runAsync(editor =&gt; {
+                const sel = editor.getDocument().defaultView<span class="branch-0 cbranch-no" title="branch not covered" >?.g</span>etSelection();
+                const first = getCellAtCursor(editor, sel<span class="branch-0 cbranch-no" title="branch not covered" >?.a</span>nchorNode);
+                // Triple clicking a cell will select that cell only
+                // Assign last the same as first to make sure we can select the cell
+                const last = tripleClick ? <span class="branch-0 cbranch-no" title="branch not covered" >first </span>: getCellAtCursor(editor, sel<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>ocusNode);
+                const firstTable = getTableAtCursor(editor, first);
+                <span class="missing-if-branch" title="else path not taken" >E</span>if (
+                    firstTable &amp;&amp;
+                    safeInstanceOf(first, 'HTMLTableCellElement') &amp;&amp;
+                    safeInstanceOf(last, 'HTMLTableCellElement')
+                ) {
+                    state.vTable = new VTable(first);
+                    const firstCord = getCellCoordinates(state.vTable, first);
+                    const lastCord = getCellCoordinates(state.vTable, last);
+&nbsp;
+                    <span class="missing-if-branch" title="if path not taken" >I</span>if (!firstCord || !lastCord) {
+<span class="cstat-no" title="statement not covered" >                        return;</span>
+                    }
+                    state.vTable.selection = {
+                        firstCell: firstCord,
+                        lastCell: lastCord,
+                    };
+&nbsp;
+                    state.firstTarget = first;
+                    state.lastTarget = last;
+                    selectTable(editor, state);
+&nbsp;
+                    state.tableSelection = true;
+                    state.firstTable = firstTable as HTMLTableElement;
+                    state.targetTable = firstTable;
+                    updateSelection(editor, first, 0);
+                }
+            });
+        }
     }
 }
 &nbsp;
@@ -838,7 +850,7 @@ function removeMouseUpEventListener(state: TableCellSelectionState): void {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Tue Aug 15 2023 19:27:26 GMT+0000 (Coordinated Universal Time)
+                at Tue Aug 15 2023 19:56:44 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
