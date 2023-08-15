@@ -85,7 +85,7 @@ export function handleMouseDownEvent(
                 const sel = editor.getDocument().defaultView?.getSelection();
                 const first = getCellAtCursor(editor, sel?.anchorNode);
                 // Triple clicking a cell will select that cell only
-                // make last the same as first to make sure we can select the cell
+                // Assign last the same as first to make sure we can select the cell
                 const last = tripleClick ? first : getCellAtCursor(editor, sel?.focusNode);
                 const firstTable = getTableAtCursor(editor, first);
                 if (
