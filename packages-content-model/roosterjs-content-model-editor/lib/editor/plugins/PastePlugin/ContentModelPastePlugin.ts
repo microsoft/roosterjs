@@ -1,6 +1,6 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { getPasteSource } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import { parseDeprecatedColor } from './utils/deprecatedColorParser';
 import { parseLink } from './utils/linkParser';
@@ -10,6 +10,7 @@ import { processPastedContentFromWordDesktop } from './WordDesktop/processPasted
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import {
     EditorPlugin,
+    HtmlSanitizerOptions,
     IEditor,
     KnownPasteSourceType,
     PasteType,
@@ -106,7 +107,16 @@ export default class ContentModelPastePlugin implements EditorPlugin {
 
         addParser(ev.domToModelOption, 'link', parseLink);
         parseDeprecatedColor(ev.sanitizingOption);
+        sanitizeBlockStyles(ev.sanitizingOption);
 
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
+}
+
+function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
+    chainSanitizerCallback(
+        sanitizingOption.cssStyleCallbacks,
+        'display',
+        (value: string) => value === 'flex'
+    );
 }

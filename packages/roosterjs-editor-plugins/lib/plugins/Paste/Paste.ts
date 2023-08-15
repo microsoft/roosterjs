@@ -7,8 +7,8 @@ import convertPastedContentFromWord from './wordConverter/convertPastedContentFr
 import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
-import { getPasteSource } from 'roosterjs-editor-dom';
-import { KnownPasteSourceType } from 'roosterjs-editor-types';
+import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { HtmlSanitizerOptions, KnownPasteSourceType } from 'roosterjs-editor-types';
 import {
     EditorPlugin,
     IEditor,
@@ -104,9 +104,18 @@ export default class Paste implements EditorPlugin {
             }
             sanitizeLinks(sanitizingOption);
             sanitizeHtmlColorsFromPastedContent(sanitizingOption);
+            sanitizeBlockStyles(sanitizingOption);
 
             // Replace unknown tags with SPAN
             sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
         }
     }
+}
+
+function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
+    chainSanitizerCallback(
+        sanitizingOption.cssStyleCallbacks,
+        'display',
+        (value: string) => value === 'flex'
+    );
 }
