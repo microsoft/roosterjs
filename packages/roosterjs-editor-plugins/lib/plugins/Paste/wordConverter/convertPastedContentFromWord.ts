@@ -26,7 +26,7 @@ export default function convertPastedContentFromWord(event: BeforePasteEvent) {
     let wordConverter = createWordConverter();
 
     // First find all the nodes that we need to check for list item information
-    // This call will return all the p and header elements under the root node.. These are the elements that
+    // This call will return all the p and heading elements under the root node.. These are the elements that
     // Word uses a list items, so we'll only process them and avoid walking the whole tree.
     let elements = fragment.querySelectorAll(LIST_ELEMENTS_SELECTOR) as NodeListOf<HTMLElement>;
     if (elements.length > 0) {
