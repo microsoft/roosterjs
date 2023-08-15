@@ -54,6 +54,7 @@ export function handleMouseDownEvent(
                     selection?.setBaseAndExtent(state.firstTarget, 0, state.lastTarget, 0);
                     selectTable(editor, state);
                 }
+
                 return;
             }
         }
