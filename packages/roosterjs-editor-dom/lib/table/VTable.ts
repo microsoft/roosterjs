@@ -111,6 +111,17 @@ export default class VTable {
                         }
                     }
                 }
+                for (let col = 0; col < this.cells![rowIndex].length; col++) {
+                    if (!this.cells![rowIndex][col]) {
+                        this.cells![rowIndex][col] = {
+                            td: null,
+                            spanLeft: false,
+                            spanAbove: false,
+                            width: undefined,
+                            height: undefined,
+                        };
+                    }
+                }
             });
             this.formatInfo = getTableFormatInfo(this.table);
             if (normalizeSize) {

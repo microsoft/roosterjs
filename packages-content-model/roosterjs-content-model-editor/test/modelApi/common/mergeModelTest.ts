@@ -2745,7 +2745,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         const sourceModel: ContentModelDocument = createContentModelDocument();
-        const newEntity = createEntity(document.createElement('div'), false, {
+        const newEntity = createEntity(document.createElement('div'), false, undefined, {
             fontFamily: 'Corbel',
             fontSize: '20px',
             backgroundColor: 'blue',

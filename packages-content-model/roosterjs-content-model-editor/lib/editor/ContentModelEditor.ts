@@ -2,6 +2,7 @@ import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
+import { SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -29,10 +30,13 @@ export default class ContentModelEditor
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(option?: DomToModelOption): ContentModelDocument {
+    createContentModel(
+        option?: DomToModelOption,
+        selectionOverride?: SelectionRangeEx
+    ): ContentModelDocument {
         const core = this.getCore();
 
-        return core.api.createContentModel(core, option);
+        return core.api.createContentModel(core, option, selectionOverride);
     }
 
     /**

@@ -1,16 +1,16 @@
-import setHeaderLevel from '../../../lib/publicApi/block/setHeaderLevel';
+import setHeadingLevel from '../../../lib/publicApi/block/setHeadingLevel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { paragraphTestCommon } from './paragraphTestCommon';
 
-describe('setHeaderLevel to 1', () => {
+describe('setHeadingLevel to 1', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number
     ) {
         paragraphTestCommon(
-            'setHeaderLevel',
-            editor => setHeaderLevel(editor, 1),
+            'setHeadingLevel',
+            editor => setHeadingLevel(editor, 1),
             model,
             result,
             calledTimes
@@ -171,7 +171,7 @@ describe('setHeaderLevel to 1', () => {
         );
     });
 
-    it('With existing header', () => {
+    it('With existing heading', () => {
         runTest(
             {
                 blockGroupType: 'Document',
@@ -229,15 +229,15 @@ describe('setHeaderLevel to 1', () => {
     });
 });
 
-describe('setHeaderLevel to 0', () => {
+describe('setHeadingLevel to 0', () => {
     function runTest(
         model: ContentModelDocument,
         result: ContentModelDocument,
         calledTimes: number
     ) {
         paragraphTestCommon(
-            'setHeaderLevel',
-            editor => setHeaderLevel(editor, 0),
+            'setHeadingLevel',
+            editor => setHeadingLevel(editor, 0),
             model,
             result,
             calledTimes
@@ -344,7 +344,7 @@ describe('setHeaderLevel to 0', () => {
         );
     });
 
-    it('With existing header', () => {
+    it('With existing heading', () => {
         runTest(
             {
                 blockGroupType: 'Document',
