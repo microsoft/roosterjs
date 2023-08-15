@@ -93,6 +93,13 @@ export default class TableCellSelection implements EditorPlugin {
                         event.rawEvent.preventDefault();
                     }
                     break;
+                case PluginEventType.Input:
+                    if (!this.state.startedSelection) {
+                        this.handleInputEvent(this.editor);
+                    } else {
+                        event.rawEvent.preventDefault();
+                    }
+                    break;
                 case PluginEventType.Scroll:
                     if (this.state.startedSelection) {
                         handleScrollEvent(this.state, this.editor);
@@ -126,5 +133,19 @@ export default class TableCellSelection implements EditorPlugin {
             state.tableSelection = true;
             editor.select(selection.table, null);
         }
+    }
+
+    private handleInputEvent(editor: IEditor) {
+        // If typing on any cell selection, clear the first cell
+        const range = editor.getSelectionRangeEx();
+        if (range.type == SelectionRangeTypes.TableSelection) {
+            const row = range.ranges[0];
+            const firstCell = row.startContainer.childNodes[row.startOffset];
+            firstCell.childNodes.forEach(node => {
+                node.remove();
+            });
+        }
+        // Add undo snapshot after content deletion
+        editor.addUndoSnapshot();
     }
 }

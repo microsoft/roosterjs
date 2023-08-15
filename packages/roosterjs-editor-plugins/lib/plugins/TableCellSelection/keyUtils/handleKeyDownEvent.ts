@@ -73,7 +73,13 @@ export function handleKeyDownEvent(
         editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection &&
         (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
     ) {
-        editor.select(null);
+        // Collapse selection to first selected cell
+        const range = editor.getSelectionRangeEx();
+        if (range.type == SelectionRangeTypes.TableSelection) {
+            const row = range.ranges[0];
+            const firstCell = row.startContainer.childNodes[row.startOffset];
+            editor.select(firstCell);
+        }
     }
 }
 
