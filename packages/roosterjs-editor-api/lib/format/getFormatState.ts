@@ -12,7 +12,7 @@ import {
  * Get element based Format State at cursor
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
+ * In this function the event cache is used to get list state and heading level. If not passed,
  * it will query the node within selection to get the info
  * @returns An ElementBasedFormatState object
  */
@@ -34,21 +34,23 @@ export function getElementBasedFormatState(
         multiline = endingBlock && startingBlock ? !endingBlock.equals(startingBlock) : false;
     }
 
-    const headerTag = getTagOfNode(
+    const headingTag = getTagOfNode(
         editor.getElementAtCursor('H1,H2,H3,H4,H5,H6', undefined /*startFrom*/, event)
     );
 
     const table = editor.queryElements('table', QueryScope.OnSelection)[0];
     const tableFormat = table ? getTableFormatInfo(table) : undefined;
-    const hasHeader = table?.rows[0]
+    const hasTableHeader = table?.rows[0]
         ? toArray(table.rows[0].cells).every(cell => getTagOfNode(cell) == 'TH')
         : undefined;
+    const headingLevel = (headingTag && parseInt(headingTag[1])) || 0;
 
     return {
         isBullet: listTag == 'UL',
         isNumbering: listTag == 'OL',
         isMultilineSelection: multiline,
-        headerLevel: (headerTag && parseInt(headerTag[1])) || 0,
+        headingLevel: headingLevel,
+        headerLevel: headingLevel,
         canUnlink: !!editor.queryElements('a[href]', QueryScope.OnSelection)[0],
         canAddImageAltText: !!editor.queryElements('img', QueryScope.OnSelection)[0],
         isBlockQuote: !!editor.queryElements('blockquote', QueryScope.OnSelection)[0],
@@ -56,7 +58,7 @@ export function getElementBasedFormatState(
         isCodeBlock: !!editor.queryElements('pre>code', QueryScope.OnSelection)[0],
         isInTable: !!table,
         tableFormat: tableFormat || {},
-        tableHasHeader: hasHeader,
+        tableHasHeader: hasTableHeader,
         canMergeTableCell: canMergeTableCell(editor),
     };
 }
@@ -67,7 +69,7 @@ export function getElementBasedFormatState(
  * bold, italic, underline, font name, font size, etc.
  * @param editor The editor instance
  * @param event (Optional) The plugin event, it stores the event cached data for looking up.
- * In this function the event cache is used to get list state and header level. If not passed,
+ * In this function the event cache is used to get list state and heading level. If not passed,
  * it will query the node within selection to get the info
  * @returns The format state at cursor
  */
