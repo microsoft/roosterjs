@@ -26,7 +26,7 @@ export function handleKeyUpEvent(
         !state.preventKeyUp &&
         IGNORE_KEY_UP_KEYS.indexOf(which) == -1
     ) {
-        clearState(state, editor);
+        editor.addUndoSnapshot(() => clearState(state, editor));
     }
     state.preventKeyUp = false;
 }
