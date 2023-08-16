@@ -9,6 +9,7 @@ import { TableCellSelectionState } from '../TableCellSelectionState';
 import { updateSelection } from '../utils/updateSelection';
 import {
     contains,
+    createRange,
     isCtrlOrMetaPressed,
     Position,
     safeInstanceOf,
@@ -36,6 +37,8 @@ export function handleKeyDownEvent(
         state.preventKeyUp = defaultPrevented;
         return;
     }
+
+    const range = editor.getSelectionRangeEx();
 
     if (shiftKey) {
         if (!state.firstTarget) {
@@ -70,16 +73,15 @@ export function handleKeyDownEvent(
             }
         });
     } else if (
-        editor.getSelectionRangeEx()?.type == SelectionRangeTypes.TableSelection &&
+        range?.type == SelectionRangeTypes.TableSelection &&
         (!isCtrlOrMetaPressed(event.rawEvent) || which == Keys.HOME || which == Keys.END)
     ) {
-        // Collapse selection to first selected cell
-        const range = editor.getSelectionRangeEx();
-        if (range.type == SelectionRangeTypes.TableSelection) {
-            const row = range.ranges[0];
-            const firstCell = row.startContainer.childNodes[row.startOffset];
-            editor.select(firstCell);
-        }
+        // Select all content in the first cell
+        const row = range.ranges[0];
+        const firstCell = row.startContainer.childNodes[row.startOffset];
+        const children = firstCell.childNodes;
+        const contentRange = createRange(children[0], children[children.length - 1]);
+        editor.select(contentRange);
     }
 }
 
