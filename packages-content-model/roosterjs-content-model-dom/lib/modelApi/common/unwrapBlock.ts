@@ -9,12 +9,16 @@ import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
 export function unwrapBlock(
     parent: ContentModelBlockGroup | null,
     groupToUnwrap: ContentModelBlockGroup & ContentModelBlock
-) {
+): boolean {
     const index = parent?.blocks.indexOf(groupToUnwrap) ?? -1;
 
     if (index >= 0) {
         groupToUnwrap.blocks.forEach(setParagraphNotImplicit);
 
         parent?.blocks.splice(index, 1, ...groupToUnwrap.blocks);
+
+        return true;
+    } else {
+        return false;
     }
 }
