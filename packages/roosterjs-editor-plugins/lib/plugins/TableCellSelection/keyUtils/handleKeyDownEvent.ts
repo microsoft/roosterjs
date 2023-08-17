@@ -39,7 +39,6 @@ export function handleKeyDownEvent(
     }
 
     const range = editor.getSelectionRangeEx();
-
     if (shiftKey) {
         if (!state.firstTarget) {
             const pos = editor.getFocusedPosition();

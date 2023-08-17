@@ -1,5 +1,6 @@
 import { clearState } from '../utils/clearState';
 import { IEditor, Keys, PluginKeyUpEvent } from 'roosterjs-editor-types';
+import { isCharacterValue } from 'roosterjs-editor-dom/lib';
 import { TableCellSelectionState } from '../TableCellSelectionState';
 
 const IGNORE_KEY_UP_KEYS = [
@@ -26,6 +27,9 @@ export function handleKeyUpEvent(
         !state.preventKeyUp &&
         IGNORE_KEY_UP_KEYS.indexOf(which) == -1
     ) {
+        if (isCharacterValue(event.rawEvent)) {
+            editor.addUndoSnapshot();
+        }
         clearState(state, editor);
     }
     state.preventKeyUp = false;
