@@ -1,6 +1,7 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom } from 'roosterjs-content-model-dom';
+import { contentModelToDom, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { DeleteResult } from 'roosterjs-content-model-editor/lib/modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -145,7 +146,12 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                             editor as IContentModelEditor,
                             'cut',
                             (model, context) => {
-                                deleteSelection(model, [], context);
+                                if (
+                                    deleteSelection(model, [], context).deleteResult ==
+                                    DeleteResult.Range
+                                ) {
+                                    normalizeContentModel(model);
+                                }
 
                                 return true;
                             },

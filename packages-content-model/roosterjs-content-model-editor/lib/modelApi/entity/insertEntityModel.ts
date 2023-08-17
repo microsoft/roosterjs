@@ -1,9 +1,14 @@
-import { createBr, createParagraph, createSelectionMarker } from 'roosterjs-content-model-dom';
+import {
+    createBr,
+    createParagraph,
+    createSelectionMarker,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
+import { DeleteResult, DeleteSelectionResult } from '../edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../edit/deleteSelection';
 import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
 import { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
-import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { setSelection } from '../selection/setSelection';
 import {
     ContentModelBlock,
@@ -26,13 +31,17 @@ export function insertEntityModel(
 ) {
     let blockParent: ContentModelBlockGroup | undefined;
     let blockIndex = -1;
-    let insertPoint: InsertPoint | null;
+    let deleteResult: DeleteSelectionResult;
 
     if (position == 'begin' || position == 'end') {
         blockParent = model;
         blockIndex = position == 'begin' ? 0 : model.blocks.length;
-    } else if ((insertPoint = deleteSelection(model, [], context).insertPoint)) {
-        const { marker, paragraph, path } = insertPoint;
+    } else if ((deleteResult = deleteSelection(model, [], context)).insertPoint) {
+        const { marker, paragraph, path } = deleteResult.insertPoint;
+
+        if (deleteResult.deleteResult == DeleteResult.Range) {
+            normalizeContentModel(model);
+        }
 
         if (!isBlock) {
             const index = paragraph.segments.indexOf(marker);
