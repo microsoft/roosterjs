@@ -14,7 +14,7 @@ import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-edit
 const trustedHTMLHandler = <any>'mock';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
-describe('Paste', () => {
+describe('ContentModelPastePlugin |', () => {
     let editor: IContentModelEditor;
 
     beforeEach(() => {
@@ -48,7 +48,7 @@ describe('Paste', () => {
         domToModelOption: {},
     });
 
-    describe('onPluginEvent', () => {
+    describe('onPluginEvent | ', () => {
         let plugin = new ContentModelPastePlugin();
 
         beforeEach(() => {
@@ -106,7 +106,7 @@ describe('Paste', () => {
                 event,
                 trustedHTMLHandler
             );
-            expect(addParser.default).toHaveBeenCalledTimes(2);
+            expect(addParser.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
         });
@@ -139,7 +139,7 @@ describe('Paste', () => {
                 event,
                 trustedHTMLHandler
             );
-            expect(addParser.default).toHaveBeenCalledTimes(2);
+            expect(addParser.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
         });
@@ -155,7 +155,7 @@ describe('Paste', () => {
                 event,
                 trustedHTMLHandler
             );
-            expect(addParser.default).toHaveBeenCalledTimes(2);
+            expect(addParser.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
         });
