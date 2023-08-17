@@ -1,5 +1,7 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
+import { ContentModelBlockFormat } from 'roosterjs-content-model-types/lib/format/ContentModelBlockFormat';
+import { FormatParser } from 'roosterjs-content-model-types/lib/context/DomToModelSettings';
 import { getPasteSource } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import { parseDeprecatedColor } from './utils/deprecatedColorParser';
@@ -8,6 +10,7 @@ import { processPastedContentFromExcel } from './Excel/processPastedContentFromE
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
+import { setProcessor } from './utils/setProcessor';
 import {
     EditorPlugin,
     IEditor,
@@ -107,6 +110,23 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         addParser(ev.domToModelOption, 'link', parseLink);
         parseDeprecatedColor(ev.sanitizingOption);
 
+        if (event.pasteType === PasteType.MergeFormat) {
+            addParser(ev.domToModelOption, 'block', blockElementParser);
+            addParser(ev.domToModelOption, 'listItem', blockElementParser);
+        }
+
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
+
+/**
+ * For block elements that have background color style, remove the background color when user selects the merge current format
+ * paste option
+ */
+const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat
+) => {
+    if (format.backgroundColor) {
+        delete format.backgroundColor;
+    }
+};
