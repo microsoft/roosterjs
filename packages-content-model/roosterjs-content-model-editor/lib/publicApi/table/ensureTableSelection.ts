@@ -1,11 +1,11 @@
 import hasSelectionInBlock from '../selection/hasSelectionInBlock';
+import { setSelection } from '../../modelApi/selection/setSelection';
 import {
     createBr,
     createParagraph,
     createSelectionMarker,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import { setSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/setSelection';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,
