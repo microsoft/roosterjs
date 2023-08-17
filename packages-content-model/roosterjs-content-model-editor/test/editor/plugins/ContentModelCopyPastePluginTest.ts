@@ -1,9 +1,12 @@
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
+import * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
+import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
@@ -199,7 +202,7 @@ describe('ContentModelCopyPastePlugin |', () => {
         it('Selection not Collapsed and table selection', () => {
             // Arrange
             const table = document.createElement('table');
-            table.id = 'image';
+            table.id = 'table';
             // Arrange
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.TableSelection,
@@ -209,6 +212,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 table,
             };
 
+            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 const container = document.createElement('div');
@@ -228,6 +232,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy?.(<Event>{});
 
             // Assert
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
@@ -264,6 +269,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 image,
             };
 
+            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 div.appendChild(image);
@@ -280,6 +286,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy?.(<Event>{});
 
             // Assert
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>image);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
@@ -394,7 +401,7 @@ describe('ContentModelCopyPastePlugin |', () => {
         it('Selection not Collapsed and table selection', () => {
             // Arrange
             const table = document.createElement('table');
-            table.id = 'image';
+            table.id = 'table';
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.TableSelection,
                 ranges: [new Range()],
@@ -403,7 +410,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 table,
             };
 
-            spyOn(deleteSelectionsFile, 'deleteSelection');
+            spyOn(createRangeF, 'default').and.callThrough();
+            spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
+                deleteResult: DeleteResult.Range,
+                insertPoint: null!,
+            });
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 const container = document.createElement('div');
                 container.append(table);
@@ -412,6 +423,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+            spyOn(normalizeContentModel, 'normalizeContentModel');
 
             triggerPluginEventSpy.and.callThrough();
             focusSpy.and.callThrough();
@@ -422,6 +434,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.cut?.(<Event>{});
 
             // Assert
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
@@ -447,6 +460,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, {
                 onNodeCreated: undefined,
             });
+            expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(modelValue);
         });
 
         it('Selection not Collapsed and image selection', () => {
@@ -460,12 +474,17 @@ describe('ContentModelCopyPastePlugin |', () => {
                 image,
             };
 
-            spyOn(deleteSelectionsFile, 'deleteSelection');
+            spyOn(createRangeF, 'default').and.callThrough();
+            spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
+                deleteResult: DeleteResult.Range,
+                insertPoint: null!,
+            });
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 div.appendChild(image);
                 return selectionRangeExValue;
             });
             spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+            spyOn(normalizeContentModel, 'normalizeContentModel');
 
             triggerPluginEventSpy.and.callThrough();
             focusSpy.and.callThrough();
@@ -476,6 +495,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.cut?.(<Event>{});
 
             // Assert
+            expect(createRangeF.default).toHaveBeenCalledWith(<any>image);
             expect(getSelectionRangeEx).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
@@ -500,6 +520,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, {
                 onNodeCreated: undefined,
             });
+            expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(modelValue);
         });
     });
 
