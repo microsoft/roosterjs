@@ -13,7 +13,7 @@ import {
  * We need to make sure table is in normal state, and there is a place to put cursor.
  * @returns a new paragraph that can but put focus in, or undefined if not needed
  */
-export function normalizeTableAfterEdit(
+export function ensureFocusableParagraphForTable(
     model: ContentModelDocument,
     path: ContentModelBlockGroup[],
     table: ContentModelTable
@@ -36,6 +36,7 @@ export function normalizeTableAfterEdit(
         // No table cell at all, which means the whole table is deleted. So we need to remove it from content model.
         let block: ContentModelBlock = table;
         let parent: ContentModelBlockGroup | undefined;
+        paragraph = createEmptyParagraph(model);
 
         // If the table is the only block of its parent and parent is a FormatContainer, remove the parent as well.
         // We need to do this in a loop in case there are multiple layer of FormatContainer that match this case
@@ -43,7 +44,6 @@ export function normalizeTableAfterEdit(
             const index = parent.blocks.indexOf(block) ?? -1;
 
             if (parent && index >= 0) {
-                paragraph = createEmptyParagraph(model);
                 parent.blocks.splice(index, 1, paragraph);
             }
 

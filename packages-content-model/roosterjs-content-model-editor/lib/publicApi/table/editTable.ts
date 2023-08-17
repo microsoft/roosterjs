@@ -5,6 +5,7 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
+import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -14,7 +15,6 @@ import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
 import { mergeTableColumn } from '../../modelApi/table/mergeTableColumn';
 import { mergeTableRow } from '../../modelApi/table/mergeTableRow';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
-import { normalizeTableAfterEdit } from '../../modelApi/table/normalizeTableAfterEdit';
 import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
@@ -98,7 +98,7 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
             }
 
             if (!hasSelectionInBlock(tableModel)) {
-                const paragraph = normalizeTableAfterEdit(model, path, tableModel);
+                const paragraph = ensureFocusableParagraphForTable(model, path, tableModel);
 
                 if (paragraph) {
                     const marker = createSelectionMarker(model.format);
