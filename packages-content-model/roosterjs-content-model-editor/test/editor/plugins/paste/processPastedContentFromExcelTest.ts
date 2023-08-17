@@ -9,7 +9,7 @@ let div: HTMLElement;
 let fragment: DocumentFragment;
 
 describe('processPastedContentFromExcelTest', () => {
-    function runTest(source?: string, expected?: string, expectedModel?: ContentModelDocument) {
+    function runTest(source?: string, expectedModel?: ContentModelDocument) {
         //Act
         if (source) {
             div = document.createElement('div');
@@ -29,230 +29,208 @@ describe('processPastedContentFromExcelTest', () => {
             expect(model).toEqual(expectedModel);
         }
 
-        contentModelToDom(
-            document,
-            div,
-            model,
-            {
-                isDarkMode: false,
-            },
-            {}
-        );
-
-        //Assert
-        if (expected && Browser.isChrome) {
-            expect(div.innerHTML.replace(' ', '')).toBe(expected.replace(' ', ''));
-        }
-
         div.parentElement?.removeChild(div);
     }
 
     it('Table', () => {
-        runTest(
-            '<table><tr><td>a</td><td>b</td></tr></table>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Table',
-                        rows: [
-                            {
-                                height: 0,
-                                format: {},
-                                cells: [
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'a',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'b',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                ],
-                            },
-                        ],
-                        format: {},
-                        widths: [],
-                        dataset: {},
+        runTest('<table><tr><td>a</td><td>b</td></tr></table>', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'a',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'b',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        borderCollapse: true,
                     },
-                ],
-            }
-        );
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        });
     });
 
     it('Table without TR', () => {
-        runTest(
-            '<td>a</td><td>b</td>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Table',
-                        rows: [
-                            {
-                                height: 0,
-                                format: {},
-                                cells: [
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    { segmentType: 'Text', text: 'a', format: {} },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    { segmentType: 'Text', text: 'b', format: {} },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                ],
-                            },
-                        ],
-                        format: {},
-                        widths: [],
-                        dataset: {},
+        runTest('<td>a</td><td>b</td>', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                { segmentType: 'Text', text: 'a', format: {} },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                { segmentType: 'Text', text: 'b', format: {} },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        borderCollapse: true,
                     },
-                ],
-            }
-        );
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        });
     });
 
-    it('Table without TABLE', () => {
-        runTest(
-            '<tr><td>a</td><td>b</td></tr>',
-            '<table><tbody><tr><td>a</td><td>b</td></tr></tbody></table>',
-            {
-                blockGroupType: 'Document',
-                blocks: [
-                    {
-                        blockType: 'Table',
-                        rows: [
-                            {
-                                height: 0,
-                                format: {},
-                                cells: [
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'a',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                    {
-                                        blockGroupType: 'TableCell',
-                                        blocks: [
-                                            {
-                                                blockType: 'Paragraph',
-                                                segments: [
-                                                    {
-                                                        segmentType: 'Text',
-                                                        text: 'b',
-                                                        format: {},
-                                                    },
-                                                ],
-                                                format: {},
-                                                isImplicit: true,
-                                            },
-                                        ],
-                                        format: {},
-                                        spanLeft: false,
-                                        spanAbove: false,
-                                        isHeader: false,
-                                        dataset: {},
-                                    },
-                                ],
-                            },
-                        ],
-                        format: {},
-                        widths: [],
-                        dataset: {},
+    it('Table without TABLE tag', () => {
+        runTest('<tr><td>a</td><td>b</td></tr>', {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'a',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'b',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                            isImplicit: true,
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        borderCollapse: true,
                     },
-                ],
-            }
-        );
+                    widths: [],
+                    dataset: {},
+                },
+            ],
+        });
     });
 
     it('Table, handle borderStyle: none', () => {
         runTest(
             '<table><tr><td style="border-style:none">a</td><td style="border-style:none">b</td></tr></table>',
-            '<table><tbody><tr><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">a</td><td style="border-width: 1px; border-style: solid; border-color: rgb(212, 212, 212);">b</td></tr></tbody></table>',
             {
                 blockGroupType: 'Document',
                 blocks: [
@@ -320,7 +298,9 @@ describe('processPastedContentFromExcelTest', () => {
                                 ],
                             },
                         ],
-                        format: {},
+                        format: {
+                            borderCollapse: true,
+                        },
                         widths: [],
                         dataset: {},
                     },

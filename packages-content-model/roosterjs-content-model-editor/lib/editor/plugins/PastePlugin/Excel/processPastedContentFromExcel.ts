@@ -43,6 +43,11 @@ export function processPastedContentFromExcel(
         }
     }
 
+    addParser(event.domToModelOption, 'table', (format, element) => {
+        if (!element.style.borderCollapse) {
+            format.borderCollapse = true;
+        }
+    });
     addParser(event.domToModelOption, 'tableCell', (format, element) => {
         if (element.style.borderStyle === 'none') {
             format.borderBottom = DEFAULT_BORDER_STYLE;
