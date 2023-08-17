@@ -22,6 +22,10 @@ export {
     FormatWithContentModelOptions,
     ContentModelFormatter,
 } from './publicTypes/parameter/FormatWithContentModelContext';
+export {
+    InsertEntityOptions,
+    InsertEntityPosition,
+} from './publicTypes/parameter/InsertEntityOptions';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';
@@ -52,7 +56,7 @@ export { default as getSelectedSegments } from './publicApi/selection/getSelecte
 export { default as setIndentation } from './publicApi/block/setIndentation';
 export { default as setAlignment } from './publicApi/block/setAlignment';
 export { default as setDirection } from './publicApi/block/setDirection';
-export { default as setHeaderLevel } from './publicApi/block/setHeaderLevel';
+export { default as setHeadingLevel } from './publicApi/block/setHeadingLevel';
 export { default as toggleBlockQuote } from './publicApi/block/toggleBlockQuote';
 export { default as setSpacing } from './publicApi/block/setSpacing';
 export { default as setImageBorder } from './publicApi/image/setImageBorder';
@@ -69,6 +73,7 @@ export { default as adjustImageSelection } from './publicApi/image/adjustImageSe
 export { default as setParagraphMargin } from './publicApi/block/setParagraphMargin';
 export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
+export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';

@@ -23,7 +23,7 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
         context,
         { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
         () => {
-            const entityModel = createEntity(element, isReadonly, context.segmentFormat, id, type);
+            const entityModel = createEntity(element, isReadonly, type, context.segmentFormat, id);
 
             // TODO: Need to handle selection for editable entity
             if (context.isInSelection) {

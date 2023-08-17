@@ -21,7 +21,7 @@ export interface ContentModelParagraph
     segmentFormat?: ContentModelSegmentFormat;
 
     /**
-     * Header info for this paragraph if it is a header
+     * Decorator info for this paragraph, used by heading and P tags
      */
     decorator?: ContentModelParagraphDecorator;
 

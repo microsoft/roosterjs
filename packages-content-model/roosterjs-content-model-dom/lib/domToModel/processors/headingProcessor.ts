@@ -20,8 +20,8 @@ export const headingProcessor: ElementProcessor<HTMLHeadingElement> = (group, el
             parseFormat(element, context.formatParsers.segmentOnBlock, segmentFormat, context);
 
             // These formats are already declared on heading element, no need to keep them in context.
-            // And we should not duplicate them in context, either. Because when we want to turn off header,
-            // inner text should not keep those text format from header.
+            // And we should not duplicate them in context, either. Because when we want to turn off heading,
+            // inner text should not keep those text format from heading.
             getObjectKeys(segmentFormat).forEach(key => {
                 delete context.segmentFormat[key];
             });

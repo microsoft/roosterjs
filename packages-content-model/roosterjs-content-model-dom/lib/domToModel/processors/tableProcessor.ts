@@ -235,6 +235,17 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                         );
                     }
                 });
+
+                for (let col = 0; col < tableRow.cells.length; col++) {
+                    if (!tableRow.cells[col]) {
+                        tableRow.cells[col] = createTableCell(
+                            false,
+                            false,
+                            false,
+                            context.blockFormat
+                        );
+                    }
+                }
             }
 
             table.widths = calcSizes(columnPositions);
