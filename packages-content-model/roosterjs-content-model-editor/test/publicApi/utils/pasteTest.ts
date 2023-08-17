@@ -17,6 +17,7 @@ import {
     ClipboardData,
     KnownPasteSourceType,
     PasteType,
+    PluginEvent,
     PluginEventType,
 } from 'roosterjs-editor-types';
 
@@ -283,7 +284,7 @@ describe('paste with content model & paste plugin', () => {
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(0);
     });
 
-    it('Excel Paste', () => {
+    it('Verify the event data is not lost', () => {
         clipboardData = {
             types: ['image/png', 'text/plain', 'text/html'],
             text: 'Flight\tDescription\r\n',
@@ -296,7 +297,6 @@ describe('paste with content model & paste plugin', () => {
             imageDataUri: '',
         };
 
-        const onPluginEventSpy = jasmine.createSpy('onPluginEvent');
         let eventChecker: BeforePasteEvent = <any>{};
         editor = new ContentModelEditor(div!, {
             plugins: [
@@ -304,7 +304,7 @@ describe('paste with content model & paste plugin', () => {
                     initialize: () => {},
                     dispose: () => {},
                     getName: () => 'test',
-                    onPluginEvent(event) {
+                    onPluginEvent(event: PluginEvent) {
                         if (event.eventType === PluginEventType.BeforePaste) {
                             eventChecker = event;
                         }
