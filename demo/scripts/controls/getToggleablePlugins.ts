@@ -10,7 +10,7 @@ import { ImageEdit } from 'roosterjs-editor-plugins/lib/ImageEdit';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
 import { TableCellSelection } from 'roosterjs-editor-plugins/lib/TableCellSelection';
 import { TableResize } from 'roosterjs-editor-plugins/lib/TableResize';
-import { Watermark } from 'roosterjs-editor-plugins/lib/Watermark';
+import { WatermarkV2 } from 'roosterjs-editor-plugins/lib/WatermarkV2';
 import {
     createContextMenuPlugin,
     createImageEditMenuProvider,
@@ -38,7 +38,7 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
               )
             : null,
         paste: pluginList.paste ? new Paste() : null,
-        watermark: pluginList.watermark ? new Watermark(initState.watermarkText) : null,
+        watermark: pluginList.watermark ? new WatermarkV2(initState.watermarkText) : null,
         imageEdit,
         cutPasteListChain: pluginList.cutPasteListChain ? new CutPasteListChain() : null,
         tableCellSelection: pluginList.tableCellSelection ? new TableCellSelection() : null,
