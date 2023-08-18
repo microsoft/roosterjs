@@ -176,6 +176,7 @@ const defaultFormatKeysPerCategory: {
         'boxShadow',
         'display',
         'float',
+        'verticalAlign',
     ],
     link: [
         'link',
