@@ -115,10 +115,10 @@ export function getOperationalBlocks<T extends ContentModelBlockGroup>(
  */
 export function getFirstSelectedTable(
     model: ContentModelDocument
-): [ContentModelTable | undefined, ContentModelBlockGroup | undefined] {
+): [ContentModelTable | undefined, ContentModelBlockGroup[]] {
     const selections = collectSelections(model, { includeListFormatHolder: 'never' });
     let table: ContentModelTable | undefined;
-    let parent: ContentModelBlockGroup | undefined;
+    let resultPath: ContentModelBlockGroup[] = [];
 
     removeUnmeaningfulSelections(selections);
 
@@ -126,15 +126,20 @@ export function getFirstSelectedTable(
         if (!table) {
             if (block?.blockType == 'Table') {
                 table = block;
-                parent = path[0];
+                resultPath = [...path];
             } else if (tableContext?.table) {
                 table = tableContext.table;
-                parent = path.filter(group => group.blocks.indexOf(tableContext.table) >= 0)[0];
+
+                const parent = path.filter(
+                    group => group.blocks.indexOf(tableContext.table) >= 0
+                )[0];
+                const index = path.indexOf(parent);
+                resultPath = index >= 0 ? path.slice(index) : [];
             }
         }
     });
 
-    return [table, parent];
+    return [table, resultPath];
 }
 
 /**
