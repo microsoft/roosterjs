@@ -1,6 +1,7 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
 import { parseDeprecatedColor } from './utils/deprecatedColorParser';
 import { parseLink } from './utils/linkParser';
@@ -109,9 +110,27 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         parseDeprecatedColor(ev.sanitizingOption);
         sanitizeBlockStyles(ev.sanitizingOption);
 
+        if (event.pasteType === PasteType.MergeFormat) {
+            addParser(ev.domToModelOption, 'block', blockElementParser);
+            addParser(ev.domToModelOption, 'listLevel', blockElementParser);
+        }
+
         event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
+
+/**
+ * For block elements that have background color style, remove the background color when user selects the merge current format
+ * paste option
+ */
+const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.style.backgroundColor) {
+        delete format.backgroundColor;
+    }
+};
 
 function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
     chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
