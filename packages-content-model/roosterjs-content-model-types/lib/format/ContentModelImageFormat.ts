@@ -7,6 +7,7 @@ import { IdFormat } from './formatParts/IdFormat';
 import { MarginFormat } from './formatParts/MarginFormat';
 import { PaddingFormat } from './formatParts/PaddingFormat';
 import { SizeFormat } from './formatParts/SizeFormat';
+import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
  * The format object for an image in Content Model
@@ -19,4 +20,5 @@ export type ContentModelImageFormat = ContentModelSegmentFormat &
     BorderFormat &
     BoxShadowFormat &
     DisplayFormat &
-    FloatFormat;
+    FloatFormat &
+    VerticalAlignFormat;
