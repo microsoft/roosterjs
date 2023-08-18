@@ -3,6 +3,7 @@ import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
+import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
 import {
@@ -74,7 +75,11 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 const tr = tableElement.rows[row];
                 const tableRow = table.rows[row];
 
-                if (context.allowCacheElement) {
+                const tbody = tr.parentNode;
+
+                if (safeInstanceOf(tbody, 'HTMLTableSectionElement')) {
+                    parseFormat(tbody, context.formatParsers.tableRow, tableRow.format, context);
+                } else if (context.allowCacheElement) {
                     tableRow.cachedElement = tr;
                 }
 
