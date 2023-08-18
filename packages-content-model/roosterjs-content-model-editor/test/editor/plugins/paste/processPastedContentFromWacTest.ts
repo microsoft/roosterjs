@@ -126,7 +126,6 @@ describe('wordOnlineHandler', () => {
 
         const model = domToContentModel(fragment, {
             ...event.domToModelOption,
-            disableCacheElement: true,
         });
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
@@ -1347,6 +1346,7 @@ describe('wordOnlineHandler', () => {
                                             borderRight: Browser.isFirefox ? 'medium none' : '',
                                             borderBottom: Browser.isFirefox ? 'medium none' : '',
                                             borderLeft: Browser.isFirefox ? 'medium none' : '',
+                                            verticalAlign: 'top',
                                         },
                                         dataset: {},
                                         alt:
@@ -1768,6 +1768,7 @@ describe('wordOnlineHandler', () => {
                                                         paddingRight: '0px',
                                                         paddingBottom: '0px',
                                                         paddingLeft: '0px',
+                                                        verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -1879,6 +1880,7 @@ describe('wordOnlineHandler', () => {
                                                         paddingRight: '0px',
                                                         paddingBottom: '0px',
                                                         paddingLeft: '0px',
+                                                        verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -1995,6 +1997,7 @@ describe('wordOnlineHandler', () => {
                                                         paddingRight: '0px',
                                                         paddingBottom: '0px',
                                                         paddingLeft: '0px',
+                                                        verticalAlign: 'middle',
                                                     },
                                                     spanLeft: false,
                                                     spanAbove: false,
@@ -2020,6 +2023,7 @@ describe('wordOnlineHandler', () => {
                                                         paddingRight: '0px',
                                                         paddingBottom: '0px',
                                                         paddingLeft: '0px',
+                                                        verticalAlign: 'middle',
                                                     },
                                                     spanLeft: true,
                                                     spanAbove: false,

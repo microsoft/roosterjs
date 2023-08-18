@@ -136,6 +136,7 @@ function retrieveSegmentFormat(
     mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst);
     mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
     mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
+    mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst);
 
     mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst);
     mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);
@@ -151,12 +152,13 @@ function retrieveParagraphFormat(
     paragraph: ContentModelParagraph,
     isFirst: boolean
 ) {
-    const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
-    const validHeaderLevel = headerLevel >= 1 && headerLevel <= 6 ? headerLevel : undefined;
+    const headingLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
+    const validHeadingLevel = headingLevel >= 1 && headingLevel <= 6 ? headingLevel : undefined;
 
     mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst);
     mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst);
-    mergeValue(result, 'headerLevel', validHeaderLevel, isFirst);
+    mergeValue(result, 'headingLevel', validHeadingLevel, isFirst);
+    mergeValue(result, 'headerLevel', validHeadingLevel, isFirst);
     mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst);
     mergeValue(result, 'direction', paragraph.format.direction, isFirst);
 }

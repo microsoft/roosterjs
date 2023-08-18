@@ -374,7 +374,7 @@ describe('getSelectedParagraphs', () => {
 describe('getFirstSelectedTable', () => {
     function runTest(
         selections: SelectionInfo[],
-        expectedResult: [ContentModelTable | undefined, ContentModelBlockGroup | undefined]
+        expectedResult: [ContentModelTable | undefined, ContentModelBlockGroup[]]
     ) {
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
             selections.forEach(({ path, tableContext, block, segments }) => {
@@ -390,7 +390,7 @@ describe('getFirstSelectedTable', () => {
     }
 
     it('Empty selection', () => {
-        runTest([], [undefined, undefined]);
+        runTest([], [undefined, []]);
     });
 
     it('Single table selection in context', () => {
@@ -408,7 +408,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            [table, undefined]
+            [table, []]
         );
     });
 
@@ -422,7 +422,7 @@ describe('getFirstSelectedTable', () => {
                     block: table,
                 },
             ],
-            [table, undefined]
+            [table, []]
         );
     });
 
@@ -443,7 +443,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            [table1, undefined]
+            [table1, []]
         );
     });
 
@@ -462,7 +462,7 @@ describe('getFirstSelectedTable', () => {
                     block: table2,
                 },
             ],
-            [table1, undefined]
+            [table1, []]
         );
     });
 
@@ -491,7 +491,7 @@ describe('getFirstSelectedTable', () => {
                     },
                 },
             ],
-            [table1, undefined]
+            [table1, []]
         );
     });
 
@@ -510,7 +510,7 @@ describe('getFirstSelectedTable', () => {
                     block: table1,
                 },
             ],
-            [table1, undefined]
+            [table1, []]
         );
     });
 
@@ -526,7 +526,7 @@ describe('getFirstSelectedTable', () => {
 
         const result = getFirstSelectedTable(doc);
 
-        expect(result).toEqual([table1, doc]);
+        expect(result).toEqual([table1, [doc]]);
     });
 
     it('With parent, things under table is selected', () => {
@@ -545,7 +545,30 @@ describe('getFirstSelectedTable', () => {
 
         const result = getFirstSelectedTable(doc);
 
-        expect(result).toEqual([table1, doc]);
+        expect(result).toEqual([table1, [doc]]);
+    });
+
+    it('With deep parent, deep things under table is selected', () => {
+        const table1 = createTable(1);
+        const cell = createTableCell();
+        const doc = createContentModelDocument();
+
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+
+        const container1 = createFormatContainer('div');
+        const container2 = createFormatContainer('div');
+
+        para.segments.push(marker);
+        container2.blocks.push(para);
+        cell.blocks.push(container2);
+        table1.rows[0].cells.push(cell);
+        container1.blocks.push(table1);
+        doc.blocks.push(container1);
+
+        const result = getFirstSelectedTable(doc);
+
+        expect(result).toEqual([table1, [container1, doc]]);
     });
 });
 

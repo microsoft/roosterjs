@@ -432,11 +432,6 @@ export default class ImageEdit implements EditorPlugin {
             // Set image src to original src to help show editing UI, also it will be used when regenerate image dataURL after editing
             if (this.clonedImage) {
                 this.clonedImage.src = this.pngSource ?? this.editInfo.src;
-                setFlipped(
-                    this.clonedImage,
-                    this.editInfo.flippedHorizontal,
-                    this.editInfo.flippedVertical
-                );
                 this.clonedImage.style.position = 'absolute';
             }
 
@@ -525,6 +520,8 @@ export default class ImageEdit implements EditorPlugin {
                 leftPercent,
                 rightPercent,
                 topPercent,
+                flippedHorizontal,
+                flippedVertical,
             } = this.editInfo;
 
             // Width/height of the image
@@ -556,6 +553,9 @@ export default class ImageEdit implements EditorPlugin {
             // Update size of the image
             this.clonedImage.style.width = getPx(originalWidth);
             this.clonedImage.style.height = getPx(originalHeight);
+
+            //Update flip direction
+            setFlipped(this.clonedImage.parentElement, flippedHorizontal, flippedVertical);
 
             if (this.isCropping) {
                 // For crop, we also need to set position of the overlays
@@ -596,7 +596,14 @@ export default class ImageEdit implements EditorPlugin {
                 const viewport = this.editor?.getVisibleViewport();
                 const isSmall = isASmallImage(targetWidth, targetHeight);
                 if (rotateHandle && rotateCenter && viewport) {
-                    updateRotateHandleState(viewport, rotateCenter, rotateHandle, isSmall);
+                    updateRotateHandleState(
+                        viewport,
+                        angleRad,
+                        wrapper,
+                        rotateCenter,
+                        rotateHandle,
+                        isSmall
+                    );
                 }
 
                 updateSideHandlesVisibility(resizeHandles, isSmall);
@@ -770,11 +777,13 @@ function getColorString(color: string | ModeIndependentColor, isDarkMode: boolea
 }
 
 function setFlipped(
-    element: HTMLImageElement,
+    element: HTMLElement | null,
     flippedHorizontally?: boolean,
     flippedVertically?: boolean
 ) {
-    element.style.transform = `scale(${flippedHorizontally ? '-1' : '1'}, ${
-        flippedVertically ? '-1' : '1'
-    })`;
+    if (element) {
+        element.style.transform = `scale(${flippedHorizontally ? -1 : 1}, ${
+            flippedVertically ? -1 : 1
+        })`;
+    }
 }

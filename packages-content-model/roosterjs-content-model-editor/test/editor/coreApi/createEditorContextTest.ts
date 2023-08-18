@@ -36,6 +36,7 @@ describe('createEditorContext', () => {
             darkColorHandler,
             defaultFormat,
             addDelimiterForEntity,
+            allowCacheElement: true,
         });
     });
 });
@@ -87,6 +88,7 @@ describe('createEditorContext - checkZoomScale', () => {
             darkColorHandler,
             addDelimiterForEntity,
             zoomScale: 1,
+            allowCacheElement: true,
         });
     });
 
@@ -104,6 +106,7 @@ describe('createEditorContext - checkZoomScale', () => {
             darkColorHandler,
             addDelimiterForEntity,
             zoomScale: 2,
+            allowCacheElement: true,
         });
     });
 
@@ -121,6 +124,7 @@ describe('createEditorContext - checkZoomScale', () => {
             darkColorHandler,
             addDelimiterForEntity,
             zoomScale: 0.5,
+            allowCacheElement: true,
         });
     });
 });
@@ -170,6 +174,7 @@ describe('createEditorContext - checkRootDir', () => {
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
+            allowCacheElement: true,
         });
     });
 
@@ -186,6 +191,7 @@ describe('createEditorContext - checkRootDir', () => {
             darkColorHandler,
             addDelimiterForEntity,
             isRootRtl: true,
+            allowCacheElement: true,
         });
     });
 });

@@ -45,6 +45,7 @@ export const defaultProcessorMap: ElementProcessorMap = {
     p: pProcessor,
     pre: formatContainerProcessor,
     s: knownElementProcessor,
+    section: knownElementProcessor,
     span: knownElementProcessor,
     strike: knownElementProcessor,
     strong: knownElementProcessor,

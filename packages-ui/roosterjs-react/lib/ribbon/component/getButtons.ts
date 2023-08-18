@@ -12,7 +12,7 @@ import { decreaseFontSize } from './buttons/decreaseFontSize';
 import { decreaseIndent } from './buttons/decreaseIndent';
 import { font } from './buttons/font';
 import { fontSize } from './buttons/fontSize';
-import { header } from './buttons/header';
+import { heading } from './buttons/heading';
 import { increaseFontSize } from './buttons/increaseFontSize';
 import { increaseIndent } from './buttons/increaseIndent';
 import { insertImage } from './buttons/insertImage';
@@ -58,7 +58,8 @@ const KnownRibbonButtons = <Record<KnownRibbonButtonKey, RibbonButton<AllButtonS
     [KnownRibbonButtonKey.Superscript]: superscript,
     [KnownRibbonButtonKey.Subscript]: subscript,
     [KnownRibbonButtonKey.Strikethrough]: strikethrough,
-    [KnownRibbonButtonKey.Header]: header,
+    [KnownRibbonButtonKey.Header]: heading,
+    [KnownRibbonButtonKey.Heading]: heading,
     [KnownRibbonButtonKey.Code]: code,
     [KnownRibbonButtonKey.Ltr]: ltr,
     [KnownRibbonButtonKey.Rtl]: rtl,
@@ -95,7 +96,7 @@ export const AllButtonKeys = [
     KnownRibbonButtonKey.Superscript,
     KnownRibbonButtonKey.Subscript,
     KnownRibbonButtonKey.Strikethrough,
-    KnownRibbonButtonKey.Header,
+    KnownRibbonButtonKey.Heading,
     KnownRibbonButtonKey.Code,
     KnownRibbonButtonKey.Ltr,
     KnownRibbonButtonKey.Rtl,

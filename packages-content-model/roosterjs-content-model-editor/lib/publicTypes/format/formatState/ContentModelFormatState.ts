@@ -9,4 +9,9 @@ export interface ContentModelFormatState extends FormatState {
      * Format of image, if there is table at cursor position
      */
     imageFormat?: ImageFormatState;
+
+    /**
+     * Letter spacing
+     */
+    letterSpacing?: string;
 }
