@@ -5,6 +5,7 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
+import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -19,14 +20,6 @@ import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellH
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
 import {
-    ContentModelBlockGroup,
-    ContentModelDocument,
-    ContentModelParagraph,
-    ContentModelTable,
-} from 'roosterjs-content-model-types';
-import {
-    createBr,
-    createParagraph,
     createSelectionMarker,
     hasMetadata,
     setParagraphNotImplicit,
@@ -39,7 +32,7 @@ import {
  */
 export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
     formatWithContentModel(editor, 'editTable', model => {
-        const [tableModel, parent] = getFirstSelectedTable(model);
+        const [tableModel, path] = getFirstSelectedTable(model);
 
         if (tableModel) {
             switch (operation) {
@@ -104,7 +97,17 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
                     break;
             }
 
-            ensureTableSelection(model, parent, tableModel);
+            if (!hasSelectionInBlock(tableModel)) {
+                const paragraph = ensureFocusableParagraphForTable(model, path, tableModel);
+
+                if (paragraph) {
+                    const marker = createSelectionMarker(model.format);
+
+                    paragraph.segments.unshift(marker);
+                    setParagraphNotImplicit(paragraph);
+                    setSelection(model, marker);
+                }
+            }
 
             normalizeTable(tableModel);
 
@@ -117,50 +120,4 @@ export default function editTable(editor: IContentModelEditor, operation: TableO
             return false;
         }
     });
-}
-
-function ensureTableSelection(
-    model: ContentModelDocument,
-    parent: ContentModelBlockGroup | undefined,
-    table: ContentModelTable
-) {
-    if (!hasSelectionInBlock(table)) {
-        let paragraph: ContentModelParagraph | undefined;
-        const firstCell = table.rows.filter(row => row.cells.length > 0)[0]?.cells[0];
-
-        if (firstCell) {
-            paragraph = firstCell.blocks.filter(
-                (block): block is ContentModelParagraph => block.blockType == 'Paragraph'
-            )[0];
-
-            if (!paragraph) {
-                paragraph = createEmptyParagraph(model);
-                firstCell.blocks.push(paragraph);
-            }
-        } else if (parent) {
-            const index = parent.blocks.indexOf(table);
-
-            if (index >= 0) {
-                paragraph = createEmptyParagraph(model);
-                parent.blocks.splice(index, 1, paragraph);
-            }
-        }
-
-        if (paragraph) {
-            const marker = createSelectionMarker(model.format);
-
-            paragraph.segments.unshift(marker);
-            setParagraphNotImplicit(paragraph);
-            setSelection(model, marker);
-        }
-    }
-}
-
-function createEmptyParagraph(model: ContentModelDocument) {
-    const newPara = createParagraph(false /*isImplicit*/, undefined /*blockFormat*/, model.format);
-    const br = createBr(model.format);
-
-    newPara.segments.push(br);
-
-    return newPara;
 }
