@@ -186,7 +186,7 @@ function triggerPluginEventAndCreatePasteFragment(
         : undefined;
 
     // Step 2: Retrieve Metadata from Html and the Html that was copied.
-    retrieveMetadataFromClipboard(doc, event, editor.getTrustedHTMLHandler());
+    retrieveMetadataFromClipboard(doc, event, trustedHTMLHandler);
 
     // Step 3: Fill the BeforePasteEvent object, especially the fragment for paste
     if ((pasteAsImage && imageDataUri) || (!pasteAsText && !text && imageDataUri)) {
@@ -199,12 +199,12 @@ function triggerPluginEventAndCreatePasteFragment(
         handleTextPaste(text, position, fragment);
     }
 
-    let pluginEvent: ContentModelBeforePasteEvent | undefined = undefined;
+    let pluginEvent: ContentModelBeforePasteEvent = event;
     // Step 4: Trigger BeforePasteEvent so that plugins can do proper change before paste, when the type of paste is different than Plain Text
     if (event.pasteType !== PasteType.AsPlainText) {
         pluginEvent = editor.triggerPluginEvent(
             PluginEventType.BeforePaste,
-            eventData,
+            event,
             true /* broadcast */
         ) as ContentModelBeforePasteEvent;
     }
@@ -212,7 +212,7 @@ function triggerPluginEventAndCreatePasteFragment(
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
     sanitizePasteContent(event, position);
 
-    return pluginEvent || eventData;
+    return pluginEvent;
 }
 
 /**
