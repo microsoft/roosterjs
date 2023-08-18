@@ -106,7 +106,7 @@ describe('Paste', () => {
                 event,
                 trustedHTMLHandler
             );
-            expect(addParser.default).toHaveBeenCalledTimes(2);
+            expect(addParser.default).toHaveBeenCalledTimes(4);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
         });
