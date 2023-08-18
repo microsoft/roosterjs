@@ -4,11 +4,7 @@ import { FormatWithContentModelContext } from '../../publicTypes/parameter/Forma
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { NodePosition } from 'roosterjs-editor-types';
-import {
-    ContentModelBlockFormat,
-    ContentModelDocument,
-    FormatParser,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import ContentModelBeforePasteEvent, {
     ContentModelBeforePasteEventData,
 } from '../../publicTypes/event/ContentModelBeforePasteEvent';
