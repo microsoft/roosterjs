@@ -1,11 +1,8 @@
 import addParser from './addParser';
+import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
+import { BorderFormat, FormatParser } from 'roosterjs-content-model-types';
+import { BorderKeys } from 'roosterjs-content-model-dom';
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
-import {
-    BorderFormat,
-    BorderKeys,
-    ContentModelBeforePasteEvent,
-    FormatParser,
-} from 'roosterjs-content-model';
 
 const DeprecatedColors: string[] = [
     'inactiveborder',
