@@ -1061,9 +1061,6 @@ describe('End to end test for DOM => Model', () => {
                             marginBottom: '1em',
                             marginLeft: '40px',
                             paddingLeft: '10px',
-                            borderLeftColor: 'rgb(200, 200, 200)',
-                            borderLeftStyle: 'solid',
-                            borderLeftWidth: '3px',
                         },
                     },
                     {
