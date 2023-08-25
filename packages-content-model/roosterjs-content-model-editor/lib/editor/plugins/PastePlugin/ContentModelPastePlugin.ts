@@ -107,7 +107,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         }
 
         addParser(ev.domToModelOption, 'link', parseLink);
-        parseDeprecatedColor(ev.sanitizingOption);
+        parseDeprecatedColor(ev);
         sanitizeBlockStyles(ev.sanitizingOption);
 
         if (event.pasteType === PasteType.MergeFormat) {

@@ -24,6 +24,8 @@ import {
 
 let clipboardData: ClipboardData;
 
+const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
+
 describe('Paste ', () => {
     let editor: IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
@@ -181,7 +183,7 @@ describe('paste with content model & paste plugin', () => {
         pasteF.default(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
-        expect(addParserF.default).toHaveBeenCalledTimes(4);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
         expect(WordDesktopFile.processPastedContentFromWordDesktop).toHaveBeenCalledTimes(1);
     });
 
@@ -192,7 +194,7 @@ describe('paste with content model & paste plugin', () => {
         pasteF.default(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(4);
-        expect(addParserF.default).toHaveBeenCalledTimes(5);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
         expect(WacComponents.processPastedContentWacComponents).toHaveBeenCalledTimes(1);
     });
 
@@ -203,7 +205,7 @@ describe('paste with content model & paste plugin', () => {
         pasteF.default(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
-        expect(addParserF.default).toHaveBeenCalledTimes(2);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
 
@@ -214,7 +216,7 @@ describe('paste with content model & paste plugin', () => {
         pasteF.default(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
-        expect(addParserF.default).toHaveBeenCalledTimes(2);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
 
@@ -225,7 +227,7 @@ describe('paste with content model & paste plugin', () => {
         pasteF.default(editor!, clipboardData);
 
         expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
-        expect(addParserF.default).toHaveBeenCalledTimes(1);
+        expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
         expect(PPT.processPastedContentFromPowerPoint).toHaveBeenCalledTimes(1);
     });
 
