@@ -33,6 +33,18 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '1px solid red',
             borderBottom: '1px solid red',
             borderLeft: '1px solid red',
+            borderTopColor: 'red',
+            borderRightColor: 'red',
+            borderBottomColor: 'red',
+            borderLeftColor: 'red',
+            borderTopStyle: 'solid',
+            borderRightStyle: 'solid',
+            borderBottomStyle: 'solid',
+            borderLeftStyle: 'solid',
+            borderTopWidth: '1px',
+            borderRightWidth: '1px',
+            borderBottomWidth: '1px',
+            borderLeftWidth: '1px',
         });
     });
 
@@ -48,6 +60,18 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '2px solid red',
             borderBottom: '3px solid red',
             borderLeft: '4px solid red',
+            borderTopColor: 'red',
+            borderRightColor: 'red',
+            borderBottomColor: 'red',
+            borderLeftColor: 'red',
+            borderTopStyle: 'solid',
+            borderRightStyle: 'solid',
+            borderBottomStyle: 'solid',
+            borderLeftStyle: 'solid',
+            borderTopWidth: '1px',
+            borderRightWidth: '2px',
+            borderBottomWidth: '3px',
+            borderLeftWidth: '4px',
         });
     });
 
@@ -63,6 +87,18 @@ describe('borderFormatHandler.parse', () => {
             borderRight: '2px none red',
             borderBottom: '3px none red',
             borderLeft: '4px none red',
+            borderTopColor: 'red',
+            borderRightColor: 'red',
+            borderBottomColor: 'red',
+            borderLeftColor: 'red',
+            borderTopStyle: '',
+            borderRightStyle: '',
+            borderBottomStyle: '',
+            borderLeftStyle: '',
+            borderTopWidth: '1px',
+            borderRightWidth: '2px',
+            borderBottomWidth: '3px',
+            borderLeftWidth: '4px',
         });
     });
 

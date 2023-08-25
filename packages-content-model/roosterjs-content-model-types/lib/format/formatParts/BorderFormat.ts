@@ -26,4 +26,64 @@ export type BorderFormat = {
      * Radius to be applied in all borders corners
      */
     borderRadius?: string;
+
+    /**
+     * Top border color
+     */
+    borderTopColor?: string;
+
+    /**
+     * Right border color
+     */
+    borderRightColor?: string;
+
+    /**
+     * Bottom border color
+     */
+    borderBottomColor?: string;
+
+    /**
+     * Left border color
+     */
+    borderLeftColor?: string;
+
+    /**
+     * Top border Style
+     */
+    borderTopStyle?: string;
+
+    /**
+     * Right border Style
+     */
+    borderRightStyle?: string;
+
+    /**
+     * Bottom border Style
+     */
+    borderBottomStyle?: string;
+
+    /**
+     * Left border Style
+     */
+    borderLeftStyle?: string;
+
+    /**
+     * Top border Width
+     */
+    borderTopWidth?: string;
+
+    /**
+     * Right border Width
+     */
+    borderRightWidth?: string;
+
+    /**
+     * Bottom border Width
+     */
+    borderBottomWidth?: string;
+
+    /**
+     * Left border Width
+     */
+    borderLeftWidth?: string;
 };
