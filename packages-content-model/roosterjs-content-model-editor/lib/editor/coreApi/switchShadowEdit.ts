@@ -14,9 +14,7 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
-            if (!core.cachedModel) {
-                core.cachedModel = core.api.createContentModel(core);
-            }
+            core.api.createContentModel(core, {});
 
             const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
 

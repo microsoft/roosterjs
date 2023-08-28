@@ -53,6 +53,7 @@ export function createDomToModelContext(
             options?.additionalFormatParsers
         ),
 
+        callbacks: options?.callbacks || {},
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
     };

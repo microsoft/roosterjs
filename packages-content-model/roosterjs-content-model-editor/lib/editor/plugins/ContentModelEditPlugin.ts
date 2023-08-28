@@ -5,6 +5,7 @@ import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { isBlockElement, isCharacterValue, isModifierKey, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
 import {
     EditorPlugin,
@@ -17,13 +18,6 @@ import {
     PluginKeyDownEvent,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -36,7 +30,6 @@ const ProcessKey = 'Process';
  */
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
-    private hasDefaultFormat = false;
 
     /**
      * Get name of this plugin
@@ -54,11 +47,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
-
-        const defaultFormat = this.editor.getContentModelDefaultFormat();
-        this.hasDefaultFormat =
-            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
-                .length > 0;
     }
 
     /**
@@ -84,9 +72,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     break;
 
                 case PluginEventType.ContentChanged:
-                case PluginEventType.MouseUp:
-                case PluginEventType.SelectionChanged:
-                    this.editor.cacheContentModel(null);
+                    this.editor.clearCachedModel();
                     break;
             }
         }
@@ -98,7 +84,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
 
         if (rawEvent.defaultPrevented || event.handledByEditFeature) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
-            editor.cacheContentModel(null /*model*/);
+            editor.clearCachedModel();
         } else {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
@@ -111,20 +97,21 @@ export default class ContentModelEditPlugin implements EditorPlugin {
                     if (this.shouldDeleteWithContentModel(range, rawEvent)) {
                         handleKeyDownEvent(editor, rawEvent);
                     } else {
-                        editor.cacheContentModel(null);
+                        editor.clearCachedModel();
                     }
 
                     break;
 
                 default:
-                    if (
-                        (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) &&
-                        this.hasDefaultFormat
-                    ) {
+                    if (which == Keys.ENTER) {
+                        // Enter key will start a new paragraph which the cache reconcile code cannot handle now, so clear cache
+                        editor.clearCachedModel();
+                    }
+
+                    if (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) {
                         this.tryApplyDefaultFormat(editor);
                     }
 
-                    editor.cacheContentModel(null);
                     break;
             }
         }

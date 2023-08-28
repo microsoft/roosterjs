@@ -111,6 +111,7 @@ export {
     FormatParsersPerCategory,
     DomToModelSettings,
     FormatParser,
+    DomToModelCallback,
 } from './context/DomToModelSettings';
 export { DomToModelContext } from './context/DomToModelContext';
 export { ElementProcessor } from './context/ElementProcessor';

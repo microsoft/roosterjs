@@ -1,3 +1,4 @@
+import { ContentModelCachePluginState } from './pluginState/ContentModelCachePluginState';
 import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
@@ -6,6 +7,21 @@ import {
     EditorContext,
     ModelToDomOption,
 } from 'roosterjs-content-model-types';
+
+/**
+ *
+ */
+export interface CreateContentModelOptions {
+    /**
+     *
+     */
+    useReducedModel?: boolean;
+
+    /**
+     * When specified, use this selection to override existing selection inside editor
+     */
+    selectionOverride?: SelectionRangeEx;
+}
 
 /**
  * Create a EditorContext object used by ContentModel API
@@ -20,8 +36,7 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
  */
 export type CreateContentModel = (
     core: ContentModelEditorCore,
-    option?: DomToModelOption,
-    selectionOverride?: SelectionRangeEx
+    option: CreateContentModelOptions
 ) => ContentModelDocument;
 
 /**
@@ -83,9 +98,15 @@ export interface ContentModelEditorCore extends EditorCore {
     cachedModel?: ContentModelDocument;
 
     /**
-     * Cached selection range ex. This range only exist when cached model exists and it has selection
+     *
      */
-    cachedRangeEx?: SelectionRangeEx;
+    cache: ContentModelCachePluginState;
+
+    /**
+     * Segment indexer helps create an index of segments, so we can easily update selection in content model
+     * when selection is changed
+     */
+    // segmentIndexer: SegmentIndexer;
 
     /**
      * Default format used by Content Model. This is calculated from lifecycle.defaultFormat

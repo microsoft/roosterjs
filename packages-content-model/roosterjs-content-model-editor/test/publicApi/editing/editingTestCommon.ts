@@ -30,7 +30,7 @@ export function editingTestCommon(
         });
     const editor = ({
         createContentModel: () => model,
-        cacheContentModel: jasmine.createSpy('cacheContentModel'),
+        clearCachedModel: jasmine.createSpy('clearCachedModel'),
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,

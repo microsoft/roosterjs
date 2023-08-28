@@ -8,20 +8,25 @@ import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  */
 export const setContentModel: SetContentModel = (core, model, option) => {
+    const editorContext = core.api.createEditorContext(core);
     const range = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        core.api.createEditorContext(core),
+        editorContext,
         {
             ...core.defaultModelToDomOptions,
-            ...(option || {}),
+            ...option,
         }
     );
 
     if (!core.lifecycle.shadowEditFragment) {
         core.api.select(core, range);
-        core.cachedRangeEx = range || undefined;
+        core.cachedModel = undefined;
+
+        if (range) {
+            core.cache.cachedRangeEx = range;
+        }
     }
 
     return range;

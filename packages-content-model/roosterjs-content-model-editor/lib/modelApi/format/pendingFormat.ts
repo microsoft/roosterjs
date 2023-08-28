@@ -27,6 +27,8 @@ export function setPendingFormat(
 
     holder.format = format;
     holder.position = position;
+
+    editor.clearCachedModel();
 }
 
 /**

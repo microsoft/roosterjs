@@ -7,6 +7,7 @@ export {
     ContentModelEditorCore,
     CreateContentModel,
     SetContentModel,
+    CreateContentModelOptions,
 } from './publicTypes/ContentModelEditorCore';
 export {
     default as ContentModelBeforePasteEvent,
@@ -26,6 +27,10 @@ export {
     InsertEntityOptions,
     InsertEntityPosition,
 } from './publicTypes/parameter/InsertEntityOptions';
+export {
+    ContentModelCachePluginState,
+    SegmentIndexEntry,
+} from './publicTypes/pluginState/ContentModelCachePluginState';
 
 export { default as insertTable } from './publicApi/table/insertTable';
 export { default as formatTable } from './publicApi/table/formatTable';

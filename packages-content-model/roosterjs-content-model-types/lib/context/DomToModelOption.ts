@@ -1,5 +1,6 @@
 import {
     DefaultStyleMap,
+    DomToModelCallback,
     ElementProcessorMap,
     FormatParsers,
     FormatParsersPerCategory,
@@ -28,4 +29,9 @@ export interface DomToModelOption {
      * Provide additional format parsers for each format type
      */
     additionalFormatParsers?: Partial<FormatParsersPerCategory>;
+
+    /**
+     * Callbacks that will be invoked during DOM to Content Model conversion
+     */
+    callbacks?: DomToModelCallback;
 }

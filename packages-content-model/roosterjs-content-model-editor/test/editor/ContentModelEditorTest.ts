@@ -184,11 +184,11 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
-        editor.cacheContentModel(cachedModel);
+        editor.clearCachedModel(cachedModel);
 
         expect((editor as any).core.cachedModel).toBe(cachedModel);
 
-        editor.cacheContentModel(null);
+        editor.clearCachedModel(null);
 
         expect((editor as any).core.cachedModel).toBe(undefined);
     });

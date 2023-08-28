@@ -12,21 +12,21 @@ import {
 describe('handleKeyboardEventResult', () => {
     let mockedEditor: IContentModelEditor;
     let mockedEvent: KeyboardEvent;
-    let cacheContentModel: jasmine.Spy;
+    let clearCachedModel: jasmine.Spy;
     let preventDefault: jasmine.Spy;
     let triggerContentChangedEvent: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
     let addUndoSnapshot: jasmine.Spy;
 
     beforeEach(() => {
-        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        clearCachedModel = jasmine.createSpy('clearCachedModel');
         preventDefault = jasmine.createSpy('preventDefault');
         triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot');
 
         mockedEditor = ({
-            cacheContentModel,
+            clearCachedModel,
             triggerContentChangedEvent,
             triggerPluginEvent,
             addUndoSnapshot,
@@ -55,7 +55,7 @@ describe('handleKeyboardEventResult', () => {
         expect(preventDefault).toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
-        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(clearCachedModel).not.toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
             rawEvent: mockedEvent,
         });
@@ -77,7 +77,7 @@ describe('handleKeyboardEventResult', () => {
         expect(preventDefault).not.toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
-        expect(cacheContentModel).toHaveBeenCalledWith(null);
+        expect(clearCachedModel).toHaveBeenCalledWith(null);
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(context.skipUndoSnapshot).toBeTrue();
     });
@@ -97,7 +97,7 @@ describe('handleKeyboardEventResult', () => {
         expect(preventDefault).toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(mockedModel);
-        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(clearCachedModel).not.toHaveBeenCalled();
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.BeforeKeyboardEditing, {
             rawEvent: mockedEvent,
         });
@@ -119,7 +119,7 @@ describe('handleKeyboardEventResult', () => {
         expect(preventDefault).toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
-        expect(cacheContentModel).not.toHaveBeenCalled();
+        expect(clearCachedModel).not.toHaveBeenCalled();
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(context.skipUndoSnapshot).toBeTrue();
     });

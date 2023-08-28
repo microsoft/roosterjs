@@ -5,7 +5,10 @@ import { GetSelectionRangeEx } from 'roosterjs-editor-types';
  * @internal
  */
 export const getSelectionRangeEx: GetSelectionRangeEx = core => {
-    const contentModelCore = core as ContentModelEditorCore;
+    const { cache } = core as ContentModelEditorCore;
+    const { cachedRangeEx, isUpdatingRange } = cache;
 
-    return contentModelCore.cachedRangeEx ?? core.originalApi.getSelectionRangeEx(core);
+    return (
+        (isUpdatingRange ? undefined : cachedRangeEx) ?? core.originalApi.getSelectionRangeEx(core)
+    );
 };

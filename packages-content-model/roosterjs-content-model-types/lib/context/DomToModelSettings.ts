@@ -1,5 +1,7 @@
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
 import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import { ContentModelParagraph } from '../block/ContentModelParagraph';
+import { ContentModelText } from '../segment/ContentModelText';
 import { DomToModelContext } from './DomToModelContext';
 import { ElementProcessor } from './ElementProcessor';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
@@ -99,6 +101,29 @@ export type ElementProcessorMap = {
     };
 
 /**
+ * Callbacks that can be invoked when creating Content Model from DOM tree
+ */
+export interface DomToModelCallback {
+    /**
+     * Invoked when processor see a new Text node from DOM tree
+     * @param textNode The new Text node
+     */
+    onNewTextNode?: (textNode: Text) => void;
+
+    /**
+     * Invoked when processor has created a new Text segment
+     * @param paragraph The parent paragraph of this segment
+     * @param textSegment The new text segment
+     * @param textNode The text DOM node that the text segment is created from
+     */
+    onNewTextSegment?: (
+        paragraph: ContentModelParagraph,
+        textSegment: ContentModelText,
+        textNode: Text
+    ) => void;
+}
+
+/**
  * Represents settings to customize DOM to Content Model conversion
  */
 export interface DomToModelSettings {
@@ -128,4 +153,9 @@ export interface DomToModelSettings {
      * This provides a way to call original format parser from an overridden parser function
      */
     defaultFormatParsers: Readonly<FormatParsers>;
+
+    /**
+     * Callbacks that can be invoked when creating Content Model from DOM tree
+     */
+    callbacks: DomToModelCallback;
 }

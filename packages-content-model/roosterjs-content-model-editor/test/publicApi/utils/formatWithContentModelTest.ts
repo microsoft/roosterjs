@@ -11,7 +11,7 @@ describe('formatWithContentModel', () => {
     let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
-    let cacheContentModel: jasmine.Spy;
+    let clearCachedModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
     let triggerContentChangedEvent: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
@@ -26,7 +26,7 @@ describe('formatWithContentModel', () => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
-        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        clearCachedModel = jasmine.createSpy('clearCachedModel');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
@@ -36,7 +36,7 @@ describe('formatWithContentModel', () => {
             addUndoSnapshot,
             createContentModel,
             setContentModel,
-            cacheContentModel,
+            clearCachedModel,
             getFocusedPosition,
             triggerContentChangedEvent,
             triggerPluginEvent,

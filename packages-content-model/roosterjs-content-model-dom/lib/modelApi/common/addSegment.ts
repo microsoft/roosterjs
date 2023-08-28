@@ -17,7 +17,7 @@ export function addSegment(
     group: ContentModelBlockGroup,
     newSegment: ContentModelSegment,
     blockFormat?: ContentModelBlockFormat
-) {
+): ContentModelParagraph {
     const lastBlock = group.blocks[group.blocks.length - 1];
     let paragraph: ContentModelParagraph;
 
@@ -41,4 +41,6 @@ export function addSegment(
 
         paragraph.segments.push(newSegment);
     }
+
+    return paragraph;
 }

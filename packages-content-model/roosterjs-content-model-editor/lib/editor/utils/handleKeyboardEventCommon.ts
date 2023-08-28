@@ -21,7 +21,7 @@ export function handleKeyboardEventResult(
     switch (result) {
         case DeleteResult.NotDeleted:
             // We have not delete anything, we will let browser handle this event, so clear cached model if any since the content will be changed by browser
-            editor.cacheContentModel(null);
+            editor.clearCachedModel();
             return false;
 
         case DeleteResult.NothingToDelete:

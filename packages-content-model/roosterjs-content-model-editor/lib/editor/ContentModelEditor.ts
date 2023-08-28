@@ -1,12 +1,13 @@
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    ContentModelEditorCore,
+    CreateContentModelOptions,
+} from '../publicTypes/ContentModelEditorCore';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
-    DomToModelOption,
     ModelToDomOption,
 } from 'roosterjs-content-model-types';
 
@@ -30,13 +31,10 @@ export default class ContentModelEditor
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(
-        option?: DomToModelOption,
-        selectionOverride?: SelectionRangeEx
-    ): ContentModelDocument {
+    createContentModel(option?: CreateContentModelOptions): ContentModelDocument {
         const core = this.getCore();
 
-        return core.api.createContentModel(core, option, selectionOverride);
+        return core.api.createContentModel(core, option || {});
     }
 
     /**
@@ -51,15 +49,17 @@ export default class ContentModelEditor
     }
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
+     * Clear cached content model and selection if any
      */
-    cacheContentModel(model: ContentModelDocument | null) {
+    clearCachedModel() {
         const core = this.getCore();
 
         if (!core.lifecycle.shadowEditFragment) {
-            core.cachedModel = model || undefined;
-            core.cachedRangeEx = undefined;
+            core.cachedModel = undefined;
+
+            core.cache.nextSequenceNumber = 0;
+            core.cache.index = {};
+            core.cache.cachedRangeEx = undefined;
         }
     }
 

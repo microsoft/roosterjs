@@ -13,17 +13,17 @@ import {
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
-    let cacheContentModel: jasmine.Spy;
+    let clearCachedModel: jasmine.Spy;
     let getContentModelDefaultFormat: jasmine.Spy;
 
     beforeEach(() => {
-        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        clearCachedModel = jasmine.createSpy('clearCachedModel');
         getContentModelDefaultFormat = jasmine
             .createSpy('getContentModelDefaultFormat')
             .and.returnValue({});
 
         editor = ({
-            cacheContentModel,
+            clearCachedModel,
             getContentModelDefaultFormat,
             getSelectionRangeEx: () =>
                 ({
@@ -51,7 +51,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(clearCachedModel).not.toHaveBeenCalled();
         });
 
         it('Delete', () => {
@@ -66,7 +66,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(clearCachedModel).not.toHaveBeenCalled();
         });
 
         it('Other key', () => {
@@ -81,7 +81,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith(null);
         });
 
         it('Default prevented', () => {
@@ -95,7 +95,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith(null);
         });
 
         it('Trigger entity event first', () => {
@@ -131,7 +131,7 @@ describe('ContentModelEditPlugin', () => {
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, {
                 which: Keys.DELETE,
             } as any);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(clearCachedModel).not.toHaveBeenCalled();
         });
 
         it('SelectionChanged event should clear cached model', () => {
@@ -143,7 +143,7 @@ describe('ContentModelEditPlugin', () => {
                 selectionRangeEx: null!,
             });
 
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith(null);
         });
     });
 
@@ -180,8 +180,8 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledTimes(1);
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledTimes(1);
+            expect(clearCachedModel).toHaveBeenCalledWith(null);
         });
 
         it('Delete', () => {
@@ -196,8 +196,8 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledTimes(1);
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledTimes(1);
+            expect(clearCachedModel).toHaveBeenCalledWith(null);
         });
 
         it('Backspace from the beginning', () => {
@@ -218,7 +218,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(clearCachedModel).not.toHaveBeenCalled();
         });
 
         it('Delete from the last', () => {
@@ -239,7 +239,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(clearCachedModel).not.toHaveBeenCalled();
         });
     });
 });
@@ -257,7 +257,7 @@ describe('ContentModelEditPlugin for default format', () => {
         setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
         getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx');
-        cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
+        cacheContentModelSpy = jasmine.createSpy('clearCachedModel');
         addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
         contentDiv = document.createElement('div');
@@ -268,7 +268,7 @@ describe('ContentModelEditPlugin for default format', () => {
             getContentModelDefaultFormat: () => ({
                 fontFamily: 'Arial',
             }),
-            cacheContentModel: cacheContentModelSpy,
+            clearCachedModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
         } as any) as IContentModelEditor;
     });

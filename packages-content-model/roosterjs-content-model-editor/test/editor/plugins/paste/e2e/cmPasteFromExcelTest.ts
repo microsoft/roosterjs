@@ -71,7 +71,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData, false, false, true);
 
-        editor.cacheContentModel(null);
+        editor.clearCachedModel(null);
 
         const model = editor.createContentModel({
             processorOverride: {

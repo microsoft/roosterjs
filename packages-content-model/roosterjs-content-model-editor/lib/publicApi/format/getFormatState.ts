@@ -17,11 +17,7 @@ import {
  */
 export default function getFormatState(editor: IContentModelEditor): ContentModelFormatState {
     const pendingFormat = getPendingFormat(editor);
-    const model = editor.createContentModel({
-        processorOverride: {
-            child: reducedModelChildProcessor,
-        },
-    });
+    const model = editor.createContentModel({ useReducedModel: true });
     const result: ContentModelFormatState = {
         ...editor.getUndoState(),
         isDarkMode: editor.isDarkMode(),

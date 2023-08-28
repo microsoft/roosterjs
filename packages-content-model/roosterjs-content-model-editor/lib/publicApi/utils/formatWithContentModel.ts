@@ -34,7 +34,7 @@ export function formatWithContentModel(
 
     editor.focus();
 
-    const model = editor.createContentModel(undefined /*option*/, selectionOverride);
+    const model = editor.createContentModel({ selectionOverride });
     const context: FormatWithContentModelContext = {
         deletedEntities: [],
         rawEvent,
@@ -77,7 +77,7 @@ export function formatWithContentModel(
             );
         }
 
-        editor.cacheContentModel?.(model);
+        editor.createContentModel();
     }
 }
 

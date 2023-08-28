@@ -351,7 +351,10 @@ function cloneGeneralSegment(
     return Object.assign(cloneGeneralBlock(general, options), cloneSegmentBase(general));
 }
 
-function cloneText(textSegment: ContentModelText): ContentModelText {
+/**
+ * @internal
+ */
+export function cloneText(textSegment: ContentModelText): ContentModelText {
     const { text } = textSegment;
     return Object.assign({ text }, cloneSegmentBase(textSegment));
 }

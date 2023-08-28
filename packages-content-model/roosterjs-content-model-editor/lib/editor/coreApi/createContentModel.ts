@@ -1,11 +1,13 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
+import { createOnNewTextSegmentCallbacks } from '../utils/modelCache';
 import { domToContentModel } from 'roosterjs-content-model-dom';
-import { DomToModelOption } from 'roosterjs-content-model-types';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import { DomToModelOption, EditorContext } from 'roosterjs-content-model-types';
+import { reducedModelChildProcessor } from '../../publicApi/format/getFormatState';
 import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
     CreateContentModel,
+    CreateContentModelOptions,
 } from '../../publicTypes/ContentModelEditorCore';
 
 /**
@@ -13,37 +15,51 @@ import {
  * Create Content Model from DOM tree in this editor
  * @param option The option to customize the behavior of DOM to Content Model conversion
  */
-export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
-    let cachedModel = selectionOverride ? null : core.cachedModel;
+export const createContentModel: CreateContentModel = (core, option) => {
+    const allowCache =
+        !core.lifecycle.shadowEditEntities && !option.selectionOverride && !option.useReducedModel;
+    let result = allowCache ? core.cachedModel : null;
 
-    if (cachedModel && core.lifecycle.shadowEditFragment) {
+    if (result && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
-        cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
+        result = cloneModel(result, { includeCachedElement: true });
     }
 
-    return cachedModel || internalCreateContentModel(core, option, selectionOverride);
+    if (!result) {
+        const editorContext = core.api.createEditorContext(core);
+
+        result = internalCreateContentModel(core, editorContext, option);
+
+        if (allowCache) {
+            core.cachedModel = result;
+        }
+    }
+
+    return result;
 };
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    option: DomToModelOption | undefined,
-    selectionOverride?: SelectionRangeEx
+    editorContext: EditorContext,
+    option: CreateContentModelOptions
 ) {
-    const context: DomToModelOption = {
+    const domToModelOption: DomToModelOption = {
+        callbacks: createOnNewTextSegmentCallbacks(core.cache),
         ...core.defaultDomToModelOptions,
-        ...option,
     };
+    const range = option.selectionOverride || core.api.getSelectionRangeEx(core);
 
-    context.processorOverride = {
+    domToModelOption.processorOverride = {
         table: tablePreProcessor,
-        ...context.processorOverride,
-        ...option?.processorOverride,
+        ...domToModelOption.processorOverride,
     };
 
-    return domToContentModel(
-        core.contentDiv,
-        context,
-        core.api.createEditorContext(core),
-        selectionOverride || core.api.getSelectionRangeEx(core)
-    );
+    if (option.useReducedModel) {
+        domToModelOption.processorOverride.child = reducedModelChildProcessor;
+    }
+
+    core.contentDiv.normalize();
+    core.cache.cachedRangeEx = range;
+
+    return domToContentModel(core.contentDiv, domToModelOption, editorContext, range);
 }

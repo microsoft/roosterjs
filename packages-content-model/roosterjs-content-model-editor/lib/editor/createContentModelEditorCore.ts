@@ -2,6 +2,7 @@ import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlug
 import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
+import { ContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -20,10 +21,12 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
+    const cachePlugin = new ContentModelCachePlugin();
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
             ...(options.plugins || []),
+            cachePlugin,
             new ContentModelFormatPlugin(),
             new ContentModelEditPlugin(),
         ],
@@ -42,6 +45,8 @@ export const createContentModelEditorCore: CoreCreator<
     };
 
     const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
+
+    core.cache = cachePlugin.getState();
 
     promoteToContentModelEditorCore(core, modifiedOptions);
 
