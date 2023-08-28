@@ -3,19 +3,22 @@ import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/d
 import * as ExcelF from '../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
-import * as pasteF from '../../../lib/publicApi/utils/paste';
 import * as PPT from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
 import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { createContentModelDocument } from 'roosterjs-content-model-dom';
+import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
+import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
+import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { initEditor } from '../../editor/plugins/paste/e2e/testUtils';
+import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
     ClipboardData,
+    ExperimentalFeatures,
     KnownPasteSourceType,
     PasteType,
     PluginEvent,
@@ -551,3 +554,154 @@ describe('mergePasteContent', () => {
         );
     });
 });
+
+describe('Paste with clipboardData', () => {
+    let editor: IContentModelEditor = undefined!;
+    const ID = 'EDITOR_ID';
+
+    beforeEach(() => {
+        editor = initEditor(ID);
+        clipboardData = <ClipboardData>(<any>{
+            types: ['text/plain', 'text/html'],
+            text: 'Test\r\nasdsad\r\n',
+            image: null,
+            files: [],
+            rawHtml: '',
+            customValues: {},
+            htmlFirstLevelChildTags: ['P', 'P'],
+            html: '',
+        });
+    });
+
+    afterEach(() => {
+        document.getElementById(ID)?.remove();
+    });
+
+    it('Remove windowtext from clipboardContent', () => {
+        clipboardData.rawHtml =
+            '<html><head></head><body><p style="color: windowtext;">Test</p></body></html>';
+
+        paste(editor, clipboardData);
+
+        const model = editor.createContentModel(<DomToModelOption>{
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
+
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                    decorator: {
+                        tagName: 'p',
+                        format: {},
+                    },
+                },
+            ],
+            format: {},
+        });
+    });
+
+    it('Remove unsupported url of link from clipboardContent', () => {
+        clipboardData.rawHtml =
+            '<html><head></head><body><a href="file://mylocalfile">Link</a></body></html>';
+
+        paste(editor, clipboardData);
+
+        const model = editor.createContentModel(<DomToModelOption>{
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
+
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                Object({
+                    segments: [
+                        Object({ text: 'Link', segmentType: 'Text', format: Object({}) }),
+                        Object({
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: Object({}),
+                        }),
+                    ],
+                    blockType: 'Paragraph',
+                    format: Object({}),
+                }),
+            ],
+            format: {},
+        });
+    });
+
+    it('Keep supported url of link from clipboardContent', () => {
+        clipboardData.rawHtml =
+            '<html><head></head><body><a href="https://github.com/microsoft/roosterjs">Link</a></body></html>';
+
+        paste(editor, clipboardData);
+
+        const model = editor.createContentModel(<DomToModelOption>{
+            processorOverride: {
+                table: tableProcessor,
+            },
+        });
+
+        expectEqual(model, {
+            blockGroupType: 'Document',
+            blocks: [
+                Object({
+                    segments: [
+                        Object({
+                            text: 'Link',
+                            segmentType: 'Text',
+                            format: Object({}),
+                            link: Object({
+                                format: Object({
+                                    underline: true,
+                                    href: 'https://github.com/microsoft/roosterjs',
+                                }),
+                                dataset: Object({}),
+                            }),
+                        }),
+                        Object({
+                            isSelected: true,
+                            segmentType: 'SelectionMarker',
+                            format: Object({}),
+                        }),
+                    ],
+                    blockType: 'Paragraph',
+                    format: Object({}),
+                }),
+            ],
+            format: {},
+        });
+    });
+});
+
+function expectEqual(model1: ContentModelDocument, model2: ContentModelDocument) {
+    expect(
+        /// Remove Cached elements and undefined properties
+        JSON.parse(
+            JSON.stringify(
+                cloneModel(model1, {
+                    includeCachedElement: false,
+                })
+            )
+        )
+    ).toEqual(model2);
+}

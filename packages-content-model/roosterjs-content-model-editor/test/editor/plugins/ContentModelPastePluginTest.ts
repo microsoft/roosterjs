@@ -15,7 +15,7 @@ const trustedHTMLHandler = <any>'mock';
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 const DEFAULT_TIMES_ADD_PARSER_CALLED = 3;
 
-describe('Paste', () => {
+describe('Content Model Paste Plugin Test', () => {
     let editor: IContentModelEditor;
 
     beforeEach(() => {
@@ -91,7 +91,7 @@ describe('Paste', () => {
                 WordDesktopFile.wordDesktopElementProcessor
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(5);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
         });
 
@@ -109,7 +109,7 @@ describe('Paste', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Excel | image', () => {
@@ -125,7 +125,7 @@ describe('Paste', () => {
                 trustedHTMLHandler
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
         });
 
@@ -142,7 +142,7 @@ describe('Paste', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Excel Online', () => {
@@ -158,7 +158,7 @@ describe('Paste', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Power Point', () => {
@@ -176,7 +176,7 @@ describe('Paste', () => {
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Wac', () => {
@@ -189,7 +189,7 @@ describe('Paste', () => {
             expect(WacFile.processPastedContentWacComponents).toHaveBeenCalledWith(event);
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 4);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(4);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Default', () => {
@@ -200,7 +200,7 @@ describe('Paste', () => {
 
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
         it('Google Sheets', () => {
@@ -211,7 +211,7 @@ describe('Paste', () => {
 
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED);
             expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
-            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(3);
+            expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
             expect(
                 event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME]
             ).toEqual('*');

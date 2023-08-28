@@ -1,55 +1,8 @@
-import addParser from './addParser';
-import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { BorderFormat, FormatParser } from 'roosterjs-content-model-types';
-import { BorderKeys } from 'roosterjs-content-model-dom';
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
-
-const DeprecatedColors: string[] = [
-    'inactiveborder',
-    'activeborder',
-    'inactivecaptiontext',
-    'inactivecaption',
-    'activecaption',
-    'appworkspace',
-    'infobackground',
-    'background',
-    'buttonhighlight',
-    'buttonshadow',
-    'captiontext',
-    'infotext',
-    'menutext',
-    'menu',
-    'scrollbar',
-    'threeddarkshadow',
-    'threedface',
-    'threedhighlight',
-    'threedlightshadow',
-    'threedfhadow',
-    'windowtext',
-    'windowframe',
-    'window',
-];
+import { BorderKeys, DeprecatedColors } from 'roosterjs-content-model-dom';
 
 /**
  * @internal
- */
-export function parseDeprecatedColor(ev: ContentModelBeforePasteEvent) {
-    const { sanitizingOption, domToModelOption } = ev;
-    ['color', 'background-color'].forEach(property => {
-        chainSanitizerCallback(
-            sanitizingOption.cssStyleCallbacks,
-            property,
-            (value: string) => DeprecatedColors.indexOf(value) < 0
-        );
-    });
-
-    addParser(domToModelOption, 'tableCell', deprecatedBorderColorParser);
-    addParser(domToModelOption, 'table', deprecatedBorderColorParser);
-}
-
-/**
- * @internal
- * Exported only for Unit testing
  */
 export const deprecatedBorderColorParser: FormatParser<BorderFormat> = (
     format: BorderFormat
