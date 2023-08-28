@@ -9,16 +9,14 @@ import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacCompo
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
+import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtils';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { initEditor } from '../../editor/plugins/paste/e2e/testUtils';
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
     ClipboardData,
-    ExperimentalFeatures,
     KnownPasteSourceType,
     PasteType,
     PluginEvent,
@@ -632,18 +630,18 @@ describe('Paste with clipboardData', () => {
         expectEqual(model, {
             blockGroupType: 'Document',
             blocks: [
-                Object({
+                {
                     segments: [
-                        Object({ text: 'Link', segmentType: 'Text', format: Object({}) }),
-                        Object({
+                        { text: 'Link', segmentType: 'Text', format: {} },
+                        {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: Object({}),
-                        }),
+                            format: {},
+                        },
                     ],
                     blockType: 'Paragraph',
-                    format: Object({}),
-                }),
+                    format: {},
+                },
             ],
             format: {},
         });
@@ -664,44 +662,31 @@ describe('Paste with clipboardData', () => {
         expectEqual(model, {
             blockGroupType: 'Document',
             blocks: [
-                Object({
+                {
                     segments: [
-                        Object({
+                        {
                             text: 'Link',
                             segmentType: 'Text',
-                            format: Object({}),
-                            link: Object({
-                                format: Object({
+                            format: {},
+                            link: {
+                                format: {
                                     underline: true,
                                     href: 'https://github.com/microsoft/roosterjs',
-                                }),
-                                dataset: Object({}),
-                            }),
-                        }),
-                        Object({
+                                },
+                                dataset: {},
+                            },
+                        },
+                        {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: Object({}),
-                        }),
+                            format: {},
+                        },
                     ],
                     blockType: 'Paragraph',
-                    format: Object({}),
-                }),
+                    format: {},
+                },
             ],
             format: {},
         });
     });
 });
-
-function expectEqual(model1: ContentModelDocument, model2: ContentModelDocument) {
-    expect(
-        /// Remove Cached elements and undefined properties
-        JSON.parse(
-            JSON.stringify(
-                cloneModel(model1, {
-                    includeCachedElement: false,
-                })
-            )
-        )
-    ).toEqual(model2);
-}

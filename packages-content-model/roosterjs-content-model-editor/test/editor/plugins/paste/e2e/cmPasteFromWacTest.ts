@@ -247,7 +247,7 @@ describe(ID, () => {
                                             ],
                                         },
                                     ],
-                                    format: {
+                                    format: <any>{
                                         direction: 'ltr',
                                         textAlign: 'start',
                                         whiteSpace: 'normal',
