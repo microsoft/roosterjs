@@ -14,6 +14,7 @@ describe('createDomToModelContext', () => {
         levels: [],
     };
     const contextOptions = {
+        callbacks: {},
         elementProcessors: defaultProcessorMap,
         defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),

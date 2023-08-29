@@ -3,6 +3,7 @@ import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEna
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
+import { ContentModelCachePlugin } from '../../lib/editor/corePlugins/ContentModelCachePlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
@@ -173,7 +174,11 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [
+                new ContentModelCachePlugin(),
+                new ContentModelFormatPlugin(),
+                new ContentModelEditPlugin(),
+            ],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,

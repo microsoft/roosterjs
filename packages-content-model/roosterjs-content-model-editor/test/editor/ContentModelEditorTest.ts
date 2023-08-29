@@ -179,20 +179,6 @@ describe('ContentModelEditor', () => {
         expect(domToContentModel.domToContentModel).not.toHaveBeenCalled();
     });
 
-    it('cache model', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-        const cachedModel = 'MODEL' as any;
-
-        editor.clearCachedModel(cachedModel);
-
-        expect((editor as any).core.cachedModel).toBe(cachedModel);
-
-        editor.clearCachedModel(null);
-
-        expect((editor as any).core.cachedModel).toBe(undefined);
-    });
-
     it('default format', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div, {

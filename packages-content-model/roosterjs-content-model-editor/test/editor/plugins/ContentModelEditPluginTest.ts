@@ -81,7 +81,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(clearCachedModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith();
         });
 
         it('Default prevented', () => {
@@ -95,7 +95,7 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(clearCachedModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith();
         });
 
         it('Trigger entity event first', () => {
@@ -143,7 +143,7 @@ describe('ContentModelEditPlugin', () => {
                 selectionRangeEx: null!,
             });
 
-            expect(clearCachedModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith();
         });
     });
 
@@ -181,7 +181,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(clearCachedModel).toHaveBeenCalledTimes(1);
-            expect(clearCachedModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith();
         });
 
         it('Delete', () => {
@@ -197,7 +197,7 @@ describe('ContentModelEditPlugin', () => {
 
             expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
             expect(clearCachedModel).toHaveBeenCalledTimes(1);
-            expect(clearCachedModel).toHaveBeenCalledWith(null);
+            expect(clearCachedModel).toHaveBeenCalledWith();
         });
 
         it('Backspace from the beginning', () => {

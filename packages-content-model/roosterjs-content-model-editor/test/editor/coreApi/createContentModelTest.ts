@@ -1,10 +1,12 @@
 import * as cloneModel from '../../../lib/modelApi/common/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
-import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
-import { DomToModelOption } from 'roosterjs-content-model-types';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
+import {
+    ContentModelEditorCore,
+    CreateContentModelOptions,
+} from '../../../lib/publicTypes/ContentModelEditorCore';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedModel = 'MODEL' as any;
@@ -42,7 +44,7 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, no cache, no shadow edit', () => {
-        const option: DomToModelOption = {};
+        const option: CreateContentModelOptions = {};
 
         core.cachedModel = undefined;
 
@@ -64,7 +66,7 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, no shadow edit', () => {
-        const option: DomToModelOption = {};
+        const option: CreateContentModelOptions = {};
         const model = createContentModel(core, option);
 
         expect(createEditorContext).not.toHaveBeenCalled();
@@ -74,7 +76,7 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, with cache, with shadow edit', () => {
-        const option: DomToModelOption = {};
+        const option: CreateContentModelOptions = {};
 
         core.lifecycle.shadowEditFragment = {} as any;
 
@@ -123,7 +125,7 @@ describe('createContentModel with selection', () => {
             ranges: [MockedRange],
         });
 
-        createContentModel(core);
+        createContentModel(core, {});
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
@@ -155,7 +157,7 @@ describe('createContentModel with selection', () => {
             },
         });
 
-        createContentModel(core);
+        createContentModel(core, {});
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
@@ -185,7 +187,7 @@ describe('createContentModel with selection', () => {
             image: MockedContainer,
         });
 
-        createContentModel(core);
+        createContentModel(core, {});
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
@@ -209,7 +211,7 @@ describe('createContentModel with selection', () => {
             ranges: [],
         });
 
-        createContentModel(core);
+        createContentModel(core, {});
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
@@ -232,7 +234,7 @@ describe('createContentModel with selection', () => {
             type: SelectionRangeTypes.TableSelection,
         });
 
-        createContentModel(core);
+        createContentModel(core, {});
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
