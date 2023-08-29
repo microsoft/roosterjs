@@ -114,7 +114,7 @@ export function reconcileCachedSelection(
 
                 newSegments.push(createSelectionMarker(first.format));
 
-                if (offset < txt.length - 1) {
+                if (offset < txt.length) {
                     const second = cloneText(first) as IndexedSegment;
 
                     second.text = txt.substring(offset);
