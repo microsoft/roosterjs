@@ -1730,7 +1730,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -1842,7 +1841,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -1959,7 +1957,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2085,7 +2082,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2132,7 +2128,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2233,7 +2228,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2281,7 +2275,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2327,7 +2320,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2374,7 +2366,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2420,7 +2411,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2517,7 +2507,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2618,7 +2607,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {

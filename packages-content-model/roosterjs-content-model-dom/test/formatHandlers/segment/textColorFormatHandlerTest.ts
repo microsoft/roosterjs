@@ -1,6 +1,7 @@
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
 import {
@@ -86,6 +87,16 @@ describe('textColorFormatHandler.parse', () => {
         textColorFormatHandler.parse(format, div, context, {});
 
         expect(format.textColor).toBe('red');
+    });
+
+    DeprecatedColors.forEach(color => {
+        it('Remove deprecated color ' + color, () => {
+            div.style.backgroundColor = color;
+
+            textColorFormatHandler.parse(format, div, context, {});
+
+            expect(format.textColor).toBe(undefined);
+        });
     });
 });
 
