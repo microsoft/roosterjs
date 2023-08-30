@@ -1,4 +1,4 @@
-import { DefaultImplicitFormatMap, DefaultStyleMap } from 'roosterjs-content-model-types';
+import { DefaultStyleMap } from 'roosterjs-content-model-types';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',
@@ -7,7 +7,7 @@ const blockElement: Partial<CSSStyleDeclaration> = {
 /**
  * @internal
  */
-export const defaultStyleMap: DefaultStyleMap = {
+export const defaultHTMLStyleMap: DefaultStyleMap = {
     address: blockElement,
     article: blockElement,
     aside: blockElement,
@@ -122,70 +122,4 @@ export const defaultStyleMap: DefaultStyleMap = {
         textDecoration: 'underline',
     },
     ul: blockElement,
-};
-
-/**
- * @internal
- */
-export const enum PseudoTagNames {
-    childOfPre = 'pre *', // This value is not a CSS selector, it just to tell this will impact elements under PRE tag. Any unique value here can work actually
-}
-
-/**
- * A map from tag name to its default implicit formats
- */
-export const defaultImplicitFormatMap: DefaultImplicitFormatMap = {
-    a: {
-        underline: true,
-    },
-    blockquote: {
-        marginTop: '1em',
-        marginBottom: '1em',
-        marginLeft: '40px',
-        marginRight: '40px',
-    },
-    code: {
-        fontFamily: 'monospace',
-    },
-    h1: {
-        fontWeight: 'bold',
-        fontSize: '2em',
-    },
-    h2: {
-        fontWeight: 'bold',
-        fontSize: '1.5em',
-    },
-    h3: {
-        fontWeight: 'bold',
-        fontSize: '1.17em',
-    },
-    h4: {
-        fontWeight: 'bold',
-        fontSize: '1em', // Set this default value here to overwrite existing font size when change heading level
-    },
-    h5: {
-        fontWeight: 'bold',
-        fontSize: '0.83em',
-    },
-    h6: {
-        fontWeight: 'bold',
-        fontSize: '0.67em',
-    },
-    p: {
-        marginTop: '1em',
-        marginBottom: '1em',
-    },
-    pre: {
-        fontFamily: 'monospace',
-        whiteSpace: 'pre',
-        marginTop: '1em',
-        marginBottom: '1em',
-    },
-
-    // For PRE tag, the following styles will be included from the PRE tag.
-    // Adding this implicit style here so no need to generate these style for child elements
-    [PseudoTagNames.childOfPre]: {
-        fontFamily: 'monospace',
-        whiteSpace: 'pre',
-    },
 };

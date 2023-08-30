@@ -97,7 +97,7 @@ export { Selectable } from './selection/Selectable';
 
 export {
     ContentModelHandlerMap,
-    DefaultImplicitFormatMap,
+    DefaultContentModelFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
     OnNodeCreated,

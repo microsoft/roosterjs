@@ -108,11 +108,6 @@ export interface DomToModelSettings {
     elementProcessors: ElementProcessorMap;
 
     /**
-     * Map of default styles
-     */
-    defaultStyles: DefaultStyleMap;
-
-    /**
      * Map of format parsers
      */
     formatParsers: FormatParsersPerCategory;
