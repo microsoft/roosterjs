@@ -1,10 +1,7 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
 import { EditorContext, ModelToDomContext } from 'roosterjs-content-model-types';
-import {
-    defaultFormatAppliers,
-    getFormatAppliers,
-} from '../../../lib/formatHandlers/defaultFormatHandlers';
+import { getFormatAppliers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 
 describe('createModelToDomContext', () => {
     const editorContext: EditorContext = {};
@@ -24,7 +21,6 @@ describe('createModelToDomContext', () => {
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
         defaultModelHandlers: defaultContentModelHandlers,
-        defaultFormatAppliers: defaultFormatAppliers,
         onNodeCreated: undefined,
     };
     it('no param', () => {
@@ -81,7 +77,6 @@ describe('createModelToDomContext', () => {
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
-        expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
         expect(context.onNodeCreated).toBe(onNodeCreated);
     });
 });

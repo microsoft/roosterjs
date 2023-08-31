@@ -117,10 +117,4 @@ export interface DomToModelSettings {
      * This provides a way to call original processor from an overridden processor function
      */
     defaultElementProcessors: Readonly<ElementProcessorMap>;
-
-    /**
-     * Default format parsers before overriding.
-     * This provides a way to call original format parser from an overridden parser function
-     */
-    defaultFormatParsers: Readonly<FormatParsers>;
 }

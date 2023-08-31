@@ -197,10 +197,7 @@ const defaultFormatKeysPerCategory: {
     container: [...sharedContainerFormats, 'htmlAlign', 'size', 'display'],
 };
 
-/**
- * @internal
- */
-export const defaultFormatParsers: FormatParsers = getObjectKeys(defaultFormatHandlerMap).reduce(
+const defaultFormatParsers: FormatParsers = getObjectKeys(defaultFormatHandlerMap).reduce(
     (result, key) => {
         result[key] = defaultFormatHandlerMap[key].parse as FormatParser<any>;
         return result;
@@ -208,10 +205,7 @@ export const defaultFormatParsers: FormatParsers = getObjectKeys(defaultFormatHa
     <FormatParsers>{}
 );
 
-/**
- * @internal
- */
-export const defaultFormatAppliers: FormatAppliers = getObjectKeys(defaultFormatHandlerMap).reduce(
+const defaultFormatAppliers: FormatAppliers = getObjectKeys(defaultFormatHandlerMap).reduce(
     (result, key) => {
         result[key] = defaultFormatHandlerMap[key].apply as FormatApplier<any>;
         return result;

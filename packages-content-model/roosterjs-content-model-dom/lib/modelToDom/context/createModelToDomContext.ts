@@ -1,9 +1,6 @@
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
 import { EditorContext, ModelToDomContext, ModelToDomOption } from 'roosterjs-content-model-types';
-import {
-    defaultFormatAppliers,
-    getFormatAppliers,
-} from '../../formatHandlers/defaultFormatHandlers';
+import { getFormatAppliers } from '../../formatHandlers/defaultFormatHandlers';
 
 /**
  * @internal
@@ -40,7 +37,6 @@ export function createModelToDomContext(
         },
 
         defaultModelHandlers: defaultContentModelHandlers,
-        defaultFormatAppliers: defaultFormatAppliers,
         onNodeCreated: options.onNodeCreated,
     };
 }

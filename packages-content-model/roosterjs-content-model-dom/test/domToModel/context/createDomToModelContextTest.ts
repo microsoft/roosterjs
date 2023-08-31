@@ -1,10 +1,7 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
 import { DomToModelListFormat, EditorContext } from 'roosterjs-content-model-types';
-import {
-    defaultFormatParsers,
-    getFormatParsers,
-} from '../../../lib/formatHandlers/defaultFormatHandlers';
+import { getFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 
 describe('createDomToModelContext', () => {
     const editorContext: EditorContext = {};
@@ -16,7 +13,6 @@ describe('createDomToModelContext', () => {
         elementProcessors: defaultProcessorMap,
         formatParsers: getFormatParsers(),
         defaultElementProcessors: defaultProcessorMap,
-        defaultFormatParsers: defaultFormatParsers,
     };
     it('no param', () => {
         const context = createDomToModelContext();

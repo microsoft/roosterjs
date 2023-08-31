@@ -1,6 +1,6 @@
-import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
 import { DomToModelContext, DomToModelOption, EditorContext } from 'roosterjs-content-model-types';
+import { getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
@@ -48,7 +48,6 @@ export function createDomToModelContext(
         ),
 
         defaultElementProcessors: defaultProcessorMap,
-        defaultFormatParsers: defaultFormatParsers,
     };
 
     if (editorContext?.isRootRtl) {
