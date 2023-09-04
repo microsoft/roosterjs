@@ -218,6 +218,13 @@ export default class ImageEdit implements EditorPlugin {
                     this.setEditingImage(null);
                 }
                 break;
+            case PluginEventType.MouseUp:
+                // When mouse up, if the image and the shadow span exists, the editing mode is on.
+                // To make sure the selection did not jump to the shadow root, reselect the image.
+                if (this.image && this.shadowSpan) {
+                    this.editor?.select(this.image);
+                }
+                break;
             case PluginEventType.KeyDown:
                 this.setEditingImage(null);
                 break;
@@ -351,7 +358,6 @@ export default class ImageEdit implements EditorPlugin {
                 ...this.createDndHelpers(ImageEditElementClass.CropHandle, Cropper),
                 ...this.createDndHelpers(ImageEditElementClass.CropContainer, Cropper),
             ];
-
             this.editor.select(this.image);
         }
     }
