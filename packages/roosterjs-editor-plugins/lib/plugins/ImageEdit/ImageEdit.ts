@@ -358,6 +358,7 @@ export default class ImageEdit implements EditorPlugin {
                 ...this.createDndHelpers(ImageEditElementClass.CropHandle, Cropper),
                 ...this.createDndHelpers(ImageEditElementClass.CropContainer, Cropper),
             ];
+
             this.editor.select(this.image);
         }
     }
