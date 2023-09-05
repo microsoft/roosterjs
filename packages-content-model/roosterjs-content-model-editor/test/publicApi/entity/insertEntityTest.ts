@@ -94,7 +94,7 @@ describe('insertEntity', () => {
             },
             'begin',
             false,
-            true,
+            undefined,
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
@@ -217,7 +217,7 @@ describe('insertEntity', () => {
             },
             'begin',
             false,
-            true,
+            undefined,
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
