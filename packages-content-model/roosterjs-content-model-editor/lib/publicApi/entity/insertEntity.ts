@@ -80,7 +80,7 @@ export default function insertEntity(
                 entityModel,
                 typeof position == 'string' ? position : 'focus',
                 isBlock,
-                isBlock ? focusAfterEntity : true,
+                focusAfterEntity,
                 context
             );
 
