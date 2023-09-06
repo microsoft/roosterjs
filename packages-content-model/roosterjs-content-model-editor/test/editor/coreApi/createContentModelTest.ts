@@ -2,9 +2,8 @@ import * as cloneModel from '../../../lib/modelApi/common/cloneModel';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
-import { DomToModelOption } from 'roosterjs-content-model-types';
+import { createDomToModelContext } from 'roosterjs-content-model-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import { tablePreProcessor } from '../../../lib/domToModel/processors/tablePreProcessor';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedModel = 'MODEL' as any;
@@ -42,30 +41,28 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, no cache, no shadow edit', () => {
-        const option: DomToModelOption = {};
-
         core.cachedModel = undefined;
 
-        const model = createContentModel(core, option);
+        const model = createContentModel(core);
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
         expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             mockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            mockedEditorContext,
-            null
+            createDomToModelContext(
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                mockedEditorContext
+            )
         );
         expect(model).toBe(mockedModel);
     });
 
     it('Reuse model, no shadow edit', () => {
-        const option: DomToModelOption = {};
-        const model = createContentModel(core, option);
+        const model = createContentModel(core);
 
         expect(createEditorContext).not.toHaveBeenCalled();
         expect(getSelectionRangeEx).not.toHaveBeenCalled();
@@ -74,11 +71,9 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, with cache, with shadow edit', () => {
-        const option: DomToModelOption = {};
-
         core.lifecycle.shadowEditFragment = {} as any;
 
-        const model = createContentModel(core, option);
+        const model = createContentModel(core);
 
         expect(cloneModelSpy).toHaveBeenCalledWith(mockedCachedMode, {
             includeCachedElement: true,
@@ -128,16 +123,10 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             MockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            undefined,
-            {
+            createDomToModelContext(undefined, undefined, undefined, undefined, {
                 type: SelectionRangeTypes.Normal,
                 ranges: [MockedRange],
-            }
+            } as any)
         );
     });
 
@@ -160,20 +149,14 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             MockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            undefined,
-            {
+            createDomToModelContext(undefined, undefined, undefined, undefined, {
                 type: SelectionRangeTypes.TableSelection,
                 table: MockedContainer,
                 coordinates: {
                     firstCell: MockedFirstCell,
                     lastCell: MockedLastCell,
                 },
-            }
+            } as any)
         );
     });
 
@@ -190,16 +173,10 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             MockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            undefined,
-            {
+            createDomToModelContext(undefined, undefined, undefined, undefined, {
                 type: SelectionRangeTypes.ImageSelection,
                 image: MockedContainer,
-            }
+            } as any)
         );
     });
 
@@ -214,16 +191,10 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             MockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            undefined,
-            {
+            createDomToModelContext(undefined, undefined, undefined, undefined, {
                 type: SelectionRangeTypes.Normal,
                 ranges: [],
-            }
+            } as any)
         );
     });
 
@@ -237,15 +208,9 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(
             MockedDiv,
-            {
-                processorOverride: {
-                    table: tablePreProcessor,
-                },
-            },
-            undefined,
-            {
+            createDomToModelContext(undefined, undefined, undefined, undefined, {
                 type: SelectionRangeTypes.TableSelection,
-            }
+            } as any)
         );
     });
 });

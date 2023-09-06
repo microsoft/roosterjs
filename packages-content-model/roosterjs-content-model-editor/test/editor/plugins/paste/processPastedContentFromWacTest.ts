@@ -1,9 +1,14 @@
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -20,9 +25,14 @@ describe('processPastedContentFromWacTest', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(
+                event.domToModelOption.processorOverride,
+                event.domToModelOption.formatParserOverride,
+                [event.domToModelOption.additionalFormatParsers]
+            )
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -31,10 +41,9 @@ describe('processPastedContentFromWacTest', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext(undefined, undefined, undefined, undefined, undefined, {
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert
@@ -124,9 +133,14 @@ describe('wordOnlineHandler', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(
+                event.domToModelOption.processorOverride,
+                event.domToModelOption.formatParserOverride,
+                [event.domToModelOption.additionalFormatParsers]
+            )
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -135,10 +149,9 @@ describe('wordOnlineHandler', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext(undefined, undefined, undefined, undefined, undefined, {
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert

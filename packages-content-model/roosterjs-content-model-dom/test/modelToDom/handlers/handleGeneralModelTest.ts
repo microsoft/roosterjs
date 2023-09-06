@@ -26,11 +26,9 @@ describe('handleBlockGroup', () => {
         handleQuote = jasmine.createSpy('handleQuote');
 
         context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                blockGroupChildren: handleBlockGroupChildren,
-                listItem: handleListItem,
-                formatContainer: handleQuote,
-            },
+            blockGroupChildren: handleBlockGroupChildren,
+            listItem: handleListItem,
+            formatContainer: handleQuote,
         });
         parent = document.createElement('div');
     });

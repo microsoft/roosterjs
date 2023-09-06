@@ -2,6 +2,7 @@ import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlug
 import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
+import { buildBaseHandlerMap, buildBaseProcessorMap } from 'roosterjs-content-model-dom';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
@@ -12,6 +13,7 @@ import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import { tablePreProcessor } from './overrides/tablePreProcessor';
 
 /**
  * Editor Core creator for Content Model editor
@@ -73,10 +75,20 @@ function promoteContentModelInfo(
     cmCore: ContentModelEditorCore,
     options: ContentModelEditorOptions
 ) {
+    const { defaultDomToModelOptions, defaultModelToDomOptions } = options;
     const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
 
-    cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
-    cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
+    cmCore.baseProcessorMap = buildBaseProcessorMap(
+        { table: tablePreProcessor },
+        defaultDomToModelOptions?.processorOverride
+    );
+    cmCore.formatParserOverride = defaultDomToModelOptions?.formatParserOverride;
+    cmCore.additionalFormatParsers = defaultDomToModelOptions?.additionalFormatParsers;
+
+    cmCore.baseHandlerMap = buildBaseHandlerMap(defaultModelToDomOptions?.modelHandlerOverride);
+    cmCore.formatApplierOverride = defaultModelToDomOptions?.formatApplierOverride;
+    cmCore.additionalFormatAppliers = defaultModelToDomOptions?.additionalFormatAppliers;
+
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters

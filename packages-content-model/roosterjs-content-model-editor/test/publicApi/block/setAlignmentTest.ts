@@ -448,7 +448,8 @@ describe('setAlignment in table', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }
@@ -839,7 +840,8 @@ describe('setAlignment in list', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedList],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }

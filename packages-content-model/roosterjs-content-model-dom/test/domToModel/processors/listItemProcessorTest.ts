@@ -7,10 +7,8 @@ describe('listItemProcessor', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                li: listItemProcessor,
-            },
+        context = createDomToModelContext({
+            li: listItemProcessor,
         });
     });
 
@@ -359,14 +357,12 @@ describe('listItemProcessor without format handlers', () => {
     let context: DomToModelContext;
 
     beforeEach(() => {
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                li: listItemProcessor,
-            },
-            formatParserOverride: {
+        context = createDomToModelContext(
+            { li: listItemProcessor },
+            {
                 listItemThread: null,
-            },
-        });
+            }
+        );
     });
 
     it('LI without valid context', () => {

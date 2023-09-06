@@ -1,7 +1,6 @@
 import * as processPastedContentWacComponents from '../../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
 import paste from '../../../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
-import { DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
 import { tableProcessor } from 'roosterjs-content-model-dom';
@@ -56,7 +55,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
+        const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },

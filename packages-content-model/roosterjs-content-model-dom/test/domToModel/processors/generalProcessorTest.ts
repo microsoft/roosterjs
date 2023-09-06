@@ -14,14 +14,12 @@ import {
 
 describe('generalProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
-            },
+        context = createDomToModelContext({
+            child: childProcessor,
         });
     });
 

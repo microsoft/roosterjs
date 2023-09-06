@@ -17,13 +17,15 @@ describe('handleFormatContainer', () => {
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
         context = createModelToDomContext(
+            undefined,
+            {
+                blockGroupChildren: handleBlockGroupChildren,
+            },
+            undefined,
+            undefined,
+            undefined,
             {
                 allowCacheElement: true,
-            },
-            {
-                modelHandlerOverride: {
-                    blockGroupChildren: handleBlockGroupChildren,
-                },
             }
         );
     });

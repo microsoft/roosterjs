@@ -1,11 +1,15 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import {
+    contentModelToDom,
+    createModelToDomContext,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -117,10 +121,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                undefined /*editorContext, leave it undefined to use default context since we don't need editor-related dark mode info for pasted content*/,
-                {
-                    onNodeCreated,
-                }
+                createModelToDomContext(onNodeCreated)
             );
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);

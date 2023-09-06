@@ -32,11 +32,9 @@ describe('handleBlock', () => {
         handleDivider = jasmine.createSpy('handleDivider');
 
         context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                entity: handleEntity,
-                paragraph: handleParagraph,
-                divider: handleDivider,
-            },
+            entity: handleEntity,
+            paragraph: handleParagraph,
+            divider: handleDivider,
         });
     });
 
@@ -189,12 +187,10 @@ describe('handleBlockGroup', () => {
         handleGeneralModel = jasmine.createSpy('handleGeneralModel');
 
         context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                blockGroupChildren: handleBlockGroupChildren,
-                listItem: handleListItem,
-                formatContainer: handleQuote,
-                general: handleGeneralModel,
-            },
+            blockGroupChildren: handleBlockGroupChildren,
+            listItem: handleListItem,
+            formatContainer: handleQuote,
+            general: handleGeneralModel,
         });
         parent = document.createElement('div');
     });

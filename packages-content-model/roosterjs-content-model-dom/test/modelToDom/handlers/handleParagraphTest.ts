@@ -21,13 +21,13 @@ describe('handleParagraph', () => {
         parent = document.createElement('div');
         handleSegment = jasmine.createSpy('handleSegment');
         context = createModelToDomContext(
+            undefined,
+            { segment: handleSegment },
+            undefined,
+            undefined,
+            undefined,
             {
                 allowCacheElement: true,
-            },
-            {
-                modelHandlerOverride: {
-                    segment: handleSegment,
-                },
             }
         );
     });

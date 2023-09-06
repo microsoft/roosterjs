@@ -368,12 +368,11 @@ describe('handleList without format handlers', () => {
     let parent: HTMLDivElement;
 
     beforeEach(() => {
-        context = createModelToDomContext(undefined, {
-            formatApplierOverride: {
-                listLevelThread: null,
-                dataset: null,
-            },
+        context = createModelToDomContext(undefined, undefined, {
+            listLevelThread: null,
+            dataset: null,
         });
+
         parent = document.createElement('div');
     });
 

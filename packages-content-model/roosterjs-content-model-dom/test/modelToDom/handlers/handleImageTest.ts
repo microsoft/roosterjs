@@ -16,11 +16,7 @@ describe('handleSegment', () => {
 
     beforeEach(() => {
         handleBlock = jasmine.createSpy('handleBlock');
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                block: handleBlock,
-            },
-        });
+        context = createModelToDomContext(undefined, { block: handleBlock });
     });
 
     function runTest(

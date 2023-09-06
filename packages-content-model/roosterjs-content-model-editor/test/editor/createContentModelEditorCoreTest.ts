@@ -1,8 +1,11 @@
+import * as buildBaseHandlerMap from 'roosterjs-content-model-dom/lib/modelToDom/context/buildBaseHandlerMap';
+import * as buildBaseProcessorMap from 'roosterjs-content-model-dom/lib/domToModel/context/buildBaseProcessorMap';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
+import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
@@ -12,6 +15,8 @@ import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
+const mockedProcessorMap = 'PROCESSORMAP' as any;
+const mockedHandlerMap = 'HANDLERMAP' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -21,6 +26,9 @@ describe('createContentModelEditorCore', () => {
     let copyPastePlugin = 'copyPastePlugin' as any;
 
     beforeEach(() => {
+        spyOn(buildBaseProcessorMap, 'buildBaseProcessorMap').and.returnValue(mockedProcessorMap);
+        spyOn(buildBaseHandlerMap, 'buildBaseHandlerMap').and.returnValue(mockedHandlerMap);
+
         contentDiv = {
             style: {},
         } as any;
@@ -76,8 +84,12 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            formatParserOverride: undefined,
+            additionalFormatParsers: undefined,
+            formatApplierOverride: undefined,
+            additionalFormatAppliers: undefined,
+            baseProcessorMap: mockedProcessorMap,
+            baseHandlerMap: mockedHandlerMap,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -95,12 +107,12 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('With additional option', () => {
-        const defaultDomToModelOptions = { a: '1' } as any;
-        const defaultModelToDomOptions = { b: '2' } as any;
+        const processorOverride = { a: '1' } as any;
+        const modelHandlerOverride = { b: '2' } as any;
 
-        const options = {
-            defaultDomToModelOptions,
-            defaultModelToDomOptions,
+        const options: ContentModelEditorOptions = {
+            defaultDomToModelOptions: { processorOverride },
+            defaultModelToDomOptions: { modelHandlerOverride },
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
@@ -108,8 +120,8 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            defaultDomToModelOptions,
-            defaultModelToDomOptions,
+            defaultDomToModelOptions: { processorOverride },
+            defaultModelToDomOptions: { modelHandlerOverride },
             plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
@@ -135,8 +147,12 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions,
-            defaultModelToDomOptions,
+            formatParserOverride: undefined,
+            additionalFormatParsers: undefined,
+            formatApplierOverride: undefined,
+            additionalFormatAppliers: undefined,
+            baseProcessorMap: mockedProcessorMap,
+            baseHandlerMap: mockedHandlerMap,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -205,8 +221,12 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            formatParserOverride: undefined,
+            additionalFormatParsers: undefined,
+            formatApplierOverride: undefined,
+            additionalFormatAppliers: undefined,
+            baseProcessorMap: mockedProcessorMap,
+            baseHandlerMap: mockedHandlerMap,
             defaultFormat: {
                 fontWeight: 'bold',
                 italic: true,
@@ -257,8 +277,12 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            formatParserOverride: undefined,
+            additionalFormatParsers: undefined,
+            formatApplierOverride: undefined,
+            additionalFormatAppliers: undefined,
+            baseProcessorMap: mockedProcessorMap,
+            baseHandlerMap: mockedHandlerMap,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -317,8 +341,12 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            formatParserOverride: undefined,
+            additionalFormatParsers: undefined,
+            formatApplierOverride: undefined,
+            additionalFormatAppliers: undefined,
+            baseProcessorMap: mockedProcessorMap,
+            baseHandlerMap: mockedHandlerMap,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,

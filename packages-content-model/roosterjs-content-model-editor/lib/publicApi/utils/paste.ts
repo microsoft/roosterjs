@@ -1,10 +1,10 @@
-import { domToContentModel } from 'roosterjs-content-model-dom';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from './formatWithContentModel';
 import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { NodePosition } from 'roosterjs-editor-types';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import ContentModelBeforePasteEvent, {
     ContentModelBeforePasteEventData,
 } from '../../publicTypes/event/ContentModelBeforePasteEvent';
@@ -66,7 +66,14 @@ export default function paste(
         eventData
     );
 
-    const pasteModel = domToContentModel(fragment, domToModelOption);
+    const pasteModel = domToContentModel(
+        fragment,
+        createDomToModelContext(
+            domToModelOption?.processorOverride,
+            domToModelOption?.formatParserOverride,
+            [domToModelOption.additionalFormatParsers]
+        )
+    );
 
     if (pasteModel) {
         formatWithContentModel(

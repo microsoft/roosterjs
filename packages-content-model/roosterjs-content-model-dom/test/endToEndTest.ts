@@ -1,6 +1,7 @@
 import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock';
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
+import { createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import {
@@ -29,13 +30,21 @@ describe('End to end test for DOM => Model', () => {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(div1, undefined, context);
+        const model = domToContentModel(
+            div1,
+            createDomToModelContext(undefined, undefined, undefined, undefined, undefined, context)
+        );
 
         expect(model).toEqual(expectedModel);
 
         const div2 = document.createElement('div');
 
-        contentModelToDom(document, div2, model, context);
+        contentModelToDom(
+            document,
+            div2,
+            model,
+            createModelToDomContext(undefined, undefined, undefined, undefined, undefined, context)
+        );
         const possibleHTML = [
             expectedHtml, //chrome or firefox
             expectedHTMLFirefox, //firefox

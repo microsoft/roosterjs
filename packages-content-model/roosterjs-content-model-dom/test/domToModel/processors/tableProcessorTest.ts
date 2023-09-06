@@ -15,15 +15,11 @@ import {
 
 describe('tableProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<Node>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
-            },
-        });
+        context = createDomToModelContext({ child: childProcessor });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
@@ -470,7 +466,7 @@ describe('tableProcessor with format', () => {
         const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, { dataset: datasetParser });
 
         tableProcessor(doc, mockedTable, context);
 
@@ -511,7 +507,7 @@ describe('tableProcessor with format', () => {
         const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, { dataset: datasetParser });
 
         tableProcessor(doc, mockedTable, context);
 
@@ -523,15 +519,11 @@ describe('tableProcessor with format', () => {
 
 describe('tableProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
-            },
-        });
+        context = createDomToModelContext({ child: childProcessor });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,

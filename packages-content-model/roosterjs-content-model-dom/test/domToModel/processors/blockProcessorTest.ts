@@ -14,11 +14,12 @@ describe('blockProcessor', () => {
     let childSpy: jasmine.Spy;
 
     beforeEach(() => {
-        context = createDomToModelContext();
         group = createContentModelDocument();
         childSpy = jasmine.createSpy('child');
 
-        context.elementProcessors.child = childSpy;
+        context = createDomToModelContext({
+            child: childSpy,
+        });
     });
 
     function runTest(

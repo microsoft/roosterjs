@@ -30,13 +30,11 @@ describe('handleSegment', () => {
         handleImage = jasmine.createSpy('handleImage');
 
         context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                br: handleBr,
-                text: handleText,
-                general: handleGeneralModel,
-                entity: handleEntity,
-                image: handleImage,
-            },
+            br: handleBr,
+            text: handleText,
+            general: handleGeneralModel,
+            entity: handleEntity,
+            image: handleImage,
         });
     });
 

@@ -1,10 +1,15 @@
 import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/ContentModelBeforePasteEvent';
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 
 describe('processPastedContentFromWordDesktopTest', () => {
     let div: HTMLElement;
@@ -25,9 +30,14 @@ describe('processPastedContentFromWordDesktopTest', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentFromWordDesktop(event);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(
+                event.domToModelOption.processorOverride,
+                event.domToModelOption.formatParserOverride,
+                [event.domToModelOption.additionalFormatParsers]
+            )
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -36,10 +46,9 @@ describe('processPastedContentFromWordDesktopTest', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext(undefined, undefined, undefined, undefined, undefined, {
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert

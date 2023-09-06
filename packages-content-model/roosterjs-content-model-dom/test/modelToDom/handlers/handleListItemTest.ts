@@ -24,10 +24,8 @@ describe('handleListItem', () => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
         handleList = jasmine.createSpy('handleList').and.callFake(originalHandleList);
         context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                blockGroupChildren: handleBlockGroupChildren,
-                list: handleList,
-            },
+            blockGroupChildren: handleBlockGroupChildren,
+            list: handleList,
         });
 
         spyOn(applyFormat, 'applyFormat').and.callThrough();
@@ -285,15 +283,16 @@ describe('handleListItem without format handler', () => {
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
         handleList = jasmine.createSpy('handleList').and.callFake(originalHandleList);
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
+        context = createModelToDomContext(
+            undefined,
+            {
                 blockGroupChildren: handleBlockGroupChildren,
                 list: handleList,
             },
-            formatApplierOverride: {
+            {
                 listItemThread: null,
-            },
-        });
+            }
+        );
 
         spyOn(applyFormat, 'applyFormat').and.callThrough();
     });

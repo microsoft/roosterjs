@@ -8,16 +8,14 @@ import { listProcessor } from '../../../lib/domToModel/processors/listProcessor'
 
 describe('listProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                ul: listProcessor,
-                ol: listProcessor,
-                child: childProcessor,
-            },
+        context = createDomToModelContext({
+            ul: listProcessor,
+            ol: listProcessor,
+            child: childProcessor,
         });
     });
 
@@ -269,21 +267,21 @@ describe('listProcessor', () => {
 });
 
 describe('listProcessor without format handlers', () => {
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
     let context: DomToModelContext;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
+        context = createDomToModelContext(
+            {
                 ul: listProcessor,
                 ol: listProcessor,
                 child: childProcessor,
             },
-            formatParserOverride: {
+            {
                 listLevelThread: null,
-            },
-        });
+            }
+        );
     });
 
     it('Single UL element', () => {
@@ -447,15 +445,11 @@ describe('listProcessor without format handlers', () => {
 
 describe('listProcessor process metadata', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
-        context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
-            },
-        });
+        context = createDomToModelContext({ child: childProcessor });
     });
 
     it('OL without list style type and metadata', () => {

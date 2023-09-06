@@ -1,10 +1,13 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
+import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
+import { ModelToDomOption } from 'roosterjs-content-model-types';
 import { setContentModel } from '../../../lib/editor/coreApi/setContentModel';
 
 const mockedRange = 'RANGE' as any;
 const mockedDoc = 'DOCUMENT' as any;
 const mockedModel = 'MODEL' as any;
+const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedContext = 'CONTEXT' as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
 
@@ -12,6 +15,7 @@ describe('setContentModel', () => {
     let core: ContentModelEditorCore;
     let contentModelToDomSpy: jasmine.Spy;
     let createEditorContext: jasmine.Spy;
+    let createModelToDomContextSpy: jasmine.Spy;
     let select: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
 
@@ -21,7 +25,11 @@ describe('setContentModel', () => {
         );
         createEditorContext = jasmine
             .createSpy('createEditorContext')
-            .and.returnValue(mockedContext);
+            .and.returnValue(mockedEditorContext);
+        createModelToDomContextSpy = spyOn(
+            createModelToDomContext,
+            'createModelToDomContext'
+        ).and.returnValue(mockedContext);
         select = jasmine.createSpy('select');
         getSelectionRange = jasmine.createSpy('getSelectionRange');
 
@@ -39,47 +47,64 @@ describe('setContentModel', () => {
     it('no default option, no shadow edit', () => {
         setContentModel(core, mockedModel);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core);
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            undefined,
+            undefined,
+            {},
+            [undefined, undefined],
+            undefined,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            {}
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
 
     it('with default option, no shadow edit', () => {
-        const defaultOption = { o: 'OPTION' } as any;
-        core.defaultModelToDomOptions = defaultOption;
         setContentModel(core, mockedModel);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core);
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            undefined,
+            undefined,
+            {},
+            [undefined, undefined],
+            undefined,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            defaultOption
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
 
     it('with default option, no shadow edit, with additional option', () => {
-        const defaultOption = { o: 'OPTION' } as any;
-        const additionalOption = { o: 'OPTION1', o2: 'OPTION2' } as any;
+        const override = {
+            block: 'MOCK' as any,
+        };
+        const additionalOption: ModelToDomOption = { modelHandlerOverride: override };
 
-        core.defaultModelToDomOptions = defaultOption;
         setContentModel(core, mockedModel, additionalOption);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core);
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            undefined,
+            override,
+            {},
+            [undefined, undefined],
+            undefined,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            additionalOption
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -89,13 +114,19 @@ describe('setContentModel', () => {
 
         setContentModel(core, mockedModel);
 
-        expect(createEditorContext).toHaveBeenCalledWith(core);
+        expect(createModelToDomContextSpy).toHaveBeenCalledWith(
+            undefined,
+            undefined,
+            {},
+            [undefined, undefined],
+            undefined,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            {}
+            mockedContext
         );
         expect(select).not.toHaveBeenCalled();
     });

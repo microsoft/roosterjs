@@ -1,8 +1,7 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { domToContentModel } from 'roosterjs-content-model-dom';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { DomToModelOption } from 'roosterjs-content-model-types';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
-import { tablePreProcessor } from '../../domToModel/processors/tablePreProcessor';
 import {
     ContentModelEditorCore,
     CreateContentModel,
@@ -11,7 +10,9 @@ import {
 /**
  * @internal
  * Create Content Model from DOM tree in this editor
+ * @param core The editor core object
  * @param option The option to customize the behavior of DOM to Content Model conversion
+ * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
     let cachedModel = selectionOverride ? null : core.cachedModel;
@@ -26,24 +27,18 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    option: DomToModelOption | undefined,
+    option?: DomToModelOption,
     selectionOverride?: SelectionRangeEx
 ) {
-    const context: DomToModelOption = {
-        ...core.defaultDomToModelOptions,
-        ...option,
-    };
-
-    context.processorOverride = {
-        table: tablePreProcessor,
-        ...context.processorOverride,
-        ...option?.processorOverride,
-    };
-
     return domToContentModel(
         core.contentDiv,
-        context,
-        core.api.createEditorContext(core),
-        selectionOverride || core.api.getSelectionRangeEx(core)
+        createDomToModelContext(
+            option?.processorOverride,
+            { ...core.formatParserOverride, ...option?.formatParserOverride },
+            [core.additionalFormatParsers, option?.additionalFormatParsers],
+            core.baseProcessorMap,
+            selectionOverride || core.api.getSelectionRangeEx(core),
+            core.api.createEditorContext(core)
+        )
     );
 }
