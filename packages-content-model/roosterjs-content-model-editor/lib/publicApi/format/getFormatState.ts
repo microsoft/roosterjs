@@ -6,7 +6,6 @@ import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootN
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
 import {
-    childProcessor,
     getRegularSelectionOffsets,
     handleRegularSelection,
     processChildNode,
@@ -87,7 +86,7 @@ export function reducedModelChildProcessor(
             // No child node from node stack, that means we have reached the deepest node of selection.
             // Now we can use default child processor to perform full sub tree scanning for content model,
             // So that all selected node will be included.
-            childProcessor(group, parent, context);
+            context.defaultElementProcessors.child(group, parent, context);
         }
     }
 }

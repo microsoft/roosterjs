@@ -1,11 +1,11 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
-import { DomToModelContext } from 'roosterjs-content-model-types';
-import { FormatState, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import getFormatState, {
     reducedModelChildProcessor,
 } from '../../../lib/publicApi/format/getFormatState';
+import { DomToModelContext } from 'roosterjs-content-model-types';
+import { FormatState, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     createContentModelDocument,
     createDomToModelContext,
@@ -44,7 +44,9 @@ describe('getFormatState', () => {
                 editorDiv.innerHTML = html;
 
                 const selectedNode = editorDiv.querySelector('#' + selectedNodeId);
-                const context = createDomToModelContext(undefined, options);
+                const context = createDomToModelContext(undefined, {
+                    ...(options || {}),
+                });
 
                 if (selectedNode) {
                     context.rangeEx = {

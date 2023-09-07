@@ -11,9 +11,7 @@ describe('handleTable', () => {
 
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
-        context = createModelToDomContext({
-            allowCacheElement: true,
-        });
+        context = createModelToDomContext({ allowCacheElement: true });
         context.darkColorHandler = new DarkColorHandlerImpl(null!, s => 'darkMock: ' + s);
     });
 

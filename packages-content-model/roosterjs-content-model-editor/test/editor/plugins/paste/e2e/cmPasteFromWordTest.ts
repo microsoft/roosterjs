@@ -2,6 +2,7 @@ import * as wordFile from '../../../../../lib/editor/plugins/PastePlugin/WordDes
 import paste from '../../../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
 import { cloneModel } from '../../../../../lib/modelApi/common/cloneModel';
+import { DomToModelOption } from 'roosterjs-content-model-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
@@ -39,7 +40,7 @@ describe(ID, () => {
         paste(editor, clipboardData);
 
         const model = cloneModel(
-            editor.createContentModel({
+            editor.createContentModel(<DomToModelOption>{
                 processorOverride: {
                     table: tableProcessor,
                 },
@@ -115,7 +116,7 @@ describe(ID, () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.createContentModel({
+        const model = editor.createContentModel(<DomToModelOption>{
             processorOverride: {
                 table: tableProcessor,
             },
