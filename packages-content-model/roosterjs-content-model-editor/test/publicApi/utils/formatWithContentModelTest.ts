@@ -75,7 +75,7 @@ describe('formatWithContentModel', () => {
             formatApiName: apiName,
         });
         expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated: undefined });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(focus).toHaveBeenCalledTimes(1);
     });
 
@@ -176,7 +176,7 @@ describe('formatWithContentModel', () => {
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, onNodeCreated);
     });
 
     it('Has getChangeData', () => {
@@ -191,7 +191,7 @@ describe('formatWithContentModel', () => {
             rawEvent: undefined,
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated: undefined });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(addUndoSnapshot).toHaveBeenCalled();
 
         const wrappedCallback = addUndoSnapshot.calls.argsFor(0)[0] as any;

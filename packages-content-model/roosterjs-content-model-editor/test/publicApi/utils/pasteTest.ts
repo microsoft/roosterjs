@@ -9,7 +9,7 @@ import * as WacComponents from '../../../lib/editor/plugins/PastePlugin/WacCompo
 import * as WordDesktopFile from '../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import ContentModelEditor from '../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
-import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createContentModelDocument, tableProcessor } from 'roosterjs-content-model-dom';
 import { expectEqual, initEditor } from '../../editor/plugins/paste/e2e/testUtils';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -581,7 +581,7 @@ describe('Paste with clipboardData', () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
+        const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },
@@ -621,7 +621,7 @@ describe('Paste with clipboardData', () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
+        const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },
@@ -653,7 +653,7 @@ describe('Paste with clipboardData', () => {
 
         paste(editor, clipboardData);
 
-        const model = editor.createContentModel(<DomToModelOption>{
+        const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,
             },

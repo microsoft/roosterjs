@@ -352,7 +352,11 @@ describe('childProcessor', () => {
         div.innerHTML =
             '<div id="div1"><ol><li>test1</li></ol></div><div id="div2">test2</div><div id="div3"><ol><li>test3</li></ol></div>';
 
-        context.elementProcessors.div = generalProcessor;
+        context = createDomToModelContext(undefined, {
+            processorOverride: {
+                div: generalProcessor,
+            },
+        });
 
         childProcessor(doc, div, context);
 

@@ -11,7 +11,9 @@ describe('handleTable', () => {
 
     beforeEach(() => {
         spyOn(handleBlock, 'handleBlock');
-        context = createModelToDomContext({ allowCacheElement: true });
+        context = createModelToDomContext({
+            allowCacheElement: true,
+        });
         context.darkColorHandler = new DarkColorHandlerImpl(null!, s => 'darkMock: ' + s);
     });
 
@@ -234,7 +236,16 @@ describe('handleTable', () => {
 
     it('Regular 1 * 1 table, handle dataset', () => {
         const datasetApplier = jasmine.createSpy('datasetApplier');
-        context.formatAppliers.dataset = [datasetApplier];
+        context = createModelToDomContext(
+            {
+                darkColorHandler: context.darkColorHandler,
+            },
+            {
+                formatApplierOverride: {
+                    dataset: datasetApplier,
+                },
+            }
+        );
 
         const div = document.createElement('div');
         handleTable(

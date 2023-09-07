@@ -45,7 +45,7 @@ export function formatWithContentModel(
             handleDeletedEntities(editor, context);
 
             if (model) {
-                editor.setContentModel(model, { onNodeCreated });
+                editor.setContentModel(model, undefined, onNodeCreated);
             }
 
             if (preservePendingFormat) {
