@@ -37,6 +37,7 @@ describe('insertImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);

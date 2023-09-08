@@ -109,6 +109,7 @@ describe('Paste ', () => {
             getDocument,
             getTrustedHTMLHandler,
             triggerPluginEvent,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -429,7 +430,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -438,7 +439,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             {
                 mergeFormat: 'none',
                 mergeTable: true,
@@ -517,7 +518,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             customizedMerge /* customizedMerge */
@@ -535,7 +536,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             pasteModel,
             true /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -544,7 +545,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,
