@@ -2,6 +2,7 @@ import * as addParserF from '../../../lib/editor/plugins/PastePlugin/utils/addPa
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import * as ExcelF from '../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 import * as getPasteSourceF from 'roosterjs-editor-dom/lib/pasteSourceValidations/getPasteSource';
+import * as getSelectedSegmentsF from '../../../lib/publicApi/selection/getSelectedSegments';
 import * as mergeModelFile from '../../../lib/modelApi/common/mergeModel';
 import * as PPT from '../../../lib/editor/plugins/PastePlugin/PowerPoint/processPastedContentFromPowerPoint';
 import * as setProcessorF from '../../../lib/editor/plugins/PastePlugin/utils/setProcessor';
@@ -97,6 +98,14 @@ describe('Paste ', () => {
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
+        spyOn(getSelectedSegmentsF, 'default').and.returnValue([
+            {
+                format: {
+                    fontSize: '1pt',
+                    fontFamily: 'Arial',
+                },
+            } as any,
+        ]);
 
         editor = ({
             focus,
