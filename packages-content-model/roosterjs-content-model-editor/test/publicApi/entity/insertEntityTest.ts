@@ -31,6 +31,7 @@ describe('insertEntity', () => {
 
     beforeEach(() => {
         context = {
+            newEntities: [],
             deletedEntities: [],
         };
 
@@ -225,7 +226,17 @@ describe('insertEntity', () => {
             ChangeSource.InsertEntity,
             newEntity
         );
-        expect(transformToDarkColorSpy).toHaveBeenCalled();
+        expect(context.newEntities).toEqual([
+            {
+                segmentType: 'Entity',
+                blockType: 'Entity',
+                format: {},
+                id: undefined,
+                type: 'Entity',
+                isReadonly: true,
+                wrapper,
+            },
+        ]);
 
         expect(entity).toBe(newEntity);
     });

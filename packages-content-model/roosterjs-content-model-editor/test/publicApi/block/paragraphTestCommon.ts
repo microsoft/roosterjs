@@ -25,6 +25,7 @@ export function paragraphTestCommon(
         setContentModel,
         getCustomData: () => ({}),
         getFocusedPosition: () => ({}),
+        isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

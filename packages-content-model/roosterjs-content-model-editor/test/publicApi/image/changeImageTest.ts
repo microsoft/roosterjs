@@ -50,6 +50,7 @@ describe('changeImage', () => {
             getDocument: () => document,
             getSelectionRangeEx,
             triggerPluginEvent,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);

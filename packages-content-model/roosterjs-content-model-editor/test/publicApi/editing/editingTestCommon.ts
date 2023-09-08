@@ -38,6 +38,7 @@ export function editingTestCommon(
         isDisposed: () => false,
         getFocusedPosition: () => null as NodePosition,
         triggerContentChangedEvent,
+        isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

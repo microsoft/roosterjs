@@ -85,6 +85,7 @@ export default function insertEntity(
             );
 
             context.skipUndoSnapshot = skipUndoSnapshot;
+            context.newEntities.push(entityModel);
 
             return true;
         },
@@ -92,10 +93,6 @@ export default function insertEntity(
             selectionOverride: typeof position === 'object' ? position : undefined,
         }
     );
-
-    if (editor.isDarkMode()) {
-        editor.transformToDarkColor(wrapper);
-    }
 
     const newEntity = getEntityFromElement(wrapper);
 

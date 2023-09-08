@@ -35,6 +35,7 @@ describe('formatSegmentWithContentModel', () => {
             createContentModel: () => model,
             setContentModel,
             getFocusedPosition: () => null as NodePosition,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
