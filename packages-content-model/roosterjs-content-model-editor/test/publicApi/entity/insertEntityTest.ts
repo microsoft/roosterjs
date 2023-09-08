@@ -2,6 +2,7 @@ import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
+import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
 import { ChangeSource } from 'roosterjs-editor-types';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
@@ -25,6 +26,7 @@ describe('insertEntity', () => {
     let insertEntityModelSpy: jasmine.Spy;
     let isDarkModeSpy: jasmine.Spy;
     let transformToDarkColorSpy: jasmine.Spy;
+    let normalizeContentModelSpy: jasmine.Spy;
 
     const type = 'Entity';
     const apiName = 'insertEntity';
@@ -61,6 +63,7 @@ describe('insertEntity', () => {
         getDocumentSpy = jasmine.createSpy('getDocumentSpy').and.returnValue({
             createElement: createElementSpy,
         });
+        normalizeContentModelSpy = spyOn(normalizeContentModel, 'normalizeContentModel');
 
         editor = {
             triggerContentChangedEvent: triggerContentChangedEventSpy,
@@ -104,6 +107,7 @@ describe('insertEntity', () => {
             newEntity
         );
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
@@ -142,6 +146,7 @@ describe('insertEntity', () => {
             newEntity
         );
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
@@ -187,6 +192,7 @@ describe('insertEntity', () => {
             newEntity
         );
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(entity).toBe(newEntity);
     });
@@ -226,6 +232,8 @@ describe('insertEntity', () => {
             ChangeSource.InsertEntity,
             newEntity
         );
+        expect(normalizeContentModelSpy).toHaveBeenCalled();
+
         expect(context.newEntities).toEqual([
             {
                 segmentType: 'Entity',
