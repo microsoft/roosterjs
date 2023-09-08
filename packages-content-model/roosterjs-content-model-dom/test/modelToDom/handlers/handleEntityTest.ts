@@ -174,6 +174,33 @@ describe('handleEntity', () => {
         expect(context.regularSelection.current.segment).toBe(span.nextSibling);
     });
 
+    it('Entity without delimiter', () => {
+        const span = document.createElement('span');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            id: 'entity_1',
+            type: 'entity',
+            isReadonly: true,
+            wrapper: span,
+        };
+
+        span.textContent = 'test';
+
+        const parent = document.createElement('div');
+        const result = handleEntity(document, parent, entityModel, context, null);
+
+        expect(parent.innerHTML).toBe(
+            '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span>'
+        );
+        expect(span.outerHTML).toBe(
+            '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span>'
+        );
+        expect(result).toBe(null);
+        expect(context.regularSelection.current.segment).toBe(span);
+    });
+
     it('With onNodeCreated', () => {
         const entityDiv = document.createElement('div');
         const entityModel: ContentModelEntity = {
