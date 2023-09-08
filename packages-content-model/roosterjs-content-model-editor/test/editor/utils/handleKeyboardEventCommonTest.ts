@@ -42,7 +42,7 @@ describe('handleKeyboardEventResult', () => {
         const mockedModel = 'MODEL' as any;
         const which = 'WHICH' as any;
         (<any>mockedEvent).which = which;
-        const context: FormatWithContentModelContext = { deletedEntities: [] };
+        const context: FormatWithContentModelContext = { newEntities: [], deletedEntities: [] };
         const result = handleKeyboardEventResult(
             mockedEditor,
             mockedModel,
@@ -64,7 +64,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('DeleteResult.NotDeleted', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = { deletedEntities: [] };
+        const context: FormatWithContentModelContext = { newEntities: [], deletedEntities: [] };
         const result = handleKeyboardEventResult(
             mockedEditor,
             mockedModel,
@@ -84,7 +84,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('DeleteResult.Range', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = { deletedEntities: [] };
+        const context: FormatWithContentModelContext = { newEntities: [], deletedEntities: [] };
         const result = handleKeyboardEventResult(
             mockedEditor,
             mockedModel,
@@ -106,7 +106,7 @@ describe('handleKeyboardEventResult', () => {
 
     it('DeleteResult.NothingToDelete', () => {
         const mockedModel = 'MODEL' as any;
-        const context: FormatWithContentModelContext = { deletedEntities: [] };
+        const context: FormatWithContentModelContext = { newEntities: [], deletedEntities: [] };
         const result = handleKeyboardEventResult(
             mockedEditor,
             mockedModel,

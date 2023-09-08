@@ -1,5 +1,6 @@
 import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createEntity } from 'roosterjs-content-model-dom';
 
 describe('cloneModel', () => {
     function compareObjects(o1: any, o2: any, allowCache: boolean, path: string = '/') {
@@ -280,5 +281,234 @@ describe('cloneModel', () => {
                 },
             ],
         });
+    });
+
+    describe('Clone with callback', () => {
+        it('Paragraph without cache', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: undefined,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).not.toHaveBeenCalled();
+        });
+
+        it('Paragraph with cache, return undefined', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            const div = document.createElement('div');
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                            cachedElement: div,
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: undefined,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'cache');
+        });
+
+        it('Paragraph with cache, return span', () => {
+            const div = document.createElement('div');
+            const span = document.createElement('span');
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return span;
+                });
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                            cachedElement: div,
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: span,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'cache');
+        });
+
+        it('Entity, return undefined', () => {
+            const div = document.createElement('div');
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            expect(() =>
+                cloneModel(
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [createEntity(div, true)],
+                    },
+                    { includeCachedElement: callback }
+                )
+            ).toThrow();
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'entity');
+        });
+    });
+
+    it('Entity, return span', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const callback = jasmine.createSpy('callback').and.callFake((node: Node, type: string) => {
+            return span;
+        });
+        const cloneWithCallback = cloneModel(
+            {
+                blockGroupType: 'Document',
+                blocks: [createEntity(div, true)],
+            },
+            { includeCachedElement: callback }
+        );
+
+        expect(cloneWithCallback).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    format: {},
+                    wrapper: span,
+                    isReadonly: true,
+                    type: undefined,
+                    id: undefined,
+                    segmentType: 'Entity',
+                    isSelected: undefined,
+                },
+            ],
+        });
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(div, 'entity');
+    });
+
+    it('Inline entity, return span', () => {
+        const div1 = document.createElement('div');
+        const div2 = document.createElement('div');
+
+        div1.id = 'div1';
+        div2.id = 'div2';
+
+        const span = document.createElement('span');
+        const callback = jasmine.createSpy('callback').and.callFake((node: Node, type: string) => {
+            return node == div1 ? span : node;
+        });
+        const cloneWithCallback = cloneModel(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [createEntity(div1, true)],
+                        cachedElement: div2,
+                    },
+                ],
+            },
+            { includeCachedElement: callback }
+        );
+
+        expect(cloneWithCallback).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            format: {},
+                            wrapper: span,
+                            isReadonly: true,
+                            type: undefined,
+                            id: undefined,
+                            segmentType: 'Entity',
+                            isSelected: undefined,
+                        },
+                    ],
+                    cachedElement: div2,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
+                },
+            ],
+        });
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith(div1, 'entity');
+        expect(callback).toHaveBeenCalledWith(div2, 'cache');
     });
 });
