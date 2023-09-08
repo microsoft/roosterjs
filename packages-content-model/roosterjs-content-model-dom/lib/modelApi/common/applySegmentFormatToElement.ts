@@ -1,4 +1,4 @@
-import { applyFormat } from 'roosterjs-content-model-dom/lib/modelToDom/utils/applyFormat';
+import { applyFormat } from '../../modelToDom/utils/applyFormat';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../modelToDom/context/createModelToDomContext';
 
