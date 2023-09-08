@@ -2,6 +2,7 @@ import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHand
 import { backgroundColorFormatHandler } from '../../../lib/formatHandlers/common/backgroundColorFormatHandler';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { DeprecatedColors } from '../../../lib/formatHandlers/utils/color';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import {
     BackgroundColorFormat,
@@ -61,6 +62,16 @@ describe('backgroundColorFormatHandler.parse', () => {
         backgroundColorFormatHandler.parse(format, div, context, { color: 'green' });
 
         expect(format.backgroundColor).toBe('red');
+    });
+
+    DeprecatedColors.forEach(color => {
+        it('Remove deprecated color ' + color, () => {
+            div.style.backgroundColor = color;
+
+            backgroundColorFormatHandler.parse(format, div, context, {});
+
+            expect(format.backgroundColor).toBe(undefined);
+        });
     });
 });
 

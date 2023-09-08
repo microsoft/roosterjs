@@ -16,6 +16,7 @@ describe('ContentModelFormatPlugin', () => {
 
         const editor = ({
             clearCachedModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -149,6 +150,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             clearCachedModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -211,6 +213,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             clearCachedModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
