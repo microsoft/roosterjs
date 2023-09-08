@@ -20,6 +20,7 @@ describe('setTableCellShade', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 

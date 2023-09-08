@@ -1,6 +1,6 @@
 import { ChangeSource, Entity, SelectionRangeEx } from 'roosterjs-editor-types';
 import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
-import { createEntity } from 'roosterjs-content-model-dom';
+import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
@@ -84,7 +84,10 @@ export default function insertEntity(
                 context
             );
 
+            normalizeContentModel(model);
+
             context.skipUndoSnapshot = skipUndoSnapshot;
+            context.newEntities.push(entityModel);
 
             return true;
         },
@@ -92,10 +95,6 @@ export default function insertEntity(
             selectionOverride: typeof position === 'object' ? position : undefined,
         }
     );
-
-    if (editor.isDarkMode()) {
-        editor.transformToDarkColor(wrapper);
-    }
 
     const newEntity = getEntityFromElement(wrapper);
 

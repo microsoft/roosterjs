@@ -27,6 +27,7 @@ describe('insertLink', () => {
             createContentModel,
             getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 

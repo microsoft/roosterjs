@@ -1,4 +1,4 @@
-import { ContentModelSelectionMarker } from 'roosterjs-content-model-types';
+import { ContentModelEntity, ContentModelSelectionMarker } from 'roosterjs-content-model-types';
 import { DeletedEntity } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../../lib/modelApi/edit/deleteSelection';
@@ -527,7 +527,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         entity.isSelected = true;
 
-        const result = deleteSelection(model, [], { deletedEntities });
+        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -582,7 +582,7 @@ describe('deleteSelection - selectionOnly', () => {
         entity.isSelected = true;
 
         const deletedEntities: DeletedEntity[] = [];
-        const result = deleteSelection(model, [], { deletedEntities });
+        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -1485,6 +1485,7 @@ describe('deleteSelection - forward', () => {
 
         const deletedEntities: DeletedEntity[] = [];
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
+            newEntities: [],
             deletedEntities,
         });
 
@@ -1531,6 +1532,7 @@ describe('deleteSelection - forward', () => {
 
         const deletedEntities: DeletedEntity[] = [];
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
+            newEntities: [],
             deletedEntities,
         });
 
@@ -3239,6 +3241,7 @@ describe('deleteSelection - backward', () => {
 
         const deletedEntities: DeletedEntity[] = [];
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
+            newEntities: [],
             deletedEntities,
         });
 
@@ -3284,7 +3287,9 @@ describe('deleteSelection - backward', () => {
         model.blocks.push(entity, para);
 
         const deletedEntities: DeletedEntity[] = [];
+        const newEntities: ContentModelEntity[] = [];
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
+            newEntities,
             deletedEntities,
         });
 

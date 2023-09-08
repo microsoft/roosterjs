@@ -36,12 +36,14 @@ export function formatWithContentModel(
 
     const model = editor.createContentModel(undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
+        newEntities: [],
         deletedEntities: [],
         rawEvent,
     };
 
     if (formatter(model, context)) {
         const callback = () => {
+            handleNewEntities(editor, context);
             handleDeletedEntities(editor, context);
 
             if (model) {
@@ -78,6 +80,18 @@ export function formatWithContentModel(
         }
 
         editor.cacheContentModel?.(model);
+    }
+}
+
+function handleNewEntities(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+    // TODO: Ideally we can trigger NewEntity event here. But to be compatible with original editor code, we don't do it here for now.
+    // Once Content Model Editor can be standalone, we can change this behavior to move triggering NewEntity event code
+    // from EntityPlugin to here
+
+    if (editor.isDarkMode()) {
+        context.newEntities.forEach(entity => {
+            editor.transformToDarkColor(entity.wrapper);
+        });
     }
 }
 

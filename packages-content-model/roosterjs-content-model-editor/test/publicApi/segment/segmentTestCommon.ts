@@ -1,7 +1,7 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
+import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { NodePosition } from 'roosterjs-editor-types';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 
 export function segmentTestCommon(
     apiName: string,
@@ -30,6 +30,7 @@ export function segmentTestCommon(
         setContentModel,
         isDisposed: () => false,
         getFocusedPosition: () => null as NodePosition,
+        isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
