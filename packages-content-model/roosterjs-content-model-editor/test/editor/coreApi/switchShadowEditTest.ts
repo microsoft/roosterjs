@@ -32,6 +32,7 @@ describe('switchShadowEdit', () => {
 
     describe('was off', () => {
         it('no cache, isOn', () => {
+            core.cachedModel = undefined;
             switchShadowEdit(core, true);
 
             expect(createContentModel).toHaveBeenCalledWith(core);
