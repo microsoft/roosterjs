@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">97.5% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>34/40</span>
+                <span class='fraction'>39/40</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">60.53% </span>
+                <span class="strong">76.32% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>23/38</span>
+                <span class='fraction'>29/38</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85% </span>
+                <span class="strong">97.5% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>34/40</span>
+                <span class='fraction'>39/40</span>
             </div>
         
             
@@ -170,17 +170,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
-<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">61x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">60x</span>
+<span class="cline-any cline-yes">61x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -188,22 +188,22 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">51x</span>
@@ -239,15 +239,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">58x</span>
+<span class="cline-any cline-yes">59x</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -284,23 +284,23 @@ export function deleteSegment(
             segments.splice(index, 1);
             return true;
 &nbsp;
-<span class="branch-3 cbranch-no" title="branch not covered" >        case 'Entity':</span>
-            const operation = <span class="cstat-no" title="statement not covered" >segmentToDelete.isSelected</span>
+        case 'Entity':
+            const operation = segmentToDelete.isSelected
                 ? EntityOperation.Overwrite
-                : isForward
+                : <span class="branch-1 cbranch-no" title="branch not covered" >isForward</span>
                 ? EntityOperation.RemoveFromStart
                 : isBackward
                 ? EntityOperation.RemoveFromEnd
                 : undefined;
-<span class="cstat-no" title="statement not covered" >            if (operation !== undefined) {</span>
-<span class="cstat-no" title="statement not covered" >                segments.splice(index, 1);</span>
-<span class="cstat-no" title="statement not covered" >                context?.deletedEntities.push({</span>
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (operation !== undefined) {
+                segments.splice(index, 1);
+                context<span class="branch-0 cbranch-no" title="branch not covered" >?.d</span>eletedEntities.push({
                     entity: segmentToDelete,
                     operation,
                 });
             }
 &nbsp;
-<span class="cstat-no" title="statement not covered" >            return true;</span>
+            return true;
 &nbsp;
         case 'Text':
             let text = segmentToDelete.text;
@@ -355,7 +355,7 @@ function normalizePreviousSegment(segments: ContentModelSegment[], currentIndex:
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Sep 08 2023 20:12:14 GMT+0000 (Coordinated Universal Time)
+                at Fri Sep 08 2023 20:53:21 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
