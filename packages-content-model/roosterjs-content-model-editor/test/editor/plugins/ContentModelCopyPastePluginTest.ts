@@ -6,13 +6,16 @@ import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/e
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
+import { commitEntity } from 'roosterjs-editor-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
 } from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
+    ColorTransformDirection,
     DOMEventHandlerFunction,
     IEditor,
     SelectionRangeEx,
@@ -45,6 +48,8 @@ describe('ContentModelCopyPastePlugin |', () => {
 
     let isDisposed: jasmine.Spy;
     let pasteSpy: jasmine.Spy;
+    let cloneModelSpy: jasmine.Spy;
+    let transformToDarkColorSpy: jasmine.Spy;
 
     beforeEach(() => {
         div = document.createElement('div');
@@ -63,7 +68,10 @@ describe('ContentModelCopyPastePlugin |', () => {
         pasteSpy = jasmine.createSpy('paste_');
         isDisposed = jasmine.createSpy('isDisposed');
 
-        spyOn(cloneModelFile, 'cloneModel').and.callFake((model: any) => pasteModelValue);
+        cloneModelSpy = spyOn(cloneModelFile, 'cloneModel').and.callFake(
+            (model: any) => pasteModelValue
+        );
+        transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
 
         plugin = new ContentModelCopyPastePlugin({
             allowedCustomPasteType,
@@ -119,6 +127,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             paste: (ar1: any) => {
                 pasteSpy(ar1);
             },
+            transformToDarkColor: transformToDarkColorSpy,
             isDisposed,
         });
 
@@ -305,6 +314,82 @@ describe('ContentModelCopyPastePlugin |', () => {
                 undefined,
                 undefined
             );
+
+            // On Cut Spy
+            expect(undoSnapShotSpy).not.toHaveBeenCalled();
+            expect(setContentModelSpy).not.toHaveBeenCalledWith();
+            expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalledTimes(0);
+        });
+
+        it('Selection not Collapsed and entity selection in Dark mode', () => {
+            // Arrange
+            const wrapper = document.createElement('span');
+
+            document.body.appendChild(wrapper);
+
+            commitEntity(wrapper, 'Entity', true, 'Entity');
+            selectionRangeExValue = <SelectionRangeEx>{
+                type: SelectionRangeTypes.Normal,
+                ranges: [createRange(wrapper)],
+                areAllCollapsed: false,
+            };
+
+            spyOn(deleteSelectionsFile, 'deleteSelection');
+            spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
+                div.appendChild(wrapper);
+                return selectionRangeExValue;
+            });
+            spyOn(iterateSelectionsFile, 'iterateSelections').and.returnValue(undefined);
+
+            triggerPluginEventSpy.and.callThrough();
+            focusSpy.and.callThrough();
+            selectSpy.and.callThrough();
+            setContentModelSpy.and.callThrough();
+
+            editor.isDarkMode = () => true;
+
+            cloneModelSpy.and.callFake((model, options) => {
+                expect(model).toEqual(modelValue);
+                expect(typeof options.includeCachedElement).toBe('function');
+
+                const cloneCache = options.includeCachedElement(wrapper, 'cache');
+                const cloneEntity = options.includeCachedElement(wrapper, 'entity');
+
+                expect(cloneCache).toBeUndefined();
+                expect(cloneEntity).toEqual(wrapper);
+                expect(cloneEntity).not.toBe(wrapper);
+                expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
+                expect(transformToDarkColorSpy).toHaveBeenCalledWith(
+                    cloneEntity,
+                    ColorTransformDirection.DarkToLight
+                );
+
+                return pasteModelValue;
+            });
+
+            // Act
+            domEvents.copy?.(<Event>{});
+
+            // Assert
+            expect(getSelectionRangeEx).toHaveBeenCalled();
+            expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
+            expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
+                document,
+                div,
+                pasteModelValue,
+                undefined,
+                { onNodeCreated }
+            );
+            expect(createContentModelSpy).toHaveBeenCalled();
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(focusSpy).toHaveBeenCalled();
+            expect(selectSpy).toHaveBeenCalledWith(
+                selectionRangeExValue,
+                undefined,
+                undefined,
+                undefined
+            );
+            expect(cloneModelSpy).toHaveBeenCalledTimes(1);
 
             // On Cut Spy
             expect(undoSnapShotSpy).not.toHaveBeenCalled();

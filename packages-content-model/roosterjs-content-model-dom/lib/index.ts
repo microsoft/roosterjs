@@ -42,11 +42,13 @@ export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
 export { isWhiteSpacePreserved } from './modelApi/common/isWhiteSpacePreserved';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
+export { applySegmentFormatToElement } from './modelApi/common/applySegmentFormatToElement';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 
 export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
+export { DeprecatedColors } from './formatHandlers/utils/color';
 export { defaultImplicitFormatMap } from './formatHandlers/utils/defaultStyles';
 
 export { createDomToModelContext } from './domToModel/context/createDomToModelContext';

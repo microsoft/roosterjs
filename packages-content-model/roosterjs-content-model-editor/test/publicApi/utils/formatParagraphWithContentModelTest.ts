@@ -1,12 +1,12 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     createContentModelDocument,
     createParagraph,
     createText,
 } from 'roosterjs-content-model-dom';
-import { formatParagraphWithContentModel } from '../../../lib/publicApi/utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
 describe('formatParagraphWithContentModel', () => {
     let editor: IContentModelEditor;
@@ -27,6 +27,7 @@ describe('formatParagraphWithContentModel', () => {
             addUndoSnapshot,
             createContentModel: () => model,
             setContentModel,
+            isDarkMode: () => false,
             getCustomData: () => ({}),
             getFocusedPosition: () => 'NewPosition',
         } as any) as IContentModelEditor;

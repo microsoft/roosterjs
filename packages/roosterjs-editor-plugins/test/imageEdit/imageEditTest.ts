@@ -1,7 +1,13 @@
 import * as TestHelper from '../TestHelper';
 import ImageEditInfo from '../../lib/plugins/ImageEdit/types/ImageEditInfo';
-import { IEditor, ImageEditOperation, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { ImageEdit } from '../../lib/ImageEdit';
+import {
+    IEditor,
+    ImageEditOperation,
+    PluginEvent,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
 import {
     getEditInfoFromImage,
     saveEditInfo,
@@ -225,7 +231,7 @@ describe('ImageEdit | rotate and flip', () => {
     });
 });
 
-describe('ImageEdit | plugin events | quitting', () => {
+describe('ImageEdit | plugin events | ', () => {
     let editor: IEditor;
     const TEST_ID = 'imageEditTest';
     let plugin: ImageEdit;
@@ -270,22 +276,34 @@ describe('ImageEdit | plugin events | quitting', () => {
         target.dispatchEvent(event);
     };
 
-    it('image selection quit editing', () => {
-        const IMG_ID = 'IMAGE_ID_QUIT';
+    const mouseUp = (target: HTMLElement, keyNumber: number) => {
+        const rect = target.getBoundingClientRect();
+        const event = new MouseEvent('mouseup', {
+            view: window,
+            bubbles: true,
+            cancelable: true,
+            clientX: rect.left,
+            clientY: rect.top,
+            shiftKey: false,
+            button: keyNumber,
+        });
+        target.dispatchEvent(event);
+    };
+
+    it('mouse up | keep image selected if click in a image', () => {
+        const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
         editor.focus();
         editor.select(image);
-        expect(setEditingImageSpy).toHaveBeenCalled();
-        expect(setEditingImageSpy).toHaveBeenCalledWith(
-            image as any,
-            ImageEditOperation.ResizeAndRotate as any
-        );
+        mouseUp(image, 0);
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
     });
 
-    it('mousedown quit editing', () => {
+    it('quitting | mousedown quit editing', () => {
         const IMG_ID = 'IMAGE_ID_MOUSE';
         const SPAN_ID = 'SPAN_ID';
         const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
@@ -294,12 +312,12 @@ describe('ImageEdit | plugin events | quitting', () => {
         const span = document.getElementById(SPAN_ID) as HTMLImageElement;
         editor.focus();
         editor.select(image);
-        mouseDown(span, 0);
+        mouseDown(span, 2);
         expect(setEditingImageSpy).toHaveBeenCalled();
         expect(setEditingImageSpy).toHaveBeenCalledWith(null);
     });
 
-    it('keydown quit editing', () => {
+    it('quitting | keydown quit editing', () => {
         const IMG_ID = 'IMAGE_ID';
         const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);

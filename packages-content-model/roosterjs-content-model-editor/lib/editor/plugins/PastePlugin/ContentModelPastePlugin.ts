@@ -2,8 +2,8 @@ import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
 import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
+import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
-import { parseDeprecatedColor } from './utils/deprecatedColorParser';
 import { parseLink } from './utils/linkParser';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
@@ -80,7 +80,7 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         if (!ev.domToModelOption) {
             return;
         }
-        const pasteSource = getPasteSource(event, false);
+        const pasteSource = getPasteSource(ev, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
                 processPastedContentFromWordDesktop(ev);
@@ -90,16 +90,13 @@ export default class ContentModelPastePlugin implements EditorPlugin {
                 break;
             case KnownPasteSourceType.ExcelOnline:
             case KnownPasteSourceType.ExcelDesktop:
-                if (
-                    event.pasteType === PasteType.Normal ||
-                    event.pasteType === PasteType.MergeFormat
-                ) {
+                if (ev.pasteType === PasteType.Normal || ev.pasteType === PasteType.MergeFormat) {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
                 }
                 break;
             case KnownPasteSourceType.GoogleSheets:
-                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                 break;
             case KnownPasteSourceType.PowerPointDesktop:
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
@@ -107,15 +104,16 @@ export default class ContentModelPastePlugin implements EditorPlugin {
         }
 
         addParser(ev.domToModelOption, 'link', parseLink);
-        parseDeprecatedColor(ev.sanitizingOption);
+        addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
+        addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
         sanitizeBlockStyles(ev.sanitizingOption);
 
-        if (event.pasteType === PasteType.MergeFormat) {
+        if (ev.pasteType === PasteType.MergeFormat) {
             addParser(ev.domToModelOption, 'block', blockElementParser);
             addParser(ev.domToModelOption, 'listLevel', blockElementParser);
         }
 
-        event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
+        ev.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
 
