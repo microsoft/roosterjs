@@ -144,6 +144,7 @@ export const enum ExperimentalFeatures {
     TabKeyTextFeatures = 'TabKeyTextFeatures',
 
     /**
+     * @deprecated This feature is always enabled
      * Trigger formatting by a especial characters. Ex: (A), 1. i).
      */
     AutoFormatList = 'AutoFormatList',

@@ -258,7 +258,6 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
         let searcher: IPositionContentSearcher | null;
         if (
             !cacheGetListElement(event, editor) &&
-            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList) &&
             (searcher = editor.getContentSearcherOfCursor(event))
         ) {
             let textBeforeCursor = searcher.getSubStringBefore(4);
@@ -305,19 +304,16 @@ const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
             true /*canUndoByBackspace*/
         );
     },
+    defaultDisabled: true,
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoBulletList edit feature, provides the ability to automatically convert current line into a bullet list.
  */
 const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoBulletListStyle, ListType.Unordered);
         }
         return false;
@@ -352,16 +348,12 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoNumberingList edit feature, provides the ability to automatically convert current line into a numbering list.
  */
 const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoNumberingListStyle, ListType.Ordered);
         }
         return false;
