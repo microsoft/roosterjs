@@ -1,41 +1,21 @@
-import { chainSanitizerCallback } from 'roosterjs-editor-dom';
-import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
-
-const DeprecatedColorList: string[] = [
-    'activeborder',
-    'activecaption',
-    'appworkspace',
-    'background',
-    'buttonhighlight',
-    'buttonshadow',
-    'captiontext',
-    'inactiveborder',
-    'inactivecaption',
-    'inactivecaptiontext',
-    'infobackground',
-    'infotext',
-    'menu',
-    'menutext',
-    'scrollbar',
-    'threeddarkshadow',
-    'threedface',
-    'threedhighlight',
-    'threedlightshadow',
-    'threedfhadow',
-    'window',
-    'windowframe',
-    'windowtext',
-];
+import { BorderFormat, FormatParser } from 'roosterjs-content-model-types';
+import { BorderKeys, DeprecatedColors } from 'roosterjs-content-model-dom';
 
 /**
  * @internal
  */
-export function parseDeprecatedColor(sanitizingOption: Required<HtmlSanitizerOptions>) {
-    ['color', 'background-color'].forEach(property => {
-        chainSanitizerCallback(
-            sanitizingOption.cssStyleCallbacks,
-            property,
-            (value: string) => DeprecatedColorList.indexOf(value) < 0
-        );
+export const deprecatedBorderColorParser: FormatParser<BorderFormat> = (
+    format: BorderFormat
+): void => {
+    BorderKeys.forEach(key => {
+        const value = format[key];
+        let color: string = '';
+        if (
+            value &&
+            DeprecatedColors.some(dColor => value.indexOf(dColor) > -1 && (color = dColor))
+        ) {
+            const newValue = value.replace(color, '').trimRight();
+            format[key] = newValue;
+        }
     });
-}
+};

@@ -59,6 +59,7 @@ import {
 } from 'roosterjs-editor-dom';
 import type {
     CompatibleChangeSource,
+    CompatibleColorTransformDirection,
     CompatibleContentPosition,
     CompatibleExperimentalFeatures,
     CompatibleGetContentMode,
@@ -899,16 +900,16 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
     /**
      * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
      * @param node The node to transform
+     * @param direction The transform direction. @default ColorTransformDirection.LightToDark
      */
-    public transformToDarkColor(node: Node) {
+    public transformToDarkColor(
+        node: Node,
+        direction:
+            | ColorTransformDirection
+            | CompatibleColorTransformDirection = ColorTransformDirection.LightToDark
+    ) {
         const core = this.getCore();
-        core.api.transformColor(
-            core,
-            node,
-            true /*includeSelf*/,
-            null /*callback*/,
-            ColorTransformDirection.LightToDark
-        );
+        core.api.transformColor(core, node, true /*includeSelf*/, null /*callback*/, direction);
     }
 
     /**

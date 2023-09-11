@@ -11,6 +11,7 @@ import Region from './Region';
 import SelectionPath from './SelectionPath';
 import TableSelection from './TableSelection';
 import { ChangeSource } from '../enum/ChangeSource';
+import { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import { ContentPosition } from '../enum/ContentPosition';
 import { DOMEventHandler } from '../type/domEventHandler';
 import { EditorUndoState, PendableFormatState, StyleBasedFormatState } from './FormatState';
@@ -34,6 +35,7 @@ import type { CompatibleExperimentalFeatures } from '../compatibleEnum/Experimen
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
 import type { CompatibleQueryScope } from '../compatibleEnum/QueryScope';
 import type { CompatibleRegionType } from '../compatibleEnum/RegionType';
+import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 
 /**
  * Interface of roosterjs editor object
@@ -594,8 +596,12 @@ export default interface IEditor {
     /**
      * Transform the given node and all its child nodes to dark mode color if editor is in dark mode
      * @param node The node to transform
+     * @param direction The transform direction. @default ColorTransformDirection.LightToDark
      */
-    transformToDarkColor(node: Node): void;
+    transformToDarkColor(
+        node: Node,
+        direction?: ColorTransformDirection | CompatibleColorTransformDirection
+    ): void;
 
     /**
      * Get a darkColorHandler object for this editor.
