@@ -34,13 +34,11 @@ import {
     Keys,
     PluginKeyboardEvent,
     QueryScope,
-    RegionBase,
     ListType,
     ExperimentalFeatures,
     PositionType,
     NumberingListType,
     BulletListType,
-    IPositionContentSearcher,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -237,22 +235,13 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Validate if a block of text is considered a list pattern
- * The regex expression will look for patterns of the form:
- * 1.  1>  1)  1-  (1)
- * @returns if a text is considered a list pattern
- */
-function isAListPattern(textBeforeCursor: string) {
-    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor);
-}
-
-/**
  * @deprecated Use AutoBulletList and AutoNumberingList instead
  */
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
-    shouldHandleEvent: (event, editor) => {},
+    shouldHandleEvent: (event, editor) => {
+        return false;
+    },
     handleEvent: (event, editor) => {},
     defaultDisabled: true,
 };
