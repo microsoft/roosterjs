@@ -25,6 +25,11 @@ export interface DeletedEntity {
  */
 export interface FormatWithContentModelContext {
     /**
+     * New entities added during the format process
+     */
+    readonly newEntities: ContentModelEntity[];
+
+    /**
      * Entities got deleted during formatting. Need to be set by the formatter function
      */
     readonly deletedEntities: DeletedEntity[];

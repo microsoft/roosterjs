@@ -426,6 +426,7 @@ describe('setAlignment in table', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -818,6 +819,7 @@ describe('setAlignment in list', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 

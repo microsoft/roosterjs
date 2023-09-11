@@ -37,6 +37,7 @@ import {
     ClipboardData,
     SelectionRangeTypes,
     SelectionRangeEx,
+    ColorTransformDirection,
 } from 'roosterjs-editor-types';
 
 /**
@@ -98,7 +99,24 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (selection && !selection.areAllCollapsed) {
             const model = this.editor.createContentModel();
 
-            const pasteModel = cloneModel(model);
+            const pasteModel = cloneModel(model, {
+                includeCachedElement: this.editor.isDarkMode()
+                    ? (node, type) => {
+                          if (type == 'cache') {
+                              return undefined;
+                          } else {
+                              const result = node.cloneNode(true /*deep*/) as HTMLElement;
+
+                              this.editor?.transformToDarkColor(
+                                  result,
+                                  ColorTransformDirection.DarkToLight
+                              );
+
+                              return result;
+                          }
+                      }
+                    : false,
+            });
             if (selection.type === SelectionRangeTypes.TableSelection) {
                 iterateSelections([pasteModel], (path, tableContext) => {
                     if (tableContext?.table) {

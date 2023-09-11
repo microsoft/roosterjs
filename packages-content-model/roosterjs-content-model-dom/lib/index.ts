@@ -42,6 +42,7 @@ export { unwrapBlock } from './modelApi/common/unwrapBlock';
 export { addSegment } from './modelApi/common/addSegment';
 export { isWhiteSpacePreserved } from './modelApi/common/isWhiteSpacePreserved';
 export { normalizeSingleSegment } from './modelApi/common/normalizeSegment';
+export { applySegmentFormatToElement } from './modelApi/common/applySegmentFormatToElement';
 
 export { setParagraphNotImplicit } from './modelApi/block/setParagraphNotImplicit';
 

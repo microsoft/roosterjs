@@ -34,13 +34,11 @@ import {
     Keys,
     PluginKeyboardEvent,
     QueryScope,
-    RegionBase,
     ListType,
     ExperimentalFeatures,
     PositionType,
     NumberingListType,
     BulletListType,
-    IPositionContentSearcher,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -237,87 +235,24 @@ const OutdentWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Validate if a block of text is considered a list pattern
- * The regex expression will look for patterns of the form:
- * 1.  1>  1)  1-  (1)
- * @returns if a text is considered a list pattern
- */
-function isAListPattern(textBeforeCursor: string) {
-    const REGEX: RegExp = /^(\*|-|[0-9]{1,2}\.|[0-9]{1,2}\>|[0-9]{1,2}\)|[0-9]{1,2}\-|\([0-9]{1,2}\))$/;
-    return REGEX.test(textBeforeCursor);
-}
-
-/**
- * AutoBullet edit feature, provides the ability to automatically convert current line into a list.
- * When user input "1. ", convert into a numbering list
- * When user input "- " or "* ", convert into a bullet list
+ * @deprecated Use AutoBulletList and AutoNumberingList instead
  */
 const AutoBullet: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        let searcher: IPositionContentSearcher | null;
-        if (
-            !cacheGetListElement(event, editor) &&
-            !editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList) &&
-            (searcher = editor.getContentSearcherOfCursor(event))
-        ) {
-            let textBeforeCursor = searcher.getSubStringBefore(4);
-
-            // Auto list is triggered if:
-            // 1. Text before cursor exactly matches '*', '-' or '1.'
-            // 2. There's no non-text inline entities before cursor
-            return isAListPattern(textBeforeCursor) && !searcher.getNearestNonTextInlineElement();
-        }
         return false;
     },
-    handleEvent: (event, editor) => {
-        editor.insertContent('&nbsp;');
-        event.rawEvent.preventDefault();
-        editor.addUndoSnapshot(
-            () => {
-                let regions: RegionBase[];
-                let searcher = editor.getContentSearcherOfCursor();
-                if (!searcher) {
-                    return;
-                }
-                let textBeforeCursor = searcher.getSubStringBefore(4);
-                let textRange = searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/);
-
-                if (!textRange) {
-                    // no op if the range can't be found
-                } else if (
-                    textBeforeCursor.indexOf('*') == 0 ||
-                    textBeforeCursor.indexOf('-') == 0
-                ) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleBullet(editor);
-                } else if (isAListPattern(textBeforeCursor)) {
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor);
-                } else if ((regions = editor.getSelectedRegions()) && regions.length == 1) {
-                    const num = parseInt(textBeforeCursor);
-                    prepareAutoBullet(editor, textRange);
-                    toggleNumbering(editor, num);
-                }
-                searcher.getRangeFromText(textBeforeCursor, true /*exactMatch*/)?.deleteContents();
-            },
-            undefined /*changeSource*/,
-            true /*canUndoByBackspace*/
-        );
-    },
+    handleEvent: (event, editor) => {},
+    defaultDisabled: true,
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoBulletList edit feature, provides the ability to automatically convert current line into a bullet list.
  */
 const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoBulletListStyle, ListType.Unordered);
         }
         return false;
@@ -352,16 +287,12 @@ const AutoBulletList: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * Requires @see ExperimentalFeatures.AutoFormatList to be enabled
  * AutoNumberingList edit feature, provides the ability to automatically convert current line into a numbering list.
  */
 const AutoNumberingList: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.SPACE],
     shouldHandleEvent: (event, editor) => {
-        if (
-            !cacheGetListElement(event, editor) &&
-            editor.isFeatureEnabled(ExperimentalFeatures.AutoFormatList)
-        ) {
+        if (!cacheGetListElement(event, editor)) {
             return shouldTriggerList(event, editor, getAutoNumberingListStyle, ListType.Ordered);
         }
         return false;
