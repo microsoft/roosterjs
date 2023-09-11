@@ -1,4 +1,6 @@
+import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
@@ -13,6 +15,12 @@ import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
+const mockedDomToModelConfig = {
+    config: 'mockedDomToModelConfig',
+} as any;
+const mockedModelToDomConfig = {
+    config: 'mockedModelToDomConfig',
+} as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -41,6 +49,13 @@ describe('createContentModelEditorCore', () => {
 
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
             mockedCore
+        );
+
+        spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(
+            mockedDomToModelConfig
+        );
+        spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(
+            mockedModelToDomConfig
         );
     });
 
@@ -82,6 +97,8 @@ describe('createContentModelEditorCore', () => {
                 undefined,
             ],
             defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -144,6 +161,8 @@ describe('createContentModelEditorCore', () => {
                 defaultDomToModelOptions,
             ],
             defaultModelToDomOptions: [defaultModelToDomOptions],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -217,6 +236,8 @@ describe('createContentModelEditorCore', () => {
                 undefined,
             ],
             defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: 'bold',
                 italic: true,
@@ -281,6 +302,9 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
+
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -335,6 +359,8 @@ describe('createContentModelEditorCore', () => {
                 undefined,
             ],
             defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,

@@ -377,8 +377,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
