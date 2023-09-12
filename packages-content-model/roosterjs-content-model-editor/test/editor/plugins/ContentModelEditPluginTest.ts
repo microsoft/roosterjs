@@ -1,5 +1,5 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
-import * as handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
+import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -33,10 +33,10 @@ describe('ContentModelEditPlugin', () => {
     });
 
     describe('onPluginEvent', () => {
-        let handleKeyDownEventSpy: jasmine.Spy;
+        let keyboardDeleteSpy: jasmine.Spy;
 
         beforeEach(() => {
-            handleKeyDownEventSpy = spyOn(handleKeyDownEvent, 'default');
+            keyboardDeleteSpy = spyOn(keyboardDelete, 'default').and.returnValue(true);
         });
 
         it('Backspace', () => {
@@ -50,7 +50,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -65,7 +65,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
             expect(cacheContentModel).not.toHaveBeenCalled();
         });
 
@@ -80,7 +80,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -94,7 +94,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent,
             });
 
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
+            expect(keyboardDeleteSpy).not.toHaveBeenCalled();
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
 
@@ -118,7 +118,7 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent: { which: Keys.DELETE } as any,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, {
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
                 which: Keys.DELETE,
             } as any);
 
@@ -127,8 +127,8 @@ describe('ContentModelEditPlugin', () => {
                 rawEvent: { which: Keys.DELETE } as any,
             });
 
-            expect(handleKeyDownEventSpy).toHaveBeenCalledTimes(2);
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, {
+            expect(keyboardDeleteSpy).toHaveBeenCalledTimes(2);
+            expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
                 which: Keys.DELETE,
             } as any);
             expect(cacheContentModel).not.toHaveBeenCalled();
@@ -145,101 +145,19 @@ describe('ContentModelEditPlugin', () => {
 
             expect(cacheContentModel).toHaveBeenCalledWith(null);
         });
-    });
 
-    describe('onPluginEvent, no need to go through Content Model', () => {
-        let handleKeyDownEventSpy: jasmine.Spy;
-        let range: any;
-
-        beforeEach(() => {
-            handleKeyDownEventSpy = spyOn(handleKeyDownEvent, 'default');
-
-            range = {
-                collapsed: true,
-                startContainer: document.createTextNode('test'),
-                startOffset: 2,
-            };
-
-            editor.getSelectionRangeEx = () =>
-                ({
-                    type: SelectionRangeTypes.Normal,
-                    areAllCollapsed: true,
-                    ranges: [range],
-                } as any);
-        });
-
-        it('Backspace', () => {
+        it('keyboardDelete returns false', () => {
             const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.BACKSPACE } as any;
+
+            keyboardDeleteSpy.and.returnValue(false);
 
             plugin.initialize(editor);
-
             plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
+                eventType: PluginEventType.SelectionChanged,
+                selectionRangeEx: null!,
             });
 
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledTimes(1);
             expect(cacheContentModel).toHaveBeenCalledWith(null);
-        });
-
-        it('Delete', () => {
-            const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.DELETE } as any;
-
-            plugin.initialize(editor);
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
-            });
-
-            expect(handleKeyDownEventSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledTimes(1);
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
-        });
-
-        it('Backspace from the beginning', () => {
-            const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.BACKSPACE } as any;
-
-            plugin.initialize(editor);
-
-            range = {
-                collapsed: true,
-                startContainer: document.createTextNode('test'),
-                startOffset: 0,
-            };
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
-            });
-
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
-        });
-
-        it('Delete from the last', () => {
-            const plugin = new ContentModelEditPlugin();
-            const rawEvent = { which: Keys.DELETE } as any;
-
-            plugin.initialize(editor);
-
-            range = {
-                collapsed: true,
-                startContainer: document.createTextNode('test'),
-                startOffset: 4,
-            };
-
-            plugin.onPluginEvent({
-                eventType: PluginEventType.KeyDown,
-                rawEvent,
-            });
-
-            expect(handleKeyDownEventSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
         });
     });
 });

@@ -1,29 +1,15 @@
-import handleKeyDownEvent from '../../publicApi/editing/handleKeyDownEvent';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
+import keyboardDelete from 'roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { isCharacterValue } from 'roosterjs-editor-dom';
 import {
     EditorPlugin,
     IEditor,
     Keys,
-    NodePosition,
-    NodeType,
     PluginEvent,
     PluginEventType,
     PluginKeyDownEvent,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-import {
-    getObjectKeys,
-    isBlockElement,
-    isCharacterValue,
-    isModifierKey,
-    Position,
-} from 'roosterjs-editor-dom';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -36,7 +22,6 @@ const ProcessKey = 'Process';
  */
 export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
-    private hasDefaultFormat = false;
 
     /**
      * Get name of this plugin
@@ -54,11 +39,6 @@ export default class ContentModelEditPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
-
-        const defaultFormat = this.editor.getContentModelDefaultFormat();
-        this.hasDefaultFormat =
-            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
-                .length > 0;
     }
 
     /**
@@ -104,133 +84,20 @@ export default class ContentModelEditPlugin implements EditorPlugin {
             switch (which) {
                 case Keys.BACKSPACE:
                 case Keys.DELETE:
-                    const rangeEx = editor.getSelectionRangeEx();
-                    const range =
-                        rangeEx.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
-
-                    if (this.shouldDeleteWithContentModel(range, rawEvent)) {
-                        handleKeyDownEvent(editor, rawEvent);
-                    } else {
+                    if (!keyboardDelete(editor, rawEvent)) {
                         editor.cacheContentModel(null);
                     }
 
                     break;
 
                 default:
-                    if (
-                        (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) &&
-                        this.hasDefaultFormat
-                    ) {
-                        this.tryApplyDefaultFormat(editor);
+                    if (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) {
+                        applyDefaultFormat(editor);
                     }
 
                     editor.cacheContentModel(null);
                     break;
             }
         }
-    }
-
-    private tryApplyDefaultFormat(editor: IContentModelEditor) {
-        const rangeEx = editor.getSelectionRangeEx();
-        const range = rangeEx?.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
-        const startPos = range ? Position.getStart(range) : null;
-        let node: Node | null = startPos?.node ?? null;
-
-        while (node && editor.contains(node)) {
-            if (isNodeOfType(node, NodeType.Element) && node.getAttribute?.('style')) {
-                return;
-            } else if (isBlockElement(node)) {
-                break;
-            } else {
-                node = node.parentNode;
-            }
-        }
-
-        formatWithContentModel(editor, 'input', (model, context) => {
-            const result = deleteSelection(model, [], context);
-
-            if (result.deleteResult == DeleteResult.Range) {
-                normalizeContentModel(model);
-                editor.addUndoSnapshot();
-
-                return true;
-            } else if (
-                result.deleteResult == DeleteResult.NotDeleted &&
-                result.insertPoint &&
-                startPos
-            ) {
-                const { paragraph, path, marker } = result.insertPoint;
-                const blocks = path[0].blocks;
-                const blockCount = blocks.length;
-                const blockIndex = blocks.indexOf(paragraph);
-
-                if (
-                    paragraph.isImplicit &&
-                    paragraph.segments.length == 1 &&
-                    paragraph.segments[0] == marker &&
-                    blockCount > 0 &&
-                    blockIndex == blockCount - 1
-                ) {
-                    // Focus is in the last paragraph which is implicit and there is not other segments.
-                    // This can happen when focus is moved after all other content under current block group.
-                    // We need to check if browser will merge focus into previous paragraph by checking if
-                    // previous block is block. If previous block is paragraph, browser will most likely merge
-                    // the input into previous paragraph, then nothing need to do here. Otherwise we need to
-                    // apply pending format since this input event will start a new real paragraph.
-                    const previousBlock = blocks[blockIndex - 1];
-
-                    if (previousBlock?.blockType != 'Paragraph') {
-                        this.applyDefaultFormat(editor, marker.format, startPos);
-                    }
-                } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
-                    this.applyDefaultFormat(editor, marker.format, startPos);
-                }
-
-                // We didn't do any change but just apply default format to pending format, so no need to write back
-                return false;
-            } else {
-                return false;
-            }
-        });
-    }
-
-    private applyDefaultFormat(
-        editor: IContentModelEditor,
-        currentFormat: ContentModelSegmentFormat,
-        startPos: NodePosition
-    ) {
-        const pendingFormat = getPendingFormat(editor) || {};
-        const defaultFormat = editor.getContentModelDefaultFormat();
-        const newFormat: ContentModelSegmentFormat = {
-            ...defaultFormat,
-            ...pendingFormat,
-            ...currentFormat,
-        };
-
-        setPendingFormat(editor, newFormat, startPos);
-    }
-
-    private shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEvent) {
-        return !(
-            range?.collapsed &&
-            range.startContainer.nodeType == NodeType.Text &&
-            !isModifierKey(rawEvent) &&
-            (this.canDeleteBefore(rawEvent, range) || this.canDeleteAfter(rawEvent, range))
-        );
-    }
-
-    private canDeleteBefore(rawEvent: KeyboardEvent, range: Range) {
-        return (
-            rawEvent.which == Keys.BACKSPACE &&
-            (range.startOffset > 1 || range.startContainer.previousSibling)
-        );
-    }
-
-    private canDeleteAfter(rawEvent: KeyboardEvent, range: Range) {
-        return (
-            rawEvent.which == Keys.DELETE &&
-            (range.startOffset < (range.startContainer.nodeValue?.length ?? 0) - 1 ||
-                range.startContainer.nextSibling)
-        );
     }
 }
