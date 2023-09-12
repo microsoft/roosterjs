@@ -1,5 +1,5 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
-import keyboardDelete from 'roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete';
+import keyboardDelete from '../../publicApi/editing/keyboardDelete';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isCharacterValue } from 'roosterjs-editor-dom';
 import {

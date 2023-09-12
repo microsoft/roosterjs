@@ -9,6 +9,7 @@ import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom
 import { NodePosition, NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * When necessary, set default format as current pending format so it will be applied when Input event is fired
  * @param editor The Content Model Editor
  */
