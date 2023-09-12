@@ -37,12 +37,6 @@ export interface IContentModelEditor extends IEditor {
     ): void;
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
-     */
-    cacheContentModel(model: ContentModelDocument | null): void;
-
-    /**
      * Get default format as ContentModelSegmentFormat.
      * This is a replacement of IEditor.getDefaultFormat for Content Model.
      * @returns The default format

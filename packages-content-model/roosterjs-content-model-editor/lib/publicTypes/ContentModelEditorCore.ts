@@ -1,4 +1,10 @@
-import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
+import { ContentModelEditPluginState } from '../editor/plugins/ContentModelEditPlugin';
+import {
+    CopyPastePluginState,
+    CoreApiMap,
+    EditorCore,
+    SelectionRangeEx,
+} from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -70,9 +76,25 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
 }
 
 /**
+ * Temporary core plugin state for Content Model editor
+ * TODO: Create Content Model plugin state from all core plugins once we have standalone Content Model Editor
+ */
+export interface ContentModelPluginState {
+    /**
+     * Plugin state for ContentModelEditPlugin
+     */
+    contentModelEdit: ContentModelEditPluginState;
+
+    /**
+     * Plugin state for ContentModelCopyPastePlugin
+     */
+    copyPaste: CopyPastePluginState;
+}
+
+/**
  * Represents the core data structure of a Content Model editor
  */
-export interface ContentModelEditorCore extends EditorCore {
+export interface ContentModelEditorCore extends EditorCore, ContentModelPluginState {
     /**
      * Core API map of this editor
      */
@@ -82,16 +104,6 @@ export interface ContentModelEditorCore extends EditorCore {
      * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
      */
     readonly originalApi: ContentModelCoreApiMap;
-
-    /**
-     * When reuse Content Model is allowed, we cache the Content Model object here after created
-     */
-    cachedModel?: ContentModelDocument;
-
-    /**
-     * Cached selection range ex. This range only exist when cached model exists and it has selection
-     */
-    cachedRangeEx?: SelectionRangeEx;
 
     /**
      * Default format used by Content Model. This is calculated from lifecycle.defaultFormat

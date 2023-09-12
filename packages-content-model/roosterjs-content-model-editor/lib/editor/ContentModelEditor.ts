@@ -57,19 +57,6 @@ export default class ContentModelEditor
     }
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
-     */
-    cacheContentModel(model: ContentModelDocument | null) {
-        const core = this.getCore();
-
-        if (!core.lifecycle.shadowEditFragment) {
-            core.cachedModel = model || undefined;
-            core.cachedRangeEx = undefined;
-        }
-    }
-
-    /**
      * Get default format as ContentModelSegmentFormat.
      * This is a replacement of IEditor.getDefaultFormat for Content Model.
      * @returns The default format

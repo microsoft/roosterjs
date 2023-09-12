@@ -1,9 +1,9 @@
+import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
     createModelToDomContext,
     createModelToDomContextWithConfig,
 } from 'roosterjs-content-model-dom';
-import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
@@ -28,7 +28,10 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
 
     if (!core.lifecycle.shadowEditFragment) {
         core.api.select(core, range);
-        core.cachedRangeEx = range || undefined;
+
+        if (range) {
+            core.contentModelEdit.cachedRangeEx = range;
+        }
     }
 
     return range;

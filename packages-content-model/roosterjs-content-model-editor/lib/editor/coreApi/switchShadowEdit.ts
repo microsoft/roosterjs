@@ -14,7 +14,9 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
-            const model = !core.cachedModel ? core.api.createContentModel(core) : null;
+            const model = !core.contentModelEdit.cachedModel
+                ? core.api.createContentModel(core)
+                : null;
             const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
 
             // Fake object, not used in Content Model Editor, just to satisfy original editor code
@@ -34,8 +36,8 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
 
             // This need to be done after EnteredShadowEdit event is triggered since EnteredShadowEdit event will cause a SelectionChanged event
             // if current selection is table selection or image selection
-            if (!core.cachedModel && model) {
-                core.cachedModel = model;
+            if (!core.contentModelEdit.cachedModel && model) {
+                core.contentModelEdit.cachedModel = model;
             }
 
             core.lifecycle.shadowEditSelectionPath = selectionPath;
@@ -52,8 +54,8 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
                 false /*broadcast*/
             );
 
-            if (core.cachedModel) {
-                core.api.setContentModel(core, core.cachedModel);
+            if (core.contentModelEdit.cachedModel) {
+                core.api.setContentModel(core, core.contentModelEdit.cachedModel);
             }
         }
     }

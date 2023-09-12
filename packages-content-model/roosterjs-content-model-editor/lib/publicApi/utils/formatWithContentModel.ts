@@ -79,7 +79,8 @@ export function formatWithContentModel(
             );
         }
 
-        editor.cacheContentModel?.(model);
+        // Recreate Content Model to refresh text node cache
+        editor.createContentModel();
     }
 }
 

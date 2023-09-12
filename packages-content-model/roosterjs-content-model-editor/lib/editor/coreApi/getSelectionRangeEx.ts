@@ -7,5 +7,8 @@ import { GetSelectionRangeEx } from 'roosterjs-editor-types';
 export const getSelectionRangeEx: GetSelectionRangeEx = core => {
     const contentModelCore = core as ContentModelEditorCore;
 
-    return contentModelCore.cachedRangeEx ?? core.originalApi.getSelectionRangeEx(core);
+    return (
+        contentModelCore.contentModelEdit.cachedRangeEx ??
+        core.originalApi.getSelectionRangeEx(core)
+    );
 };

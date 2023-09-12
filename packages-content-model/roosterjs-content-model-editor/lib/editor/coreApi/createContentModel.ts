@@ -19,14 +19,24 @@ import {
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
-    let cachedModel = selectionOverride ? null : core.cachedModel;
+    let cachedModel = selectionOverride ? null : core.contentModelEdit.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
         cachedModel = cloneModel(cachedModel, { includeCachedElement: true });
     }
 
-    return cachedModel || internalCreateContentModel(core, option, selectionOverride);
+    if (cachedModel) {
+        return cachedModel;
+    } else {
+        const model = internalCreateContentModel(core, option, selectionOverride);
+
+        if (!option && !selectionOverride) {
+            core.contentModelEdit.cachedModel = model;
+        }
+
+        return model;
+    }
 };
 
 function internalCreateContentModel(

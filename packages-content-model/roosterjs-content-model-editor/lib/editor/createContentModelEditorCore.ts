@@ -2,7 +2,6 @@ import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlug
 import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
@@ -14,6 +13,10 @@ import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
+import {
+    ContentModelEditorCore,
+    ContentModelPluginState,
+} from '../publicTypes/ContentModelEditorCore';
 
 /**
  * Editor Core creator for Content Model editor
@@ -22,12 +25,18 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
+    const pluginState: ContentModelPluginState = {
+        contentModelEdit: {},
+        copyPaste: {
+            allowedCustomPasteType: options.allowedCustomPasteType || [],
+        },
+    };
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
             ...(options.plugins || []),
             new ContentModelFormatPlugin(),
-            new ContentModelEditPlugin(),
+            new ContentModelEditPlugin(pluginState.contentModelEdit),
         ],
         corePluginOverride: {
             typeInContainer: new ContentModelTypeInContainerPlugin(),
@@ -35,9 +44,7 @@ export const createContentModelEditorCore: CoreCreator<
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
             )
-                ? new ContentModelCopyPastePlugin({
-                      allowedCustomPasteType: options.allowedCustomPasteType || [],
-                  })
+                ? new ContentModelCopyPastePlugin(pluginState.copyPaste)
                 : undefined,
             ...(options.corePluginOverride || {}),
         },
@@ -45,7 +52,7 @@ export const createContentModelEditorCore: CoreCreator<
 
     const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
 
-    promoteToContentModelEditorCore(core, modifiedOptions);
+    promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 
     return core;
 };
@@ -57,13 +64,22 @@ export const createContentModelEditorCore: CoreCreator<
  */
 export function promoteToContentModelEditorCore(
     core: EditorCore,
-    options: ContentModelEditorOptions
+    options: ContentModelEditorOptions,
+    pluginState: ContentModelPluginState
 ) {
     const cmCore = core as ContentModelEditorCore;
 
+    promoteCorePluginState(cmCore, pluginState);
     promoteDefaultFormat(cmCore);
     promoteContentModelInfo(cmCore, options);
     promoteCoreApi(cmCore);
+}
+
+function promoteCorePluginState(
+    cmCore: ContentModelEditorCore,
+    pluginState: ContentModelPluginState
+) {
+    Object.assign(cmCore, pluginState);
 }
 
 function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
