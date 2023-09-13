@@ -1,6 +1,7 @@
 import * as React from 'react';
 import ApiPaneProps, { ApiPlaygroundComponent } from './ApiPaneProps';
 import InsertEntityPane from './insertEntity/InsertEntityPane';
+import SearchPane from './search/SearchPane';
 
 export interface ApiPlaygroundReactComponent
     extends React.Component<ApiPaneProps, any>,
@@ -18,6 +19,10 @@ const apiEntries: { [key: string]: ApiEntry } = {
     entity: {
         name: 'Insert Entity',
         component: InsertEntityPane,
+    },
+    search: {
+        name: 'Search',
+        component: SearchPane,
     },
     more: {
         name: 'Coming soon...',

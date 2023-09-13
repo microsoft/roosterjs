@@ -1,5 +1,5 @@
-import ContentModelFormatPainterPlugin from '../../contentModel/plugins/ContentModelFormatPainterPlugin';
 import { isContentModelEditor } from 'roosterjs-content-model-editor';
+import { iterateSelections } from 'roosterjs-content-model-editor/lib/modelApi/selection/iterateSelections';
 import { RibbonButton } from 'roosterjs-react';
 
 /**
@@ -12,7 +12,18 @@ export const formatPainterButton: RibbonButton<'formatPainter'> = {
     iconName: 'Brush',
     onClick: editor => {
         if (isContentModelEditor(editor)) {
-            ContentModelFormatPainterPlugin.startFormatPainter(editor);
+            const contentModel = editor.createContentModel();
+
+            iterateSelections(
+                [contentModel],
+                (path, tableContext, block, segment) => console.log(segment),
+                {
+                    contentUnderSelectedTableCell: 'ignoreForTableOrCell',
+                    contentUnderSelectedGeneralElement: 'contentOnly',
+                },
+                undefined,
+                true
+            );
         }
         return true;
     },
