@@ -38,6 +38,8 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             // if current selection is table selection or image selection
             if (!core.contentModelEdit.cachedModel && model) {
                 core.contentModelEdit.cachedModel = model;
+
+                console.log(model);
             }
 
             core.lifecycle.shadowEditSelectionPath = selectionPath;

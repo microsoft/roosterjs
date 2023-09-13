@@ -32,9 +32,9 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         if (range) {
             core.contentModelEdit.cachedRangeEx = range;
         }
-    }
 
-    // TODO: Reconcile selection text node cache
+        core.api.createContentModel(core);
+    }
 
     return range;
 };

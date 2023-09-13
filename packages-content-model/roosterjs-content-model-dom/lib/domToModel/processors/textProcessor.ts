@@ -1,8 +1,8 @@
 import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { addSelectionMarker } from '../utils/addSelectionMarker';
-import { areSameFormats } from '../utils/areSameFormats';
 import { createText } from '../../modelApi/creators/createText';
+import { ensureParagraph } from 'roosterjs-content-model-dom';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
 import {
@@ -51,21 +51,11 @@ const WhiteSpaceValuesNeedToHandle = ['pre', 'pre-wrap', 'pre-line', 'break-spac
 
 function addTextSegment(group: ContentModelBlockGroup, text: string, context: DomToModelContext) {
     if (text) {
-        const lastBlock = group.blocks[group.blocks.length - 1];
-        const paragraph = lastBlock?.blockType == 'Paragraph' ? lastBlock : null;
-        const lastSegment = paragraph?.segments[paragraph.segments.length - 1];
+        const paragraph = ensureParagraph(group, context.blockFormat);
 
         if (
-            lastSegment?.segmentType == 'Text' &&
-            !!lastSegment.isSelected == !!context.isInSelection &&
-            areSameFormats(lastSegment.format, context.segmentFormat) &&
-            areSameFormats(lastSegment.link || {}, context.link.format || {}) &&
-            areSameFormats(lastSegment.code || {}, context.code.format || {})
-        ) {
-            lastSegment.text += text;
-        } else if (
             !hasSpacesOnly(text) ||
-            paragraph?.segments.length! > 0 ||
+            (paragraph?.segments.length ?? 0) > 0 ||
             WhiteSpaceValuesNeedToHandle.indexOf(paragraph?.format.whiteSpace || '') >= 0
         ) {
             const textModel = createText(text, context.segmentFormat);

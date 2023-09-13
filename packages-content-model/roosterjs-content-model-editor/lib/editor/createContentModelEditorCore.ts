@@ -15,6 +15,7 @@ import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
+import { textIndexedProcessor } from './overrides/textIndexedProcessor';
 
 /**
  * Editor Core creator for Content Model editor
@@ -95,6 +96,7 @@ function promoteContentModelInfo(
         {
             processorOverride: {
                 table: tablePreProcessor,
+                '#text': textIndexedProcessor,
             },
         },
         options.defaultDomToModelOptions,

@@ -1,16 +1,21 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import keyboardDelete from '../../publicApi/editing/keyboardDelete';
+import { areSameRangeEx } from 'roosterjs-content-model-editor/lib/modelApi/selection/areSameRangeEx';
 import { ContentModelEditPluginState } from '../../publicTypes/pluginState/ContentModelEditPluginState';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isCharacterValue } from 'roosterjs-editor-dom';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { reconcileTextSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/reconcileTextSelection';
 import {
     IEditor,
     Keys,
+    NodeType,
     PluginEvent,
     PluginEventType,
     PluginKeyDownEvent,
     PluginWithState,
     SelectionRangeEx,
+    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -83,6 +88,10 @@ export default class ContentModelEditPlugin
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
+                case PluginEventType.EditorReady:
+                    this.editor.createContentModel();
+                    break;
+
                 case PluginEventType.KeyDown:
                     this.handleKeyDownEvent(this.editor, event);
                     break;
@@ -137,13 +146,71 @@ export default class ContentModelEditPlugin
     };
 
     private reconcileSelection(editor: IContentModelEditor, newRangeEx?: SelectionRangeEx) {
-        // TODO: Really do reconcile selection
-        this.state.cachedModel = undefined;
-        this.state.cachedRangeEx = undefined;
+        const cachedRangeEx = this.state.cachedRangeEx;
+
+        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
+        newRangeEx = newRangeEx || editor.getSelectionRangeEx();
+
+        if (
+            this.state.cachedModel &&
+            (!cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx))
+        ) {
+            if (!this.internalReconcileSelection(cachedRangeEx, newRangeEx)) {
+                this.clearCachedModel(editor);
+                editor.createContentModel();
+            }
+        }
+
+        this.state.cachedRangeEx = newRangeEx;
+    }
+
+    private internalReconcileSelection(
+        cachedRangeEx: SelectionRangeEx | undefined,
+        newRangeEx: SelectionRangeEx
+    ) {
+        let newRange =
+            newRangeEx.type == SelectionRangeTypes.Normal && newRangeEx.ranges[0]?.collapsed
+                ? newRangeEx.ranges[0]
+                : undefined;
+
+        if (
+            cachedRangeEx?.type == SelectionRangeTypes.Normal &&
+            cachedRangeEx.ranges[0]?.collapsed
+        ) {
+            const range = cachedRangeEx.ranges[0];
+            const node = range.startContainer;
+
+            if (isNodeOfType(node, NodeType.Text) && node != newRange?.startContainer) {
+                reconcileTextSelection(node);
+            }
+        } else {
+            return false;
+        }
+
+        if (newRange) {
+            let { startContainer, startOffset } = newRange;
+            if (!isNodeOfType(startContainer, NodeType.Text)) {
+                startContainer = startContainer.childNodes[startOffset];
+                startOffset = 0;
+            }
+
+            if (isNodeOfType(startContainer, NodeType.Text)) {
+                if (reconcileTextSelection(startContainer, startOffset)) {
+                    console.log('Reconcile succeeded');
+
+                    return true;
+                }
+            }
+        }
+
+        return false;
     }
 
     private clearCachedModel(editor: IContentModelEditor) {
         if (!editor.isInShadowEdit()) {
+            if (this.state.cachedModel) {
+                console.log('Clear cache');
+            }
             this.state.cachedModel = undefined;
             this.state.cachedRangeEx = undefined;
         }
