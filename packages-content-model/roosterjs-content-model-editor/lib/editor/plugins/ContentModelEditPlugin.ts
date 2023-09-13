@@ -1,6 +1,6 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import keyboardDelete from '../../publicApi/editing/keyboardDelete';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelEditPluginState } from '../../publicTypes/pluginState/ContentModelEditPluginState';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isCharacterValue } from 'roosterjs-editor-dom';
 import {
@@ -15,21 +15,6 @@ import {
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
-
-/**
- * Plugin state for ContentModelEditPlugin
- */
-export interface ContentModelEditPluginState {
-    /**
-     * Cached selection range
-     */
-    cachedRangeEx?: SelectionRangeEx | undefined;
-
-    /**
-     * When reuse Content Model is allowed, we cache the Content Model object here after created
-     */
-    cachedModel?: ContentModelDocument;
-}
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.

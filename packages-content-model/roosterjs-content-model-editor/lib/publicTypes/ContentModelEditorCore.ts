@@ -1,10 +1,5 @@
-import { ContentModelEditPluginState } from '../editor/plugins/ContentModelEditPlugin';
-import {
-    CopyPastePluginState,
-    CoreApiMap,
-    EditorCore,
-    SelectionRangeEx,
-} from 'roosterjs-editor-types';
+import { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
@@ -73,22 +68,6 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel: SetContentModel;
-}
-
-/**
- * Temporary core plugin state for Content Model editor
- * TODO: Create Content Model plugin state from all core plugins once we have standalone Content Model Editor
- */
-export interface ContentModelPluginState {
-    /**
-     * Plugin state for ContentModelEditPlugin
-     */
-    contentModelEdit: ContentModelEditPluginState;
-
-    /**
-     * Plugin state for ContentModelCopyPastePlugin
-     */
-    copyPaste: CopyPastePluginState;
 }
 
 /**

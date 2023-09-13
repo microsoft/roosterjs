@@ -1,11 +1,10 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
+import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
+import { ContentModelEditPluginState } from '../../../lib/publicTypes/pluginState/ContentModelEditPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
-import ContentModelEditPlugin, {
-    ContentModelEditPluginState,
-} from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import {
     EntityOperation,
     Keys,
