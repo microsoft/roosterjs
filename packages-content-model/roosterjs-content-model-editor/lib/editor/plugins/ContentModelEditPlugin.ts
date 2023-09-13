@@ -16,9 +16,12 @@ import {
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
 
+/**
+ * Plugin state for ContentModelEditPlugin
+ */
 export interface ContentModelEditPluginState {
     /**
-     *
+     * Cached selection range
      */
     cachedRangeEx?: SelectionRangeEx | undefined;
 
