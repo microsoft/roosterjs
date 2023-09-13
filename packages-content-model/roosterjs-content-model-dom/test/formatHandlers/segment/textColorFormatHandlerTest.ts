@@ -1,6 +1,7 @@
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
+import { defaultHTMLStyleMap } from '../../../lib/config/defaultHTMLStyleMap';
 import { DeprecatedColors } from '../../../lib';
 import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { textColorFormatHandler } from '../../../lib/formatHandlers/segment/textColorFormatHandler';
@@ -74,7 +75,7 @@ describe('textColorFormatHandler.parse', () => {
     it('Color from hyperlink with override', () => {
         div.style.color = 'red';
 
-        textColorFormatHandler.parse(format, div, context, context.defaultStyles.a!);
+        textColorFormatHandler.parse(format, div, context, defaultHTMLStyleMap.a!);
 
         expect(format).toEqual({
             textColor: 'red',

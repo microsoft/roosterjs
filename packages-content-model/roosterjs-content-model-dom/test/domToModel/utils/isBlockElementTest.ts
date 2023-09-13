@@ -67,52 +67,6 @@ describe('isBlockElement', () => {
         expect(result).toBeTrue();
     });
 
-    it('Override DIV default style', () => {
-        const div = document.createElement('div');
-
-        context = createDomToModelContext(undefined, {
-            defaultStyleOverride: {
-                div: {
-                    display: 'inline',
-                },
-            },
-        });
-
-        const result = isBlockElement(div, context);
-        expect(result).toBeFalse();
-    });
-
-    it('Override SPAN default style', () => {
-        const span = document.createElement('span');
-
-        context = createDomToModelContext(undefined, {
-            defaultStyleOverride: {
-                span: {
-                    display: 'block',
-                },
-            },
-        });
-
-        const result = isBlockElement(span, context);
-        expect(result).toBeTrue();
-    });
-
-    it('Double override SPAN', () => {
-        const span = document.createElement('span');
-        span.style.display = 'inline';
-
-        context = createDomToModelContext(undefined, {
-            defaultStyleOverride: {
-                span: {
-                    display: 'block',
-                },
-            },
-        });
-
-        const result = isBlockElement(span, context);
-        expect(result).toBeFalse();
-    });
-
     it('display = flex', () => {
         const div = document.createElement('div');
         div.style.display = 'flex';

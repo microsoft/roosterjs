@@ -1,6 +1,5 @@
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { defaultStyleMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { DomToModelListFormat, EditorContext } from 'roosterjs-content-model-types';
 import {
     defaultFormatParsers,
@@ -15,7 +14,6 @@ describe('createDomToModelContext', () => {
     };
     const contextOptions = {
         elementProcessors: defaultProcessorMap,
-        defaultStyles: defaultStyleMap,
         formatParsers: getFormatParsers(),
         defaultElementProcessors: defaultProcessorMap,
         defaultFormatParsers: defaultFormatParsers,
@@ -134,9 +132,6 @@ describe('createDomToModelContext', () => {
             processorOverride: {
                 a: mockedAProcessor,
             },
-            defaultStyleOverride: {
-                ol: mockedOlStyle,
-            },
             formatParserOverride: {
                 bold: mockedBoldParser,
             },
@@ -146,7 +141,6 @@ describe('createDomToModelContext', () => {
         });
 
         expect(context.elementProcessors.a).toBe(mockedAProcessor);
-        expect(context.defaultStyles.ol).toBe(mockedOlStyle);
         expect(context.formatParsers.segment.indexOf(mockedBoldParser)).toBeGreaterThanOrEqual(0);
         expect(context.formatParsers.block).toEqual([
             ...getFormatParsers().block,
