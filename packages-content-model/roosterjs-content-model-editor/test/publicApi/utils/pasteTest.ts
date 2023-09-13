@@ -582,6 +582,7 @@ describe('Paste with clipboardData', () => {
     });
 
     afterEach(() => {
+        editor.dispose();
         document.getElementById(ID)?.remove();
     });
 
@@ -614,7 +615,10 @@ describe('Paste with clipboardData', () => {
                             format: {},
                         },
                     ],
-                    format: {},
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                    },
                     decorator: {
                         tagName: 'p',
                         format: {},
@@ -690,6 +694,13 @@ describe('Paste with clipboardData', () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {},
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://github.com/microsoft/roosterjs',
+                                },
+                                dataset: {},
+                            },
                         },
                     ],
                     blockType: 'Paragraph',

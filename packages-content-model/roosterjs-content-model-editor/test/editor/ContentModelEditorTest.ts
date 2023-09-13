@@ -198,7 +198,7 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
-        (editor as any).core.cachedModel = cachedModel;
+        (editor as any).core.contentModelEdit.cachedModel = cachedModel;
 
         spyOn(domToContentModel, 'domToContentModel');
 
@@ -206,20 +206,6 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(cachedModel);
         expect(domToContentModel.domToContentModel).not.toHaveBeenCalled();
-    });
-
-    it('cache model', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div);
-        const cachedModel = 'MODEL' as any;
-
-        editor.cacheContentModel(cachedModel);
-
-        expect((editor as any).core.cachedModel).toBe(cachedModel);
-
-        editor.cacheContentModel(null);
-
-        expect((editor as any).core.cachedModel).toBe(undefined);
     });
 
     it('default format', () => {

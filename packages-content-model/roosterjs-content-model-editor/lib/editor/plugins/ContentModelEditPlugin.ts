@@ -161,3 +161,13 @@ export default class ContentModelEditPlugin
         }
     }
 }
+
+/**
+ * @internal
+ * Create a new instance of ContentModelEditPlugin class.
+ * This is mostly for unit test
+ * @param state State of this plugin
+ */
+export function createContentModelEditPlugin(state: ContentModelEditPluginState) {
+    return new ContentModelEditPlugin(state);
+}

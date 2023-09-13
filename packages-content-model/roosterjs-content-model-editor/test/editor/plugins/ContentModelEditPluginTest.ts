@@ -1,9 +1,11 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
-import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
+import ContentModelEditPlugin, {
+    ContentModelEditPluginState,
+} from '../../../lib/editor/plugins/ContentModelEditPlugin';
 import {
     EntityOperation,
     Keys,
@@ -13,23 +15,29 @@ import {
 
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
-    let cacheContentModel: jasmine.Spy;
+    let pluginState: ContentModelEditPluginState;
     let getContentModelDefaultFormat: jasmine.Spy;
+    let plugin: ContentModelEditPlugin;
 
     beforeEach(() => {
-        cacheContentModel = jasmine.createSpy('cacheContentModel');
+        pluginState = {};
         getContentModelDefaultFormat = jasmine
             .createSpy('getContentModelDefaultFormat')
             .and.returnValue({});
 
         editor = ({
-            cacheContentModel,
             getContentModelDefaultFormat,
+            getDocument: () => document,
+            isInShadowEdit: () => false,
             getSelectionRangeEx: () =>
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
         } as any) as IContentModelEditor;
+    });
+
+    afterEach(() => {
+        plugin?.dispose();
     });
 
     describe('onPluginEvent', () => {
@@ -40,7 +48,7 @@ describe('ContentModelEditPlugin', () => {
         });
 
         it('Backspace', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
             const rawEvent = { which: Keys.BACKSPACE } as any;
 
             plugin.initialize(editor);
@@ -51,11 +59,11 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(pluginState).toEqual({});
         });
 
         it('Delete', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
             const rawEvent = { which: Keys.DELETE } as any;
 
             plugin.initialize(editor);
@@ -66,11 +74,11 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, rawEvent);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(pluginState).toEqual({});
         });
 
         it('Other key', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
             const rawEvent = { which: 41 } as any;
 
             plugin.initialize(editor);
@@ -81,11 +89,11 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(pluginState).toEqual({});
         });
 
         it('Default prevented', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
             const rawEvent = { which: Keys.DELETE, defaultPrevented: true } as any;
 
             plugin.initialize(editor);
@@ -95,11 +103,11 @@ describe('ContentModelEditPlugin', () => {
             });
 
             expect(keyboardDeleteSpy).not.toHaveBeenCalled();
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(pluginState).toEqual({ cachedModel: undefined, cachedRangeEx: undefined });
         });
 
         it('Trigger entity event first', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
             const wrapper = 'WRAPPER' as any;
 
             plugin.initialize(editor);
@@ -131,11 +139,11 @@ describe('ContentModelEditPlugin', () => {
             expect(keyboardDeleteSpy).toHaveBeenCalledWith(editor, {
                 which: Keys.DELETE,
             } as any);
-            expect(cacheContentModel).not.toHaveBeenCalled();
+            expect(pluginState).toEqual({});
         });
 
         it('SelectionChanged event should clear cached model', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
 
             plugin.initialize(editor);
             plugin.onPluginEvent({
@@ -143,11 +151,11 @@ describe('ContentModelEditPlugin', () => {
                 selectionRangeEx: null!,
             });
 
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(pluginState).toEqual({ cachedModel: undefined, cachedRangeEx: undefined });
         });
 
         it('keyboardDelete returns false', () => {
-            const plugin = new ContentModelEditPlugin();
+            plugin = new ContentModelEditPlugin(pluginState);
 
             keyboardDeleteSpy.and.returnValue(false);
 
@@ -157,7 +165,10 @@ describe('ContentModelEditPlugin', () => {
                 selectionRangeEx: null!,
             });
 
-            expect(cacheContentModel).toHaveBeenCalledWith(null);
+            expect(pluginState).toEqual({
+                cachedModel: undefined,
+                cachedRangeEx: undefined,
+            });
         });
     });
 });
@@ -170,8 +181,11 @@ describe('ContentModelEditPlugin for default format', () => {
     let setPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
     let addUndoSnapshotSpy: jasmine.Spy;
+    let plugin: ContentModelEditPlugin;
+    let pluginState: ContentModelEditPluginState;
 
     beforeEach(() => {
+        pluginState = {};
         setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
         getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx');
@@ -188,11 +202,16 @@ describe('ContentModelEditPlugin for default format', () => {
             }),
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
+            getDocument: () => document,
         } as any) as IContentModelEditor;
     });
 
+    afterEach(() => {
+        plugin?.dispose();
+    });
+
     it('Collapsed range, text input, under editor directly', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'a' } as any;
 
         getSelectionRangeEx.and.returnValue({
@@ -243,7 +262,7 @@ describe('ContentModelEditPlugin for default format', () => {
     });
 
     it('Expanded range, text input, under editor directly', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'a' } as any;
 
         getSelectionRangeEx.and.returnValue({
@@ -292,7 +311,7 @@ describe('ContentModelEditPlugin for default format', () => {
     });
 
     it('Collapsed range, IME input, under editor directly', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'Process' } as any;
 
         getSelectionRangeEx.and.returnValue({
@@ -343,7 +362,7 @@ describe('ContentModelEditPlugin for default format', () => {
     });
 
     it('Collapsed range, other input, under editor directly', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'Up' } as any;
 
         getSelectionRangeEx.and.returnValue({
@@ -390,7 +409,7 @@ describe('ContentModelEditPlugin for default format', () => {
     });
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'a' } as any;
         const div = document.createElement('div');
 
@@ -443,7 +462,7 @@ describe('ContentModelEditPlugin for default format', () => {
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
-        const plugin = new ContentModelEditPlugin();
+        plugin = new ContentModelEditPlugin(pluginState);
         const rawEvent = { key: 'a' } as any;
 
         getSelectionRangeEx.and.returnValue({

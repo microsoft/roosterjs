@@ -34,5 +34,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         }
     }
 
+    // TODO: Reconcile selection text node cache
+
     return range;
 };

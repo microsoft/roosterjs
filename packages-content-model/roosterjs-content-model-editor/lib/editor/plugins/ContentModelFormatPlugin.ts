@@ -85,3 +85,12 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         }
     }
 }
+
+/**
+ * @internal
+ * Create a new instance of ContentModelFormatPlugin.
+ * This is mostly for unit test
+ */
+export function createContentModelFormatPlugin() {
+    return new ContentModelFormatPlugin();
+}
