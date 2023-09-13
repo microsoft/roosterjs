@@ -83,7 +83,7 @@ export function mergeModel(
 
             switch (block.blockType) {
                 case 'Paragraph':
-                    mergeParagraph(insertPosition, block, i == 0);
+                    mergeParagraph(insertPosition, block, i == 0, options);
                     break;
 
                 case 'Divider':
@@ -120,7 +120,8 @@ export function mergeModel(
 function mergeParagraph(
     markerPosition: InsertPoint,
     newPara: ContentModelParagraph,
-    mergeToCurrentParagraph: boolean
+    mergeToCurrentParagraph: boolean,
+    option: MergeModelOption | undefined
 ) {
     const { paragraph, marker } = markerPosition;
     const newParagraph = mergeToCurrentParagraph
@@ -128,6 +129,12 @@ function mergeParagraph(
         : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
+    if (option?.mergeFormat == 'none' && mergeToCurrentParagraph) {
+        newParagraph.segments.forEach(segment => {
+            segment.format = { ...(newParagraph.segmentFormat || {}), ...segment.format };
+        });
+        delete newParagraph.segmentFormat;
+    }
     if (segmentIndex >= 0) {
         newParagraph.segments.splice(segmentIndex, 0, ...newPara.segments);
     }
