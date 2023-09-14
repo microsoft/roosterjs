@@ -6,17 +6,12 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 describe('ContentModelEditPlugin', () => {
     let editor: IContentModelEditor;
     let invalidateCache: jasmine.Spy;
-    let getContentModelDefaultFormat: jasmine.Spy;
 
     beforeEach(() => {
         invalidateCache = jasmine.createSpy('invalidateCache');
-        getContentModelDefaultFormat = jasmine
-            .createSpy('getContentModelDefaultFormat')
-            .and.returnValue({});
 
         editor = ({
             invalidateCache,
-            getContentModelDefaultFormat,
             getSelectionRangeEx: () =>
                 ({
                     type: -1,

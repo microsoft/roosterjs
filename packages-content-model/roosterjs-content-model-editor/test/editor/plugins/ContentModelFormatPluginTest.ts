@@ -19,6 +19,7 @@ describe('ContentModelFormatPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -48,6 +49,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
         const model = createContentModelDocument();
@@ -81,6 +83,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -113,6 +116,7 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -153,6 +157,7 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -217,6 +222,7 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -276,6 +282,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -308,6 +315,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -338,6 +346,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -368,6 +377,7 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
