@@ -1,25 +1,13 @@
-import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import keyboardDelete from '../../publicApi/editing/keyboardDelete';
-import { areSameRangeEx } from 'roosterjs-content-model-editor/lib/modelApi/selection/areSameRangeEx';
-import { ContentModelEditPluginState } from '../../publicTypes/pluginState/ContentModelEditPluginState';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isCharacterValue } from 'roosterjs-editor-dom';
-import { isNodeOfType } from 'roosterjs-content-model-dom';
-import { reconcileTextSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/reconcileTextSelection';
 import {
+    EditorPlugin,
     IEditor,
     Keys,
-    NodeType,
     PluginEvent,
     PluginEventType,
     PluginKeyDownEvent,
-    PluginWithState,
-    SelectionRangeEx,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
-
-// During IME input, KeyDown event will have "Process" as key
-const ProcessKey = 'Process';
 
 /**
  * ContentModel plugins helps editor to do editing operation on top of content model.
@@ -27,17 +15,8 @@ const ProcessKey = 'Process';
  * 1. Delete Key
  * 2. Backspace Key
  */
-export default class ContentModelEditPlugin
-    implements PluginWithState<ContentModelEditPluginState> {
+export default class ContentModelEditPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
-
-    /**
-     * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
-     */
-    constructor(private state: ContentModelEditPluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
-    }
 
     /**
      * Get name of this plugin
@@ -55,7 +34,6 @@ export default class ContentModelEditPlugin
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
-        this.editor.getDocument().addEventListener('selectionchange', this.onNativeSelectionChange);
     }
 
     /**
@@ -64,19 +42,7 @@ export default class ContentModelEditPlugin
      * called, plugin should not call to any editor method since it will result in error.
      */
     dispose() {
-        if (this.editor) {
-            this.editor
-                .getDocument()
-                .removeEventListener('selectionchange', this.onNativeSelectionChange);
-            this.editor = null;
-        }
-    }
-
-    /**
-     * Get plugin state object
-     */
-    getState(): ContentModelEditPluginState {
-        return this.state;
+        this.editor = null;
     }
 
     /**
@@ -88,21 +54,8 @@ export default class ContentModelEditPlugin
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.EditorReady:
-                    this.editor.createContentModel();
-                    break;
-
                 case PluginEventType.KeyDown:
                     this.handleKeyDownEvent(this.editor, event);
-                    break;
-
-                case PluginEventType.Input:
-                case PluginEventType.SelectionChanged:
-                    this.reconcileSelection(this.editor);
-                    break;
-
-                case PluginEventType.ContentChanged:
-                    this.clearCachedModel(this.editor);
                     break;
             }
         }
@@ -114,7 +67,7 @@ export default class ContentModelEditPlugin
 
         if (rawEvent.defaultPrevented || event.handledByEditFeature) {
             // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
-            this.clearCachedModel(editor);
+            editor.invalidateCache();
         } else {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
@@ -124,95 +77,7 @@ export default class ContentModelEditPlugin
                     // No need to clear cache here since if we rely on browser's behavior, there will be Input event and its handler will reconcile cache
                     keyboardDelete(editor, rawEvent);
                     break;
-
-                case Keys.ENTER:
-                    // ENTER key will create new paragraph, so need to update cache to reflect this change
-                    this.clearCachedModel(editor);
-                    break;
-
-                default:
-                    if (isCharacterValue(rawEvent) || rawEvent.key == ProcessKey) {
-                        applyDefaultFormat(editor);
-                    }
-                    break;
             }
-        }
-    }
-
-    private onNativeSelectionChange = () => {
-        if (this.editor?.hasFocus()) {
-            this.reconcileSelection(this.editor);
-        }
-    };
-
-    private reconcileSelection(editor: IContentModelEditor, newRangeEx?: SelectionRangeEx) {
-        const cachedRangeEx = this.state.cachedRangeEx;
-
-        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
-        newRangeEx = newRangeEx || editor.getSelectionRangeEx();
-
-        if (
-            this.state.cachedModel &&
-            (!cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx))
-        ) {
-            if (!this.internalReconcileSelection(cachedRangeEx, newRangeEx)) {
-                this.clearCachedModel(editor);
-                editor.createContentModel();
-            }
-        }
-
-        this.state.cachedRangeEx = newRangeEx;
-    }
-
-    private internalReconcileSelection(
-        cachedRangeEx: SelectionRangeEx | undefined,
-        newRangeEx: SelectionRangeEx
-    ) {
-        let newRange =
-            newRangeEx.type == SelectionRangeTypes.Normal && newRangeEx.ranges[0]?.collapsed
-                ? newRangeEx.ranges[0]
-                : undefined;
-
-        if (
-            cachedRangeEx?.type == SelectionRangeTypes.Normal &&
-            cachedRangeEx.ranges[0]?.collapsed
-        ) {
-            const range = cachedRangeEx.ranges[0];
-            const node = range.startContainer;
-
-            if (isNodeOfType(node, NodeType.Text) && node != newRange?.startContainer) {
-                reconcileTextSelection(node);
-            }
-        } else {
-            return false;
-        }
-
-        if (newRange) {
-            let { startContainer, startOffset } = newRange;
-            if (!isNodeOfType(startContainer, NodeType.Text)) {
-                startContainer = startContainer.childNodes[startOffset];
-                startOffset = 0;
-            }
-
-            if (isNodeOfType(startContainer, NodeType.Text)) {
-                if (reconcileTextSelection(startContainer, startOffset)) {
-                    console.log('Reconcile succeeded');
-
-                    return true;
-                }
-            }
-        }
-
-        return false;
-    }
-
-    private clearCachedModel(editor: IContentModelEditor) {
-        if (!editor.isInShadowEdit()) {
-            if (this.state.cachedModel) {
-                console.log('Clear cache');
-            }
-            this.state.cachedModel = undefined;
-            this.state.cachedRangeEx = undefined;
         }
     }
 }
@@ -221,8 +86,7 @@ export default class ContentModelEditPlugin
  * @internal
  * Create a new instance of ContentModelEditPlugin class.
  * This is mostly for unit test
- * @param state State of this plugin
  */
-export function createContentModelEditPlugin(state: ContentModelEditPluginState) {
-    return new ContentModelEditPlugin(state);
+export function createContentModelEditPlugin() {
+    return new ContentModelEditPlugin();
 }

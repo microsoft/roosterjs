@@ -84,6 +84,8 @@ export { default as ContentModelEditPlugin } from './editor/plugins/ContentModel
 export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
+export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
+
 export {
     createContentModelEditorCore,
     promoteToContentModelEditorCore,
@@ -93,5 +95,5 @@ export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
 
-export { ContentModelEditPluginState } from './publicTypes/pluginState/ContentModelEditPluginState';
+export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

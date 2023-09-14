@@ -18,6 +18,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     const modelToDomContext = option
         ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
         : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
+
     const range = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
@@ -27,13 +28,8 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 
     if (!core.lifecycle.shadowEditFragment) {
+        core.cache.cachedRangeEx = range || undefined;
         core.api.select(core, range);
-
-        if (range) {
-            core.contentModelEdit.cachedRangeEx = range;
-        }
-
-        core.api.createContentModel(core);
     }
 
     return range;

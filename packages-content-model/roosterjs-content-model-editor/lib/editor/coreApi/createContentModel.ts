@@ -19,7 +19,7 @@ import {
  * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export const createContentModel: CreateContentModel = (core, option, selectionOverride) => {
-    let cachedModel = selectionOverride ? null : core.contentModelEdit.cachedModel;
+    let cachedModel = selectionOverride ? null : core.cache.cachedModel;
 
     if (cachedModel && core.lifecycle.shadowEditFragment) {
         // When in shadow edit, use a cloned model so we won't pollute the cached one
@@ -27,15 +27,18 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     }
 
     if (cachedModel) {
-        console.log('Create from cache');
+        if (!option) {
+            console.log('Create from cache');
+        }
+
         return cachedModel;
     } else {
         const selection = selectionOverride || core.api.getSelectionRangeEx(core);
         const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
-            core.contentModelEdit.cachedModel = model;
-            core.contentModelEdit.cachedRangeEx = selection;
+            core.cache.cachedModel = model;
+            core.cache.cachedRangeEx = selection;
 
             console.log('!!! Create New Content Model !!!!!');
         }

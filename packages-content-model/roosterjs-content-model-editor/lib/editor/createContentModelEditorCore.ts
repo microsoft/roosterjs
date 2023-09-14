@@ -6,6 +6,7 @@ import { ContentModelPluginState } from '../publicTypes/pluginState/ContentModel
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
+import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
 import { createContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
 import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
@@ -25,7 +26,7 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorOptions
 > = (contentDiv, options) => {
     const pluginState: ContentModelPluginState = {
-        contentModelEdit: {},
+        cache: {},
         copyPaste: {
             allowedCustomPasteType: options.allowedCustomPasteType || [],
         },
@@ -34,8 +35,9 @@ export const createContentModelEditorCore: CoreCreator<
         ...options,
         plugins: [
             ...(options.plugins || []),
+            createContentModelCachePlugin(pluginState.cache),
             createContentModelFormatPlugin(),
-            createContentModelEditPlugin(pluginState.contentModelEdit),
+            createContentModelEditPlugin(),
         ],
         corePluginOverride: {
             typeInContainer: new ContentModelTypeInContainerPlugin(),

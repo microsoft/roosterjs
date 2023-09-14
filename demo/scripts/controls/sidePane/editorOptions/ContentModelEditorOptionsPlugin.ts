@@ -24,9 +24,7 @@ const initialState: BuildInPluginState = {
         contentModelPaste: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
-    defaultFormat: {
-        fontFamily: 'Arial',
-    },
+    defaultFormat: {},
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
