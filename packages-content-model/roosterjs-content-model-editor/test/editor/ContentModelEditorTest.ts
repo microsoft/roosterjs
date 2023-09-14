@@ -198,7 +198,7 @@ describe('ContentModelEditor', () => {
         const editor = new ContentModelEditor(div);
         const cachedModel = 'MODEL' as any;
 
-        (editor as any).core.contentModelEdit.cachedModel = cachedModel;
+        (editor as any).core.cache.cachedModel = cachedModel;
 
         spyOn(domToContentModel, 'domToContentModel');
 

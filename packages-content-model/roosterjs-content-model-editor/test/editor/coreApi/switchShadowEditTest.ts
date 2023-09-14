@@ -27,18 +27,18 @@ describe('switchShadowEdit', () => {
             },
             lifecycle: {},
             contentDiv: document.createElement('div'),
-            contentModelEdit: {},
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 
     describe('was off', () => {
         it('no cache, isOn', () => {
-            core.contentModelEdit.cachedModel = undefined;
+            core.cache.cachedModel = undefined;
             switchShadowEdit(core, true);
 
             expect(createContentModel).toHaveBeenCalledWith(core);
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(mockedModel);
+            expect(core.cache.cachedModel).toBe(mockedModel);
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
                 core,
@@ -52,13 +52,13 @@ describe('switchShadowEdit', () => {
         });
 
         it('with cache, isOn', () => {
-            core.contentModelEdit.cachedModel = mockedCachedModel;
+            core.cache.cachedModel = mockedCachedModel;
 
             switchShadowEdit(core, true);
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(mockedCachedModel);
+            expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -77,19 +77,19 @@ describe('switchShadowEdit', () => {
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(undefined);
+            expect(core.cache.cachedModel).toBe(undefined);
 
             expect(triggerEvent).not.toHaveBeenCalled();
         });
 
         it('with cache, isOff', () => {
-            core.contentModelEdit.cachedModel = mockedCachedModel;
+            core.cache.cachedModel = mockedCachedModel;
 
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(mockedCachedModel);
+            expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).not.toHaveBeenCalled();
         });
@@ -105,19 +105,19 @@ describe('switchShadowEdit', () => {
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(undefined);
+            expect(core.cache.cachedModel).toBe(undefined);
 
             expect(triggerEvent).not.toHaveBeenCalled();
         });
 
         it('with cache, isOn', () => {
-            core.contentModelEdit.cachedModel = mockedCachedModel;
+            core.cache.cachedModel = mockedCachedModel;
 
             switchShadowEdit(core, true);
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(mockedCachedModel);
+            expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).not.toHaveBeenCalled();
         });
@@ -127,7 +127,7 @@ describe('switchShadowEdit', () => {
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).not.toHaveBeenCalled();
-            expect(core.contentModelEdit.cachedModel).toBe(undefined);
+            expect(core.cache.cachedModel).toBe(undefined);
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(
@@ -140,13 +140,13 @@ describe('switchShadowEdit', () => {
         });
 
         it('with cache, isOff', () => {
-            core.contentModelEdit.cachedModel = mockedCachedModel;
+            core.cache.cachedModel = mockedCachedModel;
 
             switchShadowEdit(core, false);
 
             expect(createContentModel).not.toHaveBeenCalled();
             expect(setContentModel).toHaveBeenCalledWith(core, mockedCachedModel);
-            expect(core.contentModelEdit.cachedModel).toBe(mockedCachedModel);
+            expect(core.cache.cachedModel).toBe(mockedCachedModel);
 
             expect(triggerEvent).toHaveBeenCalledTimes(1);
             expect(triggerEvent).toHaveBeenCalledWith(

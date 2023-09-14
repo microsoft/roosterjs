@@ -47,7 +47,7 @@ describe('setContentModel', () => {
             },
             lifecycle: {},
             defaultModelToDomConfig: mockedConfig,
-            contentModelEdit: {},
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 

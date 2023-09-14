@@ -30,7 +30,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         core.api.select(core, range);
 
         if (range) {
-            core.contentModelEdit.cachedRangeEx = range;
+            core.cache.cachedRangeEx = range;
         }
     }
 

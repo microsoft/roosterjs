@@ -4,7 +4,7 @@ import { SelectionRangeEx } from 'roosterjs-editor-types';
 /**
  * Plugin state for ContentModelEditPlugin
  */
-export interface ContentModelEditPluginState {
+export interface ContentModelCachePluginState {
     /**
      * Cached selection range
      */

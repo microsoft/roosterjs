@@ -40,7 +40,7 @@ describe('createContentModel', () => {
                 createEditorContext,
                 getSelectionRangeEx,
             },
-            contentModelEdit: {
+            cache: {
                 cachedModel: mockedCachedMode,
             },
             lifecycle: {},
@@ -48,7 +48,7 @@ describe('createContentModel', () => {
     });
 
     it('Reuse model, no cache, no shadow edit', () => {
-        core.contentModelEdit.cachedModel = undefined;
+        core.cache.cachedModel = undefined;
 
         const model = createContentModel(core);
 
@@ -104,7 +104,7 @@ describe('createContentModel with selection', () => {
                 getSelectionRangeEx: getSelectionRangeExSpy,
                 createEditorContext: createEditorContextSpy,
             },
-            contentModelEdit: {},
+            cache: {},
         };
     });
 

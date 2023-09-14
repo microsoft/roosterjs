@@ -1,3 +1,4 @@
+import * as ContentModelCachePlugin from '../../lib/editor/corePlugins/ContentModelCachePlugin';
 import * as ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import * as ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
@@ -23,6 +24,7 @@ const mockedModelToDomConfig = {
 } as any;
 const mockedFormatPlugin = 'FORMATPLUGIN' as any;
 const mockedEditPlugin = 'EDITPLUGIN' as any;
+const mockedCachePlugin = 'CACHPLUGIN' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -58,6 +60,9 @@ describe('createContentModelEditorCore', () => {
         spyOn(ContentModelEditPlugin, 'createContentModelEditPlugin').and.returnValue(
             mockedEditPlugin
         );
+        spyOn(ContentModelCachePlugin, 'createContentModelCachePlugin').and.returnValue(
+            mockedCachePlugin
+        );
 
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(
             mockedDomToModelConfig
@@ -76,7 +81,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedFormatPlugin, mockedEditPlugin],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -120,7 +125,7 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            contentModelEdit: {},
+            cache: {},
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
@@ -141,7 +146,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
-            plugins: [mockedFormatPlugin, mockedEditPlugin],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -186,7 +191,7 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            contentModelEdit: {},
+            cache: {},
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
@@ -211,7 +216,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedFormatPlugin, mockedEditPlugin],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -263,7 +268,7 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            contentModelEdit: {},
+            cache: {},
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
@@ -278,7 +283,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedFormatPlugin, mockedEditPlugin],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -323,7 +328,7 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            contentModelEdit: {},
+            cache: {},
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
@@ -346,7 +351,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedFormatPlugin, mockedEditPlugin],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -390,7 +395,7 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            contentModelEdit: {},
+            cache: {},
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
