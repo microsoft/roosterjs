@@ -6,7 +6,6 @@ import {
 } from '../../formatHandlers/defaultFormatHandlers';
 
 /**
- * @internal
  * @param editorContext
  * @returns
  */

@@ -125,7 +125,6 @@ describe('createDomToModelContext', () => {
 
     it('with override', () => {
         const mockedAProcessor = 'a' as any;
-        const mockedOlStyle = 'ol' as any;
         const mockedBoldParser = 'bold' as any;
         const mockedBlockParser = 'block' as any;
         const context = createDomToModelContext(undefined, {
