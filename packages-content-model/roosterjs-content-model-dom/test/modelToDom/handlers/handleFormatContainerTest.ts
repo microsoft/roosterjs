@@ -104,15 +104,13 @@ describe('handleFormatContainer', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleFormatContainer(document, parent, quote, context, null);
+        handleFormatContainer(document, parent, quote, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe(
             '<blockquote style="margin: 0px;"><div>test</div></blockquote>'
         );
-        expect(onNodeCreated).toHaveBeenCalledTimes(3);
-        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);
-        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('blockquote'));
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(quote);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('blockquote'));
     });
 });

@@ -46,7 +46,6 @@ describe('insertLink', () => {
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel.calls.argsFor(0)[0]).toEqual(expectedModel);
-            expect(typeof setContentModel.calls.argsFor(0)[2]).toEqual('function');
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }

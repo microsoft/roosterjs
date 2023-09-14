@@ -150,9 +150,7 @@ describe('handleSegment', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<span><img src="http://test.com/test"></span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);

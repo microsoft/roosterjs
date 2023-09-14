@@ -95,9 +95,7 @@ describe('handleText', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<span>test</span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);

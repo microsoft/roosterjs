@@ -10,13 +10,14 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
     doc,
     parent,
     segment,
-    context
+    context,
+    onNodeCreated
 ) => {
     const { code, link } = segment;
 
     if (link) {
         stackFormat(context, 'a', () => {
-            const a = document.createElement('a');
+            const a = doc.createElement('a');
 
             moveChildNodes(a, parent);
             parent.appendChild(a);
@@ -24,20 +25,20 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
             applyFormat(a, context.formatAppliers.link, link.format, context);
             applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
 
-            context.onNodeCreated?.(link, a);
+            onNodeCreated?.(link, a);
         });
     }
 
     if (code) {
         stackFormat(context, 'code', () => {
-            const codeNode = document.createElement('code');
+            const codeNode = doc.createElement('code');
 
             moveChildNodes(codeNode, parent);
             parent.appendChild(codeNode);
 
             applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 
-            context.onNodeCreated?.(code, codeNode);
+            onNodeCreated?.(code, codeNode);
         });
     }
 };

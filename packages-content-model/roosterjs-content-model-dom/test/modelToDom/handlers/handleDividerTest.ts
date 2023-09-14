@@ -150,9 +150,7 @@ describe('handleDivider', () => {
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
         const parent = document.createElement('div');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleDivider(document, parent, hr, context, null);
+        handleDivider(document, parent, hr, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<hr>');
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(hr);

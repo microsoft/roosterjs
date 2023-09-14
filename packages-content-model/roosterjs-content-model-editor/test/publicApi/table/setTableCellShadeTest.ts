@@ -43,7 +43,6 @@ describe('setTableCellShade', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                undefined,
                 undefined
             );
         } else {

@@ -42,8 +42,7 @@ describe('handleSegment', () => {
         };
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-        handleBr(document, parent, br, context);
+        handleBr(document, parent, br, context, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<span style="color: red;"><br></span>');
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(br);

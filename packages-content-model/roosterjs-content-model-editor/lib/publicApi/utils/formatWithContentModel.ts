@@ -1,4 +1,5 @@
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
+import { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
@@ -15,26 +16,24 @@ import {
  * @param editor Content Model editor
  * @param apiName Name of the format API
  * @param formatter Formatter function, see ContentModelFormatter
- * @param options More options, see FormatWithContentModelOptions
+ * @param formatOptions More options, see FormatWithContentModelOptions
+ * @param domToModelOption Options for DOM to Content Model conversion
+ * @param modelToDomOption Options for Content Model to DOM conversion
  */
 export function formatWithContentModel(
     editor: IContentModelEditor,
     apiName: string,
     formatter: ContentModelFormatter,
-    options?: FormatWithContentModelOptions
+    formatOptions?: FormatWithContentModelOptions,
+    domToModelOption?: DomToModelOption,
+    modelToDomOption?: ModelToDomOption
 ) {
-    const {
-        onNodeCreated,
-        preservePendingFormat,
-        getChangeData,
-        changeSource,
-        rawEvent,
-        selectionOverride,
-    } = options || {};
+    const { preservePendingFormat, getChangeData, changeSource, rawEvent, selectionOverride } =
+        formatOptions || {};
 
     editor.focus();
 
-    const model = editor.createContentModel(undefined /*option*/, selectionOverride);
+    const model = editor.createContentModel(domToModelOption, selectionOverride);
     const context: FormatWithContentModelContext = {
         newEntities: [],
         deletedEntities: [],
@@ -47,7 +46,7 @@ export function formatWithContentModel(
             handleDeletedEntities(editor, context);
 
             if (model) {
-                editor.setContentModel(model, undefined /*options*/, onNodeCreated);
+                editor.setContentModel(model, modelToDomOption);
             }
 
             if (preservePendingFormat) {

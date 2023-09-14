@@ -7,7 +7,6 @@ import {
     ContentModelBlockHandler,
     ContentModelFormatContainer,
     ContentModelSegmentFormat,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
@@ -19,11 +18,12 @@ const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
  * @internal
  */
 export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatContainer> = (
-    doc: Document,
-    parent: Node,
-    container: ContentModelFormatContainer,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    container,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     let element = context.allowCacheElement ? container.cachedElement : undefined;
 
@@ -64,7 +64,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     }
 
     if (element) {
-        context.onNodeCreated?.(container, element);
+        onNodeCreated?.(container, element);
     }
 
     return refNode;

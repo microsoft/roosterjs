@@ -1,20 +1,17 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelDivider } from 'roosterjs-content-model-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
-    ContentModelBlockHandler,
-    ContentModelDivider,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
-    doc: Document,
-    parent: Node,
-    divider: ContentModelDivider,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    divider,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     let element = context.allowCacheElement ? divider.cachedElement : undefined;
 
@@ -36,7 +33,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
         }
     }
 
-    context.onNodeCreated?.(divider, element);
+    onNodeCreated?.(divider, element);
 
     return refNode;
 };

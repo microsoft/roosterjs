@@ -216,9 +216,7 @@ describe('handleEntity', () => {
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
         const parent = document.createElement('div');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleEntity(document, parent, entityModel, context, null);
+        handleEntity(document, parent, entityModel, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'

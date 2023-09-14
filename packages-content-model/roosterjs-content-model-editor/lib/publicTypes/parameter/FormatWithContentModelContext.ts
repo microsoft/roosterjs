@@ -1,9 +1,5 @@
 import { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
-    ContentModelDocument,
-    ContentModelEntity,
-    OnNodeCreated,
-} from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelEntity } from 'roosterjs-content-model-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
@@ -65,13 +61,6 @@ export interface FormatWithContentModelOptions {
      * Change source used for triggering a ContentChanged event. @default ChangeSource.Format.
      */
     changeSource?: string;
-
-    /**
-     * An optional callback that will be called when a DOM node is created
-     * @param modelElement The related Content Model element
-     * @param node The node created for this model element
-     */
-    onNodeCreated?: OnNodeCreated;
 
     /**
      * Optional callback to get an object used for change data in ContentChangedEvent

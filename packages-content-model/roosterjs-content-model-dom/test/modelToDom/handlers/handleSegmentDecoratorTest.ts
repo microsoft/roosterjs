@@ -154,9 +154,7 @@ describe('handleSegmentDecorator', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleSegmentDecorator(document, span, segment, context);
+        handleSegmentDecorator(document, span, segment, context, onNodeCreated);
 
         expect(parent.innerHTML).toBe(
             '<span><code><a href="https://www.test.com"></a></code></span>'

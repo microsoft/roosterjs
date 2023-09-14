@@ -175,11 +175,4 @@ export interface ModelToDomSettings {
      * This provides a way to call original format applier from an overridden applier function
      */
     defaultFormatAppliers: Readonly<FormatAppliers>;
-
-    /**
-     * An optional callback that will be called when a DOM node is created
-     * @param modelElement The related Content Model element
-     * @param node The node created for this model element
-     */
-    onNodeCreated?: OnNodeCreated;
 }
