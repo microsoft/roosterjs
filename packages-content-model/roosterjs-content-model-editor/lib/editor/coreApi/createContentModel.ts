@@ -40,7 +40,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
             core.cache.cachedModel = model;
             core.cache.cachedRangeEx = selection;
 
-            console.log('!!! Create New Content Model !!!!!');
+            console.error('!!! Create New Content Model !!!!!');
         }
 
         return model;

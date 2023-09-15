@@ -57,18 +57,6 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         if (!core.lifecycle.shadowEditFragment) {
-            core.cache.cachedModel = undefined;
-            core.cache.cachedRangeEx = undefined;
-        }
-    }
-
-    /**
-     * Notify editor the current cache may be invalid
-     */
-    invalidateCache() {
-        const core = this.getCore();
-
-        if (!core.lifecycle.shadowEditFragment) {
             if (core.cache.cachedModel) {
                 console.log('Clear cache');
             }
