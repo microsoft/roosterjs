@@ -452,9 +452,7 @@ describe('handleParagraph', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleParagraph(document, parent, paragraph, context, null);
+        handleParagraph(document, parent, paragraph, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<div></div>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);

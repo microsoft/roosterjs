@@ -1,21 +1,18 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelListItem } from 'roosterjs-content-model-types';
 import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
-    ContentModelBlockHandler,
-    ContentModelListItem,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
-    doc: Document,
-    parent: Node,
-    listItem: ContentModelListItem,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    listItem,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     let layer = 0;
     const { nodeStack } = context.listFormat;
@@ -71,7 +68,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         nodeStack.push({ node: newList, ...level });
 
-        context.onNodeCreated?.(level, newList);
+        onNodeCreated?.(level, newList);
     }
 
     return refNode;

@@ -192,7 +192,6 @@ describe('ContentModelFormatPlugin', () => {
                     },
                 ],
             },
-            undefined,
             undefined
         );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
@@ -262,7 +261,6 @@ describe('ContentModelFormatPlugin', () => {
                     },
                 ],
             },
-            undefined,
             undefined
         );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);

@@ -506,19 +506,15 @@ describe('handleListItem without format handler', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleListItem(document, parent, listItem, context, null);
+        handleListItem(document, parent, listItem, context, null, onNodeCreated);
 
         expect(
             ['<ol start="1"><li></li></ol>', '<ol start="1"><li></li></ol>'].indexOf(
                 parent.innerHTML
             ) >= 0
         ).toBeTrue();
-        expect(onNodeCreated).toHaveBeenCalledTimes(2);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listLevel0);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listItem);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('li'));
+        expect(onNodeCreated).toHaveBeenCalledTimes(1);
+        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listItem);
+        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('li'));
     });
 });

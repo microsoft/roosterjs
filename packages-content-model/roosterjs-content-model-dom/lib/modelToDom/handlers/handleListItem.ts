@@ -1,23 +1,20 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelListItem } from 'roosterjs-content-model-types';
 import { listItemMetadataFormatHandler } from '../../formatHandlers/list/listItemMetadataFormatHandler';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
-    ContentModelBlockHandler,
-    ContentModelListItem,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
-    doc: Document,
-    parent: Node,
-    listItem: ContentModelListItem,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    listItem,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
@@ -54,7 +51,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
         unwrap(li);
     }
 
-    context.onNodeCreated?.(listItem, li);
+    onNodeCreated?.(listItem, li);
 
     return refNode;
 };

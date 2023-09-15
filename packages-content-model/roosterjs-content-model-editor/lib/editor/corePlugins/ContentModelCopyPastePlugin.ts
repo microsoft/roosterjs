@@ -13,8 +13,10 @@ import {
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
+    ContentModelBlockHandler,
     ContentModelDecorator,
     ContentModelSegment,
+    ContentModelTable,
     ContentModelTableRow,
 } from 'roosterjs-content-model-types';
 import {
@@ -139,8 +141,11 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                createModelToDomContext(),
-                onNodeCreated
+                createModelToDomContext(undefined /*editorContext*/, {
+                    modelHandlerOverride: {
+                        table: handleTableWithDiv,
+                    },
+                })
             );
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
@@ -272,11 +277,17 @@ function selectionExToRange(
     return newRange;
 }
 
-/**
- * @internal
- * Exported only for unit testing
- */
-export const onNodeCreated = (
+const handleTableWithDiv: ContentModelBlockHandler<ContentModelTable> = (
+    doc,
+    parent,
+    model,
+    context,
+    refNode
+) => {
+    return context.defaultModelHandlers.table(doc, parent, model, context, refNode, onNodeCreated);
+};
+
+const onNodeCreated = (
     _:
         | ContentModelBlock
         | ContentModelBlockGroup

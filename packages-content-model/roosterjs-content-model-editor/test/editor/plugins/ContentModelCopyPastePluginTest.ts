@@ -1,18 +1,16 @@
 import * as cloneModelFile from '../../../lib/modelApi/common/cloneModel';
 import * as contentModelToDomFile from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
+import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as deleteSelectionsFile from '../../../lib/modelApi/edit/deleteSelection';
 import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/extractClipboardItems';
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
+import ContentModelCopyPastePlugin from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import { commitEntity } from 'roosterjs-editor-dom';
-import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
-import ContentModelCopyPastePlugin, {
-    onNodeCreated,
-} from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
 import {
     ClipboardData,
     ColorTransformDirection,
@@ -135,6 +133,16 @@ describe('ContentModelCopyPastePlugin |', () => {
     });
 
     describe('Copy |', () => {
+        const mockedContext = 'CONTEXT' as any;
+        let createModelToDomContextSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            createModelToDomContextSpy = spyOn(
+                createModelToDomContext,
+                'createModelToDomContext'
+            ).and.returnValue(mockedContext);
+        });
+
         it('Selection Collapsed', () => {
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.Normal,
@@ -189,9 +197,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).not.toHaveBeenCalled();
@@ -248,9 +260,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
@@ -302,9 +318,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
@@ -377,9 +397,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
@@ -399,6 +423,16 @@ describe('ContentModelCopyPastePlugin |', () => {
     });
 
     describe('Cut |', () => {
+        const mockedContext = 'CONTEXT' as any;
+        let createModelToDomContextSpy: jasmine.Spy;
+
+        beforeEach(() => {
+            createModelToDomContextSpy = spyOn(
+                createModelToDomContext,
+                'createModelToDomContext'
+            ).and.returnValue(mockedContext);
+        });
+
         it('Selection Collapsed', () => {
             // Arrange
             selectionRangeExValue = <SelectionRangeEx>{
@@ -463,9 +497,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();
@@ -523,9 +561,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
@@ -582,9 +624,13 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                createModelToDomContext(),
-                onNodeCreated
+                mockedContext
             );
+            expect(createModelToDomContextSpy).toHaveBeenCalledTimes(1);
+            expect(createModelToDomContextSpy.calls.argsFor(0)[0]).toBeUndefined();
+            expect(
+                createModelToDomContextSpy.calls.argsFor(0)[1]?.modelHandlerOverride?.table
+            ).toBeDefined();
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
             expect(focusSpy).toHaveBeenCalled();

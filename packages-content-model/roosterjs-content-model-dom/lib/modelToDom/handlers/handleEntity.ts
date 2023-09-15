@@ -1,11 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelEntity } from 'roosterjs-content-model-types';
 import { Entity } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
-    ContentModelBlockHandler,
-    ContentModelEntity,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 import {
     addDelimiters,
     commitEntity,
@@ -18,11 +14,12 @@ import {
  * @internal
  */
 export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
-    doc: Document,
-    parent: Node,
-    entityModel: ContentModelEntity,
-    context: ModelToDomContext,
-    refNode: Node | null
+    _,
+    parent,
+    entityModel,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     const { id, type, isReadonly, format } = entityModel;
     let wrapper = entityModel.wrapper;
@@ -65,7 +62,7 @@ export const handleEntity: ContentModelBlockHandler<ContentModelEntity> = (
         context.regularSelection.current.segment = wrapper;
     }
 
-    context.onNodeCreated?.(entityModel, wrapper);
+    onNodeCreated?.(entityModel, wrapper);
 
     return refNode;
 };

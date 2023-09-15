@@ -1,6 +1,6 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelLink } from 'roosterjs-content-model-types';
+import { ContentModelLink, OnNodeCreated } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
@@ -55,6 +55,11 @@ export default function insertLink(
 
         const links: ContentModelLink[] = [];
         let anchorNode: Node | undefined;
+        const onAnchorCreated: OnNodeCreated = (modelElement, node) => {
+            if (!anchorNode && links.indexOf(modelElement as ContentModelLink) >= 0) {
+                anchorNode = node;
+            }
+        };
 
         formatWithContentModel(
             editor,
@@ -103,12 +108,21 @@ export default function insertLink(
             },
             {
                 changeSource: ChangeSource.CreateLink,
-                onNodeCreated: (modelElement, node) => {
-                    if (!anchorNode && links.indexOf(modelElement as ContentModelLink) >= 0) {
-                        anchorNode = node;
-                    }
-                },
                 getChangeData: () => anchorNode,
+            },
+            undefined /*domToModelOption*/,
+            {
+                modelHandlerOverride: {
+                    segmentDecorator: (doc, parent, model, context) => {
+                        return context.defaultModelHandlers.segmentDecorator(
+                            doc,
+                            parent,
+                            model,
+                            context,
+                            onAnchorCreated
+                        );
+                    },
+                },
             }
         );
     }

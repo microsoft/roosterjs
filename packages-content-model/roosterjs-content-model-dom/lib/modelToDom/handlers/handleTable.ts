@@ -1,23 +1,20 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelTable } from 'roosterjs-content-model-types';
 import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
-    ContentModelBlockHandler,
-    ContentModelTable,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
-    doc: Document,
-    parent: Node,
-    table: ContentModelTable,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    table,
+    context,
+    refNode,
+    onNodeCreated
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
@@ -45,7 +42,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
     }
 
-    context.onNodeCreated?.(table, tableNode);
+    onNodeCreated?.(table, tableNode);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
@@ -70,7 +67,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
         }
 
-        context.onNodeCreated?.(tableRow, tr);
+        onNodeCreated?.(tableRow, tr);
 
         for (let col = 0; col < tableRow.cells.length; col++) {
             const cell = tableRow.cells[col];
@@ -140,7 +137,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
 
                 context.modelHandlers.blockGroupChildren(doc, td, cell, context);
 
-                context.onNodeCreated?.(cell, td);
+                onNodeCreated?.(cell, td);
             }
         }
     }

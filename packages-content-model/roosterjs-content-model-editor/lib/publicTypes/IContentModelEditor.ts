@@ -4,7 +4,6 @@ import {
     ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
-    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -28,13 +27,13 @@ export interface IContentModelEditor extends IEditor {
      * Set content with content model
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
      */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ): void;
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+
+    /**
+     * Notify editor the current cache may be invalid
+     */
+    invalidateCache(): void;
 
     /**
      * Notify editor the current cache may be invalid

@@ -78,7 +78,7 @@ describe('formatWithContentModel', () => {
             formatApiName: apiName,
         });
         expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined);
         expect(focus).toHaveBeenCalledTimes(1);
     });
 
@@ -171,22 +171,6 @@ describe('formatWithContentModel', () => {
         expect(triggerContentChangedEvent).toHaveBeenCalledWith('TEST', 'DATA');
     });
 
-    it('Has onNodeCreated', () => {
-        const callback = jasmine.createSpy('callback').and.returnValue(true);
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
-
-        formatWithContentModel(editor, apiName, callback, { onNodeCreated: onNodeCreated });
-
-        expect(callback).toHaveBeenCalledWith(mockedModel, {
-            newEntities: [],
-            deletedEntities: [],
-            rawEvent: undefined,
-        });
-        expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, onNodeCreated);
-    });
-
     it('Has getChangeData', () => {
         const callback = jasmine.createSpy('callback').and.returnValue(true);
         const mockedData = 'DATA' as any;
@@ -200,7 +184,7 @@ describe('formatWithContentModel', () => {
             rawEvent: undefined,
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined);
         expect(addUndoSnapshot).toHaveBeenCalled();
 
         const wrappedCallback = addUndoSnapshot.calls.argsFor(0)[0] as any;

@@ -375,7 +375,6 @@ describe('changeFontSize', () => {
                     },
                 ],
             },
-            undefined,
             undefined
         );
     });

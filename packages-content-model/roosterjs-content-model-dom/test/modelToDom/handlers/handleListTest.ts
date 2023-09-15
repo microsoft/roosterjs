@@ -856,9 +856,7 @@ describe('handleList handles metadata', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleList(document, parent, listItem, context, null);
+        handleList(document, parent, listItem, context, null, onNodeCreated);
 
         expect(
             ['<ol start="1"><ul></ul></ol>', '<ol start="1"><ul></ul></ol>'].indexOf(

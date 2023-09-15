@@ -11,9 +11,8 @@ import {
  * @param core The editor core object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
-export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
+export const setContentModel: SetContentModel = (core, model, option) => {
     const editorContext = core.api.createEditorContext(core);
     const modelToDomContext = option
         ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
@@ -23,8 +22,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        modelToDomContext,
-        onNodeCreated
+        modelToDomContext
     );
 
     if (!core.lifecycle.shadowEditFragment) {

@@ -338,9 +338,7 @@ describe('handleTable', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleTable(document, parent, table, context, null);
+        handleTable(document, parent, table, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe(
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'

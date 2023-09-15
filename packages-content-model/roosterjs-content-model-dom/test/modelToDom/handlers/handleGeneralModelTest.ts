@@ -227,9 +227,7 @@ describe('handleBlockGroup', () => {
 
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, null, onNodeCreated);
 
         expect(parent.innerHTML).toBe('<span></span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
