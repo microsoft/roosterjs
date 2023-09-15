@@ -60,7 +60,6 @@ describe('createModelToDomContext', () => {
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
-
         const context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 br: mockedBrHandler,
