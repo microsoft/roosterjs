@@ -378,4 +378,47 @@ describe('changeFontSize', () => {
             { onNodeCreated: undefined }
         );
     });
+
+    it('Paragraph has font size', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20pt' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '10pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '11pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'increase'
+        );
+    });
 });

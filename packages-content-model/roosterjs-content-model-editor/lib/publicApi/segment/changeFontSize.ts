@@ -1,7 +1,8 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ContentModelParagraph, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { parseValueWithUnit } from 'roosterjs-content-model-dom';
+import { setFontSizeInternal } from './setFontSize';
 
 /**
  * Default font size sequence, in pt. Suggest editor UI use this sequence as your font size list,
@@ -24,15 +25,16 @@ export default function changeFontSize(
     formatSegmentWithContentModel(
         editor,
         'changeFontSize',
-        format => changeFontSizeInternal(format, change),
+        (format, _, __, paragraph) => changeFontSizeInternal(change, format, paragraph),
         undefined /* segmentHasStyleCallback*/,
         true /*includingFormatHandler*/
     );
 }
 
 function changeFontSizeInternal(
+    change: 'increase' | 'decrease',
     format: ContentModelSegmentFormat,
-    change: 'increase' | 'decrease'
+    paragraph: ContentModelParagraph | null
 ) {
     if (format.fontSize) {
         let sizeInPt = parseValueWithUnit(format.fontSize, undefined /*element*/, 'pt');
@@ -40,7 +42,7 @@ function changeFontSizeInternal(
         if (sizeInPt > 0) {
             const newSize = getNewFontSize(sizeInPt, change == 'increase' ? 1 : -1, FONT_SIZES);
 
-            format.fontSize = newSize + 'pt';
+            setFontSizeInternal(newSize + 'pt', format, paragraph);
         }
     }
 }
