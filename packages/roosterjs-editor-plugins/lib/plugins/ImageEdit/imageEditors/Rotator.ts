@@ -63,35 +63,35 @@ export function updateRotateHandleState(
     } else {
         rotateCenter.style.display = '';
         rotateHandle.style.display = '';
-        const rotateHandleRect = rotateHandle.getBoundingClientRect();
+        const rotateCenterRect = rotateCenter.getBoundingClientRect();
         const wrapperRect = wrapper.getBoundingClientRect();
-
-        if (rotateHandleRect && wrapperRect) {
+        const ROTATOR_HEIGHT = ROTATE_SIZE + ROTATE_GAP + RESIZE_HANDLE_MARGIN;
+        if (rotateCenterRect && wrapperRect) {
             let adjustedDistance = Number.MAX_SAFE_INTEGER;
             const angle = angleRad * DEG_PER_RAD;
 
-            if (angle < 45 && angle > -45 && wrapperRect.top - editorRect.top < ROTATE_GAP) {
-                const top = rotateHandleRect.top - editorRect.top;
+            if (angle < 45 && angle > -45 && wrapperRect.top - editorRect.top < ROTATOR_HEIGHT) {
+                const top = rotateCenterRect.top - editorRect.top;
                 adjustedDistance = top;
             } else if (
                 angle <= -80 &&
                 angle >= -100 &&
-                wrapperRect.left - editorRect.left < ROTATE_GAP
+                wrapperRect.left - editorRect.left < ROTATOR_HEIGHT
             ) {
-                const left = rotateHandleRect.left - editorRect.left;
+                const left = rotateCenterRect.left - editorRect.left;
                 adjustedDistance = left;
             } else if (
                 angle >= 80 &&
                 angle <= 100 &&
-                editorRect.right - wrapperRect.right < ROTATE_GAP
+                editorRect.right - wrapperRect.right < ROTATOR_HEIGHT
             ) {
-                const right = rotateHandleRect.right - editorRect.right;
+                const right = rotateCenterRect.right - editorRect.right;
                 adjustedDistance = Math.min(editorRect.right - wrapperRect.right, right);
             } else if (
                 (angle <= -160 || angle >= 160) &&
-                editorRect.bottom - wrapperRect.bottom < ROTATE_GAP
+                editorRect.bottom - wrapperRect.bottom < ROTATOR_HEIGHT
             ) {
-                const bottom = rotateHandleRect.bottom - editorRect.bottom;
+                const bottom = rotateCenterRect.bottom - editorRect.bottom;
                 adjustedDistance = Math.min(editorRect.bottom - wrapperRect.bottom, bottom);
             }
 
