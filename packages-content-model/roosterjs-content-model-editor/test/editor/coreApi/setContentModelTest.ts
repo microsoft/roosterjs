@@ -63,8 +63,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -80,8 +79,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -102,8 +100,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(select).toHaveBeenCalledWith(core, mockedRange);
     });
@@ -121,8 +118,7 @@ describe('setContentModel', () => {
             mockedDoc,
             mockedDiv,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(select).not.toHaveBeenCalled();
     });

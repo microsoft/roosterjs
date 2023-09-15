@@ -141,21 +141,19 @@ describe('handleDivider', () => {
         expect(result).toBe(br);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const hr: ContentModelDivider = {
             blockType: 'Divider',
             tagName: 'hr',
             format: {},
         };
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
         const parent = document.createElement('div');
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleDivider(document, parent, hr, context, null);
+        handleDivider(document, parent, hr, context, null, newNodes);
 
         expect(parent.innerHTML).toBe('<hr>');
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(hr);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('hr'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('hr')!);
     });
 });

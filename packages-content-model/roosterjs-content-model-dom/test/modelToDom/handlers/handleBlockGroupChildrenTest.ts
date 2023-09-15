@@ -36,7 +36,7 @@ describe('handleBlockGroupChildren', () => {
     it('Empty block group', () => {
         const group = createContentModelDocument();
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
@@ -49,7 +49,7 @@ describe('handleBlockGroupChildren', () => {
 
         group.blocks.push(paragraph);
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><div></div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
@@ -65,7 +65,7 @@ describe('handleBlockGroupChildren', () => {
         group.blocks.push(paragraph1);
         group.blocks.push(paragraph2);
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><div></div></div>');
         expect(context.listFormat.nodeStack).toEqual([]);
@@ -87,7 +87,7 @@ describe('handleBlockGroupChildren', () => {
             return refNode;
         });
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(nodeStack).toEqual([{ a: 'b' } as any]);
@@ -123,7 +123,7 @@ describe('handleBlockGroupChildren', () => {
             return refNode;
         });
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(nodeStack).toEqual([{ a: 'b' } as any]);
@@ -162,7 +162,7 @@ describe('handleBlockGroupChildren', () => {
             ],
         };
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><div>test1</div><div>test2</div></div>');
         expect(parent.firstChild).toBe(div1);
@@ -197,7 +197,7 @@ describe('handleBlockGroupChildren', () => {
             ],
         };
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><div>test2</div><div>test1</div></div>');
         expect(parent.firstChild).toBe(div2);
@@ -233,7 +233,7 @@ describe('handleBlockGroupChildren', () => {
             ],
         };
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><div>test2</div><div>test1</div></div>');
         expect(parent.firstChild).toBe(div2);
@@ -273,7 +273,7 @@ describe('handleBlockGroupChildren', () => {
             ],
         };
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe(
             '<div><div id="div2">test2</div><blockquote id="div1"></blockquote></div>'
@@ -317,7 +317,7 @@ describe('handleBlockGroupChildren', () => {
 
         handleBlock.and.callFake(originalHandleBlock);
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe(
             '<div><blockquote id="div1"><div><br></div></blockquote></div>'
@@ -368,7 +368,7 @@ describe('handleBlockGroupChildren', () => {
             ],
         };
 
-        handleBlockGroupChildren(document, parent, group, context);
+        handleBlockGroupChildren(document, parent, group, context, null);
 
         expect(parent.innerHTML).toBe(
             '<div><br></div><span class="_Entity _EType_MyEntity _EReadonly_0"></span>'

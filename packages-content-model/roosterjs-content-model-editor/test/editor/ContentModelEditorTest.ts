@@ -105,8 +105,7 @@ describe('ContentModelEditor', () => {
             document,
             div,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(createModelToDomContext.createModelToDomContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
@@ -145,8 +144,7 @@ describe('ContentModelEditor', () => {
             document,
             div,
             mockedModel,
-            mockedContext,
-            undefined
+            mockedContext
         );
         expect(createModelToDomContext.createModelToDomContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,

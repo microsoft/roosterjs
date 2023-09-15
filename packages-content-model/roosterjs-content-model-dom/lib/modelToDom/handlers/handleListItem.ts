@@ -1,23 +1,20 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelListItem } from 'roosterjs-content-model-types';
 import { listItemMetadataFormatHandler } from '../../formatHandlers/list/listItemMetadataFormatHandler';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
-    ContentModelBlockHandler,
-    ContentModelListItem,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
-    doc: Document,
-    parent: Node,
-    listItem: ContentModelListItem,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    listItem,
+    context,
+    refNode,
+    newNodes
 ) => {
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
@@ -43,18 +40,30 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
             return metadata;
         });
 
-        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            li,
+            listItem,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
     } else {
         // There is no level for this list item, that means it should be moved out of the list
         // For each paragraph, make it not implicit so it will have a DIV around it, to avoid more paragraphs connected together
         listItem.blocks.forEach(setParagraphNotImplicit);
 
-        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            li,
+            listItem,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
 
         unwrap(li);
     }
 
-    context.onNodeCreated?.(listItem, li);
+    newNodes?.push(li);
 
     return refNode;
 };

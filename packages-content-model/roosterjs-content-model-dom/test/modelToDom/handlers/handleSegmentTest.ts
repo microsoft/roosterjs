@@ -8,18 +8,20 @@ import {
     ContentModelSegment,
     ContentModelText,
     ModelToDomContext,
-    ContentModelBlockHandler,
-    ContentModelHandler,
+    ContentModelSegmentHandler,
+    ContentModelBlockAndSegmentHandler,
 } from 'roosterjs-content-model-types';
 
 describe('handleSegment', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleBr: jasmine.Spy<ContentModelHandler<ContentModelBr>>;
-    let handleText: jasmine.Spy<ContentModelHandler<ContentModelText>>;
-    let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
-    let handleEntity: jasmine.Spy<ContentModelBlockHandler<ContentModelEntity>>;
-    let handleImage: jasmine.Spy<ContentModelHandler<ContentModelImage>>;
+    let handleBr: jasmine.Spy<ContentModelSegmentHandler<ContentModelBr>>;
+    let handleText: jasmine.Spy<ContentModelSegmentHandler<ContentModelText>>;
+    let handleGeneralModel: jasmine.Spy<ContentModelBlockAndSegmentHandler<
+        ContentModelGeneralBlock
+    >>;
+    let handleEntity: jasmine.Spy<ContentModelBlockAndSegmentHandler<ContentModelEntity>>;
+    let handleImage: jasmine.Spy<ContentModelSegmentHandler<ContentModelImage>>;
 
     beforeEach(() => {
         parent = document.createElement('div');
@@ -46,10 +48,11 @@ describe('handleSegment', () => {
             text: 'test',
             format: {},
         };
+        const mockedParagraph = 'PARAGRAPH' as any;
 
-        handleSegment(document, parent, text, context);
+        handleSegment(document, parent, text, context, mockedParagraph);
 
-        expect(handleText).toHaveBeenCalledWith(document, parent, text, context);
+        expect(handleText).toHaveBeenCalledWith(document, parent, text, context, mockedParagraph);
         expect(parent.innerHTML).toBe('');
     });
 
@@ -58,10 +61,12 @@ describe('handleSegment', () => {
             segmentType: 'Br',
             format: {},
         };
-        handleSegment(document, parent, br, context);
+        const mockedParagraph = 'PARAGRAPH' as any;
+
+        handleSegment(document, parent, br, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('');
-        expect(handleBr).toHaveBeenCalledWith(document, parent, br, context);
+        expect(handleBr).toHaveBeenCalledWith(document, parent, br, context, mockedParagraph);
     });
 
     it('general segment', () => {
@@ -73,10 +78,18 @@ describe('handleSegment', () => {
             element: null!,
             format: {},
         };
+        const mockedParagraph = 'PARAGRAPH' as any;
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedParagraph);
         expect(parent.innerHTML).toBe('');
-        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, segment, context, null);
+        expect(handleGeneralModel).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedParagraph,
+            null
+        );
     });
 
     it('entity segment', () => {
@@ -90,10 +103,18 @@ describe('handleSegment', () => {
             wrapper: div,
             isReadonly: true,
         };
+        const mockedParagraph = 'PARAGRAPH' as any;
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedParagraph);
         expect(parent.innerHTML).toBe('');
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context, null);
+        expect(handleEntity).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedParagraph,
+            null
+        );
     });
 
     it('image segment', () => {
@@ -103,9 +124,16 @@ describe('handleSegment', () => {
             format: {},
             dataset: {},
         };
+        const mockedParagraph = 'PARAGRAPH' as any;
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedParagraph);
         expect(parent.innerHTML).toBe('');
-        expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleImage).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedParagraph
+        );
     });
 });

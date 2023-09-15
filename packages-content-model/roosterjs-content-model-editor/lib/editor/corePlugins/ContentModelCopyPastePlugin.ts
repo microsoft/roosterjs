@@ -10,13 +10,7 @@ import {
     createModelToDomContext,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import type { ContentModelBlockHandler, ContentModelTable } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -139,8 +133,11 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                createModelToDomContext(),
-                onNodeCreated
+                createModelToDomContext(undefined /*editorContext*/, {
+                    modelHandlerOverride: {
+                        table: handleTableWithDiv,
+                    },
+                })
             );
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
@@ -272,20 +269,20 @@ function selectionExToRange(
     return newRange;
 }
 
-/**
- * @internal
- * Exported only for unit testing
- */
-export const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
-    if (safeInstanceOf(node, 'HTMLTableElement')) {
-        wrap(node, 'div');
+const handleTableWithDiv: ContentModelBlockHandler<ContentModelTable> = (
+    doc,
+    parent,
+    model,
+    context,
+    refNode
+) => {
+    const newNodes: Node[] = [];
+
+    refNode = context.defaultModelHandlers.table(doc, parent, model, context, refNode, newNodes);
+
+    if (safeInstanceOf(newNodes[0], 'HTMLTableElement')) {
+        wrap(newNodes[0], 'div');
     }
+
+    return refNode;
 };

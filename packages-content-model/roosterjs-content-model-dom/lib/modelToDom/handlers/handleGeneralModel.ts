@@ -5,20 +5,21 @@ import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { wrap } from 'roosterjs-editor-dom';
 import {
-    ContentModelBlockHandler,
+    ContentModelBlockAndSegmentHandler,
     ContentModelGeneralBlock,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlock> = (
-    doc: Document,
-    parent: Node,
-    group: ContentModelGeneralBlock,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleGeneralModel: ContentModelBlockAndSegmentHandler<ContentModelGeneralBlock> = (
+    doc,
+    parent,
+    group,
+    context,
+    paragraph,
+    refNode,
+    newNodes
 ) => {
     let node: Node = group.element;
 
@@ -31,15 +32,21 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
         parent.insertBefore(node, refNode);
     }
 
-    if (isGeneralSegment(group) && isNodeOfType(node, NodeType.Element)) {
+    if (isGeneralSegment(group) && isNodeOfType(node, NodeType.Element) && paragraph) {
         const element = wrap(node, 'span');
 
-        handleSegmentCommon(doc, node, element, group, context);
+        handleSegmentCommon(doc, node, element, group, context, paragraph, newNodes);
     } else {
-        context.onNodeCreated?.(group, node);
+        newNodes?.push(node);
     }
 
-    context.modelHandlers.blockGroupChildren(doc, node, group, context);
+    context.modelHandlers.blockGroupChildren(
+        doc,
+        node,
+        group,
+        context,
+        null /*refNode, not used by blockGroupChildren handler*/
+    );
 
     return refNode;
 };

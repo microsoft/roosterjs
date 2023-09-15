@@ -7,7 +7,6 @@ import {
     ContentModelBlockHandler,
     ContentModelFormatContainer,
     ContentModelSegmentFormat,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
@@ -19,18 +18,25 @@ const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
  * @internal
  */
 export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatContainer> = (
-    doc: Document,
-    parent: Node,
-    container: ContentModelFormatContainer,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    container,
+    context,
+    refNode,
+    newNodes
 ) => {
     let element = context.allowCacheElement ? container.cachedElement : undefined;
 
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
 
-        context.modelHandlers.blockGroupChildren(doc, element, container, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            element,
+            container,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
     } else if (!isBlockGroupEmpty(container)) {
         const containerNode = doc.createElement(container.tagName);
 
@@ -54,17 +60,29 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
 
         if (container.tagName == 'pre') {
             stackFormat(context, PreChildFormat, () => {
-                context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
+                context.modelHandlers.blockGroupChildren(
+                    doc,
+                    containerNode,
+                    container,
+                    context,
+                    null /*refNode, not used by blockGroupChildren handler*/
+                );
             });
         } else {
-            context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
+            context.modelHandlers.blockGroupChildren(
+                doc,
+                containerNode,
+                container,
+                context,
+                null /*refNode, not used by blockGroupChildren handler*/
+            );
         }
 
         element = containerNode;
     }
 
     if (element) {
-        context.onNodeCreated?.(container, element);
+        newNodes?.push(element);
     }
 
     return refNode;

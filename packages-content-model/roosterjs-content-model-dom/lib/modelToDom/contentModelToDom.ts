@@ -4,7 +4,6 @@ import {
     ContentModelDocument,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
-    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 import {
     NodePosition,
@@ -21,19 +20,21 @@ import {
  * won't be touched.
  * @param model The content model document to generate DOM tree from
  * @param context The context object for Content Model to DOM conversion
- * @param onNodeCreated Callback invoked when a DOM node is created
  * @returns The selection range created in DOM tree from this model, or null when there is no selection
  */
 export function contentModelToDom(
     doc: Document,
     root: Node,
     model: ContentModelDocument,
-    context: ModelToDomContext,
-    onNodeCreated?: OnNodeCreated
+    context: ModelToDomContext
 ): SelectionRangeEx | null {
-    context.onNodeCreated = onNodeCreated;
-
-    context.modelHandlers.blockGroupChildren(doc, root, model, context);
+    context.modelHandlers.blockGroupChildren(
+        doc,
+        root,
+        model,
+        context,
+        null /*refNode, not used by blockGroupChildren handler*/
+    );
 
     const range = extractSelectionRange(context);
 

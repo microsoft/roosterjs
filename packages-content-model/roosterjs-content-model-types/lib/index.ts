@@ -100,7 +100,6 @@ export {
     DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
-    OnNodeCreated,
     ModelToDomSettings,
     FormatApplier,
 } from './context/ModelToDomSettings';
@@ -134,6 +133,10 @@ export {
     ModelToDomListContext,
     ModelToDomFormatContext,
 } from './context/ModelToDomFormatContext';
-export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
+export {
+    ContentModelBlockHandler,
+    ContentModelBlockAndSegmentHandler,
+    ContentModelSegmentHandler,
+} from './context/ContentModelHandler';
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';

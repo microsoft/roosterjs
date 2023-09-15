@@ -6,13 +6,13 @@ import { handleBlockGroupChildren as originalHandleBlockGroupChildren } from '..
 import { handleFormatContainer } from '../../../lib/modelToDom/handlers/handleFormatContainer';
 import {
     ContentModelBlockGroup,
-    ContentModelHandler,
+    ContentModelBlockHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 describe('handleFormatContainer', () => {
     let context: ModelToDomContext;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelBlockHandler<ContentModelBlockGroup>>;
 
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
@@ -58,7 +58,8 @@ describe('handleFormatContainer', () => {
             document,
             parent.firstChild as HTMLElement,
             quote,
-            context
+            context,
+            null
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
     });
@@ -86,13 +87,14 @@ describe('handleFormatContainer', () => {
             document,
             parent.firstChild as HTMLElement,
             quote,
-            context
+            context,
+            null
         );
         expect(quote.cachedElement).toBe(parent.firstChild as HTMLQuoteElement);
         expect(result).toBe(br);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const parent = document.createElement('div');
         const quote = createFormatContainer('blockquote');
         const paragraph = createParagraph();
@@ -102,17 +104,14 @@ describe('handleFormatContainer', () => {
 
         handleBlockGroupChildren.and.callFake(originalHandleBlockGroupChildren);
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleFormatContainer(document, parent, quote, context, null);
+        handleFormatContainer(document, parent, quote, context, null, newNodes);
 
         expect(parent.innerHTML).toBe(
             '<blockquote style="margin: 0px;"><div>test</div></blockquote>'
         );
-        expect(onNodeCreated).toHaveBeenCalledTimes(3);
-        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(quote);
-        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('blockquote'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('blockquote')!);
     });
 });

@@ -8,7 +8,6 @@ import {
     ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
-    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -44,16 +43,23 @@ export default class ContentModelEditor
      * Set content with content model
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
-     * @param onNodeCreated An optional callback that will be called when a DOM node is created
      */
-    setContentModel(
-        model: ContentModelDocument,
-        option?: ModelToDomOption,
-        onNodeCreated?: OnNodeCreated
-    ) {
+    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
         const core = this.getCore();
 
-        core.api.setContentModel(core, model, option, onNodeCreated);
+        core.api.setContentModel(core, model, option);
+    }
+
+    /**
+     * Notify editor the current cache may be invalid
+     */
+    invalidateCache() {
+        const core = this.getCore();
+
+        if (!core.lifecycle.shadowEditFragment) {
+            core.cache.cachedModel = undefined;
+            core.cache.cachedRangeEx = undefined;
+        }
     }
 
     /**

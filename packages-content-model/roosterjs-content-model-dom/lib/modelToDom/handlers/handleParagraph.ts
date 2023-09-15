@@ -1,13 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
+import { ContentModelBlockHandler, ContentModelParagraph } from 'roosterjs-content-model-types';
 import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
-import {
-    ContentModelBlockHandler,
-    ContentModelParagraph,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 const DefaultParagraphTag = 'div';
 
@@ -15,11 +11,12 @@ const DefaultParagraphTag = 'div';
  * @internal
  */
 export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = (
-    doc: Document,
-    parent: Node,
-    paragraph: ContentModelParagraph,
-    context: ModelToDomContext,
-    refNode: Node | null
+    doc,
+    parent,
+    paragraph,
+    context,
+    refNode,
+    newNodes
 ) => {
     let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
@@ -66,12 +63,13 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context
+                            context,
+                            paragraph
                         );
                     }
 
                     paragraph.segments.forEach(segment => {
-                        context.modelHandlers.segment(doc, parent, segment, context);
+                        context.modelHandlers.segment(doc, parent, segment, context, paragraph);
                     });
                 }
             };
@@ -112,7 +110,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     }
 
     if (container) {
-        context.onNodeCreated?.(paragraph, container);
+        newNodes?.push(container);
     }
 
     return refNode;

@@ -837,7 +837,7 @@ describe('handleList handles metadata', () => {
         expect(result).toBe(br);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const listLevel0 = createListLevel('OL');
         const listLevel1 = createListLevel('UL');
         const listItem: ContentModelListItem = {
@@ -854,21 +854,17 @@ describe('handleList handles metadata', () => {
         };
         const parent = document.createElement('div');
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleList(document, parent, listItem, context, null);
+        handleList(document, parent, listItem, context, null, newNodes);
 
         expect(
             ['<ol start="1"><ul></ul></ol>', '<ol start="1"><ul></ul></ol>'].indexOf(
                 parent.innerHTML
             ) >= 0
         ).toBeTrue();
-        expect(onNodeCreated).toHaveBeenCalledTimes(2);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listLevel0);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listLevel1);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('ul'));
+        expect(newNodes.length).toBe(2);
+        expect(newNodes[0]).toBe(parent.querySelector('ol')!);
+        expect(newNodes[1]).toBe(parent.querySelector('ul')!);
     });
 });

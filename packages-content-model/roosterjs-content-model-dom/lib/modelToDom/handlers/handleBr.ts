@@ -1,23 +1,21 @@
+import { ContentModelBr, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import {
-    ContentModelBr,
-    ContentModelHandler,
-    ModelToDomContext,
-} from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleBr: ContentModelHandler<ContentModelBr> = (
-    doc: Document,
-    parent: Node,
-    segment: ContentModelBr,
-    context: ModelToDomContext
+export const handleBr: ContentModelSegmentHandler<ContentModelBr> = (
+    doc,
+    parent,
+    segment,
+    context,
+    paragraph,
+    newNodes
 ) => {
     const br = doc.createElement('br');
     const element = doc.createElement('span');
     element.appendChild(br);
     parent.appendChild(element);
 
-    handleSegmentCommon(doc, br, element, segment, context);
+    handleSegmentCommon(doc, br, element, segment, context, paragraph, newNodes);
 };

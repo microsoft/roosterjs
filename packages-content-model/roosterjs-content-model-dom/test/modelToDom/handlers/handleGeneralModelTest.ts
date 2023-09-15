@@ -10,13 +10,12 @@ import {
     ContentModelListItem,
     ModelToDomContext,
     ContentModelBlockHandler,
-    ContentModelHandler,
 } from 'roosterjs-content-model-types';
 
 describe('handleBlockGroup', () => {
     let context: ModelToDomContext;
     let parent: HTMLDivElement;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelBlockHandler<ContentModelBlockGroup>>;
     let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
     let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelFormatContainer>>;
 
@@ -44,7 +43,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, null, null);
 
         expect(parent.outerHTML).toBe('<div><span></span></div>');
         expect(typeof parent.firstChild).toBe('object');
@@ -55,7 +54,8 @@ describe('handleBlockGroup', () => {
             document,
             clonedChild,
             group,
-            context
+            context,
+            null
         );
         expect(applyFormat.applyFormat).not.toHaveBeenCalled();
     });
@@ -69,7 +69,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, {} as any, null);
 
         expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -81,7 +81,8 @@ describe('handleBlockGroup', () => {
             document,
             clonedChild,
             group,
-            context
+            context,
+            null
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
     });
@@ -96,7 +97,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, {} as any, null);
 
         expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -108,7 +109,8 @@ describe('handleBlockGroup', () => {
             document,
             clonedChild,
             group,
-            context
+            context,
+            null
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
     });
@@ -131,7 +133,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, {} as any, null);
 
         expect(parent.outerHTML).toBe('<div><span><a href="/test"><span></span></a></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -143,7 +145,8 @@ describe('handleBlockGroup', () => {
             document,
             clonedChild,
             group,
-            context
+            context,
+            null
         );
         expect(applyFormat.applyFormat).toHaveBeenCalled();
     });
@@ -165,7 +168,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, {} as any, null);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
@@ -183,7 +186,7 @@ describe('handleBlockGroup', () => {
         const br = document.createElement('br');
         parent.appendChild(br);
 
-        const result = handleGeneralModel(document, parent, group, context, br);
+        const result = handleGeneralModel(document, parent, group, context, null, br);
 
         expect(parent.outerHTML).toBe('<div><span></span><br></div>');
         expect(typeof parent.firstChild).toBe('object');
@@ -194,7 +197,8 @@ describe('handleBlockGroup', () => {
             document,
             clonedChild,
             group,
-            context
+            context,
+            null
         );
         expect(applyFormat.applyFormat).not.toHaveBeenCalled();
         expect(result).toBe(br);
@@ -209,31 +213,28 @@ describe('handleBlockGroup', () => {
         parent.appendChild(node);
         parent.appendChild(br);
 
-        const result = handleGeneralModel(document, parent, group, context, node);
+        const result = handleGeneralModel(document, parent, group, context, null, node);
 
         expect(parent.outerHTML).toBe('<div><span></span><br></div>');
         expect(parent.firstChild).toBe(node);
         expect(context.listFormat.nodeStack).toEqual([]);
         expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
-        expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(document, node, group, context, null);
         expect(result).toBe(br);
         expect(group.element).toBe(node);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const parent = document.createElement('div');
         const node = document.createElement('span');
         const group = createGeneralBlock(node);
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralModel(document, parent, group, context, {} as any, null, newNodes);
 
         expect(parent.innerHTML).toBe('<span></span>');
-        expect(onNodeCreated).toHaveBeenCalledTimes(1);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(group);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('span')!);
     });
 });

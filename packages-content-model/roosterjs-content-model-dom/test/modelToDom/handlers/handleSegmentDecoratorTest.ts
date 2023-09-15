@@ -32,7 +32,7 @@ describe('handleSegmentDecorator', () => {
             code: code,
         };
 
-        handleSegmentDecorator(document, parent, segment, context);
+        handleSegmentDecorator(document, parent, segment, context, {} as any);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
     }
@@ -132,7 +132,7 @@ describe('handleSegmentDecorator', () => {
         runTest(link, code, '<code><a href="http://test.com/test">test</a></code>');
     });
 
-    it('Link with onNodeCreated', () => {
+    it('Link with newNodes', () => {
         const parent = document.createElement('div');
         const span = document.createElement('span');
         const segment: ContentModelText = {
@@ -152,20 +152,16 @@ describe('handleSegmentDecorator', () => {
 
         parent.appendChild(span);
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        context.onNodeCreated = onNodeCreated;
-
-        handleSegmentDecorator(document, span, segment, context);
+        handleSegmentDecorator(document, span, segment, context, undefined!, newNodes);
 
         expect(parent.innerHTML).toBe(
             '<span><code><a href="https://www.test.com"></a></code></span>'
         );
-        expect(onNodeCreated).toHaveBeenCalledTimes(2);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment.link);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('a'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(segment.code);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('code'));
+        expect(newNodes.length).toBe(2);
+        expect(newNodes[0]).toBe(parent.querySelector('a')!);
+        expect(newNodes[1]).toBe(parent.querySelector('code')!);
     });
 
     it('link with display: block', () => {
