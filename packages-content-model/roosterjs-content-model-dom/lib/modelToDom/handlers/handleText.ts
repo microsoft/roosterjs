@@ -1,15 +1,16 @@
-import { ContentModelHandler, ContentModelText } from 'roosterjs-content-model-types';
+import { ContentModelSegmentHandler, ContentModelText } from 'roosterjs-content-model-types';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 
 /**
  * @internal
  */
-export const handleText: ContentModelHandler<ContentModelText> = (
+export const handleText: ContentModelSegmentHandler<ContentModelText> = (
     doc,
     parent,
     segment,
     context,
-    onNodeCreated
+    paragraph,
+    newNodes
 ) => {
     const txt = doc.createTextNode(segment.text);
     const element = doc.createElement('span');
@@ -17,5 +18,5 @@ export const handleText: ContentModelHandler<ContentModelText> = (
     parent.appendChild(element);
     element.appendChild(txt);
 
-    handleSegmentCommon(doc, txt, element, segment, context, onNodeCreated);
+    handleSegmentCommon(doc, txt, element, segment, context, paragraph, newNodes);
 };

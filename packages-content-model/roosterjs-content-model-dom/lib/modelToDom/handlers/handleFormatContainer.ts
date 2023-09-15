@@ -23,14 +23,20 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
     container,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     let element = context.allowCacheElement ? container.cachedElement : undefined;
 
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
 
-        context.modelHandlers.blockGroupChildren(doc, element, container, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            element,
+            container,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
     } else if (!isBlockGroupEmpty(container)) {
         const containerNode = doc.createElement(container.tagName);
 
@@ -54,17 +60,29 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
 
         if (container.tagName == 'pre') {
             stackFormat(context, PreChildFormat, () => {
-                context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
+                context.modelHandlers.blockGroupChildren(
+                    doc,
+                    containerNode,
+                    container,
+                    context,
+                    null /*refNode, not used by blockGroupChildren handler*/
+                );
             });
         } else {
-            context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
+            context.modelHandlers.blockGroupChildren(
+                doc,
+                containerNode,
+                container,
+                context,
+                null /*refNode, not used by blockGroupChildren handler*/
+            );
         }
 
         element = containerNode;
     }
 
     if (element) {
-        onNodeCreated?.(container, element);
+        newNodes?.push(element);
     }
 
     return refNode;

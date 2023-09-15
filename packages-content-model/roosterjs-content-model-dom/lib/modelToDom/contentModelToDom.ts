@@ -28,7 +28,13 @@ export function contentModelToDom(
     model: ContentModelDocument,
     context: ModelToDomContext
 ): SelectionRangeEx | null {
-    context.modelHandlers.blockGroupChildren(doc, root, model, context);
+    context.modelHandlers.blockGroupChildren(
+        doc,
+        root,
+        model,
+        context,
+        null /*refNode, not used by blockGroupChildren handler*/
+    );
 
     const range = extractSelectionRange(context);
 

@@ -11,7 +11,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
     divider,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     let element = context.allowCacheElement ? divider.cachedElement : undefined;
 
@@ -33,7 +33,7 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
         }
     }
 
-    onNodeCreated?.(divider, element);
+    newNodes?.push(element);
 
     return refNode;
 };

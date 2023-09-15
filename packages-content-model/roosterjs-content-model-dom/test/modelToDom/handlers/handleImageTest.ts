@@ -30,7 +30,7 @@ describe('handleSegment', () => {
     ) {
         parent = document.createElement('div');
 
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, {} as any);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleBlock).toHaveBeenCalledTimes(expectedCreateBlockFromContentModelCalledTimes);
@@ -139,7 +139,7 @@ describe('handleSegment', () => {
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const segment: ContentModelImage = {
             segmentType: 'Image',
             src: 'http://test.com/test',
@@ -148,14 +148,13 @@ describe('handleSegment', () => {
         };
         const parent = document.createElement('div');
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        handleImage(document, parent, segment, context, onNodeCreated);
+        handleImage(document, parent, segment, context, {} as any, newNodes);
 
         expect(parent.innerHTML).toBe('<span><img src="http://test.com/test"></span>');
-        expect(onNodeCreated).toHaveBeenCalledTimes(1);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(segment);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('img'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('img')!);
     });
 
     it('With display: block', () => {
@@ -167,7 +166,7 @@ describe('handleSegment', () => {
         };
         const parent = document.createElement('div');
 
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, {} as any);
 
         expect(parent.innerHTML).toBe(
             '<span><img src="http://test.com/test" style="display: block;"></span>'

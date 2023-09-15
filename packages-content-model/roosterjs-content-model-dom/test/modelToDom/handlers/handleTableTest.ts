@@ -327,7 +327,7 @@ describe('handleTable', () => {
         expect(result).toBe(br);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const parent = document.createElement('div');
         const tableCell1 = createTableCell(false, false, true);
         const tableCell2 = createTableCell();
@@ -336,26 +336,21 @@ describe('handleTable', () => {
         table.rows[0].cells.push(tableCell1);
         table.rows[1].cells.push(tableCell2);
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        handleTable(document, parent, table, context, null, onNodeCreated);
+        handleTable(document, parent, table, context, null, newNodes);
 
         expect(parent.innerHTML).toBe(
             '<table><tbody><tr><th></th></tr><tr><td></td></tr></tbody></table>'
         );
         const tableNode = parent.querySelector('table') as HTMLTableElement;
 
-        expect(onNodeCreated).toHaveBeenCalledTimes(5);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(table);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(tableNode);
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(table.rows[0]);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(tableNode.rows[0]);
-        expect(onNodeCreated.calls.argsFor(2)[0]).toBe(tableCell1);
-        expect(onNodeCreated.calls.argsFor(2)[1]).toBe(parent.querySelector('th'));
-        expect(onNodeCreated.calls.argsFor(3)[0]).toBe(table.rows[1]);
-        expect(onNodeCreated.calls.argsFor(3)[1]).toBe(tableNode.rows[1]);
-        expect(onNodeCreated.calls.argsFor(4)[0]).toBe(tableCell2);
-        expect(onNodeCreated.calls.argsFor(4)[1]).toBe(parent.querySelector('td'));
+        expect(newNodes.length).toBe(5);
+        expect(newNodes[0]).toBe(tableNode);
+        expect(newNodes[1]).toBe(tableNode.rows[0]);
+        expect(newNodes[2]).toBe(parent.querySelector('th')!);
+        expect(newNodes[3]).toBe(tableNode.rows[1]);
+        expect(newNodes[4]).toBe(parent.querySelector('td')!);
     });
 
     it('With cached TABLE element, do not apply border styles', () => {

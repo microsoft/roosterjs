@@ -1,13 +1,13 @@
 import {
     ContentModelBlockGroup,
-    ContentModelHandler,
+    ContentModelBlockHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGroup> = (
+export const handleBlockGroupChildren: ContentModelBlockHandler<ContentModelBlockGroup> = (
     doc: Document,
     parent: Node,
     group: ContentModelBlockGroup,
@@ -44,4 +44,6 @@ export const handleBlockGroupChildren: ContentModelHandler<ContentModelBlockGrou
     } finally {
         listFormat.nodeStack = nodeStack;
     }
+
+    return null;
 };

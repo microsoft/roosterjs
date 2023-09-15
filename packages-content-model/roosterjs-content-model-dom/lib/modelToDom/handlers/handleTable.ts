@@ -14,7 +14,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     table,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     if (isBlockEmpty(table)) {
         // Empty table, do not create TABLE element and just return
@@ -42,7 +42,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         applyFormat(tableNode, context.formatAppliers.dataset, table.dataset, context);
     }
 
-    onNodeCreated?.(table, tableNode);
+    newNodes?.push(tableNode);
 
     const tbody = doc.createElement('tbody');
     tableNode.appendChild(tbody);
@@ -67,7 +67,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
         }
 
-        onNodeCreated?.(tableRow, tr);
+        newNodes?.push(tr);
 
         for (let col = 0; col < tableRow.cells.length; col++) {
             const cell = tableRow.cells[col];
@@ -135,9 +135,15 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                     applyFormat(td, context.formatAppliers.dataset, cell.dataset, context);
                 }
 
-                context.modelHandlers.blockGroupChildren(doc, td, cell, context);
+                context.modelHandlers.blockGroupChildren(
+                    doc,
+                    td,
+                    cell,
+                    context,
+                    null /*refNode, not used by blockGroupChildren handler*/
+                );
 
-                onNodeCreated?.(cell, td);
+                newNodes?.push(td);
             }
         }
     }

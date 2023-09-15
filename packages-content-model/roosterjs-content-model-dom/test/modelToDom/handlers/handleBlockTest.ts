@@ -15,14 +15,14 @@ import {
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelBlockHandler,
-    ContentModelHandler,
     ModelToDomContext,
+    ContentModelBlockAndSegmentHandler,
 } from 'roosterjs-content-model-types';
 
 describe('handleBlock', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleEntity: jasmine.Spy<ContentModelBlockHandler<ContentModelEntity>>;
+    let handleEntity: jasmine.Spy<ContentModelBlockAndSegmentHandler<ContentModelEntity>>;
     let handleParagraph: jasmine.Spy<ContentModelBlockHandler<ContentModelParagraph>>;
     let handleDivider: jasmine.Spy<ContentModelBlockHandler<ContentModelDivider>>;
 
@@ -112,7 +112,7 @@ describe('handleBlock', () => {
         runTestWithRefNode(block, '<span></span><br>');
     });
 
-    it('General segment', () => {
+    it('General segment, treat as block', () => {
         const element = document.createElement('span');
         const block: ContentModelGeneralSegment = {
             blockType: 'BlockGroup',
@@ -128,12 +128,12 @@ describe('handleBlock', () => {
         spyOn(applyFormat, 'applyFormat');
         handleBlock(document, parent, block, context, null);
 
-        expect(parent.innerHTML).toBe('<span><span></span></span>');
+        expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild!.firstChild);
-        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
 
-        runTestWithRefNode(block, '<span><span></span></span><br>');
+        runTestWithRefNode(block, '<span></span><br>');
     });
 
     it('Entity block', () => {
@@ -152,7 +152,7 @@ describe('handleBlock', () => {
 
         handleBlock(document, parent, block, context, null);
 
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context, null);
+        expect(handleEntity).toHaveBeenCalledWith(document, parent, block, context, null, null);
 
         runTestWithRefNode(block, '<br>');
     });
@@ -177,10 +177,12 @@ describe('handleBlock', () => {
 describe('handleBlockGroup', () => {
     let context: ModelToDomContext;
     let parent: HTMLDivElement;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelBlockHandler<ContentModelBlockGroup>>;
     let handleListItem: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
     let handleQuote: jasmine.Spy<ContentModelBlockHandler<ContentModelFormatContainer>>;
-    let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
+    let handleGeneralModel: jasmine.Spy<ContentModelBlockAndSegmentHandler<
+        ContentModelGeneralBlock
+    >>;
 
     beforeEach(() => {
         handleBlockGroupChildren = jasmine.createSpy('handleBlockGroupChildren');
@@ -222,9 +224,16 @@ describe('handleBlockGroup', () => {
 
         expect(parent.outerHTML).toBe('<div></div>');
         expect(handleGeneralModel).toHaveBeenCalledTimes(1);
-        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, group, context, null);
+        expect(handleGeneralModel).toHaveBeenCalledWith(
+            document,
+            parent,
+            group,
+            context,
+            null,
+            null
+        );
 
-        handleGeneralModel.and.callFake((doc, parent, model, context, refNode) => {
+        handleGeneralModel.and.callFake((doc, parent, model, context, paragraph, refNode) => {
             parent.insertBefore(doc.createTextNode('test'), refNode);
             return refNode;
         });

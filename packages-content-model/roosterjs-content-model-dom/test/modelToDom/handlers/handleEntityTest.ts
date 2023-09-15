@@ -28,7 +28,7 @@ describe('handleEntity', () => {
         const parent = document.createElement('div');
 
         context.addDelimiterForEntity = false;
-        handleEntity(document, parent, entityModel, context, null);
+        handleEntity(document, parent, entityModel, context, null, null);
 
         expect(parent.innerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
@@ -53,7 +53,7 @@ describe('handleEntity', () => {
 
         const parent = document.createElement('div');
 
-        handleEntity(document, parent, entityModel, context, null);
+        handleEntity(document, parent, entityModel, context, null, null);
 
         expect(parent.innerHTML).toBe('<div>test</div>');
         expect(div.outerHTML).toBe('<div>test</div>');
@@ -74,7 +74,7 @@ describe('handleEntity', () => {
 
         const parent = document.createElement('div');
         context.addDelimiterForEntity = true;
-        handleEntity(document, parent, entityModel, context, null);
+        handleEntity(document, parent, entityModel, context, {} as any, null);
 
         expect(parent.innerHTML).toBe(
             '<span class="entityDelimiterBefore">​</span><span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></span><span class="entityDelimiterAfter">​</span>'
@@ -103,7 +103,7 @@ describe('handleEntity', () => {
         const br = document.createElement('br');
         parent.appendChild(br);
 
-        const result = handleEntity(document, parent, entityModel, context, br);
+        const result = handleEntity(document, parent, entityModel, context, null, br);
 
         expect(parent.innerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</div><br>'
@@ -136,7 +136,7 @@ describe('handleEntity', () => {
 
         entityDiv.textContent = 'test';
 
-        const result = handleEntity(document, parent, entityModel, context, entityDiv);
+        const result = handleEntity(document, parent, entityModel, context, null, entityDiv);
 
         expect(insertBefore).not.toHaveBeenCalled();
         expect(result).toBe(br);
@@ -162,7 +162,7 @@ describe('handleEntity', () => {
 
         context.addDelimiterForEntity = true;
 
-        const result = handleEntity(document, parent, entityModel, context, br);
+        const result = handleEntity(document, parent, entityModel, context, {} as any, br);
 
         expect(parent.innerHTML).toBe(
             '<span class="entityDelimiterBefore">​</span><span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span><span class="entityDelimiterAfter">​</span><br>'
@@ -189,7 +189,7 @@ describe('handleEntity', () => {
         span.textContent = 'test';
 
         const parent = document.createElement('div');
-        const result = handleEntity(document, parent, entityModel, context, null);
+        const result = handleEntity(document, parent, entityModel, context, {} as any, null);
 
         expect(parent.innerHTML).toBe(
             '<span class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false">test</span>'
@@ -201,7 +201,7 @@ describe('handleEntity', () => {
         expect(context.regularSelection.current.segment).toBe(span);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const entityDiv = document.createElement('div');
         const entityModel: ContentModelEntity = {
             blockType: 'Entity',
@@ -213,15 +213,15 @@ describe('handleEntity', () => {
             wrapper: entityDiv,
         };
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
         const parent = document.createElement('div');
 
-        handleEntity(document, parent, entityModel, context, null, onNodeCreated);
+        handleEntity(document, parent, entityModel, context, {} as any, null, newNodes);
 
         expect(parent.innerHTML).toBe(
             '<div class="_Entity _EType_entity _EId_entity_1 _EReadonly_1" contenteditable="false"></div>'
         );
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(entityModel);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('div')!);
     });
 });

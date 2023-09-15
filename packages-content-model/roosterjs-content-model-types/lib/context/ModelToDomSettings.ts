@@ -1,9 +1,7 @@
 import { ContentModelBlock } from '../block/ContentModelBlock';
 import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
 import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelBlockHandler, ContentModelHandler } from './ContentModelHandler';
 import { ContentModelBr } from '../segment/ContentModelBr';
-import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
 import { ContentModelDivider } from '../block/ContentModelDivider';
 import { ContentModelEntity } from '../entity/ContentModelEntity';
 import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
@@ -16,10 +14,14 @@ import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { ContentModelTable } from '../block/ContentModelTable';
-import { ContentModelTableRow } from '../block/ContentModelTableRow';
 import { ContentModelText } from '../segment/ContentModelText';
 import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 import { ModelToDomContext } from './ModelToDomContext';
+import {
+    ContentModelBlockAndSegmentHandler,
+    ContentModelBlockHandler,
+    ContentModelSegmentHandler,
+} from './ContentModelHandler';
 
 /**
  * Default implicit format map from tag name (lower case) to segment format
@@ -67,22 +69,22 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for child models of ContentModelBlockGroup
      */
-    blockGroupChildren: ContentModelHandler<ContentModelBlockGroup>;
+    blockGroupChildren: ContentModelBlockHandler<ContentModelBlockGroup>;
 
     /**
      * Content Model type for ContentModelBr
      */
-    br: ContentModelHandler<ContentModelBr>;
+    br: ContentModelSegmentHandler<ContentModelBr>;
 
     /**
      * Content Model type for child models of ContentModelEntity
      */
-    entity: ContentModelBlockHandler<ContentModelEntity>;
+    entity: ContentModelBlockAndSegmentHandler<ContentModelEntity>;
 
     /**
      * Content Model type for ContentModelGeneralBlock
      */
-    general: ContentModelBlockHandler<ContentModelGeneralBlock>;
+    general: ContentModelBlockAndSegmentHandler<ContentModelGeneralBlock>;
 
     /**
      * Content Model type for ContentModelHR
@@ -92,7 +94,7 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelImage
      */
-    image: ContentModelHandler<ContentModelImage>;
+    image: ContentModelSegmentHandler<ContentModelImage>;
 
     /**
      * Content Model type for list group of ContentModelListItem
@@ -117,12 +119,12 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelSegment
      */
-    segment: ContentModelHandler<ContentModelSegment>;
+    segment: ContentModelSegmentHandler<ContentModelSegment>;
 
     /**
      * Content Model type for ContentModelCode
      */
-    segmentDecorator: ContentModelHandler<ContentModelSegment>;
+    segmentDecorator: ContentModelSegmentHandler<ContentModelSegment>;
 
     /**
      * Content Model type for ContentModelTable
@@ -132,23 +134,8 @@ export type ContentModelHandlerMap = {
     /**
      * Content Model type for ContentModelText
      */
-    text: ContentModelHandler<ContentModelText>;
+    text: ContentModelSegmentHandler<ContentModelText>;
 };
-
-/**
- * An optional callback that will be called when a DOM node is created
- * @param modelElement The related Content Model element
- * @param node The node created for this model element
- */
-export type OnNodeCreated = (
-    modelElement:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-) => void;
 
 /**
  * Represents settings to customize DOM to Content Model conversion

@@ -10,15 +10,7 @@ import {
     createModelToDomContext,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelBlockHandler,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTable,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import type { ContentModelBlockHandler, ContentModelTable } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -284,19 +276,13 @@ const handleTableWithDiv: ContentModelBlockHandler<ContentModelTable> = (
     context,
     refNode
 ) => {
-    return context.defaultModelHandlers.table(doc, parent, model, context, refNode, onNodeCreated);
-};
+    const newNodes: Node[] = [];
 
-const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
-    if (safeInstanceOf(node, 'HTMLTableElement')) {
-        wrap(node, 'div');
+    refNode = context.defaultModelHandlers.table(doc, parent, model, context, refNode, newNodes);
+
+    if (safeInstanceOf(newNodes[0], 'HTMLTableElement')) {
+        wrap(newNodes[0], 'div');
     }
+
+    return refNode;
 };

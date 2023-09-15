@@ -13,7 +13,7 @@ describe('handleSegmentCommon', () => {
             lineHeight: '2',
             fontWeight: 'bold',
         });
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
         const context = createModelToDomContext();
 
         context.darkColorHandler = new DarkColorHandlerImpl(
@@ -28,13 +28,14 @@ describe('handleSegmentCommon', () => {
             },
         };
 
-        handleSegmentCommon(document, txt, container, segment, context, onNodeCreated);
+        handleSegmentCommon(document, txt, container, segment, context, {} as any, newNodes);
 
         expect(context.regularSelection.current.segment).toBe(txt);
         expect(container.outerHTML).toBe(
             '<span style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href"></a></b></span>'
         );
-        expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(txt);
     });
 
     it('element with child', () => {
@@ -47,7 +48,7 @@ describe('handleSegmentCommon', () => {
         const segment = createText('test', {});
         const context = createModelToDomContext();
 
-        handleSegmentCommon(document, parent, container, segment, context);
+        handleSegmentCommon(document, parent, container, segment, context, {} as any);
 
         expect(context.regularSelection.current.segment).toBe(null);
         expect(container.outerHTML).toBe('<span></span>');

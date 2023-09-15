@@ -6,16 +6,16 @@ import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagrap
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 import {
-    ContentModelHandler,
     ContentModelParagraph,
     ContentModelSegment,
+    ContentModelSegmentHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleSegment: jasmine.Spy<ContentModelHandler<ContentModelSegment>>;
+    let handleSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelSegment>>;
 
     beforeEach(() => {
         parent = document.createElement('div');
@@ -75,21 +75,19 @@ describe('handleParagraph', () => {
             text: 'test',
             format: {},
         };
-        runTest(
-            {
-                blockType: 'Paragraph',
-                segments: [segment],
-                format: {},
-            },
-            '<div></div>',
-            1
-        );
+        const para: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+        };
+        runTest(para, '<div></div>', 1);
 
         expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment,
-            context
+            context,
+            para
         );
     });
 
@@ -99,18 +97,15 @@ describe('handleParagraph', () => {
             text: 'test',
             format: {},
         };
-        runTest(
-            {
-                blockType: 'Paragraph',
-                segments: [segment],
-                isImplicit: true,
-                format: {},
-            },
-            '',
-            1
-        );
+        const para: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            isImplicit: true,
+            format: {},
+        };
+        runTest(para, '', 1);
 
-        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context, para);
     });
 
     it('Handle multiple segments', () => {
@@ -127,27 +122,26 @@ describe('handleParagraph', () => {
             element: null!,
             format: {},
         };
-        runTest(
-            {
-                blockType: 'Paragraph',
-                segments: [segment1, segment2],
-                format: {},
-            },
-            '<div></div>',
-            2
-        );
+        const para: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment1, segment2],
+            format: {},
+        };
+        runTest(para, '<div></div>', 2);
 
         expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment1,
-            context
+            context,
+            para
         );
         expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment2,
-            context
+            context,
+            para
         );
     });
 
@@ -437,7 +431,7 @@ describe('handleParagraph', () => {
         expect(para2.cachedElement?.outerHTML).toBe('<div style="white-space: pre;">test2</div>');
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const parent = document.createElement('div');
         const segment: ContentModelSegment = {
             segmentType: 'Text',
@@ -450,14 +444,13 @@ describe('handleParagraph', () => {
             format: {},
         };
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        handleParagraph(document, parent, paragraph, context, null, onNodeCreated);
+        handleParagraph(document, parent, paragraph, context, null, newNodes);
 
         expect(parent.innerHTML).toBe('<div></div>');
-        expect(onNodeCreated).toHaveBeenCalledTimes(1);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('div')!);
     });
 
     it('Paragraph with only selection marker and BR', () => {

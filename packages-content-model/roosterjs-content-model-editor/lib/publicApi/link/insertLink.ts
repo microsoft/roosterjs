@@ -1,11 +1,15 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelLink, OnNodeCreated } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
-import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
+import { HtmlSanitizer, matchLink, safeInstanceOf } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import {
+    ContentModelLink,
+    ContentModelSegment,
+    ContentModelSegmentHandler,
+} from 'roosterjs-content-model-types';
 import {
     addLink,
     addSegment,
@@ -55,9 +59,32 @@ export default function insertLink(
 
         const links: ContentModelLink[] = [];
         let anchorNode: Node | undefined;
-        const onAnchorCreated: OnNodeCreated = (modelElement, node) => {
-            if (!anchorNode && links.indexOf(modelElement as ContentModelLink) >= 0) {
-                anchorNode = node;
+
+        const segmentDecorator: ContentModelSegmentHandler<ContentModelSegment> = (
+            doc,
+            parent,
+            model,
+            context,
+            paragraph
+        ) => {
+            const newNodes: Node[] = [];
+
+            context.defaultModelHandlers.segmentDecorator(
+                doc,
+                parent,
+                model,
+                context,
+                paragraph,
+                newNodes
+            );
+
+            if (!anchorNode && model.link && links.indexOf(model.link) >= 0) {
+                for (let i = 0; i < newNodes.length; i++) {
+                    if (safeInstanceOf(newNodes[i], 'HTMLAnchorElement')) {
+                        anchorNode = newNodes[i];
+                        break;
+                    }
+                }
             }
         };
 
@@ -112,17 +139,7 @@ export default function insertLink(
             },
             undefined /*domToModelOption*/,
             {
-                modelHandlerOverride: {
-                    segmentDecorator: (doc, parent, model, context) => {
-                        return context.defaultModelHandlers.segmentDecorator(
-                            doc,
-                            parent,
-                            model,
-                            context,
-                            onAnchorCreated
-                        );
-                    },
-                },
+                modelHandlerOverride: { segmentDecorator },
             }
         );
     }

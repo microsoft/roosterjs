@@ -1,17 +1,18 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler, ContentModelImage } from 'roosterjs-content-model-types';
+import { ContentModelImage, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { parseValueWithUnit } from '../../formatHandlers/utils/parseValueWithUnit';
 
 /**
  * @internal
  */
-export const handleImage: ContentModelHandler<ContentModelImage> = (
+export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
     doc,
     parent,
     imageModel,
     context,
-    onNodeCreated
+    paragraph,
+    newNodes
 ) => {
     const img = doc.createElement('img');
     const element = document.createElement('span');
@@ -50,5 +51,5 @@ export const handleImage: ContentModelHandler<ContentModelImage> = (
         };
     }
 
-    handleSegmentCommon(doc, img, element, imageModel, context, onNodeCreated);
+    handleSegmentCommon(doc, img, element, imageModel, context, paragraph, newNodes);
 };

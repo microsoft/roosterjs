@@ -14,7 +14,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     listItem,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     refNode = context.modelHandlers.list(doc, parent, listItem, context, refNode);
 
@@ -40,18 +40,30 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
             return metadata;
         });
 
-        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            li,
+            listItem,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
     } else {
         // There is no level for this list item, that means it should be moved out of the list
         // For each paragraph, make it not implicit so it will have a DIV around it, to avoid more paragraphs connected together
         listItem.blocks.forEach(setParagraphNotImplicit);
 
-        context.modelHandlers.blockGroupChildren(doc, li, listItem, context);
+        context.modelHandlers.blockGroupChildren(
+            doc,
+            li,
+            listItem,
+            context,
+            null /*refNode, not used by blockGroupChildren handler*/
+        );
 
         unwrap(li);
     }
 
-    onNodeCreated?.(listItem, li);
+    newNodes?.push(li);
 
     return refNode;
 };

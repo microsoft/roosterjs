@@ -12,7 +12,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
     listItem,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     let layer = 0;
     const { nodeStack } = context.listFormat;
@@ -68,7 +68,7 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
 
         nodeStack.push({ node: newList, ...level });
 
-        onNodeCreated?.(level, newList);
+        newNodes?.push(newList);
     }
 
     return refNode;

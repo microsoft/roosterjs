@@ -1,17 +1,18 @@
 import { applyFormat } from '../utils/applyFormat';
-import { ContentModelHandler, ContentModelSegment } from 'roosterjs-content-model-types';
+import { ContentModelSegment, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
  * @internal
  */
-export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = (
+export const handleSegmentDecorator: ContentModelSegmentHandler<ContentModelSegment> = (
     doc,
     parent,
     segment,
     context,
-    onNodeCreated
+    _,
+    newNodes
 ) => {
     const { code, link } = segment;
 
@@ -25,7 +26,7 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
             applyFormat(a, context.formatAppliers.link, link.format, context);
             applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
 
-            onNodeCreated?.(link, a);
+            newNodes?.push(a);
         });
     }
 
@@ -38,7 +39,7 @@ export const handleSegmentDecorator: ContentModelHandler<ContentModelSegment> = 
 
             applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 
-            onNodeCreated?.(code, codeNode);
+            newNodes?.push(codeNode);
         });
     }
 };

@@ -1,17 +1,18 @@
 import {
-    ContentModelHandler,
     ContentModelSegment,
+    ContentModelSegmentHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleSegment: ContentModelHandler<ContentModelSegment> = (
+export const handleSegment: ContentModelSegmentHandler<ContentModelSegment> = (
     doc: Document,
     parent: Node,
     segment: ContentModelSegment,
-    context: ModelToDomContext
+    context: ModelToDomContext,
+    paragraph
 ) => {
     const regularSelection = context.regularSelection;
 
@@ -24,23 +25,37 @@ export const handleSegment: ContentModelHandler<ContentModelSegment> = (
 
     switch (segment.segmentType) {
         case 'Text':
-            context.modelHandlers.text(doc, parent, segment, context);
+            context.modelHandlers.text(doc, parent, segment, context, paragraph);
             break;
 
         case 'Br':
-            context.modelHandlers.br(doc, parent, segment, context);
+            context.modelHandlers.br(doc, parent, segment, context, paragraph);
             break;
 
         case 'Image':
-            context.modelHandlers.image(doc, parent, segment, context);
+            context.modelHandlers.image(doc, parent, segment, context, paragraph);
             break;
 
         case 'General':
-            context.modelHandlers.general(doc, parent, segment, context, null /*refNode*/);
+            context.modelHandlers.general(
+                doc,
+                parent,
+                segment,
+                context,
+                paragraph,
+                null /*refNode*/
+            );
             break;
 
         case 'Entity':
-            context.modelHandlers.entity(doc, parent, segment, context, null /*refNode*/);
+            context.modelHandlers.entity(
+                doc,
+                parent,
+                segment,
+                context,
+                paragraph,
+                null /*refNode*/
+            );
             break;
     }
 

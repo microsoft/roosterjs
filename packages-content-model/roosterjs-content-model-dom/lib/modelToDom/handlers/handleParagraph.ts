@@ -16,7 +16,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     paragraph,
     context,
     refNode,
-    onNodeCreated
+    newNodes
 ) => {
     let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
@@ -63,12 +63,13 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context
+                            context,
+                            paragraph
                         );
                     }
 
                     paragraph.segments.forEach(segment => {
-                        context.modelHandlers.segment(doc, parent, segment, context);
+                        context.modelHandlers.segment(doc, parent, segment, context, paragraph);
                     });
                 }
             };
@@ -109,7 +110,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     }
 
     if (container) {
-        onNodeCreated?.(paragraph, container);
+        newNodes?.push(container);
     }
 
     return refNode;

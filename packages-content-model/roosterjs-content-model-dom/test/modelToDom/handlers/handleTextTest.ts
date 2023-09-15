@@ -4,6 +4,8 @@ import { ContentModelText, ModelToDomContext } from 'roosterjs-content-model-typ
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { handleText } from '../../../lib/modelToDom/handlers/handleText';
 
+const mockedParagraph = 'PARAGRAPH' as any;
+
 describe('handleText', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
@@ -20,7 +22,7 @@ describe('handleText', () => {
             format: {},
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span>test</span>');
     });
@@ -33,7 +35,7 @@ describe('handleText', () => {
         };
         context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span style="color: red;">test</span>');
     });
@@ -46,7 +48,7 @@ describe('handleText', () => {
             link: { format: { href: '/test', underline: true }, dataset: {} },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
     });
@@ -63,7 +65,7 @@ describe('handleText', () => {
             },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span><code>test</code></span>');
     });
@@ -78,14 +80,14 @@ describe('handleText', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const parent = document.createElement('div');
         const text: ContentModelText = {
             segmentType: 'Text',
@@ -93,14 +95,13 @@ describe('handleText', () => {
             format: {},
         };
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        handleText(document, parent, text, context, onNodeCreated);
+        handleText(document, parent, text, context, mockedParagraph, newNodes);
 
         expect(parent.innerHTML).toBe('<span>test</span>');
-        expect(onNodeCreated).toHaveBeenCalledTimes(1);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(text);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span')!.firstChild);
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('span')!.firstChild!);
     });
 
     it('Link is outside of SPAN', () => {
@@ -118,7 +119,7 @@ describe('handleText', () => {
             },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, mockedParagraph);
 
         expect(parent.innerHTML).toBe('<span style="font-size: 12px;"><a href="#">test</a></span>');
     });

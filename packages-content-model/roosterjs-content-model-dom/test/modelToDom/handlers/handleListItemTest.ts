@@ -12,12 +12,11 @@ import {
     ContentModelListItem,
     ModelToDomContext,
     ContentModelBlockHandler,
-    ContentModelHandler,
 } from 'roosterjs-content-model-types';
 
 describe('handleListItem', () => {
     let context: ModelToDomContext;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelBlockHandler<ContentModelBlockGroup>>;
     let handleList: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
 
     beforeEach(() => {
@@ -59,7 +58,8 @@ describe('handleListItem', () => {
             document,
             document.createElement('li'),
             listItem,
-            context
+            context,
+            null
         );
         expect(paragraph.isImplicit).toBeFalse();
     });
@@ -132,7 +132,8 @@ describe('handleListItem', () => {
             document,
             parent.firstChild as HTMLElement,
             listItem,
-            context
+            context,
+            null
         );
     });
 
@@ -200,7 +201,8 @@ describe('handleListItem', () => {
             document,
             parent.firstChild as HTMLElement,
             listItem,
-            context
+            context,
+            null
         );
     });
 
@@ -232,7 +234,8 @@ describe('handleListItem', () => {
             document,
             document.createElement('li'),
             listItem,
-            context
+            context,
+            null
         );
         expect(paragraph.isImplicit).toBeFalse();
     });
@@ -272,14 +275,15 @@ describe('handleListItem', () => {
             document,
             parent.firstChild?.firstChild as HTMLLIElement,
             listItem,
-            context
+            context,
+            null
         );
     });
 });
 
 describe('handleListItem without format handler', () => {
     let context: ModelToDomContext;
-    let handleBlockGroupChildren: jasmine.Spy<ContentModelHandler<ContentModelBlockGroup>>;
+    let handleBlockGroupChildren: jasmine.Spy<ContentModelBlockHandler<ContentModelBlockGroup>>;
     let handleList: jasmine.Spy<ContentModelBlockHandler<ContentModelListItem>>;
 
     beforeEach(() => {
@@ -324,7 +328,8 @@ describe('handleListItem without format handler', () => {
             document,
             document.createElement('li'),
             listItem,
-            context
+            context,
+            null
         );
         expect(paragraph.isImplicit).toBeFalse();
     });
@@ -393,7 +398,8 @@ describe('handleListItem without format handler', () => {
             document,
             parent.firstChild as HTMLElement,
             listItem,
-            context
+            context,
+            null
         );
     });
 
@@ -461,7 +467,8 @@ describe('handleListItem without format handler', () => {
             document,
             parent.firstChild as HTMLElement,
             listItem,
-            context
+            context,
+            null
         );
     });
 
@@ -483,12 +490,13 @@ describe('handleListItem without format handler', () => {
             document,
             parent.firstChild!.firstChild as HTMLElement,
             listItem,
-            context
+            context,
+            null
         );
         expect(result).toBe(br);
     });
 
-    it('With onNodeCreated', () => {
+    it('With newNodes', () => {
         const listLevel0 = createListLevel('OL');
         const listItem: ContentModelListItem = {
             blockType: 'BlockGroup',
@@ -504,17 +512,16 @@ describe('handleListItem without format handler', () => {
         };
         const parent = document.createElement('div');
 
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+        const newNodes: Node[] = [];
 
-        handleListItem(document, parent, listItem, context, null, onNodeCreated);
+        handleListItem(document, parent, listItem, context, null, newNodes);
 
         expect(
             ['<ol start="1"><li></li></ol>', '<ol start="1"><li></li></ol>'].indexOf(
                 parent.innerHTML
             ) >= 0
         ).toBeTrue();
-        expect(onNodeCreated).toHaveBeenCalledTimes(1);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listItem);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('li'));
+        expect(newNodes.length).toBe(1);
+        expect(newNodes[0]).toBe(parent.querySelector('li')!);
     });
 });
