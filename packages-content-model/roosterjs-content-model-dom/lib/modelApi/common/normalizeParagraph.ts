@@ -37,6 +37,8 @@ export function normalizeParagraph(paragraph: ContentModelParagraph) {
         normalizeAllSegments(paragraph);
     }
 
+    removeEmptyLinks(paragraph);
+
     removeEmptySegments(paragraph);
 }
 
@@ -45,5 +47,14 @@ function removeEmptySegments(block: ContentModelParagraph) {
         if (isSegmentEmpty(block.segments[j])) {
             block.segments.splice(j, 1);
         }
+    }
+}
+
+function removeEmptyLinks(paragraph: ContentModelParagraph) {
+    const segments = paragraph.segments;
+    const noMarkerSegments = segments.filter(x => x.segmentType != 'SelectionMarker');
+    const marker = segments.find(x => x.segmentType == 'SelectionMarker');
+    if (marker && marker.link && noMarkerSegments.every(x => !x.link)) {
+        delete marker.link;
     }
 }
