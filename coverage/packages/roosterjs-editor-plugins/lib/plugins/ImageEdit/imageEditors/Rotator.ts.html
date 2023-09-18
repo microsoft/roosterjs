@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.34% </span>
+                <span class="strong">94.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>50/53</span>
+                <span class='fraction'>51/54</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">96.08% </span>
+                <span class="strong">96.15% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>49/51</span>
+                <span class='fraction'>50/52</span>
             </div>
         
             
@@ -285,29 +285,29 @@
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">4x</span>
-<span class="cline-any cline-yes">8x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-yes">6x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">4x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -444,35 +444,35 @@ export function updateRotateHandleState(
     } else {
         rotateCenter.style.display = '';
         rotateHandle.style.display = '';
-        const rotateHandleRect = rotateHandle.getBoundingClientRect();
+        const rotateCenterRect = rotateCenter.getBoundingClientRect();
         const wrapperRect = wrapper.getBoundingClientRect();
-&nbsp;
-        <span class="missing-if-branch" title="else path not taken" >E</span>if (rotateHandleRect &amp;&amp; wrapperRect) {
+        const ROTATOR_HEIGHT = ROTATE_SIZE + ROTATE_GAP + RESIZE_HANDLE_MARGIN;
+        <span class="missing-if-branch" title="else path not taken" >E</span>if (rotateCenterRect &amp;&amp; wrapperRect) {
             let adjustedDistance = Number.MAX_SAFE_INTEGER;
             const angle = angleRad * DEG_PER_RAD;
 &nbsp;
-            if (angle &lt; 45 &amp;&amp; angle &gt; -45 &amp;&amp; wrapperRect.top - editorRect.top &lt; ROTATE_GAP) {
-                const top = rotateHandleRect.top - editorRect.top;
+            if (angle &lt; 45 &amp;&amp; angle &gt; -45 &amp;&amp; wrapperRect.top - editorRect.top &lt; ROTATOR_HEIGHT) {
+                const top = rotateCenterRect.top - editorRect.top;
                 adjustedDistance = top;
             } else if (
                 angle &lt;= -80 &amp;&amp;
                 angle &gt;= -100 &amp;&amp;
-                wrapperRect.left - editorRect.left &lt; ROTATE_GAP
+                wrapperRect.left - editorRect.left &lt; ROTATOR_HEIGHT
             ) {
-                const left = rotateHandleRect.left - editorRect.left;
+                const left = rotateCenterRect.left - editorRect.left;
                 adjustedDistance = left;
             } else if (
                 angle &gt;= 80 &amp;&amp;
                 angle &lt;= 100 &amp;&amp;
-                editorRect.right - wrapperRect.right &lt; ROTATE_GAP
+                editorRect.right - wrapperRect.right &lt; ROTATOR_HEIGHT
             ) {
-                const right = rotateHandleRect.right - editorRect.right;
+                const right = rotateCenterRect.right - editorRect.right;
                 adjustedDistance = Math.min(editorRect.right - wrapperRect.right, right);
             } else if (
                 (angle &lt;= -160 || angle &gt;= 160) &amp;&amp;
-                editorRect.bottom - wrapperRect.bottom &lt; ROTATE_GAP
+                editorRect.bottom - wrapperRect.bottom &lt; ROTATOR_HEIGHT
             ) {
-                const bottom = rotateHandleRect.bottom - editorRect.bottom;
+                const bottom = rotateCenterRect.bottom - editorRect.bottom;
                 adjustedDistance = Math.min(editorRect.bottom - wrapperRect.bottom, bottom);
             }
 &nbsp;
@@ -547,7 +547,7 @@ function getRotateIconHTML(borderColor: string): CreateElementData {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Sep 15 2023 23:30:55 GMT+0000 (Coordinated Universal Time)
+                at Mon Sep 18 2023 14:37:37 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../prettify.js"></script>
