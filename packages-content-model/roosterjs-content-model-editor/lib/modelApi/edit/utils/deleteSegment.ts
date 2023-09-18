@@ -30,6 +30,7 @@ export function deleteSegment(
         case 'SelectionMarker':
             segments.splice(index, 1);
             return true;
+
         case 'Entity':
             const operation = segmentToDelete.isSelected
                 ? EntityOperation.Overwrite
