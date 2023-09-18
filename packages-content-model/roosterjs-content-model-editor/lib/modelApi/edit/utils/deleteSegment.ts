@@ -26,11 +26,16 @@ export function deleteSegment(
 
     switch (segmentToDelete.segmentType) {
         case 'Br':
-        case 'Image':
         case 'SelectionMarker':
             segments.splice(index, 1);
             return true;
-
+        case 'Image':
+            if (segmentToDelete.link) {
+                segments.splice(index, 2);
+            } else {
+                segments.splice(index, 1);
+            }
+            return true;
         case 'Entity':
             const operation = segmentToDelete.isSelected
                 ? EntityOperation.Overwrite
