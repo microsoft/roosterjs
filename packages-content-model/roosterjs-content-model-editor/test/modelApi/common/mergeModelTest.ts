@@ -2130,7 +2130,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { deletedEntities: [] },
+            { newEntities: [], deletedEntities: [] },
             {
                 mergeFormat: 'none',
             }
