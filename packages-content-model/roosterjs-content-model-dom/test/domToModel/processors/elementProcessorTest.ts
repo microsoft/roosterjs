@@ -15,7 +15,7 @@ describe('elementProcessor', () => {
     let divProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let generalProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
     let entityProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
-    let delimiterProcessor: jasmine.Spy<ElementProcessor<HTMLSpanElement>>;
+    let delimiterProcessor: jasmine.Spy<ElementProcessor<Node>>;
 
     beforeEach(() => {
         group = createContentModelDocument();

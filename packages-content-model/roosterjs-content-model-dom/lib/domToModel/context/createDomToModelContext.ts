@@ -1,31 +1,62 @@
-import { defaultFormatParsers, getFormatParsers } from '../../formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from './defaultProcessors';
-import { defaultStyleMap } from '../../formatHandlers/utils/defaultStyles';
-import { DomToModelContext, DomToModelOption, EditorContext } from 'roosterjs-content-model-types';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import { getObjectKeys } from 'roosterjs-editor-dom';
+import {
+    defaultFormatKeysPerCategory,
+    defaultFormatParsers,
+} from '../../formatHandlers/defaultFormatHandlers';
+import {
+    ContentModelBlockFormat,
+    DomToModelContext,
+    DomToModelDecoratorContext,
+    DomToModelFormatContext,
+    DomToModelOption,
+    DomToModelSelectionContext,
+    DomToModelSettings,
+    EditorContext,
+    FormatParser,
+    FormatParsers,
+    FormatParsersPerCategory,
+} from 'roosterjs-content-model-types';
 
 /**
- * Create context object form DOM to Content Model conversion
+ * Create context object for DOM to Content Model conversion
  * @param editorContext Context of editor
- * @param options Options for this context
- * @param selection Selection that already exists in content
+ * @param options Option array to customize the DOM to Model conversion behavior
  */
 export function createDomToModelContext(
     editorContext?: EditorContext,
-    options?: DomToModelOption,
-    selection?: SelectionRangeEx
+    ...options: (DomToModelOption | undefined)[]
 ): DomToModelContext {
-    const context: DomToModelContext = {
-        ...editorContext,
+    return Object.assign(
+        {},
+        editorContext,
+        createDomToModelSelectionContext(),
+        createDomToModelFormatContext(editorContext?.isRootRtl),
+        createDomToModelDecoratorContext(),
+        createDomToModelSettings(options)
+    );
+}
 
-        blockFormat: {},
+function createDomToModelSelectionContext(): DomToModelSelectionContext {
+    return { isInSelection: false };
+}
+
+function createDomToModelFormatContext(isRootRtl?: boolean): DomToModelFormatContext {
+    const blockFormat: ContentModelBlockFormat = isRootRtl ? { direction: 'rtl' } : {};
+
+    return {
+        blockFormat,
         segmentFormat: {},
-        isInSelection: false,
 
         listFormat: {
             levels: [],
             threadItemCounts: [],
         },
+    };
+}
+
+function createDomToModelDecoratorContext(): DomToModelDecoratorContext {
+    return {
         link: {
             format: {},
             dataset: {},
@@ -37,33 +68,54 @@ export function createDomToModelContext(
             format: {},
             tagName: '',
         },
-
-        elementProcessors: {
-            ...defaultProcessorMap,
-            ...(options?.processorOverride || {}),
-        },
-
-        defaultStyles: {
-            ...defaultStyleMap,
-            ...(options?.defaultStyleOverride || {}),
-        },
-
-        formatParsers: getFormatParsers(
-            options?.formatParserOverride,
-            options?.additionalFormatParsers
-        ),
-
-        defaultElementProcessors: defaultProcessorMap,
-        defaultFormatParsers: defaultFormatParsers,
     };
+}
 
-    if (editorContext?.isRootRtl) {
-        context.blockFormat.direction = 'rtl';
-    }
+function createDomToModelSettings(options: (DomToModelOption | undefined)[]): DomToModelSettings {
+    return {
+        elementProcessors: Object.assign(
+            {},
+            defaultProcessorMap,
+            ...options.map(x => x?.processorOverride)
+        ),
+        formatParsers: buildFormatParsers(
+            options.map(x => x?.formatParserOverride),
+            options.map(x => x?.additionalFormatParsers)
+        ),
+        defaultElementProcessors: defaultProcessorMap,
+        defaultFormatParsers,
+    };
+}
 
-    if (selection) {
-        context.rangeEx = selection;
-    }
+/**
+ * @internal Export for test only
+ * Build format parsers used by DOM to Content Model conversion
+ * @param override
+ * @param additionalParsersArray
+ * @returns
+ */
+export function buildFormatParsers(
+    overrides: (Partial<FormatParsers> | undefined)[] = [],
+    additionalParsersArray: (Partial<FormatParsersPerCategory> | undefined)[] = []
+): FormatParsersPerCategory {
+    const combinedOverrides = Object.assign({}, ...overrides);
 
-    return context;
+    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
+        const value = defaultFormatKeysPerCategory[key]
+            .map(
+                formatKey =>
+                    (combinedOverrides[formatKey] === undefined
+                        ? defaultFormatParsers[formatKey]
+                        : combinedOverrides[formatKey]) as FormatParser<any>
+            )
+            .concat(
+                ...additionalParsersArray.map(
+                    parsers => (parsers?.[key] ?? []) as FormatParser<any>[]
+                )
+            );
+
+        result[key] = value;
+
+        return result;
+    }, {} as FormatParsersPerCategory);
 }

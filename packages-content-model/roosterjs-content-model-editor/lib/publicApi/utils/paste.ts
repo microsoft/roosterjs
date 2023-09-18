@@ -1,11 +1,15 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { applySegmentFormatToElement, domToContentModel } from 'roosterjs-content-model-dom';
 import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from './formatWithContentModel';
 import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { NodePosition } from 'roosterjs-editor-types';
+import {
+    applySegmentFormatToElement,
+    createDomToModelContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 import ContentModelBeforePasteEvent, {
     ContentModelBeforePasteEventData,
 } from '../../publicTypes/event/ContentModelBeforePasteEvent';
@@ -74,7 +78,10 @@ export default function paste(
                 { fontFamily, fontSize, textColor, backgroundColor, letterSpacing, lineHeight }
             );
 
-            const pasteModel = domToContentModel(fragment, domToModelOption);
+            const pasteModel = domToContentModel(
+                fragment,
+                createDomToModelContext(undefined /*editorContext*/, domToModelOption)
+            );
 
             mergePasteContent(model, context, pasteModel, applyCurrentFormat, customizedMerge);
 

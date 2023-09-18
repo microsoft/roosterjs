@@ -1,9 +1,4 @@
-import {
-    DefaultStyleMap,
-    ElementProcessorMap,
-    FormatParsers,
-    FormatParsersPerCategory,
-} from './DomToModelSettings';
+import { ElementProcessorMap, FormatParsers, FormatParsersPerCategory } from './DomToModelSettings';
 
 /**
  * Options for creating DomToModelContext
@@ -13,11 +8,6 @@ export interface DomToModelOption {
      * Overrides default element processors
      */
     processorOverride?: Partial<ElementProcessorMap>;
-
-    /**
-     * Overrides default element styles
-     */
-    defaultStyleOverride?: DefaultStyleMap;
 
     /**
      * Overrides default format handlers

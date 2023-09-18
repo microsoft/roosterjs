@@ -2077,6 +2077,109 @@ describe('mergeModel', () => {
         });
     });
 
+    it('Merge with default format paragraph and paragraph, mergeFormat: none', () => {
+        const MockedFormat = {
+            fontFamily: 'sourceSegmentFormatFontFamily',
+            italic: 'sourceSegmentFormatItalic',
+            underline: 'sourceSegmentFormatUnderline',
+            fontSize: 'sourceSegmentFormatFontSize',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        majorModel.blocks.push({
+            blockType: 'Paragraph',
+            segmentFormat: MockedFormat,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontFamily: 'sourceFontFamily',
+                    } as any,
+                },
+                createSelectionMarker(),
+            ],
+            format: {},
+        });
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                                fontSize: 'sourcefontSize',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'none',
+            }
+        );
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        Object({
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: Object({
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceSegmentFormatItalic',
+                                underline: 'sourceSegmentFormatUnderline',
+                                fontSize: 'sourceSegmentFormatFontSize',
+                            }),
+                        }),
+                        Object({
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: Object({
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                                fontSize: 'sourcefontSize',
+                            }),
+                        }),
+                        Object({
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: Object({
+                                fontFamily: 'sourceSegmentFormatFontFamily',
+                                italic: 'sourceSegmentFormatItalic',
+                                underline: 'sourceSegmentFormatUnderline',
+                                fontSize: 'sourceSegmentFormatFontSize',
+                            }),
+                        }),
+                    ],
+                    format: {},
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
     it('Merge Table + Paragraph', () => {
         const majorModel = createContentModelDocument();
         const sourceModel: ContentModelDocument = {

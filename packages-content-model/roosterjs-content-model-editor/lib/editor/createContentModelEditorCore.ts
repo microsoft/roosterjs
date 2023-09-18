@@ -12,6 +12,7 @@ import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import { tablePreProcessor } from './overrides/tablePreProcessor';
 
 /**
  * Editor Core creator for Content Model editor
@@ -75,8 +76,16 @@ function promoteContentModelInfo(
 ) {
     const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
 
-    cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
-    cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
+    cmCore.defaultDomToModelOptions = [
+        {
+            processorOverride: {
+                table: tablePreProcessor,
+            },
+        },
+        options.defaultDomToModelOptions,
+    ];
+    cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
+
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters
