@@ -30,11 +30,7 @@ export function deleteSegment(
             segments.splice(index, 1);
             return true;
         case 'Image':
-            if (segmentToDelete.link) {
-                segments.splice(index, 2);
-            } else {
-                segments.splice(index, 1);
-            }
+            segments.splice(index, segmentToDelete.link ? 2 : 1);
             return true;
         case 'Entity':
             const operation = segmentToDelete.isSelected
