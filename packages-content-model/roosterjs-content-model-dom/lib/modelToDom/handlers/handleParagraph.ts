@@ -1,11 +1,11 @@
 import { applyFormat } from '../utils/applyFormat';
 import { ContentModelBlockHandler, ContentModelParagraph } from 'roosterjs-content-model-types';
-import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 
 const DefaultParagraphTag = 'div';
+const DefaultImplicitParagraphTag = 'span';
 
 /**
  * @internal
@@ -24,28 +24,25 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
         refNode = reuseCachedElement(parent, container, refNode);
     } else {
         stackFormat(context, paragraph.decorator?.tagName || null, () => {
-            const needParagraphWrapper =
-                !paragraph.isImplicit ||
-                !!paragraph.decorator ||
-                (getObjectKeys(paragraph.format).length > 0 &&
-                    paragraph.segments.some(segment => segment.segmentType != 'SelectionMarker'));
-            const formatOnWrapper = needParagraphWrapper
-                ? {
-                      ...(paragraph.decorator?.format || {}),
-                      ...paragraph.segmentFormat,
-                  }
-                : {};
+            const formatOnWrapper = {
+                ...paragraph.decorator?.format,
+                ...paragraph.segmentFormat,
+            };
 
-            container = doc.createElement(paragraph.decorator?.tagName || DefaultParagraphTag);
+            container = doc.createElement(
+                paragraph.decorator?.tagName || paragraph.isImplicit
+                    ? DefaultImplicitParagraphTag
+                    : DefaultParagraphTag
+            );
 
             parent.insertBefore(container, refNode);
 
             context.regularSelection.current = {
-                block: needParagraphWrapper ? container : container.parentNode,
+                block: container,
                 segment: null,
             };
 
-            const handleSegments = () => {
+            stackFormat(context, formatOnWrapper, () => {
                 const parent = container;
 
                 if (parent) {
@@ -72,22 +69,11 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                         context.modelHandlers.segment(doc, parent, segment, context, paragraph);
                     });
                 }
-            };
+            });
 
-            if (needParagraphWrapper) {
-                stackFormat(context, formatOnWrapper, handleSegments);
-
-                applyFormat(container, context.formatAppliers.block, paragraph.format, context);
-                applyFormat(container, context.formatAppliers.container, paragraph.format, context);
-                applyFormat(
-                    container,
-                    context.formatAppliers.segmentOnBlock,
-                    formatOnWrapper,
-                    context
-                );
-            } else {
-                handleSegments();
-            }
+            applyFormat(container, context.formatAppliers.block, paragraph.format, context);
+            applyFormat(container, context.formatAppliers.container, paragraph.format, context);
+            applyFormat(container, context.formatAppliers.segmentOnBlock, formatOnWrapper, context);
 
             optimize(container);
 
@@ -99,18 +85,15 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             // to make sure the value is correct.
             refNode = container.nextSibling;
 
-            if (needParagraphWrapper) {
-                if (context.allowCacheElement) {
-                    paragraph.cachedElement = container;
-                }
-            } else {
-                unwrap(container);
+            if (context.allowCacheElement) {
+                paragraph.cachedElement = container;
             }
         });
     }
 
     if (container) {
         newNodes?.push(container);
+        context.domIndexer?.onParagraph(container);
     }
 
     return refNode;

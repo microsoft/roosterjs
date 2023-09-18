@@ -28,7 +28,10 @@ export interface IContentModelEditor extends IEditor {
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption
+    ): SelectionRangeEx | null;
 
     /**
      * Notify editor the current cache may be invalid

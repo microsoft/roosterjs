@@ -1,4 +1,5 @@
-import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType, SelectionRangeEx } from 'roosterjs-editor-types';
+import { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -39,15 +40,14 @@ export function formatWithContentModel(
         deletedEntities: [],
         rawEvent,
     };
+    let rangeEx: SelectionRangeEx | undefined;
 
     if (formatter(model, context)) {
-        const callback = () => {
+        const writeBack = () => {
             handleNewEntities(editor, context);
             handleDeletedEntities(editor, context);
 
-            if (model) {
-                editor.setContentModel(model, modelToDomOption);
-            }
+            rangeEx = editor.setContentModel(model, modelToDomOption) || undefined;
 
             if (preservePendingFormat) {
                 const pendingFormat = getPendingFormat(editor);
@@ -57,26 +57,31 @@ export function formatWithContentModel(
                     setPendingFormat(editor, pendingFormat, pos);
                 }
             }
-
-            return getChangeData?.();
         };
 
         if (context.skipUndoSnapshot) {
-            const contentChangedEventData = callback();
-
-            if (changeSource) {
-                editor.triggerContentChangedEvent(changeSource, contentChangedEventData);
-            }
+            writeBack();
         } else {
             editor.addUndoSnapshot(
-                callback,
-                changeSource || ChangeSource.Format,
+                writeBack,
+                undefined /*changeSource, passing undefined here to avoid triggering ContentChangedEvent. We will trigger it using it with Content Model below */,
                 false /*canUndoByBackspace*/,
                 {
                     formatApiName: apiName,
                 }
             );
         }
+
+        const eventData: ContentModelContentChangedEventData = {
+            contentModel: model,
+            rangeEx: rangeEx,
+            source: changeSource || ChangeSource.Format,
+            data: getChangeData?.(),
+            additionalData: {
+                formatApiName: apiName,
+            },
+        };
+        editor.triggerPluginEvent(PluginEventType.ContentChanged, eventData);
     }
 }
 

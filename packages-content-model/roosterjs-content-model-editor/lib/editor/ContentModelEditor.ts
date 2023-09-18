@@ -44,10 +44,13 @@ export default class ContentModelEditor
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
-    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption
+    ): SelectionRangeEx | null {
         const core = this.getCore();
 
-        core.api.setContentModel(core, model, option);
+        return core.api.setContentModel(core, model, option);
     }
 
     /**

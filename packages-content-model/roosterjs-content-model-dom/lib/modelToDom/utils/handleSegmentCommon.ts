@@ -28,4 +28,5 @@ export function handleSegmentCommon(
     applyFormat(containerNode, context.formatAppliers.elementBasedSegment, segment.format, context);
 
     newNodes?.push(segmentNode);
+    context.domIndexer?.onSegment(segmentNode, paragraph, [segment]);
 }

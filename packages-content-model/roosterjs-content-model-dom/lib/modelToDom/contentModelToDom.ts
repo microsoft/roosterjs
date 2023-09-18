@@ -38,8 +38,6 @@ export function contentModelToDom(
 
     const range = extractSelectionRange(context);
 
-    root.normalize();
-
     return range;
 }
 

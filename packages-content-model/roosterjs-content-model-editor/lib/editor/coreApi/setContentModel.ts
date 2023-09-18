@@ -1,3 +1,5 @@
+import { contentModelDomIndexer } from '../utils/contentModelDomIndexer';
+import { ModelToDomContext } from 'roosterjs-content-model-types';
 import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
@@ -14,9 +16,22 @@ import {
  */
 export const setContentModel: SetContentModel = (core, model, option) => {
     const editorContext = core.api.createEditorContext(core);
-    const modelToDomContext = option
-        ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
-        : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
+    let modelToDomContext: ModelToDomContext;
+
+    if (option) {
+        modelToDomContext = createModelToDomContext(
+            editorContext,
+            ...(core.defaultModelToDomOptions || []),
+            option
+        );
+    } else {
+        editorContext.domIndexer = contentModelDomIndexer;
+        modelToDomContext = createModelToDomContextWithConfig(
+            core.defaultModelToDomConfig,
+            editorContext
+        );
+    }
+
     const range = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
@@ -24,15 +39,13 @@ export const setContentModel: SetContentModel = (core, model, option) => {
         modelToDomContext
     );
 
+    core.contentDiv.normalize();
+
     if (!core.lifecycle.shadowEditFragment) {
+        core.cache.cachedRangeEx = range || undefined;
         core.api.select(core, range);
-
-        if (range) {
-            core.cache.cachedRangeEx = range;
-        }
+        core.cache.cachedModel = model;
     }
-
-    // TODO: Reconcile selection text node cache
 
     return range;
 };

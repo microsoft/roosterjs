@@ -66,45 +66,56 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
     }
 
     if (rangeEx) {
-        switch (rangeEx.type) {
-            case SelectionRangeTypes.TableSelection:
-                if (contains(core.contentDiv, rangeEx.table)) {
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-                    core.domEvent.tableSelectionRange = core.api.selectTable(
-                        core,
-                        rangeEx.table,
-                        rangeEx.coordinates
-                    );
-                    rangeEx = core.domEvent.tableSelectionRange;
-                }
-                break;
-            case SelectionRangeTypes.ImageSelection:
-                if (contains(core.contentDiv, rangeEx.image)) {
+        const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
+
+        core.domEvent.skipReselectOnFocus = true;
+
+        try {
+            switch (rangeEx.type) {
+                case SelectionRangeTypes.TableSelection:
+                    if (contains(core.contentDiv, rangeEx.table)) {
+                        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+                        core.domEvent.tableSelectionRange = core.api.selectTable(
+                            core,
+                            rangeEx.table,
+                            rangeEx.coordinates
+                        );
+                        rangeEx = core.domEvent.tableSelectionRange;
+                    }
+                    break;
+                case SelectionRangeTypes.ImageSelection:
+                    if (contains(core.contentDiv, rangeEx.image)) {
+                        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+                        core.domEvent.imageSelectionRange = core.api.selectImage(
+                            core,
+                            rangeEx.image
+                        );
+                        rangeEx = core.domEvent.imageSelectionRange;
+                    }
+                    break;
+                case SelectionRangeTypes.Normal:
                     core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, rangeEx.image);
-                    rangeEx = core.domEvent.imageSelectionRange;
-                }
-                break;
-            case SelectionRangeTypes.Normal:
-                core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
 
-                if (contains(core.contentDiv, rangeEx.ranges[0])) {
-                    core.api.selectRange(core, rangeEx.ranges[0]);
-                } else {
-                    rangeEx = null;
-                }
-                break;
+                    if (contains(core.contentDiv, rangeEx.ranges[0])) {
+                        core.api.selectRange(core, rangeEx.ranges[0]);
+                    } else {
+                        rangeEx = null;
+                    }
+                    break;
+            }
+
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.SelectionChanged,
+                    selectionRangeEx: rangeEx,
+                },
+                true /** broadcast **/
+            );
+        } finally {
+            core.domEvent.skipReselectOnFocus = skipReselectOnFocus;
         }
-
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: rangeEx,
-            },
-            true /** broadcast **/
-        );
     } else {
         core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
         core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
