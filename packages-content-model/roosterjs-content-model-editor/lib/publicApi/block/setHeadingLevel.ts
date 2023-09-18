@@ -1,12 +1,17 @@
-import { defaultImplicitFormatMap } from 'roosterjs-content-model-dom';
+import { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
-    ContentModelParagraphDecorator,
-    ContentModelSegmentFormat,
-} from 'roosterjs-content-model-types';
 
 type HeadingLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
+
+const HeaderFontSizes: Record<HeadingLevelTags, string> = {
+    h1: '2em',
+    h2: '1.5em',
+    h3: '1.17em',
+    h4: '1em',
+    h5: '0.83em',
+    h6: '0.67em',
+};
 
 /**
  * Set heading level of selected paragraphs
@@ -22,13 +27,16 @@ export default function setHeadingLevel(
             headingLevel > 0
                 ? (('h' + headingLevel) as HeadingLevelTags | null)
                 : getExistingHeadingTag(para.decorator);
-        const headingStyle =
-            (tagName && (defaultImplicitFormatMap[tagName] as ContentModelSegmentFormat)) || {};
 
         if (headingLevel > 0) {
             para.decorator = {
                 tagName: tagName!,
-                format: { ...headingStyle },
+                format: tagName
+                    ? {
+                          fontWeight: 'bold',
+                          fontSize: HeaderFontSizes[tagName],
+                      }
+                    : {},
             };
 
             // Remove existing formats since tags have default font size and weight
