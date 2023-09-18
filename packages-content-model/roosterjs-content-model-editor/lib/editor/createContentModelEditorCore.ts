@@ -33,8 +33,8 @@ export const createContentModelEditorCore: CoreCreator<
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
-            ...(options.plugins || []),
             createContentModelCachePlugin(pluginState.cache),
+            ...(options.plugins || []),
             createContentModelFormatPlugin(),
             createContentModelEditPlugin(),
         ],
