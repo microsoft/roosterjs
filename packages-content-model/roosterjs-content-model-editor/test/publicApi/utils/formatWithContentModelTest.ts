@@ -145,7 +145,7 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
         expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(undefined!);
-        expect(triggerPluginEvent).toHaveBeenCalled;
+        expect(triggerPluginEvent).toHaveBeenCalled();
     });
 
     it('Customize change source and skip undo snapshot', () => {
@@ -199,9 +199,6 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(addUndoSnapshot).toHaveBeenCalled();
-
-        addUndoSnapshot.calls.argsFor(0)[0] as any;
-
         expect(getChangeData).toHaveBeenCalled();
     });
 
