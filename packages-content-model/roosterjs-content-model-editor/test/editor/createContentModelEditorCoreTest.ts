@@ -10,6 +10,7 @@ import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getSelectionRangeEx } from '../../lib/editor/coreApi/getSelectionRangeEx';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
+import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
 
@@ -76,8 +77,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -135,8 +139,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions,
-            defaultModelToDomOptions,
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                defaultDomToModelOptions,
+            ],
+            defaultModelToDomOptions: [defaultModelToDomOptions],
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -205,8 +212,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
             defaultFormat: {
                 fontWeight: 'bold',
                 italic: true,
@@ -257,8 +267,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -317,8 +330,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,

@@ -5,6 +5,7 @@ import {
     DomToModelOption,
     EditorContext,
     ModelToDomOption,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,6 +18,7 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
  * Create Content Model from DOM tree in this editor
  * @param core The ContentModelEditorCore object
  * @param option The option to customize the behavior of DOM to Content Model conversion
+ * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export type CreateContentModel = (
     core: ContentModelEditorCore,
@@ -29,11 +31,13 @@ export type CreateContentModel = (
  * @param core The ContentModelEditorCore object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
+ * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export type SetContentModel = (
     core: ContentModelEditorCore,
     model: ContentModelDocument,
-    option?: ModelToDomOption
+    option?: ModelToDomOption,
+    onNodeCreated?: OnNodeCreated
 ) => void;
 
 /**
@@ -95,12 +99,12 @@ export interface ContentModelEditorCore extends EditorCore {
     /**
      * Default DOM to Content Model options
      */
-    defaultDomToModelOptions: DomToModelOption;
+    defaultDomToModelOptions: (DomToModelOption | undefined)[];
 
     /**
      * Default Content Model to DOM options
      */
-    defaultModelToDomOptions: ModelToDomOption;
+    defaultModelToDomOptions: (ModelToDomOption | undefined)[];
 
     /**
      * Whether adding delimiter for entity is allowed
