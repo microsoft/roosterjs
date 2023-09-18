@@ -1,32 +1,23 @@
-import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
+import { defaultFormatParsers } from '../../../lib/formatHandlers/defaultFormatHandlers';
 import { defaultProcessorMap } from '../../../lib/domToModel/context/defaultProcessors';
-import { DomToModelListFormat, EditorContext } from 'roosterjs-content-model-types';
+import { EditorContext } from 'roosterjs-content-model-types';
 import {
-    defaultFormatParsers,
-    getFormatParsers,
-} from '../../../lib/formatHandlers/defaultFormatHandlers';
+    buildFormatParsers,
+    createDomToModelContext,
+} from '../../../lib/domToModel/context/createDomToModelContext';
 
 describe('createDomToModelContext', () => {
-    const editorContext: EditorContext = {};
-    const listFormat: DomToModelListFormat = {
-        threadItemCounts: [],
-        levels: [],
-    };
-    const contextOptions = {
-        elementProcessors: defaultProcessorMap,
-        formatParsers: getFormatParsers(),
-        defaultElementProcessors: defaultProcessorMap,
-        defaultFormatParsers: defaultFormatParsers,
-    };
     it('no param', () => {
         const context = createDomToModelContext();
 
         expect(context).toEqual({
-            ...editorContext,
-            segmentFormat: {},
-            blockFormat: {},
             isInSelection: false,
-            listFormat,
+            blockFormat: {},
+            segmentFormat: {},
+            listFormat: {
+                threadItemCounts: [],
+                levels: [],
+            },
             link: {
                 format: {},
                 dataset: {},
@@ -38,11 +29,14 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            ...contextOptions,
+            elementProcessors: defaultProcessorMap,
+            formatParsers: buildFormatParsers(),
+            defaultElementProcessors: defaultProcessorMap,
+            defaultFormatParsers,
         });
     });
 
-    it('with content model context', () => {
+    it('with editor context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
         };
@@ -51,10 +45,13 @@ describe('createDomToModelContext', () => {
 
         expect(context).toEqual({
             ...editorContext,
-            segmentFormat: {},
-            blockFormat: {},
             isInSelection: false,
-            listFormat,
+            blockFormat: {},
+            segmentFormat: {},
+            listFormat: {
+                threadItemCounts: [],
+                levels: [],
+            },
             link: {
                 format: {},
                 dataset: {},
@@ -66,60 +63,10 @@ describe('createDomToModelContext', () => {
                 format: {},
                 tagName: '',
             },
-            ...contextOptions,
-        });
-    });
-
-    it('with content model context', () => {
-        const editorContext: EditorContext = {
-            isDarkMode: true,
-        };
-
-        const context = createDomToModelContext(editorContext);
-
-        expect(context).toEqual({
-            ...editorContext,
-            segmentFormat: {},
-            blockFormat: {},
-            isInSelection: false,
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            ...contextOptions,
-        });
-    });
-
-    it('with selection context', () => {
-        const selectionContext = { name: 'SelectionContext' } as any;
-        const context = createDomToModelContext(undefined, undefined, selectionContext);
-
-        expect(context).toEqual({
-            segmentFormat: {},
-            blockFormat: {},
-            isInSelection: false,
-            listFormat,
-            link: {
-                format: {},
-                dataset: {},
-            },
-            code: {
-                format: {},
-            },
-            blockDecorator: {
-                format: {},
-                tagName: '',
-            },
-            ...contextOptions,
-            rangeEx: selectionContext,
+            elementProcessors: defaultProcessorMap,
+            formatParsers: buildFormatParsers(),
+            defaultElementProcessors: defaultProcessorMap,
+            defaultFormatParsers,
         });
     });
 
@@ -127,7 +74,7 @@ describe('createDomToModelContext', () => {
         const mockedAProcessor = 'a' as any;
         const mockedBoldParser = 'bold' as any;
         const mockedBlockParser = 'block' as any;
-        const context = createDomToModelContext(undefined, {
+        const context = createDomToModelContext(undefined, undefined, {
             processorOverride: {
                 a: mockedAProcessor,
             },
@@ -139,11 +86,40 @@ describe('createDomToModelContext', () => {
             },
         });
 
-        expect(context.elementProcessors.a).toBe(mockedAProcessor);
-        expect(context.formatParsers.segment.indexOf(mockedBoldParser)).toBeGreaterThanOrEqual(0);
-        expect(context.formatParsers.block).toEqual([
-            ...getFormatParsers().block,
-            mockedBlockParser,
-        ]);
+        const parsers = buildFormatParsers();
+
+        parsers.block[4] = mockedBlockParser;
+        parsers.elementBasedSegment[4] = mockedBoldParser;
+        parsers.segment[7] = mockedBoldParser;
+        parsers.segmentOnBlock[7] = mockedBoldParser;
+        parsers.segmentOnTableCell[7] = mockedBoldParser;
+
+        expect(context).toEqual({
+            isInSelection: false,
+            blockFormat: {},
+            segmentFormat: {},
+            listFormat: {
+                threadItemCounts: [],
+                levels: [],
+            },
+            link: {
+                format: {},
+                dataset: {},
+            },
+            code: {
+                format: {},
+            },
+            blockDecorator: {
+                format: {},
+                tagName: '',
+            },
+            elementProcessors: {
+                ...defaultProcessorMap,
+                a: mockedAProcessor,
+            } as any,
+            formatParsers: parsers,
+            defaultElementProcessors: defaultProcessorMap,
+            defaultFormatParsers,
+        });
     });
 });

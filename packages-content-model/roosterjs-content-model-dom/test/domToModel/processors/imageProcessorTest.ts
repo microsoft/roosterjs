@@ -215,7 +215,9 @@ describe('imageProcessor', () => {
 
         img.src = 'http://test.com/testSrc';
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         imageProcessor(doc, img, context);
 
@@ -251,7 +253,9 @@ describe('imageProcessor', () => {
 
         img.src = 'http://test.com/testSrc';
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         imageProcessor(doc, img, context);
 

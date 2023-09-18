@@ -1,39 +1,35 @@
-import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
-import { EditorContext, ModelToDomContext } from 'roosterjs-content-model-types';
+import { defaultFormatAppliers } from '../../../lib/formatHandlers/defaultFormatHandlers';
+import { EditorContext } from 'roosterjs-content-model-types';
 import {
-    defaultFormatAppliers,
-    getFormatAppliers,
-} from '../../../lib/formatHandlers/defaultFormatHandlers';
+    buildFormatAppliers,
+    createModelToDomContext,
+} from '../../../lib/modelToDom/context/createModelToDomContext';
 
 describe('createModelToDomContext', () => {
-    const editorContext: EditorContext = {};
-    const defaultResult: ModelToDomContext = {
-        ...editorContext,
-        regularSelection: {
-            current: {
-                block: null,
-                segment: null,
-            },
-        },
-        listFormat: {
-            threadItemCounts: [],
-            nodeStack: [],
-        },
-        implicitFormat: {},
-        formatAppliers: getFormatAppliers(),
-        modelHandlers: defaultContentModelHandlers,
-        defaultModelHandlers: defaultContentModelHandlers,
-        defaultFormatAppliers: defaultFormatAppliers,
-        onNodeCreated: undefined,
-    };
     it('no param', () => {
         const context = createModelToDomContext();
 
-        expect(context).toEqual(defaultResult);
+        expect(context).toEqual({
+            regularSelection: {
+                current: {
+                    block: null,
+                    segment: null,
+                },
+            },
+            listFormat: {
+                threadItemCounts: [],
+                nodeStack: [],
+            },
+            implicitFormat: {},
+            modelHandlers: defaultContentModelHandlers,
+            formatAppliers: buildFormatAppliers(),
+            defaultModelHandlers: defaultContentModelHandlers,
+            defaultFormatAppliers,
+        });
     });
 
-    it('with content model context', () => {
+    it('with editor context', () => {
         const editorContext: EditorContext = {
             isDarkMode: true,
         };
@@ -41,8 +37,22 @@ describe('createModelToDomContext', () => {
         const context = createModelToDomContext(editorContext);
 
         expect(context).toEqual({
-            ...defaultResult,
-            ...editorContext,
+            isDarkMode: true,
+            regularSelection: {
+                current: {
+                    block: null,
+                    segment: null,
+                },
+            },
+            listFormat: {
+                threadItemCounts: [],
+                nodeStack: [],
+            },
+            implicitFormat: {},
+            modelHandlers: defaultContentModelHandlers,
+            formatAppliers: buildFormatAppliers(),
+            defaultModelHandlers: defaultContentModelHandlers,
+            defaultFormatAppliers,
         });
     });
 
@@ -50,38 +60,45 @@ describe('createModelToDomContext', () => {
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
-        const onNodeCreated = 'OnNodeCreated' as any;
         const context = createModelToDomContext(undefined, {
+            modelHandlerOverride: {
+                br: mockedBrHandler,
+            },
             formatApplierOverride: {
                 bold: mockedBoldApplier,
             },
             additionalFormatAppliers: {
                 block: [mockedBlockApplier],
             },
-            modelHandlerOverride: {
-                br: mockedBrHandler,
-            },
-            onNodeCreated,
         });
 
-        expect(context.regularSelection).toEqual({
-            current: {
-                block: null,
-                segment: null,
+        const appliers = buildFormatAppliers();
+
+        appliers.block[4] = mockedBlockApplier;
+        appliers.elementBasedSegment[4] = mockedBoldApplier;
+        appliers.segment[7] = mockedBoldApplier;
+        appliers.segmentOnBlock[7] = mockedBoldApplier;
+        appliers.segmentOnTableCell[7] = mockedBoldApplier;
+
+        expect(context).toEqual({
+            regularSelection: {
+                current: {
+                    block: null,
+                    segment: null,
+                },
             },
+            listFormat: {
+                threadItemCounts: [],
+                nodeStack: [],
+            },
+            implicitFormat: {},
+            modelHandlers: {
+                ...defaultContentModelHandlers,
+                br: mockedBrHandler,
+            } as any,
+            formatAppliers: appliers,
+            defaultModelHandlers: defaultContentModelHandlers,
+            defaultFormatAppliers,
         });
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [],
-            nodeStack: [],
-        });
-        expect(context.implicitFormat).toEqual({});
-        expect(context.formatAppliers.block).toEqual([
-            ...getFormatAppliers().block,
-            mockedBlockApplier,
-        ]);
-        expect(context.modelHandlers.br).toBe(mockedBrHandler);
-        expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
-        expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
-        expect(context.onNodeCreated).toBe(onNodeCreated);
     });
 });
