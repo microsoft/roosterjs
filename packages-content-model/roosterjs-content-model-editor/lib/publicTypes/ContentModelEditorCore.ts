@@ -38,7 +38,7 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
-) => void;
+) => SelectionRangeEx | null;
 
 /**
  * The interface for the map of core API for Content Model editor.

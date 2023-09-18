@@ -50,10 +50,10 @@ export default class ContentModelEditor
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ) {
+    ): SelectionRangeEx | null {
         const core = this.getCore();
 
-        core.api.setContentModel(core, model, option, onNodeCreated);
+        return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**

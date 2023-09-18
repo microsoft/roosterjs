@@ -78,22 +78,18 @@ describe('ContentModelEditor', () => {
     it('setContentModel with normal selection', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
-        const mockedFragment = 'Fragment' as any;
         const mockedRange = {
             type: SelectionRangeTypes.Normal,
             ranges: [document.createRange()],
         } as any;
-        const mockedPairs = 'Pairs' as any;
-
-        const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
         const mockedContext = 'MockedContext' as any;
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedResult);
+        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
         spyOn(createModelToDomContext, 'createModelToDomContext').and.returnValue(mockedContext);
 
-        editor.setContentModel(mockedModel);
+        const rangeEx = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -108,27 +104,24 @@ describe('ContentModelEditor', () => {
             undefined,
             undefined
         );
+        expect(rangeEx).toBe(mockedRange);
     });
 
     it('setContentModel', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
-        const mockedFragment = 'Fragment' as any;
         const mockedRange = {
             type: SelectionRangeTypes.Normal,
             ranges: [document.createRange()],
         } as any;
-        const mockedPairs = 'Pairs' as any;
-
-        const mockedResult = [mockedFragment, mockedRange, mockedPairs] as any;
         const mockedModel = 'MockedModel' as any;
         const mockedContext = 'MockedContext' as any;
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
-        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedResult);
+        spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(mockedRange);
         spyOn(createModelToDomContext, 'createModelToDomContext').and.returnValue(mockedContext);
 
-        editor.setContentModel(mockedModel);
+        const rangeEx = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -143,6 +136,7 @@ describe('ContentModelEditor', () => {
             undefined,
             undefined
         );
+        expect(rangeEx).toBe(mockedRange);
     });
 
     it('createContentModel in EditorReady event', () => {

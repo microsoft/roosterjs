@@ -1,7 +1,7 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/plugins/ContentModelFormatPlugin';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { PluginEventType } from 'roosterjs-editor-types';
 import {
     addSegment,
     createContentModelDocument,
@@ -151,6 +151,7 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -199,6 +200,7 @@ describe('ContentModelFormatPlugin', () => {
         });
 
         const setContentModel = jasmine.createSpy('setContentModel');
+        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const model = createContentModelDocument();
         const text = createText('test a test', { fontFamily: 'Arial' });
         const marker = createSelectionMarker();
@@ -215,6 +217,7 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -225,6 +228,15 @@ describe('ContentModelFormatPlugin', () => {
         });
         plugin.dispose();
 
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: model,
+            rangeEx: undefined,
+            data: undefined,
+            source: ChangeSource.Format,
+            additionalData: {
+                formatApiName: 'applyPendingFormat',
+            },
+        });
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(
             {

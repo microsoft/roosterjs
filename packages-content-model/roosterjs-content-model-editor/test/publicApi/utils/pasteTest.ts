@@ -17,6 +17,7 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 import paste, * as pasteF from '../../../lib/publicApi/utils/paste';
 import {
     BeforePasteEvent,
+    ChangeSource,
     ClipboardData,
     KnownPasteSourceType,
     PasteType,
@@ -42,7 +43,6 @@ describe('Paste ', () => {
     let getDocument: jasmine.Spy;
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
-    let undoSnapshotResult: any;
 
     const mockedPos = 'POS' as any;
 
@@ -63,9 +63,7 @@ describe('Paste ', () => {
         mockedModel = ({} as any) as ContentModelDocument;
         mockedMergeModel = ({} as any) as ContentModelDocument;
 
-        addUndoSnapshot = jasmine
-            .createSpy('addUndoSnapshot')
-            .and.callFake(callback => (undoSnapshotResult = callback()));
+        addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
@@ -139,7 +137,6 @@ describe('Paste ', () => {
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(clipboardData).toEqual(undoSnapshotResult);
     });
 
     it('Execute | As plain text', () => {
@@ -150,11 +147,19 @@ describe('Paste ', () => {
         expect(addUndoSnapshot).toHaveBeenCalled();
         expect(getFocusedPosition).not.toHaveBeenCalled();
         expect(getContent).toHaveBeenCalled();
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: mockedModel,
+            rangeEx: undefined,
+            data: clipboardData,
+            source: ChangeSource.Paste,
+            additionalData: {
+                formatApiName: 'Paste',
+            },
+        });
         expect(getDocument).toHaveBeenCalled();
         expect(getTrustedHTMLHandler).toHaveBeenCalled();
         expect(mockedModel).toEqual(mockedMergeModel);
-        expect(clipboardData).toEqual(undoSnapshotResult);
     });
 });
 
@@ -614,7 +619,10 @@ describe('Paste with clipboardData', () => {
                             format: {},
                         },
                     ],
-                    format: {},
+                    format: {
+                        marginTop: '0px',
+                        marginBottom: '0px',
+                    },
                     decorator: {
                         tagName: 'p',
                         format: {},
@@ -690,6 +698,13 @@ describe('Paste with clipboardData', () => {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
                             format: {},
+                            link: {
+                                format: {
+                                    underline: true,
+                                    href: 'https://github.com/microsoft/roosterjs',
+                                },
+                                dataset: {},
+                            },
                         },
                     ],
                     blockType: 'Paragraph',

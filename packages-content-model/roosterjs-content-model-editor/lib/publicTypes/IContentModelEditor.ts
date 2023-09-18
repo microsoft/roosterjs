@@ -34,7 +34,7 @@ export interface IContentModelEditor extends IEditor {
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): void;
+    ): SelectionRangeEx | null;
 
     /**
      * Cache a content model object. Next time when format with content model, we can reuse it.
