@@ -135,9 +135,6 @@ function mergeParagraph(
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
     if (option?.mergeFormat == 'none' && mergeToCurrentParagraph) {
-        newParagraph.segments.forEach(segment => {
-            segment.format = { ...(newParagraph.segmentFormat || {}), ...segment.format };
-        });
         delete newParagraph.segmentFormat;
     }
     if (segmentIndex >= 0) {

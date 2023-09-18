@@ -2142,36 +2142,28 @@ describe('mergeModel', () => {
                 {
                     blockType: 'Paragraph',
                     segments: [
-                        Object({
+                        {
                             segmentType: 'Text',
                             text: 'test',
-                            format: Object({
+                            format: {
                                 fontFamily: 'sourceFontFamily',
-                                italic: 'sourceSegmentFormatItalic',
-                                underline: 'sourceSegmentFormatUnderline',
-                                fontSize: 'sourceSegmentFormatFontSize',
-                            }),
-                        }),
-                        Object({
+                            },
+                        },
+                        {
                             segmentType: 'Text',
                             text: 'test',
-                            format: Object({
+                            format: {
                                 fontFamily: 'sourceFontFamily',
                                 italic: 'sourceItalic',
                                 underline: 'sourceUnderline',
                                 fontSize: 'sourcefontSize',
-                            }),
-                        }),
-                        Object({
+                            } as any,
+                        },
+                        {
                             segmentType: 'SelectionMarker',
                             isSelected: true,
-                            format: Object({
-                                fontFamily: 'sourceSegmentFormatFontFamily',
-                                italic: 'sourceSegmentFormatItalic',
-                                underline: 'sourceSegmentFormatUnderline',
-                                fontSize: 'sourceSegmentFormatFontSize',
-                            }),
-                        }),
+                            format: {},
+                        },
                     ],
                     format: {},
                 },
