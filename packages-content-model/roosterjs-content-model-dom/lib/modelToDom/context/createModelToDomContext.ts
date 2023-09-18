@@ -1,5 +1,4 @@
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
-import { defaultImplicitFormatMap } from '../../formatHandlers/utils/defaultStyles';
 import { EditorContext, ModelToDomContext, ModelToDomOption } from 'roosterjs-content-model-types';
 import {
     defaultFormatAppliers,
@@ -7,7 +6,6 @@ import {
 } from '../../formatHandlers/defaultFormatHandlers';
 
 /**
- * @internal
  * @param editorContext
  * @returns
  */
@@ -38,10 +36,6 @@ export function createModelToDomContext(
         modelHandlers: {
             ...defaultContentModelHandlers,
             ...(options.modelHandlerOverride || {}),
-        },
-        defaultImplicitFormatMap: {
-            ...defaultImplicitFormatMap,
-            ...(options.defaultImplicitFormatOverride || {}),
         },
 
         defaultModelHandlers: defaultContentModelHandlers,

@@ -1,6 +1,5 @@
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { defaultContentModelHandlers } from '../../../lib/modelToDom/context/defaultContentModelHandlers';
-import { defaultImplicitFormatMap } from '../../../lib/formatHandlers/utils/defaultStyles';
 import { EditorContext, ModelToDomContext } from 'roosterjs-content-model-types';
 import {
     defaultFormatAppliers,
@@ -24,7 +23,6 @@ describe('createModelToDomContext', () => {
         implicitFormat: {},
         formatAppliers: getFormatAppliers(),
         modelHandlers: defaultContentModelHandlers,
-        defaultImplicitFormatMap: defaultImplicitFormatMap,
         defaultModelHandlers: defaultContentModelHandlers,
         defaultFormatAppliers: defaultFormatAppliers,
         onNodeCreated: undefined,
@@ -52,7 +50,6 @@ describe('createModelToDomContext', () => {
         const mockedBoldApplier = 'bold' as any;
         const mockedBlockApplier = 'block' as any;
         const mockedBrHandler = 'br' as any;
-        const mockedAStyle = 'a' as any;
         const onNodeCreated = 'OnNodeCreated' as any;
         const context = createModelToDomContext(undefined, {
             formatApplierOverride: {
@@ -63,9 +60,6 @@ describe('createModelToDomContext', () => {
             },
             modelHandlerOverride: {
                 br: mockedBrHandler,
-            },
-            defaultImplicitFormatOverride: {
-                a: mockedAStyle,
             },
             onNodeCreated,
         });
@@ -86,7 +80,6 @@ describe('createModelToDomContext', () => {
             mockedBlockApplier,
         ]);
         expect(context.modelHandlers.br).toBe(mockedBrHandler);
-        expect(context.defaultImplicitFormatMap.a).toEqual(mockedAStyle);
         expect(context.defaultModelHandlers).toEqual(defaultContentModelHandlers);
         expect(context.defaultFormatAppliers).toEqual(defaultFormatAppliers);
         expect(context.onNodeCreated).toBe(onNodeCreated);

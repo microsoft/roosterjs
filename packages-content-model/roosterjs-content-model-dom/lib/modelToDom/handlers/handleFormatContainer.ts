@@ -1,13 +1,19 @@
 import { applyFormat } from '../utils/applyFormat';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
-import { PseudoTagNames } from '../../formatHandlers/utils/defaultStyles';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
 import {
+    ContentModelBlockFormat,
     ContentModelBlockHandler,
     ContentModelFormatContainer,
+    ContentModelSegmentFormat,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
+
+const PreChildFormat: ContentModelSegmentFormat & ContentModelBlockFormat = {
+    fontFamily: 'monospace',
+    whiteSpace: 'pre',
+};
 
 /**
  * @internal
@@ -47,7 +53,7 @@ export const handleFormatContainer: ContentModelBlockHandler<ContentModelFormatC
         });
 
         if (container.tagName == 'pre') {
-            stackFormat(context, PseudoTagNames.childOfPre, () => {
+            stackFormat(context, PreChildFormat, () => {
                 context.modelHandlers.blockGroupChildren(doc, containerNode, container, context);
             });
         } else {

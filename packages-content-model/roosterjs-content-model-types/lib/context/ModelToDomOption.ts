@@ -1,6 +1,5 @@
 import {
     ContentModelHandlerMap,
-    DefaultImplicitFormatMap,
     FormatAppliers,
     FormatAppliersPerCategory,
     OnNodeCreated,
@@ -24,11 +23,6 @@ export interface ModelToDomOption {
      * Overrides default model handlers
      */
     modelHandlerOverride?: Partial<ContentModelHandlerMap>;
-
-    /**
-     * Overrides default element styles
-     */
-    defaultImplicitFormatOverride?: DefaultImplicitFormatMap;
 
     /**
      * An optional callback that will be called when a DOM node is created

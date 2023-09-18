@@ -18,22 +18,6 @@ describe('getDefaultStyle', () => {
         });
     });
 
-    it('Get customized default style of DIV', () => {
-        context = createDomToModelContext(undefined, {
-            defaultStyleOverride: {
-                div: {
-                    color: 'red',
-                },
-            },
-        });
-        const div = document.createElement('div');
-        const style = getDefaultStyle(div, context);
-
-        expect(style).toEqual({
-            color: 'red',
-        });
-    });
-
     it('Get default style of customized element', () => {
         const test = document.createElement('test');
         const style = getDefaultStyle(test, context);
