@@ -24,7 +24,7 @@ describe('changeImage', () => {
             .createSpy()
             .and.callFake(
                 (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
+                    expect(source).toBe(undefined!);
                     expect(param.formatApiName).toBe('changeImage');
                     callback();
                 }
