@@ -1,9 +1,9 @@
+import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
     createModelToDomContext,
     createModelToDomContextWithConfig,
 } from 'roosterjs-content-model-dom';
-import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 
 /**
  * @internal
