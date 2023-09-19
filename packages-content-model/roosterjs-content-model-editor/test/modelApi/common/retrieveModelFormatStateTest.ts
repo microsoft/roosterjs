@@ -735,7 +735,7 @@ describe('retrieveModelFormatState', () => {
             isBold: false,
             isSuperscript: false,
             isSubscript: false,
-            fontSize: '15px',
+            fontSize: '11.25pt',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,
