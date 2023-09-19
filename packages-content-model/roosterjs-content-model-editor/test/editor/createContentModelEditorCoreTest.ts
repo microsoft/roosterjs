@@ -1,9 +1,10 @@
+import * as ContentModelCachePlugin from '../../lib/editor/corePlugins/ContentModelCachePlugin';
+import * as ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
+import * as ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
-import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
-import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
@@ -21,6 +22,9 @@ const mockedDomToModelConfig = {
 const mockedModelToDomConfig = {
     config: 'mockedModelToDomConfig',
 } as any;
+const mockedFormatPlugin = 'FORMATPLUGIN' as any;
+const mockedEditPlugin = 'EDITPLUGIN' as any;
+const mockedCachePlugin = 'CACHPLUGIN' as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -50,6 +54,15 @@ describe('createContentModelEditorCore', () => {
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
             mockedCore
         );
+        spyOn(ContentModelFormatPlugin, 'createContentModelFormatPlugin').and.returnValue(
+            mockedFormatPlugin
+        );
+        spyOn(ContentModelEditPlugin, 'createContentModelEditPlugin').and.returnValue(
+            mockedEditPlugin
+        );
+        spyOn(ContentModelCachePlugin, 'createContentModelCachePlugin').and.returnValue(
+            mockedCachePlugin
+        );
 
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(
             mockedDomToModelConfig
@@ -68,7 +81,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -112,6 +125,8 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
+            cache: {},
+            copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
 
@@ -131,7 +146,7 @@ describe('createContentModelEditorCore', () => {
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
             defaultDomToModelOptions,
             defaultModelToDomOptions,
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -176,6 +191,8 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
+            cache: {},
+            copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
 
@@ -199,7 +216,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -251,6 +268,8 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
+            cache: {},
+            copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
 
@@ -264,7 +283,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -309,6 +328,8 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
+            cache: {},
+            copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
 
@@ -330,7 +351,7 @@ describe('createContentModelEditorCore', () => {
         const core = createContentModelEditorCore(contentDiv, options);
 
         expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [new ContentModelFormatPlugin(), new ContentModelEditPlugin()],
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
             corePluginOverride: {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
@@ -374,6 +395,8 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
+            cache: {},
+            copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
 });

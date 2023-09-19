@@ -78,8 +78,6 @@ export function formatWithContentModel(
                 }
             );
         }
-
-        editor.cacheContentModel?.(model);
     }
 }
 

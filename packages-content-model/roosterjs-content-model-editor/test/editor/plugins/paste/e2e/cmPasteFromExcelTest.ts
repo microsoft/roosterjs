@@ -52,8 +52,6 @@ describe(ID, () => {
 
         paste(editor, clipboardData, false, false, true);
 
-        editor.cacheContentModel(null);
-
         const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,

@@ -3,7 +3,10 @@ import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
 import { createGeneralBlock } from '../../../lib/modelApi/creators/createGeneralBlock';
 import { createGeneralSegment } from '../../../lib/modelApi/creators/createGeneralSegment';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { handleGeneralModel } from '../../../lib/modelToDom/handlers/handleGeneralModel';
+import {
+    handleGeneralBlock,
+    handleGeneralSegment,
+} from '../../../lib/modelToDom/handlers/handleGeneralModel';
 import {
     ContentModelBlockGroup,
     ContentModelFormatContainer,
@@ -44,7 +47,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralBlock(document, parent, group, context, null);
 
         expect(parent.outerHTML).toBe('<div><span></span></div>');
         expect(typeof parent.firstChild).toBe('object');
@@ -69,7 +72,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralSegment(document, parent, group, context, []);
 
         expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -96,7 +99,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat');
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralSegment(document, parent, group, context, []);
 
         expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -131,7 +134,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(applyFormat, 'applyFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralSegment(document, parent, group, context, []);
 
         expect(parent.outerHTML).toBe('<div><span><a href="/test"><span></span></a></span></div>');
         expect(context.regularSelection.current.segment).toBe(clonedChild);
@@ -165,7 +168,7 @@ describe('handleBlockGroup', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralSegment(document, parent, group, context, []);
 
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
         expect((<jasmine.Spy>stackFormat.stackFormat).calls.argsFor(0)[1]).toBe('a');
@@ -183,7 +186,7 @@ describe('handleBlockGroup', () => {
         const br = document.createElement('br');
         parent.appendChild(br);
 
-        const result = handleGeneralModel(document, parent, group, context, br);
+        const result = handleGeneralBlock(document, parent, group, context, br);
 
         expect(parent.outerHTML).toBe('<div><span></span><br></div>');
         expect(typeof parent.firstChild).toBe('object');
@@ -209,7 +212,7 @@ describe('handleBlockGroup', () => {
         parent.appendChild(node);
         parent.appendChild(br);
 
-        const result = handleGeneralModel(document, parent, group, context, node);
+        const result = handleGeneralBlock(document, parent, group, context, node);
 
         expect(parent.outerHTML).toBe('<div><span></span><br></div>');
         expect(parent.firstChild).toBe(node);
@@ -229,11 +232,40 @@ describe('handleBlockGroup', () => {
 
         context.onNodeCreated = onNodeCreated;
 
-        handleGeneralModel(document, parent, group, context, null);
+        handleGeneralBlock(document, parent, group, context, null);
 
         expect(parent.innerHTML).toBe('<span></span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(group);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('span'));
+    });
+
+    it('General segment and newElements', () => {
+        const clonedChild = document.createElement('span');
+        const childMock = ({
+            cloneNode: () => clonedChild,
+        } as any) as HTMLElement;
+        const group = createGeneralSegment(childMock);
+        const newElements: Node[] = [];
+
+        spyOn(applyFormat, 'applyFormat');
+
+        handleGeneralSegment(document, parent, group, context, newElements);
+
+        expect(parent.outerHTML).toBe('<div><span><span></span></span></div>');
+        expect(context.regularSelection.current.segment).toBe(clonedChild);
+        expect(typeof parent.firstChild).toBe('object');
+        expect(parent.firstChild?.firstChild).toBe(clonedChild);
+        expect(context.listFormat.nodeStack).toEqual([]);
+        expect(handleBlockGroupChildren).toHaveBeenCalledTimes(1);
+        expect(handleBlockGroupChildren).toHaveBeenCalledWith(
+            document,
+            clonedChild,
+            group,
+            context
+        );
+        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(newElements.length).toBe(1);
+        expect(newElements[0]).toBe(clonedChild);
     });
 });

@@ -66,12 +66,14 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context
+                            context,
+                            []
                         );
                     }
 
                     paragraph.segments.forEach(segment => {
-                        context.modelHandlers.segment(doc, parent, segment, context);
+                        const newSegments: Node[] = [];
+                        context.modelHandlers.segment(doc, parent, segment, context, newSegments);
                     });
                 }
             };
