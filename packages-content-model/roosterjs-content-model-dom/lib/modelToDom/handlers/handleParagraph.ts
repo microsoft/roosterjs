@@ -66,12 +66,19 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context
+                            context,
+                            []
                         );
                     }
 
                     paragraph.segments.forEach(segment => {
-                        context.modelHandlers.segment(doc, parent, segment, context);
+                        const segmentNodes: Node[] = [];
+
+                        context.modelHandlers.segment(doc, parent, segment, context, segmentNodes);
+
+                        segmentNodes.forEach(node => {
+                            context.domIndexer?.onSegment(node, paragraph, [segment]);
+                        });
                     });
                 }
             };
@@ -101,6 +108,11 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             // to make sure the value is correct.
             refNode = container.nextSibling;
 
+            if (container) {
+                context.onNodeCreated?.(paragraph, container);
+                context.domIndexer?.onParagraph(container);
+            }
+
             if (needParagraphWrapper) {
                 if (context.allowCacheElement) {
                     paragraph.cachedElement = container;
@@ -109,10 +121,6 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 unwrap(container);
             }
         });
-    }
-
-    if (container) {
-        context.onNodeCreated?.(paragraph, container);
     }
 
     return refNode;
