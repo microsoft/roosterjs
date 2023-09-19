@@ -3,9 +3,9 @@ import { handleBlock } from '../handlers/handleBlock';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
 import { handleDivider } from '../handlers/handleDivider';
-import { handleEntity } from '../handlers/handleEntity';
+import { handleEntityBlock, handleEntitySegment } from '../handlers/handleEntity';
 import { handleFormatContainer } from '../handlers/handleFormatContainer';
-import { handleGeneralModel } from '../handlers/handleGeneralModel';
+import { handleGeneralBlock, handleGeneralSegment } from '../handlers/handleGeneralModel';
 import { handleImage } from '../handlers/handleImage';
 import { handleList } from '../handlers/handleList';
 import { handleListItem } from '../handlers/handleListItem';
@@ -22,8 +22,10 @@ export const defaultContentModelHandlers: ContentModelHandlerMap = {
     block: handleBlock,
     blockGroupChildren: handleBlockGroupChildren,
     br: handleBr,
-    entity: handleEntity,
-    general: handleGeneralModel,
+    entityBlock: handleEntityBlock,
+    entitySegment: handleEntitySegment,
+    generalBlock: handleGeneralBlock,
+    generalSegment: handleGeneralSegment,
     divider: handleDivider,
     image: handleImage,
     list: handleList,
