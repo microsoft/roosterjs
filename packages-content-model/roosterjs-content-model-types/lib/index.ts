@@ -134,6 +134,10 @@ export {
     ModelToDomListContext,
     ModelToDomFormatContext,
 } from './context/ModelToDomFormatContext';
-export { ContentModelHandler, ContentModelBlockHandler } from './context/ContentModelHandler';
+export {
+    ContentModelHandler,
+    ContentModelSegmentHandler,
+    ContentModelBlockHandler,
+} from './context/ContentModelHandler';
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';

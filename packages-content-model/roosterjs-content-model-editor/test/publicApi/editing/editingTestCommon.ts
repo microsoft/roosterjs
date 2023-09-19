@@ -36,7 +36,7 @@ export function editingTestCommon(
         setContentModel,
         triggerPluginEvent,
         isDisposed: () => false,
-        getFocusedPosition: () => null as NodePosition,
+        getFocusedPosition: () => null! as NodePosition,
         triggerContentChangedEvent,
         isDarkMode: () => false,
     } as any) as IContentModelEditor;
