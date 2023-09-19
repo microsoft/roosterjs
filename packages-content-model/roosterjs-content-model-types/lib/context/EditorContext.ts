@@ -1,3 +1,4 @@
+import { ContentModelDomIndexer } from './ContentModelDomIndexer';
 import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 import { DarkColorHandler } from 'roosterjs-editor-types';
 
@@ -40,4 +41,9 @@ export interface EditorContext {
      * When pass true, this cached element will be used to create DOM tree back when convert Content Model to DOM
      */
     allowCacheElement?: boolean;
+
+    /**
+     * @optional Indexer for content model, to help build backward relationship from DOM node to Content Model
+     */
+    domIndexer?: ContentModelDomIndexer;
 }
