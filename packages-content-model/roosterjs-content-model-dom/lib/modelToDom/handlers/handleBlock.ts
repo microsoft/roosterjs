@@ -24,7 +24,7 @@ export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
             refNode = handlers.paragraph(doc, parent, block, context, refNode);
             break;
         case 'Entity':
-            refNode = handlers.entity(doc, parent, block, context, refNode);
+            refNode = handlers.entityBlock(doc, parent, block, context, refNode);
             break;
         case 'Divider':
             refNode = handlers.divider(doc, parent, block, context, refNode);
@@ -32,7 +32,7 @@ export const handleBlock: ContentModelBlockHandler<ContentModelBlock> = (
         case 'BlockGroup':
             switch (block.blockGroupType) {
                 case 'General':
-                    refNode = handlers.general(doc, parent, block, context, refNode);
+                    refNode = handlers.generalBlock(doc, parent, block, context, refNode);
                     break;
 
                 case 'FormatContainer':

@@ -15,8 +15,8 @@ import {
     ContentModelListItem,
     ContentModelParagraph,
     ContentModelBlockHandler,
-    ContentModelHandler,
     ModelToDomContext,
+    ContentModelHandler,
 } from 'roosterjs-content-model-types';
 
 describe('handleBlock', () => {
@@ -33,7 +33,7 @@ describe('handleBlock', () => {
 
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
-                entity: handleEntity,
+                entityBlock: handleEntity,
                 paragraph: handleParagraph,
                 divider: handleDivider,
             },
@@ -128,12 +128,12 @@ describe('handleBlock', () => {
         spyOn(applyFormat, 'applyFormat');
         handleBlock(document, parent, block, context, null);
 
-        expect(parent.innerHTML).toBe('<span><span></span></span>');
+        expect(parent.innerHTML).toBe('<span></span>');
         expect(parent.firstChild).not.toBe(element);
         expect(context.regularSelection.current.segment).toBe(parent.firstChild!.firstChild);
-        expect(applyFormat.applyFormat).toHaveBeenCalled();
+        expect(applyFormat.applyFormat).not.toHaveBeenCalled();
 
-        runTestWithRefNode(block, '<span><span></span></span><br>');
+        runTestWithRefNode(block, '<span></span><br>');
     });
 
     it('Entity block', () => {
@@ -193,7 +193,7 @@ describe('handleBlockGroup', () => {
                 blockGroupChildren: handleBlockGroupChildren,
                 listItem: handleListItem,
                 formatContainer: handleQuote,
-                general: handleGeneralModel,
+                generalBlock: handleGeneralModel,
             },
         });
         parent = document.createElement('div');
