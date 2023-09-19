@@ -25,12 +25,24 @@ export function createModelToDomContext(
     editorContext?: EditorContext,
     ...options: (ModelToDomOption | undefined)[]
 ): ModelToDomContext {
+    return createModelToDomContextWithConfig(createModelToDomConfig(options), editorContext);
+}
+
+/**
+ * Create context object for Content Model to DOM conversion with an existing configure
+ * @param config A full config object to define how to convert Content Model to DOM tree
+ * @param editorContext Context of editor
+ */
+export function createModelToDomContextWithConfig(
+    config: ModelToDomSettings,
+    editorContext?: EditorContext
+) {
     return Object.assign(
         {},
         editorContext,
         createModelToDomSelectionContext(),
         createModelToDomFormatContext(),
-        createModelToDomSettings(options)
+        config
     );
 }
 
@@ -55,7 +67,13 @@ function createModelToDomFormatContext(): ModelToDomFormatContext {
     };
 }
 
-function createModelToDomSettings(options: (ModelToDomOption | undefined)[]): ModelToDomSettings {
+/**
+ * Create Content Model to DOM Config object
+ * @param options All customizations of DOM creation
+ */
+export function createModelToDomConfig(
+    options: (ModelToDomOption | undefined)[]
+): ModelToDomSettings {
     return {
         modelHandlers: Object.assign(
             {},

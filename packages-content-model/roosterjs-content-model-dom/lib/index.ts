@@ -50,5 +50,13 @@ export { parseValueWithUnit } from './formatHandlers/utils/parseValueWithUnit';
 export { BorderKeys } from './formatHandlers/common/borderFormatHandler';
 export { DeprecatedColors } from './formatHandlers/utils/color';
 
-export { createDomToModelContext } from './domToModel/context/createDomToModelContext';
-export { createModelToDomContext } from './modelToDom/context/createModelToDomContext';
+export {
+    createDomToModelContext,
+    createDomToModelContextWithConfig,
+    createDomToModelConfig,
+} from './domToModel/context/createDomToModelContext';
+export {
+    createModelToDomContext,
+    createModelToDomContextWithConfig,
+    createModelToDomConfig,
+} from './modelToDom/context/createModelToDomContext';
