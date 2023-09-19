@@ -1,9 +1,9 @@
+import { areSameFormats } from '../../domToModel/utils/areSameFormats';
 import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
-
 /**
  * @internal
  */
@@ -51,10 +51,24 @@ function removeEmptySegments(block: ContentModelParagraph) {
 }
 
 function removeEmptyLinks(paragraph: ContentModelParagraph) {
-    const segments = paragraph.segments;
-    const noMarkerSegments = segments.filter(x => x.segmentType != 'SelectionMarker');
-    const marker = segments.find(x => x.segmentType == 'SelectionMarker');
-    if (marker && marker.link && noMarkerSegments.every(x => !x.link)) {
-        delete marker.link;
+    const marker = paragraph.segments.find(x => x.segmentType == 'SelectionMarker');
+    if (marker) {
+        const markerIndex = paragraph.segments.indexOf(marker);
+        const prev = paragraph.segments[markerIndex - 1];
+        const next = paragraph.segments[markerIndex + 1];
+        if (
+            (prev &&
+                !prev.link &&
+                areSameFormats(prev.format, marker.format) &&
+                (!next || (!next.link && areSameFormats(next.format, marker.format))) &&
+                marker.link) ||
+            (!prev &&
+                marker.link &&
+                next &&
+                !next.link &&
+                areSameFormats(next.format, marker.format))
+        ) {
+            delete marker.link;
+        }
     }
 }
