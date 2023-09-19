@@ -28,8 +28,13 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
 
     if (!core.lifecycle.shadowEditFragment) {
         core.api.select(core, range);
-        core.cachedRangeEx = range || undefined;
+
+        if (range) {
+            core.cache.cachedRangeEx = range;
+        }
     }
+
+    // TODO: Reconcile selection text node cache
 
     return range;
 };
