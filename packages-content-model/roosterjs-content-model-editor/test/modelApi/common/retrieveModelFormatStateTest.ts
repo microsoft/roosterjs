@@ -712,6 +712,41 @@ describe('retrieveModelFormatState', () => {
         const model = createContentModelDocument({
             fontFamily: 'Arial',
             fontSize: '12px',
+            underline: true,
+            fontWeight: 'bold',
+            italic: true,
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1', { fontFamily: 'Tahoma', fontSize: '15px' });
+        para.segments.push(text1);
+
+        text1.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontSize: '15px',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            fontName: 'Tahoma',
+        });
+    });
+
+    it('With default format and other different format', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
         });
         const result: ContentModelFormatState = {};
         const para = createParagraph();
