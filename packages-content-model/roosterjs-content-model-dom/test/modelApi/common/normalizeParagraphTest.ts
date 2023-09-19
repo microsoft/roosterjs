@@ -315,4 +315,42 @@ describe('Normalize text that contains space', () => {
             ],
         });
     });
+
+    it('Remove empty links', () => {
+        const model = createContentModelDocument();
+        const para = createParagraph();
+        const marker = createSelectionMarker();
+        const text = createText('test');
+        marker.link = {
+            dataset: {},
+            format: {},
+        };
+
+        para.segments.push(text, marker);
+        model.blocks.push(para);
+
+        normalizeContentModel(model);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                },
+            ],
+        });
+    });
 });
