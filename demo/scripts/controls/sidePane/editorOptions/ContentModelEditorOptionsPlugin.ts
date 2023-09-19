@@ -31,6 +31,7 @@ const initialState: BuildInPluginState = {
     experimentalFeatures: [
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
         ExperimentalFeatures.ContentModelPaste,
+        ExperimentalFeatures.ReusableContentModelV2,
     ],
     isRtl: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',

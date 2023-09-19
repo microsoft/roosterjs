@@ -1,22 +1,14 @@
+import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
-import { ContentModelContentChangedEvent } from 'roosterjs-content-model/lib';
-import { ContentModelDocument } from 'roosterjs-content-model-types/lib';
-import { ContentModelSegment, ContentModelText, Selectable } from 'roosterjs-content-model-types';
-import { createSelectionMarker, createText } from 'roosterjs-content-model-dom';
+import { ContentModelContentChangedEvent } from 'roosterjs-content-model';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { isNodeOfType } from 'roosterjs-content-model-dom/lib';
-import { setSelection } from 'roosterjs-content-model-editor/lib/modelApi/selection/setSelection';
-import { updateTextSegments } from '../../editor/utils/contentModelDomIndexer';
 import {
-    Coordinates,
     IEditor,
     Keys,
-    NodeType,
     PluginEvent,
     PluginEventType,
     PluginWithState,
     SelectionRangeEx,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
 
 /**
@@ -100,12 +92,12 @@ export default class ContentModelCachePlugin
             case PluginEventType.Input:
                 {
                     const rangeEx = this.forceGetSelectionRangeEx(this.editor);
-                    this.reconcileSelection(this.editor, rangeEx);
+                    this.updateCachedModel(this.editor, rangeEx);
                 }
                 break;
 
             case PluginEventType.SelectionChanged:
-                this.reconcileSelection(
+                this.updateCachedModel(
                     this.editor,
                     event.selectionRangeEx ?? this.forceGetSelectionRangeEx(this.editor)
                 );
@@ -118,7 +110,6 @@ export default class ContentModelCachePlugin
                     if (contentModel) {
                         this.state.cachedModel = contentModel;
                         this.state.cachedRangeEx = rangeEx;
-                        console.log('Content changed, reuse cache');
                     } else {
                         this.editor.invalidateCache();
                         this.editor.createContentModel();
@@ -131,103 +122,24 @@ export default class ContentModelCachePlugin
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            this.reconcileSelection(this.editor, this.forceGetSelectionRangeEx(this.editor));
+            this.updateCachedModel(this.editor, this.forceGetSelectionRangeEx(this.editor));
         }
     };
 
-    private reconcileSelection(editor: IContentModelEditor, newRangeEx: SelectionRangeEx) {
+    private updateCachedModel(editor: IContentModelEditor, newRangeEx: SelectionRangeEx) {
         const cachedRangeEx = this.state.cachedRangeEx;
-        const model = this.state.cachedModel ?? editor.createContentModel();
+        const model = this.state.cachedModel;
+        const isSelectionChanged = !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
 
-        if (!cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx)) {
-            if (!this.internalReconcileSelection(model, cachedRangeEx, newRangeEx)) {
-                editor.invalidateCache();
-                editor.createContentModel();
-            }
+        if (
+            isSelectionChanged &&
+            model &&
+            !this.state.domIndexer?.reconcileSelection(model, cachedRangeEx, newRangeEx)
+        ) {
+            editor.invalidateCache();
         }
 
         this.state.cachedRangeEx = newRangeEx;
-    }
-
-    private internalReconcileSelection(
-        cachedModel: ContentModelDocument,
-        cachedRangeEx: SelectionRangeEx | undefined,
-        newRangeEx: SelectionRangeEx
-    ) {
-        if (cachedRangeEx) {
-            this.unSelect(cachedModel, cachedRangeEx);
-        }
-
-        switch (newRangeEx.type) {
-            case SelectionRangeTypes.ImageSelection:
-                console.log('Reconcile -- Image selection');
-                break;
-
-            case SelectionRangeTypes.TableSelection:
-                console.log('Reconcile -- Table selection');
-                break;
-
-            case SelectionRangeTypes.Normal:
-                const newRange = newRangeEx.ranges[0];
-                if (newRange) {
-                    const {
-                        startContainer,
-                        startOffset,
-                        endContainer,
-                        endOffset,
-                        collapsed,
-                    } = newRange;
-
-                    if (collapsed) {
-                        const marker = !!reconcileSelection(startContainer, startOffset);
-                        if (marker) {
-                            console.log('Reconcile succeeded - Collapsed');
-                        } else {
-                            console.log('Reconcile failed - Collapsed');
-                        }
-
-                        return !!marker;
-                    } else if (startContainer == endContainer) {
-                        const marker = !!reconcileSelection(startContainer, startOffset, endOffset);
-                        if (marker) {
-                            console.log('Reconcile succeeded - Expand on same node');
-                        } else {
-                            console.log('Reconcile failed - Expand on same node');
-                        }
-
-                        return !!marker;
-                    } else {
-                        const marker1 = reconcileSelection(startContainer, startOffset);
-                        const marker2 = reconcileSelection(endContainer, endOffset);
-
-                        if (marker1 && marker2) {
-                            console.log('Reconcile succeeded - Multiple nodes');
-                            setSelection(cachedModel, marker1, marker2);
-                            return true;
-                        } else {
-                            console.log('Reconcile failed - Multiple nodes');
-                        }
-                    }
-                }
-
-                break;
-        }
-
-        return false;
-    }
-
-    private unSelect(model: ContentModelDocument, rangeEx: SelectionRangeEx) {
-        const range: Range | undefined = rangeEx.ranges[0];
-
-        if (
-            rangeEx?.type == SelectionRangeTypes.Normal &&
-            range?.collapsed &&
-            isNodeOfType(range.startContainer, NodeType.Text)
-        ) {
-            reconcileSelection(range.startContainer);
-        } else {
-            setSelection(model);
-        }
     }
 
     private forceGetSelectionRangeEx(editor: IContentModelEditor) {
@@ -239,128 +151,6 @@ export default class ContentModelCachePlugin
 
         return currentRangeEx;
     }
-}
-
-function reconcileSelection(
-    node: Node,
-    startOffset?: number,
-    endOffset?: number
-): Selectable | undefined {
-    let selectable: Selectable | undefined;
-
-    updateTextSegments(node, (paragraph, first, last) => {
-        const newSegments: ContentModelSegment[] = [];
-        const txt = node.nodeValue || '';
-        const textSegments: ContentModelText[] = [];
-
-        if (startOffset === undefined) {
-            first.text = txt;
-            newSegments.push(first);
-            textSegments.push(first);
-        } else {
-            if (startOffset > 0) {
-                first.text = txt.substring(0, startOffset);
-                newSegments.push(first);
-                textSegments.push(first);
-            }
-
-            if (endOffset === undefined) {
-                const marker = createSelectionMarker(first.format);
-                newSegments.push(marker);
-
-                selectable = marker;
-                endOffset = startOffset;
-            } else if (endOffset > startOffset) {
-                const middle = createText(
-                    txt.substring(startOffset, endOffset),
-                    first.format,
-                    first.link,
-                    first.code
-                );
-
-                middle.isSelected = true;
-                newSegments.push(middle);
-                textSegments.push(middle);
-                selectable = middle;
-            }
-
-            if (endOffset < txt.length) {
-                const newLast = createText(
-                    txt.substring(endOffset),
-                    first.format,
-                    first.link,
-                    first.code
-                );
-                newSegments.push(newLast);
-                textSegments.push(newLast);
-            }
-        }
-
-        let firstIndex = paragraph.segments.indexOf(first);
-        let lastIndex = paragraph.segments.indexOf(last);
-
-        if (firstIndex >= 0 && lastIndex >= 0) {
-            while (
-                firstIndex > 0 &&
-                paragraph.segments[firstIndex - 1].segmentType == 'SelectionMarker'
-            ) {
-                firstIndex--;
-            }
-
-            while (
-                lastIndex < paragraph.segments.length - 1 &&
-                paragraph.segments[lastIndex + 1].segmentType == 'SelectionMarker'
-            ) {
-                lastIndex++;
-            }
-
-            paragraph.segments.splice(firstIndex, lastIndex - firstIndex + 1, ...newSegments);
-            return textSegments;
-        } else {
-            return [];
-        }
-    });
-
-    return selectable;
-}
-
-function areSameRangeEx(range1: SelectionRangeEx, range2: SelectionRangeEx): boolean {
-    switch (range1.type) {
-        case SelectionRangeTypes.ImageSelection:
-            return (
-                range2.type == SelectionRangeTypes.ImageSelection && range2.image == range1.image
-            );
-
-        case SelectionRangeTypes.TableSelection:
-            return (
-                range2.type == SelectionRangeTypes.TableSelection &&
-                range2.table == range1.table &&
-                areSameCoordinates(range2.coordinates?.firstCell, range1.coordinates?.firstCell) &&
-                areSameCoordinates(range2.coordinates?.lastCell, range1.coordinates?.lastCell)
-            );
-
-        case SelectionRangeTypes.Normal:
-        default:
-            return (
-                range2.type == SelectionRangeTypes.Normal &&
-                areSameRanges(range2.ranges[0], range1.ranges[0])
-            );
-    }
-}
-
-function areSameRanges(r1?: Range, r2?: Range): boolean {
-    return !!(
-        r1 &&
-        r2 &&
-        r1.startContainer == r2.startContainer &&
-        r1.startOffset == r2.startOffset &&
-        r1.endContainer == r2.endContainer &&
-        r1.endOffset == r2.endOffset
-    );
-}
-
-function areSameCoordinates(c1?: Coordinates, c2?: Coordinates): boolean {
-    return !!(c1 && c2 && c1.x == c2.x && c1.y == c2.y);
 }
 
 /**

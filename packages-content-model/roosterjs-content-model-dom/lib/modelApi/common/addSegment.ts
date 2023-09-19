@@ -2,6 +2,7 @@ import { ensureParagraph } from './ensureParagraph';
 import type {
     ContentModelBlockFormat,
     ContentModelBlockGroup,
+    ContentModelParagraph,
     ContentModelSegment,
 } from 'roosterjs-content-model-types';
 
@@ -10,12 +11,13 @@ import type {
  * @param group The parent block group of the paragraph to add segment into
  * @param newSegment The segment to add
  * @param blockFormat The block format used for creating a new paragraph when need
+ * @returns The parent paragraph where the segment is added to
  */
 export function addSegment(
     group: ContentModelBlockGroup,
     newSegment: ContentModelSegment,
     blockFormat?: ContentModelBlockFormat
-) {
+): ContentModelParagraph {
     const paragraph = ensureParagraph(group, blockFormat);
     const lastSegment = paragraph.segments[paragraph.segments.length - 1];
 
@@ -30,4 +32,6 @@ export function addSegment(
 
         paragraph.segments.push(newSegment);
     }
+
+    return paragraph;
 }

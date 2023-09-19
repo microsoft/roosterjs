@@ -12,5 +12,6 @@ export const brProcessor: ElementProcessor<HTMLBRElement> = (group, element, con
         br.isSelected = true;
     }
 
-    addSegment(group, br, context.blockFormat);
+    const paragraph = addSegment(group, br, context.blockFormat);
+    context.domIndexer?.onSegment(element, paragraph, [br]);
 };

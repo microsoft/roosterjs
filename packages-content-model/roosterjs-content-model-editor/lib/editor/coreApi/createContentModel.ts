@@ -36,8 +36,6 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
         if (!option && !selectionOverride) {
             core.cache.cachedModel = model;
             core.cache.cachedRangeEx = selection;
-
-            console.error('!!! Create New Content Model !!!!!');
         }
 
         return model;
