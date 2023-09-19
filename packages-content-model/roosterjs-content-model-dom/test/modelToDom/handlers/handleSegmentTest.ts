@@ -9,32 +9,41 @@ import {
     ContentModelText,
     ModelToDomContext,
     ContentModelBlockHandler,
-    ContentModelHandler,
+    ContentModelSegmentHandler,
+    ContentModelGeneralSegment,
 } from 'roosterjs-content-model-types';
 
 describe('handleSegment', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleBr: jasmine.Spy<ContentModelHandler<ContentModelBr>>;
-    let handleText: jasmine.Spy<ContentModelHandler<ContentModelText>>;
-    let handleGeneralModel: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
-    let handleEntity: jasmine.Spy<ContentModelBlockHandler<ContentModelEntity>>;
-    let handleImage: jasmine.Spy<ContentModelHandler<ContentModelImage>>;
+    let handleBr: jasmine.Spy<ContentModelSegmentHandler<ContentModelBr>>;
+    let handleText: jasmine.Spy<ContentModelSegmentHandler<ContentModelText>>;
+    let handleGeneralBlock: jasmine.Spy<ContentModelBlockHandler<ContentModelGeneralBlock>>;
+    let handleGeneralSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelGeneralSegment>>;
+    let handleEntityBlock: jasmine.Spy<ContentModelBlockHandler<ContentModelEntity>>;
+    let handleEntitySegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelEntity>>;
+    let handleImage: jasmine.Spy<ContentModelSegmentHandler<ContentModelImage>>;
+    let mockedSegmentNodes: any;
 
     beforeEach(() => {
         parent = document.createElement('div');
         handleBr = jasmine.createSpy('handleBr');
         handleText = jasmine.createSpy('handleText');
-        handleGeneralModel = jasmine.createSpy('handleGeneralModel');
-        handleEntity = jasmine.createSpy('handleEntity');
+        handleGeneralBlock = jasmine.createSpy('handleGeneralBlock');
+        handleEntityBlock = jasmine.createSpy('handleEntityBlock');
+        handleGeneralSegment = jasmine.createSpy('handleGeneralSegment');
+        handleEntitySegment = jasmine.createSpy('handleEntitySegment');
         handleImage = jasmine.createSpy('handleImage');
+        mockedSegmentNodes = 'SEGMENTNODES' as any;
 
         context = createModelToDomContext(undefined, {
             modelHandlerOverride: {
                 br: handleBr,
                 text: handleText,
-                general: handleGeneralModel,
-                entity: handleEntity,
+                generalSegment: handleGeneralSegment,
+                entitySegment: handleEntitySegment,
+                generalBlock: handleGeneralBlock,
+                entityBlock: handleEntityBlock,
                 image: handleImage,
             },
         });
@@ -47,9 +56,15 @@ describe('handleSegment', () => {
             format: {},
         };
 
-        handleSegment(document, parent, text, context);
+        handleSegment(document, parent, text, context, mockedSegmentNodes);
 
-        expect(handleText).toHaveBeenCalledWith(document, parent, text, context);
+        expect(handleText).toHaveBeenCalledWith(
+            document,
+            parent,
+            text,
+            context,
+            mockedSegmentNodes
+        );
         expect(parent.innerHTML).toBe('');
     });
 
@@ -58,10 +73,10 @@ describe('handleSegment', () => {
             segmentType: 'Br',
             format: {},
         };
-        handleSegment(document, parent, br, context);
+        handleSegment(document, parent, br, context, mockedSegmentNodes);
 
         expect(parent.innerHTML).toBe('');
-        expect(handleBr).toHaveBeenCalledWith(document, parent, br, context);
+        expect(handleBr).toHaveBeenCalledWith(document, parent, br, context, mockedSegmentNodes);
     });
 
     it('general segment', () => {
@@ -74,9 +89,16 @@ describe('handleSegment', () => {
             format: {},
         };
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedSegmentNodes);
         expect(parent.innerHTML).toBe('');
-        expect(handleGeneralModel).toHaveBeenCalledWith(document, parent, segment, context, null);
+        expect(handleGeneralSegment).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedSegmentNodes
+        );
+        expect(handleGeneralBlock).not.toHaveBeenCalled();
     });
 
     it('entity segment', () => {
@@ -91,9 +113,16 @@ describe('handleSegment', () => {
             isReadonly: true,
         };
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedSegmentNodes);
         expect(parent.innerHTML).toBe('');
-        expect(handleEntity).toHaveBeenCalledWith(document, parent, segment, context, null);
+        expect(handleEntitySegment).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedSegmentNodes
+        );
+        expect(handleEntityBlock).not.toHaveBeenCalled();
     });
 
     it('image segment', () => {
@@ -104,8 +133,14 @@ describe('handleSegment', () => {
             dataset: {},
         };
 
-        handleSegment(document, parent, segment, context);
+        handleSegment(document, parent, segment, context, mockedSegmentNodes);
         expect(parent.innerHTML).toBe('');
-        expect(handleImage).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleImage).toHaveBeenCalledWith(
+            document,
+            parent,
+            segment,
+            context,
+            mockedSegmentNodes
+        );
     });
 });

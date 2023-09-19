@@ -28,14 +28,19 @@ describe('handleSegmentCommon', () => {
                 href: 'href',
             },
         };
+        container.appendChild(txt);
+        const segmentNodes: Node[] = [];
 
-        handleSegmentCommon(document, txt, container, segment, context);
+        handleSegmentCommon(document, txt, container, segment, context, segmentNodes);
 
         expect(context.regularSelection.current.segment).toBe(txt);
         expect(container.outerHTML).toBe(
-            '<span style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href"></a></b></span>'
+            '<span style="font-size: 10pt; color: red; line-height: 2;"><b><a href="href">test</a></b></span>'
         );
         expect(onNodeCreated).toHaveBeenCalledWith(segment, txt);
+        expect(segmentNodes.length).toBe(2);
+        expect(segmentNodes[0]).toBe(txt);
+        expect(segmentNodes[1]).toBe(txt.parentNode!);
     });
 
     it('element with child', () => {
@@ -48,12 +53,16 @@ describe('handleSegmentCommon', () => {
         const segment = createText('test', {});
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
         const context = createModelToDomContext();
+        const segmentNodes: Node[] = [];
 
         context.onNodeCreated = onNodeCreated;
-        handleSegmentCommon(document, parent, container, segment, context);
+        container.appendChild(parent);
+        handleSegmentCommon(document, parent, container, segment, context, segmentNodes);
 
         expect(context.regularSelection.current.segment).toBe(null);
-        expect(container.outerHTML).toBe('<span></span>');
+        expect(container.outerHTML).toBe('<span><span>child</span></span>');
         expect(onNodeCreated).toHaveBeenCalledWith(segment, parent);
+        expect(segmentNodes.length).toBe(1);
+        expect(segmentNodes[0]).toBe(parent);
     });
 });

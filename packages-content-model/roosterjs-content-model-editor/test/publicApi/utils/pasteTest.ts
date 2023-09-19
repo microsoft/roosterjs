@@ -587,6 +587,7 @@ describe('Paste with clipboardData', () => {
     });
 
     afterEach(() => {
+        editor.dispose();
         document.getElementById(ID)?.remove();
     });
 

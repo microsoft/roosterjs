@@ -236,6 +236,7 @@ describe(ID, () => {
                                         },
                                     ],
                                     format: <any>{
+                                        useBorderBox: true,
                                         direction: 'ltr',
                                         textAlign: 'start',
                                         whiteSpace: 'normal',

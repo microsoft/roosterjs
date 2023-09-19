@@ -1,5 +1,4 @@
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
-import { isGeneralSegment } from '../../modelApi/common/isGeneralSegment';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
@@ -7,18 +6,19 @@ import { wrap } from 'roosterjs-editor-dom';
 import {
     ContentModelBlockHandler,
     ContentModelGeneralBlock,
-    ModelToDomContext,
+    ContentModelGeneralSegment,
+    ContentModelSegmentHandler,
 } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlock> = (
-    doc: Document,
-    parent: Node,
-    group: ContentModelGeneralBlock,
-    context: ModelToDomContext,
-    refNode: Node | null
+export const handleGeneralBlock: ContentModelBlockHandler<ContentModelGeneralBlock> = (
+    doc,
+    parent,
+    group,
+    context,
+    refNode
 ) => {
     let node: Node = group.element;
 
@@ -31,15 +31,32 @@ export const handleGeneralModel: ContentModelBlockHandler<ContentModelGeneralBlo
         parent.insertBefore(node, refNode);
     }
 
-    if (isGeneralSegment(group) && isNodeOfType(node, NodeType.Element)) {
+    context.onNodeCreated?.(group, node);
+    context.modelHandlers.blockGroupChildren(doc, node, group, context);
+
+    return refNode;
+};
+
+/**
+ * @internal
+ */
+export const handleGeneralSegment: ContentModelSegmentHandler<ContentModelGeneralSegment> = (
+    doc,
+    parent,
+    group,
+    context,
+    segmentNodes
+) => {
+    const node = group.element.cloneNode() as HTMLElement;
+    group.element = node;
+    parent.appendChild(node);
+
+    if (isNodeOfType(node, NodeType.Element)) {
         const element = wrap(node, 'span');
 
-        handleSegmentCommon(doc, node, element, group, context);
-    } else {
+        handleSegmentCommon(doc, node, element, group, context, segmentNodes);
         context.onNodeCreated?.(group, node);
     }
 
     context.modelHandlers.blockGroupChildren(doc, node, group, context);
-
-    return refNode;
 };

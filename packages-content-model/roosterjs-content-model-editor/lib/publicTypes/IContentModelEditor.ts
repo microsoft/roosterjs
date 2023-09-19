@@ -37,10 +37,9 @@ export interface IContentModelEditor extends IEditor {
     ): SelectionRangeEx | null;
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
+     * Notify editor the current cache may be invalid
      */
-    cacheContentModel(model: ContentModelDocument | null): void;
+    invalidateCache(): void;
 
     /**
      * Get default format as ContentModelSegmentFormat.

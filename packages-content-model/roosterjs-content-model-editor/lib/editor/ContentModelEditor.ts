@@ -57,15 +57,14 @@ export default class ContentModelEditor
     }
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
+     * Notify editor the current cache may be invalid
      */
-    cacheContentModel(model: ContentModelDocument | null) {
+    invalidateCache() {
         const core = this.getCore();
 
         if (!core.lifecycle.shadowEditFragment) {
-            core.cachedModel = model || undefined;
-            core.cachedRangeEx = undefined;
+            core.cache.cachedModel = undefined;
+            core.cache.cachedRangeEx = undefined;
         }
     }
 
