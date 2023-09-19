@@ -225,6 +225,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             getContentModelDefaultFormat: () => ({}),
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
