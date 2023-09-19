@@ -248,7 +248,6 @@ describe(ID, () => {
                                         width: '0px',
                                         tableLayout: 'fixed',
                                         borderCollapse: true,
-                                        useBorderBox: true,
                                     },
                                     widths: [jasmine.anything() as any, jasmine.anything() as any],
                                     dataset: {
