@@ -59,6 +59,12 @@ export function alignTableCell(
                             return metadata;
                         });
                     }
+
+                    cell.blocks.forEach(block => {
+                        if (block.blockType === 'Paragraph') {
+                            delete block.format.textAlign;
+                        }
+                    });
                 }
             }
         }
