@@ -7,6 +7,7 @@ import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
+import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
@@ -85,6 +86,8 @@ function promoteContentModelInfo(
         options.defaultDomToModelOptions,
     ];
     cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
+    cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
+    cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
 
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,

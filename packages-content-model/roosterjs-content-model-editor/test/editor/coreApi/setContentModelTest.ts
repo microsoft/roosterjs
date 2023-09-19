@@ -9,12 +9,14 @@ const mockedModel = 'MODEL' as any;
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedContext = 'CONTEXT' as any;
 const mockedDiv = { ownerDocument: mockedDoc } as any;
+const mockedConfig = 'CONFIG' as any;
 
 describe('setContentModel', () => {
     let core: ContentModelEditorCore;
     let contentModelToDomSpy: jasmine.Spy;
     let createEditorContext: jasmine.Spy;
     let createModelToDomContextSpy: jasmine.Spy;
+    let createModelToDomContextWithConfigSpy: jasmine.Spy;
     let select: jasmine.Spy;
     let getSelectionRange: jasmine.Spy;
 
@@ -29,6 +31,10 @@ describe('setContentModel', () => {
             createModelToDomContext,
             'createModelToDomContext'
         ).and.returnValue(mockedContext);
+        createModelToDomContextWithConfigSpy = spyOn(
+            createModelToDomContext,
+            'createModelToDomContextWithConfig'
+        ).and.returnValue(mockedContext);
         select = jasmine.createSpy('select');
         getSelectionRange = jasmine.createSpy('getSelectionRange');
 
@@ -40,13 +46,18 @@ describe('setContentModel', () => {
                 getSelectionRange,
             },
             lifecycle: {},
+            defaultModelToDomConfig: mockedConfig,
         } as any) as ContentModelEditorCore;
     });
 
     it('no default option, no shadow edit', () => {
         setContentModel(core, mockedModel);
 
-        expect(createModelToDomContextSpy).toHaveBeenCalledWith(mockedEditorContext, undefined);
+        expect(createModelToDomContextSpy).not.toHaveBeenCalled();
+        expect(createModelToDomContextWithConfigSpy).toHaveBeenCalledWith(
+            mockedConfig,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
@@ -60,7 +71,10 @@ describe('setContentModel', () => {
     it('with default option, no shadow edit', () => {
         setContentModel(core, mockedModel);
 
-        expect(createModelToDomContextSpy).toHaveBeenCalledWith(mockedEditorContext, undefined);
+        expect(createModelToDomContextWithConfigSpy).toHaveBeenCalledWith(
+            mockedConfig,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
@@ -98,7 +112,10 @@ describe('setContentModel', () => {
 
         setContentModel(core, mockedModel);
 
-        expect(createModelToDomContextSpy).toHaveBeenCalledWith(mockedEditorContext, undefined);
+        expect(createModelToDomContextWithConfigSpy).toHaveBeenCalledWith(
+            mockedConfig,
+            mockedEditorContext
+        );
         expect(contentModelToDomSpy).toHaveBeenCalledWith(
             mockedDoc,
             mockedDiv,
