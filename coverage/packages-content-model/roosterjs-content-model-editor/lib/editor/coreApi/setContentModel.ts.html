@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>8/8</span>
+                <span class='fraction'>10/10</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">83.33% </span>
+                <span class="strong">75% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>5/6</span>
+                <span class='fraction'>6/8</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>7/7</span>
+                <span class='fraction'>9/9</span>
             </div>
         
             
@@ -88,7 +88,15 @@
 <a name='L29'></a><a href='#L29'>29</a>
 <a name='L30'></a><a href='#L30'>30</a>
 <a name='L31'></a><a href='#L31'>31</a>
-<a name='L32'></a><a href='#L32'>32</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L32'></a><a href='#L32'>32</a>
+<a name='L33'></a><a href='#L33'>33</a>
+<a name='L34'></a><a href='#L34'>34</a>
+<a name='L35'></a><a href='#L35'>35</a>
+<a name='L36'></a><a href='#L36'>36</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -100,7 +108,11 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -108,19 +120,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-yes">27x</span>
+<span class="cline-any cline-yes">27x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-yes">23x</span>
-<span class="cline-any cline-yes">23x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">24x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { contentModelToDom, createModelToDomContext } from 'roosterjs-content-model-dom';
-import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
+import {
+    contentModelToDom,
+    createModelToDomContext,
+    createModelToDomContextWithConfig,
+} from 'roosterjs-content-model-dom';
 &nbsp;
 /**
  * @internal
@@ -131,15 +143,15 @@ import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
  * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) =&gt; {
+    const editorContext = core.api.createEditorContext(core);
+    const modelToDomContext = option
+        ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || <span class="branch-1 cbranch-no" title="branch not covered" >[])</span>, option)
+        : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
     const range = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        createModelToDomContext(
-            core.api.createEditorContext(core),
-            ...(core.defaultModelToDomOptions || []),
-            option
-        ),
+        modelToDomContext,
         onNodeCreated
     );
 &nbsp;
@@ -157,7 +169,7 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Mon Sep 18 2023 19:13:33 GMT+0000 (Coordinated Universal Time)
+                at Tue Sep 19 2023 06:52:48 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
