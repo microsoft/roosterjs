@@ -3,8 +3,10 @@ import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
+    DomToModelSettings,
     EditorContext,
     ModelToDomOption,
+    ModelToDomSettings,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
@@ -105,6 +107,18 @@ export interface ContentModelEditorCore extends EditorCore {
      * Default Content Model to DOM options
      */
     defaultModelToDomOptions: (ModelToDomOption | undefined)[];
+
+    /**
+     * Default DOM to Content Model config, calculated from defaultDomToModelOptions,
+     * will be used for creating content model if there is no other customized options
+     */
+    defaultDomToModelConfig: DomToModelSettings;
+
+    /**
+     * Default Content Model to DOM config, calculated from defaultModelToDomOptions,
+     * will be used for setting content model if there is no other customized options
+     */
+    defaultModelToDomConfig: ModelToDomSettings;
 
     /**
      * Whether adding delimiter for entity is allowed

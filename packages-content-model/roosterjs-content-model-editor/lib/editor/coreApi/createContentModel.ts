@@ -1,7 +1,11 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { DomToModelOption } from 'roosterjs-content-model-types';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    createDomToModelContext,
+    createDomToModelContextWithConfig,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 import {
     ContentModelEditorCore,
     CreateContentModel,
@@ -30,13 +34,14 @@ function internalCreateContentModel(
     option?: DomToModelOption,
     selectionOverride?: SelectionRangeEx
 ) {
+    const editorContext = core.api.createEditorContext(core);
+    const domToModelContext = option
+        ? createDomToModelContext(editorContext, ...(core.defaultDomToModelOptions || []), option)
+        : createDomToModelContextWithConfig(core.defaultDomToModelConfig, editorContext);
+
     return domToContentModel(
         core.contentDiv,
-        createDomToModelContext(
-            core.api.createEditorContext(core),
-            ...(core.defaultDomToModelOptions || []),
-            option
-        ),
+        domToModelContext,
         selectionOverride || core.api.getSelectionRangeEx(core)
     );
 }
