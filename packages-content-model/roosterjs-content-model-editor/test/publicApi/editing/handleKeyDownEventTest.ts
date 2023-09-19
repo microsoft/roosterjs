@@ -59,6 +59,7 @@ describe('handleKeyDownEvent', () => {
         );
 
         expect(deleteSelectionSpy).toHaveBeenCalledWith(input, expectedSteps, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: mockedEvent,
             skipUndoSnapshot: true,

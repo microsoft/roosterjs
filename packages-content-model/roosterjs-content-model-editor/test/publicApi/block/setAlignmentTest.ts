@@ -426,6 +426,7 @@ describe('setAlignment in table', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -448,7 +449,8 @@ describe('setAlignment in table', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }
@@ -817,6 +819,7 @@ describe('setAlignment in list', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -839,7 +842,8 @@ describe('setAlignment in list', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedList],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }

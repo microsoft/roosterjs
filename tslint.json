@@ -2,7 +2,6 @@
     "rules": {
         "use-isnan": true,
         "jquery-deferred-must-complete": true,
-        "missing-optional-annotation": true,
         "no-backbone-get-set-outside-model": false,
         "no-banned-terms": true,
         "no-constant-condition": true,

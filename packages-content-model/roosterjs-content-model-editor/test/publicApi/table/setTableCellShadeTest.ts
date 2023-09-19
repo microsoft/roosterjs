@@ -20,6 +20,7 @@ describe('setTableCellShade', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -42,7 +43,8 @@ describe('setTableCellShade', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         } else {
             expect(setContentModel).not.toHaveBeenCalled();

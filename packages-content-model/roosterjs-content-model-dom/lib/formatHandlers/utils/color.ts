@@ -2,6 +2,35 @@ import { DarkColorHandler } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';
 
 /**
+ * List of deprecated colors
+ */
+export const DeprecatedColors: string[] = [
+    'inactiveborder',
+    'activeborder',
+    'inactivecaptiontext',
+    'inactivecaption',
+    'activecaption',
+    'appworkspace',
+    'infobackground',
+    'background',
+    'buttonhighlight',
+    'buttonshadow',
+    'captiontext',
+    'infotext',
+    'menutext',
+    'menu',
+    'scrollbar',
+    'threeddarkshadow',
+    'threedface',
+    'threedhighlight',
+    'threedlightshadow',
+    'threedfhadow',
+    'windowtext',
+    'windowframe',
+    'window',
+];
+
+/**
  * @internal
  */
 export function getColor(
@@ -19,6 +48,10 @@ export function getColor(
             (isBackground ? element.style.backgroundColor : element.style.color) ||
             element.getAttribute(isBackground ? 'bgcolor' : 'color') ||
             undefined;
+    }
+
+    if (color && DeprecatedColors.indexOf(color) > -1) {
+        color = undefined;
     }
 
     if (darkColorHandler) {

@@ -14,9 +14,9 @@ describe('handleSegmentCommon', () => {
             fontWeight: 'bold',
         });
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
-        const context = createModelToDomContext(undefined, {
-            onNodeCreated,
-        });
+        const context = createModelToDomContext();
+
+        context.onNodeCreated = onNodeCreated;
         context.darkColorHandler = new DarkColorHandlerImpl(
             document.createElement('div'),
             s => 'darkMock: ' + s
@@ -47,10 +47,9 @@ describe('handleSegmentCommon', () => {
         const container = document.createElement('span');
         const segment = createText('test', {});
         const onNodeCreated = jasmine.createSpy('onNodeCreated');
-        const context = createModelToDomContext(undefined, {
-            onNodeCreated,
-        });
+        const context = createModelToDomContext();
 
+        context.onNodeCreated = onNodeCreated;
         handleSegmentCommon(document, parent, container, segment, context);
 
         expect(context.regularSelection.current.segment).toBe(null);

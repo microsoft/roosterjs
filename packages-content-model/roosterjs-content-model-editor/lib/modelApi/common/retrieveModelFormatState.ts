@@ -126,6 +126,10 @@ export function retrieveModelFormatState(
             includeListFormatHolder: 'never',
         }
     );
+
+    if (formatState.fontSize) {
+        formatState.fontSize = px2Pt(formatState.fontSize);
+    }
 }
 
 function retrieveSegmentFormat(
@@ -235,4 +239,13 @@ function mergeValue<K extends keyof ContentModelFormatState>(
     } else if (newValue !== format[key]) {
         delete format[key];
     }
+}
+
+function px2Pt(px: string) {
+    if (px && px.indexOf('px') == px.length - 2) {
+        // Edge may not handle the floating computing well which causes the calculated value is a little less than actual value
+        // So add 0.05 to fix it
+        return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
+    }
+    return px;
 }

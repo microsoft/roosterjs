@@ -1,9 +1,14 @@
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { processPastedContentWacComponents } from '../../../../lib/editor/plugins/PastePlugin/WacComponents/processPastedContentWacComponents';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -20,9 +25,10 @@ describe('processPastedContentFromWacTest', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(undefined, event.domToModelOption)
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -31,10 +37,9 @@ describe('processPastedContentFromWacTest', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext({
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert
@@ -124,9 +129,10 @@ describe('wordOnlineHandler', () => {
         const event = createBeforePasteEventMock(fragment);
         processPastedContentWacComponents(event);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(undefined, event.domToModelOption)
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -135,10 +141,9 @@ describe('wordOnlineHandler', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext({
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert
@@ -1730,7 +1735,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -1842,7 +1846,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -1959,7 +1962,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2085,7 +2087,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2132,7 +2133,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2233,7 +2233,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2281,7 +2280,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2327,7 +2325,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2374,7 +2371,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2420,7 +2416,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2517,7 +2512,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {
@@ -2618,7 +2612,6 @@ describe('wordOnlineHandler', () => {
                                                                     },
                                                                     segmentFormat: {
                                                                         fontWeight: 'normal',
-                                                                        textColor: 'windowtext',
                                                                         italic: false,
                                                                     },
                                                                     decorator: {

@@ -1,6 +1,6 @@
 import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import { getSelectionPath } from 'roosterjs-editor-dom';
-import { SwitchShadowEdit } from 'roosterjs-editor-types';
+import { PluginEventType, SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -14,18 +14,43 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
 
     if (isOn != !!core.lifecycle.shadowEditFragment) {
         if (isOn) {
-            if (!core.cachedModel) {
-                core.cachedModel = core.api.createContentModel(core);
-            }
-
+            const model = !core.cachedModel ? core.api.createContentModel(core) : null;
             const range = core.api.getSelectionRange(core, true /*tryGetFromCache*/);
 
-            core.lifecycle.shadowEditSelectionPath =
-                range && getSelectionPath(core.contentDiv, range);
-            core.lifecycle.shadowEditFragment = core.contentDiv.ownerDocument.createDocumentFragment();
+            // Fake object, not used in Content Model Editor, just to satisfy original editor code
+            // TODO: we can remove them once we have standalone Content Model Editor
+            const fragment = core.contentDiv.ownerDocument.createDocumentFragment();
+            const selectionPath = range && getSelectionPath(core.contentDiv, range);
+
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.EnteredShadowEdit,
+                    fragment,
+                    selectionPath,
+                },
+                false /*broadcast*/
+            );
+
+            // This need to be done after EnteredShadowEdit event is triggered since EnteredShadowEdit event will cause a SelectionChanged event
+            // if current selection is table selection or image selection
+            if (!core.cachedModel && model) {
+                core.cachedModel = model;
+            }
+
+            core.lifecycle.shadowEditSelectionPath = selectionPath;
+            core.lifecycle.shadowEditFragment = fragment;
         } else {
             core.lifecycle.shadowEditFragment = null;
             core.lifecycle.shadowEditSelectionPath = null;
+
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.LeavingShadowEdit,
+                },
+                false /*broadcast*/
+            );
 
             if (core.cachedModel) {
                 core.api.setContentModel(core, core.cachedModel);

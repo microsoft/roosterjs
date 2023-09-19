@@ -1,4 +1,6 @@
+import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
+import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
 import ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
@@ -10,8 +12,15 @@ import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getSelectionRangeEx } from '../../lib/editor/coreApi/getSelectionRangeEx';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
+import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
 
 const mockedSwitchShadowEdit = 'SHADOWEDIT' as any;
+const mockedDomToModelConfig = {
+    config: 'mockedDomToModelConfig',
+} as any;
+const mockedModelToDomConfig = {
+    config: 'mockedModelToDomConfig',
+} as any;
 
 describe('createContentModelEditorCore', () => {
     let createEditorCoreSpy: jasmine.Spy;
@@ -40,6 +49,13 @@ describe('createContentModelEditorCore', () => {
 
         createEditorCoreSpy = spyOn(createEditorCore, 'createEditorCore').and.returnValue(
             mockedCore
+        );
+
+        spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(
+            mockedDomToModelConfig
+        );
+        spyOn(createModelToDomContext, 'createModelToDomConfig').and.returnValue(
+            mockedModelToDomConfig
         );
     });
 
@@ -76,8 +92,13 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -135,8 +156,13 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions,
-            defaultModelToDomOptions,
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                defaultDomToModelOptions,
+            ],
+            defaultModelToDomOptions: [defaultModelToDomOptions],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -205,8 +231,13 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: 'bold',
                 italic: true,
@@ -257,8 +288,11 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,
@@ -268,6 +302,9 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
+
             addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
@@ -317,8 +354,13 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
             },
-            defaultDomToModelOptions: {},
-            defaultModelToDomOptions: {},
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
             defaultFormat: {
                 fontWeight: undefined,
                 italic: undefined,

@@ -136,17 +136,18 @@ export const enum ExperimentalFeatures {
      */
     EditWithContentModel = 'EditWithContentModel',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Trigger formatting by a especial characters. Ex: (A), 1. i).
-     */
-    AutoFormatList = 'AutoFormatList',
 
     /**
      * With this feature enabled, when writing back a list item we will re-use all

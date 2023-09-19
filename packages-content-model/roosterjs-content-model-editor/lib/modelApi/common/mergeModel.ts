@@ -83,12 +83,16 @@ export function mergeModel(
 
             switch (block.blockType) {
                 case 'Paragraph':
-                    mergeParagraph(insertPosition, block, i == 0);
+                    mergeParagraph(insertPosition, block, i == 0, context, options);
                     break;
 
                 case 'Divider':
+                    insertBlock(insertPosition, block);
+                    break;
+
                 case 'Entity':
                     insertBlock(insertPosition, block);
+                    context?.newEntities.push(block);
                     break;
 
                 case 'Table':
@@ -120,7 +124,9 @@ export function mergeModel(
 function mergeParagraph(
     markerPosition: InsertPoint,
     newPara: ContentModelParagraph,
-    mergeToCurrentParagraph: boolean
+    mergeToCurrentParagraph: boolean,
+    context?: FormatWithContentModelContext,
+    option?: MergeModelOption
 ) {
     const { paragraph, marker } = markerPosition;
     const newParagraph = mergeToCurrentParagraph
@@ -128,8 +134,22 @@ function mergeParagraph(
         : splitParagraph(markerPosition, newPara.format);
     const segmentIndex = newParagraph.segments.indexOf(marker);
 
+    if (option?.mergeFormat == 'none' && mergeToCurrentParagraph) {
+        newParagraph.segments.forEach(segment => {
+            segment.format = { ...(newParagraph.segmentFormat || {}), ...segment.format };
+        });
+        delete newParagraph.segmentFormat;
+    }
     if (segmentIndex >= 0) {
-        newParagraph.segments.splice(segmentIndex, 0, ...newPara.segments);
+        for (let i = 0; i < newPara.segments.length; i++) {
+            const segment = newPara.segments[i];
+
+            newParagraph.segments.splice(segmentIndex + i, 0, segment);
+
+            if (context && segment.segmentType == 'Entity') {
+                context.newEntities.push(segment);
+            }
+        }
     }
 
     if (newPara.decorator) {

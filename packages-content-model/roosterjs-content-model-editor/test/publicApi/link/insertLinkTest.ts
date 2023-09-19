@@ -27,6 +27,7 @@ describe('insertLink', () => {
             createContentModel,
             getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -45,7 +46,7 @@ describe('insertLink', () => {
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
             expect(setContentModel.calls.argsFor(0)[0]).toEqual(expectedModel);
-            expect(typeof setContentModel.calls.argsFor(0)[1]!.onNodeCreated).toEqual('function');
+            expect(typeof setContentModel.calls.argsFor(0)[2]).toEqual('function');
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }

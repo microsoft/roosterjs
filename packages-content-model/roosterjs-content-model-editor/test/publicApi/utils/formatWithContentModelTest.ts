@@ -40,6 +40,7 @@ describe('formatWithContentModel', () => {
             getFocusedPosition,
             triggerContentChangedEvent,
             triggerPluginEvent,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -49,6 +50,7 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback);
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
@@ -64,6 +66,7 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback);
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
@@ -75,7 +78,7 @@ describe('formatWithContentModel', () => {
             formatApiName: apiName,
         });
         expect(setContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated: undefined });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(focus).toHaveBeenCalledTimes(1);
     });
 
@@ -91,6 +94,7 @@ describe('formatWithContentModel', () => {
         });
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
@@ -122,6 +126,7 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback);
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
@@ -136,6 +141,7 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback, { changeSource: 'TEST' });
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
@@ -155,6 +161,7 @@ describe('formatWithContentModel', () => {
         });
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
@@ -171,12 +178,13 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback, { onNodeCreated: onNodeCreated });
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, onNodeCreated);
     });
 
     it('Has getChangeData', () => {
@@ -187,11 +195,12 @@ describe('formatWithContentModel', () => {
         formatWithContentModel(editor, apiName, callback, { getChangeData });
 
         expect(callback).toHaveBeenCalledWith(mockedModel, {
+            newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
-        expect(setContentModel).toHaveBeenCalledWith(mockedModel, { onNodeCreated: undefined });
+        expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(addUndoSnapshot).toHaveBeenCalled();
 
         const wrappedCallback = addUndoSnapshot.calls.argsFor(0)[0] as any;
@@ -238,6 +247,35 @@ describe('formatWithContentModel', () => {
             operation: EntityOperation.RemoveFromEnd,
             rawEvent: rawEvent,
         });
+    });
+
+    it('Has new entity in dark mode', () => {
+        const wrapper1 = 'W1' as any;
+        const wrapper2 = 'W2' as any;
+        const entity1 = { id: 'E1', type: 'E', wrapper: wrapper1, isReadonly: true } as any;
+        const entity2 = { id: 'E2', type: 'E', wrapper: wrapper2, isReadonly: true } as any;
+        const rawEvent = 'RawEvent' as any;
+        const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+
+        editor.isDarkMode = () => true;
+        editor.transformToDarkColor = transformToDarkColorSpy;
+
+        formatWithContentModel(
+            editor,
+            apiName,
+            (model, context) => {
+                context.newEntities.push(entity1, entity2);
+                return true;
+            },
+            {
+                rawEvent: rawEvent,
+            }
+        );
+
+        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(transformToDarkColorSpy).toHaveBeenCalledTimes(2);
+        expect(transformToDarkColorSpy).toHaveBeenCalledWith(wrapper1);
+        expect(transformToDarkColorSpy).toHaveBeenCalledWith(wrapper2);
     });
 
     it('With selectionOverride', () => {

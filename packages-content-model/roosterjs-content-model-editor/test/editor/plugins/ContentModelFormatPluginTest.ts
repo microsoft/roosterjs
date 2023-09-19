@@ -16,6 +16,7 @@ describe('ContentModelFormatPlugin', () => {
 
         const editor = ({
             cacheContentModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -149,6 +150,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -183,7 +185,8 @@ describe('ContentModelFormatPlugin', () => {
                     },
                 ],
             },
-            { onNodeCreated: undefined }
+            undefined,
+            undefined
         );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);
@@ -211,6 +214,7 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
@@ -250,7 +254,8 @@ describe('ContentModelFormatPlugin', () => {
                     },
                 ],
             },
-            { onNodeCreated: undefined }
+            undefined,
+            undefined
         );
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledTimes(1);
         expect(pendingFormat.clearPendingFormat).toHaveBeenCalledWith(editor);

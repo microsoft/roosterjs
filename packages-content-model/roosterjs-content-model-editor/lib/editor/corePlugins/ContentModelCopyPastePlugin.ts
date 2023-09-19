@@ -1,11 +1,15 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import {
+    contentModelToDom,
+    createModelToDomContext,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -33,6 +37,7 @@ import {
     ClipboardData,
     SelectionRangeTypes,
     SelectionRangeEx,
+    ColorTransformDirection,
 } from 'roosterjs-editor-types';
 
 /**
@@ -94,7 +99,24 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (selection && !selection.areAllCollapsed) {
             const model = this.editor.createContentModel();
 
-            const pasteModel = cloneModel(model);
+            const pasteModel = cloneModel(model, {
+                includeCachedElement: this.editor.isDarkMode()
+                    ? (node, type) => {
+                          if (type == 'cache') {
+                              return undefined;
+                          } else {
+                              const result = node.cloneNode(true /*deep*/) as HTMLElement;
+
+                              this.editor?.transformToDarkColor(
+                                  result,
+                                  ColorTransformDirection.DarkToLight
+                              );
+
+                              return result;
+                          }
+                      }
+                    : false,
+            });
             if (selection.type === SelectionRangeTypes.TableSelection) {
                 iterateSelections([pasteModel], (path, tableContext) => {
                     if (tableContext?.table) {
@@ -117,10 +139,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                undefined /*editorContext, leave it undefined to use default context since we don't need editor-related dark mode info for pasted content*/,
-                {
-                    onNodeCreated,
-                }
+                createModelToDomContext(),
+                onNodeCreated
             );
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);

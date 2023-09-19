@@ -35,7 +35,7 @@ describe('retrieveModelFormatState', () => {
     const baseFormatResult: ContentModelFormatState = {
         backgroundColor: 'red',
         fontName: 'Arial',
-        fontSize: '10px',
+        fontSize: '7.5pt',
         isBold: true,
         isItalic: true,
         isStrikeThrough: true,
@@ -329,7 +329,7 @@ describe('retrieveModelFormatState', () => {
             isStrikeThrough: true,
             fontName: 'Arial',
             isSuperscript: true,
-            fontSize: '10px',
+            fontSize: '7.5pt',
             backgroundColor: 'red',
             textColor: 'green',
         });
@@ -490,7 +490,7 @@ describe('retrieveModelFormatState', () => {
             isItalic: true,
             isUnderline: true,
             isStrikeThrough: true,
-            fontSize: '10px',
+            fontSize: '7.5pt',
         });
     });
 
@@ -701,7 +701,7 @@ describe('retrieveModelFormatState', () => {
             isSuperscript: false,
             isSubscript: false,
             fontName: 'Arial',
-            fontSize: '12px',
+            fontSize: '9pt',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,
@@ -769,7 +769,7 @@ describe('retrieveModelFormatState', () => {
             isBold: false,
             isSuperscript: false,
             isSubscript: false,
-            fontSize: '12px',
+            fontSize: '9pt',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,

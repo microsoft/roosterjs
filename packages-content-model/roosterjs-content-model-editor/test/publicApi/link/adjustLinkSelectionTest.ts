@@ -25,6 +25,7 @@ describe('adjustLinkSelection', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
 
@@ -40,9 +41,7 @@ describe('adjustLinkSelection', () => {
 
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel, {
-                onNodeCreated: undefined,
-            });
+            expect(setContentModel).toHaveBeenCalledWith(expectedModel, undefined, undefined);
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }
