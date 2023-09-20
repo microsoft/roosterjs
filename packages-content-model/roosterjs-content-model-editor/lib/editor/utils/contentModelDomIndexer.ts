@@ -1,46 +1,96 @@
 import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
-import { NodeType, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { setSelection } from '../../modelApi/selection/setSelection';
+import {
+    NodeType,
+    SelectionRangeEx,
+    SelectionRangeTypes,
+    TableSelection,
+} from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelDomIndexer,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSelectionMarker,
+    ContentModelTable,
+    ContentModelTableRow,
     ContentModelText,
     Selectable,
 } from 'roosterjs-content-model-types';
 
-interface SegmentIndexItem {
+interface SegmentItem {
     paragraph: ContentModelParagraph;
     segments: ContentModelSegment[];
 }
 
-interface IndexedNode extends Node {
-    segmentIndex: SegmentIndexItem;
+interface TableItem {
+    tableRows: ContentModelTableRow[];
 }
 
-function onSegment(node: Node, paragraph: ContentModelParagraph, segment: ContentModelSegment[]) {
-    const indexedText = node as IndexedNode;
-    indexedText.segmentIndex = {
+interface IndexedSegmentNode extends Node {
+    __roosterjsContentModel: SegmentItem;
+}
+
+interface IndexedTableElement extends HTMLTableElement {
+    __roosterjsContentModel: TableItem;
+}
+
+const UnSelectedCoordinates: TableSelection = {
+    firstCell: {
+        x: -1,
+        y: -1,
+    },
+    lastCell: {
+        x: -1,
+        y: -1,
+    },
+};
+
+function isIndexedSegment(node: Node): node is IndexedSegmentNode {
+    const { paragraph, segments } = (node as IndexedSegmentNode).__roosterjsContentModel ?? {};
+
+    return (
+        paragraph &&
+        paragraph.blockType == 'Paragraph' &&
+        Array.isArray(paragraph.segments) &&
+        Array.isArray(segments) &&
+        segments.length > 0
+    );
+}
+
+function isIndexedTable(element: HTMLTableElement): element is IndexedTableElement {
+    const { tableRows } = (element as IndexedTableElement).__roosterjsContentModel ?? {};
+
+    return Array.isArray(tableRows) && tableRows.every(row => Array.isArray(row.cells));
+}
+
+function onSegment(
+    segmentNode: Node,
+    paragraph: ContentModelParagraph,
+    segment: ContentModelSegment[]
+) {
+    const indexedText = segmentNode as IndexedSegmentNode;
+    indexedText.__roosterjsContentModel = {
         paragraph,
         segments: segment,
     };
 }
 
-function onParagraph(node: Node) {
+function onParagraph(paragraphElement: HTMLElement) {
     let previousText: Text | null = null;
 
-    for (let child = node.firstChild; child; child = child.nextSibling) {
+    for (let child = paragraphElement.firstChild; child; child = child.nextSibling) {
         if (isNodeOfType(child, NodeType.Text)) {
             if (!previousText) {
                 previousText = child;
             } else {
-                const item = isIndexedNode(previousText) ? previousText.segmentIndex : undefined;
+                const item = isIndexedSegment(previousText)
+                    ? previousText.__roosterjsContentModel
+                    : undefined;
 
-                if (item && isIndexedNode(child)) {
-                    item.segments = item.segments.concat(child.segmentIndex.segments);
-                    child.segmentIndex.segments = [];
+                if (item && isIndexedSegment(child)) {
+                    item.segments = item.segments.concat(child.__roosterjsContentModel.segments);
+                    child.__roosterjsContentModel.segments = [];
                 }
             }
         } else if (isNodeOfType(child, NodeType.Element)) {
@@ -51,6 +101,11 @@ function onParagraph(node: Node) {
             previousText = null;
         }
     }
+}
+
+function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
+    const indexedTable = tableElement as IndexedTableElement;
+    indexedTable.__roosterjsContentModel = { tableRows: table.rows };
 }
 
 function reconcileSelection(
@@ -66,7 +121,7 @@ function reconcileSelection(
             range?.collapsed &&
             isNodeOfType(range.startContainer, NodeType.Text)
         ) {
-            if (isIndexedNode(range.startContainer)) {
+            if (isIndexedSegment(range.startContainer)) {
                 reconcileTextSelection(range.startContainer);
             }
         } else {
@@ -76,8 +131,8 @@ function reconcileSelection(
 
     switch (newRangeEx.type) {
         case SelectionRangeTypes.ImageSelection:
-            const imageModel = isIndexedNode(newRangeEx.image)
-                ? newRangeEx.image.segmentIndex.segments[0]
+            const imageModel = isIndexedSegment(newRangeEx.image)
+                ? newRangeEx.image.__roosterjsContentModel.segments[0]
                 : null;
 
             if (imageModel?.segmentType == 'Image') {
@@ -90,6 +145,20 @@ function reconcileSelection(
             break;
 
         case SelectionRangeTypes.TableSelection:
+            const rows = isIndexedTable(newRangeEx.table)
+                ? newRangeEx.table.__roosterjsContentModel.tableRows
+                : null;
+            const { firstCell, lastCell } = newRangeEx.coordinates ?? UnSelectedCoordinates;
+
+            rows?.forEach((row, rowIndex) => {
+                row.cells.forEach((cell, colIndex) => {
+                    cell.isSelected =
+                        rowIndex >= firstCell.y &&
+                        rowIndex <= lastCell.y &&
+                        colIndex >= firstCell.x &&
+                        colIndex <= lastCell.x;
+                });
+            });
             // Cannot handle table selection for now, so just return false and create a new model
             return false;
 
@@ -111,7 +180,7 @@ function reconcileSelection(
                     isNodeOfType(startContainer, NodeType.Text)
                 ) {
                     return (
-                        isIndexedNode(startContainer) &&
+                        isIndexedSegment(startContainer) &&
                         !!reconcileTextSelection(startContainer, startOffset, endOffset)
                     );
                 } else {
@@ -135,7 +204,7 @@ function reconcileSelection(
 
 function reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
     if (isNodeOfType(node, NodeType.Text)) {
-        return isIndexedNode(node) ? reconcileTextSelection(node, offset) : undefined;
+        return isIndexedSegment(node) ? reconcileTextSelection(node, offset) : undefined;
     } else if (offset >= node.childNodes.length) {
         return insertMarker(node.lastChild, true /*isAfter*/);
     } else {
@@ -146,8 +215,8 @@ function reconcileNodeSelection(node: Node, offset: number): Selectable | undefi
 function insertMarker(node: Node | null, isAfter: boolean): Selectable | undefined {
     let marker: ContentModelSelectionMarker | undefined;
 
-    if (node && isIndexedNode(node)) {
-        const { paragraph, segments } = node.segmentIndex;
+    if (node && isIndexedSegment(node)) {
+        const { paragraph, segments } = node.__roosterjsContentModel;
         const index = paragraph.segments.indexOf(segments[0]);
 
         if (index >= 0) {
@@ -164,8 +233,12 @@ function insertMarker(node: Node | null, isAfter: boolean): Selectable | undefin
     return marker;
 }
 
-function reconcileTextSelection(textNode: IndexedNode, startOffset?: number, endOffset?: number) {
-    const { paragraph, segments } = textNode.segmentIndex;
+function reconcileTextSelection(
+    textNode: IndexedSegmentNode,
+    startOffset?: number,
+    endOffset?: number
+) {
+    const { paragraph, segments } = textNode.__roosterjsContentModel;
     const first = segments[0];
     const last = segments[segments.length - 1];
     let selectable: Selectable | undefined;
@@ -239,7 +312,7 @@ function reconcileTextSelection(textNode: IndexedNode, startOffset?: number, end
             paragraph.segments.splice(firstIndex, lastIndex - firstIndex + 1, ...newSegments);
         }
 
-        textNode.segmentIndex = {
+        textNode.__roosterjsContentModel = {
             paragraph,
             segments: textSegments,
         };
@@ -250,18 +323,6 @@ function reconcileTextSelection(textNode: IndexedNode, startOffset?: number, end
     return selectable;
 }
 
-function isIndexedNode(node: Node): node is IndexedNode {
-    const { paragraph, segments } = (node as IndexedNode).segmentIndex ?? {};
-
-    return (
-        paragraph &&
-        paragraph.blockType == 'Paragraph' &&
-        Array.isArray(paragraph.segments) &&
-        Array.isArray(segments) &&
-        segments.length > 0
-    );
-}
-
 /**
  * @internal
  * Implementation of ContentModelDomIndexer
@@ -269,5 +330,6 @@ function isIndexedNode(node: Node): node is IndexedNode {
 export const contentModelDomIndexer: ContentModelDomIndexer = {
     onSegment,
     onParagraph,
+    onTable,
     reconcileSelection,
 };

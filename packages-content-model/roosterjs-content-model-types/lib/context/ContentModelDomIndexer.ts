@@ -1,6 +1,7 @@
 import { ContentModelDocument } from '../group/ContentModelDocument';
 import { ContentModelParagraph } from '../block/ContentModelParagraph';
 import { ContentModelSegment } from '../segment/ContentModelSegment';
+import { ContentModelTable } from '../block/ContentModelTable';
 import { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
@@ -10,21 +11,27 @@ import { SelectionRangeEx } from 'roosterjs-editor-types';
 export interface ContentModelDomIndexer {
     /**
      * Invoked when processing a segment
-     * @param node The new DOM node for this segment
+     * @param segmentNode The new DOM node for this segment
      * @param paragraph Parent paragraph of this segment
      * @param segments The source segments
      */
     onSegment: (
-        node: Node,
+        segmentNode: Node,
         paragraph: ContentModelParagraph,
         segments: ContentModelSegment[]
     ) => void;
 
     /**
      * Invoked when new paragraph node is created in DOM tree
-     * @param node The new DOM node for this paragraph
+     * @param paragraphElement The new DOM node for this paragraph
      */
-    onParagraph: (node: Node) => void;
+    onParagraph: (paragraphElement: HTMLElement) => void;
+
+    /**
+     * Invoked when new table node is created in DOM tree
+     * @param tableElement The new DOM node for this table
+     */
+    onTable: (tableElement: HTMLTableElement, tableModel: ContentModelTable) => void;
 
     /**
      * When document content or selection is changed by user, we need to use this function to update the content model
