@@ -157,8 +157,8 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
-            getContentModelDefaultFormat: () => ({}),
             triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
+            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const plugin = new ContentModelFormatPlugin();
 
