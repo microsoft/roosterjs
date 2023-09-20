@@ -102,14 +102,15 @@ function setSelectionToTable(
     start: Selectable | null,
     end: Selectable | null
 ): boolean {
+    const notFoundCo: Coordinates = { x: -1, y: -1 };
     const startCo = findCell(table, start);
-    const endCo = end ? findCell(table, end) : startCo;
+    const { x: firstX, y: firstY } = startCo ?? notFoundCo;
+    const { x: lastX, y: lastY } = (end ? findCell(table, end) : startCo) ?? notFoundCo;
 
-    if (!isInSelection && startCo && endCo) {
+    if (!isInSelection) {
         for (let row = 0; row < table.rows.length; row++) {
             for (let col = 0; col < table.rows[row].cells.length; col++) {
-                const isSelected =
-                    row >= startCo.y && row <= endCo.y && col >= startCo.x && col <= endCo.x;
+                const isSelected = row >= firstY && row <= lastY && col >= firstX && col <= lastX;
 
                 setIsSelected(table.rows[row].cells[col], isSelected);
             }
