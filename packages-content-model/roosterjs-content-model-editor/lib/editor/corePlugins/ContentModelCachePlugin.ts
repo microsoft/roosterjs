@@ -138,7 +138,7 @@ export default class ContentModelCachePlugin
         if (
             isSelectionChanged &&
             model &&
-            !this.state.domIndexer?.reconcileSelection(model, cachedRangeEx, newRangeEx)
+            !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
         ) {
             editor.invalidateCache();
         }

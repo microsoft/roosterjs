@@ -6,6 +6,7 @@ import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditor
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
 import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
+import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
@@ -398,6 +399,71 @@ describe('createContentModelEditorCore', () => {
                 style: {},
             },
             cache: { domIndexer: undefined },
+            copyPaste: { allowedCustomPasteType: [] },
+        } as any);
+    });
+
+    it('Allow dom indexer', () => {
+        mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModelV2);
+
+        const options = {
+            corePluginOverride: {
+                copyPaste: copyPastePlugin,
+            },
+        };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) => feature == ExperimentalFeatures.ReusableContentModelV2
+        );
+
+        const core = createContentModelEditorCore(contentDiv, options);
+
+        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
+            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
+            corePluginOverride: {
+                typeInContainer: new ContentModelTypeInContainerPlugin(),
+                copyPaste: copyPastePlugin,
+            },
+        });
+        expect(core).toEqual({
+            lifecycle: {
+                experimentalFeatures: [ExperimentalFeatures.ReusableContentModelV2],
+                defaultFormat: {},
+            },
+            api: {
+                switchShadowEdit,
+                createEditorContext,
+                createContentModel,
+                setContentModel,
+                getSelectionRangeEx,
+            },
+            originalApi: {
+                a: 'b',
+                createEditorContext,
+                createContentModel,
+                setContentModel,
+            },
+            defaultDomToModelOptions: [
+                { processorOverride: { table: tablePreProcessor } },
+                undefined,
+            ],
+            defaultModelToDomOptions: [undefined],
+            defaultDomToModelConfig: mockedDomToModelConfig,
+            defaultModelToDomConfig: mockedModelToDomConfig,
+            defaultFormat: {
+                fontWeight: undefined,
+                italic: undefined,
+                underline: undefined,
+                fontFamily: undefined,
+                fontSize: undefined,
+                textColor: undefined,
+                backgroundColor: undefined,
+            },
+            addDelimiterForEntity: false,
+            contentDiv: {
+                style: {},
+            },
+            cache: { domIndexer: contentModelDomIndexer },
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });

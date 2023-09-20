@@ -6,8 +6,10 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
+    ContentModelDomIndexer,
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,
+    ContentModelParagraph,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
@@ -315,5 +317,50 @@ describe('generalProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Process a SPAN element with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const span = document.createElement('span');
+        const segment: ContentModelGeneralSegment = {
+            segmentType: 'General',
+            blockType: 'BlockGroup',
+            blockGroupType: 'General',
+            element: span,
+            blocks: [],
+            format: {},
+        };
+
+        spyOn(createGeneralSegment, 'createGeneralSegment').and.returnValue(segment);
+
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [segment],
+            format: {},
+        };
+
+        generalProcessor(doc, span, context);
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledTimes(1);
+        expect(createGeneralSegment.createGeneralSegment).toHaveBeenCalledWith(span, {});
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(childProcessor).toHaveBeenCalledWith(segment, span, context);
+        expect(onSegmentSpy).toHaveBeenCalledWith(span, paragraph, [segment]);
     });
 });

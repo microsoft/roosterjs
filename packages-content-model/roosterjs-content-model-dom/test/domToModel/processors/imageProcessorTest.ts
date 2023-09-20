@@ -1,8 +1,13 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { imageProcessor } from '../../../lib/domToModel/processors/imageProcessor';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    ContentModelDomIndexer,
+    ContentModelImage,
+    ContentModelParagraph,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('imageProcessor', () => {
     let context: DomToModelContext;
@@ -280,5 +285,40 @@ describe('imageProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Image with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const img = document.createElement('img');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        imageProcessor(doc, img, context);
+
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            format: {},
+            src: '',
+            dataset: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            format: {},
+            isImplicit: true,
+            segments: [segment],
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(img, paragraph, [segment]);
     });
 });

@@ -1,10 +1,15 @@
 import * as handleBlock from '../../../lib/modelToDom/handlers/handleBlock';
 import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
-import { ContentModelTable, ModelToDomContext } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { handleTable } from '../../../lib/modelToDom/handlers/handleTable';
+import {
+    ContentModelDomIndexer,
+    ContentModelTable,
+    ContentModelTableRow,
+    ModelToDomContext,
+} from 'roosterjs-content-model-types';
 
 describe('handleTable', () => {
     let context: ModelToDomContext;
@@ -577,5 +582,36 @@ describe('handleTable', () => {
         expect(parent.innerHTML).toBe(
             '<table><tbody><tr><td style="width: 20px; height: 40px;"></td></tr></tbody></table>'
         );
+    });
+
+    it('Regular 1 * 1 table with domIndexer', () => {
+        const tableRow: ContentModelTableRow = {
+            format: {},
+            height: 0,
+            cells: [createTableCell(1, 1, false)],
+        };
+        const tableModel: ContentModelTable = {
+            blockType: 'Table',
+            rows: [tableRow],
+            format: {},
+            widths: [],
+            dataset: {},
+        };
+        const onTableSpy = jasmine.createSpy('onTable');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: null!,
+            onTable: onTableSpy,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        const div = document.createElement('div');
+
+        handleTable(document, div, tableModel, context, null);
+
+        expect(div.innerHTML).toBe('<table><tbody><tr><td></td></tr></tbody></table>');
+        expect(onTableSpy).toHaveBeenCalledWith(div.firstChild, tableModel);
     });
 });

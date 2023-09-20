@@ -1,7 +1,12 @@
 import { brProcessor } from '../../../lib/domToModel/processors/brProcessor';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
+import {
+    ContentModelBr,
+    ContentModelDomIndexer,
+    ContentModelParagraph,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('brProcessor', () => {
     let context: DomToModelContext;
@@ -58,5 +63,38 @@ describe('brProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Br with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const br = document.createElement('br');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        brProcessor(doc, br, context);
+
+        const brModel: ContentModelBr = {
+            segmentType: 'Br',
+            format: {},
+        };
+        const paragraphModel: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [brModel],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraphModel],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(br, paragraphModel, [brModel]);
     });
 });

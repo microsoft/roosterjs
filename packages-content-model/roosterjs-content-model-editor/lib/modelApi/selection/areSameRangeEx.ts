@@ -5,6 +5,10 @@ import { Coordinates, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-ed
  * Check if the given selection ranges are the same
  */
 export function areSameRangeEx(range1: SelectionRangeEx, range2: SelectionRangeEx): boolean {
+    if (range1 == range2) {
+        return true;
+    }
+
     switch (range1.type) {
         case SelectionRangeTypes.ImageSelection:
             return (

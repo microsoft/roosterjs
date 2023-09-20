@@ -53,8 +53,7 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
         paragraph &&
         paragraph.blockType == 'Paragraph' &&
         Array.isArray(paragraph.segments) &&
-        Array.isArray(segments) &&
-        segments.length > 0
+        Array.isArray(segments)
     );
 }
 
@@ -110,8 +109,8 @@ function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
 
 function reconcileSelection(
     model: ContentModelDocument,
-    oldRangeEx: SelectionRangeEx | undefined,
-    newRangeEx: SelectionRangeEx
+    newRangeEx: SelectionRangeEx,
+    oldRangeEx?: SelectionRangeEx
 ): boolean {
     if (oldRangeEx) {
         const range: Range | undefined = oldRangeEx.ranges[0];
@@ -159,8 +158,8 @@ function reconcileSelection(
                         colIndex <= lastCell.x;
                 });
             });
-            // Cannot handle table selection for now, so just return false and create a new model
-            return false;
+
+            return true;
 
         case SelectionRangeTypes.Normal:
             const newRange = newRangeEx.ranges[0];
@@ -312,10 +311,7 @@ function reconcileTextSelection(
             paragraph.segments.splice(firstIndex, lastIndex - firstIndex + 1, ...newSegments);
         }
 
-        textNode.__roosterjsContentModel = {
-            paragraph,
-            segments: textSegments,
-        };
+        onSegment(textNode, paragraph, textSegments);
 
         delete paragraph.cachedElement;
     }
