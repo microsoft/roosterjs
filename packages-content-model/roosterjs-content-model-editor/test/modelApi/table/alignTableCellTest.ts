@@ -51,6 +51,9 @@ describe('alignTableCell', () => {
         expect(table.rows[1].cells[0].cachedElement).toEqual({} as any);
         expect(table.rows[1].cells[1].cachedElement).toBeUndefined();
         expect(table.rows[1].cells[2].cachedElement).toBeUndefined();
+        table.rows[0].cells[1].blocks.forEach(block => {
+            expect(block.format.textAlign).toEqual(undefined);
+        });
     }
 
     it('empty table', () => {
