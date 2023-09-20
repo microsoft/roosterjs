@@ -66,7 +66,9 @@ function reconcileSelection(
             range?.collapsed &&
             isNodeOfType(range.startContainer, NodeType.Text)
         ) {
-            isIndexedNode(range.startContainer) && reconcileTextSelection(range.startContainer);
+            if (isIndexedNode(range.startContainer)) {
+                reconcileTextSelection(range.startContainer);
+            }
         } else {
             setSelection(model);
         }
@@ -74,12 +76,22 @@ function reconcileSelection(
 
     switch (newRangeEx.type) {
         case SelectionRangeTypes.ImageSelection:
-            console.log('Reconcile -- Image selection');
+            const imageModel = isIndexedNode(newRangeEx.image)
+                ? newRangeEx.image.segmentIndex.segments[0]
+                : null;
+
+            if (imageModel?.segmentType == 'Image') {
+                imageModel.isSelected = true;
+                imageModel.isSelectedAsImageSelection = true;
+
+                return true;
+            }
+
             break;
 
         case SelectionRangeTypes.TableSelection:
-            console.log('Reconcile -- Table selection');
-            break;
+            // Cannot handle table selection for now, so just return false and create a new model
+            return false;
 
         case SelectionRangeTypes.Normal:
             const newRange = newRangeEx.ranges[0];
@@ -106,7 +118,12 @@ function reconcileSelection(
                     const marker1 = reconcileNodeSelection(startContainer, startOffset);
                     const marker2 = reconcileNodeSelection(endContainer, endOffset);
 
-                    return !!marker1 && !!marker2;
+                    if (marker1 && marker2) {
+                        setSelection(model, marker1, marker2);
+                        return true;
+                    } else {
+                        return false;
+                    }
                 }
             }
 
@@ -119,24 +136,32 @@ function reconcileSelection(
 function reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
     if (isNodeOfType(node, NodeType.Text)) {
         return isIndexedNode(node) ? reconcileTextSelection(node, offset) : undefined;
+    } else if (offset >= node.childNodes.length) {
+        return insertMarker(node.lastChild, true /*isAfter*/);
     } else {
-        const child = node.childNodes[offset];
-        let selectable: ContentModelSelectionMarker | undefined;
-
-        if (child && isIndexedNode(child)) {
-            const { paragraph, segments } = child.segmentIndex;
-            const index = paragraph.segments.indexOf(segments[0]);
-
-            if (index >= 0) {
-                const format =
-                    paragraph.segments[index - 1]?.format ?? paragraph.segments[index].format;
-                selectable = createSelectionMarker(format);
-                paragraph.segments.splice(index, 0, selectable);
-            }
-        }
-
-        return selectable;
+        return insertMarker(node.childNodes[offset], false /*isAfter*/);
     }
+}
+
+function insertMarker(node: Node | null, isAfter: boolean): Selectable | undefined {
+    let marker: ContentModelSelectionMarker | undefined;
+
+    if (node && isIndexedNode(node)) {
+        const { paragraph, segments } = node.segmentIndex;
+        const index = paragraph.segments.indexOf(segments[0]);
+
+        if (index >= 0) {
+            const formatSegment =
+                (!isAfter && paragraph.segments[index - 1]) || paragraph.segments[index];
+            marker = createSelectionMarker(
+                formatSegment?.segmentType == 'Text' ? formatSegment.format : undefined
+            );
+
+            paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
+        }
+    }
+
+    return marker;
 }
 
 function reconcileTextSelection(textNode: IndexedNode, startOffset?: number, endOffset?: number) {

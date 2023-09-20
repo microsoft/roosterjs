@@ -1,6 +1,6 @@
+import ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
-import { ContentModelContentChangedEvent } from 'roosterjs-content-model';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     IEditor,
@@ -92,7 +92,7 @@ export default class ContentModelCachePlugin
             case PluginEventType.Input:
                 {
                     const rangeEx = this.forceGetSelectionRangeEx(this.editor);
-                    this.updateCachedModel(this.editor, rangeEx);
+                    this.updateCachedModel(this.editor, rangeEx, true /*forceUpdate*/);
                 }
                 break;
 
@@ -126,10 +126,15 @@ export default class ContentModelCachePlugin
         }
     };
 
-    private updateCachedModel(editor: IContentModelEditor, newRangeEx: SelectionRangeEx) {
+    private updateCachedModel(
+        editor: IContentModelEditor,
+        newRangeEx: SelectionRangeEx,
+        forceUpdate?: boolean
+    ) {
         const cachedRangeEx = this.state.cachedRangeEx;
         const model = this.state.cachedModel;
-        const isSelectionChanged = !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
+        const isSelectionChanged =
+            forceUpdate || !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
 
         if (
             isSelectionChanged &&
