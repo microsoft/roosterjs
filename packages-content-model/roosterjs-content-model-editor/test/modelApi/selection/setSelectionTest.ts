@@ -725,4 +725,80 @@ describe('setSelection', () => {
             ],
         });
     });
+
+    it('Update table selection', () => {
+        const model = createContentModelDocument();
+        const table = createTable(3);
+
+        const cell_0_0 = createTableCell();
+        const cell_0_1 = createTableCell();
+        const cell_0_2 = createTableCell();
+        const cell_1_0 = createTableCell();
+        const cell_1_1 = createTableCell();
+        const cell_1_2 = createTableCell();
+        const cell_2_0 = createTableCell();
+        const cell_2_1 = createTableCell();
+        const cell_2_2 = createTableCell();
+
+        table.rows[0].cells.push(cell_0_0, cell_0_1, cell_0_2);
+        table.rows[1].cells.push(cell_1_0, cell_1_1, cell_1_2);
+        table.rows[2].cells.push(cell_2_0, cell_2_1, cell_2_2);
+
+        cell_0_0.isSelected = true;
+        cell_0_1.isSelected = true;
+        cell_1_0.isSelected = true;
+        cell_1_1.isSelected = true;
+
+        model.blocks.push(table);
+
+        setSelection(model, cell_1_1, cell_2_2);
+
+        expect(cell_0_0.isSelected).toBeFalsy();
+        expect(cell_0_1.isSelected).toBeFalsy();
+        expect(cell_0_2.isSelected).toBeFalsy();
+        expect(cell_1_0.isSelected).toBeFalsy();
+        expect(cell_1_1.isSelected).toBeTrue();
+        expect(cell_1_2.isSelected).toBeTrue();
+        expect(cell_2_0.isSelected).toBeFalsy();
+        expect(cell_2_1.isSelected).toBeTrue();
+        expect(cell_2_2.isSelected).toBeTrue();
+    });
+
+    it('Clear table selection', () => {
+        const model = createContentModelDocument();
+        const table = createTable(3);
+
+        const cell_0_0 = createTableCell();
+        const cell_0_1 = createTableCell();
+        const cell_0_2 = createTableCell();
+        const cell_1_0 = createTableCell();
+        const cell_1_1 = createTableCell();
+        const cell_1_2 = createTableCell();
+        const cell_2_0 = createTableCell();
+        const cell_2_1 = createTableCell();
+        const cell_2_2 = createTableCell();
+
+        table.rows[0].cells.push(cell_0_0, cell_0_1, cell_0_2);
+        table.rows[1].cells.push(cell_1_0, cell_1_1, cell_1_2);
+        table.rows[2].cells.push(cell_2_0, cell_2_1, cell_2_2);
+
+        cell_0_0.isSelected = true;
+        cell_0_1.isSelected = true;
+        cell_1_0.isSelected = true;
+        cell_1_1.isSelected = true;
+
+        model.blocks.push(table);
+
+        setSelection(model);
+
+        expect(cell_0_0.isSelected).toBeFalsy();
+        expect(cell_0_1.isSelected).toBeFalsy();
+        expect(cell_0_2.isSelected).toBeFalsy();
+        expect(cell_1_0.isSelected).toBeFalsy();
+        expect(cell_1_1.isSelected).toBeFalsy();
+        expect(cell_1_2.isSelected).toBeFalsy();
+        expect(cell_2_0.isSelected).toBeFalsy();
+        expect(cell_2_1.isSelected).toBeFalsy();
+        expect(cell_2_2.isSelected).toBeFalsy();
+    });
 });
