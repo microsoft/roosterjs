@@ -1,5 +1,6 @@
 import { contains, createRange, safeInstanceOf } from 'roosterjs-editor-dom';
 import {
+    EditorCore,
     NodePosition,
     PluginEventType,
     PositionType,
@@ -21,6 +22,35 @@ import {
  * @param arg4 (optional) An offset number, or a PositionType
  */
 export const select: Select = (core, arg1, arg2, arg3, arg4) => {
+    let rangeEx = buildRangeEx(core, arg1, arg2, arg3, arg4);
+
+    if (rangeEx) {
+        const skipReselectOnFocus = core.domEvent.skipReselectOnFocus;
+
+        // We are applying a new selection, so we don't need to apply cached selection in DOMEventPlugin.
+        // Set skipReselectOnFocus to skip this behavior
+        core.domEvent.skipReselectOnFocus = true;
+
+        try {
+            applyRangeEx(core, rangeEx);
+        } finally {
+            core.domEvent.skipReselectOnFocus = skipReselectOnFocus;
+        }
+    } else {
+        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+    }
+
+    return !!rangeEx;
+};
+
+function buildRangeEx(
+    core: EditorCore,
+    arg1: Range | SelectionRangeEx | NodePosition | Node | SelectionPath | null,
+    arg2?: NodePosition | number | PositionType | TableSelection | null,
+    arg3?: Node,
+    arg4?: number | PositionType
+) {
     let rangeEx: SelectionRangeEx | null = null;
 
     if (isSelectionRangeEx(arg1)) {
@@ -65,53 +95,50 @@ export const select: Select = (core, arg1, arg2, arg3, arg4) => {
             : null;
     }
 
-    if (rangeEx) {
-        switch (rangeEx.type) {
-            case SelectionRangeTypes.TableSelection:
-                if (contains(core.contentDiv, rangeEx.table)) {
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
-                    core.domEvent.tableSelectionRange = core.api.selectTable(
-                        core,
-                        rangeEx.table,
-                        rangeEx.coordinates
-                    );
-                    rangeEx = core.domEvent.tableSelectionRange;
-                }
-                break;
-            case SelectionRangeTypes.ImageSelection:
-                if (contains(core.contentDiv, rangeEx.image)) {
-                    core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-                    core.domEvent.imageSelectionRange = core.api.selectImage(core, rangeEx.image);
-                    rangeEx = core.domEvent.imageSelectionRange;
-                }
-                break;
-            case SelectionRangeTypes.Normal:
-                core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+    return rangeEx;
+}
+
+function applyRangeEx(core: EditorCore, rangeEx: SelectionRangeEx | null) {
+    switch (rangeEx?.type) {
+        case SelectionRangeTypes.TableSelection:
+            if (contains(core.contentDiv, rangeEx.table)) {
                 core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+                core.domEvent.tableSelectionRange = core.api.selectTable(
+                    core,
+                    rangeEx.table,
+                    rangeEx.coordinates
+                );
+                rangeEx = core.domEvent.tableSelectionRange;
+            }
+            break;
+        case SelectionRangeTypes.ImageSelection:
+            if (contains(core.contentDiv, rangeEx.image)) {
+                core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+                core.domEvent.imageSelectionRange = core.api.selectImage(core, rangeEx.image);
+                rangeEx = core.domEvent.imageSelectionRange;
+            }
+            break;
+        case SelectionRangeTypes.Normal:
+            core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
+            core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
 
-                if (contains(core.contentDiv, rangeEx.ranges[0])) {
-                    core.api.selectRange(core, rangeEx.ranges[0]);
-                } else {
-                    rangeEx = null;
-                }
-                break;
-        }
-
-        core.api.triggerEvent(
-            core,
-            {
-                eventType: PluginEventType.SelectionChanged,
-                selectionRangeEx: rangeEx,
-            },
-            true /** broadcast **/
-        );
-    } else {
-        core.domEvent.tableSelectionRange = core.api.selectTable(core, null);
-        core.domEvent.imageSelectionRange = core.api.selectImage(core, null);
+            if (contains(core.contentDiv, rangeEx.ranges[0])) {
+                core.api.selectRange(core, rangeEx.ranges[0]);
+            } else {
+                rangeEx = null;
+            }
+            break;
     }
 
-    return !!rangeEx;
-};
+    core.api.triggerEvent(
+        core,
+        {
+            eventType: PluginEventType.SelectionChanged,
+            selectionRangeEx: rangeEx,
+        },
+        true /** broadcast **/
+    );
+}
 
 function isSelectionRangeEx(obj: any): obj is SelectionRangeEx {
     const rangeEx = obj as SelectionRangeEx;
