@@ -191,7 +191,9 @@ describe('createContentModelEditorCore', () => {
             contentDiv: {
                 style: {},
             },
-            cache: {},
+            cache: {
+                domIndexer: undefined,
+            },
             copyPaste: { allowedCustomPasteType: [] },
         } as any);
     });
