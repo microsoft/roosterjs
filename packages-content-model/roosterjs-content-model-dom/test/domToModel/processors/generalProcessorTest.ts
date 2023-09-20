@@ -257,7 +257,13 @@ describe('generalProcessor', () => {
                                     segments: [
                                         {
                                             segmentType: 'Text',
-                                            text: 'tes',
+                                            text: 't',
+                                            format: {},
+                                            isSelected: true,
+                                        },
+                                        {
+                                            segmentType: 'Text',
+                                            text: 'es',
                                             format: {},
                                             isSelected: true,
                                         },

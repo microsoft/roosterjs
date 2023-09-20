@@ -95,7 +95,12 @@ describe('textProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test0test1',
+                            text: 'test0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
                             format: {},
                         },
                     ],
@@ -255,7 +260,13 @@ describe('textProcessor', () => {
             segments: [
                 {
                     segmentType: 'Text',
-                    text: 'test1test2',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
                     isSelected: true,
                     format: {},
                 },
@@ -441,7 +452,14 @@ describe('textProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            blocks: [],
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
         });
     });
 
@@ -453,7 +471,14 @@ describe('textProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            blocks: [],
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
         });
     });
 
@@ -494,7 +519,12 @@ describe('textProcessor', () => {
                         {
                             segmentType: 'Text',
                             format: {},
-                            text: 'test ',
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: ' ',
                         },
                     ],
                 },

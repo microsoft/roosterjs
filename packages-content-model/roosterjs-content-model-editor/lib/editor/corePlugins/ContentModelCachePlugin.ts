@@ -107,12 +107,11 @@ export default class ContentModelCachePlugin
                 {
                     const { contentModel, rangeEx } = event as ContentModelContentChangedEvent;
 
-                    if (contentModel) {
+                    if (contentModel && this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
                         this.state.cachedRangeEx = rangeEx;
                     } else {
                         this.editor.invalidateCache();
-                        this.editor.createContentModel();
                     }
                 }
 

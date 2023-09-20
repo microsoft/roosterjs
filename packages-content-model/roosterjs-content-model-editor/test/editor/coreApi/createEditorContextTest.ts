@@ -27,6 +27,7 @@ describe('createEditorContext', () => {
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
+            cache: {},
         } as any) as ContentModelEditorCore;
 
         const context = createEditorContext(core);
@@ -37,6 +38,7 @@ describe('createEditorContext', () => {
             defaultFormat,
             addDelimiterForEntity,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 });
@@ -71,6 +73,7 @@ describe('createEditorContext - checkZoomScale', () => {
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 
@@ -89,6 +92,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity,
             zoomScale: 1,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -107,6 +111,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity,
             zoomScale: 2,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -125,6 +130,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity,
             zoomScale: 0.5,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 });
@@ -159,6 +165,7 @@ describe('createEditorContext - checkRootDir', () => {
             defaultFormat,
             darkColorHandler,
             addDelimiterForEntity,
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 
@@ -175,6 +182,7 @@ describe('createEditorContext - checkRootDir', () => {
             darkColorHandler,
             addDelimiterForEntity,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -192,6 +200,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity,
             isRootRtl: true,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 });

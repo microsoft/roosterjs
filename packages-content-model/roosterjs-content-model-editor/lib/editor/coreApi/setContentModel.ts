@@ -1,5 +1,3 @@
-import { contentModelDomIndexer } from '../utils/contentModelDomIndexer';
-import { ModelToDomContext } from 'roosterjs-content-model-types';
 import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
@@ -14,29 +12,17 @@ import {
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
  */
-export const setContentModel: SetContentModel = (core, model, option) => {
+export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core);
-    let modelToDomContext: ModelToDomContext;
-
-    if (option) {
-        modelToDomContext = createModelToDomContext(
-            editorContext,
-            ...(core.defaultModelToDomOptions || []),
-            option
-        );
-    } else {
-        editorContext.domIndexer = contentModelDomIndexer;
-        modelToDomContext = createModelToDomContextWithConfig(
-            core.defaultModelToDomConfig,
-            editorContext
-        );
-    }
-
+    const modelToDomContext = option
+        ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
+        : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
     const range = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
-        modelToDomContext
+        modelToDomContext,
+        onNodeCreated
     );
 
     core.contentDiv.normalize();
