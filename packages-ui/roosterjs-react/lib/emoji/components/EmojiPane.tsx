@@ -225,7 +225,10 @@ const EmojiPane = React.forwardRef(function EmojiPaneFunc(
         [mode, currentFamily, currentEmojiList]
     );
 
-    const getEmojiIconId = React.useCallback((emoji: Emoji) => `${listId}-${emoji.key}`, [listId]);
+    const getEmojiIconId = React.useCallback(
+        (emoji: Emoji) => (emoji ? `${listId}-${emoji.key}` : ''),
+        [listId]
+    );
 
     React.useImperativeHandle(
         ref,
