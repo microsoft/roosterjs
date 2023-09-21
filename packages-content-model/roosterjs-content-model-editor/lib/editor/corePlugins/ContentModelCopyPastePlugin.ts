@@ -11,13 +11,7 @@ import {
     isNodeOfType,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import type { OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -280,15 +274,7 @@ function selectionExToRange(
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
+export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (safeInstanceOf(node, 'HTMLTableElement')) {
         wrap(node, 'div');
     }
