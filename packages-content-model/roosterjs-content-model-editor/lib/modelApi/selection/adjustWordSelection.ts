@@ -25,28 +25,34 @@ export function adjustWordSelection(
         return true;
     });
 
-    if (markerBlock) {
+    const tempSegments = markerBlock ? [...markerBlock.segments] : undefined;
+
+    if (tempSegments && markerBlock) {
         const segments: ContentModelSegment[] = [];
-        let markerSelectionIndex = markerBlock.segments.indexOf(marker);
+        let markerSelectionIndex = tempSegments.indexOf(marker);
         for (let i = markerSelectionIndex - 1; i >= 0; i--) {
-            const currentSegment = markerBlock.segments[i];
+            const currentSegment = tempSegments[i];
             if (currentSegment.segmentType == 'Text') {
                 const found = findDelimiter(currentSegment, false /*moveRightward*/);
                 if (found > -1) {
                     if (found == currentSegment.text.length) {
                         break;
                     }
-                    splitTextSegment(markerBlock.segments, currentSegment, i, found);
-                    segments.push(markerBlock.segments[i + 1]);
+
+                    splitTextSegment(tempSegments, currentSegment, i, found);
+
+                    segments.push(tempSegments[i + 1]);
+
                     break;
                 } else {
-                    segments.push(markerBlock.segments[i]);
+                    segments.push(tempSegments[i]);
                 }
             } else {
                 break;
             }
         }
-        markerSelectionIndex = markerBlock.segments.indexOf(marker);
+
+        markerSelectionIndex = tempSegments.indexOf(marker);
         segments.push(marker);
 
         // Marker is at start of word
@@ -54,19 +60,19 @@ export function adjustWordSelection(
             return segments;
         }
 
-        for (let i = markerSelectionIndex + 1; i < markerBlock.segments.length; i++) {
-            const currentSegment = markerBlock.segments[i];
+        for (let i = markerSelectionIndex + 1; i < tempSegments.length; i++) {
+            const currentSegment = tempSegments[i];
             if (currentSegment.segmentType == 'Text') {
                 const found = findDelimiter(currentSegment, true /*moveRightward*/);
                 if (found > -1) {
                     if (found == 0) {
                         break;
                     }
-                    splitTextSegment(markerBlock.segments, currentSegment, i, found);
-                    segments.push(markerBlock.segments[i]);
+                    splitTextSegment(tempSegments, currentSegment, i, found);
+                    segments.push(tempSegments[i]);
                     break;
                 } else {
-                    segments.push(markerBlock.segments[i]);
+                    segments.push(tempSegments[i]);
                 }
             } else {
                 break;
@@ -78,6 +84,7 @@ export function adjustWordSelection(
             return [marker];
         }
 
+        markerBlock.segments = tempSegments;
         return segments;
     } else {
         return [marker];
@@ -123,26 +130,22 @@ function findDelimiter(segment: ContentModelText, moveRightward: boolean): numbe
 
 function splitTextSegment(
     segments: ContentModelSegment[],
-    textSegment: ContentModelText,
+    textSegment: Readonly<ContentModelText>,
     index: number,
     found: number
 ) {
     const text = textSegment.text;
-    const newSegment = createText(text.substring(0, found), segments[index].format);
-
-    if (textSegment.code) {
-        newSegment.code = {
-            format: { ...textSegment.code.format },
-        };
-    }
-
-    if (textSegment.link) {
-        newSegment.link = {
-            format: { ...textSegment.link.format },
-            dataset: { ...textSegment.link.dataset },
-        };
-    }
-
-    textSegment.text = text.substring(found, text.length);
-    segments.splice(index, 0, newSegment);
+    const newSegmentLeft = createText(
+        text.substring(0, found),
+        textSegment.format,
+        textSegment.link,
+        textSegment.code
+    );
+    const newSegmentRight = createText(
+        text.substring(found, text.length),
+        textSegment.format,
+        textSegment.link,
+        textSegment.code
+    );
+    segments.splice(index, 1, newSegmentLeft, newSegmentRight);
 }
