@@ -32,7 +32,7 @@ export default function insertTable(
             const doc = createContentModelDocument();
             const table = createTableStructure(doc, columns, rows);
 
-            normalizeTable(table);
+            normalizeTable(table, getPendingFormat(editor) || insertPosition.marker.format);
             // Assign default vertical align
             format = format || { verticalAlign: 'top' };
             applyTableFormat(table, format);
