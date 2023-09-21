@@ -21,7 +21,6 @@ export default function formatTable(
 
         if (tableModel) {
             applyTableFormat(tableModel, format, keepCellShade);
-            normalizeTable(tableModel);
             return true;
         } else {
             return false;
