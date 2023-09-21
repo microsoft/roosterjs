@@ -1,5 +1,11 @@
 import { adjustWordSelection } from '../../../lib/modelApi/selection/adjustWordSelection';
 import {
+    createContentModelDocument,
+    createParagraph,
+    createSelectionMarker,
+    createText,
+} from 'roosterjs-content-model-dom';
+import {
     ContentModelBlock,
     ContentModelDocument,
     ContentModelSegment,
@@ -884,5 +890,85 @@ describe('adjustWordSelection', () => {
                 }
             );
         });
+    });
+
+    it('Do not modify segments array if no word is selected: marker before text', () => {
+        const text = createText('Word1 Word2');
+        const marker = createSelectionMarker();
+        const paragraph = createParagraph();
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(marker, text);
+        model.blocks.push(paragraph);
+
+        adjustWordSelection(model, marker);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [marker, text],
+                    format: {},
+                },
+            ],
+        });
+        expect(model.blocks[0]).toBe(paragraph);
+        expect(paragraph.segments[0]).toBe(marker);
+        expect(paragraph.segments[1]).toBe(text);
+    });
+
+    it('Do not modify segments array if no word is selected: marker after text', () => {
+        const text = createText('Word1 Word2');
+        const marker = createSelectionMarker();
+        const paragraph = createParagraph();
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(text, marker);
+        model.blocks.push(paragraph);
+
+        adjustWordSelection(model, marker);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text, marker],
+                    format: {},
+                },
+            ],
+        });
+        expect(model.blocks[0]).toBe(paragraph);
+        expect(paragraph.segments[0]).toBe(text);
+        expect(paragraph.segments[1]).toBe(marker);
+    });
+
+    it('Do not modify segments array if no word is selected: marker between text', () => {
+        const text1 = createText('Word1 ');
+        const text2 = createText(' Word2');
+        const marker = createSelectionMarker();
+        const paragraph = createParagraph();
+        const model = createContentModelDocument();
+
+        paragraph.segments.push(text1, marker, text2);
+        model.blocks.push(paragraph);
+
+        adjustWordSelection(model, marker);
+
+        expect(model).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [text1, marker, text2],
+                    format: {},
+                },
+            ],
+        });
+        expect(model.blocks[0]).toBe(paragraph);
+        expect(paragraph.segments[0]).toBe(text1);
+        expect(paragraph.segments[1]).toBe(marker);
+        expect(paragraph.segments[2]).toBe(text2);
     });
 });
