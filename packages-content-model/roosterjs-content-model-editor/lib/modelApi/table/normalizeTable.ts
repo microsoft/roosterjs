@@ -38,7 +38,7 @@ export function normalizeTable(
                     : defaultSegmentFormat;
                 addBlock(
                     cell,
-                    createParagraph(undefined /*isImplicit*/, undefined /*format*/, format)
+                    createParagraph(undefined /*isImplicit*/, undefined /*blockFormat*/, format)
                 );
                 addSegment(cell, createBr(format));
             }
