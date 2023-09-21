@@ -40,7 +40,7 @@ export function setTableCellBackgroundColor(
             delete cell.format.textColor;
         }
 
-        if (overrideTextColor) {
+        if (overrideTextColor && cell.format.textColor) {
             cell.blocks.forEach(block => {
                 if (block.blockType == 'Paragraph') {
                     block.segmentFormat = {
