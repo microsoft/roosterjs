@@ -81,11 +81,11 @@ describe('normalizeTable', () => {
                                     segments: [
                                         {
                                             segmentType: 'Br',
-                                            format: { textColor: undefined },
+                                            format: {},
                                         },
                                     ],
                                     format: {},
-                                    segmentFormat: { textColor: undefined },
+                                    segmentFormat: {},
                                 },
                             ],
                             dataset: {},
@@ -688,7 +688,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
-                                    segmentFormat: { fontSize: '10px', textColor: undefined },
+                                    segmentFormat: { fontSize: '10px' },
                                 },
                             ],
                             dataset: {},
@@ -734,7 +734,7 @@ describe('normalizeTable', () => {
                     },
                 },
             ],
-            segmentFormat: { textColor: undefined },
+            segmentFormat: {},
             format: {},
         };
 
