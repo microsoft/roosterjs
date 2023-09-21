@@ -96,8 +96,14 @@ export function setListType(model: ContentModelDocument, listType: 'OL' | 'UL') 
 }
 
 function shouldIgnoreBlock(block: ContentModelBlock) {
-    return (
-        block.blockType != 'Paragraph' ||
-        block.segments.every(x => x.segmentType == 'Br' || x.segmentType == 'SelectionMarker')
-    );
+    switch (block.blockType) {
+        case 'Table':
+            return false;
+        case 'Paragraph':
+            return block.segments.every(
+                x => x.segmentType == 'Br' || x.segmentType == 'SelectionMarker'
+            );
+        default:
+            return true;
+    }
 }
