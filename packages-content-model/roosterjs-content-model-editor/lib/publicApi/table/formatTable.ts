@@ -2,6 +2,7 @@ import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { normalizeTable } from 'roosterjs-content-model-editor/lib/modelApi/table/normalizeTable';
 import { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
@@ -20,7 +21,7 @@ export default function formatTable(
 
         if (tableModel) {
             applyTableFormat(tableModel, format, keepCellShade);
-
+            normalizeTable(tableModel);
             return true;
         } else {
             return false;
