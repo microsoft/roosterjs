@@ -2,7 +2,7 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+//import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import {
     createText,
     normalizeContentModel,
@@ -42,14 +42,14 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
                             marker.format = { ...format };
                             previousSegment.text = text.substring(0, text.length - data.length);
-                            const cellFormat = getSelectedCellFormat(tableContext);
+                            //const cellFormat = getSelectedCellFormat(tableContext);
 
                             const newText = createText(
                                 data == ANSI_SPACE ? NON_BREAK_SPACE : data,
                                 {
                                     ...format,
                                     ...previousSegment.format,
-                                    ...cellFormat,
+                                    // ...cellFormat,
                                 }
                             );
 
@@ -72,11 +72,11 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
     }
 }
 
-const getSelectedCellFormat = (tableContext?: TableSelectionContext) => {
-    if (tableContext) {
-        const { rowIndex, colIndex, table } = tableContext;
-        const cell = table.rows[rowIndex]?.cells[colIndex];
-        return cell?.format;
-    }
-    return undefined;
-};
+// const getSelectedCellFormat = (tableContext?: TableSelectionContext) => {
+//     if (tableContext) {
+//         const { rowIndex, colIndex, table } = tableContext;
+//         const cell = table.rows[rowIndex]?.cells[colIndex];
+//         return cell?.format;
+//     }
+//     return undefined;
+// };

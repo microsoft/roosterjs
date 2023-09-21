@@ -10,7 +10,11 @@ export const setTableHeaderButton: RibbonButton<'ribbonButtonSetTableHeader'> = 
     onClick: editor => {
         if (isContentModelEditor(editor)) {
             const format = getFormatState(editor);
-            formatTable(editor, { hasHeaderRow: !format.tableHasHeader }, true /*keepCellShade*/);
+            formatTable(
+                editor,
+                { hasHeaderRow: !format.tableHasHeader, headerRowColor: '#000000' },
+                true /*keepCellShade*/
+            );
         }
     },
 };

@@ -44,13 +44,7 @@ export function normalizeTable(
                         }
                     )
                 );
-                addSegment(
-                    cell,
-                    createBr({
-                        ...defaultSegmentFormat,
-                        ...cell.format,
-                    })
-                );
+                addSegment(cell, createBr(defaultSegmentFormat));
             }
 
             if (rowIndex == 0) {
