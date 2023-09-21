@@ -44,8 +44,16 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
             core.lifecycle.shadowEditFragment = null;
             core.lifecycle.shadowEditSelectionPath = null;
 
-            if (core.cachedModel) {
-                core.api.setContentModel(core, core.cachedModel);
+            core.api.triggerEvent(
+                core,
+                {
+                    eventType: PluginEventType.LeavingShadowEdit,
+                },
+                false /*broadcast*/
+            );
+
+            if (core.cache.cachedModel) {
+                core.api.setContentModel(core, core.cache.cachedModel);
             }
         }
     }

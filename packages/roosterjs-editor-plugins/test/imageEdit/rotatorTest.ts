@@ -231,6 +231,7 @@ describe('updateRotateHandlePosition', () => {
             },
             '-6px',
             '0px',
+            '0px',
             {
                 top: 2,
                 bottom: 3,
