@@ -192,7 +192,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         expect(setSelectionSpy).not.toHaveBeenCalled();
     });
 
-    it('no old range, normal range on non-unindexed text, collapsed', () => {
+    it('no old range, normal range on non-indexed text, collapsed', () => {
         const node = document.createTextNode('test');
         const newRangeEx: SelectionRangeEx = {
             type: SelectionRangeTypes.Normal,
@@ -527,5 +527,139 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         expect(cell20.isSelected).toBeTrue();
         expect(cell21.isSelected).toBeTrue();
         expect(cell22.isSelected).toBeFalse();
+    });
+
+    it('no old range, collapsed range after last node', () => {
+        const node = document.createElement('br') as any;
+        const parent = document.createElement('div');
+
+        parent.appendChild(node);
+
+        const newRangeEx: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            areAllCollapsed: true,
+            ranges: [createRange(parent, 1)],
+        };
+        const paragraph = createParagraph();
+        const segment = createBr({ fontFamily: 'Arial' });
+
+        paragraph.segments.push(segment);
+        contentModelDomIndexer.onSegment(node, paragraph, [segment]);
+
+        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment, createSelectionMarker({ fontFamily: 'Arial' })],
+        });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('has old range - collapsed, expanded new range', () => {
+        const node = document.createTextNode('test') as any;
+        const oldRangeEx: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            areAllCollapsed: true,
+            ranges: [createRange(node, 2)],
+        };
+        const newRangeEx: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            areAllCollapsed: true,
+            ranges: [createRange(node, 1, node, 3)],
+        };
+        const paragraph = createParagraph();
+        const oldSegment1 = createText('te');
+        const oldSegment2 = createText('st');
+
+        paragraph.segments.push(oldSegment1, createSelectionMarker(), oldSegment2);
+        contentModelDomIndexer.onSegment(node, paragraph, [oldSegment1, oldSegment2]);
+
+        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx, oldRangeEx);
+
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'es',
+            format: {},
+            isSelected: true,
+        };
+        const segment3: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1, segment2, segment3],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, segment2, segment3],
+        });
+        expect(setSelectionSpy).not.toHaveBeenCalled();
+    });
+
+    it('has old range - expanded, expanded new range', () => {
+        const node = document.createTextNode('test') as any;
+        const oldRangeEx: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            areAllCollapsed: true,
+            ranges: [createRange(node, 1, node, 3)],
+        };
+        const newRangeEx: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            areAllCollapsed: true,
+            ranges: [createRange(node, 2)],
+        };
+        const paragraph = createParagraph();
+        const oldSegment1: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const oldSegment2: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'es',
+            format: {},
+            isSelected: true,
+        };
+        const oldSegment3: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+
+        paragraph.segments.push(oldSegment1, oldSegment2, oldSegment3);
+        contentModelDomIndexer.onSegment(node, paragraph, [oldSegment1, oldSegment2, oldSegment3]);
+
+        const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx, oldRangeEx);
+
+        const segment1 = createText('te');
+        const segment2 = createText('st');
+
+        expect(result).toBeTrue();
+        expect(node.__roosterjsContentModel).toEqual({
+            paragraph,
+            segments: [segment1, segment2],
+        });
+        expect(paragraph).toEqual({
+            blockType: 'Paragraph',
+            format: {},
+            segments: [segment1, createSelectionMarker(), segment2],
+        });
+        expect(setSelectionSpy).toHaveBeenCalled();
     });
 });

@@ -221,9 +221,7 @@ function insertMarker(node: Node | null, isAfter: boolean): Selectable | undefin
         if (index >= 0) {
             const formatSegment =
                 (!isAfter && paragraph.segments[index - 1]) || paragraph.segments[index];
-            marker = createSelectionMarker(
-                formatSegment?.segmentType == 'Text' ? formatSegment.format : undefined
-            );
+            marker = createSelectionMarker(formatSegment.format);
 
             paragraph.segments.splice(isAfter ? index + 1 : index, 0, marker);
         }
