@@ -183,7 +183,14 @@ export default class ContentModelEventViewPane extends React.Component<
                                 <pre className={styles.eventContent}>
                                     {JSON.stringify(
                                         (event as ContentModelContentChangedEvent).contentModel,
-                                        null,
+                                        (key, value) =>
+                                            safeInstanceOf(value, 'Node')
+                                                ? Object.prototype.toString.apply(value)
+                                                : key == 'src'
+                                                ? value.length > 100
+                                                    ? value.substring(0, 97) + '...'
+                                                    : value
+                                                : value,
                                         2
                                     )}
                                 </pre>
