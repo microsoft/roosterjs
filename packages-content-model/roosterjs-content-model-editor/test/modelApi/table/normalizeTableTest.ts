@@ -85,6 +85,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    segmentFormat: { textColor: undefined },
                                 },
                             ],
                             dataset: {},
@@ -686,7 +687,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
-                                    segmentFormat: { fontSize: '10px' },
+                                    segmentFormat: { fontSize: '10px', textColor: undefined },
                                 },
                             ],
                             dataset: {},
@@ -731,6 +732,7 @@ describe('normalizeTable', () => {
                 },
             ],
             format: {},
+            segmentFormat: { textColor: undefined },
         };
 
         expect(table).toEqual({

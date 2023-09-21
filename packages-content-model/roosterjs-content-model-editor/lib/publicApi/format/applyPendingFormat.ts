@@ -24,7 +24,7 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
         let isChanged = false;
 
         formatWithContentModel(editor, 'applyPendingFormat', (model, context) => {
-            iterateSelections([model], (_, tableContext, block, segments) => {
+            iterateSelections([model], (_, __, block, segments) => {
                 if (
                     block?.blockType == 'Paragraph' &&
                     segments?.length == 1 &&
@@ -42,14 +42,12 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
                         if (subStr == data || (data == ANSI_SPACE && subStr == NON_BREAK_SPACE)) {
                             marker.format = { ...format };
                             previousSegment.text = text.substring(0, text.length - data.length);
-                            //const cellFormat = getSelectedCellFormat(tableContext);
 
                             const newText = createText(
                                 data == ANSI_SPACE ? NON_BREAK_SPACE : data,
                                 {
                                     ...format,
                                     ...previousSegment.format,
-                                    // ...cellFormat,
                                 }
                             );
 
@@ -71,12 +69,3 @@ export default function applyPendingFormat(editor: IContentModelEditor, data: st
         });
     }
 }
-
-// const getSelectedCellFormat = (tableContext?: TableSelectionContext) => {
-//     if (tableContext) {
-//         const { rowIndex, colIndex, table } = tableContext;
-//         const cell = table.rows[rowIndex]?.cells[colIndex];
-//         return cell?.format;
-//     }
-//     return undefined;
-// };
