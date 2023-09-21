@@ -8,6 +8,7 @@ import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     contentModelToDom,
     createModelToDomContext,
+    isNodeOfType,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
 import type {
@@ -38,6 +39,7 @@ import {
     SelectionRangeTypes,
     SelectionRangeEx,
     ColorTransformDirection,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -181,6 +183,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         );
                     }
                 });
+            } else {
+                cleanUpAndRestoreSelection(tempDiv);
             }
         }
     }
@@ -287,5 +291,8 @@ export const onNodeCreated = (
 ): void => {
     if (safeInstanceOf(node, 'HTMLTableElement')) {
         wrap(node, 'div');
+    }
+    if (isNodeOfType(node, NodeType.Element) && !node.isContentEditable) {
+        node.removeAttribute('contenteditable');
     }
 };
