@@ -254,7 +254,12 @@ function setHeaderRowFormat(
 
         if (format.hasHeaderRow && format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
-                setTableCellBackgroundColor(cell, format.headerRowColor);
+                setTableCellBackgroundColor(
+                    cell,
+                    format.headerRowColor,
+                    false /*isColorOverride*/,
+                    true /*overrideTextColor*/
+                );
             }
 
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
