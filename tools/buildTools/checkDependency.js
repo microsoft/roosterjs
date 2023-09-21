@@ -12,7 +12,7 @@ function getPossibleNames(dir, objectName) {
     ];
 }
 
-function processFile(dir, filename, files, externalDependencies) {
+function processFile(dir, filename, files, externalDependencies, fromFile) {
     if (
         externalDependencies.some(d => (typeof d === 'string' ? d == filename : d.test(filename)))
     ) {
@@ -27,7 +27,8 @@ function processFile(dir, filename, files, externalDependencies) {
                 filename +
                 ' under ' +
                 dir +
-                ': File not found'
+                ': File not found. Source file: ' +
+                fromFile
         );
     }
 
@@ -54,7 +55,7 @@ function processFile(dir, filename, files, externalDependencies) {
         while ((match = reg.exec(content))) {
             var nextFile = match[1];
             if (nextFile) {
-                processFile(dir, nextFile, files, externalDependencies);
+                processFile(dir, nextFile, files, externalDependencies, thisFilename);
             }
         }
 
@@ -95,11 +96,13 @@ function checkDependency() {
         var peerDependencies = packageJson.peerDependencies
             ? Object.keys(packageJson.peerDependencies)
             : [];
+        const startFile = path.join(packageName, 'lib/index');
         processFile(
             packageRoot,
-            path.join(packageName, 'lib/index'),
+            startFile,
             [],
-            dependencies.concat(peerDependencies).concat(GlobalAllowedCrossPackageDependency)
+            dependencies.concat(peerDependencies).concat(GlobalAllowedCrossPackageDependency),
+            startFile + '.ts'
         );
     });
 }

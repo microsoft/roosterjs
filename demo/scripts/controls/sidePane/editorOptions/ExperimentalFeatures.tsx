@@ -10,8 +10,6 @@ export interface ExperimentalFeaturesProps {
 
 const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.TabKeyTextFeatures]: 'Additional functionality to Tab Key',
-    [ExperimentalFeatures.AutoFormatList]:
-        'Trigger formatting by a especial characters. Ex: (A), 1. i).',
     [ExperimentalFeatures.ReuseAllAncestorListElements]:
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DeleteTableWithBackspace]:

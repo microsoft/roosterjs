@@ -479,7 +479,7 @@ export default class ImageEdit implements EditorPlugin {
                 });
 
                 this.shadowSpan.style.verticalAlign = 'bottom';
-                this.shadowSpan.style.fontSize = '24px';
+                wrapper.style.fontSize = '24px';
 
                 shadowRoot.appendChild(wrapper);
             }

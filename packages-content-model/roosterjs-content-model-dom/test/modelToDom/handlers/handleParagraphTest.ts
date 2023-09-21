@@ -6,16 +6,16 @@ import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagrap
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 import {
-    ContentModelHandler,
     ContentModelParagraph,
     ContentModelSegment,
+    ContentModelSegmentHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleSegment: jasmine.Spy<ContentModelHandler<ContentModelSegment>>;
+    let handleSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelSegment>>;
 
     beforeEach(() => {
         parent = document.createElement('div');
@@ -89,7 +89,8 @@ describe('handleParagraph', () => {
             document,
             parent.firstChild as HTMLElement,
             segment,
-            context
+            context,
+            []
         );
     });
 
@@ -110,7 +111,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context, []);
     });
 
     it('Handle multiple segments', () => {
@@ -141,13 +142,15 @@ describe('handleParagraph', () => {
             document,
             parent.firstChild as HTMLElement,
             segment1,
-            context
+            context,
+            []
         );
         expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment2,
-            context
+            context,
+            []
         );
     });
 

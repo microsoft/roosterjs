@@ -318,4 +318,56 @@ describe('setFontSize', () => {
             1
         );
     });
+
+    it('With font size in paragraph', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '8pt', fontFamily: 'Arial' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: {},
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontFamily: 'Arial' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '10pt' },
+                                isSelected: true,
+                            },
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '8pt' },
+                            },
+                        ],
+                    },
+                ],
+            },
+            1
+        );
+    });
 });

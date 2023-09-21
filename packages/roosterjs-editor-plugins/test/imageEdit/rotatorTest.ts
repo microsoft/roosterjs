@@ -229,8 +229,7 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '-7px',
-            '1px',
+            '-6px',
             '0px',
             {
                 top: 2,

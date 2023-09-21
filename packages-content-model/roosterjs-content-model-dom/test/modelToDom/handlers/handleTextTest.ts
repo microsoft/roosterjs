@@ -20,7 +20,7 @@ describe('handleText', () => {
             format: {},
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span>test</span>');
     });
@@ -33,7 +33,7 @@ describe('handleText', () => {
         };
         context.darkColorHandler = new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s);
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span style="color: red;">test</span>');
     });
@@ -46,7 +46,7 @@ describe('handleText', () => {
             link: { format: { href: '/test', underline: true }, dataset: {} },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
     });
@@ -63,7 +63,7 @@ describe('handleText', () => {
             },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span><code>test</code></span>');
     });
@@ -78,7 +78,7 @@ describe('handleText', () => {
 
         spyOn(stackFormat, 'stackFormat').and.callThrough();
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span><a href="/test">test</a></span>');
         expect(stackFormat.stackFormat).toHaveBeenCalledTimes(1);
@@ -97,7 +97,7 @@ describe('handleText', () => {
 
         context.onNodeCreated = onNodeCreated;
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span>test</span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
@@ -120,8 +120,23 @@ describe('handleText', () => {
             },
         };
 
-        handleText(document, parent, text, context);
+        handleText(document, parent, text, context, []);
 
         expect(parent.innerHTML).toBe('<span style="font-size: 12px;"><a href="#">test</a></span>');
+    });
+
+    it('Text segment with segmentNodes', () => {
+        const text: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const segmentNodes: Node[] = [];
+
+        handleText(document, parent, text, context, segmentNodes);
+
+        expect(parent.innerHTML).toBe('<span>test</span>');
+        expect(segmentNodes.length).toBe(1);
+        expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
     });
 });

@@ -1,8 +1,8 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
-import { domToContentModel } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -343,7 +343,7 @@ describe('changeFontSize', () => {
 
         const editor = ({
             createContentModel: (option: any) =>
-                domToContentModel(div, option, undefined, {
+                domToContentModel(div, createDomToModelContext(undefined), {
                     type: SelectionRangeTypes.Normal,
                     ranges: [createRange(sub)],
                     areAllCollapsed: false,
@@ -375,7 +375,51 @@ describe('changeFontSize', () => {
                     },
                 ],
             },
-            { onNodeCreated: undefined }
+            undefined,
+            undefined
+        );
+    });
+
+    it('Paragraph has font size', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20pt' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '10pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '11pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'increase'
         );
     });
 });

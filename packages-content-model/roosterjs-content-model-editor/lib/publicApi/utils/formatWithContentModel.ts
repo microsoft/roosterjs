@@ -47,7 +47,7 @@ export function formatWithContentModel(
             handleDeletedEntities(editor, context);
 
             if (model) {
-                editor.setContentModel(model, { onNodeCreated });
+                editor.setContentModel(model, undefined /*options*/, onNodeCreated);
             }
 
             if (preservePendingFormat) {
@@ -78,8 +78,6 @@ export function formatWithContentModel(
                 }
             );
         }
-
-        editor.cacheContentModel?.(model);
     }
 }
 

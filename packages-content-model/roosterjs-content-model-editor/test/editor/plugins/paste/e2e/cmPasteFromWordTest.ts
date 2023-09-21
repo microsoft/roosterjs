@@ -67,7 +67,7 @@ describe(ID, () => {
                     ],
                     segmentFormat: undefined,
                     blockType: 'Paragraph',
-                    format: {},
+                    format: { marginTop: '0px', marginBottom: '0px' },
                     decorator: { tagName: 'p', format: {} },
                 },
                 {
@@ -83,13 +83,12 @@ describe(ID, () => {
                         {
                             isSelected: true,
                             segmentType: 'SelectionMarker',
-                            format: {},
+                            format: { fontFamily: 'Calibri, sans-serif', fontSize: '11pt' },
                         },
                     ],
                     segmentFormat: undefined,
                     blockType: 'Paragraph',
                     format: {
-                        lineHeight: undefined,
                         marginTop: '0in',
                         marginRight: '0in',
                         marginBottom: '8pt',
@@ -127,10 +126,10 @@ describe(ID, () => {
             blockGroupType: 'Document',
             blocks: [
                 {
-                    widths: [],
+                    widths: [jasmine.anything() as any, jasmine.anything() as any],
                     rows: [
                         {
-                            height: 0,
+                            height: jasmine.anything() as any,
                             cells: [
                                 {
                                     spanAbove: false,
@@ -202,7 +201,6 @@ describe(ID, () => {
                                         borderTop: '1pt solid',
                                         borderRight: '1pt solid',
                                         borderBottom: '1pt solid',
-                                        borderLeft: '',
                                         paddingTop: '0in',
                                         paddingRight: '5.4pt',
                                         paddingBottom: '0in',
@@ -218,11 +216,8 @@ describe(ID, () => {
                     ],
                     blockType: 'Table',
                     format: {
-                        borderTop: '',
-                        borderRight: '',
-                        borderBottom: '',
-                        borderLeft: '',
                         borderCollapse: true,
+                        useBorderBox: true,
                     },
                     dataset: {},
                 },

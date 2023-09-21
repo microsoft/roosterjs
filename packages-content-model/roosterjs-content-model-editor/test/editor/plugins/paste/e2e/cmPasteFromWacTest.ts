@@ -79,7 +79,7 @@ describe(ID, () => {
                                     blockType: 'Table',
                                     rows: [
                                         {
-                                            height: 0,
+                                            height: jasmine.anything() as any,
                                             format: {},
                                             cells: [
                                                 {
@@ -102,9 +102,6 @@ describe(ID, () => {
                                                                                 fontFamily:
                                                                                     'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                                                                 fontSize: '11pt',
-                                                                                italic: false,
-                                                                                fontWeight:
-                                                                                    'normal',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 lineHeight:
@@ -120,9 +117,6 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                    },
-                                                                    segmentFormat: {
-                                                                        fontWeight: 'normal',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -183,9 +177,6 @@ describe(ID, () => {
                                                                                 fontFamily:
                                                                                     'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                                                                 fontSize: '11pt',
-                                                                                italic: false,
-                                                                                fontWeight:
-                                                                                    'normal',
                                                                                 textColor:
                                                                                     'rgb(0, 0, 0)',
                                                                                 lineHeight:
@@ -201,9 +192,6 @@ describe(ID, () => {
                                                                         marginRight: '0px',
                                                                         marginTop: '0px',
                                                                         marginBottom: '0px',
-                                                                    },
-                                                                    segmentFormat: {
-                                                                        fontWeight: 'normal',
                                                                     },
                                                                     decorator: {
                                                                         tagName: 'p',
@@ -248,6 +236,7 @@ describe(ID, () => {
                                         },
                                     ],
                                     format: <any>{
+                                        useBorderBox: true,
                                         direction: 'ltr',
                                         textAlign: 'start',
                                         whiteSpace: 'normal',
@@ -260,7 +249,7 @@ describe(ID, () => {
                                         tableLayout: 'fixed',
                                         borderCollapse: true,
                                     },
-                                    widths: [],
+                                    widths: [jasmine.anything() as any, jasmine.anything() as any],
                                     dataset: {
                                         tablestyle: 'MsoTableGrid',
                                         tablelook: '1696',
@@ -268,9 +257,6 @@ describe(ID, () => {
                                 },
                             ],
                             format: {
-                                direction: 'ltr',
-                                textAlign: 'start',
-                                whiteSpace: 'normal',
                                 marginTop: '2px',
                                 marginRight: '0px',
                                 marginBottom: '2px',
@@ -278,9 +264,6 @@ describe(ID, () => {
                         },
                     ],
                     format: {
-                        direction: 'ltr',
-                        textAlign: 'start',
-                        whiteSpace: 'normal',
                         backgroundColor: 'rgb(255, 255, 255)',
                         marginTop: '0px',
                         marginRight: '0px',
@@ -304,8 +287,6 @@ describe(ID, () => {
                                         fontFamily:
                                             'Aptos, Aptos_EmbeddedFont, Aptos_MSFontService, sans-serif',
                                         fontSize: '12pt',
-                                        italic: false,
-                                        fontWeight: 'normal',
                                         textColor: 'rgb(0, 0, 0)',
                                         lineHeight: '20.925px',
                                     },
@@ -320,9 +301,6 @@ describe(ID, () => {
                                 marginBottom: '0px',
                                 marginLeft: '0px',
                             },
-                            segmentFormat: {
-                                fontWeight: 'normal',
-                            },
                             decorator: {
                                 tagName: 'p',
                                 format: {},
@@ -330,9 +308,6 @@ describe(ID, () => {
                         },
                     ],
                     format: {
-                        direction: 'ltr',
-                        textAlign: 'start',
-                        whiteSpace: 'normal',
                         backgroundColor: 'rgb(255, 255, 255)',
                         marginTop: '0px',
                         marginRight: '0px',
