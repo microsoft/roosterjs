@@ -52,12 +52,17 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
+                        const modelFormat = Object.assign({}, model.format);
+                        delete modelFormat?.italic;
+                        delete modelFormat?.underline;
+                        delete modelFormat?.fontWeight;
+
                         retrieveSegmentFormat(
                             formatState,
                             isFirst,
                             Object.assign(
                                 {},
-                                model.format,
+                                modelFormat,
                                 block.format,
                                 block.decorator?.format,
                                 segment.format,
