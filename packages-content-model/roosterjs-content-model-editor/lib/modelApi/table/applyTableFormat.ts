@@ -206,7 +206,12 @@ function formatCells(
                             : bgColorEven
                         : bgColorEven; /* bgColorEven is the default color */
 
-                setTableCellBackgroundColor(cell, color);
+                setTableCellBackgroundColor(
+                    cell,
+                    color,
+                    false /*isColorOverride*/,
+                    true /*overrideTextColor*/
+                );
             }
 
             // Format Vertical Align
@@ -229,7 +234,12 @@ function setFirstColumnFormat(
 
                 if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                     setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(cell, null /*color*/);
+                    setTableCellBackgroundColor(
+                        cell,
+                        null /*color*/,
+                        false /*isColorOverride*/,
+                        true /*overrideTextColor*/
+                    );
                 }
 
                 if (rowIndex !== rows.length - 1 && rowIndex !== 0) {
@@ -254,7 +264,12 @@ function setHeaderRowFormat(
 
         if (format.hasHeaderRow && format.headerRowColor) {
             if (!metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
-                setTableCellBackgroundColor(cell, format.headerRowColor);
+                setTableCellBackgroundColor(
+                    cell,
+                    format.headerRowColor,
+                    false /*isColorOverride*/,
+                    true /*overrideTextColor*/
+                );
             }
 
             setBorderColor(cell.format, 'borderTop', format.headerRowColor);
