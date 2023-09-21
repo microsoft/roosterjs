@@ -206,7 +206,12 @@ function formatCells(
                             : bgColorEven
                         : bgColorEven; /* bgColorEven is the default color */
 
-                setTableCellBackgroundColor(cell, color);
+                setTableCellBackgroundColor(
+                    cell,
+                    color,
+                    false /*isColorOverride*/,
+                    true /*overrideTextColor*/
+                );
             }
 
             // Format Vertical Align
