@@ -234,7 +234,7 @@ function setFirstColumnFormat(
 
                 if (rowIndex !== 0 && !metaOverrides.bgColorOverrides[rowIndex][cellIndex]) {
                     setBorderColor(cell.format, 'borderTop');
-                    setTableCellBackgroundColor(cell, null /*color*/);
+                    setTableCellBackgroundColor(cell, null /*color*/, true /*overrideTextColor*/);
                 }
 
                 if (rowIndex !== rows.length - 1 && rowIndex !== 0) {

@@ -32,10 +32,17 @@ export function normalizeTable(
             if (cell.blocks.length == 0) {
                 addBlock(
                     cell,
-                    createParagraph(undefined /*isImplicit*/, undefined /*blockFormat*/, {
-                        ...defaultSegmentFormat,
-                        ...cell.format,
-                    })
+                    createParagraph(
+                        undefined /*isImplicit*/,
+                        {
+                            ...defaultSegmentFormat,
+                            ...cell.format,
+                        },
+                        {
+                            ...defaultSegmentFormat,
+                            ...cell.format,
+                        }
+                    )
                 );
                 addSegment(
                     cell,
