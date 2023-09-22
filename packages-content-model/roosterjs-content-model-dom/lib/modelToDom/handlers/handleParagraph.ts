@@ -109,6 +109,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                 }
             } else {
                 unwrap(container);
+                container = undefined;
             }
         });
     }
