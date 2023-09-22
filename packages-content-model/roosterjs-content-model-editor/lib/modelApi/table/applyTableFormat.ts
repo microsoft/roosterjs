@@ -210,7 +210,7 @@ function formatCells(
                     cell,
                     color,
                     false /*isColorOverride*/,
-                    true /*overrideTextColor*/
+                    true /*applyToSegments*/
                 );
             }
 
@@ -238,7 +238,7 @@ function setFirstColumnFormat(
                         cell,
                         null /*color*/,
                         false /*isColorOverride*/,
-                        true /*overrideTextColor*/
+                        true /*applyToSegments*/
                     );
                 }
 
@@ -268,7 +268,7 @@ function setHeaderRowFormat(
                     cell,
                     format.headerRowColor,
                     false /*isColorOverride*/,
-                    true /*overrideTextColor*/
+                    true /*applyToSegments*/
                 );
             }
 

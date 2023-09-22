@@ -17,7 +17,7 @@ export function setTableCellBackgroundColor(
     cell: ContentModelTableCell,
     color: string | null | undefined,
     isColorOverride?: boolean,
-    overrideTextColor?: boolean
+    applyToSegments?: boolean
 ) {
     if (color) {
         cell.format.backgroundColor = color;
@@ -40,7 +40,7 @@ export function setTableCellBackgroundColor(
             delete cell.format.textColor;
         }
 
-        if (overrideTextColor && cell.format.textColor) {
+        if (applyToSegments && cell.format.textColor) {
             cell.blocks.forEach(block => {
                 if (block.blockType == 'Paragraph') {
                     block.segmentFormat = {
