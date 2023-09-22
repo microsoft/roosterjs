@@ -15,10 +15,12 @@ describe('insertLink', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         editor = ({
             focus: () => {},
@@ -28,6 +30,7 @@ describe('insertLink', () => {
             getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
             isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -331,6 +334,8 @@ describe('insertLink', () => {
             additionalData: {
                 formatApiName: 'insertLink',
             },
+            contentModel: jasmine.anything(),
+            rangeEx: jasmine.anything(),
         });
 
         document.body.removeChild(div);

@@ -18,12 +18,14 @@ describe('formatSegmentWithContentModel', () => {
     let model: ContentModelDocument;
     let getPendingFormat: jasmine.Spy;
     let setPendingFormat: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
 
     const apiName = 'mockedApi';
 
     beforeEach(() => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
 
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
@@ -36,6 +38,7 @@ describe('formatSegmentWithContentModel', () => {
             setContentModel,
             getFocusedPosition: () => null as NodePosition,
             isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
