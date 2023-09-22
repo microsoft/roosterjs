@@ -1,5 +1,6 @@
 import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
+import * as inlineEntityOnPluginEvent from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import {
@@ -23,6 +24,8 @@ describe('EntityPlugin', () => {
 
     beforeEach(() => {
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        spyOn(inlineEntityOnPluginEvent, 'inlineEntityOnPluginEvent');
+
         plugin = new EntityPlugin();
         state = plugin.getState();
         editor = <IEditor>(<any>{

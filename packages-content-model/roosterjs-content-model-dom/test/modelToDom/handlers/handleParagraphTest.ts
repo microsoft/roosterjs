@@ -467,6 +467,30 @@ describe('handleParagraph', () => {
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
     });
 
+    it('With onNodeCreated on implicit paragraph', () => {
+        const parent = document.createElement('div');
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+            isImplicit: true,
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('');
+        expect(onNodeCreated).toHaveBeenCalled();
+    });
+
     it('Paragraph with only selection marker and BR', () => {
         const paragraph: ContentModelParagraph = {
             blockType: 'Paragraph',

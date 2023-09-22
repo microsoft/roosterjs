@@ -2,7 +2,6 @@ import BuildInPluginState, { BuildInPluginProps, UrlPlaceholder } from '../../Bu
 import getDefaultContentEditFeatureSettings from './getDefaultContentEditFeatureSettings';
 import OptionsPane from './OptionsPane';
 import SidePanePluginImpl from '../SidePanePluginImpl';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { SidePaneElementProps } from '../SidePaneElement';
 
 const initialState: BuildInPluginState = {
@@ -28,7 +27,7 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+    experimentalFeatures: [],
     isRtl: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
 };

@@ -29,7 +29,6 @@ const initialState: BuildInPluginState = {
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
     experimentalFeatures: [
-        ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
         ExperimentalFeatures.ContentModelPaste,
         ExperimentalFeatures.ReusableContentModelV2,
     ],

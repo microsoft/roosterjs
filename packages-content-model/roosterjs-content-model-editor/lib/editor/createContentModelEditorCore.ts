@@ -99,8 +99,6 @@ function promoteContentModelInfo(
     cmCore: ContentModelEditorCore,
     options: ContentModelEditorOptions
 ) {
-    const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
-
     cmCore.defaultDomToModelOptions = [
         {
             processorOverride: {
@@ -112,11 +110,6 @@ function promoteContentModelInfo(
     cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
     cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
     cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
-
-    cmCore.addDelimiterForEntity = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-    );
 }
 
 function promoteCoreApi(cmCore: ContentModelEditorCore) {

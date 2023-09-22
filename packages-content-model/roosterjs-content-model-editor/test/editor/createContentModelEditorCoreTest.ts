@@ -122,7 +122,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -188,7 +187,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -267,7 +265,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: 'red',
                 backgroundColor: 'blue',
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -327,7 +324,6 @@ describe('createContentModelEditorCore', () => {
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
 
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -337,19 +333,11 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow entity delimiters', () => {
-        mockedCore.lifecycle.experimentalFeatures.push(
-            ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-        );
-
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
         };
-
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) => feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -362,7 +350,7 @@ describe('createContentModelEditorCore', () => {
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+                experimentalFeatures: [],
                 defaultFormat: {},
             },
             api: {
@@ -394,7 +382,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: true,
             contentDiv: {
                 style: {},
             },
@@ -459,7 +446,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
