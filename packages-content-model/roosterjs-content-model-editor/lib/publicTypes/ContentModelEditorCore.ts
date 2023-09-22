@@ -85,11 +85,6 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
     readonly originalApi: ContentModelCoreApiMap;
 
     /**
-     * Default format used by Content Model. This is calculated from lifecycle.defaultFormat
-     */
-    defaultFormat: ContentModelSegmentFormat;
-
-    /**
      * Default DOM to Content Model options
      */
     defaultDomToModelOptions: (DomToModelOption | undefined)[];
@@ -110,9 +105,4 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
-
-    /**
-     * Whether adding delimiter for entity is allowed
-     */
-    addDelimiterForEntity: boolean;
 }

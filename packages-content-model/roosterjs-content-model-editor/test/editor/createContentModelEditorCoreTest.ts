@@ -4,13 +4,11 @@ import * as ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModel
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getSelectionRangeEx } from '../../lib/editor/coreApi/getSelectionRangeEx';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
@@ -122,7 +120,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -188,7 +185,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -267,7 +263,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: 'red',
                 backgroundColor: 'blue',
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -337,19 +332,11 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow entity delimiters', () => {
-        mockedCore.lifecycle.experimentalFeatures.push(
-            ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-        );
-
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
         };
-
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) => feature == ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -362,7 +349,7 @@ describe('createContentModelEditorCore', () => {
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [ExperimentalFeatures.InlineEntityReadOnlyDelimiters],
+                experimentalFeatures: [],
                 defaultFormat: {},
             },
             api: {
@@ -404,17 +391,11 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow dom indexer', () => {
-        mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModelV2);
-
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
         };
-
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) => feature == ExperimentalFeatures.ReusableContentModelV2
-        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -427,7 +408,7 @@ describe('createContentModelEditorCore', () => {
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [ExperimentalFeatures.ReusableContentModelV2],
+                experimentalFeatures: [],
                 defaultFormat: {},
             },
             api: {

@@ -14,7 +14,6 @@ import {
     ChangeSource,
     ContentPosition,
     Entity,
-    ExperimentalFeatures,
     IEditor,
     KnownCreateElementDataIndex,
     NodePosition,
@@ -149,10 +148,7 @@ export default function insertEntity(
                 editor.select(pos);
             }
         }
-    } else if (
-        isReadonly &&
-        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-    ) {
+    } else if (isReadonly) {
         addDelimiters(entity.wrapper);
         if (entity.wrapper.nextElementSibling) {
             editor.select(new Position(entity.wrapper.nextElementSibling, PositionType.After));
