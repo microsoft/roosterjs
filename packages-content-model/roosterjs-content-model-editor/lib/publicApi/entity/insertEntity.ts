@@ -70,6 +70,7 @@ export default function insertEntity(
     commitEntity(wrapper, type, true /*isReadonly*/);
 
     const entityModel = createEntity(wrapper, true /*isReadonly*/, type);
+    let newEntity: Entity | null = null;
 
     formatWithContentModel(
         editor,
@@ -93,12 +94,13 @@ export default function insertEntity(
         },
         {
             selectionOverride: typeof position === 'object' ? position : undefined,
+            changeSource: ChangeSource.InsertEntity,
+            getChangeData: () => {
+                newEntity = getEntityFromElement(wrapper);
+                return newEntity;
+            },
         }
     );
-
-    const newEntity = getEntityFromElement(wrapper);
-
-    editor.triggerContentChangedEvent(ChangeSource.InsertEntity, newEntity);
 
     return newEntity;
 }

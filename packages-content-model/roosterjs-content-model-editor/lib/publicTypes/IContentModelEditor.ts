@@ -34,7 +34,7 @@ export interface IContentModelEditor extends IEditor {
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): void;
+    ): SelectionRangeEx | null;
 
     /**
      * Notify editor the current cache may be invalid
