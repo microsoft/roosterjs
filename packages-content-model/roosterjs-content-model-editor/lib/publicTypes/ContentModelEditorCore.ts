@@ -110,9 +110,4 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
-
-    /**
-     * Whether adding delimiter for entity is allowed
-     */
-    addDelimiterForEntity: boolean;
 }

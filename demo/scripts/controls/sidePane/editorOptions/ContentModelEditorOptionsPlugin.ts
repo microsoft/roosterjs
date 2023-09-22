@@ -28,10 +28,7 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    experimentalFeatures: [
-        ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
-        ExperimentalFeatures.ContentModelPaste,
-    ],
+    experimentalFeatures: [ExperimentalFeatures.ContentModelPaste],
     isRtl: false,
     tableFeaturesContainerSelector: '#' + 'EditorContainer',
 };
