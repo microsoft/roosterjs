@@ -13,6 +13,12 @@ export {
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,
 } from './publicTypes/event/ContentModelBeforePasteEvent';
+export {
+    default as ContentModelContentChangedEvent,
+    CompatibleContentModelContentChangedEvent,
+    ContentModelContentChangedEventData,
+} from './publicTypes/event/ContentModelContentChangedEvent';
+
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';

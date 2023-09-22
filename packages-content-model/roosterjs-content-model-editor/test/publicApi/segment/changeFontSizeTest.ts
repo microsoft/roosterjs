@@ -329,6 +329,7 @@ describe('changeFontSize', () => {
     it('Test format parser', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
+        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
             callback();
@@ -352,6 +353,7 @@ describe('changeFontSize', () => {
             focus: jasmine.createSpy(),
             setContentModel,
             isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');

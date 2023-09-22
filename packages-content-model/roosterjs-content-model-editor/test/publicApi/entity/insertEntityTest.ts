@@ -55,6 +55,7 @@ describe('insertEntity', () => {
             'formatWithContentModel'
         ).and.callFake((editor, apiName, formatter, options) => {
             formatter(model, context);
+            options?.getChangeData?.();
         });
         getEntityFromElementSpy = spyOn(getEntityFromElement, 'default').and.returnValue(newEntity);
         commitEntitySpy = spyOn(commitEntity, 'default');
@@ -82,9 +83,9 @@ describe('insertEntity', () => {
         expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3]).toEqual({
-            selectionOverride: undefined,
-        });
+        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
             model,
             {
@@ -102,10 +103,7 @@ describe('insertEntity', () => {
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(
-            ChangeSource.InsertEntity,
-            newEntity
-        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
@@ -121,9 +119,9 @@ describe('insertEntity', () => {
         expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3]).toEqual({
-            selectionOverride: undefined,
-        });
+        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
             model,
             {
@@ -141,10 +139,7 @@ describe('insertEntity', () => {
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(
-            ChangeSource.InsertEntity,
-            newEntity
-        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
@@ -167,9 +162,10 @@ describe('insertEntity', () => {
         expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3]).toEqual({
-            selectionOverride: range,
-        });
+        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
+
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
             model,
             {
@@ -187,10 +183,7 @@ describe('insertEntity', () => {
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(
-            ChangeSource.InsertEntity,
-            newEntity
-        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
@@ -208,9 +201,9 @@ describe('insertEntity', () => {
         expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
-        expect(formatWithContentModelSpy.calls.argsFor(0)[3]).toEqual({
-            selectionOverride: undefined,
-        });
+        expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
+            ChangeSource.InsertEntity
+        );
         expect(insertEntityModelSpy).toHaveBeenCalledWith(
             model,
             {
@@ -228,10 +221,7 @@ describe('insertEntity', () => {
             context
         );
         expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
-        expect(triggerContentChangedEventSpy).toHaveBeenCalledWith(
-            ChangeSource.InsertEntity,
-            newEntity
-        );
+        expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
         expect(context.newEntities).toEqual([
