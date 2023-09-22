@@ -488,7 +488,7 @@ describe('handleParagraph', () => {
         handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe('');
-        expect(onNodeCreated).not.toHaveBeenCalled();
+        expect(onNodeCreated).toHaveBeenCalled();
     });
 
     it('Paragraph with only selection marker and BR', () => {

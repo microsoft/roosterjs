@@ -2,6 +2,7 @@ import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWith
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
 import { ChangeSource, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
 import {
@@ -19,7 +20,6 @@ describe('ContentModelFormatPlugin', () => {
         const editor = ({
             cacheContentModel: () => {},
             isDarkMode: () => false,
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -51,7 +51,6 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -88,7 +87,6 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -123,7 +121,6 @@ describe('ContentModelFormatPlugin', () => {
             setContentModel,
             isInIME: () => false,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -167,7 +164,6 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -235,7 +231,6 @@ describe('ContentModelFormatPlugin', () => {
             },
             cacheContentModel: () => {},
             isDarkMode: () => false,
-            getContentModelDefaultFormat: () => ({}),
             triggerPluginEvent,
         } as any) as IContentModelEditor;
         const state = {
@@ -308,7 +303,6 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -343,7 +337,6 @@ describe('ContentModelFormatPlugin', () => {
                 callback();
             },
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -376,7 +369,6 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -410,7 +402,6 @@ describe('ContentModelFormatPlugin', () => {
             createContentModel: () => model,
             setContentModel,
             cacheContentModel: () => {},
-            getContentModelDefaultFormat: () => ({}),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -451,17 +442,14 @@ describe('ContentModelFormatPlugin for default format', () => {
         editor = ({
             contains: (e: Node) => contentDiv != e && contentDiv.contains(e),
             getSelectionRangeEx,
-            getContentModelDefaultFormat: () => ({
-                fontFamily: 'Arial',
-            }),
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
         } as any) as IContentModelEditor;
     });
 
     it('Collapsed range, text input, under editor directly', () => {
-        const state = {
-            defaultFormat: {},
+        const state: ContentModelFormatPluginState = {
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
@@ -515,7 +503,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Expanded range, text input, under editor directly', () => {
         const state = {
-            defaultFormat: {},
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
@@ -567,7 +555,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, IME input, under editor directly', () => {
         const state = {
-            defaultFormat: {},
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Process' } as any;
@@ -621,7 +609,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, other input, under editor directly', () => {
         const state = {
-            defaultFormat: {},
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Up' } as any;
@@ -671,7 +659,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, normal input, not under editor directly, no style', () => {
         const state = {
-            defaultFormat: {},
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
@@ -727,7 +715,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
         const state = {
-            defaultFormat: {},
+            defaultFormat: { fontFamily: 'Arial' },
         };
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;

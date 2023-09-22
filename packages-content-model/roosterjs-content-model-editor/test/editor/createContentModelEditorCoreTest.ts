@@ -4,11 +4,13 @@ import * as ContentModelFormatPlugin from '../../lib/editor/corePlugins/ContentM
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
+import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
+import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getSelectionRangeEx } from '../../lib/editor/coreApi/getSelectionRangeEx';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
@@ -110,7 +112,17 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {},
+            format: {
+                defaultFormat: {
+                    fontWeight: undefined,
+                    italic: undefined,
+                    underline: undefined,
+                    fontFamily: undefined,
+                    fontSize: undefined,
+                    textColor: undefined,
+                    backgroundColor: undefined,
+                },
+            },
             contentDiv: {
                 style: {},
             },
@@ -166,14 +178,16 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [defaultModelToDomOptions],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
+            format: {
+                defaultFormat: {
+                    fontWeight: undefined,
+                    italic: undefined,
+                    underline: undefined,
+                    fontFamily: undefined,
+                    fontSize: undefined,
+                    textColor: undefined,
+                    backgroundColor: undefined,
+                },
             },
             contentDiv: {
                 style: {},
@@ -186,19 +200,18 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('With default format', () => {
-        mockedCore.lifecycle.defaultFormat = {
-            bold: true,
-            italic: true,
-            underline: true,
-            fontFamily: 'Arial',
-            fontSize: '10pt',
-            textColor: 'red',
-            backgroundColor: 'blue',
-        };
-
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
+            },
+            defaultFormat: {
+                bold: true,
+                italic: true,
+                underline: true,
+                fontFamily: 'Arial',
+                fontSize: '10pt',
+                textColor: 'red',
+                backgroundColor: 'blue',
             },
         };
 
@@ -210,19 +223,19 @@ describe('createContentModelEditorCore', () => {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
+            defaultFormat: {
+                bold: true,
+                italic: true,
+                underline: true,
+                fontFamily: 'Arial',
+                fontSize: '10pt',
+                textColor: 'red',
+                backgroundColor: 'blue',
+            },
         });
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {
-                    bold: true,
-                    italic: true,
-                    underline: true,
-                    fontFamily: 'Arial',
-                    fontSize: '10pt',
-                    textColor: 'red',
-                    backgroundColor: 'blue',
-                },
             },
             api: {
                 switchShadowEdit,
@@ -301,9 +314,20 @@ describe('createContentModelEditorCore', () => {
                 undefined,
             ],
             defaultModelToDomOptions: [undefined],
-            defaultFormat: {},
+            format: {
+                defaultFormat: {
+                    fontWeight: undefined,
+                    italic: undefined,
+                    underline: undefined,
+                    fontFamily: undefined,
+                    fontSize: undefined,
+                    textColor: undefined,
+                    backgroundColor: undefined,
+                },
+            },
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
+
             contentDiv: {
                 style: {},
             },
@@ -313,11 +337,17 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow dom indexer', () => {
+        mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModelV2);
+
         const options = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
         };
+
+        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
+            (features, feature) => feature == ExperimentalFeatures.ReusableContentModelV2
+        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -330,7 +360,7 @@ describe('createContentModelEditorCore', () => {
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [],
+                experimentalFeatures: [ExperimentalFeatures.ReusableContentModelV2],
             },
             api: {
                 switchShadowEdit,
@@ -352,14 +382,16 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
+            format: {
+                defaultFormat: {
+                    fontWeight: undefined,
+                    italic: undefined,
+                    underline: undefined,
+                    fontFamily: undefined,
+                    fontSize: undefined,
+                    textColor: undefined,
+                    backgroundColor: undefined,
+                },
             },
             contentDiv: {
                 style: {},
