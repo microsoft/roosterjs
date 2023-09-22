@@ -79,26 +79,30 @@ export default class ContentModelCachePlugin
 
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                switch (event.rawEvent.which) {
-                    case Keys.ENTER:
-                        // ENTER key will create new paragraph, so need to update cache to reflect this change
-                        // TODO: Handle ENTER key to better reuse content model
-                        this.editor.invalidateCache();
+                if (event.rawEvent.defaultPrevented || event.handledByEditFeature) {
+                    // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
+                    this.invalidateCache();
+                } else {
+                    switch (event.rawEvent.which) {
+                        case Keys.ENTER:
+                            // ENTER key will create new paragraph, so need to update cache to reflect this change
+                            // TODO: Handle ENTER key to better reuse content model
+                            this.invalidateCache();
 
-                        break;
+                            break;
+                    }
                 }
                 break;
 
             case PluginEventType.Input:
                 {
                     const rangeEx = this.forceGetSelectionRangeEx(this.editor);
-                    this.updateCachedModel(this.editor, rangeEx, true /*forceUpdate*/);
+                    this.updateCachedModel(rangeEx, true /*forceUpdate*/);
                 }
                 break;
 
             case PluginEventType.SelectionChanged:
                 this.updateCachedModel(
-                    this.editor,
                     event.selectionRangeEx ?? this.forceGetSelectionRangeEx(this.editor)
                 );
                 break;
@@ -111,7 +115,7 @@ export default class ContentModelCachePlugin
                         this.state.cachedModel = contentModel;
                         this.state.cachedRangeEx = rangeEx;
                     } else {
-                        this.editor.invalidateCache();
+                        this.invalidateCache();
                     }
                 }
 
@@ -121,15 +125,18 @@ export default class ContentModelCachePlugin
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            this.updateCachedModel(this.editor, this.forceGetSelectionRangeEx(this.editor));
+            this.updateCachedModel(this.forceGetSelectionRangeEx(this.editor));
         }
     };
 
-    private updateCachedModel(
-        editor: IContentModelEditor,
-        newRangeEx: SelectionRangeEx,
-        forceUpdate?: boolean
-    ) {
+    private invalidateCache() {
+        if (!this.editor?.isInShadowEdit()) {
+            this.state.cachedModel = undefined;
+            this.state.cachedRangeEx = undefined;
+        }
+    }
+
+    private updateCachedModel(newRangeEx: SelectionRangeEx, forceUpdate?: boolean) {
         const cachedRangeEx = this.state.cachedRangeEx;
         const model = this.state.cachedModel;
         const isSelectionChanged =
@@ -140,7 +147,7 @@ export default class ContentModelCachePlugin
             model &&
             !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
         ) {
-            editor.invalidateCache();
+            this.invalidateCache();
         }
 
         this.state.cachedRangeEx = newRangeEx;

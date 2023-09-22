@@ -64,18 +64,6 @@ export default class ContentModelEditor
     }
 
     /**
-     * Notify editor the current cache may be invalid
-     */
-    invalidateCache() {
-        const core = this.getCore();
-
-        if (!core.lifecycle.shadowEditFragment) {
-            core.cache.cachedModel = undefined;
-            core.cache.cachedRangeEx = undefined;
-        }
-    }
-
-    /**
      * Get default format as ContentModelSegmentFormat.
      * This is a replacement of IEditor.getDefaultFormat for Content Model.
      * @returns The default format

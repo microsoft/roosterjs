@@ -37,11 +37,6 @@ export interface IContentModelEditor extends IEditor {
     ): SelectionRangeEx | null;
 
     /**
-     * Notify editor the current cache may be invalid
-     */
-    invalidateCache(): void;
-
-    /**
      * Get default format as ContentModelSegmentFormat.
      * This is a replacement of IEditor.getDefaultFormat for Content Model.
      * @returns The default format

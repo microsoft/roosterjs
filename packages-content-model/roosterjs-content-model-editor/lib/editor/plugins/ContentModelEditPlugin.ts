@@ -65,10 +65,7 @@ export default class ContentModelEditPlugin implements EditorPlugin {
         const rawEvent = event.rawEvent;
         const which = rawEvent.which;
 
-        if (rawEvent.defaultPrevented || event.handledByEditFeature) {
-            // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
-            editor.invalidateCache();
-        } else {
+        if (!rawEvent.defaultPrevented && !event.handledByEditFeature) {
             // TODO: Consider use ContentEditFeature and need to hide other conflict features that are not based on Content Model
             switch (which) {
                 case Keys.BACKSPACE:

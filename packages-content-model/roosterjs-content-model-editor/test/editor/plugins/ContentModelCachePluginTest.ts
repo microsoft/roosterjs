@@ -9,22 +9,19 @@ describe('ContentModelCachePlugin', () => {
     let state: ContentModelCachePluginState;
     let editor: IContentModelEditor;
 
-    let invalidateCacheSpy: jasmine.Spy;
     let addEventListenerSpy: jasmine.Spy;
     let removeEventListenerSpy: jasmine.Spy;
     let getSelectionRangeExSpy: jasmine.Spy;
     let reconcileSelectionSpy: jasmine.Spy;
+    let isInShadowEditSpy: jasmine.Spy;
     let domIndexer: ContentModelDomIndexer;
 
     function init() {
-        invalidateCacheSpy = jasmine.createSpy('invalidateCacheSpy').and.callFake(() => {
-            state.cachedModel = undefined;
-            state.cachedRangeEx = undefined;
-        });
         addEventListenerSpy = jasmine.createSpy('addEventListenerSpy');
         removeEventListenerSpy = jasmine.createSpy('removeEventListener');
         getSelectionRangeExSpy = jasmine.createSpy('getSelectionRangeEx');
         reconcileSelectionSpy = jasmine.createSpy('reconcileSelection');
+        isInShadowEditSpy = jasmine.createSpy('isInShadowEdit');
 
         domIndexer = {
             reconcileSelection: reconcileSelectionSpy,
@@ -32,8 +29,8 @@ describe('ContentModelCachePlugin', () => {
 
         state = {};
         editor = ({
-            invalidateCache: invalidateCacheSpy,
             getSelectionRangeEx: getSelectionRangeExSpy,
+            isInShadowEdit: isInShadowEditSpy,
             getDocument: () => {
                 return {
                     addEventListener: addEventListenerSpy,
@@ -75,7 +72,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: undefined,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalledWith();
         });
 
         it('Other key', () => {
@@ -87,7 +83,19 @@ describe('ContentModelCachePlugin', () => {
             });
 
             expect(state).toEqual({});
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
+        });
+
+        it('Do not clear cache when in shadow edit', () => {
+            isInShadowEditSpy.and.returnValue(true);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.ENTER,
+                } as any,
+            });
+
+            expect(state).toEqual({});
         });
     });
 
@@ -113,7 +121,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: rangeEx,
             });
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
         });
 
         it('No cached range, has cached model', () => {
@@ -134,7 +141,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: rangeEx,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalledWith();
         });
 
         it('has cached range, has cached model', () => {
@@ -156,7 +162,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: newRangeEx,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalledWith();
         });
 
         it('has cached range, has cached model, has domIndexer', () => {
@@ -181,7 +186,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedRangeEx: newRangeEx,
                 domIndexer,
             });
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
         });
     });
 
@@ -209,7 +213,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedRangeEx: rangeEx,
                 domIndexer,
             });
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
 
@@ -234,7 +237,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedRangeEx: newRangeEx,
                 domIndexer,
             });
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
         });
 
@@ -259,7 +261,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedRangeEx: newRangeEx,
                 domIndexer,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalled();
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
         });
     });
@@ -285,7 +286,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: undefined,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalledWith();
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
 
@@ -310,7 +310,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedModel: undefined,
                 cachedRangeEx: undefined,
             });
-            expect(invalidateCacheSpy).toHaveBeenCalled();
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
 
@@ -337,7 +336,6 @@ describe('ContentModelCachePlugin', () => {
                 cachedRangeEx: newRangeEx,
                 domIndexer,
             });
-            expect(invalidateCacheSpy).not.toHaveBeenCalled();
             expect(reconcileSelectionSpy).not.toHaveBeenCalled();
         });
     });
