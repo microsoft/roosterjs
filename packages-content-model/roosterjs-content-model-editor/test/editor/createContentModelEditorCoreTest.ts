@@ -1,6 +1,6 @@
 import * as ContentModelCachePlugin from '../../lib/editor/corePlugins/ContentModelCachePlugin';
-import * as ContentModelEditPlugin from '../../lib/editor/plugins/ContentModelEditPlugin';
-import * as ContentModelFormatPlugin from '../../lib/editor/plugins/ContentModelFormatPlugin';
+import * as ContentModelEditPlugin from '../../lib/editor/corePlugins/ContentModelEditPlugin';
+import * as ContentModelFormatPlugin from '../../lib/editor/corePlugins/ContentModelFormatPlugin';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
@@ -89,7 +89,6 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {},
             },
             api: {
                 switchShadowEdit,
@@ -111,15 +110,7 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
+            defaultFormat: {},
             contentDiv: {
                 style: {},
             },
@@ -154,7 +145,6 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {},
             },
             api: {
                 switchShadowEdit,
@@ -254,14 +244,16 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: 'bold',
-                italic: true,
-                underline: true,
-                fontFamily: 'Arial',
-                fontSize: '10pt',
-                textColor: 'red',
-                backgroundColor: 'blue',
+            format: {
+                defaultFormat: {
+                    fontWeight: 'bold',
+                    italic: true,
+                    underline: true,
+                    fontFamily: 'Arial',
+                    fontSize: '10pt',
+                    textColor: 'red',
+                    backgroundColor: 'blue',
+                },
             },
             contentDiv: {
                 style: {},
@@ -290,7 +282,6 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {},
             },
             api: {
                 switchShadowEdit: switchShadowEdit,
@@ -310,15 +301,7 @@ describe('createContentModelEditorCore', () => {
                 undefined,
             ],
             defaultModelToDomOptions: [undefined],
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
+            defaultFormat: {},
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
             contentDiv: {
@@ -348,7 +331,6 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {},
             },
             api: {
                 switchShadowEdit,
@@ -370,14 +352,16 @@ describe('createContentModelEditorCore', () => {
             defaultModelToDomOptions: [undefined],
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
+            format: {
+                defaultFormat: {
+                    fontWeight: undefined,
+                    italic: undefined,
+                    underline: undefined,
+                    fontFamily: undefined,
+                    fontSize: undefined,
+                    textColor: undefined,
+                    backgroundColor: undefined,
+                },
             },
             contentDiv: {
                 style: {},
@@ -406,7 +390,6 @@ describe('createContentModelEditorCore', () => {
         expect(core).toEqual({
             lifecycle: {
                 experimentalFeatures: [],
-                defaultFormat: {},
             },
             api: {
                 switchShadowEdit,

@@ -1,9 +1,16 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
-import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 import { getObjectKeys, isCharacterValue } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import {
+    IEditor,
+    Keys,
+    PluginEvent,
+    PluginEventType,
+    PluginWithState,
+} from 'roosterjs-editor-types';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';
@@ -13,9 +20,18 @@ const ProcessKey = 'Process';
  * This includes:
  * 1. Handle pending format changes when selection is collapsed
  */
-export default class ContentModelFormatPlugin implements EditorPlugin {
+export default class ContentModelFormatPlugin
+    implements PluginWithState<ContentModelFormatPluginState> {
     private editor: IContentModelEditor | null = null;
     private hasDefaultFormat = false;
+
+    /**
+     * Construct a new instance of ContentModelEditPlugin class
+     * @param state State of this plugin
+     */
+    constructor(private state: ContentModelFormatPluginState) {
+        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    }
 
     /**
      * Get name of this plugin
@@ -33,11 +49,10 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
-
-        const defaultFormat = this.editor.getContentModelDefaultFormat();
         this.hasDefaultFormat =
-            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
-                .length > 0;
+            getObjectKeys(this.state.defaultFormat).filter(
+                x => typeof this.state.defaultFormat[x] !== 'undefined'
+            ).length > 0;
     }
 
     /**
@@ -47,6 +62,13 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
      */
     dispose() {
         this.editor = null;
+    }
+
+    /**
+     * Get plugin state object
+     */
+    getState(): ContentModelFormatPluginState {
+        return this.state;
     }
 
     /**
@@ -80,7 +102,7 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                     this.hasDefaultFormat &&
                     (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
                 ) {
-                    applyDefaultFormat(this.editor);
+                    applyDefaultFormat(this.editor, this.state.defaultFormat);
                 }
 
                 break;
@@ -107,6 +129,6 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
  * Create a new instance of ContentModelFormatPlugin.
  * This is mostly for unit test
  */
-export function createContentModelFormatPlugin() {
-    return new ContentModelFormatPlugin();
+export function createContentModelFormatPlugin(state: ContentModelFormatPluginState) {
+    return new ContentModelFormatPlugin(state);
 }

@@ -23,9 +23,11 @@ describe('createEditorContext', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
             darkColorHandler,
             cache: {},
+            format: {
+                defaultFormat,
+            },
         } as any) as ContentModelEditorCore;
 
         const context = createEditorContext(core);
@@ -62,10 +64,12 @@ describe('createEditorContext', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
             darkColorHandler,
             cache: {
                 domIndexer,
+            },
+            format: {
+                defaultFormat,
             },
         } as any) as ContentModelEditorCore;
 
@@ -108,9 +112,11 @@ describe('createEditorContext - checkZoomScale', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
             darkColorHandler,
             cache: {},
+            format: {
+                defaultFormat,
+            },
         } as any) as ContentModelEditorCore;
     });
 
@@ -198,9 +204,11 @@ describe('createEditorContext - checkRootDir', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
             darkColorHandler,
             cache: {},
+            format: {
+                defaultFormat,
+            },
         } as any) as ContentModelEditorCore;
     });
 

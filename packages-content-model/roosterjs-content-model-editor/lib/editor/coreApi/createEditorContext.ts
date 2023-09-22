@@ -10,7 +10,7 @@ export const createEditorContext: CreateEditorContext = core => {
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
-        defaultFormat: core.fo,
+        defaultFormat: format.defaultFormat,
         darkColorHandler: darkColorHandler,
         addDelimiterForEntity: true,
         allowCacheElement: true,
