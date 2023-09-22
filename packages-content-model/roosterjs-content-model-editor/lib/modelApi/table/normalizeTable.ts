@@ -1,4 +1,4 @@
-import { addSegment, createBr } from 'roosterjs-content-model-dom';
+import { addBlock, addSegment, createBr, createParagraph } from 'roosterjs-content-model-dom';
 import { arrayPush } from 'roosterjs-editor-dom';
 import {
     ContentModelSegment,
@@ -30,7 +30,17 @@ export function normalizeTable(
     table.rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
             if (cell.blocks.length == 0) {
-                addSegment(cell, createBr(defaultSegmentFormat));
+                const format = cell.format.textColor
+                    ? {
+                          ...defaultSegmentFormat,
+                          textColor: cell.format.textColor,
+                      }
+                    : defaultSegmentFormat;
+                addBlock(
+                    cell,
+                    createParagraph(undefined /*isImplicit*/, undefined /*blockFormat*/, format)
+                );
+                addSegment(cell, createBr(format));
             }
 
             if (rowIndex == 0) {

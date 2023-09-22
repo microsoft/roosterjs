@@ -11,7 +11,7 @@ import DragAndDropContext, {
 import {
     getRotateHTML,
     Rotator,
-    updateRotateHandlePosition,
+    updateRotateHandleState,
 } from '../../lib/plugins/ImageEdit/imageEditors/Rotator';
 
 const ROTATE_SIZE = 32;
@@ -92,7 +92,7 @@ describe('Rotate: rotate only', () => {
 
 describe('updateRotateHandlePosition', () => {
     let editor: IEditor;
-    const TEST_ID = 'imageEditTest';
+    const TEST_ID = 'imageEditTest_rotateHandlePosition';
     let plugin: ImageEdit;
     let editorGetVisibleViewport: any;
     beforeEach(() => {
@@ -119,19 +119,25 @@ describe('updateRotateHandlePosition', () => {
         rotatePosition: DOMRect,
         rotateCenterTop: string,
         rotateCenterHeight: string,
-        rotateHandleTop: string
+        rotateHandleTop: string,
+        wrapperPosition: DOMRect,
+        angle: number
     ) {
-        const IMG_ID = 'IMAGE_ID';
-        const content = `<img id="${IMG_ID}" src='test'/>`;
+        const IMG_ID = 'IMAGE_ID_ROTATION';
+        const WRAPPER_ID = 'WRAPPER_ID_ROTATION';
+        const content = `<span id="${WRAPPER_ID}"><img id="${IMG_ID}" src='test'/></span>`;
         editor.setContent(content);
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
         plugin.setEditingImage(image, ImageEditOperation.Rotate);
         const rotate = getRotateHTML(options)[0];
         const rotateHTML = createElement(rotate, document);
-        image.parentElement!.appendChild(rotateHTML!);
+        const imageParent = image.parentElement;
+        imageParent!.appendChild(rotateHTML!);
+        const wrapper = document.getElementById(WRAPPER_ID) as HTMLElement;
         const rotateCenter = document.getElementsByClassName('r_rotateC')[0] as HTMLElement;
         const rotateHandle = document.getElementsByClassName('r_rotateH')[0] as HTMLElement;
         spyOn(rotateHandle, 'getBoundingClientRect').and.returnValues(rotatePosition);
+        spyOn(wrapper, 'getBoundingClientRect').and.returnValues(wrapperPosition);
         const viewport: Rect = {
             top: 1,
             bottom: 200,
@@ -139,8 +145,9 @@ describe('updateRotateHandlePosition', () => {
             right: 200,
         };
         editorGetVisibleViewport.and.returnValue(viewport);
+        const angleRad = angle / DEG_PER_RAD;
 
-        updateRotateHandlePosition(viewport, rotateCenter, rotateHandle);
+        updateRotateHandleState(viewport, angleRad, wrapper, rotateCenter, rotateHandle, false);
 
         expect(rotateCenter.style.top).toBe(rotateCenterTop);
         expect(rotateCenter.style.height).toBe(rotateCenterHeight);
@@ -150,7 +157,7 @@ describe('updateRotateHandlePosition', () => {
     it('adjust rotate handle - ROTATOR HIDDEN ON TOP', () => {
         runTest(
             {
-                top: 1,
+                top: 0,
                 bottom: 3,
                 left: 3,
                 right: 5,
@@ -160,9 +167,21 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
+            '-6px',
             '0px',
             '0px',
-            '0px'
+            {
+                top: 2,
+                bottom: 3,
+                left: 2,
+                right: 5,
+                height: 2,
+                width: 2,
+                x: 1,
+                y: 3,
+                toJSON: () => {},
+            },
+            0
         );
     });
 
@@ -179,9 +198,21 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
-            '-15px',
+            '-21px',
             '15px',
-            '-32px'
+            '-32px',
+            {
+                top: 0,
+                bottom: 20,
+                left: 3,
+                right: 5,
+                height: 2,
+                width: 2,
+                x: 1,
+                y: 3,
+                toJSON: () => {},
+            },
+            50
         );
     });
 
@@ -190,7 +221,7 @@ describe('updateRotateHandlePosition', () => {
             {
                 top: 2,
                 bottom: 3,
-                left: 1,
+                left: 2,
                 right: 5,
                 height: 2,
                 width: 2,
@@ -198,9 +229,21 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
+            '-6px',
             '0px',
             '0px',
-            '0px'
+            {
+                top: 2,
+                bottom: 3,
+                left: 2,
+                right: 5,
+                height: 2,
+                width: 2,
+                x: 1,
+                y: 3,
+                toJSON: () => {},
+            },
+            -90
         );
     });
 
@@ -208,7 +251,7 @@ describe('updateRotateHandlePosition', () => {
         runTest(
             {
                 top: 2,
-                bottom: 201,
+                bottom: 200,
                 left: 1,
                 right: 5,
                 height: 2,
@@ -217,9 +260,21 @@ describe('updateRotateHandlePosition', () => {
                 y: 3,
                 toJSON: () => {},
             },
+            '-6px',
             '0px',
             '0px',
-            '0px'
+            {
+                top: 0,
+                bottom: 190,
+                left: 3,
+                right: 190,
+                height: 2,
+                width: 2,
+                x: 1,
+                y: 3,
+                toJSON: () => {},
+            },
+            180
         );
     });
 
@@ -229,16 +284,28 @@ describe('updateRotateHandlePosition', () => {
                 top: 2,
                 bottom: 3,
                 left: 1,
-                right: 201,
+                right: 200,
                 height: 2,
                 width: 2,
                 x: 1,
                 y: 3,
                 toJSON: () => {},
             },
+            '-6px',
             '0px',
             '0px',
-            '0px'
+            {
+                top: 0,
+                bottom: 190,
+                left: 3,
+                right: 190,
+                height: 2,
+                width: 2,
+                x: 1,
+                y: 3,
+                toJSON: () => {},
+            },
+            90
         );
     });
 });

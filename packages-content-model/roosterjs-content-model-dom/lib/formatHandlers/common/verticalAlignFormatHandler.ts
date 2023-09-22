@@ -22,6 +22,10 @@ export const verticalAlignFormatHandler: FormatHandler<VerticalAlignFormat> = {
             case 'bottom':
                 format.verticalAlign = 'bottom';
                 break;
+
+            case 'middle':
+                format.verticalAlign = 'middle';
+                break;
         }
     },
     apply: (format, element) => {

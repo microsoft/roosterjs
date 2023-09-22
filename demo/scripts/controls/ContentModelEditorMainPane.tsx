@@ -1,12 +1,12 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import ApiPlaygroundPlugin from './sidePane/apiPlayground/ApiPlaygroundPlugin';
+import ApiPlaygroundPlugin from './sidePane/contentModelApiPlayground/ApiPlaygroundPlugin';
 import ContentModelEditorOptionsPlugin from './sidePane/editorOptions/ContentModelEditorOptionsPlugin';
+import ContentModelEventViewPlugin from './sidePane/eventViewer/ContentModelEventViewPlugin';
 import ContentModelFormatPainterPlugin from './contentModel/plugins/ContentModelFormatPainterPlugin';
 import ContentModelFormatStatePlugin from './sidePane/formatState/ContentModelFormatStatePlugin';
 import ContentModelPanePlugin from './sidePane/contentModel/ContentModelPanePlugin';
 import ContentModelRibbon from './ribbonButtons/contentModel/ContentModelRibbon';
-import EventViewPlugin from './sidePane/eventViewer/EventViewPlugin';
 import getToggleablePlugins from './getToggleablePlugins';
 import MainPaneBase from './MainPaneBase';
 import SampleEntityPlugin from './sampleEntity/SampleEntityPlugin';
@@ -84,7 +84,7 @@ const DarkTheme: PartialTheme = {
 class ContentModelEditorMainPane extends MainPaneBase {
     private formatStatePlugin: ContentModelFormatStatePlugin;
     private editorOptionPlugin: ContentModelEditorOptionsPlugin;
-    private eventViewPlugin: EventViewPlugin;
+    private eventViewPlugin: ContentModelEventViewPlugin;
     private apiPlaygroundPlugin: ApiPlaygroundPlugin;
     private ContentModelPanePlugin: ContentModelPanePlugin;
     private ribbonPlugin: RibbonPlugin;
@@ -100,7 +100,7 @@ class ContentModelEditorMainPane extends MainPaneBase {
 
         this.formatStatePlugin = new ContentModelFormatStatePlugin();
         this.editorOptionPlugin = new ContentModelEditorOptionsPlugin();
-        this.eventViewPlugin = new EventViewPlugin();
+        this.eventViewPlugin = new ContentModelEventViewPlugin();
         this.apiPlaygroundPlugin = new ApiPlaygroundPlugin();
         this.snapshotPlugin = new SnapshotPlugin();
         this.ContentModelPanePlugin = new ContentModelPanePlugin();

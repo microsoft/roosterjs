@@ -1,8 +1,9 @@
 import addParser from './utils/addParser';
 import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
-import { getPasteSource } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
+import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
 import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
-import { parseDeprecatedColor } from './utils/deprecatedColorParser';
 import { parseLink } from './utils/linkParser';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
@@ -10,6 +11,7 @@ import { processPastedContentFromWordDesktop } from './WordDesktop/processPasted
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
 import {
     EditorPlugin,
+    HtmlSanitizerOptions,
     IEditor,
     KnownPasteSourceType,
     PasteType,
@@ -27,7 +29,7 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelFormatPlugin implements EditorPlugin {
+export default class ContentModelPastePlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**
@@ -78,7 +80,7 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         if (!ev.domToModelOption) {
             return;
         }
-        const pasteSource = getPasteSource(event, false);
+        const pasteSource = getPasteSource(ev, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
                 processPastedContentFromWordDesktop(ev);
@@ -88,16 +90,13 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
                 break;
             case KnownPasteSourceType.ExcelOnline:
             case KnownPasteSourceType.ExcelDesktop:
-                if (
-                    event.pasteType === PasteType.Normal ||
-                    event.pasteType === PasteType.MergeFormat
-                ) {
+                if (ev.pasteType === PasteType.Normal || ev.pasteType === PasteType.MergeFormat) {
                     // Handle HTML copied from Excel
                     processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
                 }
                 break;
             case KnownPasteSourceType.GoogleSheets:
-                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                 break;
             case KnownPasteSourceType.PowerPointDesktop:
                 processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
@@ -105,8 +104,34 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
         }
 
         addParser(ev.domToModelOption, 'link', parseLink);
-        parseDeprecatedColor(ev.sanitizingOption);
+        addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
+        addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
+        sanitizeBlockStyles(ev.sanitizingOption);
 
-        event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
+        if (ev.pasteType === PasteType.MergeFormat) {
+            addParser(ev.domToModelOption, 'block', blockElementParser);
+            addParser(ev.domToModelOption, 'listLevel', blockElementParser);
+        }
+
+        ev.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
+}
+
+/**
+ * For block elements that have background color style, remove the background color when user selects the merge current format
+ * paste option
+ */
+const blockElementParser: FormatParser<ContentModelBlockFormat> = (
+    format: ContentModelBlockFormat,
+    element: HTMLElement
+) => {
+    if (element.style.backgroundColor) {
+        delete format.backgroundColor;
+    }
+};
+
+function sanitizeBlockStyles(sanitizingOption: Required<HtmlSanitizerOptions>) {
+    chainSanitizerCallback(sanitizingOption.cssStyleCallbacks, 'display', (value: string) => {
+        return value != 'flex'; // return whether we keep the style
+    });
 }

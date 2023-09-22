@@ -35,7 +35,7 @@ describe('retrieveModelFormatState', () => {
     const baseFormatResult: ContentModelFormatState = {
         backgroundColor: 'red',
         fontName: 'Arial',
-        fontSize: '10px',
+        fontSize: '7.5pt',
         isBold: true,
         isItalic: true,
         isStrikeThrough: true,
@@ -139,7 +139,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('Single selection with header', () => {
+    it('Single selection with heading', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const para = createParagraph(false, undefined, undefined, {
@@ -157,6 +157,7 @@ describe('retrieveModelFormatState', () => {
 
         expect(result).toEqual({
             ...baseFormatResult,
+            headingLevel: 1,
             headerLevel: 1,
             isBlockQuote: false,
             isCodeInline: false,
@@ -275,7 +276,7 @@ describe('retrieveModelFormatState', () => {
         });
     });
 
-    it('With table header', () => {
+    it('With table heading', () => {
         const model = createContentModelDocument();
         const result: ContentModelFormatState = {};
         const table = createTable(1);
@@ -328,7 +329,7 @@ describe('retrieveModelFormatState', () => {
             isStrikeThrough: true,
             fontName: 'Arial',
             isSuperscript: true,
-            fontSize: '10px',
+            fontSize: '7.5pt',
             backgroundColor: 'red',
             textColor: 'green',
         });
@@ -489,7 +490,7 @@ describe('retrieveModelFormatState', () => {
             isItalic: true,
             isUnderline: true,
             isStrikeThrough: true,
-            fontSize: '10px',
+            fontSize: '7.5pt',
         });
     });
 
@@ -700,10 +701,45 @@ describe('retrieveModelFormatState', () => {
             isSuperscript: false,
             isSubscript: false,
             fontName: 'Arial',
-            fontSize: '12px',
+            fontSize: '9pt',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,
+        });
+    });
+
+    it('With default format and other different format', () => {
+        const model = createContentModelDocument({
+            fontFamily: 'Arial',
+            fontSize: '12px',
+            underline: true,
+            fontWeight: 'bold',
+            italic: true,
+        });
+        const result: ContentModelFormatState = {};
+        const para = createParagraph();
+        const text1 = createText('test1', { fontFamily: 'Tahoma', fontSize: '15px' });
+        para.segments.push(text1);
+
+        text1.isSelected = true;
+
+        spyOn(iterateSelections, 'iterateSelections').and.callFake((path, callback) => {
+            callback(path, undefined, para, [text1]);
+            return false;
+        });
+
+        retrieveModelFormatState(model, null, result);
+
+        expect(result).toEqual({
+            isBlockQuote: false,
+            isBold: false,
+            isSuperscript: false,
+            isSubscript: false,
+            fontSize: '11.25pt',
+            isCodeInline: false,
+            canUnlink: false,
+            canAddImageAltText: false,
+            fontName: 'Tahoma',
         });
     });
 
@@ -733,7 +769,7 @@ describe('retrieveModelFormatState', () => {
             isBold: false,
             isSuperscript: false,
             isSubscript: false,
-            fontSize: '12px',
+            fontSize: '9pt',
             isCodeInline: false,
             canUnlink: false,
             canAddImageAltText: false,

@@ -1,10 +1,14 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { EntityOperation } from 'roosterjs-editor-types';
+import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
 import {
+    createBr,
     createContentModelDocument,
     createDivider,
+    createEntity,
     createListItem,
     createListLevel,
     createParagraph,
@@ -13,10 +17,6 @@ import {
     createTableCell,
     createText,
 } from 'roosterjs-content-model-dom';
-
-function onDeleteEntityMock() {
-    return false;
-}
 
 describe('mergeModel', () => {
     it('empty to single selection', () => {
@@ -28,7 +28,7 @@ describe('mergeModel', () => {
         para.segments.push(marker);
         majorModel.blocks.push(para);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -68,7 +68,7 @@ describe('mergeModel', () => {
         para2.segments.push(text1, text2);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -118,7 +118,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -197,7 +197,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -292,7 +292,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara2);
         sourceModel.blocks.push(newPara3);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -439,7 +439,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -605,7 +605,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -793,7 +793,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -894,7 +894,7 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
         expect(majorModel).toEqual({
@@ -1011,9 +1011,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1148,9 +1153,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1274,9 +1284,14 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeTable: true,
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeTable: true,
+            }
+        );
 
         expect(normalizeTable.normalizeTable).toHaveBeenCalledTimes(1);
         expect(majorModel).toEqual({
@@ -1383,13 +1398,18 @@ describe('mergeModel', () => {
         newPara.segments.push(newText);
         sourceModel.blocks.push(newPara);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            insertPosition: {
-                marker: marker2,
-                paragraph: para1,
-                path: [majorModel],
-            },
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                insertPosition: {
+                    marker: marker2,
+                    paragraph: para1,
+                    path: [majorModel],
+                },
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1461,9 +1481,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1518,9 +1543,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1581,9 +1611,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1671,9 +1706,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1745,7 +1785,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(divider);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1812,7 +1852,7 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [] });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1909,9 +1949,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'keepSourceEmphasisFormat',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'keepSourceEmphasisFormat',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1985,9 +2030,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2021,6 +2071,109 @@ describe('mergeModel', () => {
                             fontFamily: 'sourceDecoratorFontName',
                         },
                     },
+                },
+            ],
+            format: MockedFormat,
+        });
+    });
+
+    it('Merge with default format paragraph and paragraph, mergeFormat: none', () => {
+        const MockedFormat = {
+            fontFamily: 'sourceSegmentFormatFontFamily',
+            italic: 'sourceSegmentFormatItalic',
+            underline: 'sourceSegmentFormatUnderline',
+            fontSize: 'sourceSegmentFormatFontSize',
+        } as any;
+        const majorModel = createContentModelDocument(MockedFormat);
+        majorModel.blocks.push({
+            blockType: 'Paragraph',
+            segmentFormat: MockedFormat,
+            segments: [
+                {
+                    segmentType: 'Text',
+                    text: 'test',
+                    format: {
+                        fontFamily: 'sourceFontFamily',
+                    } as any,
+                },
+                createSelectionMarker(),
+            ],
+            format: {},
+        });
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: {
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                                fontSize: 'sourcefontSize',
+                            } as any,
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'none',
+            }
+        );
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        Object({
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: Object({
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceSegmentFormatItalic',
+                                underline: 'sourceSegmentFormatUnderline',
+                                fontSize: 'sourceSegmentFormatFontSize',
+                            }),
+                        }),
+                        Object({
+                            segmentType: 'Text',
+                            text: 'test',
+                            format: Object({
+                                fontFamily: 'sourceFontFamily',
+                                italic: 'sourceItalic',
+                                underline: 'sourceUnderline',
+                                fontSize: 'sourcefontSize',
+                            }),
+                        }),
+                        Object({
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: Object({
+                                fontFamily: 'sourceSegmentFormatFontFamily',
+                                italic: 'sourceSegmentFormatItalic',
+                                underline: 'sourceSegmentFormatUnderline',
+                                fontSize: 'sourceSegmentFormatFontSize',
+                            }),
+                        }),
+                    ],
+                    format: {},
                 },
             ],
             format: MockedFormat,
@@ -2164,9 +2317,14 @@ describe('mergeModel', () => {
         para1.segments.push(marker);
         majorModel.blocks.push(para1);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock, {
-            mergeFormat: 'mergeAll',
-        });
+        mergeModel(
+            majorModel,
+            sourceModel,
+            { newEntities: [], deletedEntities: [] },
+            {
+                mergeFormat: 'mergeAll',
+            }
+        );
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2334,7 +2492,7 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(heading);
 
-        mergeModel(majorModel, sourceModel, onDeleteEntityMock);
+        mergeModel(majorModel, sourceModel);
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -2363,6 +2521,458 @@ describe('mergeModel', () => {
                         },
                     },
                     segmentFormat: { backgroundColor: 'red' },
+                },
+            ],
+        });
+    });
+
+    it('Merge Table with styles into paragraph, paragraph after table should not inherit styles from table', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newPara1 = createParagraph();
+        const newText1 = createText('newText1');
+        const newCell1 = createTableCell(false, false);
+        const newTable1 = createTable(1, {
+            textAlign: 'start',
+            whiteSpace: 'normal',
+            borderTop: '1px solid black',
+            borderRight: '1px solid black',
+            borderBottom: '1px solid black',
+            borderLeft: '1px solid black',
+            backgroundColor: 'rgb(255, 255, 255)',
+            useBorderBox: true,
+            borderCollapse: true,
+        });
+
+        newPara1.segments.push(newText1);
+        newCell1.blocks.push(newPara1);
+        newTable1.rows[0].cells.push(newCell1);
+        sourceModel.blocks.push(newTable1);
+
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'Table',
+                    rows: [
+                        {
+                            height: 0,
+                            format: {},
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [
+                                        {
+                                            blockType: 'Paragraph',
+                                            segments: [
+                                                {
+                                                    segmentType: 'Text',
+                                                    text: 'newText1',
+                                                    format: {},
+                                                },
+                                            ],
+                                            format: {},
+                                        },
+                                    ],
+                                    format: {},
+                                    spanLeft: false,
+                                    spanAbove: false,
+                                    isHeader: false,
+                                    dataset: {},
+                                },
+                            ],
+                        },
+                    ],
+                    format: {
+                        textAlign: 'start',
+                        whiteSpace: 'normal',
+                        borderTop: '1px solid black',
+                        borderRight: '1px solid black',
+                        borderBottom: '1px solid black',
+                        borderLeft: '1px solid black',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                        useBorderBox: true,
+                        borderCollapse: true,
+                    },
+                    widths: [],
+                    dataset: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge Divider with styles into paragraph, paragraph after table should not inherit styles from Divider', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newDiv = createDivider('div', {
+            textAlign: 'start',
+            whiteSpace: 'normal',
+            borderTop: '1px solid black',
+            borderRight: '1px solid black',
+            borderBottom: '1px solid black',
+            borderLeft: '1px solid black',
+            backgroundColor: 'rgb(255, 255, 255)',
+        });
+
+        sourceModel.blocks.push(newDiv);
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'Divider',
+                    tagName: 'div',
+                    format: {
+                        textAlign: 'start',
+                        whiteSpace: 'normal',
+                        borderTop: '1px solid black',
+                        borderRight: '1px solid black',
+                        borderBottom: '1px solid black',
+                        borderLeft: '1px solid black',
+                        backgroundColor: 'rgb(255, 255, 255)',
+                    },
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge ListItem with styles into paragraph, paragraph after table should not inherit styles from ListItem', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newList = createListItem([
+            createListLevel('OL', {
+                marginBottom: '100px',
+            }),
+        ]);
+        const para2 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const text3 = createText('test1');
+        newList.blocks.push(para2);
+        para2.segments.push(text3);
+
+        sourceModel.blocks.push(newList);
+        mergeModel(majorModel, sourceModel);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    blockType: 'BlockGroup',
+                    blockGroupType: 'ListItem',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                            format: {},
+                            segmentFormat: {
+                                fontFamily: 'Arial',
+                                fontSize: '15px',
+                                backgroundColor: 'red',
+                                textColor: 'blue',
+                                italic: false,
+                            },
+                        },
+                    ],
+                    levels: [
+                        {
+                            listType: 'OL',
+                            format: { marginBottom: '100px' },
+                            dataset: {},
+                        },
+                    ],
+                    formatHolder: {
+                        segmentType: 'SelectionMarker',
+                        isSelected: true,
+                        format: {},
+                    },
+                    format: {},
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+    });
+
+    it('Merge Entity with styles into paragraph, paragraph after table should not inherit styles from Entity', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph(false, undefined, {
+            fontFamily: 'Arial',
+            fontSize: '15px',
+            backgroundColor: 'red',
+            textColor: 'blue',
+            italic: false,
+        });
+        const marker = createSelectionMarker();
+        const text1 = createText('test1');
+        const text2 = createText('test2');
+
+        para1.segments.push(text1, marker, text2);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newEntity = createEntity(document.createElement('div'), false, undefined, {
+            fontFamily: 'Corbel',
+            fontSize: '20px',
+            backgroundColor: 'blue',
+            textColor: 'aliceblue',
+            italic: true,
+        });
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+        };
+
+        sourceModel.blocks.push(newEntity);
+        mergeModel(majorModel, sourceModel, context);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [{ segmentType: 'Text', text: 'test1', format: {} }],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+                {
+                    segmentType: 'Entity',
+                    blockType: 'Entity',
+                    format: {
+                        fontFamily: 'Corbel',
+                        fontSize: '20px',
+                        backgroundColor: 'blue',
+                        textColor: 'aliceblue',
+                        italic: true,
+                    },
+                    id: undefined,
+                    type: undefined,
+                    isReadonly: false,
+                    wrapper: newEntity.wrapper,
+                },
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                        { segmentType: 'Text', text: 'test2', format: {} },
+                    ],
+                    format: {},
+                    segmentFormat: {
+                        fontFamily: 'Arial',
+                        fontSize: '15px',
+                        backgroundColor: 'red',
+                        textColor: 'blue',
+                        italic: false,
+                    },
+                },
+            ],
+        });
+        expect(context).toEqual({
+            newEntities: [newEntity],
+            deletedEntities: [],
+        });
+    });
+
+    it('Merge and replace inline entities', () => {
+        const majorModel = createContentModelDocument();
+        const para1 = createParagraph();
+        const sourceEntity = createEntity('wrapper1' as any, true, 'E0');
+        const sourceBr = createBr();
+
+        sourceEntity.isSelected = true;
+        para1.segments.push(sourceEntity, sourceBr);
+        majorModel.blocks.push(para1);
+
+        const sourceModel: ContentModelDocument = createContentModelDocument();
+        const newPara = createParagraph();
+        const newEntity1 = createEntity('wrapper2' as any, true, 'E1');
+        const newEntity2 = createEntity('wrapper2' as any, true, 'E2');
+        const text = createText('test');
+
+        newPara.segments.push(newEntity1, text, newEntity2);
+        sourceModel.blocks.push(newPara);
+
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+        };
+        mergeModel(majorModel, sourceModel, context);
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        newEntity1,
+                        text,
+                        newEntity2,
+                        {
+                            segmentType: 'SelectionMarker',
+                            format: {},
+                            isSelected: true,
+                        },
+                    ],
+                },
+            ],
+        });
+        expect(context).toEqual({
+            newEntities: [newEntity1, newEntity2],
+            deletedEntities: [
+                {
+                    entity: sourceEntity,
+                    operation: EntityOperation.Overwrite,
                 },
             ],
         });

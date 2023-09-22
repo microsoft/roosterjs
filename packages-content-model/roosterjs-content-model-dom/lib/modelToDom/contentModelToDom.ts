@@ -1,12 +1,10 @@
-import { createModelToDomContext } from './context/createModelToDomContext';
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import {
     ContentModelDocument,
-    EditorContext,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
-    ModelToDomOption,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 import {
     NodePosition,
@@ -22,25 +20,22 @@ import {
  * When a DOM node with existing node is passed, it will be merged with content model so that unchanged blocks
  * won't be touched.
  * @param model The content model document to generate DOM tree from
- * @param editorContext Content for Content Model editor
- * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @returns A tuple of the following 3 objects:
- * 1. Document Fragment that contains the DOM tree generated from the given model
- * 2. A SelectionRangeEx object that contains selection info from the model if any, or null
- * 3. An array entity DOM wrapper and its placeholder node pair for reusable root level entities.
+ * @param context The context object for Content Model to DOM conversion
+ * @param onNodeCreated Callback invoked when a DOM node is created
+ * @returns The selection range created in DOM tree from this model, or null when there is no selection
  */
 export function contentModelToDom(
     doc: Document,
     root: Node,
     model: ContentModelDocument,
-    editorContext: EditorContext,
-    option?: ModelToDomOption
+    context: ModelToDomContext,
+    onNodeCreated?: OnNodeCreated
 ): SelectionRangeEx | null {
-    const modelToDomContext = createModelToDomContext(editorContext, option);
+    context.onNodeCreated = onNodeCreated;
 
-    modelToDomContext.modelHandlers.blockGroupChildren(doc, root, model, modelToDomContext);
+    context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
-    const range = extractSelectionRange(modelToDomContext);
+    const range = extractSelectionRange(context);
 
     root.normalize();
 

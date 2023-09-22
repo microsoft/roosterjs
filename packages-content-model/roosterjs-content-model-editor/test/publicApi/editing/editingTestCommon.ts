@@ -13,6 +13,7 @@ export function editingTestCommon(
     spyOn(pendingFormat, 'setPendingFormat');
     spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
+    const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
     const triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
 
     const addUndoSnapshot = jasmine
@@ -29,12 +30,15 @@ export function editingTestCommon(
         });
     const editor = ({
         createContentModel: () => model,
+        cacheContentModel: jasmine.createSpy('cacheContentModel'),
         addUndoSnapshot,
         focus: jasmine.createSpy(),
         setContentModel,
+        triggerPluginEvent,
         isDisposed: () => false,
-        getFocusedPosition: () => null as NodePosition,
+        getFocusedPosition: () => null! as NodePosition,
         triggerContentChangedEvent,
+        isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

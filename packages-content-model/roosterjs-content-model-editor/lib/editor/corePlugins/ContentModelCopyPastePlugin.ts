@@ -1,17 +1,17 @@
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { contentModelToDom } from 'roosterjs-content-model-dom';
+import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { getOnDeleteEntityCallback } from '../utils/handleKeyboardEventCommon';
+import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import {
+    contentModelToDom,
+    createModelToDomContext,
+    isNodeOfType,
+    normalizeContentModel,
+} from 'roosterjs-content-model-dom';
+import type { OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -19,7 +19,6 @@ import {
     createRange,
     extractClipboardItems,
     toArray,
-    Browser,
     wrap,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
@@ -33,6 +32,8 @@ import {
     ClipboardData,
     SelectionRangeTypes,
     SelectionRangeEx,
+    ColorTransformDirection,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -92,11 +93,26 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
         const selection = this.editor.getSelectionRangeEx();
         if (selection && !selection.areAllCollapsed) {
-            const model = this.editor.createContentModel({
-                disableCacheElement: true,
-            });
+            const model = this.editor.createContentModel();
 
-            const pasteModel = cloneModel(model);
+            const pasteModel = cloneModel(model, {
+                includeCachedElement: this.editor.isDarkMode()
+                    ? (node, type) => {
+                          if (type == 'cache') {
+                              return undefined;
+                          } else {
+                              const result = node.cloneNode(true /*deep*/) as HTMLElement;
+
+                              this.editor?.transformToDarkColor(
+                                  result,
+                                  ColorTransformDirection.DarkToLight
+                              );
+
+                              return result;
+                          }
+                      }
+                    : false,
+            });
             if (selection.type === SelectionRangeTypes.TableSelection) {
                 iterateSelections([pasteModel], (path, tableContext) => {
                     if (tableContext?.table) {
@@ -115,48 +131,54 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 });
             }
             const tempDiv = this.getTempDiv(this.editor);
-            const selectionAfterPaste = contentModelToDom(
+            const selectionForCopy = contentModelToDom(
                 tempDiv.ownerDocument,
                 tempDiv,
                 pasteModel,
-                {
-                    isDarkMode: false /* To force light mode on paste */,
-                    darkColorHandler: this.editor.getDarkColorHandler(),
-                },
-                {
-                    onNodeCreated,
-                }
+                createModelToDomContext(),
+                onNodeCreated
             );
 
-            let newRange: Range | null = selectionExToRange(selectionAfterPaste, tempDiv);
+            let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
             if (newRange) {
-                const cutCopyEvent = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,
                     isCut,
-                });
+                }).range;
 
-                if (cutCopyEvent.range) {
+                if (newRange) {
                     addRangeToSelection(newRange);
                 }
 
                 this.editor.runAsync(editor => {
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    if (selectionAfterPaste) {
-                        this.editor?.select(selectionAfterPaste);
-                    }
+                    editor.select(selection);
+
                     if (isCut) {
-                        editor.addUndoSnapshot(() => {
-                            deleteSelection(
-                                model,
-                                getOnDeleteEntityCallback(editor as IContentModelEditor)
-                            );
-                            this.editor?.setContentModel(model);
-                        }, ChangeSource.Cut);
+                        formatWithContentModel(
+                            editor as IContentModelEditor,
+                            'cut',
+                            (model, context) => {
+                                if (
+                                    deleteSelection(model, [], context).deleteResult ==
+                                    DeleteResult.Range
+                                ) {
+                                    normalizeContentModel(model);
+                                }
+
+                                return true;
+                            },
+                            {
+                                changeSource: ChangeSource.Cut,
+                            }
+                        );
                     }
                 });
+            } else {
+                cleanUpAndRestoreSelection(tempDiv);
             }
         }
     }
@@ -177,7 +199,6 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     true /*pasteNativeEvent*/
                 ).then((clipboardData: ClipboardData) => {
                     if (!editor.isDisposed()) {
-                        removeContentForAndroid(editor);
                         paste(editor, clipboardData);
                     }
                 });
@@ -218,16 +239,11 @@ function cleanUpAndRestoreSelection(tempDiv: HTMLDivElement) {
     tempDiv.style.display = 'none';
     moveChildNodes(tempDiv);
 }
+
 function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
-function removeContentForAndroid(editor: IContentModelEditor) {
-    if (Browser.isAndroid) {
-        const model = editor.createContentModel();
-        deleteSelection(model, getOnDeleteEntityCallback(editor));
-        editor.setContentModel(model);
-    }
-}
+
 function selectionExToRange(
     selection: SelectionRangeEx | null,
     tempDiv: HTMLDivElement
@@ -258,16 +274,11 @@ function selectionExToRange(
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
+export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (safeInstanceOf(node, 'HTMLTableElement')) {
         wrap(node, 'div');
+    }
+    if (isNodeOfType(node, NodeType.Element) && !node.isContentEditable) {
+        node.removeAttribute('contenteditable');
     }
 };

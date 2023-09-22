@@ -8,10 +8,12 @@ describe('setTableCellShade', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         spyOn(normalizeTable, 'normalizeTable');
 
@@ -20,6 +22,8 @@ describe('setTableCellShade', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -42,7 +46,8 @@ describe('setTableCellShade', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         } else {
             expect(setContentModel).not.toHaveBeenCalled();

@@ -414,10 +414,12 @@ describe('setAlignment in table', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         spyOn(normalizeTable, 'normalizeTable');
 
@@ -426,6 +428,8 @@ describe('setAlignment in table', () => {
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -448,7 +452,8 @@ describe('setAlignment in table', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedTable],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }
@@ -807,16 +812,20 @@ describe('setAlignment in list', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -839,7 +848,8 @@ describe('setAlignment in list', () => {
                     blockGroupType: 'Document',
                     blocks: [expectedList],
                 },
-                { onNodeCreated: undefined }
+                undefined,
+                undefined
             );
         }
     }

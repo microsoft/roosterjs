@@ -24,7 +24,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         return refNode;
     }
 
-    let tableNode = table.cachedElement;
+    let tableNode = context.allowCacheElement ? table.cachedElement : undefined;
 
     if (tableNode) {
         refNode = reuseCachedElement(parent, tableNode, refNode);
@@ -33,7 +33,10 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
     } else {
         tableNode = doc.createElement('table');
 
-        table.cachedElement = tableNode;
+        if (context.allowCacheElement) {
+            table.cachedElement = tableNode;
+        }
+
         parent.insertBefore(tableNode, refNode);
 
         applyFormat(tableNode, context.formatAppliers.block, table.format, context);
@@ -55,12 +58,15 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             continue;
         }
 
-        const tr = tableRow.cachedElement || doc.createElement('tr');
+        const tr = (context.allowCacheElement && tableRow.cachedElement) || doc.createElement('tr');
         tbody.appendChild(tr);
         moveChildNodes(tr);
 
         if (!tableRow.cachedElement) {
-            tableRow.cachedElement = tr;
+            if (context.allowCacheElement) {
+                tableRow.cachedElement = tr;
+            }
+
             applyFormat(tr, context.formatAppliers.tableRow, tableRow.format, context);
         }
 
@@ -85,7 +91,9 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
-                let td = cell.cachedElement || doc.createElement(cell.isHeader ? 'th' : 'td');
+                let td =
+                    (context.allowCacheElement && cell.cachedElement) ||
+                    doc.createElement(cell.isHeader ? 'th' : 'td');
 
                 tr.appendChild(td);
 
@@ -120,7 +128,10 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                 }
 
                 if (!cell.cachedElement) {
-                    cell.cachedElement = td;
+                    if (context.allowCacheElement) {
+                        cell.cachedElement = td;
+                    }
+
                     applyFormat(td, context.formatAppliers.block, cell.format, context);
                     applyFormat(td, context.formatAppliers.tableCell, cell.format, context);
                     applyFormat(td, context.formatAppliers.tableCellBorder, cell.format, context);

@@ -15,6 +15,8 @@ import { createTable } from '../../../lib/modelApi/creators/createTable';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
 import { createText } from '../../../lib/modelApi/creators/createText';
 import {
+    ContentModelCode,
+    ContentModelLink,
     ContentModelListLevel,
     ContentModelSegmentFormat,
     ContentModelTableCellFormat,
@@ -186,6 +188,47 @@ describe('Creators', () => {
         (<any>result.format).a = 2;
 
         expect(format).toEqual({ a: 1 });
+    });
+
+    it('createText with decorators', () => {
+        const format = { a: 1 } as any;
+        const text = 'test';
+        const link: ContentModelLink = {
+            dataset: {},
+            format: {
+                href: 'test',
+            },
+        };
+        const code: ContentModelCode = {
+            format: { fontFamily: 'test' },
+        };
+        const result = createText(text, format, link, code);
+
+        expect(result).toEqual({
+            segmentType: 'Text',
+            format: { a: 1 } as any,
+            text: text,
+            link,
+            code,
+        });
+        expect(result.link).not.toBe(link);
+        expect(result.code).not.toBe(code);
+
+        result.link!.dataset.a = 'b';
+        result.link!.format.href = 'test2';
+
+        expect(link).toEqual({
+            dataset: {},
+            format: {
+                href: 'test',
+            },
+        });
+
+        result.code!.format.fontFamily = 'test2';
+
+        expect(code).toEqual({
+            format: { fontFamily: 'test' },
+        });
     });
 
     it('createTable', () => {
@@ -432,7 +475,7 @@ describe('Creators', () => {
         const type = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, undefined, id, type);
+        const entityModel = createEntity(wrapper, isReadonly, type, undefined, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
@@ -453,11 +496,11 @@ describe('Creators', () => {
         const entityModel = createEntity(
             wrapper,
             isReadonly,
+            type,
             {
                 fontSize: '10pt',
             },
-            id,
-            type
+            id
         );
 
         expect(entityModel).toEqual({

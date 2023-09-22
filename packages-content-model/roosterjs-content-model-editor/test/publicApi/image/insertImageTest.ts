@@ -22,7 +22,7 @@ describe('insertImage', () => {
             .createSpy()
             .and.callFake(
                 (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
+                    expect(source).toBe(undefined!);
                     expect(param.formatApiName).toBe(apiName);
                     callback();
                 }
@@ -30,6 +30,7 @@ describe('insertImage', () => {
         const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
             expect(model).toEqual(result);
         });
+        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         const editor = ({
             createContentModel: () => model,
             addUndoSnapshot,
@@ -37,6 +38,8 @@ describe('insertImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);
@@ -94,7 +97,9 @@ describe('insertImage', () => {
                             {
                                 segmentType: 'Image',
                                 src: testUrl,
-                                format: {},
+                                format: {
+                                    backgroundColor: '',
+                                },
                                 dataset: {},
                             },
                             {
@@ -133,7 +138,9 @@ describe('insertImage', () => {
                             {
                                 segmentType: 'Image',
                                 src: testUrl,
-                                format: {},
+                                format: {
+                                    backgroundColor: '',
+                                },
                                 dataset: {},
                             },
                             {
@@ -179,6 +186,7 @@ describe('insertImage', () => {
                                 format: {
                                     fontFamily: 'Test',
                                     fontSize: '20px',
+                                    backgroundColor: '',
                                 },
                                 dataset: {},
                             },

@@ -78,7 +78,6 @@ describe('normalizeTable', () => {
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
-                                    isImplicit: true,
                                     segments: [
                                         {
                                             segmentType: 'Br',
@@ -678,7 +677,6 @@ describe('normalizeTable', () => {
                             blocks: [
                                 {
                                     blockType: 'Paragraph',
-                                    isImplicit: true,
                                     segments: [
                                         {
                                             segmentType: 'Br',
@@ -688,6 +686,7 @@ describe('normalizeTable', () => {
                                         },
                                     ],
                                     format: {},
+                                    segmentFormat: { fontSize: '10px' },
                                 },
                             ],
                             dataset: {},
@@ -725,7 +724,6 @@ describe('normalizeTable', () => {
 
         const block: ContentModelParagraph = {
             blockType: 'Paragraph',
-            isImplicit: true,
             segments: [
                 {
                     segmentType: 'Br',

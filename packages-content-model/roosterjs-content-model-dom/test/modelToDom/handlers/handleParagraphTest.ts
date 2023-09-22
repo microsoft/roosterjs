@@ -6,25 +6,30 @@ import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagrap
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 import {
-    ContentModelHandler,
     ContentModelParagraph,
     ContentModelSegment,
+    ContentModelSegmentHandler,
     ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 describe('handleParagraph', () => {
     let parent: HTMLElement;
     let context: ModelToDomContext;
-    let handleSegment: jasmine.Spy<ContentModelHandler<ContentModelSegment>>;
+    let handleSegment: jasmine.Spy<ContentModelSegmentHandler<ContentModelSegment>>;
 
     beforeEach(() => {
         parent = document.createElement('div');
         handleSegment = jasmine.createSpy('handleSegment');
-        context = createModelToDomContext(undefined, {
-            modelHandlerOverride: {
-                segment: handleSegment,
+        context = createModelToDomContext(
+            {
+                allowCacheElement: true,
             },
-        });
+            {
+                modelHandlerOverride: {
+                    segment: handleSegment,
+                },
+            }
+        );
     });
 
     function runTest(
@@ -84,7 +89,8 @@ describe('handleParagraph', () => {
             document,
             parent.firstChild as HTMLElement,
             segment,
-            context
+            context,
+            []
         );
     });
 
@@ -105,7 +111,7 @@ describe('handleParagraph', () => {
             1
         );
 
-        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context);
+        expect(handleSegment).toHaveBeenCalledWith(document, parent, segment, context, []);
     });
 
     it('Handle multiple segments', () => {
@@ -136,13 +142,15 @@ describe('handleParagraph', () => {
             document,
             parent.firstChild as HTMLElement,
             segment1,
-            context
+            context,
+            []
         );
         expect(handleSegment).toHaveBeenCalledWith(
             document,
             parent.firstChild as HTMLElement,
             segment2,
-            context
+            context,
+            []
         );
     });
 
@@ -455,6 +463,30 @@ describe('handleParagraph', () => {
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
         expect(onNodeCreated.calls.argsFor(0)[0]).toBe(paragraph);
         expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('div'));
+    });
+
+    it('With onNodeCreated on implicit paragraph', () => {
+        const parent = document.createElement('div');
+        const segment: ContentModelSegment = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment],
+            format: {},
+            isImplicit: true,
+        };
+
+        const onNodeCreated = jasmine.createSpy('onNodeCreated');
+
+        context.onNodeCreated = onNodeCreated;
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('');
+        expect(onNodeCreated).not.toHaveBeenCalled();
     });
 
     it('Paragraph with only selection marker and BR', () => {

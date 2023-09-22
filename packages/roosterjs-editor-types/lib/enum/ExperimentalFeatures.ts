@@ -124,17 +124,36 @@ export const enum ExperimentalFeatures {
      */
     DefaultFormatOnContainer = 'DefaultFormatOnContainer',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
+     */
+    ReusableContentModel = 'ReusableContentModel',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Handle keyboard editing event with Content Model
+     */
+    EditWithContentModel = 'EditWithContentModel',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Trigger formatting by a especial characters. Ex: (A), 1. i).
+     */
+    AutoFormatList = 'AutoFormatList',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
     //#endregion
 
     /**
      * Provide additional Tab Key Features. Requires Text Features Content Editable Features
      */
     TabKeyTextFeatures = 'TabKeyTextFeatures',
-
-    /**
-     * Trigger formatting by a especial characters. Ex: (A), 1. i).
-     */
-    AutoFormatList = 'AutoFormatList',
 
     /**
      * With this feature enabled, when writing back a list item we will re-use all
@@ -145,24 +164,9 @@ export const enum ExperimentalFeatures {
     ReuseAllAncestorListElements = 'ReuseAllAncestorListElements',
 
     /**
-     * Reuse existing DOM structure if possible when convert Content Model back to DOM tree
-     */
-    ReusableContentModel = 'ReusableContentModel',
-
-    /**
-     * Handle keyboard editing event with Content Model
-     */
-    EditWithContentModel = 'EditWithContentModel',
-
-    /**
      * Delete table with Backspace key with the whole was selected with table selector
      */
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
-
-    /**
-     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
-     */
-    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
 
     /**
      * Paste with Content model

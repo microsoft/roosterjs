@@ -15,16 +15,20 @@ describe('adjustLinkSelection', () => {
     let editor: IContentModelEditor;
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         editor = ({
             focus: () => {},
             addUndoSnapshot: (callback: Function) => callback(),
             setContentModel,
             createContentModel,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -40,9 +44,7 @@ describe('adjustLinkSelection', () => {
 
         if (expectedModel) {
             expect(setContentModel).toHaveBeenCalledTimes(1);
-            expect(setContentModel).toHaveBeenCalledWith(expectedModel, {
-                onNodeCreated: undefined,
-            });
+            expect(setContentModel).toHaveBeenCalledWith(expectedModel, undefined, undefined);
         } else {
             expect(setContentModel).not.toHaveBeenCalled();
         }

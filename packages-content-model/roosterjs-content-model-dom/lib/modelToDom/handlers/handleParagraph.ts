@@ -21,7 +21,7 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let container = paragraph.cachedElement;
+    let container = context.allowCacheElement ? paragraph.cachedElement : undefined;
 
     if (container) {
         refNode = reuseCachedElement(parent, container, refNode);
@@ -66,12 +66,14 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
                                 segmentType: 'Text',
                                 text: '',
                             },
-                            context
+                            context,
+                            []
                         );
                     }
 
                     paragraph.segments.forEach(segment => {
-                        context.modelHandlers.segment(doc, parent, segment, context);
+                        const newSegments: Node[] = [];
+                        context.modelHandlers.segment(doc, parent, segment, context, newSegments);
                     });
                 }
             };
@@ -102,9 +104,12 @@ export const handleParagraph: ContentModelBlockHandler<ContentModelParagraph> = 
             refNode = container.nextSibling;
 
             if (needParagraphWrapper) {
-                paragraph.cachedElement = container;
+                if (context.allowCacheElement) {
+                    paragraph.cachedElement = container;
+                }
             } else {
                 unwrap(container);
+                container = undefined;
             }
         });
     }

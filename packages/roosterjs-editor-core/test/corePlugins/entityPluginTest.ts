@@ -1,5 +1,6 @@
 import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
+import * as inlineEntityOnPluginEvent from '../../lib/corePlugins/utils/inlineEntityOnPluginEvent';
 import EntityPlugin from '../../lib/corePlugins/EntityPlugin';
 import { createDefaultHtmlSanitizerOptions } from 'roosterjs-editor-dom';
 import {
@@ -20,25 +21,19 @@ describe('EntityPlugin', () => {
     let triggerPluginEvent: jasmine.Spy;
     let state: EntityPluginState;
     let editor: IEditor;
-    let addDomEventHandler: jasmine.Spy;
-    let onDragStartFunc: (e: any) => void;
 
     beforeEach(() => {
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        spyOn(inlineEntityOnPluginEvent, 'inlineEntityOnPluginEvent');
+
         plugin = new EntityPlugin();
         state = plugin.getState();
-        addDomEventHandler = jasmine
-            .createSpy('addDomEventHandler')
-            .and.callFake((eventName, onDragStart) => {
-                onDragStartFunc = onDragStart;
-            });
         editor = <IEditor>(<any>{
             getDocument: () => document,
             getElementAtCursor: (selector: string, node: Node) => node,
             addContentEditFeature: () => {},
             triggerPluginEvent,
             isFeatureEnabled: () => false,
-            addDomEventHandler,
         });
         plugin.initialize(editor);
     });
@@ -661,37 +656,5 @@ describe('EntityPlugin', () => {
                 },
             });
         });
-    });
-
-    it('Do Not allow dragging readonly entity', () => {
-        const wrapper = document.createElement('div');
-        const preventDefault = jasmine.createSpy('preventDefault');
-
-        commitEntity.default(wrapper, 'TestEntity', true);
-
-        expect(addDomEventHandler).toHaveBeenCalledTimes(1);
-        expect(addDomEventHandler.calls.argsFor(0)[0]).toBe('dragstart');
-
-        onDragStartFunc({
-            target: wrapper,
-            preventDefault,
-        });
-
-        expect(preventDefault).toHaveBeenCalledTimes(1);
-    });
-
-    it('Still allow dragging when click normal node', () => {
-        const wrapper = document.createElement('div');
-        const preventDefault = jasmine.createSpy('preventDefault');
-
-        expect(addDomEventHandler).toHaveBeenCalledTimes(1);
-        expect(addDomEventHandler.calls.argsFor(0)[0]).toBe('dragstart');
-
-        onDragStartFunc({
-            target: wrapper,
-            preventDefault,
-        });
-
-        expect(preventDefault).not.toHaveBeenCalled();
     });
 });

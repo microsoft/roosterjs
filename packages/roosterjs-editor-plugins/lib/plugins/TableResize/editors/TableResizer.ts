@@ -1,7 +1,13 @@
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
 import TableEditFeature from './TableEditorFeature';
-import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
+import { CreateElementData, IEditor, Rect } from 'roosterjs-editor-types';
+import {
+    createElement,
+    getComputedStyle,
+    normalizeRect,
+    safeInstanceOf,
+    VTable,
+} from 'roosterjs-editor-dom';
 
 const TABLE_RESIZER_LENGTH = 12;
 const MIN_CELL_WIDTH = 30;
@@ -12,16 +18,25 @@ const MIN_CELL_HEIGHT = 20;
  */
 export default function createTableResizer(
     table: HTMLTableElement,
-    zoomScale: number,
-    isRTL: boolean,
+    editor: IEditor,
     onStart: () => void,
-    onDragEnd: () => false,
+    onEnd: () => false,
     onShowHelperElement?: (
         elementData: CreateElementData,
         helperType: 'CellResizer' | 'TableInserter' | 'TableResizer' | 'TableSelector'
-    ) => void
+    ) => void,
+    contentDiv?: EventTarget | null,
+    anchorContainer?: HTMLElement
 ): TableEditFeature | null {
+    const rect = normalizeRect(table.getBoundingClientRect());
+
+    if (!isTableBottomVisible(editor, rect, contentDiv)) {
+        return null;
+    }
+
     const document = table.ownerDocument;
+    const isRTL = getComputedStyle(table, 'direction') == 'rtl';
+    const zoomScale = editor.getZoomScale();
     const createElementData = {
         tag: 'div',
         style: `position: fixed; cursor: ${
@@ -35,21 +50,26 @@ export default function createTableResizer(
 
     div.style.width = `${TABLE_RESIZER_LENGTH}px`;
     div.style.height = `${TABLE_RESIZER_LENGTH}px`;
-    document.body.appendChild(div);
+
+    (anchorContainer || document.body).appendChild(div);
 
     const context: DragAndDropContext = {
         isRTL,
         table,
         zoomScale,
         onStart,
+        onEnd,
+        div,
+        editor,
+        contentDiv,
     };
 
-    setResizeDivPosition(context, div);
+    setDivPosition(context, div);
 
     const featureHandler = new DragAndDropHelper<DragAndDropContext, DragAndDropInitValue>(
         div,
         context,
-        setResizeDivPosition,
+        hideResizer, // Resizer is hidden while dragging only
         {
             onDragStart,
             onDragging,
@@ -66,6 +86,10 @@ interface DragAndDropContext {
     isRTL: boolean;
     zoomScale: number;
     onStart: () => void;
+    onEnd: () => false;
+    div: HTMLDivElement;
+    editor: IEditor;
+    contentDiv?: EventTarget | null;
 }
 
 interface DragAndDropInitValue {
@@ -137,7 +161,26 @@ function onDragging(
     }
 }
 
-function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
+function onDragEnd(
+    context: DragAndDropContext,
+    event: MouseEvent,
+    initValue: DragAndDropInitValue | undefined
+) {
+    if (
+        isTableBottomVisible(
+            context.editor,
+            normalizeRect(context.table.getBoundingClientRect()),
+            context.contentDiv
+        )
+    ) {
+        context.div.style.visibility = 'visible';
+        setDivPosition(context, context.div);
+    }
+    context.onEnd();
+    return false;
+}
+
+function setDivPosition(context: DragAndDropContext, trigger: HTMLElement) {
     const { table, isRTL } = context;
     const rect = normalizeRect(table.getBoundingClientRect());
 
@@ -147,4 +190,27 @@ function setResizeDivPosition(context: DragAndDropContext, trigger: HTMLElement)
             ? `${rect.left - TABLE_RESIZER_LENGTH - 2}px`
             : `${rect.right}px`;
     }
+}
+
+function hideResizer(context: DragAndDropContext, trigger: HTMLElement) {
+    trigger.style.visibility = 'hidden';
+}
+
+function isTableBottomVisible(
+    editor: IEditor,
+    rect: Rect | null,
+    contentDiv?: EventTarget | null
+): boolean {
+    const visibleViewport = editor.getVisibleViewport();
+    if (contentDiv && safeInstanceOf(contentDiv, 'HTMLElement') && visibleViewport && rect) {
+        const containerRect = normalizeRect(contentDiv.getBoundingClientRect());
+
+        return (
+            !!containerRect &&
+            containerRect.bottom >= rect.bottom &&
+            visibleViewport.bottom >= rect.bottom
+        );
+    }
+
+    return true;
 }

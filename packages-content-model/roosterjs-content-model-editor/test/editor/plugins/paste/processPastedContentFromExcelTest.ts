@@ -1,9 +1,14 @@
 import * as PastePluginFile from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
 import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { processPastedContentFromExcel } from '../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -22,10 +27,10 @@ describe('processPastedContentFromExcelTest', () => {
         event.clipboardData.html = source;
         processPastedContentFromExcel(event, (s: string) => s);
 
-        const model = domToContentModel(fragment, {
-            ...event.domToModelOption,
-            disableCacheElement: true,
-        });
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(undefined, event.domToModelOption)
+        );
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -34,10 +39,9 @@ describe('processPastedContentFromExcelTest', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext({
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert

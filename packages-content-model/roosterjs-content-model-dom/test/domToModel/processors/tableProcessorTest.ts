@@ -15,7 +15,7 @@ import {
 
 describe('tableProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<Node>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
@@ -23,7 +23,6 @@ describe('tableProcessor', () => {
             processorOverride: {
                 child: childProcessor,
             },
-            disableCacheElement: false,
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
@@ -51,7 +50,6 @@ describe('tableProcessor', () => {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [
@@ -63,7 +61,6 @@ describe('tableProcessor', () => {
                                 blocks: [],
                                 format: {},
                                 dataset: {},
-                                cachedElement: div.querySelector('#td1') as HTMLTableCellElement,
                             },
                         ],
                     },
@@ -71,7 +68,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
     });
@@ -85,22 +81,15 @@ describe('tableProcessor', () => {
         const tdModel4 = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
-            tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
-            tdModel4.cachedElement = div.querySelector('#td4') as HTMLTableCellElement;
-
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel1, tdModel2],
                     },
                     {
-                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel3, tdModel4],
@@ -109,7 +98,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100, 100],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
     });
@@ -123,21 +111,15 @@ describe('tableProcessor', () => {
         const tdModel4 = createTableCell(2, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
-            tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
-
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel1, tdModel2],
                     },
                     {
-                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel3, tdModel4],
@@ -146,7 +128,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100, 100],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
     });
@@ -157,19 +138,16 @@ describe('tableProcessor', () => {
 
         runTest(tableHTML, div => {
             const tdModel1 = createTableCell(1, 1, false);
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
 
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel1, createTableCell(2, 1, false)],
                     },
                     {
-                        cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
                         format: {},
                         height: 0,
                         cells: [createTableCell(1, 2, false), createTableCell(2, 2, false)],
@@ -178,7 +156,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100, 0],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
     });
@@ -188,13 +165,10 @@ describe('tableProcessor', () => {
         const tdModel = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel],
@@ -203,7 +177,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
 
@@ -217,14 +190,10 @@ describe('tableProcessor', () => {
         const tdModel2 = createTableCell(1, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-            tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
-
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel1, tdModel2],
@@ -233,7 +202,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100, 100],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
 
@@ -247,13 +215,10 @@ describe('tableProcessor', () => {
         const tdModel2 = createTableCell(2, 1, false);
 
         runTest(tableHTML, div => {
-            tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-
             return {
                 blockType: 'Table',
                 rows: [
                     {
-                        cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                         format: {},
                         height: 200,
                         cells: [tdModel1, tdModel2],
@@ -262,7 +227,6 @@ describe('tableProcessor', () => {
                 format: {},
                 widths: [100, 0],
                 dataset: {},
-                cachedElement: div.querySelector('.tb1') as HTMLTableElement,
             };
         });
 
@@ -297,10 +261,6 @@ describe('tableProcessor', () => {
 
         tdModel2.isSelected = true;
         tdModel4.isSelected = true;
-        tdModel1.cachedElement = div.querySelector('#td1') as HTMLTableCellElement;
-        tdModel2.cachedElement = div.querySelector('#td2') as HTMLTableCellElement;
-        tdModel3.cachedElement = div.querySelector('#td3') as HTMLTableCellElement;
-        tdModel4.cachedElement = div.querySelector('#td4') as HTMLTableCellElement;
 
         tableProcessor(doc, div.firstChild as HTMLTableElement, context);
 
@@ -308,13 +268,11 @@ describe('tableProcessor', () => {
             blockType: 'Table',
             rows: [
                 {
-                    cachedElement: div.querySelector('#tr1') as HTMLTableRowElement,
                     format: {},
                     height: 200,
                     cells: [tdModel1, tdModel2],
                 },
                 {
-                    cachedElement: div.querySelector('#tr2') as HTMLTableRowElement,
                     format: {},
                     height: 200,
                     cells: [tdModel3, tdModel4],
@@ -323,7 +281,6 @@ describe('tableProcessor', () => {
             format: {},
             widths: [100, 100],
             dataset: {},
-            cachedElement: div.querySelector('.tb1') as HTMLTableElement,
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(4);
@@ -335,8 +292,6 @@ describe('tableProcessor with format', () => {
 
     beforeEach(() => {
         context = createDomToModelContext();
-
-        context.allowCacheElement = true;
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
             width: 100,
@@ -386,7 +341,6 @@ describe('tableProcessor with format', () => {
                     blockType: 'Table',
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -409,7 +363,6 @@ describe('tableProcessor with format', () => {
                                             format: {},
                                         },
                                     ],
-                                    cachedElement: td,
                                     spanLeft: false,
                                     spanAbove: false,
                                     isHeader: false,
@@ -426,7 +379,6 @@ describe('tableProcessor with format', () => {
                         format1: 'table',
                     } as any,
                     dataset: {},
-                    cachedElement: table,
                 },
             ],
         });
@@ -469,7 +421,6 @@ describe('tableProcessor with format', () => {
                     format: {},
                     rows: [
                         {
-                            cachedElement: mockedTr as any,
                             format: {},
                             height: 100,
                             cells: [
@@ -481,13 +432,11 @@ describe('tableProcessor with format', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: mockedTd,
                                 },
                             ],
                         },
                     ],
                     dataset: {},
-                    cachedElement: mockedTable,
                 },
             ],
         });
@@ -521,7 +470,9 @@ describe('tableProcessor with format', () => {
         const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         tableProcessor(doc, mockedTable, context);
 
@@ -562,7 +513,9 @@ describe('tableProcessor with format', () => {
         const doc = createContentModelDocument();
         const datasetParser = jasmine.createSpy('datasetParser');
 
-        context.formatParsers.dataset = [datasetParser];
+        context = createDomToModelContext(undefined, {
+            formatParserOverride: { dataset: datasetParser },
+        });
 
         tableProcessor(doc, mockedTable, context);
 
@@ -574,15 +527,12 @@ describe('tableProcessor with format', () => {
 
 describe('tableProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
         context = createDomToModelContext(undefined, {
-            processorOverride: {
-                child: childProcessor,
-            },
-            disableCacheElement: false,
+            processorOverride: { child: childProcessor },
         });
 
         spyOn(getBoundingClientRect, 'getBoundingClientRect').and.returnValue(({
@@ -681,7 +631,6 @@ describe('tableProcessor', () => {
                     widths: [100],
                     rows: [
                         {
-                            cachedElement: mockedTr,
                             format: {},
                             height: 200,
                             cells: [
@@ -695,12 +644,10 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: mockedTd,
                                 },
                             ],
                         },
                     ],
-                    cachedElement: mockedTable,
                 },
             ],
         });
@@ -737,7 +684,6 @@ describe('tableProcessor', () => {
                     dataset: {},
                     widths: [],
                     rows: [],
-                    cachedElement: mockedTable,
                 },
             ],
         });
@@ -767,7 +713,6 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -794,7 +739,6 @@ describe('tableProcessor', () => {
                                             ],
                                         },
                                     ],
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -802,7 +746,6 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    cachedElement: table,
                 },
             ],
         });
@@ -829,7 +772,6 @@ describe('tableProcessor', () => {
                     },
                     dataset: {},
                     widths: [],
-                    cachedElement: table,
                 },
             ],
         });
@@ -855,7 +797,6 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -867,7 +808,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -875,7 +815,6 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    cachedElement: table,
                 },
             ],
         });
@@ -904,7 +843,6 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -921,7 +859,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -929,7 +866,6 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    cachedElement: table,
                 },
             ],
         });
@@ -963,7 +899,7 @@ describe('tableProcessor', () => {
                         {
                             format: {},
                             height: 200,
-                            cachedElement: tr,
+
                             cells: [
                                 {
                                     blockGroupType: 'TableCell',
@@ -989,7 +925,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -997,7 +932,6 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    cachedElement: table,
                 },
             ],
         });
@@ -1028,7 +962,6 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1055,7 +988,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -1063,7 +995,6 @@ describe('tableProcessor', () => {
                     format: {},
                     dataset: {},
                     widths: [100],
-                    cachedElement: table,
                 },
             ],
         });
@@ -1107,10 +1038,9 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     widths: [100],
                     dataset: {},
-                    cachedElement: table,
+
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1127,7 +1057,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -1172,10 +1101,9 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     widths: [100],
                     dataset: {},
-                    cachedElement: table,
+
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1187,7 +1115,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -1231,10 +1158,9 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     widths: [100],
                     dataset: {},
-                    cachedElement: table,
+
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {},
                             height: 200,
                             cells: [
@@ -1248,7 +1174,6 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
                                 },
                             ],
                         },
@@ -1291,10 +1216,9 @@ describe('tableProcessor', () => {
                     blockType: 'Table',
                     widths: [100],
                     dataset: {},
-                    cachedElement: table,
+
                     rows: [
                         {
-                            cachedElement: tr,
                             format: {
                                 backgroundColor: 'red',
                             },
@@ -1308,7 +1232,60 @@ describe('tableProcessor', () => {
                                     spanLeft: false,
                                     isHeader: false,
                                     dataset: {},
-                                    cachedElement: td,
+                                },
+                            ],
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+    });
+
+    it('Respect background on tbody', () => {
+        const group = createContentModelDocument();
+        const table = document.createElement('table');
+        const tbody = document.createElement('tbody');
+        const tr = document.createElement('tr');
+        const td = document.createElement('td');
+
+        tbody.style.backgroundColor = 'red';
+
+        table.appendChild(tbody);
+        tbody.appendChild(tr);
+        tr.appendChild(td);
+
+        childProcessor.and.callFake(() => {
+            expect(context.blockFormat).toEqual({});
+            expect(context.segmentFormat).toEqual({});
+        });
+
+        tableProcessor(group, table, context);
+
+        expect(childProcessor).toHaveBeenCalledTimes(1);
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Table',
+                    widths: [100],
+                    dataset: {},
+
+                    rows: [
+                        {
+                            format: {
+                                backgroundColor: 'red',
+                            },
+                            height: 200,
+                            cells: [
+                                {
+                                    blockGroupType: 'TableCell',
+                                    blocks: [],
+                                    format: {},
+                                    spanAbove: false,
+                                    spanLeft: false,
+                                    isHeader: false,
+                                    dataset: {},
                                 },
                             ],
                         },

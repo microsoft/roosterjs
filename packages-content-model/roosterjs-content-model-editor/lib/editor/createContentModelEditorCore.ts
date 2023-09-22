@@ -1,16 +1,21 @@
 import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
-import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
-import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
+import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
+import { createContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
+import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlugin';
+import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
+import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import { tablePreProcessor } from './overrides/tablePreProcessor';
 
 /**
  * Editor Core creator for Content Model editor
@@ -19,27 +24,27 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
+    const pluginState: ContentModelPluginState = {
+        cache: {},
+        copyPaste: {
+            allowedCustomPasteType: options.allowedCustomPasteType || [],
+        },
+    };
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
+            createContentModelCachePlugin(pluginState.cache),
             ...(options.plugins || []),
-            new ContentModelFormatPlugin(),
-            new ContentModelEditPlugin(),
+            createContentModelFormatPlugin(),
+            createContentModelEditPlugin(),
         ],
         corePluginOverride: {
-            typeInContainer: isFeatureEnabled(
-                options.experimentalFeatures,
-                ExperimentalFeatures.EditWithContentModel
-            )
-                ? new ContentModelTypeInContainerPlugin()
-                : undefined,
+            typeInContainer: new ContentModelTypeInContainerPlugin(),
             copyPaste: isFeatureEnabled(
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
             )
-                ? new ContentModelCopyPastePlugin({
-                      allowedCustomPasteType: options.allowedCustomPasteType || [],
-                  })
+                ? new ContentModelCopyPastePlugin(pluginState.copyPaste)
                 : undefined,
             ...(options.corePluginOverride || {}),
         },
@@ -47,7 +52,7 @@ export const createContentModelEditorCore: CoreCreator<
 
     const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
 
-    promoteToContentModelEditorCore(core, modifiedOptions);
+    promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 
     return core;
 };
@@ -59,13 +64,22 @@ export const createContentModelEditorCore: CoreCreator<
  */
 export function promoteToContentModelEditorCore(
     core: EditorCore,
-    options: ContentModelEditorOptions
+    options: ContentModelEditorOptions,
+    pluginState: ContentModelPluginState
 ) {
     const cmCore = core as ContentModelEditorCore;
 
+    promoteCorePluginState(cmCore, pluginState);
     promoteDefaultFormat(cmCore);
     promoteContentModelInfo(cmCore, options);
     promoteCoreApi(cmCore);
+}
+
+function promoteCorePluginState(
+    cmCore: ContentModelEditorCore,
+    pluginState: ContentModelPluginState
+) {
+    Object.assign(cmCore, pluginState);
 }
 
 function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
@@ -77,34 +91,25 @@ function promoteContentModelInfo(
     cmCore: ContentModelEditorCore,
     options: ContentModelEditorOptions
 ) {
-    const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
-
-    cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
-    cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
-    cmCore.reuseModel = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.ReusableContentModel
-    );
-    cmCore.addDelimiterForEntity = isFeatureEnabled(
-        experimentalFeatures,
-        ExperimentalFeatures.InlineEntityReadOnlyDelimiters
-    );
+    cmCore.defaultDomToModelOptions = [
+        {
+            processorOverride: {
+                table: tablePreProcessor,
+            },
+        },
+        options.defaultDomToModelOptions,
+    ];
+    cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
+    cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
+    cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
 }
 
 function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createEditorContext = createEditorContext;
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
-
-    if (
-        isFeatureEnabled(
-            cmCore.lifecycle.experimentalFeatures,
-            ExperimentalFeatures.ReusableContentModel
-        )
-    ) {
-        // Only use Content Model shadow edit when reuse model is enabled because it relies on cached model for the original model
-        cmCore.api.switchShadowEdit = switchShadowEdit;
-    }
+    cmCore.api.switchShadowEdit = switchShadowEdit;
+    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;

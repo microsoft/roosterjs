@@ -1,32 +1,10 @@
 import * as processPastedContentFromExcel from '../../../../../lib/editor/plugins/PastePlugin/Excel/processPastedContentFromExcel';
-import ContentModelEditor from '../../../../../lib/editor/ContentModelEditor';
-import ContentModelPastePlugin from '../../../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import paste from '../../../../../lib/publicApi/utils/paste';
 import { Browser } from 'roosterjs-editor-dom';
-import { ClipboardData, ExperimentalFeatures } from 'roosterjs-editor-types';
+import { ClipboardData } from 'roosterjs-editor-types';
+import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
+import { initEditor } from './testUtils';
 import { tableProcessor } from 'roosterjs-content-model-dom';
-import {
-    ContentModelEditorOptions,
-    IContentModelEditor,
-} from '../../../../../lib/publicTypes/IContentModelEditor';
-
-export function initEditor(id: string) {
-    let node = document.createElement('div');
-    node.id = id;
-    document.body.insertBefore(node, document.body.childNodes[0]);
-
-    let options: ContentModelEditorOptions = {
-        plugins: [new ContentModelPastePlugin()],
-        experimentalFeatures: [ExperimentalFeatures.ContentModelPaste],
-        defaultDomToModelOptions: {
-            disableCacheElement: true,
-        },
-    };
-
-    let editor = new ContentModelEditor(node as HTMLDivElement, options);
-
-    return editor as IContentModelEditor;
-}
 
 const ID = 'CM_Paste_From_Excel_E2E';
 const clipboardData = <ClipboardData>(<any>{
@@ -73,6 +51,7 @@ describe(ID, () => {
         spyOn(processPastedContentFromExcel, 'processPastedContentFromExcel').and.callThrough();
 
         paste(editor, clipboardData, false, false, true);
+
         const model = editor.createContentModel({
             processorOverride: {
                 table: tableProcessor,

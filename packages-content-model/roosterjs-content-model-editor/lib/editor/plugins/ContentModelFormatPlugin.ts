@@ -1,7 +1,12 @@
+import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
 import { EditorPlugin, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
+import { getObjectKeys, isCharacterValue } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+
+// During IME input, KeyDown event will have "Process" as key
+const ProcessKey = 'Process';
 
 /**
  * ContentModelFormat plugins helps editor to do formatting on top of content model.
@@ -10,6 +15,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  */
 export default class ContentModelFormatPlugin implements EditorPlugin {
     private editor: IContentModelEditor | null = null;
+    private hasDefaultFormat = false;
 
     /**
      * Get name of this plugin
@@ -27,6 +33,11 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
     initialize(editor: IEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
         this.editor = editor as IContentModelEditor;
+
+        const defaultFormat = this.editor.getContentModelDefaultFormat();
+        this.hasDefaultFormat =
+            getObjectKeys(defaultFormat).filter(x => typeof defaultFormat[x] !== 'undefined')
+                .length > 0;
     }
 
     /**
@@ -65,6 +76,11 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
             case PluginEventType.KeyDown:
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
+                } else if (
+                    this.hasDefaultFormat &&
+                    (isCharacterValue(event.rawEvent) || event.rawEvent.key == ProcessKey)
+                ) {
+                    applyDefaultFormat(this.editor);
                 }
 
                 break;
@@ -84,4 +100,13 @@ export default class ContentModelFormatPlugin implements EditorPlugin {
             clearPendingFormat(this.editor);
         }
     }
+}
+
+/**
+ * @internal
+ * Create a new instance of ContentModelFormatPlugin.
+ * This is mostly for unit test
+ */
+export function createContentModelFormatPlugin() {
+    return new ContentModelFormatPlugin();
 }

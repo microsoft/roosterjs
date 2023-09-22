@@ -2,7 +2,7 @@ import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     applySegmentFormat,
-    getSegmentFormat,
+    getFormatState,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
 
@@ -53,13 +53,13 @@ export default class ContentModelFormatPainterPlugin implements EditorPlugin {
     }
 }
 
-function getFormatHolder(editor: IEditor): FormatPainterFormatHolder {
+function getFormatHolder(editor: IContentModelEditor): FormatPainterFormatHolder {
     return editor.getCustomData('__FormatPainterFormat', () => {
         return {} as FormatPainterFormatHolder;
     });
 }
 
-function setFormatPainterCursor(editor: IEditor, isOn: boolean) {
+function setFormatPainterCursor(editor: IContentModelEditor, isOn: boolean) {
     let styles = editor.getEditorDomAttribute('style') || '';
     styles = styles.replace(CURSOR_REGEX, '');
 
@@ -68,4 +68,25 @@ function setFormatPainterCursor(editor: IEditor, isOn: boolean) {
     }
 
     editor.setEditorDomAttribute('style', styles);
+}
+
+function getSegmentFormat(editor: IContentModelEditor): ContentModelSegmentFormat {
+    const formatState = getFormatState(editor);
+
+    return {
+        backgroundColor: formatState.backgroundColor,
+        fontFamily: formatState.fontName,
+        fontSize: formatState.fontSize,
+        fontWeight: formatState.isBold ? 'bold' : 'normal',
+        italic: formatState.isItalic,
+        letterSpacing: formatState.letterSpacing,
+        strikethrough: formatState.isStrikeThrough,
+        superOrSubScriptSequence: formatState.isSubscript
+            ? 'sub'
+            : formatState.isSuperscript
+            ? 'super'
+            : '',
+        textColor: formatState.textColor,
+        underline: formatState.isUnderline,
+    };
 }

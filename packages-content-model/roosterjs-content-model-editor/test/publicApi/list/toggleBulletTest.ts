@@ -10,6 +10,7 @@ describe('toggleBullet', () => {
     let setContentModel: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
+    let triggerPluginEvent: jasmine.Spy;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -17,6 +18,7 @@ describe('toggleBullet', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
 
         editor = ({
@@ -26,6 +28,8 @@ describe('toggleBullet', () => {
             setContentModel,
             getCustomData: () => ({}),
             getFocusedPosition: () => ({}),
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

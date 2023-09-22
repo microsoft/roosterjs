@@ -84,7 +84,8 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
                 });
             },
 
-            // 4. Drop event
+            // 4. Drag and Drop event
+            dragstart: this.onDragStart,
             drop: this.onDrop,
 
             // 5. Focus management
@@ -146,6 +147,14 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
         return this.state;
     }
 
+    private onDragStart = (e: Event) => {
+        const dragEvent = e as DragEvent;
+        const element = this.editor?.getElementAtCursor('*', dragEvent.target as Node);
+
+        if (element && !element.isContentEditable) {
+            dragEvent.preventDefault();
+        }
+    };
     private onDrop = () => {
         this.editor?.runAsync(editor => {
             editor.addUndoSnapshot(() => {}, ChangeSource.Drop);
@@ -153,15 +162,17 @@ export default class DOMEventPlugin implements PluginWithState<DOMEventPluginSta
     };
 
     private onFocus = () => {
-        const { table, coordinates } = this.state.tableSelectionRange || {};
-        const { image } = this.state.imageSelectionRange || {};
+        if (!this.state.skipReselectOnFocus) {
+            const { table, coordinates } = this.state.tableSelectionRange || {};
+            const { image } = this.state.imageSelectionRange || {};
 
-        if (table && coordinates) {
-            this.editor?.select(table, coordinates);
-        } else if (image) {
-            this.editor?.select(image);
-        } else if (this.state.selectionRange) {
-            this.editor?.select(this.state.selectionRange);
+            if (table && coordinates) {
+                this.editor?.select(table, coordinates);
+            } else if (image) {
+                this.editor?.select(image);
+            } else if (this.state.selectionRange) {
+                this.editor?.select(this.state.selectionRange);
+            }
         }
 
         this.state.selectionRange = null;

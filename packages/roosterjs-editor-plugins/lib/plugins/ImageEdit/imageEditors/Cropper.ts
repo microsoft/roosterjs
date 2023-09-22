@@ -4,17 +4,13 @@ import { CreateElementData } from 'roosterjs-editor-types';
 import { CropInfo } from '../types/ImageEditInfo';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { rotateCoordinate } from './Resizer';
-
-const CROP_HANDLE_SIZE = 22;
-const CROP_HANDLE_WIDTH = 7;
-const Xs: DNDDirectionX[] = ['w', 'e'];
-const Ys: DnDDirectionY[] = ['s', 'n'];
-const ROTATION: Record<string, number> = {
-    sw: 0,
-    nw: 90,
-    ne: 180,
-    se: 270,
-};
+import {
+    CROP_HANDLE_SIZE,
+    CROP_HANDLE_WIDTH,
+    ROTATION,
+    XS_CROP,
+    YS_CROP,
+} from '../constants/constants';
 
 /**
  * @internal
@@ -106,7 +102,9 @@ export function getCropHTML(): CreateElementData[] {
         children: [],
     };
     if (containerHTML) {
-        Xs.forEach(x => Ys.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y))));
+        XS_CROP.forEach(x =>
+            YS_CROP.forEach(y => containerHTML.children?.push(getCropHTMLInternal(x, y)))
+        );
     }
     return [containerHTML, overlayHTML, overlayHTML, overlayHTML, overlayHTML];
 }

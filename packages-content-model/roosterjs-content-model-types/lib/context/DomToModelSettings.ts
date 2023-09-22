@@ -95,7 +95,7 @@ export type ElementProcessorMap = {
         /**
          * Processor for Inline Readonly Delimiters
          */
-        delimiter?: ElementProcessor<HTMLSpanElement>;
+        delimiter?: ElementProcessor<Node>;
     };
 
 /**
@@ -106,11 +106,6 @@ export interface DomToModelSettings {
      * Map of element processors
      */
     elementProcessors: ElementProcessorMap;
-
-    /**
-     * Map of default styles
-     */
-    defaultStyles: DefaultStyleMap;
 
     /**
      * Map of format parsers

@@ -1,10 +1,11 @@
+import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import { EditorOptions, IEditor } from 'roosterjs-editor-types';
 
 /**
  * An interface of editor with Content Model support.
@@ -16,21 +17,29 @@ export interface IContentModelEditor extends IEditor {
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
      * @param option The options to customize the behavior of DOM to Content Model conversion
+     * @param selectionOverride When specified, use this selection to override existing selection inside editor
      */
-    createContentModel(option?: DomToModelOption): ContentModelDocument;
+    createContentModel(
+        option?: DomToModelOption,
+        selectionOverride?: SelectionRangeEx
+    ): ContentModelDocument;
 
     /**
      * Set content with content model
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param onNodeCreated An optional callback that will be called when a DOM node is created
      */
-    setContentModel(model: ContentModelDocument, option?: ModelToDomOption): void;
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption,
+        onNodeCreated?: OnNodeCreated
+    ): SelectionRangeEx | null;
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
+     * Notify editor the current cache may be invalid
      */
-    cacheContentModel(model: ContentModelDocument | null): void;
+    invalidateCache(): void;
 
     /**
      * Get default format as ContentModelSegmentFormat.

@@ -52,12 +52,17 @@ export function retrieveModelFormatState(
                 // Segment formats
                 segments?.forEach(segment => {
                     if (isFirstSegment || segment.segmentType != 'SelectionMarker') {
+                        const modelFormat = Object.assign({}, model.format);
+                        delete modelFormat?.italic;
+                        delete modelFormat?.underline;
+                        delete modelFormat?.fontWeight;
+
                         retrieveSegmentFormat(
                             formatState,
                             isFirst,
                             Object.assign(
                                 {},
-                                model.format,
+                                modelFormat,
                                 block.format,
                                 block.decorator?.format,
                                 segment.format,
@@ -121,6 +126,10 @@ export function retrieveModelFormatState(
             includeListFormatHolder: 'never',
         }
     );
+
+    if (formatState.fontSize) {
+        formatState.fontSize = px2Pt(formatState.fontSize);
+    }
 }
 
 function retrieveSegmentFormat(
@@ -136,6 +145,7 @@ function retrieveSegmentFormat(
     mergeValue(result, 'isStrikeThrough', mergedFormat.strikethrough, isFirst);
     mergeValue(result, 'isSuperscript', superOrSubscript == 'super', isFirst);
     mergeValue(result, 'isSubscript', superOrSubscript == 'sub', isFirst);
+    mergeValue(result, 'letterSpacing', mergedFormat.letterSpacing, isFirst);
 
     mergeValue(result, 'fontName', mergedFormat.fontFamily, isFirst);
     mergeValue(result, 'fontSize', mergedFormat.fontSize, isFirst);
@@ -151,12 +161,13 @@ function retrieveParagraphFormat(
     paragraph: ContentModelParagraph,
     isFirst: boolean
 ) {
-    const headerLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
-    const validHeaderLevel = headerLevel >= 1 && headerLevel <= 6 ? headerLevel : undefined;
+    const headingLevel = parseInt((paragraph.decorator?.tagName || '').substring(1));
+    const validHeadingLevel = headingLevel >= 1 && headingLevel <= 6 ? headingLevel : undefined;
 
     mergeValue(result, 'marginBottom', paragraph.format.marginBottom, isFirst);
     mergeValue(result, 'marginTop', paragraph.format.marginTop, isFirst);
-    mergeValue(result, 'headerLevel', validHeaderLevel, isFirst);
+    mergeValue(result, 'headingLevel', validHeadingLevel, isFirst);
+    mergeValue(result, 'headerLevel', validHeadingLevel, isFirst);
     mergeValue(result, 'textAlign', paragraph.format.textAlign, isFirst);
     mergeValue(result, 'direction', paragraph.format.direction, isFirst);
 }
@@ -228,4 +239,13 @@ function mergeValue<K extends keyof ContentModelFormatState>(
     } else if (newValue !== format[key]) {
         delete format[key];
     }
+}
+
+function px2Pt(px: string) {
+    if (px && px.indexOf('px') == px.length - 2) {
+        // Edge may not handle the floating computing well which causes the calculated value is a little less than actual value
+        // So add 0.05 to fix it
+        return Math.round(parseFloat(px) * 75 + 0.05) / 100 + 'pt';
+    }
+    return px;
 }

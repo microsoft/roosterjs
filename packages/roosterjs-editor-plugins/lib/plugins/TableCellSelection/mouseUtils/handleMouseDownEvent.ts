@@ -24,7 +24,13 @@ export function handleMouseDownEvent(
     state: TableCellSelectionState,
     editor: IEditor
 ) {
-    const { which, shiftKey } = event.rawEvent;
+    const { which, shiftKey, target, detail } = event.rawEvent;
+    const table = editor.getElementAtCursor('table', target as Node, event);
+    const tripleClick = detail >= 3;
+
+    if (table && !table.isContentEditable) {
+        return;
+    }
 
     const td = editor.getElementAtCursor(TABLE_CELL_SELECTOR);
     if (which == RIGHT_CLICK && state.tableSelection && state.vTable && td) {
@@ -53,60 +59,63 @@ export function handleMouseDownEvent(
             }
         }
     }
-    if (which == LEFT_CLICK && !shiftKey) {
-        clearState(state, editor);
+    if (which == LEFT_CLICK) {
+        if (!shiftKey && !tripleClick) {
+            clearState(state, editor);
 
-        if (getTableAtCursor(editor, event.rawEvent.target)) {
-            const doc = editor.getDocument() || document;
+            if (getTableAtCursor(editor, event.rawEvent.target)) {
+                const doc = editor.getDocument() || document;
 
-            const mouseUpListener = getOnMouseUp(state);
-            const mouseMoveListener = onMouseMove(state, editor);
-            doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-            doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
+                const mouseUpListener = getOnMouseUp(state);
+                const mouseMoveListener = onMouseMove(state, editor);
+                doc.addEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                doc.addEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
 
-            state.mouseMoveDisposer = () => {
-                doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
-                doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
-            };
-
-            state.startedSelection = true;
-        }
-    }
-
-    if (which == LEFT_CLICK && shiftKey) {
-        editor.runAsync(editor => {
-            const sel = editor.getDocument().defaultView?.getSelection();
-            const first = getCellAtCursor(editor, sel?.anchorNode);
-            const last = getCellAtCursor(editor, sel?.focusNode);
-            const firstTable = getTableAtCursor(editor, first);
-            const targetTable = getTableAtCursor(editor, first);
-            if (
-                firstTable! == targetTable! &&
-                safeInstanceOf(first, 'HTMLTableCellElement') &&
-                safeInstanceOf(last, 'HTMLTableCellElement')
-            ) {
-                state.vTable = new VTable(first);
-                const firstCord = getCellCoordinates(state.vTable, first);
-                const lastCord = getCellCoordinates(state.vTable, last);
-
-                if (!firstCord || !lastCord) {
-                    return;
-                }
-                state.vTable.selection = {
-                    firstCell: firstCord,
-                    lastCell: lastCord,
+                state.mouseMoveDisposer = () => {
+                    doc.removeEventListener('mouseup', mouseUpListener, true /*setCapture*/);
+                    doc.removeEventListener('mousemove', mouseMoveListener, true /*setCapture*/);
                 };
 
-                state.firstTarget = first;
-                state.lastTarget = last;
-                selectTable(editor, state);
-
-                state.tableSelection = true;
-                state.firstTable = firstTable as HTMLTableElement;
-                state.targetTable = targetTable;
-                updateSelection(editor, first, 0);
+                state.startedSelection = true;
             }
-        });
+        }
+
+        if (shiftKey || tripleClick) {
+            editor.runAsync(editor => {
+                const sel = editor.getDocument().defaultView?.getSelection();
+                const first = getCellAtCursor(editor, sel?.anchorNode);
+                // Triple clicking a cell will select that cell only
+                // Assign last the same as first to make sure we can select the cell
+                const last = tripleClick ? first : getCellAtCursor(editor, sel?.focusNode);
+                const firstTable = getTableAtCursor(editor, first);
+                if (
+                    firstTable &&
+                    safeInstanceOf(first, 'HTMLTableCellElement') &&
+                    safeInstanceOf(last, 'HTMLTableCellElement')
+                ) {
+                    state.vTable = new VTable(first);
+                    const firstCord = getCellCoordinates(state.vTable, first);
+                    const lastCord = getCellCoordinates(state.vTable, last);
+
+                    if (!firstCord || !lastCord) {
+                        return;
+                    }
+                    state.vTable.selection = {
+                        firstCell: firstCord,
+                        lastCell: lastCord,
+                    };
+
+                    state.firstTarget = first;
+                    state.lastTarget = last;
+                    selectTable(editor, state);
+
+                    state.tableSelection = true;
+                    state.firstTable = firstTable as HTMLTableElement;
+                    state.targetTable = firstTable;
+                    updateSelection(editor, first, 0);
+                }
+            });
+        }
     }
 }
 

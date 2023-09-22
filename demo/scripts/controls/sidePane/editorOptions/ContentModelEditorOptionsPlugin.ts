@@ -28,14 +28,9 @@ const initialState: BuildInPluginState = {
     linkTitle: 'Ctrl+Click to follow the link:' + UrlPlaceholder,
     watermarkText: 'Type content here ...',
     forcePreserveRatio: false,
-    experimentalFeatures: [
-        ExperimentalFeatures.AutoFormatList,
-        ExperimentalFeatures.ReusableContentModel,
-        ExperimentalFeatures.EditWithContentModel,
-        ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
-        ExperimentalFeatures.ContentModelPaste,
-    ],
+    experimentalFeatures: [ExperimentalFeatures.ContentModelPaste],
     isRtl: false,
+    tableFeaturesContainerSelector: '#' + 'EditorContainer',
 };
 
 export default class ContentModelEditorOptionsPlugin extends SidePanePluginImpl<

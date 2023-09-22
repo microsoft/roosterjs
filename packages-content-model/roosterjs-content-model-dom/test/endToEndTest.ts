@@ -1,24 +1,15 @@
 import * as createGeneralBlock from '../lib/modelApi/creators/createGeneralBlock';
-import DarkColorHandlerImpl from 'roosterjs-editor-core/lib/editor/DarkColorHandlerImpl';
 import { contentModelToDom } from '../lib/modelToDom/contentModelToDom';
+import { createDomToModelContext, createModelToDomContext } from '../lib';
 import { domToContentModel } from '../lib/domToModel/domToContentModel';
+import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
 import {
     ContentModelBlockFormat,
     ContentModelDocument,
     ContentModelGeneralBlock,
-    EditorContext,
 } from 'roosterjs-content-model-types';
 
 describe('End to end test for DOM => Model', () => {
-    let context: EditorContext;
-
-    beforeEach(() => {
-        context = {
-            isDarkMode: false,
-            darkColorHandler: new DarkColorHandlerImpl({} as any, s => 'darkMock: ' + s),
-        };
-    });
-
     function runTest(
         html: string,
         expectedModel: ContentModelDocument,
@@ -28,25 +19,19 @@ describe('End to end test for DOM => Model', () => {
         const div1 = document.createElement('div');
         div1.innerHTML = html;
 
-        const model = domToContentModel(
-            div1,
-            {
-                disableCacheElement: true,
-            },
-            context
-        );
+        const model = domToContentModel(div1, createDomToModelContext());
 
         expect(model).toEqual(expectedModel);
 
         const div2 = document.createElement('div');
 
-        contentModelToDom(document, div2, model, context);
+        contentModelToDom(document, div2, model, createModelToDomContext());
         const possibleHTML = [
             expectedHtml, //chrome or firefox
             expectedHTMLFirefox, //firefox
         ];
 
-        expect(possibleHTML.indexOf(div2.innerHTML)).toBeGreaterThanOrEqual(0, div2.innerHTML);
+        expectHtml(div2.innerHTML, possibleHTML);
     }
 
     it('List with margin', () => {

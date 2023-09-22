@@ -30,7 +30,7 @@ describe('handleSegment', () => {
     ) {
         parent = document.createElement('div');
 
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, []);
 
         expect(parent.innerHTML).toBe(expectedInnerHTML);
         expect(handleBlock).toHaveBeenCalledTimes(expectedCreateBlockFromContentModelCalledTimes);
@@ -152,7 +152,7 @@ describe('handleSegment', () => {
 
         context.onNodeCreated = onNodeCreated;
 
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, []);
 
         expect(parent.innerHTML).toBe('<span><img src="http://test.com/test"></span>');
         expect(onNodeCreated).toHaveBeenCalledTimes(1);
@@ -169,10 +169,29 @@ describe('handleSegment', () => {
         };
         const parent = document.createElement('div');
 
-        handleImage(document, parent, segment, context);
+        handleImage(document, parent, segment, context, []);
 
         expect(parent.innerHTML).toBe(
             '<span><img src="http://test.com/test" style="display: block;"></span>'
         );
+    });
+
+    it('With segmentNodes', () => {
+        const segment: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'http://test.com/test',
+            format: { display: 'block' },
+            dataset: {},
+        };
+        const parent = document.createElement('div');
+        const segmentNodes: Node[] = [];
+
+        handleImage(document, parent, segment, context, segmentNodes);
+
+        expect(parent.innerHTML).toBe(
+            '<span><img src="http://test.com/test" style="display: block;"></span>'
+        );
+        expect(segmentNodes.length).toBe(1);
+        expect(segmentNodes[0]).toBe(parent.firstChild!.firstChild!);
     });
 });

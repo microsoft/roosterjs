@@ -1,8 +1,8 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import changeFontSize from '../../../lib/publicApi/segment/changeFontSize';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createDomToModelContext, domToContentModel } from 'roosterjs-content-model-dom';
 import { createRange } from 'roosterjs-editor-dom';
-import { domToContentModel } from 'roosterjs-content-model-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
@@ -329,6 +329,7 @@ describe('changeFontSize', () => {
     it('Test format parser', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
+        const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
             callback();
@@ -343,7 +344,7 @@ describe('changeFontSize', () => {
 
         const editor = ({
             createContentModel: (option: any) =>
-                domToContentModel(div, option, undefined, {
+                domToContentModel(div, createDomToModelContext(undefined), {
                     type: SelectionRangeTypes.Normal,
                     ranges: [createRange(sub)],
                     areAllCollapsed: false,
@@ -351,6 +352,8 @@ describe('changeFontSize', () => {
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');
@@ -374,7 +377,51 @@ describe('changeFontSize', () => {
                     },
                 ],
             },
-            { onNodeCreated: undefined }
+            undefined,
+            undefined
+        );
+    });
+
+    it('Paragraph has font size', () => {
+        runTest(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20pt' },
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '10pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: {},
+                        segments: [
+                            {
+                                segmentType: 'Text',
+                                text: 'test',
+                                format: { fontSize: '11pt' },
+                                isSelected: true,
+                            },
+                        ],
+                    },
+                ],
+            },
+            1,
+            'increase'
         );
     });
 });

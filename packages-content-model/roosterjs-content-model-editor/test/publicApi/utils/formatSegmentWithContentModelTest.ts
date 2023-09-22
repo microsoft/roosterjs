@@ -18,12 +18,14 @@ describe('formatSegmentWithContentModel', () => {
     let model: ContentModelDocument;
     let getPendingFormat: jasmine.Spy;
     let setPendingFormat: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
 
     const apiName = 'mockedApi';
 
     beforeEach(() => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
 
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
@@ -35,6 +37,8 @@ describe('formatSegmentWithContentModel', () => {
             createContentModel: () => model,
             setContentModel,
             getFocusedPosition: () => null as NodePosition,
+            isDarkMode: () => false,
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
@@ -132,7 +136,7 @@ describe('formatSegmentWithContentModel', () => {
         expect(segmentHasStyleCallback).toHaveBeenCalledTimes(1);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text.format, text, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(1);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text.format, false, text, para);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledTimes(0);
     });
@@ -203,8 +207,8 @@ describe('formatSegmentWithContentModel', () => {
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text1.format, text1, para);
         expect(segmentHasStyleCallback).toHaveBeenCalledWith(text3.format, text3, para);
         expect(toggleStyleCallback).toHaveBeenCalledTimes(2);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1);
-        expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text1.format, true, text1, para);
+        expect(toggleStyleCallback).toHaveBeenCalledWith(text3.format, true, text3, para);
         expect(getPendingFormat).toHaveBeenCalledTimes(1);
         expect(setPendingFormat).toHaveBeenCalledTimes(0);
     });

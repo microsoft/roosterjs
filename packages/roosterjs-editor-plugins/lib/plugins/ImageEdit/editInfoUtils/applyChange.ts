@@ -78,5 +78,6 @@ export default function applyChange(
         // Remove width/height style so that it won't affect the image size, since style width/height has higher priority
         image.style.removeProperty('width');
         image.style.removeProperty('height');
+        image.style.removeProperty('max-width');
     }
 }

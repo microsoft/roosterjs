@@ -6,13 +6,14 @@ import { EditorContext } from 'roosterjs-content-model-types';
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = core => {
-    const { lifecycle, defaultFormat, darkColorHandler, addDelimiterForEntity, contentDiv } = core;
+    const { lifecycle, defaultFormat, darkColorHandler, contentDiv } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
         defaultFormat: defaultFormat,
         darkColorHandler: darkColorHandler,
-        addDelimiterForEntity: addDelimiterForEntity,
+        addDelimiterForEntity: true,
+        allowCacheElement: true,
     };
 
     checkRootRtl(contentDiv, context);

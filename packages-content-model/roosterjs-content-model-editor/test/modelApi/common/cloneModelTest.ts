@@ -1,8 +1,9 @@
 import { cloneModel } from '../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createEntity } from 'roosterjs-content-model-dom';
 
 describe('cloneModel', () => {
-    function compareObjects(o1: any, o2: any) {
+    function compareObjects(o1: any, o2: any, allowCache: boolean, path: string = '/') {
         expect(typeof o2).toBe(typeof o1);
 
         if (typeof o1 == 'boolean' || typeof o1 == 'number' || typeof o1 == 'string') {
@@ -12,23 +13,41 @@ describe('cloneModel', () => {
         } else if (typeof o1 == 'object') {
             if (Array.isArray(o1)) {
                 expect(Array.isArray(o2)).toBeTrue();
-                expect(o2).not.toBe(o1);
-                expect(o2.length).toBe(o1.length);
+                expect(o2).not.toBe(o1, path);
+                expect(o2.length).toBe(o1.length, path);
 
                 for (let i = 0; i < o1.length; i++) {
-                    compareObjects(o1[i], o2[i]);
+                    compareObjects(o1[i], o2[i], allowCache, path + `[${i}]/`);
                 }
             } else if (o1 instanceof Node) {
-                expect(o2).toBe(o1);
+                expect(o2).toBe(o1, path);
             } else if (o1 === null) {
-                expect(o2).toBeNull();
+                expect(o2).toBeNull(path);
             } else {
-                expect(o2).not.toBe(o1);
+                expect(o2).not.toBe(o1, path);
 
                 const keys = new Set([...Object.keys(o1), ...Object.keys(o2)]);
 
                 keys.forEach(key => {
-                    compareObjects(o1[key], o2[key]);
+                    if (allowCache) {
+                        compareObjects(o1[key], o2[key], allowCache, path + key + '/');
+                    } else {
+                        switch (key) {
+                            case 'cachedElement':
+                                expect(o2[key]).toBeUndefined(path);
+                                break;
+
+                            case 'wrapper':
+                            case 'element':
+                                expect(o2[key]).not.toBe(o1[key], path);
+                                expect(o2[key]).toEqual(o1[key], path);
+                                break;
+
+                            default:
+                                compareObjects(o1[key], o2[key], allowCache, path + key + '/');
+                                break;
+                        }
+                    }
                 });
             }
         } else {
@@ -37,9 +56,11 @@ describe('cloneModel', () => {
     }
 
     function runTest(model: ContentModelDocument) {
-        const clone = cloneModel(model);
+        const cloneWithCache = cloneModel(model, { includeCachedElement: true });
+        const cloneWithoutCache = cloneModel(model);
 
-        compareObjects(model, clone);
+        compareObjects(model, cloneWithCache, true);
+        compareObjects(model, cloneWithoutCache, false);
     }
 
     it('Empty model', () => {
@@ -260,5 +281,234 @@ describe('cloneModel', () => {
                 },
             ],
         });
+    });
+
+    describe('Clone with callback', () => {
+        it('Paragraph without cache', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: undefined,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).not.toHaveBeenCalled();
+        });
+
+        it('Paragraph with cache, return undefined', () => {
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            const div = document.createElement('div');
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                            cachedElement: div,
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: undefined,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'cache');
+        });
+
+        it('Paragraph with cache, return span', () => {
+            const div = document.createElement('div');
+            const span = document.createElement('span');
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return span;
+                });
+            const cloneWithCallback = cloneModel(
+                {
+                    blockGroupType: 'Document',
+                    blocks: [
+                        {
+                            blockType: 'Paragraph',
+                            format: {},
+                            segmentFormat: { fontSize: '20px' },
+                            segments: [],
+                            cachedElement: div,
+                        },
+                    ],
+                },
+                { includeCachedElement: callback }
+            );
+
+            expect(cloneWithCallback).toEqual({
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segmentFormat: { fontSize: '20px' },
+                        segments: [],
+                        cachedElement: span,
+                        isImplicit: undefined,
+                    },
+                ],
+            });
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'cache');
+        });
+
+        it('Entity, return undefined', () => {
+            const div = document.createElement('div');
+            const callback = jasmine
+                .createSpy('callback')
+                .and.callFake((node: Node, type: string) => {
+                    return undefined;
+                });
+            expect(() =>
+                cloneModel(
+                    {
+                        blockGroupType: 'Document',
+                        blocks: [createEntity(div, true)],
+                    },
+                    { includeCachedElement: callback }
+                )
+            ).toThrow();
+
+            expect(callback).toHaveBeenCalledTimes(1);
+            expect(callback).toHaveBeenCalledWith(div, 'entity');
+        });
+    });
+
+    it('Entity, return span', () => {
+        const div = document.createElement('div');
+        const span = document.createElement('span');
+        const callback = jasmine.createSpy('callback').and.callFake((node: Node, type: string) => {
+            return span;
+        });
+        const cloneWithCallback = cloneModel(
+            {
+                blockGroupType: 'Document',
+                blocks: [createEntity(div, true)],
+            },
+            { includeCachedElement: callback }
+        );
+
+        expect(cloneWithCallback).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Entity',
+                    format: {},
+                    wrapper: span,
+                    isReadonly: true,
+                    type: undefined,
+                    id: undefined,
+                    segmentType: 'Entity',
+                    isSelected: undefined,
+                },
+            ],
+        });
+        expect(callback).toHaveBeenCalledTimes(1);
+        expect(callback).toHaveBeenCalledWith(div, 'entity');
+    });
+
+    it('Inline entity, return span', () => {
+        const div1 = document.createElement('div');
+        const div2 = document.createElement('div');
+
+        div1.id = 'div1';
+        div2.id = 'div2';
+
+        const span = document.createElement('span');
+        const callback = jasmine.createSpy('callback').and.callFake((node: Node, type: string) => {
+            return node == div1 ? span : node;
+        });
+        const cloneWithCallback = cloneModel(
+            {
+                blockGroupType: 'Document',
+                blocks: [
+                    {
+                        blockType: 'Paragraph',
+                        format: {},
+                        segments: [createEntity(div1, true)],
+                        cachedElement: div2,
+                    },
+                ],
+            },
+            { includeCachedElement: callback }
+        );
+
+        expect(cloneWithCallback).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    format: {},
+                    segments: [
+                        {
+                            blockType: 'Entity',
+                            format: {},
+                            wrapper: span,
+                            isReadonly: true,
+                            type: undefined,
+                            id: undefined,
+                            segmentType: 'Entity',
+                            isSelected: undefined,
+                        },
+                    ],
+                    cachedElement: div2,
+                    isImplicit: undefined,
+                    segmentFormat: undefined,
+                },
+            ],
+        });
+        expect(callback).toHaveBeenCalledTimes(2);
+        expect(callback).toHaveBeenCalledWith(div1, 'entity');
+        expect(callback).toHaveBeenCalledWith(div2, 'cache');
     });
 });

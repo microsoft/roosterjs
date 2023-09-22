@@ -1,13 +1,15 @@
+import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
+import { createContentModelEditorCore } from './createContentModelEditorCore';
+import { EditorBase } from 'roosterjs-editor-core';
+import { SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
-import { createContentModelEditorCore } from './createContentModelEditorCore';
-import { EditorBase } from 'roosterjs-editor-core';
 
 /**
  * Editor for Content Model.
@@ -29,32 +31,40 @@ export default class ContentModelEditor
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */
-    createContentModel(option?: DomToModelOption): ContentModelDocument {
+    createContentModel(
+        option?: DomToModelOption,
+        selectionOverride?: SelectionRangeEx
+    ): ContentModelDocument {
         const core = this.getCore();
 
-        return core.api.createContentModel(core, option);
+        return core.api.createContentModel(core, option, selectionOverride);
     }
 
     /**
      * Set content with content model
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
+     * @param onNodeCreated An optional callback that will be called when a DOM node is created
      */
-    setContentModel(model: ContentModelDocument, option?: ModelToDomOption) {
+    setContentModel(
+        model: ContentModelDocument,
+        option?: ModelToDomOption,
+        onNodeCreated?: OnNodeCreated
+    ): SelectionRangeEx | null {
         const core = this.getCore();
 
-        core.api.setContentModel(core, model, option);
+        return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**
-     * Cache a content model object. Next time when format with content model, we can reuse it.
-     * @param model
+     * Notify editor the current cache may be invalid
      */
-    cacheContentModel(model: ContentModelDocument | null) {
+    invalidateCache() {
         const core = this.getCore();
 
-        if (core.reuseModel && !core.lifecycle.shadowEditFragment) {
-            core.cachedModel = model || undefined;
+        if (!core.lifecycle.shadowEditFragment) {
+            core.cache.cachedModel = undefined;
+            core.cache.cachedRangeEx = undefined;
         }
     }
 

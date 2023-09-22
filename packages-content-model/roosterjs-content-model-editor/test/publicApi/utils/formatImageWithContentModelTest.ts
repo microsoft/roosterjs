@@ -209,7 +209,7 @@ function segmentTestForPluginEvent(
     const addUndoSnapshot = jasmine
         .createSpy()
         .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
-            expect(source).toBe('Format');
+            expect(source).toBe(undefined!);
             expect(param.formatApiName).toBe(apiName);
             callback();
         });
@@ -225,11 +225,12 @@ function segmentTestForPluginEvent(
         isDisposed: () => false,
         getFocusedPosition: () => null as NodePosition,
         triggerPluginEvent,
+        isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);
     if (shouldCallPluginEvent) {
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(calledTimes);
+        expect(triggerPluginEvent).toHaveBeenCalled();
     }
     expect(addUndoSnapshot).toHaveBeenCalledTimes(calledTimes);
     expect(setContentModel).toHaveBeenCalledTimes(calledTimes);

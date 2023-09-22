@@ -24,7 +24,7 @@ describe('changeImage', () => {
             .createSpy()
             .and.callFake(
                 (callback: () => void, source: string, canUndoByBackspace, param: any) => {
-                    expect(source).toBe('Format');
+                    expect(source).toBe(undefined!);
                     expect(param.formatApiName).toBe('changeImage');
                     callback();
                 }
@@ -50,6 +50,7 @@ describe('changeImage', () => {
             getDocument: () => document,
             getSelectionRangeEx,
             triggerPluginEvent,
+            isDarkMode: () => false,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);
@@ -172,6 +173,7 @@ describe('changeImage', () => {
                                 src: testUrl,
                                 isSelected: true,
                                 dataset: {},
+                                alt: '',
                                 format: {
                                     boxShadow: '0px 0px 3px 3px #aaaaaa',
                                     width: '',

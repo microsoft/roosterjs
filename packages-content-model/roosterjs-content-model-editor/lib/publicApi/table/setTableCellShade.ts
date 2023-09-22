@@ -12,7 +12,7 @@ import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBa
  */
 export default function setTableCellShade(editor: IContentModelEditor, color: string | null) {
     formatWithContentModel(editor, 'setTableCellShade', model => {
-        const table = getFirstSelectedTable(model);
+        const [table] = getFirstSelectedTable(model);
 
         if (table) {
             normalizeTable(table);

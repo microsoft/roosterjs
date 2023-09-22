@@ -1,6 +1,5 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { getOnDeleteEntityCallback } from '../../editor/utils/handleKeyboardEventCommon';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { readFile } from 'roosterjs-editor-dom';
@@ -23,12 +22,12 @@ export default function insertImage(editor: IContentModelEditor, imageFileOrSrc:
 }
 
 function insertImageWithSrc(editor: IContentModelEditor, src: string) {
-    formatWithContentModel(editor, 'insertImage', model => {
-        const image = createImage(src);
+    formatWithContentModel(editor, 'insertImage', (model, context) => {
+        const image = createImage(src, { backgroundColor: '' });
         const doc = createContentModelDocument();
 
         addSegment(doc, image);
-        mergeModel(model, doc, getOnDeleteEntityCallback(editor), {
+        mergeModel(model, doc, context, {
             mergeFormat: 'mergeAll',
         });
 

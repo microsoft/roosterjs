@@ -5,3 +5,4 @@ export * from './contextMenu/index';
 export * from './pasteOptions/index';
 export * from './colorPicker/index';
 export * from './emoji/index';
+export * from './inputDialog/index';

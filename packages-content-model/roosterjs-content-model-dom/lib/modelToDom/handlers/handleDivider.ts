@@ -16,14 +16,17 @@ export const handleDivider: ContentModelBlockHandler<ContentModelDivider> = (
     context: ModelToDomContext,
     refNode: Node | null
 ) => {
-    let element = divider.cachedElement;
+    let element = context.allowCacheElement ? divider.cachedElement : undefined;
 
     if (element) {
         refNode = reuseCachedElement(parent, element, refNode);
     } else {
         element = doc.createElement(divider.tagName);
 
-        divider.cachedElement = element;
+        if (context.allowCacheElement) {
+            divider.cachedElement = element;
+        }
+
         parent.insertBefore(element, refNode);
 
         applyFormat(element, context.formatAppliers.divider, divider.format, context);

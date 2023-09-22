@@ -1,10 +1,14 @@
-import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
+    DomToModelSettings,
     EditorContext,
     ModelToDomOption,
+    ModelToDomSettings,
+    OnNodeCreated,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -17,10 +21,12 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
  * Create Content Model from DOM tree in this editor
  * @param core The ContentModelEditorCore object
  * @param option The option to customize the behavior of DOM to Content Model conversion
+ * @param selectionOverride When passed, use this selection range instead of current selection in editor
  */
 export type CreateContentModel = (
     core: ContentModelEditorCore,
-    option?: DomToModelOption
+    option?: DomToModelOption,
+    selectionOverride?: SelectionRangeEx
 ) => ContentModelDocument;
 
 /**
@@ -28,12 +34,14 @@ export type CreateContentModel = (
  * @param core The ContentModelEditorCore object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
+ * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export type SetContentModel = (
     core: ContentModelEditorCore,
     model: ContentModelDocument,
-    option?: ModelToDomOption
-) => void;
+    option?: ModelToDomOption,
+    onNodeCreated?: OnNodeCreated
+) => SelectionRangeEx | null;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -65,7 +73,7 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
 /**
  * Represents the core data structure of a Content Model editor
  */
-export interface ContentModelEditorCore extends EditorCore {
+export interface ContentModelEditorCore extends EditorCore, ContentModelPluginState {
     /**
      * Core API map of this editor
      */
@@ -77,11 +85,6 @@ export interface ContentModelEditorCore extends EditorCore {
     readonly originalApi: ContentModelCoreApiMap;
 
     /**
-     * When reuse Content Model is allowed, we cache the Content Model object here after created
-     */
-    cachedModel?: ContentModelDocument;
-
-    /**
      * Default format used by Content Model. This is calculated from lifecycle.defaultFormat
      */
     defaultFormat: ContentModelSegmentFormat;
@@ -89,20 +92,22 @@ export interface ContentModelEditorCore extends EditorCore {
     /**
      * Default DOM to Content Model options
      */
-    defaultDomToModelOptions: DomToModelOption;
+    defaultDomToModelOptions: (DomToModelOption | undefined)[];
 
     /**
      * Default Content Model to DOM options
      */
-    defaultModelToDomOptions: ModelToDomOption;
+    defaultModelToDomOptions: (ModelToDomOption | undefined)[];
 
     /**
-     * Whether reuse Content Model is allowed
+     * Default DOM to Content Model config, calculated from defaultDomToModelOptions,
+     * will be used for creating content model if there is no other customized options
      */
-    reuseModel: boolean;
+    defaultDomToModelConfig: DomToModelSettings;
 
     /**
-     * Whether adding delimiter for entity is allowed
+     * Default Content Model to DOM config, calculated from defaultModelToDomOptions,
+     * will be used for setting content model if there is no other customized options
      */
-    addDelimiterForEntity: boolean;
+    defaultModelToDomConfig: ModelToDomSettings;
 }
