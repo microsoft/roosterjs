@@ -6,11 +6,11 @@ import { EditorContext } from 'roosterjs-content-model-types';
  * Create a EditorContext object used by ContentModel API
  */
 export const createEditorContext: CreateEditorContext = core => {
-    const { lifecycle, defaultFormat, darkColorHandler, contentDiv, cache } = core;
+    const { lifecycle, darkColorHandler, contentDiv, cache, format } = core;
 
     const context: EditorContext = {
         isDarkMode: lifecycle.isDarkMode,
-        defaultFormat: defaultFormat,
+        defaultFormat: core.fo,
         darkColorHandler: darkColorHandler,
         addDelimiterForEntity: true,
         allowCacheElement: true,

@@ -44,7 +44,6 @@ describe('createEditorContext', () => {
         const isDarkMode = 'DARKMODE' as any;
         const defaultFormat = 'DEFAULTFORMAT' as any;
         const darkColorHandler = 'DARKHANDLER' as any;
-        const addDelimiterForEntity = 'ADDDELIMITER' as any;
         const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
         const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
         const domIndexer = 'DOMINDEXER' as any;
@@ -65,7 +64,6 @@ describe('createEditorContext', () => {
             },
             defaultFormat,
             darkColorHandler,
-            addDelimiterForEntity,
             cache: {
                 domIndexer,
             },
@@ -77,7 +75,7 @@ describe('createEditorContext', () => {
             isDarkMode,
             darkColorHandler,
             defaultFormat,
-            addDelimiterForEntity,
+            addDelimiterForEntity: true,
             allowCacheElement: true,
             domIndexer,
         });

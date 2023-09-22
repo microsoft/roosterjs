@@ -321,8 +321,6 @@ describe('createContentModelEditorCore', () => {
             },
             defaultDomToModelConfig: mockedDomToModelConfig,
             defaultModelToDomConfig: mockedModelToDomConfig,
-
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
@@ -381,7 +379,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: true,
             contentDiv: {
                 style: {},
             },
@@ -440,7 +437,6 @@ describe('createContentModelEditorCore', () => {
                 textColor: undefined,
                 backgroundColor: undefined,
             },
-            addDelimiterForEntity: false,
             contentDiv: {
                 style: {},
             },
