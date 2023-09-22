@@ -142,6 +142,12 @@ export const enum ExperimentalFeatures {
      */
     AutoFormatList = 'AutoFormatList',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
     //#endregion
 
     /**
@@ -161,11 +167,6 @@ export const enum ExperimentalFeatures {
      * Delete table with Backspace key with the whole was selected with table selector
      */
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
-
-    /**
-     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
-     */
-    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
 
     /**
      * Paste with Content model

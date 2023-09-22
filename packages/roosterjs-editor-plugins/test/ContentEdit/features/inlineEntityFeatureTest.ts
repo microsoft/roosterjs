@@ -9,14 +9,7 @@ import {
     Position,
     PositionContentSearcher,
 } from 'roosterjs-editor-dom';
-import {
-    Entity,
-    ExperimentalFeatures,
-    IEditor,
-    Keys,
-    PluginKeyDownEvent,
-    BlockElement,
-} from 'roosterjs-editor-types';
+import { Entity, IEditor, Keys, PluginKeyDownEvent, BlockElement } from 'roosterjs-editor-types';
 
 describe('Content Edit Features |', () => {
     const { moveBetweenDelimitersFeature, removeEntityBetweenDelimiters } = EntityFeatures;
@@ -68,8 +61,6 @@ describe('Content Edit Features |', () => {
                     collapsed: true,
                 },
             select,
-            isFeatureEnabled: (feature: ExperimentalFeatures) =>
-                feature === ExperimentalFeatures.InlineEntityReadOnlyDelimiters,
             getBodyTraverser: (startNode?: Node) =>
                 ContentTraverser.createBodyTraverser(testContainer, startNode),
             getBlockElementAtNode: (node: Node) => getBlockElementAtNode(document.body, node),
