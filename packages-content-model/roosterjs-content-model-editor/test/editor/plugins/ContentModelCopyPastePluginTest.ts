@@ -467,7 +467,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,
@@ -527,7 +527,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
@@ -586,7 +586,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,

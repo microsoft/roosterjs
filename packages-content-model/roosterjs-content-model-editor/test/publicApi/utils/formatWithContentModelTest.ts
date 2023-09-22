@@ -13,7 +13,6 @@ describe('formatWithContentModel', () => {
     let mockedModel: ContentModelDocument;
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
-    let triggerContentChangedEvent: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
 
     const apiName = 'mockedApi';
@@ -28,7 +27,6 @@ describe('formatWithContentModel', () => {
         focus = jasmine.createSpy('focus');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
-        triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         editor = ({
@@ -38,7 +36,6 @@ describe('formatWithContentModel', () => {
             setContentModel,
             cacheContentModel,
             getFocusedPosition,
-            triggerContentChangedEvent,
             triggerPluginEvent,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
@@ -72,7 +69,7 @@ describe('formatWithContentModel', () => {
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(ChangeSource.Format);
+        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(undefined);
         expect(addUndoSnapshot.calls.argsFor(0)[2]).toBe(false);
         expect(addUndoSnapshot.calls.argsFor(0)[3]).toEqual({
             formatApiName: apiName,
@@ -100,7 +97,7 @@ describe('formatWithContentModel', () => {
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
-        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(ChangeSource.Format);
+        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(undefined!);
         expect(addUndoSnapshot.calls.argsFor(0)[2]).toBe(false);
         expect(addUndoSnapshot.calls.argsFor(0)[3]).toEqual({
             formatApiName: apiName,
@@ -147,7 +144,8 @@ describe('formatWithContentModel', () => {
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
-        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe('TEST');
+        expect(addUndoSnapshot.calls.argsFor(0)[1]).toBe(undefined!);
+        expect(triggerPluginEvent).toHaveBeenCalled();
     });
 
     it('Customize change source and skip undo snapshot', () => {
@@ -168,7 +166,6 @@ describe('formatWithContentModel', () => {
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
-        expect(triggerContentChangedEvent).toHaveBeenCalledWith('TEST', 'DATA');
     });
 
     it('Has onNodeCreated', () => {
@@ -202,12 +199,7 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
         expect(addUndoSnapshot).toHaveBeenCalled();
-
-        const wrappedCallback = addUndoSnapshot.calls.argsFor(0)[0] as any;
-        const result = wrappedCallback();
-
         expect(getChangeData).toHaveBeenCalled();
-        expect(result).toBe(mockedData);
     });
 
     it('Has entity got deleted', () => {
@@ -236,7 +228,7 @@ describe('formatWithContentModel', () => {
             }
         );
 
-        expect(triggerPluginEvent).toHaveBeenCalledTimes(2);
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(3);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
             entity: entity1,
             operation: EntityOperation.RemoveFromStart,
@@ -256,6 +248,7 @@ describe('formatWithContentModel', () => {
         const entity2 = { id: 'E2', type: 'E', wrapper: wrapper2, isReadonly: true } as any;
         const rawEvent = 'RawEvent' as any;
         const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
+        const mockedData = 'DATA';
 
         editor.isDarkMode = () => true;
         editor.transformToDarkColor = transformToDarkColorSpy;
@@ -269,10 +262,20 @@ describe('formatWithContentModel', () => {
             },
             {
                 rawEvent: rawEvent,
+                getChangeData: () => mockedData,
             }
         );
 
-        expect(triggerPluginEvent).not.toHaveBeenCalled();
+        expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
+        expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
+            contentModel: mockedModel,
+            rangeEx: undefined,
+            source: ChangeSource.Format,
+            data: mockedData,
+            additionalData: {
+                formatApiName: apiName,
+            },
+        });
         expect(transformToDarkColorSpy).toHaveBeenCalledTimes(2);
         expect(transformToDarkColorSpy).toHaveBeenCalledWith(wrapper1);
         expect(transformToDarkColorSpy).toHaveBeenCalledWith(wrapper2);
