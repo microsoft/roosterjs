@@ -36,14 +36,12 @@ import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
 import {
     ContentModelFormatMap,
-    FormatHandlerTypeMap,
-    FormatKey,
     FormatApplier,
     FormatAppliers,
-    FormatAppliersPerCategory,
+    FormatHandlerTypeMap,
+    FormatKey,
     FormatParser,
     FormatParsers,
-    FormatParsersPerCategory,
 } from 'roosterjs-content-model-types';
 
 type FormatHandlers = {
@@ -113,7 +111,10 @@ const sharedContainerFormats: (keyof FormatHandlerTypeMap)[] = [
     'border',
 ];
 
-const defaultFormatKeysPerCategory: {
+/**
+ * @internal
+ */
+export const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: sharedBlockFormats,
@@ -218,49 +219,3 @@ export const defaultFormatAppliers: FormatAppliers = getObjectKeys(defaultFormat
     },
     <FormatAppliers>{}
 );
-
-/**
- * @internal
- */
-export function getFormatParsers(
-    override: Partial<FormatParsers> = {},
-    additionalParsers: Partial<FormatParsersPerCategory> = {}
-): FormatParsersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (override[formatKey] === undefined
-                        ? defaultFormatParsers[formatKey]
-                        : override[formatKey]) as FormatParser<any>
-            )
-            .concat((additionalParsers[key] as FormatParser<any>[]) || []);
-
-        result[key] = value;
-
-        return result;
-    }, {} as FormatParsersPerCategory);
-}
-
-/**
- * @internal
- */
-export function getFormatAppliers(
-    override: Partial<FormatAppliers> = {},
-    additionalAppliers: Partial<FormatAppliersPerCategory> = {}
-): FormatAppliersPerCategory {
-    return getObjectKeys(defaultFormatKeysPerCategory).reduce((result, key) => {
-        const value = defaultFormatKeysPerCategory[key]
-            .map(
-                formatKey =>
-                    (override[formatKey] === undefined
-                        ? defaultFormatAppliers[formatKey]
-                        : override[formatKey]) as FormatApplier<any>
-            )
-            .concat((additionalAppliers[key] as FormatApplier<any>[]) || []);
-
-        result[key] = value;
-
-        return result;
-    }, {} as FormatAppliersPerCategory);
-}

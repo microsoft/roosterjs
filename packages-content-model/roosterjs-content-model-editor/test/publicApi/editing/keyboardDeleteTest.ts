@@ -1,8 +1,8 @@
 import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
-import handleKeyDownEvent from '../../../lib/publicApi/editing/handleKeyDownEvent';
-import { ChangeSource, Keys } from 'roosterjs-editor-types';
+import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
+import { ChangeSource, Keys, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
@@ -20,7 +20,7 @@ import {
     forwardDeleteCollapsedSelection,
 } from '../../../lib/modelApi/edit/deleteSteps/deleteCollapsedSelection';
 
-describe('handleKeyDownEvent', () => {
+describe('keyboardDelete', () => {
     let deleteSelectionSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -51,7 +51,18 @@ describe('handleKeyDownEvent', () => {
             'handleBackspaceKey',
             newEditor => {
                 editor = newEditor;
-                handleKeyDownEvent(editor, mockedEvent);
+
+                editor.getSelectionRangeEx = () => ({
+                    type: SelectionRangeTypes.Normal,
+                    ranges: [
+                        {
+                            collapsed: false,
+                        },
+                    ],
+                });
+                const result = keyboardDelete(editor, mockedEvent);
+
+                expect(result).toBeTrue();
             },
             input,
             expectedResult,
@@ -366,13 +377,17 @@ describe('handleKeyDownEvent', () => {
 
         const editor = ({
             addUndoSnapshot,
+            getSelectionRangeEx: () => ({
+                type: SelectionRangeTypes.Normal,
+                ranges: [{ collapsed: false }],
+            }),
         } as any) as IContentModelEditor;
         const which = Keys.DELETE;
         const event = {
             which,
         } as any;
 
-        handleKeyDownEvent(editor, event);
+        keyboardDelete(editor, event);
 
         expect(spy.calls.argsFor(0)[0]).toBe(editor);
         expect(spy.calls.argsFor(0)[1]).toBe('handleDeleteKey');
@@ -385,18 +400,121 @@ describe('handleKeyDownEvent', () => {
         const spy = spyOn(formatWithContentModel, 'formatWithContentModel');
         const preventDefault = jasmine.createSpy('preventDefault');
 
-        const editor = 'EDITOR' as any;
+        const editor = {
+            getSelectionRangeEx: () => ({
+                type: SelectionRangeTypes.Normal,
+                ranges: [{ collapsed: false }],
+            }),
+        } as any;
         const which = Keys.BACKSPACE;
         const event = {
             which,
             preventDefault,
         } as any;
 
-        handleKeyDownEvent(editor, event);
+        keyboardDelete(editor, event);
 
         expect(spy.calls.argsFor(0)[0]).toBe(editor);
         expect(spy.calls.argsFor(0)[1]).toBe('handleBackspaceKey');
         expect(spy.calls.argsFor(0)[3]?.changeSource).toBe(ChangeSource.Keyboard);
         expect(spy.calls.argsFor(0)[3]?.getChangeData?.()).toBe(which);
+    });
+
+    it('No need to delete - Backspace', () => {
+        const rawEvent = { which: Keys.BACKSPACE } as any;
+        const range: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                ({
+                    collapsed: true,
+                    startContainer: document.createTextNode('test'),
+                    startOffset: 2,
+                } as any) as Range,
+            ],
+            areAllCollapsed: true,
+        };
+        const editor = {
+            getSelectionRangeEx: () => range,
+        } as any;
+        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
+
+        const result = keyboardDelete(editor, rawEvent);
+
+        expect(result).toBeFalse();
+        expect(formatWithContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('No need to delete - Delete', () => {
+        const rawEvent = { which: Keys.DELETE } as any;
+        const range: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                ({
+                    collapsed: true,
+                    startContainer: document.createTextNode('test'),
+                    startOffset: 2,
+                } as any) as Range,
+            ],
+            areAllCollapsed: true,
+        };
+        const editor = {
+            getSelectionRangeEx: () => range,
+        } as any;
+        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
+
+        const result = keyboardDelete(editor, rawEvent);
+
+        expect(result).toBeFalse();
+        expect(formatWithContentModelSpy).not.toHaveBeenCalled();
+    });
+
+    it('Backspace from the beginning', () => {
+        const rawEvent = { which: Keys.BACKSPACE } as any;
+        const range: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                ({
+                    collapsed: true,
+                    startContainer: document.createTextNode('test'),
+                    startOffset: 0,
+                } as any) as Range,
+            ],
+            areAllCollapsed: true,
+        };
+
+        const editor = {
+            getSelectionRangeEx: () => range,
+        } as any;
+        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
+
+        const result = keyboardDelete(editor, rawEvent);
+
+        expect(result).toBeTrue();
+        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
+    });
+
+    it('Delete from the last', () => {
+        const rawEvent = { which: Keys.DELETE } as any;
+        const range: SelectionRangeEx = {
+            type: SelectionRangeTypes.Normal,
+            ranges: [
+                ({
+                    collapsed: true,
+                    startContainer: document.createTextNode('test'),
+                    startOffset: 4,
+                } as any) as Range,
+            ],
+            areAllCollapsed: true,
+        };
+
+        const editor = {
+            getSelectionRangeEx: () => range,
+        } as any;
+        const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
+
+        const result = keyboardDelete(editor, rawEvent);
+
+        expect(result).toBeTrue();
+        expect(formatWithContentModelSpy).toHaveBeenCalledTimes(1);
     });
 });

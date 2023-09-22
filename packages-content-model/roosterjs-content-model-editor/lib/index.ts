@@ -13,6 +13,12 @@ export {
     ContentModelBeforePasteEventData,
     CompatibleContentModelBeforePasteEvent,
 } from './publicTypes/event/ContentModelBeforePasteEvent';
+export {
+    default as ContentModelContentChangedEvent,
+    CompatibleContentModelContentChangedEvent,
+    ContentModelContentChangedEventData,
+} from './publicTypes/event/ContentModelContentChangedEvent';
+
 export { IContentModelEditor, ContentModelEditorOptions } from './publicTypes/IContentModelEditor';
 export { InsertPoint } from './publicTypes/selection/InsertPoint';
 export { TableSelectionContext } from './publicTypes/selection/TableSelectionContext';
@@ -75,6 +81,7 @@ export { default as toggleCode } from './publicApi/segment/toggleCode';
 export { default as paste } from './publicApi/utils/paste';
 export { default as insertEntity } from './publicApi/entity/insertEntity';
 export { formatWithContentModel } from './publicApi/utils/formatWithContentModel';
+export { default as keyboardDelete } from './publicApi/editing/keyboardDelete';
 
 export { default as ContentModelEditor } from './editor/ContentModelEditor';
 export { default as isContentModelEditor } from './editor/isContentModelEditor';
@@ -83,6 +90,8 @@ export { default as ContentModelEditPlugin } from './editor/plugins/ContentModel
 export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin/ContentModelPastePlugin';
 export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
+export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
+
 export {
     createContentModelEditorCore,
     promoteToContentModelEditorCore,
@@ -91,3 +100,6 @@ export { combineBorderValue, extractBorderValues } from './domUtils/borderValues
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
+
+export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
+export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

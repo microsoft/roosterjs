@@ -6,6 +6,7 @@ import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateS
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
 import { commitEntity } from 'roosterjs-editor-dom';
+import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
@@ -188,8 +189,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -247,8 +248,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -301,8 +302,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -376,8 +377,8 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
             expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
@@ -462,11 +463,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,
@@ -477,9 +478,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             // On Cut Spy
             expect(undoSnapShotSpy).toHaveBeenCalled();
-            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, {
-                onNodeCreated: undefined,
-            });
+            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, undefined);
         });
 
         it('Selection not Collapsed and table selection', () => {
@@ -524,11 +523,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
@@ -541,9 +540,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // On Cut Spy
             expect(undoSnapShotSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalled();
-            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, {
-                onNodeCreated: undefined,
-            });
+            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, undefined);
             expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(modelValue);
         });
 
@@ -585,11 +582,11 @@ describe('ContentModelCopyPastePlugin |', () => {
                 document,
                 div,
                 pasteModelValue,
-                undefined,
-                { onNodeCreated }
+                createModelToDomContext(),
+                onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,
@@ -601,9 +598,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             // On Cut Spy
             expect(undoSnapShotSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).toHaveBeenCalled();
-            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, {
-                onNodeCreated: undefined,
-            });
+            expect(setContentModelSpy).toHaveBeenCalledWith(modelValue, undefined);
             expect(normalizeContentModel.normalizeContentModel).toHaveBeenCalledWith(modelValue);
         });
     });

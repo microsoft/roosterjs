@@ -77,7 +77,7 @@ describe('handleKeyboardEventResult', () => {
         expect(preventDefault).not.toHaveBeenCalled();
         expect(triggerContentChangedEvent).not.toHaveBeenCalled();
         expect(normalizeContentModel.normalizeContentModel).not.toHaveBeenCalled();
-        expect(cacheContentModel).toHaveBeenCalledWith(null);
+        expect(cacheContentModel).not.toHaveBeenCalledWith(null);
         expect(triggerPluginEvent).not.toHaveBeenCalled();
         expect(context.skipUndoSnapshot).toBeTrue();
     });

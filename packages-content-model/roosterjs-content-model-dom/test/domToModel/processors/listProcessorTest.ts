@@ -8,7 +8,7 @@ import { listProcessor } from '../../../lib/domToModel/processors/listProcessor'
 
 describe('listProcessor', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();
@@ -269,7 +269,7 @@ describe('listProcessor', () => {
 });
 
 describe('listProcessor without format handlers', () => {
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
     let context: DomToModelContext;
 
     beforeEach(() => {
@@ -447,7 +447,7 @@ describe('listProcessor without format handlers', () => {
 
 describe('listProcessor process metadata', () => {
     let context: DomToModelContext;
-    let childProcessor: jasmine.Spy<ElementProcessor<HTMLElement>>;
+    let childProcessor: jasmine.Spy<ElementProcessor<ParentNode>>;
 
     beforeEach(() => {
         childProcessor = jasmine.createSpy();

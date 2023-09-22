@@ -1,8 +1,13 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { contentModelToDom, domToContentModel } from 'roosterjs-content-model-dom';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { parseLink } from '../../../../lib/editor/plugins/PastePlugin/utils/linkParser';
+import {
+    contentModelToDom,
+    createDomToModelContext,
+    createModelToDomContext,
+    domToContentModel,
+} from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;
 let fragment: DocumentFragment;
@@ -22,7 +27,11 @@ describe('link parser test', () => {
             link: [parseLink],
         };
 
-        const model = domToContentModel(fragment, event.domToModelOption);
+        const model = domToContentModel(
+            fragment,
+            createDomToModelContext(undefined, event.domToModelOption)
+        );
+
         if (expectedModel) {
             expect(model).toEqual(expectedModel);
         }
@@ -31,10 +40,9 @@ describe('link parser test', () => {
             document,
             div,
             model,
-            {
+            createModelToDomContext({
                 isDarkMode: false,
-            },
-            {}
+            })
         );
 
         //Assert

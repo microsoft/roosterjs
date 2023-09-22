@@ -1,17 +1,21 @@
 import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
-import ContentModelEditPlugin from './plugins/ContentModelEditPlugin';
-import ContentModelFormatPlugin from './plugins/ContentModelFormatPlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
+import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
+import { createContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
+import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlugin';
+import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import { tablePreProcessor } from './overrides/tablePreProcessor';
 
 /**
  * Editor Core creator for Content Model editor
@@ -20,12 +24,19 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
+    const pluginState: ContentModelPluginState = {
+        cache: {},
+        copyPaste: {
+            allowedCustomPasteType: options.allowedCustomPasteType || [],
+        },
+    };
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
+            createContentModelCachePlugin(pluginState.cache),
             ...(options.plugins || []),
-            new ContentModelFormatPlugin(),
-            new ContentModelEditPlugin(),
+            createContentModelFormatPlugin(),
+            createContentModelEditPlugin(),
         ],
         corePluginOverride: {
             typeInContainer: new ContentModelTypeInContainerPlugin(),
@@ -33,9 +44,7 @@ export const createContentModelEditorCore: CoreCreator<
                 options.experimentalFeatures,
                 ExperimentalFeatures.ContentModelPaste
             )
-                ? new ContentModelCopyPastePlugin({
-                      allowedCustomPasteType: options.allowedCustomPasteType || [],
-                  })
+                ? new ContentModelCopyPastePlugin(pluginState.copyPaste)
                 : undefined,
             ...(options.corePluginOverride || {}),
         },
@@ -43,7 +52,7 @@ export const createContentModelEditorCore: CoreCreator<
 
     const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
 
-    promoteToContentModelEditorCore(core, modifiedOptions);
+    promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
 
     return core;
 };
@@ -55,13 +64,22 @@ export const createContentModelEditorCore: CoreCreator<
  */
 export function promoteToContentModelEditorCore(
     core: EditorCore,
-    options: ContentModelEditorOptions
+    options: ContentModelEditorOptions,
+    pluginState: ContentModelPluginState
 ) {
     const cmCore = core as ContentModelEditorCore;
 
+    promoteCorePluginState(cmCore, pluginState);
     promoteDefaultFormat(cmCore);
     promoteContentModelInfo(cmCore, options);
     promoteCoreApi(cmCore);
+}
+
+function promoteCorePluginState(
+    cmCore: ContentModelEditorCore,
+    pluginState: ContentModelPluginState
+) {
+    Object.assign(cmCore, pluginState);
 }
 
 function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
@@ -75,8 +93,18 @@ function promoteContentModelInfo(
 ) {
     const experimentalFeatures = cmCore.lifecycle.experimentalFeatures;
 
-    cmCore.defaultDomToModelOptions = options.defaultDomToModelOptions || {};
-    cmCore.defaultModelToDomOptions = options.defaultModelToDomOptions || {};
+    cmCore.defaultDomToModelOptions = [
+        {
+            processorOverride: {
+                table: tablePreProcessor,
+            },
+        },
+        options.defaultDomToModelOptions,
+    ];
+    cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
+    cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
+    cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
+
     cmCore.addDelimiterForEntity = isFeatureEnabled(
         experimentalFeatures,
         ExperimentalFeatures.InlineEntityReadOnlyDelimiters

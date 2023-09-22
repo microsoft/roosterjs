@@ -12,6 +12,7 @@ describe('formatParagraphWithContentModel', () => {
     let editor: IContentModelEditor;
     let addUndoSnapshot: jasmine.Spy;
     let setContentModel: jasmine.Spy;
+    let triggerPluginEvent: jasmine.Spy;
     let focus: jasmine.Spy;
     let model: ContentModelDocument;
 
@@ -20,6 +21,7 @@ describe('formatParagraphWithContentModel', () => {
     beforeEach(() => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
+        triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
 
         editor = ({
@@ -30,6 +32,7 @@ describe('formatParagraphWithContentModel', () => {
             isDarkMode: () => false,
             getCustomData: () => ({}),
             getFocusedPosition: () => 'NewPosition',
+            triggerPluginEvent,
         } as any) as IContentModelEditor;
     });
 
