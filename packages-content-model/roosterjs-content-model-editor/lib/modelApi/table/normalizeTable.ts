@@ -30,15 +30,17 @@ export function normalizeTable(
     table.rows.forEach((row, rowIndex) => {
         row.cells.forEach((cell, colIndex) => {
             if (cell.blocks.length == 0) {
+                const format = cell.format.textColor
+                    ? {
+                          ...defaultSegmentFormat,
+                          textColor: cell.format.textColor,
+                      }
+                    : defaultSegmentFormat;
                 addBlock(
                     cell,
-                    createParagraph(
-                        undefined /*isImplicit*/,
-                        undefined /*blockFormat*/,
-                        defaultSegmentFormat
-                    )
+                    createParagraph(undefined /*isImplicit*/, undefined /*blockFormat*/, format)
                 );
-                addSegment(cell, createBr(defaultSegmentFormat));
+                addSegment(cell, createBr(format));
             }
 
             if (rowIndex == 0) {
