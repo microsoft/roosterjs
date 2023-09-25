@@ -145,5 +145,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
         }
     }
 
+    context.domIndexer?.onTable(tableNode, table);
+
     return refNode;
 };

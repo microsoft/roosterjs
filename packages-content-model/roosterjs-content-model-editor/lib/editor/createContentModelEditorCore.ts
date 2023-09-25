@@ -1,5 +1,6 @@
 import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
+import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
@@ -25,7 +26,14 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorOptions
 > = (contentDiv, options) => {
     const pluginState: ContentModelPluginState = {
-        cache: {},
+        cache: {
+            domIndexer: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.ReusableContentModelV2
+            )
+                ? contentModelDomIndexer
+                : undefined,
+        },
         copyPaste: {
             allowedCustomPasteType: options.allowedCustomPasteType || [],
         },

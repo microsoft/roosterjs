@@ -35,7 +35,8 @@ const generalSegmentProcessor: ElementProcessor<HTMLElement> = (group, element, 
     const isSelectedBefore = context.isInSelection;
 
     addDecorators(segment, context);
-    addSegment(group, segment);
+    const paragraph = addSegment(group, segment);
+    context.domIndexer?.onSegment(element, paragraph, [segment]);
 
     stackFormat(
         context,

@@ -29,10 +29,12 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     if (cachedModel) {
         return cachedModel;
     } else {
-        const model = internalCreateContentModel(core, option, selectionOverride);
+        const selection = selectionOverride || core.api.getSelectionRangeEx(core);
+        const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
             core.cache.cachedModel = model;
+            core.cache.cachedRangeEx = selection;
         }
 
         return model;
@@ -41,17 +43,13 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    option?: DomToModelOption,
-    selectionOverride?: SelectionRangeEx
+    selection: SelectionRangeEx,
+    option?: DomToModelOption
 ) {
     const editorContext = core.api.createEditorContext(core);
     const domToModelContext = option
         ? createDomToModelContext(editorContext, ...(core.defaultDomToModelOptions || []), option)
         : createDomToModelContextWithConfig(core.defaultDomToModelConfig, editorContext);
 
-    return domToContentModel(
-        core.contentDiv,
-        domToModelContext,
-        selectionOverride || core.api.getSelectionRangeEx(core)
-    );
+    return domToContentModel(core.contentDiv, domToModelContext, selection);
 }

@@ -33,7 +33,8 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
             if (isBlockEntity) {
                 addBlock(group, entityModel);
             } else {
-                addSegment(group, entityModel);
+                const paragraph = addSegment(group, entityModel);
+                context.domIndexer?.onSegment(element, paragraph, [entityModel]);
             }
         }
     );

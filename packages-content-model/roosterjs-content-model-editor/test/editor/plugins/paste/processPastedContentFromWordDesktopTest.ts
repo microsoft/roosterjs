@@ -92,7 +92,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],
@@ -113,7 +118,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],

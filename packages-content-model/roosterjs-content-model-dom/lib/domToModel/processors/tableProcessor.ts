@@ -56,6 +56,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
                 table.cachedElement = tableElement;
             }
 
+            context.domIndexer?.onTable(tableElement, table);
+
             parseFormat(tableElement, context.formatParsers.table, table.format, context);
             parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);
             parseFormat(

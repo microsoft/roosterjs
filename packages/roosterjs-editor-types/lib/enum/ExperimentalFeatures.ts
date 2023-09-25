@@ -177,4 +177,9 @@ export const enum ExperimentalFeatures {
      * Disable list chain functionality
      */
     DisableListChain = 'DisableListChain',
+
+    /**
+     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     */
+    ReusableContentModelV2 = 'ReusableContentModelV2',
 }

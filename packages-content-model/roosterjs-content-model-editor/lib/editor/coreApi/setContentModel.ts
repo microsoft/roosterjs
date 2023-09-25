@@ -11,7 +11,6 @@ import {
  * @param core The editor core object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core);
@@ -26,15 +25,13 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
         onNodeCreated
     );
 
+    core.contentDiv.normalize();
+
     if (!core.lifecycle.shadowEditFragment) {
+        core.cache.cachedRangeEx = range || undefined;
         core.api.select(core, range);
-
-        if (range) {
-            core.cache.cachedRangeEx = range;
-        }
+        core.cache.cachedModel = model;
     }
-
-    // TODO: Reconcile selection text node cache
 
     return range;
 };

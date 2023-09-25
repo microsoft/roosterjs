@@ -1,3 +1,5 @@
+import ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
@@ -6,7 +8,6 @@ import {
     PluginEvent,
     PluginEventType,
     PluginWithState,
-    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 
 /**
@@ -77,36 +78,82 @@ export default class ContentModelCachePlugin
 
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                switch (event.rawEvent.which) {
-                    case Keys.ENTER:
-                        // ENTER key will create new paragraph, so need to update cache to reflect this change
-                        // TODO: Handle ENTER key to better reuse content model
-                        this.editor.invalidateCache();
+                if (event.rawEvent.defaultPrevented || event.handledByEditFeature) {
+                    // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
+                    this.invalidateCache();
+                } else {
+                    switch (event.rawEvent.which) {
+                        case Keys.ENTER:
+                            // ENTER key will create new paragraph, so need to update cache to reflect this change
+                            // TODO: Handle ENTER key to better reuse content model
+                            this.invalidateCache();
 
-                        break;
+                            break;
+                    }
                 }
                 break;
 
             case PluginEventType.Input:
+                {
+                    this.updateCachedModel(this.editor, true /*forceUpdate*/);
+                }
+                break;
+
             case PluginEventType.SelectionChanged:
-                this.reconcileSelection(this.editor);
+                this.updateCachedModel(this.editor);
                 break;
 
             case PluginEventType.ContentChanged:
-                this.editor.invalidateCache();
+                {
+                    const { contentModel, rangeEx } = event as ContentModelContentChangedEvent;
+
+                    if (contentModel && this.state.domIndexer) {
+                        this.state.cachedModel = contentModel;
+                        this.state.cachedRangeEx = rangeEx;
+                    } else {
+                        this.invalidateCache();
+                    }
+                }
+
                 break;
         }
     }
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            this.reconcileSelection(this.editor);
+            this.updateCachedModel(this.editor);
         }
     };
 
-    private reconcileSelection(editor: IContentModelEditor, newRangeEx?: SelectionRangeEx) {
-        // TODO: Really do reconcile selection
-        editor.invalidateCache();
+    private invalidateCache() {
+        if (!this.editor?.isInShadowEdit()) {
+            this.state.cachedModel = undefined;
+            this.state.cachedRangeEx = undefined;
+        }
+    }
+
+    private updateCachedModel(editor: IContentModelEditor, forceUpdate?: boolean) {
+        const cachedRangeEx = this.state.cachedRangeEx;
+        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
+
+        const newRangeEx = editor.getSelectionRangeEx();
+
+        const model = this.state.cachedModel;
+        const isSelectionChanged =
+            forceUpdate || !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
+
+        if (isSelectionChanged) {
+            if (
+                !model ||
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
+            ) {
+                this.invalidateCache();
+            } else {
+                this.state.cachedRangeEx = newRangeEx;
+            }
+        } else {
+            this.state.cachedRangeEx = cachedRangeEx;
+        }
     }
 }
 

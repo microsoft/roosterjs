@@ -1,4 +1,5 @@
 import * as stackFormat from '../../../lib/modelToDom/utils/stackFormat';
+import * as unwrap from 'roosterjs-editor-dom/lib/utils/unwrap';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { createText } from '../../../lib/modelApi/creators/createText';
@@ -6,6 +7,7 @@ import { handleParagraph } from '../../../lib/modelToDom/handlers/handleParagrap
 import { handleSegment as originalHandleSegment } from '../../../lib/modelToDom/handlers/handleSegment';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
 import {
+    ContentModelDomIndexer,
     ContentModelParagraph,
     ContentModelSegment,
     ContentModelSegmentHandler,
@@ -486,7 +488,7 @@ describe('handleParagraph', () => {
         handleParagraph(document, parent, paragraph, context, null);
 
         expect(parent.innerHTML).toBe('');
-        expect(onNodeCreated).not.toHaveBeenCalled();
+        expect(onNodeCreated).toHaveBeenCalled();
     });
 
     it('Paragraph with only selection marker and BR', () => {
@@ -555,5 +557,90 @@ describe('handleParagraph', () => {
         expect(parent.innerHTML).toBe(
             '<div style="font-size: 10px;"><span style="font-family: Arial;">test</span></div>'
         );
+    });
+
+    it('Paragraph with domIndexer', () => {
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            format: {},
+            text: 'test',
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Br',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment1, segment2],
+            format: {},
+        };
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const onParagraphSpy = jasmine.createSpy('onParagraph');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: onParagraphSpy,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        expect(parent.innerHTML).toBe('<div>test<br></div>');
+        expect(onParagraphSpy).toHaveBeenCalledTimes(1);
+        expect(onParagraphSpy).toHaveBeenCalledWith(parent.firstChild);
+        expect(onSegmentSpy).toHaveBeenCalledTimes(2);
+        expect(onSegmentSpy).toHaveBeenCalledWith(parent.firstChild!.firstChild, paragraph, [
+            segment1,
+        ]);
+        expect(onSegmentSpy).toHaveBeenCalledWith(parent.firstChild!.lastChild, paragraph, [
+            segment2,
+        ]);
+    });
+
+    it('Implicit paragraph with domIndexer', () => {
+        const segment1: ContentModelSegment = {
+            segmentType: 'Text',
+            format: {},
+            text: 'test',
+        };
+        const segment2: ContentModelSegment = {
+            segmentType: 'Br',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            segments: [segment1, segment2],
+            format: {},
+            isImplicit: true,
+        };
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const onParagraphSpy = jasmine.createSpy('onParagraph');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: onParagraphSpy,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        const unwrapSpy = spyOn(unwrap, 'default').and.callThrough();
+        handleSegment.and.callFake(originalHandleSegment);
+
+        handleParagraph(document, parent, paragraph, context, null);
+
+        const tempContainer = unwrapSpy.calls.argsFor(0)[0] as HTMLElement;
+
+        expect(parent.innerHTML).toBe('test<br>');
+        expect(tempContainer.outerHTML).toBe('<div></div>');
+        expect(onParagraphSpy).toHaveBeenCalledTimes(1);
+        expect(onParagraphSpy).toHaveBeenCalledWith(tempContainer);
+        expect(onSegmentSpy).toHaveBeenCalledTimes(2);
+        expect(onSegmentSpy).toHaveBeenCalledWith(parent.firstChild, paragraph, [segment1]);
+        expect(onSegmentSpy).toHaveBeenCalledWith(parent.lastChild, paragraph, [segment2]);
     });
 });

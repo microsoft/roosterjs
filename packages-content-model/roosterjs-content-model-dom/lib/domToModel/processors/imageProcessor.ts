@@ -41,6 +41,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             image.isSelected = true;
         }
 
-        addSegment(group, image);
+        const paragraph = addSegment(group, image);
+        context.domIndexer?.onSegment(element, paragraph, [image]);
     });
 };

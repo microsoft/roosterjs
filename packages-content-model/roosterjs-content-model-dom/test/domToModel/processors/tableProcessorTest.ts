@@ -9,6 +9,8 @@ import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 import {
     ContentModelBlock,
+    ContentModelDomIndexer,
+    ContentModelTable,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
@@ -284,6 +286,52 @@ describe('tableProcessor', () => {
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(4);
+    });
+
+    it('Table with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const div = document.createElement('div');
+        const onTableSpy = jasmine.createSpy('onTable');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: null!,
+            onTable: onTableSpy,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        div.innerHTML = '<table class="tb1"><tr id="tr1"><td id="td1"></td></tr></table>';
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        const tableModel: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                {
+                    format: {},
+                    height: 200,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            spanAbove: false,
+                            spanLeft: false,
+                            isHeader: false,
+                            blocks: [],
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+            widths: [100],
+            dataset: {},
+        };
+
+        expect(doc.blocks[0]).toEqual(tableModel);
+
+        expect(onTableSpy).toHaveBeenCalledWith(div.firstChild, tableModel);
     });
 });
 
