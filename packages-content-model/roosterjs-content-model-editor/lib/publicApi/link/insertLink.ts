@@ -63,7 +63,6 @@ export default function insertLink(
             'insertLink',
             (model, context) => {
                 const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
-
                 const originalText = segments
                     .map(x => (x.segmentType == 'Text' ? x.text : ''))
                     .join('');
@@ -75,7 +74,6 @@ export default function insertLink(
                 ) {
                     segments.forEach(x => {
                         addLink(x, link(x.segmentType == 'Text'));
-
                         if (x.link) {
                             links.push(x.link);
                         }
