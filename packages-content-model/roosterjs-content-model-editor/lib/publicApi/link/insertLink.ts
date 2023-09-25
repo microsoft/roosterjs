@@ -43,14 +43,16 @@ export default function insertLink(
     let url = (checkXss(link) || '').trim();
     if (url) {
         const linkData = matchLink(url);
-        const link: ContentModelLink = {
-            dataset: {},
-            format: {
-                href: linkData ? linkData.normalizedUrl : applyLinkPrefix(url),
-                anchorTitle,
-                target,
-                underline: true,
-            },
+        const link = (underline: boolean = true): ContentModelLink => {
+            return {
+                dataset: {},
+                format: {
+                    href: linkData ? linkData.normalizedUrl : applyLinkPrefix(url),
+                    anchorTitle,
+                    target,
+                    underline: underline,
+                },
+            };
         };
 
         const links: ContentModelLink[] = [];
@@ -61,6 +63,7 @@ export default function insertLink(
             'insertLink',
             (model, context) => {
                 const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+
                 const originalText = segments
                     .map(x => (x.segmentType == 'Text' ? x.text : ''))
                     .join('');
@@ -71,7 +74,7 @@ export default function insertLink(
                     originalText == text
                 ) {
                     segments.forEach(x => {
-                        addLink(x, link);
+                        addLink(x, link(x.segmentType == 'Text'));
 
                         if (x.link) {
                             links.push(x.link);
@@ -87,7 +90,7 @@ export default function insertLink(
                     });
                     const doc = createContentModelDocument();
 
-                    addLink(segment, link);
+                    addLink(segment, link());
                     addSegment(doc, segment);
 
                     if (segment.link) {
