@@ -1,5 +1,6 @@
 import { setSelection } from '../../../lib/modelApi/selection/setSelection';
 import {
+    createBr,
     createContentModelDocument,
     createDivider,
     createGeneralSegment,
@@ -800,5 +801,24 @@ describe('setSelection', () => {
         expect(cell20.isSelected).toBeFalsy();
         expect(cell21.isSelected).toBeFalsy();
         expect(cell22.isSelected).toBeFalsy();
+    });
+
+    it('Clear selection under table', () => {
+        const model = createContentModelDocument();
+        const table = createTable(1);
+        const cell = createTableCell();
+        const para = createParagraph();
+        const segment = createBr();
+
+        segment.isSelected = true;
+        para.segments.push(segment);
+        cell.blocks.push(para);
+        table.rows[0].cells.push(cell);
+        model.blocks.push(table);
+
+        setSelection(model);
+
+        expect(cell.isSelected).toBeFalsy();
+        expect(segment.isSelected).toBeFalsy();
     });
 });

@@ -8,7 +8,6 @@ import {
     PluginEvent,
     PluginEventType,
     PluginWithState,
-    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 
 /**
@@ -96,15 +95,12 @@ export default class ContentModelCachePlugin
 
             case PluginEventType.Input:
                 {
-                    const rangeEx = this.forceGetSelectionRangeEx(this.editor);
-                    this.updateCachedModel(rangeEx, true /*forceUpdate*/);
+                    this.updateCachedModel(this.editor, true /*forceUpdate*/);
                 }
                 break;
 
             case PluginEventType.SelectionChanged:
-                this.updateCachedModel(
-                    event.selectionRangeEx ?? this.forceGetSelectionRangeEx(this.editor)
-                );
+                this.updateCachedModel(this.editor);
                 break;
 
             case PluginEventType.ContentChanged:
@@ -125,7 +121,7 @@ export default class ContentModelCachePlugin
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            this.updateCachedModel(this.forceGetSelectionRangeEx(this.editor));
+            this.updateCachedModel(this.editor);
         }
     };
 
@@ -136,31 +132,28 @@ export default class ContentModelCachePlugin
         }
     }
 
-    private updateCachedModel(newRangeEx: SelectionRangeEx, forceUpdate?: boolean) {
+    private updateCachedModel(editor: IContentModelEditor, forceUpdate?: boolean) {
         const cachedRangeEx = this.state.cachedRangeEx;
+        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
+
+        const newRangeEx = editor.getSelectionRangeEx();
+
         const model = this.state.cachedModel;
         const isSelectionChanged =
             forceUpdate || !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
 
-        if (
-            isSelectionChanged &&
-            model &&
-            !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
-        ) {
-            this.invalidateCache();
+        if (isSelectionChanged) {
+            if (
+                !model ||
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
+            ) {
+                this.invalidateCache();
+            } else {
+                this.state.cachedRangeEx = newRangeEx;
+            }
+        } else {
+            this.state.cachedRangeEx = cachedRangeEx;
         }
-
-        this.state.cachedRangeEx = newRangeEx;
-    }
-
-    private forceGetSelectionRangeEx(editor: IContentModelEditor) {
-        const cachedRangeEx = this.state.cachedRangeEx;
-        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
-
-        const currentRangeEx = editor.getSelectionRangeEx();
-        this.state.cachedRangeEx = cachedRangeEx;
-
-        return currentRangeEx;
     }
 }
 

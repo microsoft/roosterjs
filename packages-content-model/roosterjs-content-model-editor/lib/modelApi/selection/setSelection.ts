@@ -109,10 +109,21 @@ function setSelectionToTable(
 
     if (!isInSelection) {
         for (let row = 0; row < table.rows.length; row++) {
-            for (let col = 0; col < table.rows[row].cells.length; col++) {
+            const currentRow = table.rows[row];
+            for (let col = 0; col < currentRow.cells.length; col++) {
+                const currentCell = table.rows[row].cells[col];
                 const isSelected = row >= firstY && row <= lastY && col >= firstX && col <= lastX;
 
-                setIsSelected(table.rows[row].cells[col], isSelected);
+                setIsSelected(currentCell, isSelected);
+
+                if (!isSelected) {
+                    setSelectionToBlockGroup(
+                        currentCell,
+                        false /*isInSelection*/,
+                        null /*start*/,
+                        null /*end*/
+                    );
+                }
             }
         }
     } else {
