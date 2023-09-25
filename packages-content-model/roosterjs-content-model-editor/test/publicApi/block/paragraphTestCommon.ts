@@ -11,13 +11,14 @@ export function paragraphTestCommon(
     const addUndoSnapshot = jasmine
         .createSpy()
         .and.callFake((callback: () => void, source: string, canUndoByBackspace, param: any) => {
-            expect(source).toBe('Format');
+            expect(source).toBe(undefined!);
             expect(param.formatApiName).toBe(apiName);
             callback();
         });
     const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
         expect(model).toEqual(result);
     });
+    const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
     const editor = ({
         createContentModel: () => model,
         addUndoSnapshot,
@@ -26,6 +27,7 @@ export function paragraphTestCommon(
         getCustomData: () => ({}),
         getFocusedPosition: () => ({}),
         isDarkMode: () => false,
+        triggerPluginEvent,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

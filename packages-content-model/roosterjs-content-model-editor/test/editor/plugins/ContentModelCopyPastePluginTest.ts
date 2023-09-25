@@ -467,7 +467,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,
@@ -527,7 +527,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(iterateSelectionsFile.iterateSelections).toHaveBeenCalled();
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
@@ -586,7 +586,7 @@ describe('ContentModelCopyPastePlugin |', () => {
                 onNodeCreated
             );
             expect(createContentModelSpy).toHaveBeenCalled();
-            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(1);
+            expect(triggerPluginEventSpy).toHaveBeenCalledTimes(2);
             expect(focusSpy).toHaveBeenCalled();
             expect(selectSpy).toHaveBeenCalledWith(
                 selectionRangeExValue,
@@ -669,5 +669,29 @@ describe('ContentModelCopyPastePlugin |', () => {
             );
             expect(preventDefaultSpy).toHaveBeenCalledTimes(1);
         });
+    });
+
+    it('onNodeCreated with table', () => {
+        const div = document.createElement('div');
+        const table = document.createElement('table');
+
+        div.appendChild(table);
+
+        onNodeCreated(null!, table);
+
+        expect(div.innerHTML).toEqual('<div><table></table></div>');
+    });
+
+    it('onNodeCreated with readonly element', () => {
+        const div = document.createElement('div');
+        div.contentEditable = 'true';
+
+        const span = document.createElement('span');
+        div.appendChild(span);
+        span.contentEditable = 'false';
+
+        onNodeCreated(null!, span);
+
+        expect(div.innerHTML).toBe('<span></span>');
     });
 });

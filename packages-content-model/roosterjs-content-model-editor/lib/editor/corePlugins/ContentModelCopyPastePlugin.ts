@@ -8,15 +8,10 @@ import { iterateSelections } from '../../modelApi/selection/iterateSelections';
 import {
     contentModelToDom,
     createModelToDomContext,
+    isNodeOfType,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type {
-    ContentModelBlock,
-    ContentModelBlockGroup,
-    ContentModelDecorator,
-    ContentModelSegment,
-    ContentModelTableRow,
-} from 'roosterjs-content-model-types';
+import type { OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -38,6 +33,7 @@ import {
     SelectionRangeTypes,
     SelectionRangeEx,
     ColorTransformDirection,
+    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -181,6 +177,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                         );
                     }
                 });
+            } else {
+                cleanUpAndRestoreSelection(tempDiv);
             }
         }
     }
@@ -276,16 +274,11 @@ function selectionExToRange(
  * @internal
  * Exported only for unit testing
  */
-export const onNodeCreated = (
-    _:
-        | ContentModelBlock
-        | ContentModelBlockGroup
-        | ContentModelSegment
-        | ContentModelDecorator
-        | ContentModelTableRow,
-    node: Node
-): void => {
+export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (safeInstanceOf(node, 'HTMLTableElement')) {
         wrap(node, 'div');
+    }
+    if (isNodeOfType(node, NodeType.Element) && !node.isContentEditable) {
+        node.removeAttribute('contenteditable');
     }
 };

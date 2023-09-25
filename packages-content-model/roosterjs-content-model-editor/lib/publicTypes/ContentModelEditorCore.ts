@@ -41,7 +41,7 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
-) => void;
+) => SelectionRangeEx | null;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -110,9 +110,4 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
-
-    /**
-     * Whether adding delimiter for entity is allowed
-     */
-    addDelimiterForEntity: boolean;
 }
