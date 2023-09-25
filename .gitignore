@@ -11,6 +11,7 @@ node_modules/
 # Distribution
 dist/
 
+
 # Mac files
 .DS_Store
 
