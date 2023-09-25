@@ -119,7 +119,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: undefined,
-                cachedRangeEx: rangeEx,
+                cachedRangeEx: undefined,
             });
         });
 
@@ -139,7 +139,30 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: undefined,
+                cachedRangeEx: undefined,
+            });
+        });
+
+        it('No cached range, has cached model, reconcile succeed', () => {
+            const rangeEx = 'MockedRange' as any;
+            const model = 'MockedModel' as any;
+
+            state.cachedModel = model;
+            state.cachedRangeEx = undefined;
+            state.domIndexer = domIndexer;
+
+            getSelectionRangeExSpy.and.returnValue(rangeEx);
+            reconcileSelectionSpy.and.returnValue(true);
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.Input,
+                rawEvent: null!,
+            });
+
+            expect(state).toEqual({
+                cachedModel: model,
                 cachedRangeEx: rangeEx,
+                domIndexer: domIndexer,
             });
         });
 
@@ -150,7 +173,6 @@ describe('ContentModelCachePlugin', () => {
 
             state.cachedModel = model;
             state.cachedRangeEx = oldRangeEx;
-
             getSelectionRangeExSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
@@ -160,7 +182,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: undefined,
-                cachedRangeEx: newRangeEx,
+                cachedRangeEx: undefined,
             });
         });
 
@@ -203,6 +225,9 @@ describe('ContentModelCachePlugin', () => {
             state.cachedRangeEx = rangeEx;
             state.domIndexer = domIndexer;
 
+            getSelectionRangeExSpy.and.returnValue(rangeEx);
+            reconcileSelectionSpy.and.returnValue(true);
+
             plugin.onPluginEvent({
                 eventType: PluginEventType.SelectionChanged,
                 selectionRangeEx: rangeEx,
@@ -226,6 +251,7 @@ describe('ContentModelCachePlugin', () => {
             state.domIndexer = domIndexer;
 
             reconcileSelectionSpy.and.returnValue(true);
+            getSelectionRangeExSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.SelectionChanged,
@@ -250,6 +276,7 @@ describe('ContentModelCachePlugin', () => {
             state.domIndexer = domIndexer;
 
             reconcileSelectionSpy.and.returnValue(false);
+            getSelectionRangeExSpy.and.returnValue(newRangeEx);
 
             plugin.onPluginEvent({
                 eventType: PluginEventType.SelectionChanged,
@@ -258,7 +285,7 @@ describe('ContentModelCachePlugin', () => {
 
             expect(state).toEqual({
                 cachedModel: undefined,
-                cachedRangeEx: newRangeEx,
+                cachedRangeEx: undefined,
                 domIndexer,
             });
             expect(reconcileSelectionSpy).toHaveBeenCalledWith(model, newRangeEx, oldRangeEx);
