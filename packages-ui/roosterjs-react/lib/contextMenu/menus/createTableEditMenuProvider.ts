@@ -3,9 +3,8 @@ import { applyCellShading, editTable } from 'roosterjs-editor-api';
 import { renderColorPicker } from '../../colorPicker/component/renderColorPicker';
 import { TableOperation } from 'roosterjs-editor-types';
 import type ContextMenuItem from '../types/ContextMenuItem';
-import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
-import type { ModeIndependentColor } from 'roosterjs-editor-types';
 import {
     getColorPickerContainerClassName,
     getColorPickerItemClassName,

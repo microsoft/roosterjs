@@ -1,18 +1,18 @@
-import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { normalizeTable } from '../table/normalizeTable';
-import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import {
+    addSegment,
     createListItem,
     createParagraph,
     createSelectionMarker,
     createTableCell,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import type {
     ContentModelBlock,
     ContentModelBlockFormat,

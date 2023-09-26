@@ -11,14 +11,17 @@ import type { ColorTransformDirection } from '../enum/ColorTransformDirection';
 import type { ContentMetadata } from './ContentMetadata';
 import type { DOMEventHandler } from '../type/domEventHandler';
 import type { GetContentMode } from '../enum/GetContentMode';
-import type { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
+import type {
+    ImageSelectionRange,
+    SelectionRangeEx,
+    TableSelectionRange,
+} from './SelectionRangeEx';
 import type { InsertOption } from './InsertOption';
 import type { PendableFormatState, StyleBasedFormatState } from './FormatState';
 import type { PluginEvent } from '../event/PluginEvent';
 import type { PluginState } from './CorePlugins';
 import type { PositionType } from '../enum/PositionType';
 import type { SizeTransformer } from '../type/SizeTransformer';
-import type { TableSelectionRange } from './SelectionRangeEx';
 import type { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';

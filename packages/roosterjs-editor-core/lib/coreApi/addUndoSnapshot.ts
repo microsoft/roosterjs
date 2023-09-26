@@ -1,7 +1,7 @@
 import { getSelectionPath, Position } from 'roosterjs-editor-dom';
 import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { EntityState } from 'roosterjs-editor-types';
 import type {
+    EntityState,
     AddUndoSnapshot,
     ChangeSource,
     ContentChangedData,

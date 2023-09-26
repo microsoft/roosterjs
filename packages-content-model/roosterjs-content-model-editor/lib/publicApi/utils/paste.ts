@@ -8,7 +8,7 @@ import type {
 } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { NodePosition } from 'roosterjs-editor-types';
+import type { NodePosition, ClipboardData } from 'roosterjs-editor-types';
 import {
     applySegmentFormatToElement,
     createDomToModelContext,
@@ -25,7 +25,6 @@ import {
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import type { ClipboardData } from 'roosterjs-editor-types';
 
 /**
  * Paste into editor using a clipboardData object

@@ -1,13 +1,5 @@
-import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
-    DelimiterClasses,
-    EntityOperation,
-    Keys,
-    NodeType,
-    PluginEventType,
-    PositionType,
-} from 'roosterjs-editor-types';
-import {
+    ContentTraverser,
     addDelimiters,
     cacheGetEventData,
     createRange,
@@ -19,6 +11,15 @@ import {
     matchesSelector,
     Position,
 } from 'roosterjs-editor-dom';
+import {
+    DelimiterClasses,
+    EntityOperation,
+    Keys,
+    NodeType,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
+
 import type {
     BuildInEditFeature,
     EntityFeatureSettings,
