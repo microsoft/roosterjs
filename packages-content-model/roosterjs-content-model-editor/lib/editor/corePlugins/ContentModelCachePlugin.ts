@@ -136,15 +136,18 @@ export default class ContentModelCachePlugin
         const cachedSelection = this.state.cachedSelection;
         this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
-        const newRangeEx = editor.getDOMSelection();
-
+        const newRangeEx = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
-            forceUpdate || !cachedSelection || !areSameRangeEx(newRangeEx, cachedSelection);
+            forceUpdate ||
+            !cachedSelection ||
+            !newRangeEx ||
+            !areSameRangeEx(newRangeEx, cachedSelection);
 
         if (isSelectionChanged) {
             if (
                 !model ||
+                !newRangeEx ||
                 !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
                 this.invalidateCache();

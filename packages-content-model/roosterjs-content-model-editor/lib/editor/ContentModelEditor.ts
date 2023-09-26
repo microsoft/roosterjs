@@ -67,7 +67,7 @@ export default class ContentModelEditor
     /**
      * Get current DOM selection
      */
-    getDOMSelection(): DOMSelection {
+    getDOMSelection(): DOMSelection | null {
         const core = this.getCore();
 
         return core.api.getDOMSelection(core);

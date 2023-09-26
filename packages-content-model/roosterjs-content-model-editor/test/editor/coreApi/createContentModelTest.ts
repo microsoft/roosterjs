@@ -53,7 +53,7 @@ describe('createContentModel', () => {
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
         expect(getDOMSelection).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext, null);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext, undefined);
         expect(model).toBe(mockedModel);
     });
 

@@ -28,7 +28,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     if (cachedModel) {
         return cachedModel;
     } else {
-        const selection = selectionOverride || core.api.getDOMSelection(core);
+        const selection = selectionOverride || core.api.getDOMSelection(core) || undefined;
         const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
@@ -42,7 +42,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    selection: DOMSelection,
+    selection?: DOMSelection,
     option?: DomToModelOption
 ) {
     const editorContext = core.api.createEditorContext(core);

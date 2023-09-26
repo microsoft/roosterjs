@@ -31,7 +31,7 @@ export default function keyboardDelete(
 ): boolean {
     const which = rawEvent.which;
     const selection = editor.getDOMSelection();
-    const range = selection.type == 'range' ? selection.range : null;
+    const range = selection?.type == 'range' ? selection.range : null;
     let isDeleted = false;
 
     if (shouldDeleteWithContentModel(range, rawEvent)) {

@@ -34,7 +34,7 @@ export type CreateContentModel = (
  * Get current DOM selection from editor
  * @param core The ContentModelEditorCore object
  */
-export type GetDOMSelection = (core: ContentModelEditorCore) => DOMSelection;
+export type GetDOMSelection = (core: ContentModelEditorCore) => DOMSelection | null;
 
 /**
  * Set content with content model. This is the replacement of core API getSelectionRangeEx

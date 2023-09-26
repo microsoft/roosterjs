@@ -1,5 +1,4 @@
 import { ContentModelEditorCore, GetDOMSelection } from '../../publicTypes/ContentModelEditorCore';
-import { createRange } from 'roosterjs-editor-dom';
 import { DOMSelection } from 'roosterjs-content-model-types';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
@@ -10,11 +9,16 @@ export const getDOMSelection: GetDOMSelection = core => {
     return core.cache.cachedSelection ?? getNewSelection(core);
 };
 
-function getNewSelection(core: ContentModelEditorCore): DOMSelection {
-    // TODO: Get rid of getSelectionRangeEx
+function getNewSelection(core: ContentModelEditorCore): DOMSelection | null {
+    // TODO: Get rid of getSelectionRangeEx when we have standalone editor
     const rangeEx = core.api.getSelectionRangeEx(core);
 
-    if (rangeEx.type == SelectionRangeTypes.TableSelection && rangeEx.coordinates) {
+    if (rangeEx.type == SelectionRangeTypes.Normal && rangeEx.ranges[0]) {
+        return {
+            type: 'range',
+            range: rangeEx.ranges[0],
+        };
+    } else if (rangeEx.type == SelectionRangeTypes.TableSelection && rangeEx.coordinates) {
         return {
             type: 'table',
             table: rangeEx.table,
@@ -28,15 +32,7 @@ function getNewSelection(core: ContentModelEditorCore): DOMSelection {
             type: 'image',
             image: rangeEx.image,
         };
-    } else if (rangeEx.type == SelectionRangeTypes.Normal && rangeEx.ranges[0]) {
-        return {
-            type: 'range',
-            range: rangeEx.ranges[0],
-        };
     } else {
-        return {
-            type: 'range',
-            range: createRange(core.contentDiv, 0),
-        };
+        return null;
     }
 }

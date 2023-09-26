@@ -1,7 +1,6 @@
 import * as contentModelToDom from 'roosterjs-content-model-dom/lib/modelToDom/contentModelToDom';
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import * as createRange from 'roosterjs-editor-dom/lib/selection/createRange';
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
@@ -17,14 +16,12 @@ describe('ContentModelEditor', () => {
         const mockedResult = 'Result' as any;
         const mockedContext = 'MockedContext' as any;
         const mockedConfig = 'MockedConfig' as any;
-        const mockedRange = 'Range' as any;
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedResult);
         spyOn(createDomToModelContext, 'createDomToModelContextWithConfig').and.returnValue(
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
-        spyOn(createRange, 'default').and.returnValue(mockedRange);
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
@@ -35,10 +32,11 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: 'range',
-            range: mockedRange,
-        });
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            mockedContext,
+            undefined
+        );
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -49,14 +47,12 @@ describe('ContentModelEditor', () => {
         const mockedResult = 'Result' as any;
         const mockedContext = 'MockedContext' as any;
         const mockedConfig = 'MockedConfig' as any;
-        const mockedRange = 'Range' as any;
 
         spyOn(domToContentModel, 'domToContentModel').and.returnValue(mockedResult);
         spyOn(createDomToModelContext, 'createDomToModelContextWithConfig').and.returnValue(
             mockedContext
         );
         spyOn(createDomToModelContext, 'createDomToModelConfig').and.returnValue(mockedConfig);
-        spyOn(createRange, 'default').and.returnValue(mockedRange);
 
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
@@ -67,10 +63,11 @@ describe('ContentModelEditor', () => {
 
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
-        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: 'range',
-            range: mockedRange,
-        });
+        expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(
+            div,
+            mockedContext,
+            undefined
+        );
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
             editorContext
@@ -177,20 +174,7 @@ describe('ContentModelEditor', () => {
 
         expect(model).toEqual({
             blockGroupType: 'Document',
-            blocks: [
-                {
-                    blockType: 'Paragraph',
-                    segments: [
-                        {
-                            segmentType: 'SelectionMarker',
-                            isSelected: true,
-                            format: {},
-                        },
-                    ],
-                    format: {},
-                    isImplicit: true,
-                },
-            ],
+            blocks: [],
             format: {
                 fontWeight: undefined,
                 italic: undefined,

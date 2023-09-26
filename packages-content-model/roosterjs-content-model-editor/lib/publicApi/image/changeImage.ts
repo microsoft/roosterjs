@@ -11,7 +11,7 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 export default function changeImage(editor: IContentModelEditor, file: File) {
     const selection = editor.getDOMSelection();
     readFile(file, dataUrl => {
-        if (dataUrl && !editor.isDisposed() && selection.type === 'image') {
+        if (dataUrl && !editor.isDisposed() && selection?.type === 'image') {
             formatImageWithContentModel(
                 editor,
                 'changeImage',
