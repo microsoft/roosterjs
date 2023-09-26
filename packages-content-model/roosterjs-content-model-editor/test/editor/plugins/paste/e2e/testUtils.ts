@@ -2,7 +2,6 @@ import ContentModelEditor from '../../../../../lib/editor/ContentModelEditor';
 import ContentModelPastePlugin from '../../../../../lib/editor/plugins/PastePlugin/ContentModelPastePlugin';
 import { cloneModel } from '../../../../../lib/modelApi/common/cloneModel';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import {
     ContentModelEditorOptions,
     IContentModelEditor,
@@ -15,7 +14,6 @@ export function initEditor(id: string) {
 
     let options: ContentModelEditorOptions = {
         plugins: [new ContentModelPastePlugin()],
-        experimentalFeatures: [ExperimentalFeatures.ContentModelPaste],
     };
 
     let editor = new ContentModelEditor(node as HTMLDivElement, options);
