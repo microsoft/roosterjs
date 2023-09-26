@@ -2,7 +2,7 @@ import { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Check if the given selection ranges are the same
+ * Check if the given selections are the same
  */
 export function areSameRangeEx(sel1: DOMSelection, sel2: DOMSelection): boolean {
     if (sel1 == sel2) {

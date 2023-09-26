@@ -13,6 +13,7 @@ import { createEditorContext } from '../../lib/editor/coreApi/createEditorContex
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getDOMSelection } from '../../lib/editor/coreApi/getDOMSelection';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
+import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
 import { switchShadowEdit } from '../../lib/editor/coreApi/switchShadowEdit';
 import { tablePreProcessor } from '../../lib/editor/overrides/tablePreProcessor';
 
@@ -99,6 +100,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -106,6 +108,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -165,6 +168,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -172,6 +176,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -244,6 +249,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -251,6 +257,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -303,6 +310,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -310,6 +318,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -363,6 +372,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -370,6 +380,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },
@@ -428,6 +439,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             originalApi: {
                 a: 'b',
@@ -435,6 +447,7 @@ describe('createContentModelEditorCore', () => {
                 createContentModel,
                 setContentModel,
                 getDOMSelection,
+                setDOMSelection,
             },
             defaultDomToModelOptions: [
                 { processorOverride: { table: tablePreProcessor } },

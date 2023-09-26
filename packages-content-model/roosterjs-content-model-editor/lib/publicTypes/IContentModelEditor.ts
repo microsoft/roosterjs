@@ -38,9 +38,17 @@ export interface IContentModelEditor extends IEditor {
     ): DOMSelection | null;
 
     /**
-     * Get current DOM selection
+     * Get current DOM selection.
+     * This is the replacement of IEditor.getSelectionRangeEx.
      */
     getDOMSelection(): DOMSelection;
+
+    /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection): void;
 
     /**
      * Get default format as ContentModelSegmentFormat.

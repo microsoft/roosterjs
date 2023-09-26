@@ -74,6 +74,17 @@ export default class ContentModelEditor
     }
 
     /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection) {
+        const core = this.getCore();
+
+        core.api.setDOMSelection(core, selection);
+    }
+
+    /**
      * Get default format as ContentModelSegmentFormat.
      * This is a replacement of IEditor.getDefaultFormat for Content Model.
      * @returns The default format

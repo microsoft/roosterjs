@@ -1,7 +1,7 @@
 import { ContentModelEditorCore, GetDOMSelection } from '../../publicTypes/ContentModelEditorCore';
-import { createRange } from 'roosterjs-editor-dom/lib';
+import { createRange } from 'roosterjs-editor-dom';
 import { DOMSelection } from 'roosterjs-content-model-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types/lib';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * @internal

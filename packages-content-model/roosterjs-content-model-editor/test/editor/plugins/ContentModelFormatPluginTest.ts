@@ -441,13 +441,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -492,13 +490,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: false,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: false,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -541,13 +537,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -592,13 +586,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -642,13 +634,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: div,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: true,
+                startContainer: div,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -692,13 +682,11 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         getDOMSelection.and.returnValue({
             type: 'range',
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(

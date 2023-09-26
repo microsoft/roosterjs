@@ -153,7 +153,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 this.editor.runAsync(editor => {
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    editor.select(selection);
+                    (editor as IContentModelEditor).setDOMSelection(selection);
 
                     if (isCut) {
                         formatWithContentModel(

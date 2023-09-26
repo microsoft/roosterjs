@@ -54,11 +54,9 @@ describe('keyboardDelete', () => {
 
                 editor.getDOMSelection = () => ({
                     type: 'range',
-                    ranges: [
-                        {
-                            collapsed: false,
-                        },
-                    ],
+                    range: {
+                        collapsed: false,
+                    },
                 });
                 const result = keyboardDelete(editor, mockedEvent);
 
@@ -379,7 +377,7 @@ describe('keyboardDelete', () => {
             addUndoSnapshot,
             getDOMSelection: () => ({
                 type: 'range',
-                ranges: [{ collapsed: false }],
+                range: { collapsed: false },
             }),
         } as any) as IContentModelEditor;
         const which = Keys.DELETE;
@@ -403,7 +401,7 @@ describe('keyboardDelete', () => {
         const editor = {
             getDOMSelection: () => ({
                 type: 'range',
-                ranges: [{ collapsed: false }],
+                range: { collapsed: false },
             }),
         } as any;
         const which = Keys.BACKSPACE;

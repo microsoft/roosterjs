@@ -116,7 +116,7 @@ describe('createContentModel with selection', () => {
 
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
-            ranges: [MockedRange],
+            range: MockedRange,
         });
 
         createContentModel(core);
@@ -124,7 +124,7 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
             type: 'range',
-            ranges: [MockedRange],
+            range: MockedRange,
         } as any);
     });
 
@@ -175,7 +175,7 @@ describe('createContentModel with selection', () => {
     it('Incorrect regular selection', () => {
         getDOMSelectionSpy.and.returnValue({
             type: 'range',
-            ranges: [],
+            range: null!,
         });
 
         createContentModel(core);
@@ -183,7 +183,7 @@ describe('createContentModel with selection', () => {
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
             type: 'range',
-            ranges: [],
+            range: null!,
         } as any);
     });
 

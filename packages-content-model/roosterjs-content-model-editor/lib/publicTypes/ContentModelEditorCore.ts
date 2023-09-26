@@ -37,7 +37,7 @@ export type CreateContentModel = (
 export type GetDOMSelection = (core: ContentModelEditorCore) => DOMSelection;
 
 /**
- * Set content with content model
+ * Set content with content model. This is the replacement of core API getSelectionRangeEx
  * @param core The ContentModelEditorCore object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -49,6 +49,13 @@ export type SetContentModel = (
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
 ) => DOMSelection | null;
+
+/**
+ * Set current DOM selection from editor. This is the replacement of core API select
+ * @param core The ContentModelEditorCore object
+ * @param selection The selection to set
+ */
+export type SetDOMSelection = (core: ContentModelEditorCore, selection: DOMSelection) => void;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -69,6 +76,12 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
     createContentModel: CreateContentModel;
 
     /**
+     * Get current DOM selection from editor
+     * @param core The ContentModelEditorCore object
+     */
+    getDOMSelection: GetDOMSelection;
+
+    /**
      * Set content with content model
      * @param core The ContentModelEditorCore object
      * @param model The content model to set
@@ -77,9 +90,11 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
     setContentModel: SetContentModel;
 
     /**
-     * Get current DOM selection from editor
+     * Set current DOM selection from editor. This is the replacement of core API select
+     * @param core The ContentModelEditorCore object
+     * @param selection The selection to set
      */
-    getDOMSelection: GetDOMSelection;
+    setDOMSelection: SetDOMSelection;
 }
 
 /**
