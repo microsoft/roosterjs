@@ -43,18 +43,7 @@ export default function insertLink(
     let url = (checkXss(link) || '').trim();
     if (url) {
         const linkData = matchLink(url);
-        const link = (underline: boolean = true): ContentModelLink => {
-            return {
-                dataset: {},
-                format: {
-                    href: linkData ? linkData.normalizedUrl : applyLinkPrefix(url),
-                    anchorTitle,
-                    target,
-                    underline: underline,
-                },
-            };
-        };
-
+        const linkUrl = linkData ? linkData.normalizedUrl : applyLinkPrefix(url);
         const links: ContentModelLink[] = [];
         let anchorNode: Node | undefined;
 
@@ -73,7 +62,13 @@ export default function insertLink(
                     originalText == text
                 ) {
                     segments.forEach(x => {
-                        addLink(x, link(x.segmentType == 'Text'));
+                        const link = createLink(
+                            linkUrl,
+                            anchorTitle,
+                            target,
+                            x.segmentType == 'Text'
+                        );
+                        addLink(x, link);
                         if (x.link) {
                             links.push(x.link);
                         }
@@ -87,8 +82,9 @@ export default function insertLink(
                         ...(getPendingFormat(editor) || {}),
                     });
                     const doc = createContentModelDocument();
+                    const link = createLink(linkUrl, anchorTitle, target);
 
-                    addLink(segment, link());
+                    addLink(segment, link);
                     addSegment(doc, segment);
 
                     if (segment.link) {
@@ -114,6 +110,23 @@ export default function insertLink(
         );
     }
 }
+
+const createLink = (
+    url: string,
+    anchorTitle?: string,
+    target?: string,
+    underline: boolean = true
+): ContentModelLink => {
+    return {
+        dataset: {},
+        format: {
+            href: url,
+            anchorTitle,
+            target,
+            underline: underline,
+        },
+    };
+};
 
 // TODO: This is copied from original code. We may need to integrate this logic into matchLink() later.
 function applyLinkPrefix(url: string): string {
