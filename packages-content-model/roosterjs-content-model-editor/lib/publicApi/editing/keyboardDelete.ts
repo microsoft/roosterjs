@@ -1,10 +1,11 @@
 import { Browser, isModifierKey } from 'roosterjs-editor-dom';
-import { ChangeSource, Keys, NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ChangeSource, Keys, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { DeleteResult, DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
@@ -77,7 +78,7 @@ function getDeleteSteps(rawEvent: KeyboardEvent): (DeleteSelectionStep | null)[]
 function shouldDeleteWithContentModel(range: Range | null, rawEvent: KeyboardEvent) {
     return !(
         range?.collapsed &&
-        range.startContainer.nodeType == NodeType.Text &&
+        isNodeOfType(range.startContainer, 'TEXT_NODE') &&
         !isModifierKey(rawEvent) &&
         (canDeleteBefore(rawEvent, range) || canDeleteAfter(rawEvent, range))
     );
