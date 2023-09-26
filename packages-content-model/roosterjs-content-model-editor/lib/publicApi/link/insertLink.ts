@@ -1,6 +1,6 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelLink } from 'roosterjs-content-model-types';
+import { ContentModelLink, ContentModelSegment } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
@@ -60,9 +60,15 @@ export default function insertLink(
             editor,
             'insertLink',
             (model, context) => {
-                const segments = getSelectedSegments(model, false /*includingFormatHolder*/);
+                const selectedSegments = getSelectedSegments(
+                    model,
+                    false /*includingFormatHolder*/
+                );
+                const segments = splitTrailingSegments(selectedSegments);
                 const originalText = segments
-                    .map(x => (x.segmentType == 'Text' ? x.text : ''))
+                    .map(x =>
+                        x.segmentType == 'Text' && x.text.trimRight().length > 0 ? x.text : ''
+                    )
                     .join('');
                 const text = displayText || originalText || '';
 
@@ -71,7 +77,9 @@ export default function insertLink(
                     originalText == text
                 ) {
                     segments.forEach(x => {
-                        addLink(x, link);
+                        if (!isTrailingSpace(x)) {
+                            addLink(x, link);
+                        }
 
                         if (x.link) {
                             links.push(x.link);
@@ -81,14 +89,22 @@ export default function insertLink(
                     segments.every(x => x.segmentType == 'SelectionMarker') ||
                     (!!text && text != originalText)
                 ) {
-                    const segment = createText(text || (linkData ? linkData.originalUrl : url), {
-                        ...(segments[0]?.format || {}),
-                        ...(getPendingFormat(editor) || {}),
-                    });
+                    const textSegment = createText(
+                        text || (linkData ? linkData.originalUrl : url),
+                        {
+                            ...(segments[0]?.format || {}),
+                            ...(getPendingFormat(editor) || {}),
+                        }
+                    );
                     const doc = createContentModelDocument();
+                    const { segment, trailingSpaceSegment } = splitTrailingSpace(textSegment);
 
                     addLink(segment, link);
                     addSegment(doc, segment);
+
+                    if (trailingSpaceSegment) {
+                        addSegment(doc, trailingSpaceSegment);
+                    }
 
                     if (segment.link) {
                         links.push(segment.link);
@@ -153,3 +169,32 @@ function checkXss(link: string): string {
     // This has unintended side effects when the link lacks a protocol.
     return a.getAttribute('href') || '';
 }
+
+const splitTrailingSegments = (selectedSegments: ContentModelSegment[]) => {
+    const segments: ContentModelSegment[] = [];
+    selectedSegments.forEach(x => {
+        const { segment, trailingSpaceSegment } = splitTrailingSpace(x);
+        if (segment && trailingSpaceSegment) {
+            segments.push(segment);
+            segments.push(trailingSpaceSegment);
+        } else {
+            segments.push(segment);
+        }
+    });
+    return segments;
+};
+
+const splitTrailingSpace = (segment: ContentModelSegment) => {
+    if (segment.segmentType == 'Text' && segment.text.trimRight().length !== segment.text.length) {
+        const text = segment.text.trimRight();
+        const trailingSpace = segment.text.substring(text.length, segment.text.length);
+        const trailingSpaceSegment = createText(trailingSpace, segment.format);
+        segment.text = text;
+        return { segment, trailingSpaceSegment };
+    }
+    return { segment };
+};
+
+const isTrailingSpace = (segment: ContentModelSegment) => {
+    return segment.segmentType == 'Text' && segment.text.trimRight().length !== segment.text.length;
+};
