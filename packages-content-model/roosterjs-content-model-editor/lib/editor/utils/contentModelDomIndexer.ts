@@ -1,11 +1,6 @@
 import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
 import { setSelection } from '../../modelApi/selection/setSelection';
-import {
-    NodeType,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-    TableSelection,
-} from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelDomIndexer,
@@ -15,6 +10,7 @@ import {
     ContentModelTable,
     ContentModelTableRow,
     ContentModelText,
+    DOMSelection,
     Selectable,
 } from 'roosterjs-content-model-types';
 
@@ -34,17 +30,6 @@ interface IndexedSegmentNode extends Node {
 interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
 }
-
-const UnSelectedCoordinates: TableSelection = {
-    firstCell: {
-        x: -1,
-        y: -1,
-    },
-    lastCell: {
-        x: -1,
-        y: -1,
-    },
-};
 
 function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     const { paragraph, segments } = (node as IndexedSegmentNode).__roosterjsContentModel ?? {};
@@ -109,29 +94,27 @@ function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
 
 function reconcileSelection(
     model: ContentModelDocument,
-    newRangeEx: SelectionRangeEx,
-    oldRangeEx?: SelectionRangeEx
+    newSelection: DOMSelection,
+    oldSelection?: DOMSelection
 ): boolean {
-    if (oldRangeEx) {
-        const range: Range | undefined = oldRangeEx.ranges[0];
-
+    if (oldSelection) {
         if (
-            oldRangeEx?.type == SelectionRangeTypes.Normal &&
-            range?.collapsed &&
-            isNodeOfType(range.startContainer, NodeType.Text)
+            oldSelection?.type == 'range' &&
+            oldSelection.range.collapsed &&
+            isNodeOfType(oldSelection.range.startContainer, NodeType.Text)
         ) {
-            if (isIndexedSegment(range.startContainer)) {
-                reconcileTextSelection(range.startContainer);
+            if (isIndexedSegment(oldSelection.range.startContainer)) {
+                reconcileTextSelection(oldSelection.range.startContainer);
             }
         } else {
             setSelection(model);
         }
     }
 
-    switch (newRangeEx.type) {
-        case SelectionRangeTypes.ImageSelection:
-            const imageModel = isIndexedSegment(newRangeEx.image)
-                ? newRangeEx.image.__roosterjsContentModel.segments[0]
+    switch (newSelection.type) {
+        case 'image':
+            const imageModel = isIndexedSegment(newSelection.image)
+                ? newSelection.image.__roosterjsContentModel.segments[0]
                 : null;
 
             if (imageModel?.segmentType == 'Image') {
@@ -143,26 +126,24 @@ function reconcileSelection(
 
             break;
 
-        case SelectionRangeTypes.TableSelection:
-            const rows = isIndexedTable(newRangeEx.table)
-                ? newRangeEx.table.__roosterjsContentModel.tableRows
+        case 'table':
+            const rows = isIndexedTable(newSelection.table)
+                ? newSelection.table.__roosterjsContentModel.tableRows
                 : null;
-            const { firstCell, lastCell } = newRangeEx.coordinates ?? UnSelectedCoordinates;
-
             rows?.forEach((row, rowIndex) => {
                 row.cells.forEach((cell, colIndex) => {
                     cell.isSelected =
-                        rowIndex >= firstCell.y &&
-                        rowIndex <= lastCell.y &&
-                        colIndex >= firstCell.x &&
-                        colIndex <= lastCell.x;
+                        rowIndex >= newSelection.firstRow &&
+                        rowIndex <= newSelection.lastRow &&
+                        colIndex >= newSelection.firstColumn &&
+                        colIndex <= newSelection.lastColumn;
                 });
             });
 
             return true;
 
-        case SelectionRangeTypes.Normal:
-            const newRange = newRangeEx.ranges[0];
+        case 'range':
+            const newRange = newSelection.range;
             if (newRange) {
                 const {
                     startContainer,

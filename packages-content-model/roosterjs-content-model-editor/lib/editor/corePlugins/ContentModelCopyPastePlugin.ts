@@ -11,7 +11,7 @@ import {
     isNodeOfType,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { OnNodeCreated } from 'roosterjs-content-model-types';
+import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -30,8 +30,6 @@ import {
     PluginWithState,
     KnownCreateElementDataIndex,
     ClipboardData,
-    SelectionRangeTypes,
-    SelectionRangeEx,
     ColorTransformDirection,
     NodeType,
 } from 'roosterjs-editor-types';
@@ -91,8 +89,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (!this.editor) {
             return;
         }
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection && !selection.areAllCollapsed) {
+        const selection = this.editor.getDOMSelection();
+        if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
 
             const pasteModel = cloneModel(model, {
@@ -113,7 +111,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                       }
                     : false,
             });
-            if (selection.type === SelectionRangeTypes.TableSelection) {
+            if (selection.type === 'table') {
                 iterateSelections([pasteModel], (path, tableContext) => {
                     if (tableContext?.table) {
                         const table = tableContext?.table;
@@ -244,27 +242,24 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
 
-function selectionExToRange(
-    selection: SelectionRangeEx | null,
-    tempDiv: HTMLDivElement
-): Range | null {
+function selectionExToRange(selection: DOMSelection | null, tempDiv: HTMLDivElement): Range | null {
     if (!selection) {
         return null;
     }
     let newRange: Range | null = null;
-    if (selection.type === SelectionRangeTypes.TableSelection && selection.coordinates) {
+    if (selection.type === 'table') {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
         const elementToSelect =
             table.parentElement?.childElementCount == 1 ? table.parentElement : table;
         newRange = createRange(elementToSelect);
-    } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+    } else if (selection.type === 'image') {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
         if (image) {
             newRange = createRange(image);
         }
     } else {
-        newRange = selection.ranges[0];
+        newRange = selection.range;
     }
 
     return newRange;

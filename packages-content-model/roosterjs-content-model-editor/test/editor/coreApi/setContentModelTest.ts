@@ -73,7 +73,7 @@ describe('setContentModel', () => {
         expect(select).toHaveBeenCalledWith(core, mockedRange);
         expect(normalizeSpy).toHaveBeenCalledTimes(1);
         expect(normalizeSpy).toHaveBeenCalledWith();
-        expect(core.cache.cachedRangeEx).toBe(mockedRange);
+        expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(core.cache.cachedModel).toBe(mockedModel);
     });
 

@@ -6,7 +6,7 @@ import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendin
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isBlockElement, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { NodePosition, NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { NodePosition, NodeType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -14,8 +14,8 @@ import { NodePosition, NodeType, SelectionRangeTypes } from 'roosterjs-editor-ty
  * @param editor The Content Model Editor
  */
 export default function applyDefaultFormat(editor: IContentModelEditor) {
-    const rangeEx = editor.getSelectionRangeEx();
-    const range = rangeEx?.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
+    const selection = editor.getDOMSelection();
+    const range = selection?.type == 'range' ? selection.range : null;
     const startPos = range ? Position.getStart(range) : null;
     let node: Node | null = startPos?.node ?? null;
 

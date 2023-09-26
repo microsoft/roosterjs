@@ -38,7 +38,7 @@ describe('changeImage', () => {
 
         const image = document.createElement('img');
 
-        const getSelectionRangeEx = jasmine.createSpy().and.returnValues({ type: 2, image: image });
+        const getDOMSelection = jasmine.createSpy().and.returnValues({ type: 2, image: image });
         const triggerPluginEvent = jasmine.createSpy().and.callThrough();
 
         const editor = ({
@@ -48,7 +48,7 @@ describe('changeImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
-            getSelectionRangeEx,
+            getDOMSelection,
             triggerPluginEvent,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;

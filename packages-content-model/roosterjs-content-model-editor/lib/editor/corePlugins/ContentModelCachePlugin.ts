@@ -105,11 +105,11 @@ export default class ContentModelCachePlugin
 
             case PluginEventType.ContentChanged:
                 {
-                    const { contentModel, rangeEx } = event as ContentModelContentChangedEvent;
+                    const { contentModel, selection } = event as ContentModelContentChangedEvent;
 
                     if (contentModel && this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
-                        this.state.cachedRangeEx = rangeEx;
+                        this.state.cachedSelection = selection;
                     } else {
                         this.invalidateCache();
                     }
@@ -128,31 +128,31 @@ export default class ContentModelCachePlugin
     private invalidateCache() {
         if (!this.editor?.isInShadowEdit()) {
             this.state.cachedModel = undefined;
-            this.state.cachedRangeEx = undefined;
+            this.state.cachedSelection = undefined;
         }
     }
 
     private updateCachedModel(editor: IContentModelEditor, forceUpdate?: boolean) {
-        const cachedRangeEx = this.state.cachedRangeEx;
-        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
+        const cachedSelection = this.state.cachedSelection;
+        this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 
-        const newRangeEx = editor.getSelectionRangeEx();
+        const newRangeEx = editor.getDOMSelection();
 
         const model = this.state.cachedModel;
         const isSelectionChanged =
-            forceUpdate || !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
+            forceUpdate || !cachedSelection || !areSameRangeEx(newRangeEx, cachedSelection);
 
         if (isSelectionChanged) {
             if (
                 !model ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
                 this.invalidateCache();
             } else {
-                this.state.cachedRangeEx = newRangeEx;
+                this.state.cachedSelection = newRangeEx;
             }
         } else {
-            this.state.cachedRangeEx = cachedRangeEx;
+            this.state.cachedSelection = cachedSelection;
         }
     }
 }

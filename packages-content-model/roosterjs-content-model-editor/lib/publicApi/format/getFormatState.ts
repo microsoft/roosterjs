@@ -57,7 +57,7 @@ export function reducedModelChildProcessor(
     parent: ParentNode,
     context: FormatStateContext
 ) {
-    const selectionRootNode = getSelectionRootNode(context.rangeEx);
+    const selectionRootNode = getSelectionRootNode(context.selection);
 
     if (selectionRootNode) {
         if (!context.nodeStack) {

@@ -2,7 +2,6 @@ import formatImageWithContentModel from '../utils/formatImageWithContentModel';
 import { ContentModelImage } from 'roosterjs-content-model-types';
 import { getMetadata, readFile } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Change the selected image src
@@ -10,13 +9,9 @@ import { SelectionRangeTypes } from 'roosterjs-editor-types';
  * @param file The image file
  */
 export default function changeImage(editor: IContentModelEditor, file: File) {
-    const selection = editor.getSelectionRangeEx();
+    const selection = editor.getDOMSelection();
     readFile(file, dataUrl => {
-        if (
-            dataUrl &&
-            !editor.isDisposed() &&
-            selection.type === SelectionRangeTypes.ImageSelection
-        ) {
+        if (dataUrl && !editor.isDisposed() && selection.type === 'image') {
             formatImageWithContentModel(
                 editor,
                 'changeImage',

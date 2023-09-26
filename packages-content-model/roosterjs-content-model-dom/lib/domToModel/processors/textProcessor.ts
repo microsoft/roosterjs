@@ -41,7 +41,10 @@ export const textProcessor: ElementProcessor<Text> = (
         const subText = txt.substring(0, txtEndOffset);
         segments.push(addTextSegment(group, subText, paragraph, context));
 
-        if (context.rangeEx && !context.rangeEx.areAllCollapsed) {
+        if (
+            context.selection &&
+            (context.selection.type != 'range' || !context.selection.range.collapsed)
+        ) {
             addSelectionMarker(group, context);
         }
 

@@ -1,8 +1,11 @@
 import * as setSelection from '../../../lib/modelApi/selection/setSelection';
-import { ContentModelDocument, ContentModelSegment } from 'roosterjs-content-model-types';
 import { contentModelDomIndexer } from '../../../lib/editor/utils/contentModelDomIndexer';
 import { createRange } from 'roosterjs-editor-dom';
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    ContentModelSegment,
+    DOMSelection,
+} from 'roosterjs-content-model-types';
 import {
     createBr,
     createContentModelDocument,
@@ -194,10 +197,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
     it('no old range, normal range on non-indexed text, collapsed', () => {
         const node = document.createTextNode('test');
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 2)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
         };
 
         const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
@@ -208,10 +210,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
     it('no old range, normal range on indexed text, collapsed', () => {
         const node = document.createTextNode('test') as any;
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 2)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
         };
         const paragraph = createParagraph();
         const segment = createText('');
@@ -255,10 +256,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
     it('no old range, normal range on indexed text, expanded on same node', () => {
         const node = document.createTextNode('test') as any;
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 1, node, 3)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 1, node, 3),
         };
         const paragraph = createParagraph();
         const segment = createText('');
@@ -306,10 +306,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         parent.appendChild(node1);
         parent.appendChild(node2);
 
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node1, 2, node2, 3)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node1, 2, node2, 3),
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('');
@@ -376,10 +375,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
         parent.appendChild(node1);
         parent.appendChild(node2);
 
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node1, 2, parent, 2)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node1, 2, parent, 2),
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('');
@@ -434,10 +432,8 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
         parent.appendChild(node1);
 
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
-            areAllCollapsed: false,
-            ranges: [],
+        const newRangeEx: DOMSelection = {
+            type: 'image',
             image: node1,
         };
         const paragraph = createParagraph();
@@ -480,15 +476,13 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
         parent.appendChild(node1);
 
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.TableSelection,
-            areAllCollapsed: false,
-            ranges: [],
+        const newRangeEx: DOMSelection = {
+            type: 'table',
             table: node1,
-            coordinates: {
-                firstCell: { x: 0, y: 1 },
-                lastCell: { x: 1, y: 2 },
-            },
+            firstColumn: 0,
+            firstRow: 1,
+            lastColumn: 1,
+            lastRow: 2,
         };
         const tableModel = createTable(3);
         const cell00 = createTableCell();
@@ -535,10 +529,9 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
         parent.appendChild(node);
 
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(parent, 1)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(parent, 1),
         };
         const paragraph = createParagraph();
         const segment = createBr({ fontFamily: 'Arial' });
@@ -563,15 +556,13 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
     it('has old range - collapsed, expanded new range', () => {
         const node = document.createTextNode('test') as any;
-        const oldRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 2)],
+        const oldRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
         };
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 1, node, 3)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 1, node, 3),
         };
         const paragraph = createParagraph();
         const oldSegment1 = createText('te');
@@ -614,15 +605,13 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
     it('has old range - expanded, expanded new range', () => {
         const node = document.createTextNode('test') as any;
-        const oldRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 1, node, 3)],
+        const oldRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 1, node, 3),
         };
-        const newRangeEx: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(node, 2)],
+        const newRangeEx: DOMSelection = {
+            type: 'range',
+            range: createRange(node, 2),
         };
         const paragraph = createParagraph();
         const oldSegment1: ContentModelSegment = {

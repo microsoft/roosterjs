@@ -1,7 +1,8 @@
-import { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
+import { EntityOperation } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelEntity,
+    DOMSelection,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -81,7 +82,7 @@ export interface FormatWithContentModelOptions {
     /**
      * When specified, use this selection range to override current selection inside editor
      */
-    selectionOverride?: SelectionRangeEx;
+    selectionOverride?: DOMSelection;
 }
 
 /**

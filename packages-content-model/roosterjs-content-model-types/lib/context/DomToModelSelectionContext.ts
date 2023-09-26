@@ -1,4 +1,4 @@
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * Represents the selection information of content used by DOM to Content Model conversion
@@ -12,5 +12,5 @@ export interface DomToModelSelectionContext {
     /**
      * Current selection range
      */
-    rangeEx?: SelectionRangeEx;
+    selection?: DOMSelection;
 }

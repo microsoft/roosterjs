@@ -13,7 +13,7 @@ import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlug
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
-import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
+import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
@@ -117,10 +117,11 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
     cmCore.api.switchShadowEdit = switchShadowEdit;
-    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
+    cmCore.api.getDOMSelection = getDOMSelection;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
+    cmCore.originalApi.getDOMSelection = getDOMSelection;
 }
 
 function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {

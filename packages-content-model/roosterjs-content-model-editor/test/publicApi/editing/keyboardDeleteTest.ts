@@ -2,8 +2,8 @@ import * as deleteSelection from '../../../lib/modelApi/edit/deleteSelection';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as handleKeyboardEventResult from '../../../lib/editor/utils/handleKeyboardEventCommon';
 import keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import { ChangeSource, Keys, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ChangeSource, Keys } from 'roosterjs-editor-types';
+import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import { deleteAllSegmentBefore } from '../../../lib/modelApi/edit/deleteSteps/deleteAllSegmentBefore';
 import { editingTestCommon } from './editingTestCommon';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
@@ -52,8 +52,8 @@ describe('keyboardDelete', () => {
             newEditor => {
                 editor = newEditor;
 
-                editor.getSelectionRangeEx = () => ({
-                    type: SelectionRangeTypes.Normal,
+                editor.getDOMSelection = () => ({
+                    type: 'range',
                     ranges: [
                         {
                             collapsed: false,
@@ -377,8 +377,8 @@ describe('keyboardDelete', () => {
 
         const editor = ({
             addUndoSnapshot,
-            getSelectionRangeEx: () => ({
-                type: SelectionRangeTypes.Normal,
+            getDOMSelection: () => ({
+                type: 'range',
                 ranges: [{ collapsed: false }],
             }),
         } as any) as IContentModelEditor;
@@ -401,8 +401,8 @@ describe('keyboardDelete', () => {
         const preventDefault = jasmine.createSpy('preventDefault');
 
         const editor = {
-            getSelectionRangeEx: () => ({
-                type: SelectionRangeTypes.Normal,
+            getDOMSelection: () => ({
+                type: 'range',
                 ranges: [{ collapsed: false }],
             }),
         } as any;
@@ -422,19 +422,16 @@ describe('keyboardDelete', () => {
 
     it('No need to delete - Backspace', () => {
         const rawEvent = { which: Keys.BACKSPACE } as any;
-        const range: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                ({
-                    collapsed: true,
-                    startContainer: document.createTextNode('test'),
-                    startOffset: 2,
-                } as any) as Range,
-            ],
-            areAllCollapsed: true,
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 2,
+            } as any) as Range,
         };
         const editor = {
-            getSelectionRangeEx: () => range,
+            getDOMSelection: () => range,
         } as any;
         const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
@@ -446,19 +443,16 @@ describe('keyboardDelete', () => {
 
     it('No need to delete - Delete', () => {
         const rawEvent = { which: Keys.DELETE } as any;
-        const range: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                ({
-                    collapsed: true,
-                    startContainer: document.createTextNode('test'),
-                    startOffset: 2,
-                } as any) as Range,
-            ],
-            areAllCollapsed: true,
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 2,
+            } as any) as Range,
         };
         const editor = {
-            getSelectionRangeEx: () => range,
+            getDOMSelection: () => range,
         } as any;
         const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
@@ -470,20 +464,17 @@ describe('keyboardDelete', () => {
 
     it('Backspace from the beginning', () => {
         const rawEvent = { which: Keys.BACKSPACE } as any;
-        const range: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                ({
-                    collapsed: true,
-                    startContainer: document.createTextNode('test'),
-                    startOffset: 0,
-                } as any) as Range,
-            ],
-            areAllCollapsed: true,
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 0,
+            } as any) as Range,
         };
 
         const editor = {
-            getSelectionRangeEx: () => range,
+            getDOMSelection: () => range,
         } as any;
         const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 
@@ -495,20 +486,17 @@ describe('keyboardDelete', () => {
 
     it('Delete from the last', () => {
         const rawEvent = { which: Keys.DELETE } as any;
-        const range: SelectionRangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                ({
-                    collapsed: true,
-                    startContainer: document.createTextNode('test'),
-                    startOffset: 4,
-                } as any) as Range,
-            ],
-            areAllCollapsed: true,
+        const range: DOMSelection = {
+            type: 'range',
+            range: ({
+                collapsed: true,
+                startContainer: document.createTextNode('test'),
+                startOffset: 4,
+            } as any) as Range,
         };
 
         const editor = {
-            getSelectionRangeEx: () => range,
+            getDOMSelection: () => range,
         } as any;
         const formatWithContentModelSpy = spyOn(formatWithContentModel, 'formatWithContentModel');
 

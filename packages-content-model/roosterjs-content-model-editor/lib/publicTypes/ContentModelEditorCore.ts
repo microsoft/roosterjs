@@ -1,8 +1,9 @@
 import { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
+import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     ContentModelSegmentFormat,
+    DOMSelection,
     DomToModelOption,
     DomToModelSettings,
     EditorContext,
@@ -26,8 +27,14 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
 export type CreateContentModel = (
     core: ContentModelEditorCore,
     option?: DomToModelOption,
-    selectionOverride?: SelectionRangeEx
+    selectionOverride?: DOMSelection
 ) => ContentModelDocument;
+
+/**
+ * Get current DOM selection from editor
+ * @param core The ContentModelEditorCore object
+ */
+export type GetDOMSelection = (core: ContentModelEditorCore) => DOMSelection;
 
 /**
  * Set content with content model
@@ -41,7 +48,7 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
-) => SelectionRangeEx | null;
+) => DOMSelection | null;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -68,6 +75,11 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel: SetContentModel;
+
+    /**
+     * Get current DOM selection from editor
+     */
+    getDOMSelection: GetDOMSelection;
 }
 
 /**

@@ -1,6 +1,5 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { DomToModelOption } from 'roosterjs-content-model-types';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
@@ -29,12 +28,12 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
     if (cachedModel) {
         return cachedModel;
     } else {
-        const selection = selectionOverride || core.api.getSelectionRangeEx(core);
+        const selection = selectionOverride || core.api.getDOMSelection(core);
         const model = internalCreateContentModel(core, selection, option);
 
         if (!option && !selectionOverride) {
             core.cache.cachedModel = model;
-            core.cache.cachedRangeEx = selection;
+            core.cache.cachedSelection = selection;
         }
 
         return model;
@@ -43,7 +42,7 @@ export const createContentModel: CreateContentModel = (core, option, selectionOv
 
 function internalCreateContentModel(
     core: ContentModelEditorCore,
-    selection: SelectionRangeEx,
+    selection: DOMSelection,
     option?: DomToModelOption
 ) {
     const editorContext = core.api.createEditorContext(core);

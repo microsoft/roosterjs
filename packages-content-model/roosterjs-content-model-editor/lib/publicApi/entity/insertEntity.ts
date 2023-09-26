@@ -1,6 +1,7 @@
-import { ChangeSource, Entity, SelectionRangeEx } from 'roosterjs-editor-types';
+import { ChangeSource, Entity } from 'roosterjs-editor-types';
 import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { DOMSelection } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
@@ -27,7 +28,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: boolean,
-    position: 'focus' | 'begin' | 'end' | SelectionRangeEx,
+    position: 'focus' | 'begin' | 'end' | DOMSelection,
     options?: InsertEntityOptions
 ): Entity | null;
 
@@ -46,7 +47,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: true,
-    position: InsertEntityPosition | SelectionRangeEx,
+    position: InsertEntityPosition | DOMSelection,
     options?: InsertEntityOptions
 ): Entity | null;
 
@@ -54,7 +55,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: boolean,
-    position?: InsertEntityPosition | SelectionRangeEx,
+    position?: InsertEntityPosition | DOMSelection,
     options?: InsertEntityOptions
 ): Entity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};

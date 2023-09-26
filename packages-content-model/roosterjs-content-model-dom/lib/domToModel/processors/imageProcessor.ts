@@ -3,7 +3,6 @@ import { addSegment } from '../../modelApi/common/addSegment';
 import { ContentModelImageFormat, ElementProcessor } from 'roosterjs-content-model-types';
 import { createImage } from '../../modelApi/creators/createImage';
 import { parseFormat } from '../utils/parseFormat';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
 
 /**
@@ -33,10 +32,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
         if (context.isInSelection) {
             image.isSelected = true;
         }
-        if (
-            context.rangeEx?.type == SelectionRangeTypes.ImageSelection &&
-            context.rangeEx.image == element
-        ) {
+        if (context.selection?.type == 'image' && context.selection.image == element) {
             image.isSelectedAsImageSelection = true;
             image.isSelected = true;
         }

@@ -1,9 +1,8 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
 import {
     CompatibleContentChangedEvent,
     ContentChangedEvent,
     ContentChangedEventData,
-    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 
 /**
@@ -18,7 +17,7 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
     /**
      * Selection range applied to the document
      */
-    rangeEx?: SelectionRangeEx;
+    selection?: DOMSelection;
 }
 
 /**

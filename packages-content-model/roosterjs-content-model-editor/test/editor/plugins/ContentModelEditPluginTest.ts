@@ -8,7 +8,7 @@ describe('ContentModelEditPlugin', () => {
 
     beforeEach(() => {
         editor = ({
-            getSelectionRangeEx: () =>
+            getDOMSelection: () =>
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code

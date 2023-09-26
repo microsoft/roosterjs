@@ -1,7 +1,10 @@
-import { ContentModelDocument, DomToModelContext } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    DOMSelection,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create Content Model from DOM tree in this editor
@@ -13,11 +16,11 @@ import { SelectionRangeEx } from 'roosterjs-editor-types';
 export function domToContentModel(
     root: HTMLElement | DocumentFragment,
     context: DomToModelContext,
-    selection?: SelectionRangeEx
+    selection?: DOMSelection
 ): ContentModelDocument {
     const model = createContentModelDocument(context.defaultFormat);
 
-    context.rangeEx = selection;
+    context.selection = selection;
     context.elementProcessors.child(model, root, context);
 
     normalizeContentModel(model);

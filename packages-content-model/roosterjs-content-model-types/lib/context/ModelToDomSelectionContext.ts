@@ -1,4 +1,4 @@
-import { Coordinates } from 'roosterjs-editor-types';
+import { ImageSelection, TableSelection } from '../selection/DOMSelection';
 
 /**
  * Represents internal data structure for a selection position, combined by block and segment node
@@ -37,36 +37,6 @@ export interface ModelToDomRegularSelection {
 }
 
 /**
- * Represents internal data structure for table selection
- */
-export interface ModelToDomTableSelection {
-    /**
-     * Table where selection is located
-     */
-    table: HTMLTableElement;
-
-    /**
-     * Coordinate of first selected cell
-     */
-    firstCell: Coordinates;
-
-    /**
-     * Coordinate of last selected cell
-     */
-    lastCell: Coordinates;
-}
-
-/**
- * Represents an image selection for Content Model to DOM conversion
- */
-export interface ModelToDomImageSelection {
-    /**
-     * Selected image
-     */
-    image: HTMLImageElement;
-}
-
-/**
  * Represents selection info used by Content Model to DOM conversion
  */
 export interface ModelToDomSelectionContext {
@@ -78,10 +48,10 @@ export interface ModelToDomSelectionContext {
     /**
      * Table selection info
      */
-    tableSelection?: ModelToDomTableSelection;
+    tableSelection?: TableSelection;
 
     /**
      * Image selection info
      */
-    imageSelection?: ModelToDomImageSelection;
+    imageSelection?: ImageSelection;
 }

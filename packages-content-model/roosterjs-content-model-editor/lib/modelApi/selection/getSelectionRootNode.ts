@@ -1,16 +1,16 @@
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
-export function getSelectionRootNode(rangeEx: SelectionRangeEx | undefined): Node | undefined {
-    return !rangeEx
+export function getSelectionRootNode(selection: DOMSelection | undefined): Node | undefined {
+    return !selection
         ? undefined
-        : rangeEx.type == SelectionRangeTypes.Normal
-        ? rangeEx.ranges[0]?.commonAncestorContainer
-        : rangeEx.type == SelectionRangeTypes.TableSelection
-        ? rangeEx.table
-        : rangeEx.type == SelectionRangeTypes.ImageSelection
-        ? rangeEx.image
+        : selection.type == 'range'
+        ? selection.range.commonAncestorContainer
+        : selection.type == 'table'
+        ? selection.table
+        : selection.type == 'image'
+        ? selection.image
         : undefined;
 }

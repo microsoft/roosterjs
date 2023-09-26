@@ -1,14 +1,17 @@
-import { ContentModelDocument, ContentModelDomIndexer } from 'roosterjs-content-model-types';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import {
+    ContentModelDocument,
+    ContentModelDomIndexer,
+    DOMSelection,
+} from 'roosterjs-content-model-types';
 
 /**
  * Plugin state for ContentModelEditPlugin
  */
 export interface ContentModelCachePluginState {
     /**
-     * Cached selection range
+     * Cached selection
      */
-    cachedRangeEx?: SelectionRangeEx | undefined;
+    cachedSelection?: DOMSelection | undefined;
 
     /**
      * When reuse Content Model is allowed, we cache the Content Model object here after created

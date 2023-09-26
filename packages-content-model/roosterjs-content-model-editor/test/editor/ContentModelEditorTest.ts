@@ -4,7 +4,7 @@ import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelT
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import ContentModelEditor from '../../lib/editor/ContentModelEditor';
 import { ContentModelDocument, EditorContext } from 'roosterjs-content-model-types';
-import { EditorPlugin, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { EditorPlugin, PluginEventType } from 'roosterjs-editor-types';
 
 const editorContext: EditorContext = {
     isDarkMode: false,
@@ -33,9 +33,8 @@ describe('ContentModelEditor', () => {
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
-            areAllCollapsed: true,
+            type: 'range',
+            range: null!,
         });
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
@@ -64,9 +63,8 @@ describe('ContentModelEditor', () => {
         expect(model).toBe(mockedResult);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledTimes(1);
         expect(domToContentModel.domToContentModel).toHaveBeenCalledWith(div, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
-            areAllCollapsed: true,
+            type: 'range',
+            range: null!,
         });
         expect(createDomToModelContext.createDomToModelContextWithConfig).toHaveBeenCalledWith(
             mockedConfig,
@@ -76,7 +74,7 @@ describe('ContentModelEditor', () => {
 
     it('setContentModel with normal selection', () => {
         const mockedRange = {
-            type: SelectionRangeTypes.Normal,
+            type: 'range',
             ranges: [document.createRange()],
         } as any;
         const mockedModel = 'MockedModel' as any;
@@ -94,7 +92,7 @@ describe('ContentModelEditor', () => {
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
-        const rangeEx = editor.setContentModel(mockedModel);
+        const selection = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -108,12 +106,12 @@ describe('ContentModelEditor', () => {
             mockedConfig,
             editorContext
         );
-        expect(rangeEx).toBe(mockedRange);
+        expect(selection).toBe(mockedRange);
     });
 
     it('setContentModel', () => {
         const mockedRange = {
-            type: SelectionRangeTypes.Normal,
+            type: 'range',
             ranges: [document.createRange()],
         } as any;
         const mockedModel = 'MockedModel' as any;
@@ -131,7 +129,7 @@ describe('ContentModelEditor', () => {
 
         spyOn((editor as any).core.api, 'createEditorContext').and.returnValue(editorContext);
 
-        const rangeEx = editor.setContentModel(mockedModel);
+        const selection = editor.setContentModel(mockedModel);
 
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledTimes(1);
         expect(contentModelToDom.contentModelToDom).toHaveBeenCalledWith(
@@ -145,7 +143,7 @@ describe('ContentModelEditor', () => {
             mockedConfig,
             editorContext
         );
-        expect(rangeEx).toBe(mockedRange);
+        expect(selection).toBe(mockedRange);
     });
 
     it('createContentModel in EditorReady event', () => {
