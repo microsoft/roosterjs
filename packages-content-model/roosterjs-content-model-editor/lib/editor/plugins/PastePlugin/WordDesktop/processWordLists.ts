@@ -6,7 +6,7 @@ import {
     createListLevel,
     parseFormat,
 } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
     ContentModelListLevel,

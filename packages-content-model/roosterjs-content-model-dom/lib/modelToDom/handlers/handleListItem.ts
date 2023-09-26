@@ -3,7 +3,7 @@ import { listItemMetadataFormatHandler } from '../../formatHandlers/list/listIte
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { unwrap } from 'roosterjs-editor-dom';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelListItem,
     ModelToDomContext,

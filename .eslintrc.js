@@ -25,6 +25,7 @@ module.exports = {
     plugins: ['eslint-plugin-react', '@typescript-eslint', '@typescript-eslint/tslint'],
     root: true,
     rules: {
+        '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
         '@typescript-eslint/dot-notation': 'error',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',

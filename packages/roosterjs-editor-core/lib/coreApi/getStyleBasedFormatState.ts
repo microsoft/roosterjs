@@ -1,5 +1,6 @@
 import { contains, getComputedStyles } from 'roosterjs-editor-dom';
-import { EditorCore, GetStyleBasedFormatState, NodeType } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
+import type { EditorCore, GetStyleBasedFormatState } from 'roosterjs-editor-types';
 
 /**
  * @internal

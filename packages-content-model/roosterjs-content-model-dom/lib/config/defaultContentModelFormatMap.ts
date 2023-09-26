@@ -1,4 +1,4 @@
-import { DefaultImplicitFormatMap } from 'roosterjs-content-model-types';
+import type { DefaultImplicitFormatMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal

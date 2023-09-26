@@ -1,5 +1,6 @@
-import { DeleteResult, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
+import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
+import type { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
 /**
  * @internal

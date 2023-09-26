@@ -1,6 +1,7 @@
 import contains from '../utils/contains';
 import Position from './Position';
-import { NodePosition, NodeType, SelectionPath } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
+import type { NodePosition, SelectionPath } from 'roosterjs-editor-types';
 
 /**
  * Get path of the given selection range related to the given rootNode

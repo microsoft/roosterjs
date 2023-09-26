@@ -1,5 +1,5 @@
 import canMoveCurrentSnapshot from './canMoveCurrentSnapshot';
-import { Snapshot, Snapshots } from 'roosterjs-editor-types';
+import type { Snapshot, Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Clear all snapshots after the current one

@@ -1,9 +1,9 @@
-import { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
 import { deleteSingleChar } from './deleteSingleChar';
 import { EntityOperation } from 'roosterjs-editor-types';
-import { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 import { isWhiteSpacePreserved, normalizeSingleSegment } from 'roosterjs-content-model-dom';
 import { normalizeText } from '../../../domUtils/stringUtil';
+import type { ContentModelParagraph, ContentModelSegment } from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal

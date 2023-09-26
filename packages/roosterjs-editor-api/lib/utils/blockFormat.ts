@@ -1,7 +1,8 @@
 import commitListChains from '../utils/commitListChains';
 import formatUndoSnapshot from './formatUndoSnapshot';
-import { IEditor, NodePosition, Region, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { VListChain } from 'roosterjs-editor-dom';
+import type { IEditor, NodePosition, Region } from 'roosterjs-editor-types';
 
 /**
  * Split selection into regions, and perform a block-wise formatting action for each region.

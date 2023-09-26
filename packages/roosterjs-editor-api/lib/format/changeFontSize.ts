@@ -1,6 +1,7 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { FontSizeChange, IEditor } from 'roosterjs-editor-types';
+import { FontSizeChange } from 'roosterjs-editor-types';
 import { getComputedStyle } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import type { CompatibleFontSizeChange } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

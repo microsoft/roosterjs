@@ -1,4 +1,4 @@
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Represents the selection information of content used by DOM to Content Model conversion

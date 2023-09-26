@@ -1,5 +1,7 @@
-import { ExperimentalFeatures, IEditor } from 'roosterjs-editor-types';
-import { Position, VListChain } from 'roosterjs-editor-dom';
+import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import { Position } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { VListChain } from 'roosterjs-editor-dom';
 
 /**
  * Commit changes of all list changes when experiment features are allowed

@@ -1,5 +1,5 @@
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { getDefaultStyle } from './getDefaultStyle';
+import type { DomToModelContext } from 'roosterjs-content-model-types';
 
 const BLOCK_DISPLAY_STYLES = ['block', 'list-item', 'table', 'table-cell', 'flex'];
 

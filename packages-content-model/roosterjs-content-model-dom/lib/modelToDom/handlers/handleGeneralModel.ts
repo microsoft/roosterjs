@@ -3,7 +3,7 @@ import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { wrap } from 'roosterjs-editor-dom';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,

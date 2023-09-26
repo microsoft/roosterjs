@@ -1,5 +1,5 @@
-import { TableSelectionContext } from './TableSelectionContext';
-import {
+import type { TableSelectionContext } from './TableSelectionContext';
+import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSelectionMarker,

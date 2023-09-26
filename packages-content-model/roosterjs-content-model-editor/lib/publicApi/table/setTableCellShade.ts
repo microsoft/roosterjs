@@ -1,9 +1,9 @@
 import hasSelectionInBlockGroup from '../selection/hasSelectionInBlockGroup';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setTableCellBackgroundColor } from '../../modelApi/table/setTableCellBackgroundColor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set table cell shade color

@@ -1,4 +1,4 @@
-import Disposable from '../../../pluginUtils/Disposable';
+import type Disposable from '../../../pluginUtils/Disposable';
 
 /**
  * @internal

@@ -1,14 +1,9 @@
-import ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
-import { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-    PluginWithState,
-} from 'roosterjs-editor-types';
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary

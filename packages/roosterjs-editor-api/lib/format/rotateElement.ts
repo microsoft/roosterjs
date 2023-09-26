@@ -1,5 +1,5 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Rotate an element visually

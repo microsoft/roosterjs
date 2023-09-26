@@ -1,5 +1,5 @@
-import NodePosition from './NodePosition';
-import RegionBase from './RegionBase';
+import type NodePosition from './NodePosition';
+import type RegionBase from './RegionBase';
 
 /**
  * Represents a DOM region with selection information

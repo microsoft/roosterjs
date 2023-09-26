@@ -1,4 +1,4 @@
-import { NodeType } from 'roosterjs-editor-types';
+import type { NodeType } from 'roosterjs-editor-types';
 
 /**
  * A type map from node type number to its type declaration. This is used by utility function isNodeOfType()

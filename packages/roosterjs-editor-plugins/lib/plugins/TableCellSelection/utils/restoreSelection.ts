@@ -1,8 +1,9 @@
-import { IEditor, PositionType } from 'roosterjs-editor-types';
 import { isAfter } from './isAfter';
 import { Position } from 'roosterjs-editor-dom';
-import { TableCellSelectionState } from '../TableCellSelectionState';
+import { PositionType } from 'roosterjs-editor-types';
 import { updateSelection } from './updateSelection';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 /**
  * @internal

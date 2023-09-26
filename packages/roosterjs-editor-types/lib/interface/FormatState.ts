@@ -1,5 +1,5 @@
-import ModeIndependentColor from './ModeIndependentColor';
-import TableFormat from './TableFormat';
+import type ModeIndependentColor from './ModeIndependentColor';
+import type TableFormat from './TableFormat';
 
 /**
  * Format states that can have pending state.

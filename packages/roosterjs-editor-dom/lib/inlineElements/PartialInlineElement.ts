@@ -1,8 +1,9 @@
 import applyTextStyle from './applyTextStyle';
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
-import { BlockElement, InlineElement, NodePosition, PositionType } from 'roosterjs-editor-types';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
+import { PositionType } from 'roosterjs-editor-types';
+import type { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * This is a special version of inline element that identifies a section of an inline element

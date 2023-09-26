@@ -1,4 +1,5 @@
-import { Coordinates, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { Coordinates, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal

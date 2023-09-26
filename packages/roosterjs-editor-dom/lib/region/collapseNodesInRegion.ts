@@ -1,7 +1,7 @@
 import collapseNode from '../utils/collapseNodes';
 import isNodeInRegion from './isNodeInRegion';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { BlockElement, RegionBase } from 'roosterjs-editor-types';
+import type { BlockElement, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Collapse nodes within this region to their common ancestor node under this region

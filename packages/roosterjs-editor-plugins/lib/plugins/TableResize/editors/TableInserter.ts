@@ -1,7 +1,8 @@
-import Disposable from '../../../pluginUtils/Disposable';
-import TableEditFeature from './TableEditorFeature';
 import { createElement, getIntersectedRect, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData, IEditor, TableOperation, TableSelection } from 'roosterjs-editor-types';
+import { TableOperation } from 'roosterjs-editor-types';
+import type Disposable from '../../../pluginUtils/Disposable';
+import type TableEditFeature from './TableEditorFeature';
+import type { CreateElementData, IEditor, TableSelection } from 'roosterjs-editor-types';
 
 const INSERTER_COLOR = '#4A4A4A';
 const INSERTER_COLOR_DARK_MODE = 'white';

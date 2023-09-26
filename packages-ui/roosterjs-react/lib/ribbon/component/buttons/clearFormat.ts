@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
 import { clearFormat as clearFormatApi } from 'roosterjs-editor-api';
-import { ClearFormatButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { ClearFormatMode } from 'roosterjs-editor-types';
+import type RibbonButton from '../../type/RibbonButton';
+import type { ClearFormatButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

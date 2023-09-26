@@ -1,5 +1,5 @@
-import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
-import {
+import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelBlockWithCache,

@@ -1,5 +1,5 @@
-import { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
 import { setParagraphNotImplicit } from '../block/setParagraphNotImplicit';
+import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
  * Unwrap a given block group, move its child blocks to be under its parent group

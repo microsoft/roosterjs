@@ -9,7 +9,7 @@ import NormalizeTablePlugin from './NormalizeTablePlugin';
 import PendingFormatStatePlugin from './PendingFormatStatePlugin';
 import TypeInContainerPlugin from './TypeInContainerPlugin';
 import UndoPlugin from './UndoPlugin';
-import { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types';
+import type { CorePlugins, EditorOptions, PluginState } from 'roosterjs-editor-types';
 
 /**
  * @internal

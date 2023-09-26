@@ -1,4 +1,4 @@
-import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
 /**
  * Create default value of HtmlSanitizerOptions with every property set

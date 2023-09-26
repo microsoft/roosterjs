@@ -1,18 +1,21 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
-import { ContentModelDocument, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import { ChangeSource, GetContentMode, PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { formatWithContentModel } from './formatWithContentModel';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
-import { NodePosition } from 'roosterjs-editor-types';
+import type {
+    ContentModelDocument,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { NodePosition } from 'roosterjs-editor-types';
 import {
     applySegmentFormatToElement,
     createDomToModelContext,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import ContentModelBeforePasteEvent, {
-    ContentModelBeforePasteEventData,
-} from '../../publicTypes/event/ContentModelBeforePasteEvent';
+import type { ContentModelBeforePasteEventData } from '../../publicTypes/event/ContentModelBeforePasteEvent';
+import type ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import {
     createDefaultHtmlSanitizerOptions,
     getPasteType,
@@ -22,13 +25,7 @@ import {
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    ClipboardData,
-    GetContentMode,
-    PasteType,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { ClipboardData } from 'roosterjs-editor-types';
 
 /**
  * Paste into editor using a clipboardData object

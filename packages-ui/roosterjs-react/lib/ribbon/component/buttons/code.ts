@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { CodeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleCodeBlock } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { CodeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

@@ -1,3 +1,4 @@
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     changeElementTag,
     getTagOfNode,
@@ -5,13 +6,7 @@ import {
     safeInstanceOf,
     toArray,
 } from 'roosterjs-editor-dom';
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal

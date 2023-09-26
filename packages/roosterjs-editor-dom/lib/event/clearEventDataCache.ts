@@ -1,4 +1,4 @@
-import { PluginEvent } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * Clear a cached object by its key from an event object

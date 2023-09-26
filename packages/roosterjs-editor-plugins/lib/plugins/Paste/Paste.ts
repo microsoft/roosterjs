@@ -8,14 +8,10 @@ import handleLineMerge from './lineMerge/handleLineMerge';
 import sanitizeHtmlColorsFromPastedContent from './sanitizeHtmlColorsFromPastedContent/sanitizeHtmlColorsFromPastedContent';
 import sanitizeLinks from './sanitizeLinks/sanitizeLinks';
 import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
-import { HtmlSanitizerOptions, KnownPasteSourceType } from 'roosterjs-editor-types';
-import {
-    EditorPlugin,
-    IEditor,
-    PasteType,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { KnownPasteSourceType } from 'roosterjs-editor-types';
+import { PasteType, PluginEventType } from 'roosterjs-editor-types';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 

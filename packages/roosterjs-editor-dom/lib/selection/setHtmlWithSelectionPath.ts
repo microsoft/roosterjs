@@ -1,6 +1,7 @@
 import createRange from './createRange';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import validate from '../metadata/validate';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     createArrayDefinition,
     createBooleanDefinition,
@@ -8,9 +9,8 @@ import {
     createObjectDefinition,
     createStringDefinition,
 } from '../metadata/definitionCreators';
-import {
+import type {
     ContentMetadata,
-    SelectionRangeTypes,
     TrustedHTMLHandler,
     ImageContentMetadata,
     NormalContentMetadata,

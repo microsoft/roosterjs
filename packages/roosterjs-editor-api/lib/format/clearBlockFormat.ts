@@ -1,5 +1,6 @@
 import clearFormat from './clearFormat';
-import { ClearFormatMode, IEditor } from 'roosterjs-editor-types';
+import { ClearFormatMode } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * @deprecated Use clearFormat instead and pass the ClearFormatMode.Block as parameter

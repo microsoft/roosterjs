@@ -3,20 +3,19 @@ import execCommand from '../utils/execCommand';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import normalizeBlockquote from '../utils/normalizeBlockquote';
 import {
+    Alignment,
+    DocumentCommand,
+    QueryScope,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
+import {
     createVListFromRegion,
     findClosestElementAncestor,
     getSelectedBlockElementsInRegion,
     isWholeTableSelected,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    Alignment,
-    DocumentCommand,
-    IEditor,
-    QueryScope,
-    SelectionRangeTypes,
-    TableSelectionRange,
-} from 'roosterjs-editor-types';
+import type { IEditor, TableSelectionRange } from 'roosterjs-editor-types';
 import type { CompatibleAlignment } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

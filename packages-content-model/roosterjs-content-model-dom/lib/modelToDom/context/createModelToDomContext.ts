@@ -4,7 +4,7 @@ import {
     defaultFormatAppliers,
     defaultFormatKeysPerCategory,
 } from '../../formatHandlers/defaultFormatHandlers';
-import {
+import type {
     EditorContext,
     FormatApplier,
     FormatAppliers,

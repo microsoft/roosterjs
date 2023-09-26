@@ -1,6 +1,6 @@
-import { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelParagraphDecorator } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 type HeadingLevelTags = 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6';
 

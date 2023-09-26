@@ -1,5 +1,5 @@
-import { ContentModelBr, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
+import type { ContentModelBr, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
 
 /**
  * @internal

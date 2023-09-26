@@ -1,7 +1,7 @@
-import { ElementProcessor } from 'roosterjs-content-model-types';
 import { knownElementProcessor } from './knownElementProcessor';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 import NodeInlineElement from './NodeInlineElement';
-import { BlockElement } from 'roosterjs-editor-types';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 /**
  * This is an inline element representing an Html image

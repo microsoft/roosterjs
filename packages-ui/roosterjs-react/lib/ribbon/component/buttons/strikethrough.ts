@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { StrikethroughButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleStrikethrough } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { StrikethroughButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { PasteOptionButtonKeys } from '../type/PasteOptionStringKeys';
+import type { PasteOptionButtonKeys } from '../type/PasteOptionStringKeys';
 
 /**
  * @internal

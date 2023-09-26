@@ -1,9 +1,9 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import type { ContentModelDocument } from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal

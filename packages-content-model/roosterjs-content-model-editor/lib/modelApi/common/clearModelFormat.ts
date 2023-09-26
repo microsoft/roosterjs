@@ -4,10 +4,10 @@ import { arrayPush } from 'roosterjs-editor-dom';
 import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections } from '../selection/iterateSelections';
-import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import {
+import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,

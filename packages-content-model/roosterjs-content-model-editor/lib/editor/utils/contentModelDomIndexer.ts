@@ -1,12 +1,8 @@
 import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
+import { NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { setSelection } from '../../modelApi/selection/setSelection';
-import {
-    NodeType,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-    TableSelection,
-} from 'roosterjs-editor-types';
-import {
+import type { SelectionRangeEx, TableSelection } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelDomIndexer,
     ContentModelParagraph,

@@ -1,10 +1,11 @@
 import { Browser, isModifierKey } from 'roosterjs-editor-dom';
 import { ChangeSource, Keys, NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { deleteAllSegmentBefore } from '../../modelApi/edit/deleteSteps/deleteAllSegmentBefore';
-import { DeleteResult, DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
+import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { DeleteSelectionStep } from '../../modelApi/edit/utils/DeleteSelectionStep';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     handleKeyboardEventResult,
     shouldDeleteAllSegmentsBefore,
