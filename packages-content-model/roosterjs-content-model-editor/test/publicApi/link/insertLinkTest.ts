@@ -230,7 +230,10 @@ describe('insertLink', () => {
                                 format: {},
                                 src: 'test',
                                 dataset: {},
-                                link,
+                                link: {
+                                    dataset: link.dataset,
+                                    format: { ...link.format, underline: false },
+                                },
                                 isSelected: true,
                             },
                             {

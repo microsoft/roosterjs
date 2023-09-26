@@ -14,7 +14,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
-    [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
     [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
     [ExperimentalFeatures.ReusableContentModelV2]:
         'Reuse existing DOM structure if possible, and update the model when content or selection is changed',
