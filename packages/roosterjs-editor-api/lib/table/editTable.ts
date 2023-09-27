@@ -1,6 +1,7 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor, PositionType, SelectionRangeTypes, TableOperation } from 'roosterjs-editor-types';
+import { PositionType, SelectionRangeTypes, TableOperation } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

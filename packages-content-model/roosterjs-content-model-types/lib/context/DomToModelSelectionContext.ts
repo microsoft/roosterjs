@@ -1,4 +1,4 @@
-import { DOMSelection } from '../selection/DOMSelection';
+import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * Represents the selection information of content used by DOM to Content Model conversion

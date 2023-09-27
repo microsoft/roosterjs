@@ -1,11 +1,9 @@
-import {
-    ChangeSource,
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import type {
     ContentChangedEvent,
     EditorOptions,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginWithState,
     Snapshot,
     UndoPluginState,

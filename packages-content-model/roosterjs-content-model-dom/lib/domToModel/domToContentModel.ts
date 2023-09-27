@@ -1,6 +1,6 @@
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import {
+import type {
     ContentModelDocument,
     DOMSelection,
     DomToModelContext,

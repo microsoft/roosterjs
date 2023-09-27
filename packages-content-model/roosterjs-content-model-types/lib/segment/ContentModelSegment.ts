@@ -1,9 +1,9 @@
-import { ContentModelBr } from './ContentModelBr';
-import { ContentModelEntity } from '../entity/ContentModelEntity';
-import { ContentModelGeneralSegment } from './ContentModelGeneralSegment';
-import { ContentModelImage } from './ContentModelImage';
-import { ContentModelSelectionMarker } from './ContentModelSelectionMarker';
-import { ContentModelText } from './ContentModelText';
+import type { ContentModelBr } from './ContentModelBr';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelGeneralSegment } from './ContentModelGeneralSegment';
+import type { ContentModelImage } from './ContentModelImage';
+import type { ContentModelSelectionMarker } from './ContentModelSelectionMarker';
+import type { ContentModelText } from './ContentModelText';
 
 /**
  * Union type of Content Model Segment

@@ -1,7 +1,7 @@
-import { EditorContext } from './EditorContext';
-import { ModelToDomFormatContext } from './ModelToDomFormatContext';
-import { ModelToDomSelectionContext } from './ModelToDomSelectionContext';
-import { ModelToDomSettings } from './ModelToDomSettings';
+import type { EditorContext } from './EditorContext';
+import type { ModelToDomFormatContext } from './ModelToDomFormatContext';
+import type { ModelToDomSelectionContext } from './ModelToDomSelectionContext';
+import type { ModelToDomSettings } from './ModelToDomSettings';
 
 /**
  * Context of Model to DOM conversion, used for generate HTML DOM tree according to current context

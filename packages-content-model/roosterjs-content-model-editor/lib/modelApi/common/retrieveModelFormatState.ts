@@ -1,11 +1,11 @@
-import { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
 import { extractBorderValues } from '../../domUtils/borderValues';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { isBold } from '../../publicApi/segment/toggleBold';
 import { iterateSelections } from '../selection/iterateSelections';
-import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import {
+import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
+import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,

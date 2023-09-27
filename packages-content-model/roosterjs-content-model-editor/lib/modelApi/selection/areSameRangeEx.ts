@@ -1,4 +1,4 @@
-import { DOMSelection } from 'roosterjs-content-model-types';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal

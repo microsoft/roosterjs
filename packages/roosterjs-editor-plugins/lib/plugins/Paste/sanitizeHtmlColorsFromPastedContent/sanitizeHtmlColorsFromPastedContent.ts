@@ -1,6 +1,6 @@
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
 import { DeprecatedColorList } from './deprecatedColorList';
-import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
 /**
  * @internal

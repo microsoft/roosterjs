@@ -1,8 +1,9 @@
 import applyChange from '../editInfoUtils/applyChange';
 import getTargetSizeByPercentage from '../editInfoUtils/getTargetSizeByPercentage';
 import isResizedTo from './isResizedTo';
-import { ChangeSource, IEditor } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { getEditInfoFromImage } from '../editInfoUtils/editInfo';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Resize the image by percentage of its natural size. If the image is cropped or rotated,

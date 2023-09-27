@@ -1,5 +1,5 @@
-import RibbonButton from '../../type/RibbonButton';
-import { RedoButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { RedoButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

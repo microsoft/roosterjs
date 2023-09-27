@@ -1,4 +1,4 @@
-import { StringMap } from 'roosterjs-editor-types';
+import type { StringMap } from 'roosterjs-editor-types';
 
 // Inheritable CSS properties
 // Ref: https://www.w3.org/TR/CSS21/propidx.html

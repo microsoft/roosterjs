@@ -1,9 +1,12 @@
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
-import {
+import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import type {
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from '../publicTypes/IContentModelEditor';
+import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DOMSelection,

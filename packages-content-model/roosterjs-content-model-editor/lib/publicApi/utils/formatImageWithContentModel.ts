@@ -1,7 +1,8 @@
-import { ContentModelImage } from 'roosterjs-content-model-types';
-import { EditImageEventData, PluginEventType } from 'roosterjs-editor-types';
 import { formatSegmentWithContentModel } from './formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { EditImageEventData } from 'roosterjs-editor-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal

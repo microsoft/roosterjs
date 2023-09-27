@@ -1,9 +1,9 @@
-import { BorderBoxFormat } from './formatParts/BorderBoxFormat';
-import { ContentModelBlockFormat } from './ContentModelBlockFormat';
-import { SizeFormat } from './formatParts/SizeFormat';
-import { TextColorFormat } from './formatParts/TextColorFormat';
-import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
-import { WordBreakFormat } from '../format/formatParts/WordBreakFormat';
+import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
+import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import type { SizeFormat } from './formatParts/SizeFormat';
+import type { TextColorFormat } from './formatParts/TextColorFormat';
+import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
+import type { WordBreakFormat } from '../format/formatParts/WordBreakFormat';
 
 /**
  * Format of table cell

@@ -1,6 +1,6 @@
-import { ContentModelDomIndexer } from './ContentModelDomIndexer';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { DarkColorHandler } from 'roosterjs-editor-types';
+import type { ContentModelDomIndexer } from './ContentModelDomIndexer';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
 
 /**
  * An editor context interface used by ContentModel PAI

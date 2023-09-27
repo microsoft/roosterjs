@@ -1,12 +1,12 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { isBlockElement, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { NodePosition, NodeType } from 'roosterjs-editor-types';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -20,7 +20,7 @@ export default function applyDefaultFormat(editor: IContentModelEditor) {
     let node: Node | null = startPos?.node ?? null;
 
     while (node && editor.contains(node)) {
-        if (isNodeOfType(node, NodeType.Element) && node.getAttribute?.('style')) {
+        if (isNodeOfType(node, 'ELEMENT_NODE') && node.getAttribute?.('style')) {
             return;
         } else if (isBlockElement(node)) {
             break;

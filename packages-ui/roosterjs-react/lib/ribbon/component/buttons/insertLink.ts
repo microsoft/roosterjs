@@ -1,8 +1,8 @@
-import RibbonButton from '../../type/RibbonButton';
 import showInputDialog from '../../../inputDialog/utils/showInputDialog';
 import { createLink } from 'roosterjs-editor-api';
-import { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { QueryScope } from 'roosterjs-editor-types';
+import type RibbonButton from '../../type/RibbonButton';
+import type { InsertLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

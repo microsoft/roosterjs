@@ -5,7 +5,7 @@ import { getBoundingClientRect } from '../utils/getBoundingClientRect';
 import { parseFormat } from '../utils/parseFormat';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelTableCellFormat,
     DatasetFormat,
     ElementProcessor,

@@ -22,9 +22,15 @@ module.exports = {
         project: 'tsconfig.json',
         sourceType: 'module',
     },
-    plugins: ['eslint-plugin-react', '@typescript-eslint', '@typescript-eslint/tslint'],
+    plugins: [
+        'eslint-plugin-react',
+        '@typescript-eslint',
+        '@typescript-eslint/tslint',
+        'eslint-plugin-import',
+    ],
     root: true,
     rules: {
+        '@typescript-eslint/consistent-type-imports': ['error', { disallowTypeAnnotations: false }],
         '@typescript-eslint/dot-notation': 'error',
         '@typescript-eslint/explicit-function-return-type': 'off',
         '@typescript-eslint/explicit-module-boundary-types': 'off',
@@ -139,5 +145,6 @@ module.exports = {
                 },
             },
         ],
+        'import/no-duplicates': 'error',
     },
 };

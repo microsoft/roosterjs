@@ -1,7 +1,7 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { ContentModelImage } from 'roosterjs-content-model-types';
 import { getMetadata, readFile } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Change the selected image src

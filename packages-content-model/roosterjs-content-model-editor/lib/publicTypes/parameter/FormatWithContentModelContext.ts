@@ -1,5 +1,5 @@
-import { EntityOperation } from 'roosterjs-editor-types';
-import {
+import type { EntityOperation } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelEntity,
     DOMSelection,

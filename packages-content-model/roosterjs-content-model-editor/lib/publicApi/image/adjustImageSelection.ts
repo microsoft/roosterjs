@@ -1,7 +1,7 @@
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
-import { ContentModelImage } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Adjust selection to make sure select an image if any

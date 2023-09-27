@@ -1,10 +1,7 @@
 import readFile from '../utils/readFile';
 import toArray from '../jsUtils/toArray';
-import {
-    ClipboardData,
-    ContentTypePrefix,
-    ExtractClipboardItemsForIEOptions,
-} from 'roosterjs-editor-types';
+import { ContentTypePrefix } from 'roosterjs-editor-types';
+import type { ClipboardData, ExtractClipboardItemsForIEOptions } from 'roosterjs-editor-types';
 
 /**
  * Extract clipboard items to be a ClipboardData object for IE

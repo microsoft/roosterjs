@@ -1,10 +1,9 @@
 import { clearFormat } from 'roosterjs-editor-api';
-import {
+import { Keys, PositionType } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     IEditor,
-    Keys,
     PluginKeyboardEvent,
-    PositionType,
     QuoteFeatureSettings,
 } from 'roosterjs-editor-types';
 import {

@@ -1,19 +1,25 @@
 import * as React from 'react';
-import EmojiIcon, { EmojiIconProps } from './EmojiIcon';
-import EmojiNavBar, { EmojiNavBarProps } from './EmojiNavBar';
-import EmojiStatusBar, { EmojiStatusBarProps } from './EmojiStatusBar';
-import { Callout, DirectionalHint, ICalloutProps } from '@fluentui/react/lib/Callout';
+import EmojiIcon from './EmojiIcon';
+import EmojiNavBar from './EmojiNavBar';
+import EmojiStatusBar from './EmojiStatusBar';
+import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
 import { CommonEmojis, EmojiFamilyKeys, EmojiList, MoreEmoji } from '../utils/emojiList';
-import { css, KeyCodes } from '@fluentui/react/lib/Utilities';
-import { Emoji } from '../type/Emoji';
-import { EmojiStringKeys } from '../type/EmojiStringKeys';
 import { FocusZone } from '@fluentui/react/lib/FocusZone';
-import { getLocalizedString, LocalizedStrings } from '../../common/index';
-import { ITextField, TextField } from '@fluentui/react/lib/TextField';
-import { memoizeFunction } from '@fluentui/react/lib/Utilities';
+import { getLocalizedString } from '../../common/index';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { searchEmojis } from '../utils/searchEmojis';
-import { Theme, useTheme } from '@fluentui/react/lib/Theme';
+import { TextField } from '@fluentui/react/lib/TextField';
+import { useTheme } from '@fluentui/react/lib/Theme';
+import { css, KeyCodes, memoizeFunction } from '@fluentui/react/lib/Utilities';
+import type { EmojiIconProps } from './EmojiIcon';
+import type { EmojiNavBarProps } from './EmojiNavBar';
+import type { EmojiStatusBarProps } from './EmojiStatusBar';
+import type { ICalloutProps } from '@fluentui/react/lib/Callout';
+import type { Emoji } from '../type/Emoji';
+import type { EmojiStringKeys } from '../type/EmojiStringKeys';
+import type { LocalizedStrings } from '../../common/index';
+import type { ITextField } from '@fluentui/react/lib/TextField';
+import type { Theme } from '@fluentui/react/lib/Theme';
 
 // "When a div contains an element that is bigger (either taller or wider) than the parent and has the property
 // overflow-x or overflow-y set to any value, then it can receive the focus."

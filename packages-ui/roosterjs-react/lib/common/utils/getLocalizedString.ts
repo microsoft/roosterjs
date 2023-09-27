@@ -1,4 +1,4 @@
-import { LocalizedStrings } from '../type/LocalizedStrings';
+import type { LocalizedStrings } from '../type/LocalizedStrings';
 
 /**
  * Get a localized string

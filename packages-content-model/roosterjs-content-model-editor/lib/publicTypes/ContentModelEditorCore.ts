@@ -1,6 +1,6 @@
-import { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
-import {
+import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DOMSelection,

@@ -1,6 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { MarginFormat } from 'roosterjs-content-model-types';
 import { parseValueWithUnit } from '../utils/parseValueWithUnit';
+import type { FormatHandler } from '../FormatHandler';
+import type { MarginFormat } from 'roosterjs-content-model-types';
 
 const MarginKeys: (keyof MarginFormat & keyof CSSStyleDeclaration)[] = [
     'marginTop',

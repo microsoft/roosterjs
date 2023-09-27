@@ -1,5 +1,6 @@
 import { createRange, getFirstLeafNode } from 'roosterjs-editor-dom';
-import { EditorCore, Focus, PositionType } from 'roosterjs-editor-types';
+import { PositionType } from 'roosterjs-editor-types';
+import type { EditorCore, Focus } from 'roosterjs-editor-types';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
-import { EditorOptions, IEditor } from 'roosterjs-editor-types';
-import {
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DOMSelection,

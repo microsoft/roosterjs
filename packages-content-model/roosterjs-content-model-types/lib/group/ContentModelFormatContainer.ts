@@ -1,7 +1,7 @@
-import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
-import { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
+import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
+import type { ContentModelFormatContainerFormat } from '../format/ContentModelFormatContainerFormat';
 
 /**
  * Content Model of Format Container

@@ -1,7 +1,7 @@
-import BasePluginEvent from './BasePluginEvent';
-import Entity from '../interface/Entity';
-import { EntityOperation } from '../enum/EntityOperation';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type Entity from '../interface/Entity';
+import type { EntityOperation } from '../enum/EntityOperation';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatibleEntityOperation } from '../compatibleEnum/EntityOperation';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 

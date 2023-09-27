@@ -4,7 +4,8 @@ import isNodeAfter from '../utils/isNodeAfter';
 import isNodeInRegion from '../region/isNodeInRegion';
 import queryElements from '../utils/queryElements';
 import VList from './VList';
-import { ListType, RegionBase } from 'roosterjs-editor-types';
+import { ListType } from 'roosterjs-editor-types';
+import type { RegionBase } from 'roosterjs-editor-types';
 
 const CHAIN_NAME_PREFIX = '__List_Chain_';
 const CHAIN_DATASET_NAME = 'listchain';

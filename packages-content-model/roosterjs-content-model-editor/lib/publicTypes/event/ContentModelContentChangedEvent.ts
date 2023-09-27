@@ -1,5 +1,5 @@
-import { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
-import {
+import type { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
+import type {
     CompatibleContentChangedEvent,
     ContentChangedEvent,
     ContentChangedEventData,

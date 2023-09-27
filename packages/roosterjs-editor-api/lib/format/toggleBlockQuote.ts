@@ -1,6 +1,7 @@
 import blockWrap from '../utils/blockWrap';
-import { IEditor, QueryScope } from 'roosterjs-editor-types';
+import { QueryScope } from 'roosterjs-editor-types';
 import { unwrap, wrap } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 const BLOCKQUOTE_TAG = 'blockquote';
 const DEFAULT_STYLER = (element: HTMLElement): void => {

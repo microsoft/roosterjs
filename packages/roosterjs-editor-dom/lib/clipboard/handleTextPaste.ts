@@ -1,5 +1,5 @@
 import wrap from '../utils/wrap';
-import { NodePosition } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 const NBSP_HTML = '\u00A0';
 const ENSP_HTML = '\u2002';

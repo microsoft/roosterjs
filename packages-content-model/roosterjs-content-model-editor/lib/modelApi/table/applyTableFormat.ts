@@ -4,7 +4,7 @@ import { setTableCellBackgroundColor } from './setTableCellBackgroundColor';
 import { TableBorderFormat } from 'roosterjs-editor-types';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import {
+import type {
     BorderFormat,
     ContentModelTable,
     ContentModelTableRow,

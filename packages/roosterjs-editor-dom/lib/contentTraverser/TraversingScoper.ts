@@ -1,4 +1,4 @@
-import { BlockElement, InlineElement } from 'roosterjs-editor-types';
+import type { BlockElement, InlineElement } from 'roosterjs-editor-types';
 
 /**
  * @internal

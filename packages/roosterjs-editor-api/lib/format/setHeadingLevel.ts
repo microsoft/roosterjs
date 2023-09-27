@@ -1,6 +1,7 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { DocumentCommand, IEditor, QueryScope } from 'roosterjs-editor-types';
+import { DocumentCommand, QueryScope } from 'roosterjs-editor-types';
 import { HtmlSanitizer, moveChildNodes } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set heading level at selection

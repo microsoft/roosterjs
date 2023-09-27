@@ -1,11 +1,6 @@
 import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
 import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { CoreCreator, EditorCore, ExperimentalFeatures } from 'roosterjs-editor-types';
 import { createContentModel } from './coreApi/createContentModel';
 import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
 import { createContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
@@ -13,11 +8,17 @@ import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlug
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
+import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
 import { setDOMSelection } from './coreApi/setDOMSelection';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
+import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
+import type { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { CoreCreator, EditorCore } from 'roosterjs-editor-types';
 
 /**
  * Editor Core creator for Content Model editor

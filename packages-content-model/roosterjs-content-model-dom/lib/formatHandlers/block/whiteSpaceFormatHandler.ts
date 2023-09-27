@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { WhiteSpaceFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { WhiteSpaceFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

@@ -1,8 +1,8 @@
-import { ContentModelDocument } from '../group/ContentModelDocument';
-import { ContentModelParagraph } from '../block/ContentModelParagraph';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ContentModelTable } from '../block/ContentModelTable';
-import { DOMSelection } from '../selection/DOMSelection';
+import type { ContentModelDocument } from '../group/ContentModelDocument';
+import type { ContentModelParagraph } from '../block/ContentModelParagraph';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelTable } from '../block/ContentModelTable';
+import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * Represents an indexer object which provides methods to help build backward relationship

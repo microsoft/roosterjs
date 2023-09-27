@@ -1,5 +1,5 @@
-import ContextMenuProvider from '../interface/ContextMenuProvider';
-import { ImageSelectionRange, TableSelectionRange } from '../interface/SelectionRangeEx';
+import type ContextMenuProvider from '../interface/ContextMenuProvider';
+import type { ImageSelectionRange, TableSelectionRange } from '../interface/SelectionRangeEx';
 
 /**
  * The state object for DOMEventPlugin

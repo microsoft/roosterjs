@@ -1,11 +1,11 @@
 import TableEditor from './editors/TableEditor';
 import { normalizeRect, safeInstanceOf } from 'roosterjs-editor-dom';
-import {
+import { PluginEventType } from 'roosterjs-editor-types';
+import type {
     CreateElementData,
     EditorPlugin,
     IEditor,
     PluginEvent,
-    PluginEventType,
     Rect,
 } from 'roosterjs-editor-types';
 
