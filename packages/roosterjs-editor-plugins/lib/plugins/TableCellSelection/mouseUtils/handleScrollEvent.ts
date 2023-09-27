@@ -1,10 +1,10 @@
 import { getCellCoordinates } from '../utils/getCellCoordinates';
-import { IEditor } from 'roosterjs-editor-types';
 import { restoreSelection } from '../utils/restoreSelection';
 import { selectTable } from '../utils/selectTable';
 import { setData } from '../utils/setData';
-import { TableCellSelectionState } from '../TableCellSelectionState';
 import { updateSelection } from '../utils/updateSelection';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 /**
  * Handle Scroll Event and mantains the selection range,

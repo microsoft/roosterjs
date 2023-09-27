@@ -1,5 +1,5 @@
 import { isGeneralSegment } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelParagraph,

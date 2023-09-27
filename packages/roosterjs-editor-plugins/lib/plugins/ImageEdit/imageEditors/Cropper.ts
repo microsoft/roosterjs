@@ -1,9 +1,10 @@
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
-import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import { CreateElementData } from 'roosterjs-editor-types';
-import { CropInfo } from '../types/ImageEditInfo';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { rotateCoordinate } from './Resizer';
+import type { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
+import type DragAndDropContext from '../types/DragAndDropContext';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type { CreateElementData } from 'roosterjs-editor-types';
+import type { CropInfo } from '../types/ImageEditInfo';
 import {
     CROP_HANDLE_SIZE,
     CROP_HANDLE_WIDTH,

@@ -1,5 +1,5 @@
-import { FloatFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
+import type { FloatFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

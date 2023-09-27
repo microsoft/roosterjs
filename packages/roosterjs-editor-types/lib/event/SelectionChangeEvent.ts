@@ -1,6 +1,6 @@
-import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from '../enum/PluginEventType';
-import { SelectionRangeEx } from '../interface/SelectionRangeEx';
+import type BasePluginEvent from './BasePluginEvent';
+import type { PluginEventType } from '../enum/PluginEventType';
+import type { SelectionRangeEx } from '../interface/SelectionRangeEx';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**

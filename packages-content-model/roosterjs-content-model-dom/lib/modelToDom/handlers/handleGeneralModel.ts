@@ -2,7 +2,7 @@ import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { wrap } from 'roosterjs-editor-dom';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelGeneralBlock,
     ContentModelGeneralSegment,

@@ -1,5 +1,5 @@
-import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { DomToModelContext } from './DomToModelContext';
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { DomToModelContext } from './DomToModelContext';
 
 /**
  * A function type to process HTML element when do DOM to Content Model conversion

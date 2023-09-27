@@ -1,12 +1,13 @@
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
-import { NodePosition, SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
-import {
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
+import type { NodePosition, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Create DOM tree fragment from Content Model document

@@ -1,7 +1,7 @@
-import { ContentModelDocument, DomToModelContext } from 'roosterjs-content-model-types';
 import { createContentModelDocument } from '../modelApi/creators/createContentModelDocument';
 import { normalizeContentModel } from '../modelApi/common/normalizeContentModel';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentModelDocument, DomToModelContext } from 'roosterjs-content-model-types';
+import type { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Create Content Model from DOM tree in this editor

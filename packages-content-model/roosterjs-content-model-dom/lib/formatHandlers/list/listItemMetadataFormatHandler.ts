@@ -1,8 +1,8 @@
-import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { ListMetadataFormat } from 'roosterjs-content-model-types';
 import { OrderedMap, UnorderedMap } from './listLevelMetadataFormatHandler';
+import type { FormatHandler } from '../FormatHandler';
+import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 
 const OrderedMapPlaceholderRegex = /\$\{(\w+)\}/;
 const DefaultOrderedListStyles = ['decimal', 'lower-alpha', 'lower-roman'];

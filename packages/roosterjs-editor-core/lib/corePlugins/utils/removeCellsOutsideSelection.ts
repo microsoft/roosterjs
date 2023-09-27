@@ -1,5 +1,6 @@
-import { isWholeTableSelected, VTable } from 'roosterjs-editor-dom';
-import { VCell } from 'roosterjs-editor-types';
+import { isWholeTableSelected } from 'roosterjs-editor-dom';
+import type { VTable } from 'roosterjs-editor-dom';
+import type { VCell } from 'roosterjs-editor-types';
 
 /**
  * @internal

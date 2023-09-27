@@ -1,5 +1,5 @@
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { DomToModelContext } from 'roosterjs-content-model-types';
 
 /**
  * Get offset numbers of a regular (range based) selection.

@@ -6,7 +6,7 @@ import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelSegmentFormat,
     DomToModelContext,
     ElementProcessor,

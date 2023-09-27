@@ -1,10 +1,10 @@
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelCode } from '../decorator/ContentModelCode';
-import { ContentModelLink } from '../decorator/ContentModelLink';
-import { ContentModelListLevel } from '../decorator/ContentModelListLevel';
-import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelCode } from '../decorator/ContentModelCode';
+import type { ContentModelLink } from '../decorator/ContentModelLink';
+import type { ContentModelListLevel } from '../decorator/ContentModelListLevel';
+import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Represents the context object used when do DOM to Content Model conversion and processing a List

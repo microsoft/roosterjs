@@ -1,6 +1,6 @@
-import { ContentModelTableCell } from 'roosterjs-content-model-types';
 import { parseColor } from 'roosterjs-editor-dom';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
+import type { ContentModelTableCell } from 'roosterjs-content-model-types';
 
 // Using the HSL (hue, saturation and lightness) representation for RGB color values.
 // If the value of the lightness is less than 20, the color is dark.

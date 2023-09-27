@@ -1,4 +1,5 @@
 import { AutoLinkFeatures } from './features/autoLinkFeatures';
+import { CodeFeatures } from './features/codeFeatures';
 import { CursorFeatures } from './features/cursorFeatures';
 import { EntityFeatures } from './features/entityFeatures';
 import { ListFeatures } from './features/listFeatures';
@@ -8,8 +9,7 @@ import { ShortcutFeatures } from './features/shortcutFeatures';
 import { StructuredNodeFeatures } from './features/structuredNodeFeatures';
 import { TableFeatures } from './features/tableFeatures';
 import { TextFeatures } from './features/textFeatures';
-import { CodeFeatures } from './features/codeFeatures';
-import {
+import type {
     BuildInEditFeature,
     ContentEditFeatureSettings,
     PluginEvent,

@@ -1,7 +1,7 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { ContentModelWithDataset, ListMetadataFormat } from 'roosterjs-content-model-types';
 import { createNumberDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
 import { updateMetadata } from './updateMetadata';
+import type { ContentModelWithDataset, ListMetadataFormat } from 'roosterjs-content-model-types';
 
 const ListStyleDefinitionMetadata = createObjectDefinition<ListMetadataFormat>(
     {

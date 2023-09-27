@@ -1,5 +1,5 @@
 import { defaultHTMLStyleMap } from '../../config/defaultHTMLStyleMap';
-import { DefaultStyleMap, DomToModelContext } from 'roosterjs-content-model-types';
+import type { DefaultStyleMap, DomToModelContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal

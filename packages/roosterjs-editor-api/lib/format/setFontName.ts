@@ -1,5 +1,5 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set font name at selection

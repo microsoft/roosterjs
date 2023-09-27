@@ -1,6 +1,7 @@
 import collapseSelectedBlocks from '../utils/collapseSelectedBlocks';
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { Direction, IEditor } from 'roosterjs-editor-types';
+import { Direction } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 import type { CompatibleDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

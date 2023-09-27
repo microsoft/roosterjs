@@ -1,10 +1,12 @@
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
-import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import ImageEditInfo, { ResizeInfo } from '../types/ImageEditInfo';
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
-import { CreateElementData } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
 import { RESIZE_HANDLE_MARGIN, RESIZE_HANDLE_SIZE, Xs, Ys } from '../constants/constants';
+import type { DNDDirectionX, DnDDirectionY } from '../types/DragAndDropContext';
+import type DragAndDropContext from '../types/DragAndDropContext';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type { ResizeInfo } from '../types/ImageEditInfo';
+import type ImageEditInfo from '../types/ImageEditInfo';
+import type ImageHtmlOptions from '../types/ImageHtmlOptions';
+import type { CreateElementData } from 'roosterjs-editor-types';
 
 /**
  * An optional callback to allow customize resize handle element of image resizing.

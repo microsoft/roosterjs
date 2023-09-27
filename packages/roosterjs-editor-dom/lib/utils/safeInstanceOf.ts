@@ -1,4 +1,4 @@
-import { TargetWindow } from 'roosterjs-editor-types';
+import type { TargetWindow } from 'roosterjs-editor-types';
 
 // NOTE: Type TargetWindow is an auto-generated type.
 // Run node ./tools/generateTargetWindow.js to generate it.

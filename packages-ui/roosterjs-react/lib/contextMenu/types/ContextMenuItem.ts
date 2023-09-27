@@ -1,6 +1,6 @@
-import { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
-import { IEditor } from 'roosterjs-editor-types';
-import { LocalizedStrings, UIUtilities } from '../../common/index';
+import type { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * Represent a context menu item

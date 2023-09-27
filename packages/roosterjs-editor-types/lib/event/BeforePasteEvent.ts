@@ -1,7 +1,7 @@
-import BasePluginEvent from './BasePluginEvent';
-import ClipboardData from '../interface/ClipboardData';
-import HtmlSanitizerOptions from '../interface/HtmlSanitizerOptions';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type ClipboardData from '../interface/ClipboardData';
+import type HtmlSanitizerOptions from '../interface/HtmlSanitizerOptions';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatiblePasteType } from '../compatibleEnum/PasteType';
 import type { PasteType } from '../enum/PasteType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';

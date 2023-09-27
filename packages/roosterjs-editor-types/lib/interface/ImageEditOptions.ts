@@ -1,5 +1,5 @@
-import ModeIndependentColor from './ModeIndependentColor';
-import { ImageEditOperation } from '../enum/ImageEditOperation';
+import type ModeIndependentColor from './ModeIndependentColor';
+import type { ImageEditOperation } from '../enum/ImageEditOperation';
 import type { CompatibleImageEditOperation } from '../compatibleEnum/ImageEditOperation';
 
 /**

@@ -1,9 +1,9 @@
 import { areSameFormats } from '../../domToModel/utils/areSameFormats';
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createBr } from '../creators/createBr';
 import { isSegmentEmpty } from './isEmpty';
 import { isWhiteSpacePreserved } from './isWhiteSpacePreserved';
 import { normalizeAllSegments } from './normalizeSegment';
+import type { ContentModelParagraph } from 'roosterjs-content-model-types';
 /**
  * @internal
  */

@@ -1,4 +1,4 @@
-import { ContentModelTableRow } from 'roosterjs-content-model-types';
+import type { ContentModelTableRow } from 'roosterjs-content-model-types';
 
 /**
  * @internal

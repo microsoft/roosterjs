@@ -1,26 +1,26 @@
-import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelBr } from '../segment/ContentModelBr';
-import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
-import { ContentModelDivider } from '../block/ContentModelDivider';
-import { ContentModelEntity } from '../entity/ContentModelEntity';
-import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
-import { ContentModelFormatContainer } from '../group/ContentModelFormatContainer';
-import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
-import { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
-import { ContentModelGeneralSegment } from '../segment/ContentModelGeneralSegment';
-import { ContentModelImage } from '../segment/ContentModelImage';
-import { ContentModelListItem } from '../group/ContentModelListItem';
-import { ContentModelParagraph } from '../block/ContentModelParagraph';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ContentModelTable } from '../block/ContentModelTable';
-import { ContentModelTableRow } from '../block/ContentModelTableRow';
-import { ContentModelText } from '../segment/ContentModelText';
-import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
-import { ModelToDomContext } from './ModelToDomContext';
-import {
+import type { ContentModelBlock } from '../block/ContentModelBlock';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelBr } from '../segment/ContentModelBr';
+import type { ContentModelDecorator } from '../decorator/ContentModelDecorator';
+import type { ContentModelDivider } from '../block/ContentModelDivider';
+import type { ContentModelEntity } from '../entity/ContentModelEntity';
+import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
+import type { ContentModelFormatContainer } from '../group/ContentModelFormatContainer';
+import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import type { ContentModelGeneralBlock } from '../group/ContentModelGeneralBlock';
+import type { ContentModelGeneralSegment } from '../segment/ContentModelGeneralSegment';
+import type { ContentModelImage } from '../segment/ContentModelImage';
+import type { ContentModelListItem } from '../group/ContentModelListItem';
+import type { ContentModelParagraph } from '../block/ContentModelParagraph';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelTable } from '../block/ContentModelTable';
+import type { ContentModelTableRow } from '../block/ContentModelTableRow';
+import type { ContentModelText } from '../segment/ContentModelText';
+import type { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
+import type { ModelToDomContext } from './ModelToDomContext';
+import type {
     ContentModelHandler,
     ContentModelBlockHandler,
     ContentModelSegmentHandler,

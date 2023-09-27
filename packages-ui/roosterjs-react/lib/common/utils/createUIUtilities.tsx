@@ -1,9 +1,10 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import UIUtilities from '../type/UIUtilities';
 import { getComputedStyles } from 'roosterjs-editor-dom';
-import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
+import { ThemeProvider } from '@fluentui/react/lib/Theme';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
+import type UIUtilities from '../type/UIUtilities';
+import type { PartialTheme } from '@fluentui/react/lib/Theme';
 
 /**
  * Create the UI Utilities object for plugins to render additional react components

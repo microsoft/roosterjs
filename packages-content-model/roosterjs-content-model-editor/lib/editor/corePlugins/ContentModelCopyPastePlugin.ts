@@ -3,8 +3,8 @@ import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -22,16 +22,18 @@ import {
     wrap,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     CopyPastePluginState,
     IEditor,
-    PluginEventType,
     PluginWithState,
-    KnownCreateElementDataIndex,
     ClipboardData,
-    SelectionRangeTypes,
     SelectionRangeEx,
+} from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    PluginEventType,
+    KnownCreateElementDataIndex,
+    SelectionRangeTypes,
     ColorTransformDirection,
 } from 'roosterjs-editor-types';
 

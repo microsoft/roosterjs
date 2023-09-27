@@ -2,7 +2,7 @@ import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import {
+import type {
     ContentModelBlockGroup,
     DomToModelContext,
     ElementProcessor,

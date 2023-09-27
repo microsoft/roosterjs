@@ -1,8 +1,6 @@
-import RibbonButton from '../type/RibbonButton';
 import { alignCenter } from './buttons/alignCenter';
 import { alignLeft } from './buttons/alignLeft';
 import { alignRight } from './buttons/alignRight';
-import { AllButtonStringKeys } from '../type/RibbonButtonStringKeys';
 import { backgroundColor } from './buttons/backgroundColor';
 import { bold } from './buttons/bold';
 import { bulletedList } from './buttons/bulletedList';
@@ -32,6 +30,8 @@ import { superscript } from './buttons/superscript';
 import { textColor } from './buttons/textColor';
 import { underline } from './buttons/underline';
 import { undo } from './buttons/undo';
+import type RibbonButton from '../type/RibbonButton';
+import type { AllButtonStringKeys } from '../type/RibbonButtonStringKeys';
 
 const KnownRibbonButtons = <Record<KnownRibbonButtonKey, RibbonButton<AllButtonStringKeys>>>{
     [KnownRibbonButtonKey.Bold]: bold,

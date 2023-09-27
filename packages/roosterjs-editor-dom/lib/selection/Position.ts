@@ -1,6 +1,7 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import isNodeAfter from '../utils/isNodeAfter';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 import type { CompatiblePositionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

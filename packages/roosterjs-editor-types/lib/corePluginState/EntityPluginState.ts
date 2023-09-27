@@ -1,4 +1,4 @@
-import { KnownEntityItem } from '../interface/KnownEntityItem';
+import type { KnownEntityItem } from '../interface/KnownEntityItem';
 
 /**
  * The state object for EntityPlugin
