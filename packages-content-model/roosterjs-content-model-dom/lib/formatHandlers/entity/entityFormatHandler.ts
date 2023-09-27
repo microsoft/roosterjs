@@ -2,6 +2,9 @@ import { applyEntityClasses, parseEntityClasses } from '../../domUtils/entityUti
 import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
+/**
+ * @internal
+ */
 export const entityFormatHandler: FormatHandler<ContentModelEntityFormat> = {
     parse: (format, element) => {
         Object.assign(format, parseEntityClasses(element));
