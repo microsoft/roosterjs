@@ -197,10 +197,12 @@ describe('isEmpty', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            type: 'Test',
-            id: 'Test',
+            entityFormat: {
+                type: 'Test',
+                id: 'Test',
+                isReadonly: false,
+            },
             wrapper: document.createElement('div'),
-            isReadonly: false,
         });
 
         expect(result).toBeFalse();

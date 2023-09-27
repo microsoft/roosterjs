@@ -107,10 +107,12 @@ describe('handleSegment', () => {
             segmentType: 'Entity',
             blockType: 'Entity',
             format: {},
-            type: 'entity',
-            id: 'entity_1',
+            entityFormat: {
+                type: 'entity',
+                id: 'entity_1',
+                isReadonly: true,
+            },
             wrapper: div,
-            isReadonly: true,
         };
 
         handleSegment(document, parent, segment, context, mockedSegmentNodes);

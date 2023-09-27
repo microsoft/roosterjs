@@ -203,8 +203,14 @@ describe('formatWithContentModel', () => {
     });
 
     it('Has entity got deleted', () => {
-        const entity1 = { id: 'E1', type: 'E', wrapper: {}, isReadonly: true } as any;
-        const entity2 = { id: 'E2', type: 'E', wrapper: {}, isReadonly: true } as any;
+        const entity1 = {
+            entityFormat: { id: 'E1', type: 'E', isReadonly: true },
+            wrapper: {},
+        } as any;
+        const entity2 = {
+            entityFormat: { id: 'E2', type: 'E', isReadonly: true },
+            wrapper: {},
+        } as any;
         const rawEvent = 'RawEvent' as any;
 
         formatWithContentModel(
@@ -230,12 +236,12 @@ describe('formatWithContentModel', () => {
 
         expect(triggerPluginEvent).toHaveBeenCalledTimes(3);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            entity: entity1,
+            entity: { id: 'E1', type: 'E', isReadonly: true, wrapper: entity1.wrapper },
             operation: EntityOperation.RemoveFromStart,
             rawEvent: rawEvent,
         });
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.EntityOperation, {
-            entity: entity2,
+            entity: { id: 'E2', type: 'E', isReadonly: true, wrapper: entity2.wrapper },
             operation: EntityOperation.RemoveFromEnd,
             rawEvent: rawEvent,
         });
@@ -244,8 +250,14 @@ describe('formatWithContentModel', () => {
     it('Has new entity in dark mode', () => {
         const wrapper1 = 'W1' as any;
         const wrapper2 = 'W2' as any;
-        const entity1 = { id: 'E1', type: 'E', wrapper: wrapper1, isReadonly: true } as any;
-        const entity2 = { id: 'E2', type: 'E', wrapper: wrapper2, isReadonly: true } as any;
+        const entity1 = {
+            entityFormat: { id: 'E1', type: 'E', isReadonly: true },
+            wrapper: wrapper1,
+        } as any;
+        const entity2 = {
+            entityFormat: { id: 'E2', type: 'E', isReadonly: true },
+            wrapper: wrapper2,
+        } as any;
         const rawEvent = 'RawEvent' as any;
         const transformToDarkColorSpy = jasmine.createSpy('transformToDarkColor');
         const mockedData = 'DATA';

@@ -108,6 +108,10 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                                   ColorTransformDirection.DarkToLight
                               );
 
+                              result.style.color = result.style.color || 'inherit';
+                              result.style.backgroundColor =
+                                  result.style.backgroundColor || 'inherit';
+
                               return result;
                           }
                       }

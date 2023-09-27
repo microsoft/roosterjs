@@ -143,9 +143,11 @@ describe('handleBlock', () => {
             segmentType: 'Entity',
             format: {},
             wrapper: element,
-            type: 'entity',
-            id: 'entity_1',
-            isReadonly: true,
+            entityFormat: {
+                type: 'entity',
+                id: 'entity_1',
+                isReadonly: true,
+            },
         };
 
         parent = document.createElement('div');

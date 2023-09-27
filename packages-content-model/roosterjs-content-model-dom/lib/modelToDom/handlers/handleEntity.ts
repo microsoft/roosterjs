@@ -1,12 +1,10 @@
-import { addDelimiters, commitEntity, getObjectKeys, wrap } from 'roosterjs-editor-dom';
+import { addDelimiters, getObjectKeys, wrap } from 'roosterjs-editor-dom';
 import { applyFormat } from '../utils/applyFormat';
-import { Entity } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import {
     ContentModelBlockHandler,
     ContentModelEntity,
     ContentModelSegmentHandler,
-    ModelToDomContext,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -19,7 +17,9 @@ export const handleEntityBlock: ContentModelBlockHandler<ContentModelEntity> = (
     context,
     refNode
 ) => {
-    const wrapper = preprocessEntity(entityModel, context);
+    let { entityFormat, wrapper } = entityModel;
+
+    applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     refNode = reuseCachedElement(parent, wrapper, refNode);
     context.onNodeCreated?.(entityModel, wrapper);
@@ -37,8 +37,9 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     context,
     newSegments
 ) => {
-    const wrapper = preprocessEntity(entityModel, context);
-    const { format, isReadonly } = entityModel;
+    let { entityFormat, wrapper, format } = entityModel;
+
+    applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     parent.appendChild(wrapper);
     newSegments?.push(wrapper);
@@ -49,7 +50,7 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
         applyFormat(span, context.formatAppliers.segment, format, context);
     }
 
-    if (context.addDelimiterForEntity && isReadonly) {
+    if (context.addDelimiterForEntity && entityFormat.isReadonly) {
         const [after, before] = addDelimiters(wrapper);
 
         newSegments?.push(after, before);
@@ -60,29 +61,3 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
     context.onNodeCreated?.(entityModel, wrapper);
 };
-
-function preprocessEntity(entityModel: ContentModelEntity, context: ModelToDomContext) {
-    let { id, type, isReadonly, wrapper } = entityModel;
-
-    if (!context.allowCacheElement) {
-        wrapper = wrapper.cloneNode(true /*deep*/) as HTMLElement;
-        wrapper.style.color = wrapper.style.color || 'inherit';
-        wrapper.style.backgroundColor = wrapper.style.backgroundColor || 'inherit';
-    }
-
-    const entity: Entity | null =
-        id && type
-            ? {
-                  wrapper,
-                  id,
-                  type,
-                  isReadonly: !!isReadonly,
-              }
-            : null;
-
-    if (entity) {
-        // Commit the entity attributes in case there is any change
-        commitEntity(wrapper, entity.type, entity.isReadonly, entity.id);
-    }
-    return wrapper;
-}

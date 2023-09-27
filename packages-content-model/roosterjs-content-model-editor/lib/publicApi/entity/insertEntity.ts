@@ -1,5 +1,5 @@
 import { ChangeSource, Entity, SelectionRangeEx } from 'roosterjs-editor-types';
-import { commitEntity, getEntityFromElement } from 'roosterjs-editor-dom';
+import { ContentModelEntity } from 'roosterjs-content-model-types';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
@@ -29,7 +29,7 @@ export default function insertEntity(
     isBlock: boolean,
     position: 'focus' | 'begin' | 'end' | SelectionRangeEx,
     options?: InsertEntityOptions
-): Entity | null;
+): ContentModelEntity | null;
 
 /**
  * Insert a block entity into editor
@@ -48,7 +48,7 @@ export default function insertEntity(
     isBlock: true,
     position: InsertEntityPosition | SelectionRangeEx,
     options?: InsertEntityOptions
-): Entity | null;
+): ContentModelEntity | null;
 
 export default function insertEntity(
     editor: IContentModelEditor,
@@ -56,7 +56,7 @@ export default function insertEntity(
     isBlock: boolean,
     position?: InsertEntityPosition | SelectionRangeEx,
     options?: InsertEntityOptions
-): Entity | null {
+): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};
     const wrapper = editor.getDocument().createElement(isBlock ? BlockEntityTag : InlineEntityTag);
     const display = wrapperDisplay ?? (isBlock ? undefined : 'inline-block');
@@ -67,10 +67,7 @@ export default function insertEntity(
         wrapper.appendChild(contentNode);
     }
 
-    commitEntity(wrapper, type, true /*isReadonly*/);
-
-    const entityModel = createEntity(wrapper, true /*isReadonly*/, type);
-    let newEntity: Entity | null = null;
+    const entityModel = createEntity(wrapper, undefined /*format*/, true /*isReadonly*/, type);
 
     formatWithContentModel(
         editor,
@@ -96,11 +93,18 @@ export default function insertEntity(
             selectionOverride: typeof position === 'object' ? position : undefined,
             changeSource: ChangeSource.InsertEntity,
             getChangeData: () => {
-                newEntity = getEntityFromElement(wrapper);
-                return newEntity;
+                // TODO: Remove this entity when we have standalone editor
+                const entity: Entity = {
+                    wrapper,
+                    type,
+                    id: '',
+                    isReadonly: true,
+                };
+
+                return entity;
             },
         }
     );
 
-    return newEntity;
+    return entityModel;
 }

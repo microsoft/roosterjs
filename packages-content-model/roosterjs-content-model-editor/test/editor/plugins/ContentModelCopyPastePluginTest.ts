@@ -5,10 +5,10 @@ import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/e
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
-import { commitEntity } from 'roosterjs-editor-dom';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/setEntityElementClasses';
 import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
@@ -327,7 +327,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             document.body.appendChild(wrapper);
 
-            commitEntity(wrapper, 'Entity', true, 'Entity');
+            setEntityElementClasses(wrapper, 'Entity', true, 'Entity');
             selectionRangeExValue = <SelectionRangeEx>{
                 type: SelectionRangeTypes.Normal,
                 ranges: [createRange(wrapper)],
@@ -356,7 +356,9 @@ describe('ContentModelCopyPastePlugin |', () => {
                 const cloneEntity = options.includeCachedElement(wrapper, 'entity');
 
                 expect(cloneCache).toBeUndefined();
-                expect(cloneEntity).toEqual(wrapper);
+                expect((cloneEntity as any).outerHTML).toEqual(
+                    '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false" style="color: inherit; background-color: inherit;"></span>'
+                );
                 expect(cloneEntity).not.toBe(wrapper);
                 expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
                 expect(transformToDarkColorSpy).toHaveBeenCalledWith(

@@ -1,8 +1,8 @@
 import * as getDelimiterFromElement from 'roosterjs-editor-dom/lib/delimiter/getDelimiterFromElement';
-import { commitEntity } from 'roosterjs-editor-dom';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { elementProcessor } from '../../../lib/domToModel/processors/elementProcessor';
+import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
 import {
     ContentModelDocument,
     DomToModelContext,
@@ -59,7 +59,7 @@ describe('elementProcessor', () => {
     it('Entity', () => {
         const div = document.createElement('div');
 
-        commitEntity(div, 'entity', true, 'entity_1');
+        setEntityElementClasses(div, 'entity', true, 'entity_1');
 
         elementProcessor(group, div, context);
 

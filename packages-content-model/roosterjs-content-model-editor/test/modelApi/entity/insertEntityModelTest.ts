@@ -416,7 +416,7 @@ describe('insertEntityModel, block element, not focus after entity', () => {
     });
 
     it('Before another entity', () => {
-        const entity2 = createEntity({} as any, true);
+        const entity2 = createEntity({} as any, undefined, true);
         const br = createBr();
 
         runTest(
@@ -978,7 +978,7 @@ describe('insertEntityModel, block element, focus after entity', () => {
     });
 
     it('Before another entity', () => {
-        const entity2 = createEntity({} as any, true);
+        const entity2 = createEntity({} as any, undefined, true);
 
         runTest(
             () => {
@@ -1516,7 +1516,7 @@ describe('insertEntityModel, inline element, not focus after entity', () => {
     });
 
     it('Before another entity', () => {
-        const entity2 = createEntity({} as any, true);
+        const entity2 = createEntity({} as any, undefined, true);
 
         runTest(
             () => {
@@ -2033,7 +2033,7 @@ describe('insertEntityModel, inline element, focus after entity', () => {
     });
 
     it('Before another entity', () => {
-        const entity2 = createEntity({} as any, true);
+        const entity2 = createEntity({} as any, undefined, true);
 
         runTest(
             () => {

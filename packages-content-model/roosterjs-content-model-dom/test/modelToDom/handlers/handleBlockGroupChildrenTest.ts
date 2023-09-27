@@ -1,10 +1,10 @@
-import { commitEntity } from 'roosterjs-editor-dom';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createListItem } from '../../../lib/modelApi/creators/createListItem';
 import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { handleBlock as originalHandleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { handleBlockGroupChildren } from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
+import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -259,7 +259,10 @@ describe('handleBlockGroupChildren', () => {
                     blockType: 'Entity',
                     format: {},
                     wrapper: div2,
-                    isReadonly: false,
+                    entityFormat: {
+                        type: 'TEST',
+                        isReadonly: false,
+                    },
                     segmentType: 'Entity',
                 },
                 {
@@ -276,7 +279,7 @@ describe('handleBlockGroupChildren', () => {
         handleBlockGroupChildren(document, parent, group, context);
 
         expect(parent.outerHTML).toBe(
-            '<div><div id="div2">test2</div><blockquote id="div1"></blockquote></div>'
+            '<div><div id="div2" class="_Entity _EType_TEST _EReadonly_0">test2</div><blockquote id="div1"></blockquote></div>'
         );
         expect(parent.firstChild).toBe(div2);
         expect(parent.firstChild?.nextSibling).toBe(quote);
@@ -336,7 +339,7 @@ describe('handleBlockGroupChildren', () => {
         div.innerHTML = '<br>';
 
         const span = document.createElement('span');
-        commitEntity(span, 'MyEntity', false);
+        setEntityElementClasses(span, 'MyEntity', false);
 
         parent.appendChild(div);
         parent.appendChild(span);
@@ -359,8 +362,10 @@ describe('handleBlockGroupChildren', () => {
                             segmentType: 'Entity',
                             blockType: 'Entity',
                             wrapper: span,
-                            isReadonly: false,
-                            type: 'MyEntity',
+                            entityFormat: {
+                                isReadonly: false,
+                                type: 'MyEntity',
+                            },
                             format: {},
                         },
                     ],

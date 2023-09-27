@@ -10,18 +10,20 @@ import { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content
  */
 export function createEntity(
     wrapper: HTMLElement,
-    isReadonly: boolean,
-    type?: string,
     segmentFormat?: ContentModelSegmentFormat,
+    isReadonly?: boolean,
+    type?: string,
     id?: string
 ): ContentModelEntity {
     return {
         segmentType: 'Entity',
         blockType: 'Entity',
         format: { ...segmentFormat },
-        id,
-        type,
-        isReadonly,
+        entityFormat: {
+            id,
+            type,
+            isReadonly,
+        },
         wrapper,
     };
 }

@@ -475,15 +475,17 @@ describe('Creators', () => {
         const type = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, type, undefined, id);
+        const entityModel = createEntity(wrapper, undefined, isReadonly, type, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                type,
+                isReadonly,
+            },
             wrapper,
         });
     });
@@ -495,11 +497,12 @@ describe('Creators', () => {
         const wrapper = document.createElement('div');
         const entityModel = createEntity(
             wrapper,
-            isReadonly,
-            type,
             {
                 fontSize: '10pt',
             },
+            isReadonly,
+            type,
+
             id
         );
 
@@ -507,9 +510,11 @@ describe('Creators', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: { fontSize: '10pt' },
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                type,
+                isReadonly,
+            },
             wrapper,
         });
     });

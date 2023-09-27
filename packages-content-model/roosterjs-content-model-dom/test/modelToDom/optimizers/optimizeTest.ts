@@ -1,7 +1,7 @@
 import * as mergeNode from '../../../lib/modelToDom/optimizers/mergeNode';
 import * as removeUnnecessarySpan from '../../../lib/modelToDom/optimizers/removeUnnecessarySpan';
-import { commitEntity } from 'roosterjs-editor-dom';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
+import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
 
 describe('optimize', () => {
     beforeEach(() => {
@@ -43,7 +43,7 @@ describe('real optimization', () => {
 
         span1.textContent = 'test1';
         childSpan.textContent = 'entity';
-        commitEntity(span2, 'test', true);
+        setEntityElementClasses(span2, 'test', true);
 
         span2.appendChild(childSpan);
         div.appendChild(span1);

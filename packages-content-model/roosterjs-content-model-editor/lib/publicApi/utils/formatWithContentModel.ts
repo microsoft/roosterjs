@@ -103,18 +103,27 @@ function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
 ) {
-    context.deletedEntities.forEach(({ entity, operation }) => {
-        if (entity.id && entity.type) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                entity: {
-                    id: entity.id,
-                    isReadonly: entity.isReadonly,
-                    type: entity.type,
-                    wrapper: entity.wrapper,
-                },
-                operation,
-                rawEvent: context.rawEvent,
-            });
+    context.deletedEntities.forEach(
+        ({
+            entity: {
+                wrapper,
+                entityFormat: { id, type, isReadonly },
+            },
+            operation,
+        }) => {
+            if (id && type) {
+                const entity = {
+                    id,
+                    type,
+                    isReadonly: !!isReadonly,
+                    wrapper,
+                };
+                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                    entity,
+                    operation,
+                    rawEvent: context.rawEvent,
+                });
+            }
         }
-    });
+    );
 }

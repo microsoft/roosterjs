@@ -157,8 +157,8 @@ describe('getSelectedSegments', () => {
     });
 
     it('Include editable entity, but filter out readonly entity', () => {
-        const e1 = createEntity(null!, true);
-        const e2 = createEntity(null!, false);
+        const e1 = createEntity(null!, undefined, true);
+        const e2 = createEntity(null!, undefined, false);
         const p1 = createParagraph();
 
         p1.segments.push(e1, e2);

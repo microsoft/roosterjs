@@ -1,5 +1,5 @@
-import { commitEntity } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../../../lib/modelToDom/utils/reuseCachedElement';
+import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
 
 describe('reuseCachedElement', () => {
     it('No refNode', () => {
@@ -71,7 +71,7 @@ describe('reuseCachedElement', () => {
         parent.appendChild(element);
         parent.appendChild(nextNode);
 
-        commitEntity(refNode, 'TestEntity', true);
+        setEntityElementClasses(refNode, 'TestEntity', true);
 
         const result = reuseCachedElement(parent, element, refNode);
 

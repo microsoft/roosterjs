@@ -39,7 +39,7 @@ export function getSelectedSegmentsAndParagraphs(
     selections.forEach(({ segments, block }) => {
         if (segments && ((includingFormatHolder && !block) || block?.blockType == 'Paragraph')) {
             segments.forEach(segment => {
-                if (segment.segmentType != 'Entity' || !segment.isReadonly) {
+                if (segment.segmentType != 'Entity' || !segment.entityFormat.isReadonly) {
                     result.push([segment, block?.blockType == 'Paragraph' ? block : null]);
                 }
             });

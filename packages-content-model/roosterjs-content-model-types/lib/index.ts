@@ -13,6 +13,7 @@ export { ContentModelDividerFormat } from './format/ContentModelDividerFormat';
 export { ContentModelFormatBase } from './format/ContentModelFormatBase';
 export { ContentModelFormatMap } from './format/ContentModelFormatMap';
 export { ContentModelImageFormat } from './format/ContentModelImageFormat';
+export { ContentModelEntityFormat } from './format/ContentModelEntityFormat';
 export { FormatHandlerTypeMap, FormatKey } from './format/FormatHandlerTypeMap';
 
 export { BackgroundColorFormat } from './format/formatParts/BackgroundColorFormat';
@@ -46,6 +47,7 @@ export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
 export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
 export { FloatFormat } from './format/formatParts/FloatFormat';
+export { EntityTypeFormat } from './format/formatParts/EntityTypeFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
 export { TableMetadataFormat } from './format/metadata/TableMetadataFormat';

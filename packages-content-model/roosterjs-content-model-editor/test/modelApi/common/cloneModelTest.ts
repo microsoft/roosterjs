@@ -107,9 +107,11 @@ describe('cloneModel', () => {
                             segmentType: 'Entity',
                             blockType: 'Entity',
                             format: {},
-                            id: 'e1',
+                            entityFormat: {
+                                id: 'e1',
+                                isReadonly: true,
+                            },
                             wrapper: document.createElement('span'),
-                            isReadonly: true,
                         },
                         {
                             segmentType: 'General',
@@ -140,9 +142,11 @@ describe('cloneModel', () => {
                     segmentType: 'Entity',
                     blockType: 'Entity',
                     format: { underline: true },
-                    id: 'e2',
+                    entityFormat: {
+                        id: 'e2',
+                        isReadonly: true,
+                    },
                     wrapper: document.createElement('span'),
-                    isReadonly: true,
                 },
             ],
         });
@@ -413,7 +417,7 @@ describe('cloneModel', () => {
                 cloneModel(
                     {
                         blockGroupType: 'Document',
-                        blocks: [createEntity(div, true)],
+                        blocks: [createEntity(div, undefined, true)],
                     },
                     { includeCachedElement: callback }
                 )
@@ -433,7 +437,7 @@ describe('cloneModel', () => {
         const cloneWithCallback = cloneModel(
             {
                 blockGroupType: 'Document',
-                blocks: [createEntity(div, true)],
+                blocks: [createEntity(div, undefined, true)],
             },
             { includeCachedElement: callback }
         );
@@ -445,9 +449,11 @@ describe('cloneModel', () => {
                     blockType: 'Entity',
                     format: {},
                     wrapper: span,
-                    isReadonly: true,
-                    type: undefined,
-                    id: undefined,
+                    entityFormat: {
+                        isReadonly: true,
+                        type: undefined,
+                        id: undefined,
+                    },
                     segmentType: 'Entity',
                     isSelected: undefined,
                 },
@@ -475,7 +481,7 @@ describe('cloneModel', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segments: [createEntity(div1, true)],
+                        segments: [createEntity(div1, undefined, true)],
                         cachedElement: div2,
                     },
                 ],
@@ -494,9 +500,11 @@ describe('cloneModel', () => {
                             blockType: 'Entity',
                             format: {},
                             wrapper: span,
-                            isReadonly: true,
-                            type: undefined,
-                            id: undefined,
+                            entityFormat: {
+                                isReadonly: true,
+                                type: undefined,
+                                id: undefined,
+                            },
                             segmentType: 'Entity',
                             isSelected: undefined,
                         },

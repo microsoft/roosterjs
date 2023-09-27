@@ -1,4 +1,5 @@
-import { getDelimiterFromElement, getEntityFromElement } from 'roosterjs-editor-dom';
+import { getDelimiterFromElement } from 'roosterjs-editor-dom';
+import { isEntityElement } from '../../domUtils/entityUtils';
 import {
     DomToModelContext,
     ElementProcessor,
@@ -22,8 +23,7 @@ export const elementProcessor: ElementProcessor<HTMLElement> = (group, element, 
 };
 
 function tryGetProcessorForEntity(element: HTMLElement, context: DomToModelContext) {
-    return (element.className && getEntityFromElement(element)) ||
-        element.contentEditable == 'false' // For readonly element, treat as an entity
+    return isEntityElement(element) || element.contentEditable == 'false' // For readonly element, treat as an entity
         ? context.elementProcessors.entity
         : null;
 }

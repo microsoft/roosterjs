@@ -22,9 +22,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: div,
         };
 
@@ -49,7 +51,10 @@ describe('handleEntity', () => {
             segmentType: 'Entity',
             format: {},
             wrapper: div,
-            isReadonly: true,
+            entityFormat: {
+                isFakeEntity: true,
+                isReadonly: false,
+            },
         };
 
         div.textContent = 'test';
@@ -63,15 +68,41 @@ describe('handleEntity', () => {
         expect(addDelimiters.default).toHaveBeenCalledTimes(0);
     });
 
+    it('Readonly fake entity', () => {
+        const div = document.createElement('div');
+        const entityModel: ContentModelEntity = {
+            blockType: 'Entity',
+            segmentType: 'Entity',
+            format: {},
+            wrapper: div,
+            entityFormat: {
+                isFakeEntity: true,
+                isReadonly: true,
+            },
+        };
+
+        div.textContent = 'test';
+
+        const parent = document.createElement('div');
+
+        handleEntityBlock(document, parent, entityModel, context, null);
+
+        expect(parent.innerHTML).toBe('<div contenteditable="false">test</div>');
+        expect(div.outerHTML).toBe('<div contenteditable="false">test</div>');
+        expect(addDelimiters.default).toHaveBeenCalledTimes(0);
+    });
+
     it('Simple inline readonly entity', () => {
         const span = document.createElement('span');
         const entityModel: ContentModelEntity = {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: span,
         };
 
@@ -94,9 +125,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: div,
         };
 
@@ -131,9 +164,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: entityDiv,
         };
 
@@ -151,9 +186,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: span,
         };
 
@@ -182,9 +219,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: span,
         };
 
@@ -208,9 +247,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: entityDiv,
         };
 
@@ -234,9 +275,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: span,
         };
 
@@ -265,9 +308,11 @@ describe('handleEntity', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id: 'entity_1',
-            type: 'entity',
-            isReadonly: true,
+            entityFormat: {
+                id: 'entity_1',
+                type: 'entity',
+                isReadonly: true,
+            },
             wrapper: span,
         };
 

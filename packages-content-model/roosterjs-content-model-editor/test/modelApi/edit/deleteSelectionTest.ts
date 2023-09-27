@@ -469,7 +469,7 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, no callback', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
         model.blocks.push(entity);
 
         entity.isSelected = true;
@@ -521,7 +521,7 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, callback returns false', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
         const deletedEntities: DeletedEntity[] = [];
         model.blocks.push(entity);
 
@@ -576,7 +576,7 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, callback returns true', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
         model.blocks.push(entity);
 
         entity.isSelected = true;
@@ -1436,7 +1436,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -1478,7 +1478,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -1525,7 +1525,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -3192,7 +3192,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
@@ -3234,7 +3234,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
@@ -3281,7 +3281,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper, undefined, true);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
