@@ -356,7 +356,9 @@ describe('ContentModelCopyPastePlugin |', () => {
                 const cloneEntity = options.includeCachedElement(wrapper, 'entity');
 
                 expect(cloneCache).toBeUndefined();
-                expect(cloneEntity).toEqual(wrapper);
+                expect(cloneEntity.outerHTML).toBe(
+                    '<span class="_Entity _EType_Entity _EId_Entity _EReadonly_1" contenteditable="false" style="color: inherit; background-color: inherit;"></span>'
+                );
                 expect(cloneEntity).not.toBe(wrapper);
                 expect(transformToDarkColorSpy).toHaveBeenCalledTimes(1);
                 expect(transformToDarkColorSpy).toHaveBeenCalledWith(
