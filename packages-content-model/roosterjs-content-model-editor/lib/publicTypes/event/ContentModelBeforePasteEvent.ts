@@ -1,5 +1,5 @@
-import { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
-import {
+import type { ContentModelDocument, DomToModelOption } from 'roosterjs-content-model-types';
+import type {
     BeforePasteEvent,
     BeforePasteEventData,
     CompatibleBeforePasteEvent,

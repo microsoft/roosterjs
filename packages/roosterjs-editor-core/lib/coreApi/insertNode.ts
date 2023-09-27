@@ -1,13 +1,15 @@
-import {
+import type {
     BlockElement,
-    ContentPosition,
-    ColorTransformDirection,
     EditorCore,
     InsertNode,
     InsertOption,
+    NodePosition,
+} from 'roosterjs-editor-types';
+import {
+    ContentPosition,
+    ColorTransformDirection,
     NodeType,
     PositionType,
-    NodePosition,
     RegionType,
 } from 'roosterjs-editor-types';
 import {

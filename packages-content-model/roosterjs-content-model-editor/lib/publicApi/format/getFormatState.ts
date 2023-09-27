@@ -1,10 +1,10 @@
 import { contains, getTagOfNode } from 'roosterjs-editor-dom';
-import { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
-import { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { retrieveModelFormatState } from '../../modelApi/common/retrieveModelFormatState';
+import type { ContentModelBlockGroup, DomToModelContext } from 'roosterjs-content-model-types';
+import type { ContentModelFormatState } from '../../publicTypes/format/formatState/ContentModelFormatState';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     getRegularSelectionOffsets,
     handleRegularSelection,

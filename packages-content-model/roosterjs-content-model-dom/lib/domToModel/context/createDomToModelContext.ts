@@ -4,7 +4,7 @@ import {
     defaultFormatKeysPerCategory,
     defaultFormatParsers,
 } from '../../formatHandlers/defaultFormatHandlers';
-import {
+import type {
     ContentModelBlockFormat,
     DomToModelContext,
     DomToModelDecoratorContext,

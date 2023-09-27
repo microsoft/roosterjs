@@ -1,7 +1,7 @@
 import contains from '../utils/contains';
 import getTagOfNode from '../utils/getTagOfNode';
 import isNodeEmpty from '../utils/isNodeEmpty';
-import { NodePosition } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Check if this position is at beginning of the given node.

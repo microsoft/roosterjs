@@ -1,7 +1,8 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import setBackgroundColor from '../format/setBackgroundColor';
-import { IEditor, PositionType, TableFormat } from 'roosterjs-editor-types';
 import { Position, VTable } from 'roosterjs-editor-dom';
+import { PositionType } from 'roosterjs-editor-types';
+import type { IEditor, TableFormat } from 'roosterjs-editor-types';
 
 /**
  * Insert table into editor at current selection

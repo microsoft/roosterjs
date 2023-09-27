@@ -1,4 +1,4 @@
-import { EditorPlugin } from 'roosterjs-editor-types';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Dummy plugin, just to skip original TypeInContainerPlugin's behavior

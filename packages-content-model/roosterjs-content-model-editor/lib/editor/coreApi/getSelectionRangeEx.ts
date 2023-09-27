@@ -1,5 +1,5 @@
-import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
-import { GetSelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import type { GetSelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal

@@ -1,5 +1,5 @@
 import NodeInlineElement from './NodeInlineElement';
-import { BlockElement } from 'roosterjs-editor-types';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 /**
  * This is inline element presenting an html hyperlink

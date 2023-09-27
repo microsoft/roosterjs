@@ -1,6 +1,6 @@
 import { canMergeCells } from './canMergeCells';
 import { getSelectedCells } from './getSelectedCells';
-import { ContentModelTable } from 'roosterjs-content-model-types';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
 
 /**
  * @internal

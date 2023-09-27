@@ -1,15 +1,15 @@
 import * as React from 'react';
-import DialogItem from '../type/DialogItem';
 import InputDialogItem from './InputDialogItem';
-import {
+import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
+import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
+import { getLocalizedString } from '../../common/index';
+import { getObjectKeys } from 'roosterjs-editor-dom';
+import type DialogItem from '../type/DialogItem';
+import type {
     CancelButtonStringKey,
-    getLocalizedString,
     LocalizedStrings,
     OkButtonStringKey,
 } from '../../common/index';
-import { DefaultButton, PrimaryButton } from '@fluentui/react/lib/Button';
-import { Dialog, DialogFooter, DialogType } from '@fluentui/react/lib/Dialog';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 
 /**
  * @internal

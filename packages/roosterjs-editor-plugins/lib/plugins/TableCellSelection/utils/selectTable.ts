@@ -1,6 +1,6 @@
 import normalizeTableSelection from './normalizeTableSelection';
-import { IEditor } from 'roosterjs-editor-types';
-import { TableCellSelectionState } from '../TableCellSelectionState';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 /**
  * @internal

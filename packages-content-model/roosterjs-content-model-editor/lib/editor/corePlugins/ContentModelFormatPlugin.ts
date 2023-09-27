@@ -1,16 +1,11 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
-import { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 import { getObjectKeys, isCharacterValue } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-    PluginWithState,
-} from 'roosterjs-editor-types';
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type { IContentModelEditor } from 'roosterjs-content-model';
+import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
 // During IME input, KeyDown event will have "Process" as key
 const ProcessKey = 'Process';

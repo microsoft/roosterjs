@@ -1,5 +1,5 @@
-import TableSelection from './TableSelection';
-import { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
+import type TableSelection from './TableSelection';
+import type { SelectionRangeTypes } from '../enum/SelectionRangeTypes';
 import type { CompatibleSelectionRangeTypes } from '../compatibleEnum/SelectionRangeTypes';
 
 /**

@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { ItalicButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleItalic } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { ItalicButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

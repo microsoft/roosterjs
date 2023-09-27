@@ -1,5 +1,5 @@
-import { ContentModelCodeFormat } from '../format/ContentModelCodeFormat';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { ContentModelCodeFormat } from '../format/ContentModelCodeFormat';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**
  * Represent code info of Content Model.

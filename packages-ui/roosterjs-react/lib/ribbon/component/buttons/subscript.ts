@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { SubscriptButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleSubscript } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { SubscriptButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

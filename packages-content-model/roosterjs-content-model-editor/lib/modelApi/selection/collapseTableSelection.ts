@@ -1,6 +1,6 @@
 import { addSegment, createSelectionMarker } from 'roosterjs-content-model-dom';
-import { ContentModelTableRow } from 'roosterjs-content-model-types';
-import { TableSelectionCoordinates } from '../table/getSelectedCells';
+import type { ContentModelTableRow } from 'roosterjs-content-model-types';
+import type { TableSelectionCoordinates } from '../table/getSelectedCells';
 
 /**
  * @internal

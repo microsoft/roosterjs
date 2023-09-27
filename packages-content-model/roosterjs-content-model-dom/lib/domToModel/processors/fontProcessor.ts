@@ -1,7 +1,7 @@
-import { ElementProcessor } from 'roosterjs-content-model-types';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 const FontSizes = ['10px', '13px', '16px', '18px', '24px', '32px', '48px'];
 

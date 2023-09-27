@@ -1,6 +1,6 @@
 import { createBooleanDefinition, createObjectDefinition } from '../metadata/definitionCreators';
 import { getMetadata, setMetadata } from '../metadata/metadata';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
+import type { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 const BooleanDefinition = createBooleanDefinition(
     true /** isOptional */,

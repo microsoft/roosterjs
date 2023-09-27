@@ -1,5 +1,5 @@
 import { contains } from 'roosterjs-editor-dom';
-import { EditorCore, HasFocus } from 'roosterjs-editor-types';
+import type { EditorCore, HasFocus } from 'roosterjs-editor-types';
 
 /**
  * @internal

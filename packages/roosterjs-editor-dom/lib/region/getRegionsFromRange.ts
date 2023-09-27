@@ -3,7 +3,8 @@ import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import Position from '../selection/Position';
 import queryElements from '../utils/queryElements';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
-import { QueryScope, Region, RegionType } from 'roosterjs-editor-types';
+import { QueryScope, RegionType } from 'roosterjs-editor-types';
+import type { Region } from 'roosterjs-editor-types';
 import type { CompatibleRegionType } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 interface RegionTypeData {

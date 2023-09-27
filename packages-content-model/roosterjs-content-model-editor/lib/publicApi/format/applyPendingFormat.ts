@@ -1,7 +1,7 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     createText,
     normalizeContentModel,

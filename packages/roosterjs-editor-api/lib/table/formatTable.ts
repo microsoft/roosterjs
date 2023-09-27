@@ -1,6 +1,6 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor, TableFormat } from 'roosterjs-editor-types';
 import { VTable } from 'roosterjs-editor-dom';
+import type { IEditor, TableFormat } from 'roosterjs-editor-types';
 
 /**
  * Format table

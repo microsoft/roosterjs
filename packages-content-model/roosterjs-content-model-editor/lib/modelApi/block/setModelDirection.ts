@@ -1,7 +1,7 @@
 import { findListItemsInSameThread } from '../list/findListItemsInSameThread';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import {
+import type {
     ContentModelBlockFormat,
     ContentModelDocument,
     ContentModelListItem,

@@ -1,7 +1,8 @@
 import changeElementTag from '../utils/changeElementTag';
 import setColor from '../utils/setColor';
-import { DarkColorHandler, TableBorderFormat, TableFormat, VCell } from 'roosterjs-editor-types';
 import { getTableCellMetadata } from './tableCellInfo';
+import { TableBorderFormat } from 'roosterjs-editor-types';
+import type { DarkColorHandler, TableFormat, VCell } from 'roosterjs-editor-types';
 const TRANSPARENT = 'transparent';
 const TABLE_CELL_TAG_NAME = 'TD';
 const TABLE_HEADER_TAG_NAME = 'TH';

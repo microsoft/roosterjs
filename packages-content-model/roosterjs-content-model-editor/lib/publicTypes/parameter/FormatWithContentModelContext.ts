@@ -1,5 +1,5 @@
-import { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type { EntityOperation, SelectionRangeEx } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelEntity,
     OnNodeCreated,

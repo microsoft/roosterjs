@@ -1,6 +1,6 @@
 import { createParagraphDecorator } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggles the current block(s) margin properties.

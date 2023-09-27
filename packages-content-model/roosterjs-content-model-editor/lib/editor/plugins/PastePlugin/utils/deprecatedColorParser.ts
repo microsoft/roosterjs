@@ -1,5 +1,5 @@
-import { BorderFormat, FormatParser } from 'roosterjs-content-model-types';
 import { BorderKeys, DeprecatedColors } from 'roosterjs-content-model-dom';
+import type { BorderFormat, FormatParser } from 'roosterjs-content-model-types';
 
 /**
  * @internal

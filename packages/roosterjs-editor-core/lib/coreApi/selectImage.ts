@@ -1,4 +1,5 @@
 import addUniqueId from './utils/addUniqueId';
+import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     createRange,
     Position,
@@ -6,13 +7,7 @@ import {
     removeImportantStyleRule,
     setGlobalCssStyles,
 } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    ImageSelectionRange,
-    PositionType,
-    SelectImage,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { EditorCore, ImageSelectionRange, SelectImage } from 'roosterjs-editor-types';
 
 const IMAGE_ID = 'imageSelected';
 const CONTENT_DIV_ID = 'contentDiv_';

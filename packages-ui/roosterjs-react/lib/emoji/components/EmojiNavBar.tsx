@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { css } from '@fluentui/react/lib/Utilities';
-import { EmojiFabricIconCharacterMap, EmojiFamilyKeys, EmojiList } from '../utils/emojiList';
-import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
+import { EmojiFabricIconCharacterMap, EmojiList } from '../utils/emojiList';
 import { FocusZone, FocusZoneDirection } from '@fluentui/react/lib/FocusZone';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
-import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { TooltipHost } from '@fluentui/react/lib/Tooltip';
+import type { EmojiFamilyKeys } from '../utils/emojiList';
+import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
+import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 
 /**
  * @internal

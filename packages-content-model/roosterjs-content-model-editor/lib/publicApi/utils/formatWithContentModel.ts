@@ -1,8 +1,9 @@
-import { ChangeSource, PluginEventType, SelectionRangeEx } from 'roosterjs-editor-types';
-import { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import type { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,

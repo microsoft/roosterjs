@@ -1,7 +1,7 @@
 import createElement from './createElement';
 import fromHtml from './fromHtml';
 import safeInstanceOf from './safeInstanceOf';
-import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import type { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 import type { CompatibleKnownCreateElementDataIndex } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

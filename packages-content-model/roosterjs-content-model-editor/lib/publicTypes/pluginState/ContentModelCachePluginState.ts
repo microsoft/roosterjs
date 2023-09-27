@@ -1,5 +1,5 @@
-import { ContentModelDocument, ContentModelDomIndexer } from 'roosterjs-content-model-types';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentModelDocument, ContentModelDomIndexer } from 'roosterjs-content-model-types';
+import type { SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * Plugin state for ContentModelEditPlugin

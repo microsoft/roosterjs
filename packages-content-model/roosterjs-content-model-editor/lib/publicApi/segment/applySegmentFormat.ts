@@ -1,6 +1,6 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Bulk apply segment format to all selected content. This is usually used for format painter.

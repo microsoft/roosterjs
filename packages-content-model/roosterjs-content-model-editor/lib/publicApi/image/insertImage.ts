@@ -1,8 +1,8 @@
 import { addSegment, createContentModelDocument, createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { readFile } from 'roosterjs-editor-dom';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Insert an image into current selected position

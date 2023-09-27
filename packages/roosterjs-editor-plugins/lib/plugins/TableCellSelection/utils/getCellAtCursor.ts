@@ -1,6 +1,6 @@
-import { IEditor } from 'roosterjs-editor-types';
-import { Nullable } from '../TableCellSelectionState';
 import { TABLE_CELL_SELECTOR } from '../constants';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { Nullable } from '../TableCellSelectionState';
 
 /**
  * @internal

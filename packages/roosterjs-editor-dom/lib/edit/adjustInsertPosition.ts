@@ -18,14 +18,9 @@ import splitTextNode from '../utils/splitTextNode';
 import toArray from '../jsUtils/toArray';
 import unwrap from '../utils/unwrap';
 import wrap from '../utils/wrap';
+import { NodeType, PositionType, QueryScope } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import {
-    BlockElement,
-    NodePosition,
-    NodeType,
-    PositionType,
-    QueryScope,
-} from 'roosterjs-editor-types';
+import type { BlockElement, NodePosition } from 'roosterjs-editor-types';
 
 const NOT_EDITABLE_SELECTOR = '[contenteditable=false]';
 

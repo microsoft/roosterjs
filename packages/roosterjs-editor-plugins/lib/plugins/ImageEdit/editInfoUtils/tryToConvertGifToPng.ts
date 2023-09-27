@@ -1,5 +1,5 @@
 import generateDataURL from './generateDataURL';
-import ImageEditInfo from '../types/ImageEditInfo';
+import type ImageEditInfo from '../types/ImageEditInfo';
 
 /**
  * @internal

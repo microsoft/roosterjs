@@ -1,4 +1,4 @@
-import { ContentModelGeneralBlock } from 'roosterjs-content-model-types';
+import type { ContentModelGeneralBlock } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelGeneralBlock model

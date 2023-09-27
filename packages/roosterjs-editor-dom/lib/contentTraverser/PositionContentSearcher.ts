@@ -1,6 +1,6 @@
 import ContentTraverser from './ContentTraverser';
 import createRange from '../selection/createRange';
-import {
+import type {
     IContentTraverser,
     InlineElement,
     IPositionContentSearcher,

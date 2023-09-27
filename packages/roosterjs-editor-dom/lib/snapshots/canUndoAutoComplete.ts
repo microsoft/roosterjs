@@ -1,4 +1,4 @@
-import { Snapshots } from 'roosterjs-editor-types';
+import type { Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Whether there is a snapshot added before auto complete and it can be undone now

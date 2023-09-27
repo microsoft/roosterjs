@@ -1,4 +1,4 @@
-import { EditorPlugin } from 'roosterjs-editor-types';
+import type { EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Represents a plugin to help get HTML content from editor

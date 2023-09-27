@@ -1,4 +1,4 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Plugin state for ContentModelFormatPlugin

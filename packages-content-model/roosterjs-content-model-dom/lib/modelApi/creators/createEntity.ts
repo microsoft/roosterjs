@@ -1,4 +1,4 @@
-import { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelEntity model
