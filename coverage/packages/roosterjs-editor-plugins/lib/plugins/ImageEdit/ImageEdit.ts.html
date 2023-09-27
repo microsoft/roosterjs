@@ -853,19 +853,17 @@
 <a name='L794'></a><a href='#L794'>794</a>
 <a name='L795'></a><a href='#L795'>795</a>
 <a name='L796'></a><a href='#L796'>796</a>
-<a name='L797'></a><a href='#L797'>797</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L797'></a><a href='#L797'>797</a>
+<a name='L798'></a><a href='#L798'>798</a>
+<a name='L799'></a><a href='#L799'>799</a>
+<a name='L800'></a><a href='#L800'>800</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -873,12 +871,20 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -1651,18 +1657,19 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
-import DragAndDropContext, { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
-import DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
-import ImageEditInfo from './types/ImageEditInfo';
-import ImageHtmlOptions from './types/ImageHtmlOptions';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandleState } from './imageEditors/Rotator';
 import { ImageEditElementClass } from './types/ImageEditElementClass';
 import { MIN_HEIGHT_WIDTH } from './constants/constants';
 import { tryToConvertGifToPng } from './editInfoUtils/tryToConvertGifToPng';
+import type { DNDDirectionX, DnDDirectionY } from './types/DragAndDropContext';
+import type DragAndDropContext from './types/DragAndDropContext';
+import type DragAndDropHandler from '../../pluginUtils/DragAndDropHandler';
+import type ImageEditInfo from './types/ImageEditInfo';
+import type ImageHtmlOptions from './types/ImageHtmlOptions';
 import {
     arrayPush,
     Browser,
@@ -1674,24 +1681,26 @@ import {
     unwrap,
     wrap,
 } from 'roosterjs-editor-dom';
+import type { OnShowResizeHandle } from './imageEditors/Resizer';
 import {
     Resizer,
     doubleCheckResize,
     getSideResizeHTML,
     getCornerResizeHTML,
-    OnShowResizeHandle,
     getResizeBordersHTML,
 } from './imageEditors/Resizer';
-import {
-    ImageEditOperation,
+import type {
     ImageEditOptions,
     EditorPlugin,
     IEditor,
     PluginEvent,
-    PluginEventType,
     CreateElementData,
-    KnownCreateElementDataIndex,
     ModeIndependentColor,
+} from 'roosterjs-editor-types';
+import {
+    ImageEditOperation,
+    PluginEventType,
+    KnownCreateElementDataIndex,
     SelectionRangeTypes,
     ChangeSource,
 } from 'roosterjs-editor-types';
@@ -2452,7 +2461,7 @@ function setFlipped(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Sep 27 2023 03:44:40 GMT+0000 (Coordinated Universal Time)
+                at Wed Sep 27 2023 05:53:21 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
