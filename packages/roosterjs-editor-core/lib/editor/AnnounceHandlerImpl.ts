@@ -1,5 +1,4 @@
-import { DefaultAnnounceStrings } from 'roosterjs-editor-types';
-import type { AnnounceData, AnnounceHandler } from 'roosterjs-editor-types';
+import type { AnnounceData, AnnounceHandler, DefaultAnnounceStrings } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -9,20 +8,18 @@ export default class AnnounceHandlerImpl implements AnnounceHandler {
 
     constructor(
         private readonly document: Document,
-        private stringsMap: Map<DefaultAnnounceStrings, string> = getDefaultStringsMap()
-    ) {
-        this.ariaLiveElement = createAriaLiveElement(document);
-    }
+        private stringsMap?: Map<DefaultAnnounceStrings, string>
+    ) {}
 
     public announce(announceData: AnnounceData) {
         const { text, defaultStrings, formatStrings = [] } = announceData;
         let textToAnnounce = formatString(
-            (defaultStrings && this.stringsMap.get(defaultStrings)) || text,
+            (defaultStrings && this.stringsMap?.get(defaultStrings)) || text,
             formatStrings
         );
         if (textToAnnounce) {
-            if (textToAnnounce == this.ariaLiveElement?.textContent) {
-                this.ariaLiveElement.parentElement?.removeChild(this.ariaLiveElement);
+            if (!this.ariaLiveElement || textToAnnounce == this.ariaLiveElement?.textContent) {
+                this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
                 this.ariaLiveElement = createAriaLiveElement(this.document);
             }
             if (this.ariaLiveElement) {
@@ -34,6 +31,10 @@ export default class AnnounceHandlerImpl implements AnnounceHandler {
     public dispose() {
         this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
         this.ariaLiveElement = undefined;
+    }
+
+    public getAriaLiveElement() {
+        return this.ariaLiveElement;
     }
 }
 
@@ -53,12 +54,6 @@ function createAriaLiveElement(document: Document): HTMLDivElement {
     document.body.appendChild(element);
 
     return element;
-}
-
-function getDefaultStringsMap(): Map<DefaultAnnounceStrings, string> {
-    return new Map<DefaultAnnounceStrings, string>([
-        [DefaultAnnounceStrings.AnnounceListItemIndentation, 'Autocorrected {0}'],
-    ]);
 }
 
 function formatString(text: string | undefined, formatStrings: string[]) {

@@ -3,8 +3,11 @@ import * as setIndentation from 'roosterjs-editor-api/lib/format/setIndentation'
 import * as TestHelper from 'roosterjs-editor-api/test/TestHelper';
 import * as toggleListType from 'roosterjs-editor-api/lib/utils/toggleListType';
 import getBlockElementAtNode from 'roosterjs-editor-dom/lib/blockElements/getBlockElementAtNode';
-import { ListFeatures } from '../../../lib/plugins/ContentEdit/features/listFeatures';
-import { Position, PositionContentSearcher } from 'roosterjs-editor-dom';
+import { createElement, Position, PositionContentSearcher } from 'roosterjs-editor-dom';
+import {
+    getAnnounceDataForList,
+    ListFeatures,
+} from '../../../lib/plugins/ContentEdit/features/listFeatures';
 import {
     IEditor,
     Indentation,
@@ -13,6 +16,7 @@ import {
     Keys,
     BlockElement,
     IContentTraverser,
+    DefaultAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 describe('listFeatures | AutoBullet', () => {
@@ -778,5 +782,83 @@ describe('listFeatures | mergeListOnBackspaceAfterList', () => {
         runTestHandleEvent(
             `<div><ol><li><span>123</span></li></ol><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`
         );
+    });
+});
+
+describe('getAnnounceDataForList', () => {
+    it('should return announce data for numbered list item | OL', () => {
+        const el = createElement(
+            {
+                tag: 'OL',
+                children: [
+                    {
+                        tag: 'LI',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            document
+        );
+
+        el && document.body.appendChild(el);
+
+        const editorMock = {
+            getElementAtCursor: (selector: string) => {
+                if (selector == 'OL,UL') {
+                    return el;
+                } else {
+                    return el?.firstChild;
+                }
+            },
+        };
+
+        const announceData = getAnnounceDataForList(editorMock as any);
+        expect(announceData).toEqual({
+            defaultStrings: DefaultAnnounceStrings.AnnounceListItemNumberingIndentation,
+            formatStrings: ['1'],
+        });
+    });
+
+    it('should return announce data for numbered list item | UL', () => {
+        const el = createElement(
+            {
+                tag: 'UL',
+                children: [
+                    {
+                        tag: 'LI',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            document
+        );
+
+        el && document.body.appendChild(el);
+
+        const editorMock = {
+            getElementAtCursor: (selector: string) => {
+                if (selector == 'OL,UL') {
+                    return el;
+                } else {
+                    return el?.firstChild;
+                }
+            },
+        };
+
+        const announceData = getAnnounceDataForList(editorMock as any);
+        expect(announceData).toEqual({
+            defaultStrings: DefaultAnnounceStrings.AnnounceListItemBulletIndentation,
+        });
+    });
+
+    it('should return announce data for bullet list item | undefined', () => {
+        const editorMock = {
+            getElementAtCursor: () => {
+                return undefined;
+            },
+        };
+
+        const announceData = getAnnounceDataForList(editorMock as any);
+        expect(announceData).toEqual(undefined);
     });
 });

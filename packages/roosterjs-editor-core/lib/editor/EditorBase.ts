@@ -117,6 +117,7 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         }
 
         core.darkColorHandler.reset();
+        core.announceHandler?.dispose();
 
         this.core = null;
     }

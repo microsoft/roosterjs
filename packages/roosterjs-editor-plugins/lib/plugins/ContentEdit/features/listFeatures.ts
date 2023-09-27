@@ -73,13 +73,17 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
-const getAnnounceDataForList = (editor: IEditor) => {
+/**
+ * @internal Exported for unit testing
+ * @returns
+ */
+export const getAnnounceDataForList = (editor: IEditor) => {
     const li = editor.getElementAtCursor('li') as HTMLLIElement;
     const list = editor.getElementAtCursor('OL,UL', li) as
         | undefined
         | HTMLOListElement
         | HTMLUListElement;
-    if (li && list) {
+    if (li && safeInstanceOf(list, 'HTMLOListElement')) {
         const vList = new VList(list);
         const listItemIndex = vList.getListItemIndex(li);
         let stringToAnnounce = listItemIndex.toString();
@@ -97,8 +101,12 @@ const getAnnounceDataForList = (editor: IEditor) => {
         }
 
         return {
-            defaultStrings: DefaultAnnounceStrings.AnnounceListItemIndentation,
+            defaultStrings: DefaultAnnounceStrings.AnnounceListItemNumberingIndentation,
             formatStrings: [stringToAnnounce],
+        };
+    } else if (safeInstanceOf(list, 'HTMLUListElement')) {
+        return {
+            defaultStrings: DefaultAnnounceStrings.AnnounceListItemBulletIndentation,
         };
     }
     return undefined;
