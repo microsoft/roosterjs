@@ -1,4 +1,4 @@
-import { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
+import type { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
 
 /**
  * Represents data, that can be used to announce text to screen reader.

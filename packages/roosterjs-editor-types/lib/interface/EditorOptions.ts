@@ -1,4 +1,4 @@
-import { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
+import type { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
 import type CorePlugins from './CorePlugins';
 import type DarkColorHandler from './DarkColorHandler';
 import type DefaultFormat from './DefaultFormat';

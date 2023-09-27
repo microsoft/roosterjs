@@ -1,4 +1,4 @@
-import AnnounceData from './AnnounceData';
+import type AnnounceData from './AnnounceData';
 
 /**
  * A handler object for announcing text to screen reader.

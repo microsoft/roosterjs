@@ -1,4 +1,5 @@
-import { AnnounceData, AnnounceHandler, DefaultAnnounceStrings } from 'roosterjs-editor-types';
+import { DefaultAnnounceStrings } from 'roosterjs-editor-types';
+import type { AnnounceData, AnnounceHandler } from 'roosterjs-editor-types';
 
 /**
  * @internal
