@@ -1,5 +1,5 @@
-import { CreateEditorContext } from '../../publicTypes/ContentModelEditorCore';
-import { EditorContext } from 'roosterjs-content-model-types';
+import type { CreateEditorContext } from '../../publicTypes/ContentModelEditorCore';
+import type { EditorContext } from 'roosterjs-content-model-types';
 
 /**
  * @internal

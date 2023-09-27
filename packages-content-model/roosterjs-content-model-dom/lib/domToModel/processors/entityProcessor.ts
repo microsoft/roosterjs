@@ -1,10 +1,10 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createEntity } from '../../modelApi/creators/createEntity';
-import { ElementProcessor } from 'roosterjs-content-model-types';
 import { isBlockElement } from '../utils/isBlockElement';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * Content Model Element Processor for entity

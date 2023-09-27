@@ -16,23 +16,25 @@ import {
     isBlockElement,
     getObjectKeys,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     ContentChangedEvent,
-    ContentPosition,
     Entity,
-    EntityClasses,
-    EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
     KnownEntityItem,
     HtmlSanitizerOptions,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginMouseUpEvent,
     PluginWithState,
+} from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    ContentPosition,
+    EntityClasses,
+    EntityOperation,
+    Keys,
+    PluginEventType,
     QueryScope,
 } from 'roosterjs-editor-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';

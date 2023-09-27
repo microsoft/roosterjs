@@ -1,8 +1,8 @@
 import { Browser, getComputedStyle, Position } from 'roosterjs-editor-dom';
-import {
+import { Keys } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     CursorFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 

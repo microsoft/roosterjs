@@ -10,7 +10,6 @@ import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
-import { FormatHandler } from './FormatHandler';
 import { getObjectKeys } from 'roosterjs-editor-dom';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
@@ -35,7 +34,8 @@ import { underlineFormatHandler } from './segment/underlineFormatHandler';
 import { verticalAlignFormatHandler } from './common/verticalAlignFormatHandler';
 import { whiteSpaceFormatHandler } from './block/whiteSpaceFormatHandler';
 import { wordBreakFormatHandler } from './common/wordBreakFormatHandler';
-import {
+import type { FormatHandler } from './FormatHandler';
+import type {
     ContentModelFormatMap,
     FormatApplier,
     FormatAppliers,

@@ -1,4 +1,4 @@
-import { DomToModelOption, ElementProcessorMap } from 'roosterjs-content-model-types';
+import type { DomToModelOption, ElementProcessorMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal

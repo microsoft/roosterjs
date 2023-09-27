@@ -1,22 +1,20 @@
 import addParser from './utils/addParser';
-import ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
-import { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
-import { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
+import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
 import { parseLink } from './utils/linkParser';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
-import {
+import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
+import type { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
+import type {
     EditorPlugin,
     HtmlSanitizerOptions,
     IEditor,
-    KnownPasteSourceType,
-    PasteType,
     PluginEvent,
-    PluginEventType,
 } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';

@@ -1,8 +1,8 @@
-import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
-import { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelBlockBase } from './ContentModelBlockBase';
+import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelParagraphDecorator } from '../decorator/ContentModelParagraphDecorator';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of Paragraph

@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
 import { renderColorPicker } from '../../../colorPicker/component/renderColorPicker';
 import { setTextColor } from 'roosterjs-editor-api';
-import { TextColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { TextColorButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import {
     getTextColorValue,
     TextColorDropDownItems,

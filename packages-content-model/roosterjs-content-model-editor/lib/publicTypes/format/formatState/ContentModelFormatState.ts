@@ -1,5 +1,5 @@
-import { FormatState } from 'roosterjs-editor-types';
-import { ImageFormatState } from './ImageFormatState';
+import type { FormatState } from 'roosterjs-editor-types';
+import type { ImageFormatState } from './ImageFormatState';
 
 /**
  * The format object state in Content Model

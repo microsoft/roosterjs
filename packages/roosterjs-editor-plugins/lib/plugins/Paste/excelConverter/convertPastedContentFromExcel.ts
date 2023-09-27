@@ -1,5 +1,5 @@
-import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
+import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const LAST_TD_END_REGEX = /<\/\s*td\s*>((?!<\/\s*tr\s*>)[\s\S])*$/i;
 const LAST_TR_END_REGEX = /<\/\s*tr\s*>((?!<\/\s*table\s*>)[\s\S])*$/i;

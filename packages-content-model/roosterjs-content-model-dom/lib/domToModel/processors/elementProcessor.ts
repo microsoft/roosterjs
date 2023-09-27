@@ -1,6 +1,6 @@
 import { getDelimiterFromElement } from 'roosterjs-editor-dom';
 import { isEntityElement } from '../../domUtils/entityUtils';
-import {
+import type {
     DomToModelContext,
     ElementProcessor,
     ElementProcessorMap,

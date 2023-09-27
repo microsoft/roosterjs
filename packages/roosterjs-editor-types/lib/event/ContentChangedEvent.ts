@@ -1,7 +1,7 @@
-import BasePluginEvent from './BasePluginEvent';
-import ContentChangedData from '../interface/ContentChangedData';
-import { ChangeSource } from '../enum/ChangeSource';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type ContentChangedData from '../interface/ContentChangedData';
+import type { ChangeSource } from '../enum/ChangeSource';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 

@@ -3,7 +3,7 @@ import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelParagraph,
     ModelToDomContext,

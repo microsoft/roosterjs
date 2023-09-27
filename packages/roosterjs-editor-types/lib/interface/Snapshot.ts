@@ -1,5 +1,5 @@
-import ModeIndependentColor from './ModeIndependentColor';
-import { ContentMetadata } from './ContentMetadata';
+import type ModeIndependentColor from './ModeIndependentColor';
+import type { ContentMetadata } from './ContentMetadata';
 
 /**
  * State for an entity. This is used for storing entity undo snapshot

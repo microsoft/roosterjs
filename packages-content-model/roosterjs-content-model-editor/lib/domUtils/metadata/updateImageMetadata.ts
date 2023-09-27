@@ -1,5 +1,5 @@
-import { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import { updateMetadata } from 'roosterjs-content-model-dom';
+import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     createNumberDefinition,
     createObjectDefinition,

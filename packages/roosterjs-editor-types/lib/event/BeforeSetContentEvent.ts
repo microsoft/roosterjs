@@ -1,5 +1,5 @@
-import BasePluginEvent from './BasePluginEvent';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**

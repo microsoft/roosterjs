@@ -1,27 +1,27 @@
-import showEmojiCallout, { EmojiICallout } from '../components/showEmojiCallout';
-import { Emoji } from '../type/Emoji';
-import { EmojiPane } from '../components/EmojiPane';
-import { EmojiStringKeys } from '../type/EmojiStringKeys';
+import * as React from 'react';
+import showEmojiCallout from '../components/showEmojiCallout';
 import { isModifierKey } from 'roosterjs-editor-dom';
 import { KeyCodes } from '@fluentui/react/lib/Utilities';
-import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
 import { MoreEmoji } from '../utils/emojiList';
 import { replaceWithNode } from 'roosterjs-editor-api';
-import {
+import type { EmojiICallout } from '../components/showEmojiCallout';
+import type { Emoji } from '../type/Emoji';
+import type { EmojiPane } from '../components/EmojiPane';
+import type { EmojiStringKeys } from '../type/EmojiStringKeys';
+import type { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import type {
     IEditor,
     PluginDomEvent,
     PluginEvent,
-    PluginEventType,
     PluginKeyboardEvent,
     PluginKeyDownEvent,
-    PositionType,
 } from 'roosterjs-editor-types';
+import { PluginEventType, PositionType } from 'roosterjs-editor-types';
 import {
     EmojiDescriptionStrings,
     EmojiFamilyStrings,
     EmojiKeywordStrings,
 } from '../type/EmojiStrings';
-import * as React from 'react';
 
 const KEYCODE_COLON = 186;
 const KEYCODE_COLON_FIREFOX = 59;

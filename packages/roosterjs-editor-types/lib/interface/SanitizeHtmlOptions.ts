@@ -1,5 +1,5 @@
-import HtmlSanitizerOptions from './HtmlSanitizerOptions';
-import { StringMap } from '../type/htmlSanitizerCallbackTypes';
+import type HtmlSanitizerOptions from './HtmlSanitizerOptions';
+import type { StringMap } from '../type/htmlSanitizerCallbackTypes';
 
 /**
  * @deprecated

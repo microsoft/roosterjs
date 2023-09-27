@@ -6,7 +6,7 @@ import {
     normalizeContentModel,
     setParagraphNotImplicit,
 } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlock,
     ContentModelDocument,
     ContentModelListItem,

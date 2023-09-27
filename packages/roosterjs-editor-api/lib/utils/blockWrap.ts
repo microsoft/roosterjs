@@ -1,5 +1,5 @@
 import blockFormat from './blockFormat';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     getSelectedBlockElementsInRegion,

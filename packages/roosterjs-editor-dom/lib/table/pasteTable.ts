@@ -1,7 +1,8 @@
 import cloneCellStyles from './cloneCellStyles';
 import moveChildNodes from '../utils/moveChildNodes';
 import VTable from './VTable';
-import { NodePosition, TableOperation } from 'roosterjs-editor-types';
+import { TableOperation } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  *

@@ -6,7 +6,7 @@ import { parseFormat } from '../utils/parseFormat';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelTableCellFormat,
     DatasetFormat,
     ElementProcessor,

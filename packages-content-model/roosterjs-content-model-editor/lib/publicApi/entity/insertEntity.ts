@@ -1,10 +1,11 @@
-import { ChangeSource, Entity, SelectionRangeEx } from 'roosterjs-editor-types';
-import { ContentModelEntity } from 'roosterjs-content-model-types';
+import { ChangeSource } from 'roosterjs-editor-types';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
-import {
+import type { ContentModelEntity } from 'roosterjs-content-model-types';
+import type { Entity, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     InsertEntityOptions,
     InsertEntityPosition,
 } from '../../publicTypes/parameter/InsertEntityOptions';

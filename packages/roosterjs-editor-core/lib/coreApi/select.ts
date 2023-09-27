@@ -1,13 +1,12 @@
 import { contains, createRange, safeInstanceOf } from 'roosterjs-editor-dom';
-import {
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type {
     EditorCore,
     NodePosition,
-    PluginEventType,
     PositionType,
     Select,
     SelectionPath,
     SelectionRangeEx,
-    SelectionRangeTypes,
     TableSelection,
 } from 'roosterjs-editor-types';
 

@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { SuperscriptButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleSuperscript } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { SuperscriptButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

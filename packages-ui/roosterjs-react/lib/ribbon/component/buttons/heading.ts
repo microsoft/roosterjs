@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { HeadingButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { setHeadingLevel } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { HeadingButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 const headings: Partial<Record<HeadingButtonStringKey, string>> = {
     buttonNameHeading1: 'Heading 1',

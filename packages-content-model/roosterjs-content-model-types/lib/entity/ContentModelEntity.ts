@@ -1,8 +1,8 @@
-import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelEntityFormat } from '../format/ContentModelEntityFormat';
-import { ContentModelSegmentBase } from '../segment/ContentModelSegmentBase';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelEntityFormat } from '../format/ContentModelEntityFormat';
+import type { ContentModelSegmentBase } from '../segment/ContentModelSegmentBase';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Content Model of Entity

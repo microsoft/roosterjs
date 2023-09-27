@@ -1,8 +1,8 @@
-import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
-import { ContentModelListLevel } from '../decorator/ContentModelListLevel';
-import { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
+import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type { ContentModelListItemFormat } from '../format/ContentModelListItemFormat';
+import type { ContentModelListLevel } from '../decorator/ContentModelListLevel';
+import type { ContentModelSelectionMarker } from '../segment/ContentModelSelectionMarker';
 
 /**
  * Content Model of List Item

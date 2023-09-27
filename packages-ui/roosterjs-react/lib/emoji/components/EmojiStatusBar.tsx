@@ -1,8 +1,8 @@
 import * as React from 'react';
-import { Emoji } from '../type/Emoji';
-import { EmojiPaneStyle } from '../type/EmojiPaneStyles';
-import { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 import { TooltipHost, TooltipOverflowMode } from '@fluentui/react/lib/Tooltip';
+import type { Emoji } from '../type/Emoji';
+import type { EmojiPaneStyle } from '../type/EmojiPaneStyles';
+import type { IProcessedStyleSet, IStyleSet } from '@fluentui/react/lib/Styling';
 /**
  * @internal
  * Emoji Status Bar data

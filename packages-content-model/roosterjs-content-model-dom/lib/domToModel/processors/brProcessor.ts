@@ -1,6 +1,6 @@
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createBr } from '../../modelApi/creators/createBr';
-import { ElementProcessor } from 'roosterjs-content-model-types';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal

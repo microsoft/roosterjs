@@ -1,16 +1,11 @@
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     createRange,
     getSelectionPath,
     moveContentWithEntityPlaceholders,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    PluginEventType,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-    SwitchShadowEdit,
-} from 'roosterjs-editor-types';
+import type { EditorCore, SelectionRangeEx, SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
  * @internal

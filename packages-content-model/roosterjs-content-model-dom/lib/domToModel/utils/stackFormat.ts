@@ -1,5 +1,5 @@
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import {
+import type {
     ContentModelBlockFormat,
     ContentModelCode,
     ContentModelFormatBase,

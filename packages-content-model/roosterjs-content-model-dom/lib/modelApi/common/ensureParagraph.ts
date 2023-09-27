@@ -1,6 +1,6 @@
 import { addBlock } from './addBlock';
 import { createParagraph } from '../creators/createParagraph';
-import {
+import type {
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelParagraph,

@@ -1,5 +1,5 @@
 import { addCode, addLink } from '../common/addDecorators';
-import {
+import type {
     ContentModelCode,
     ContentModelLink,
     ContentModelSegmentFormat,

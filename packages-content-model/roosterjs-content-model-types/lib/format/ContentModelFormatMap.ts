@@ -1,16 +1,16 @@
-import { ContentModelBlockFormat } from './ContentModelBlockFormat';
-import { ContentModelDividerFormat } from './ContentModelDividerFormat';
-import { ContentModelEntityFormat } from './ContentModelEntityFormat';
-import { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
-import { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
-import { ContentModelImageFormat } from './ContentModelImageFormat';
-import { ContentModelListItemFormat } from './ContentModelListItemFormat';
-import { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
-import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
-import { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
-import { ContentModelTableFormat } from './ContentModelTableFormat';
-import { DatasetFormat } from './metadata/DatasetFormat';
-import { FontFamilyFormat } from './formatParts/FontFamilyFormat';
+import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
+import type { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
+import type { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
+import type { ContentModelImageFormat } from './ContentModelImageFormat';
+import type { ContentModelListItemFormat } from './ContentModelListItemFormat';
+import type { ContentModelListItemLevelFormat } from './ContentModelListItemLevelFormat';
+import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import type { ContentModelTableCellFormat } from './ContentModelTableCellFormat';
+import type { ContentModelTableFormat } from './ContentModelTableFormat';
+import type { DatasetFormat } from './metadata/DatasetFormat';
+import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 
 /**
  * A map from Content Model format name to its combined format type

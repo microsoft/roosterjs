@@ -1,5 +1,5 @@
-import BlockElement from './BlockElement';
-import InlineElement from './InlineElement';
+import type BlockElement from './BlockElement';
+import type InlineElement from './InlineElement';
 
 /**
  * Interface of ContentTraverser, provides traversing of content inside editor.

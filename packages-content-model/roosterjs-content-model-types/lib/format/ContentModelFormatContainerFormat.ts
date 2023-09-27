@@ -1,7 +1,7 @@
-import { ContentModelBlockFormat } from './ContentModelBlockFormat';
-import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
-import { DisplayFormat } from './formatParts/DisplayFormat';
-import { SizeFormat } from './formatParts/SizeFormat';
+import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
+import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import type { DisplayFormat } from './formatParts/DisplayFormat';
+import type { SizeFormat } from './formatParts/SizeFormat';
 
 /**
  * Type for FormatContainer

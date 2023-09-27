@@ -1,4 +1,4 @@
-import TargetWindowBase from './TargetWindowBase';
+import type TargetWindowBase from './TargetWindowBase';
 
 /**
  * Define DOM types of window, used by safeInstanceOf() to check if a given object is of the specified type of its own window

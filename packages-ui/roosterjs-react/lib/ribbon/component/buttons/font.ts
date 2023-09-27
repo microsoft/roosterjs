@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { FontButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { setFontName } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { FontButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 interface FontName {
     name: string;

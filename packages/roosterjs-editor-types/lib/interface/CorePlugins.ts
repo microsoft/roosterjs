@@ -1,12 +1,12 @@
-import CopyPastePluginState from '../corePluginState/CopyPastePluginState';
-import DOMEventPluginState from '../corePluginState/DOMEventPluginState';
-import EditorPlugin from './EditorPlugin';
-import EditPluginState from '../corePluginState/EditPluginState';
-import EntityPluginState from '../corePluginState/EntityPluginState';
-import LifecyclePluginState from '../corePluginState/LifecyclePluginState';
-import PendingFormatStatePluginState from '../corePluginState/PendingFormatStatePluginState';
-import PluginWithState from './PluginWithState';
-import UndoPluginState from '../corePluginState/UndoPluginState';
+import type CopyPastePluginState from '../corePluginState/CopyPastePluginState';
+import type DOMEventPluginState from '../corePluginState/DOMEventPluginState';
+import type EditorPlugin from './EditorPlugin';
+import type EditPluginState from '../corePluginState/EditPluginState';
+import type EntityPluginState from '../corePluginState/EntityPluginState';
+import type LifecyclePluginState from '../corePluginState/LifecyclePluginState';
+import type PendingFormatStatePluginState from '../corePluginState/PendingFormatStatePluginState';
+import type PluginWithState from './PluginWithState';
+import type UndoPluginState from '../corePluginState/UndoPluginState';
 
 /**
  * An interface for editor core plugins.

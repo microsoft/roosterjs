@@ -1,11 +1,11 @@
-import ListItemMetadata from './ListItemMetadata';
-import ListMetadata from './ListMetadata';
-import WordConverter from './wordConverter';
-import WordConverterArguments from './WordConverterArguments';
 import { createLevelLists } from './LevelLists';
 import { getObject, setObject } from './WordCustomData';
 import { getStyles, getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
 import { NodeType } from 'roosterjs-editor-types';
+import type ListItemMetadata from './ListItemMetadata';
+import type ListMetadata from './ListMetadata';
+import type WordConverter from './wordConverter';
+import type WordConverterArguments from './WordConverterArguments';
 
 /** Word list metadata style name */
 const LOOKUP_DEPTH = 5;

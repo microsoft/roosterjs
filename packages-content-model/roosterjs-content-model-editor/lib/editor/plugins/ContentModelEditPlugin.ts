@@ -1,11 +1,10 @@
 import keyboardDelete from '../../publicApi/editing/keyboardDelete';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     EditorPlugin,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 

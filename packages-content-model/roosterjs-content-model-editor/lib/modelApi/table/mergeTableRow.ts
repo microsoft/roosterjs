@@ -1,7 +1,7 @@
 import { canMergeCells } from './canMergeCells';
-import { ContentModelTable } from 'roosterjs-content-model-types';
 import { getSelectedCells } from './getSelectedCells';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { ContentModelTable } from 'roosterjs-content-model-types';
 import type { CompatibleTableOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
