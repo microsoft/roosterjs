@@ -1,6 +1,5 @@
 import { handleSegmentCommon } from '../utils/handleSegmentCommon';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { wrap } from 'roosterjs-editor-dom';
 import {
@@ -51,7 +50,7 @@ export const handleGeneralSegment: ContentModelSegmentHandler<ContentModelGenera
     group.element = node;
     parent.appendChild(node);
 
-    if (isNodeOfType(node, NodeType.Element)) {
+    if (isNodeOfType(node, 'ELEMENT_NODE')) {
         const element = wrap(node, 'span');
 
         handleSegmentCommon(doc, node, element, group, context, segmentNodes);

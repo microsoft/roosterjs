@@ -1,6 +1,5 @@
 import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -40,5 +39,5 @@ export function removeNode(node: Node): Node | null {
 }
 
 function isEntity(node: Node) {
-    return isNodeOfType(node, NodeType.Element) && !!getEntityFromElement(node);
+    return isNodeOfType(node, 'ELEMENT_NODE') && !!getEntityFromElement(node);
 }
