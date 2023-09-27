@@ -35,7 +35,6 @@ import {
     KnownCreateElementDataIndex,
     SelectionRangeTypes,
     ColorTransformDirection,
-    NodeType,
 } from 'roosterjs-editor-types';
 
 /**
@@ -280,7 +279,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
     if (safeInstanceOf(node, 'HTMLTableElement')) {
         wrap(node, 'div');
     }
-    if (isNodeOfType(node, NodeType.Element) && !node.isContentEditable) {
+    if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
         node.removeAttribute('contenteditable');
     }
 };

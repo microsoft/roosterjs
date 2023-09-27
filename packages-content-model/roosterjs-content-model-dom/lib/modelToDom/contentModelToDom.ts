@@ -1,6 +1,6 @@
 import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
-import { NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ModelToDomBlockAndSegmentNode,
@@ -88,7 +88,7 @@ function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefi
     if (pos.block) {
         if (!pos.segment) {
             result = new Position(pos.block, 0);
-        } else if (isNodeOfType(pos.segment, NodeType.Text)) {
+        } else if (isNodeOfType(pos.segment, 'TEXT_NODE')) {
             result = new Position(pos.segment, pos.segment.nodeValue?.length || 0);
         } else {
             result = new Position(
@@ -100,7 +100,7 @@ function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefi
         }
     }
 
-    if (isNodeOfType(result?.node, NodeType.DocumentFragment)) {
+    if (isNodeOfType(result?.node, 'DOCUMENT_FRAGMENT_NODE')) {
         result = result?.normalize();
     }
 

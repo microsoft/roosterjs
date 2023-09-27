@@ -1,5 +1,4 @@
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -7,7 +6,7 @@ import { NodeType } from 'roosterjs-editor-types';
 export function removeUnnecessarySpan(root: Node) {
     for (let child = root.firstChild; child; ) {
         if (
-            isNodeOfType(child, NodeType.Element) &&
+            isNodeOfType(child, 'ELEMENT_NODE') &&
             child.tagName == 'SPAN' &&
             child.attributes.length == 0
         ) {

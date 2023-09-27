@@ -1,5 +1,3 @@
-import type { NodeType } from 'roosterjs-editor-types';
-
 /**
  * A type map from node type number to its type declaration. This is used by utility function isNodeOfType()
  */
@@ -7,41 +5,42 @@ export interface NodeTypeMap {
     /**
      * Attribute node
      */
-    [NodeType.Attribute]: Attr;
+    ATTRIBUTE_NODE: Attr;
 
     /**
      * Comment node
      */
-    [NodeType.Comment]: Comment;
+    COMMENT_NODE: Comment;
 
     /**
      * DocumentFragment node
      */
-    [NodeType.DocumentFragment]: DocumentFragment;
+    DOCUMENT_FRAGMENT_NODE: DocumentFragment;
 
     /**
      * Document node
      */
-    [NodeType.Document]: Document;
+    DOCUMENT_NODE: Document;
 
     /**
      * DocumentType node
      */
-    [NodeType.DocumentType]: DocumentType;
+    DOCUMENT_TYPE_NODE: DocumentType;
 
     /**
      * HTMLElement node
      */
-    [NodeType.Element]: HTMLElement;
+    ELEMENT_NODE: HTMLElement;
+
     /**
      * ProcessingInstruction node
      */
-    [NodeType.ProcessingInstruction]: ProcessingInstruction;
+    PROCESSING_INSTRUCTION_NODE: ProcessingInstruction;
 
     /**
      * Text node
      */
-    [NodeType.Text]: Text;
+    TEXT_NODE: Text;
 }
 
 /**
@@ -49,9 +48,9 @@ export interface NodeTypeMap {
  * @param node The node to check
  * @param expectedType The type to check
  */
-export function isNodeOfType<T extends NodeType>(
+export function isNodeOfType<T extends keyof NodeTypeMap>(
     node: Node | null | undefined,
     expectedType: T
 ): node is NodeTypeMap[T] {
-    return !!node && node.nodeType == expectedType;
+    return !!node && node.nodeType == Node[expectedType];
 }
