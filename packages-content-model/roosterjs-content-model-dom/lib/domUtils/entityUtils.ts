@@ -1,6 +1,5 @@
-import { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 import { isNodeOfType } from './isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
+import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
 
 const ENTITY_INFO_NAME = '_Entity';
 const ENTITY_TYPE_PREFIX = '_EType_';
@@ -12,9 +11,12 @@ const CONTENT_EDITABLE = 'contenteditable';
  * @internal
  */
 export function isEntityElement(node: Node): boolean {
-    return isNodeOfType(node, NodeType.Element) && node.classList.contains(ENTITY_INFO_NAME);
+    return isNodeOfType(node, 'ELEMENT_NODE') && node.classList.contains(ENTITY_INFO_NAME);
 }
 
+/**
+ * @internal
+ */
 export function parseEntityClasses(element: HTMLElement): ContentModelEntityFormat | null {
     let isEntity = false;
     const format: ContentModelEntityFormat = {};
@@ -39,6 +41,9 @@ export function parseEntityClasses(element: HTMLElement): ContentModelEntityForm
           };
 }
 
+/**
+ * @internal
+ */
 export function applyEntityClasses(element: HTMLElement, format: ContentModelEntityFormat) {
     if (!format.isFakeEntity) {
         element.className = `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.type} ${
