@@ -6,8 +6,8 @@ import getStyles from '../style/getStyles';
 import isNodeInRegion from './isNodeInRegion';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import setStyles from '../style/setStyles';
-import { BlockElement, RegionBase } from 'roosterjs-editor-types';
 import { collapse } from '../utils/collapseNodes';
+import type { BlockElement, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Merge a BlockElement of given node after another node

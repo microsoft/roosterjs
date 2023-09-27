@@ -1,5 +1,5 @@
-import IEditor from './IEditor';
-import { PluginEvent } from '../event/PluginEvent';
+import type IEditor from './IEditor';
+import type { PluginEvent } from '../event/PluginEvent';
 
 /**
  * Interface of an editor plugin

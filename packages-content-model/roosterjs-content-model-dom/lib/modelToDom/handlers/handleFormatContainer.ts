@@ -2,7 +2,7 @@ import { applyFormat } from '../utils/applyFormat';
 import { isBlockGroupEmpty } from '../../modelApi/common/isEmpty';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelBlockFormat,
     ContentModelBlockHandler,
     ContentModelFormatContainer,

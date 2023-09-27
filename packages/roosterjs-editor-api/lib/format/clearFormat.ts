@@ -9,13 +9,8 @@ import setTextColor from './setTextColor';
 import toggleBold from './toggleBold';
 import toggleItalic from './toggleItalic';
 import toggleUnderline from './toggleUnderline';
-import {
-    ChangeSource,
-    ClearFormatMode,
-    DocumentCommand,
-    IEditor,
-    QueryScope,
-} from 'roosterjs-editor-types';
+import { ChangeSource, ClearFormatMode, DocumentCommand, QueryScope } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     collapseNodesInRegion,
     getObjectKeys,

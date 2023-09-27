@@ -1,6 +1,6 @@
-import { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
+import type { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
@@ -110,9 +110,4 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * will be used for setting content model if there is no other customized options
      */
     defaultModelToDomConfig: ModelToDomSettings;
-
-    /**
-     * Whether adding delimiter for entity is allowed
-     */
-    addDelimiterForEntity: boolean;
 }

@@ -1,5 +1,5 @@
-import { IEditor } from 'roosterjs-editor-types';
-import { Nullable } from '../TableCellSelectionState';
+import type { IEditor } from 'roosterjs-editor-types';
+import type { Nullable } from '../TableCellSelectionState';
 
 /**
  * @internal

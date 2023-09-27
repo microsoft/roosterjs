@@ -141,3 +141,4 @@ export {
 } from './context/ContentModelHandler';
 export { DomToModelOption } from './context/DomToModelOption';
 export { ModelToDomOption } from './context/ModelToDomOption';
+export { ContentModelDomIndexer } from './context/ContentModelDomIndexer';

@@ -1,6 +1,6 @@
 import { applyFormat } from '../../modelToDom/utils/applyFormat';
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { createModelToDomContext } from '../../modelToDom/context/createModelToDomContext';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 
 /**
  * Format an existing HTML element using Segment Format

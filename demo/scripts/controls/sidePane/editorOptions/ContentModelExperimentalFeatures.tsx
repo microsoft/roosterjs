@@ -14,10 +14,9 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
         "Reuse ancestor list elements even if they don't match the types from the list item.",
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
-    [ExperimentalFeatures.InlineEntityReadOnlyDelimiters]:
-        'Add read entities around read only entities to handle browser edge cases.',
-    [ExperimentalFeatures.ContentModelPaste]: 'Paste with content model',
     [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
+    [ExperimentalFeatures.ReusableContentModelV2]:
+        'Reuse existing DOM structure if possible, and update the model when content or selection is changed',
 };
 
 export default class ContentModelExperimentalFeaturesPane extends React.Component<
@@ -38,7 +37,7 @@ export default class ContentModelExperimentalFeaturesPane extends React.Componen
                     id={name}
                     onChange={() => this.onClick(name)}
                 />
-                <label htmlFor={name}>{FeatureNames[name]}</label>
+                <label htmlFor={name}>{name + ': ' + FeatureNames[name]}</label>
             </div>
         );
     }

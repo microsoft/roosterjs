@@ -1,8 +1,13 @@
 import { commitEntity } from 'roosterjs-editor-dom';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
-import { DomToModelContext } from 'roosterjs-content-model-types';
 import { entityProcessor } from '../../../lib/domToModel/processors/entityProcessor';
+import {
+    ContentModelDomIndexer,
+    ContentModelEntity,
+    ContentModelParagraph,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('entityProcessor', () => {
     let context: DomToModelContext;
@@ -196,5 +201,46 @@ describe('entityProcessor', () => {
         expect(context.blockFormat).toEqual({
             lineHeight: '20px',
         });
+    });
+
+    it('Inline Entity with domIndexer', () => {
+        const group = createContentModelDocument();
+        const span = document.createElement('span');
+
+        commitEntity(span, 'entity', true, 'entity_1');
+
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        entityProcessor(group, span, context);
+
+        const entityModel: ContentModelEntity = {
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            wrapper: span,
+            type: 'entity',
+            id: 'entity_1',
+            isReadonly: true,
+        };
+        const paragraphModel: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [entityModel],
+            format: {},
+        };
+
+        expect(group).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraphModel],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(span, paragraphModel, [entityModel]);
     });
 });

@@ -3,7 +3,7 @@ import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelTable,
     ModelToDomContext,
@@ -144,6 +144,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
         }
     }
+
+    context.domIndexer?.onTable(tableNode, table);
 
     return refNode;
 };

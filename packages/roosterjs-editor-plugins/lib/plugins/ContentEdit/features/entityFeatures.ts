@@ -1,5 +1,5 @@
-import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
+    ContentTraverser,
     addDelimiters,
     cacheGetEventData,
     createRange,
@@ -12,18 +12,20 @@ import {
     Position,
 } from 'roosterjs-editor-dom';
 import {
+    DelimiterClasses,
+    EntityOperation,
+    Keys,
+    NodeType,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
+
+import type {
     BuildInEditFeature,
     EntityFeatureSettings,
-    EntityOperation,
     IEditor,
-    Keys,
     PluginKeyboardEvent,
-    PositionType,
-    PluginEventType,
-    DelimiterClasses,
     PluginEvent,
-    NodeType,
-    ExperimentalFeatures,
     Entity,
     IContentTraverser,
     InlineElement,
@@ -215,17 +217,13 @@ function cacheGetNeighborEntityElement(
 }
 
 /**
- * @requires ExperimentalFeatures.InlineEntityReadOnlyDelimiters to be enabled
  * Content edit feature to move the cursor from Delimiters around Entities when using Right or Left Arrow Keys
  */
 const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.RIGHT, Keys.LEFT],
     allowFunctionKeys: true,
     shouldHandleEvent: (event: PluginKeyboardEvent, editor: IEditor) => {
-        if (
-            event.rawEvent.altKey ||
-            !editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-        ) {
+        if (event.rawEvent.altKey) {
             return false;
         }
 
@@ -270,16 +268,11 @@ const MoveBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
 };
 
 /**
- * @requires ExperimentalFeatures.InlineEntityReadOnlyDelimiters to be enabled
  * Content edit Feature to trigger a Delete Entity Operation when one of the Delimiter is about to be removed with DELETE or Backspace
  */
 const RemoveEntityBetweenDelimitersFeature: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.BACKSPACE, Keys.DELETE],
     shouldHandleEvent(event: PluginKeyboardEvent, editor: IEditor) {
-        if (!editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
-            return false;
-        }
-
         const range = editor.getSelectionRange();
         if (!range?.collapsed) {
             return false;
@@ -433,11 +426,7 @@ function triggerOperation(
         entity,
     });
 
-    if (
-        entity.isReadonly &&
-        !isBlockElement(entity.wrapper) &&
-        editor.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-    ) {
+    if (entity.isReadonly && !isBlockElement(entity.wrapper)) {
         if (event.rawEvent.defaultPrevented) {
             editor.runAsync(() => {
                 if (!editor.contains(entity.wrapper)) {

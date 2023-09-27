@@ -1,8 +1,8 @@
-import { ContentModelBlock } from '../block/ContentModelBlock';
-import { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
-import { ContentModelDecorator } from '../decorator/ContentModelDecorator';
-import { ContentModelSegment } from '../segment/ContentModelSegment';
-import { ModelToDomContext } from './ModelToDomContext';
+import type { ContentModelBlock } from '../block/ContentModelBlock';
+import type { ContentModelBlockGroup } from '../group/ContentModelBlockGroup';
+import type { ContentModelDecorator } from '../decorator/ContentModelDecorator';
+import type { ContentModelSegment } from '../segment/ContentModelSegment';
+import type { ModelToDomContext } from './ModelToDomContext';
 
 /**
  * Type of Content Model to DOM handler

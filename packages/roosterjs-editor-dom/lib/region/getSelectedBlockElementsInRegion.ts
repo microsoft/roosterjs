@@ -3,7 +3,8 @@ import createElement from '../utils/createElement';
 import getBlockElementAtNode from '../blockElements/getBlockElementAtNode';
 import getSelectionRangeInRegion from './getSelectionRangeInRegion';
 import shouldSkipNode from '../utils/shouldSkipNode';
-import { BlockElement, KnownCreateElementDataIndex, RegionBase } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import type { BlockElement, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Get all block elements covered by the selection under this region

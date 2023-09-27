@@ -1,8 +1,8 @@
 import { addSelectionMarker } from '../utils/addSelectionMarker';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import {
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type {
     ContentModelBlockGroup,
     DomToModelContext,
     ElementProcessor,
@@ -45,9 +45,9 @@ export function processChildNode(
     child: Node,
     context: DomToModelContext
 ) {
-    if (isNodeOfType(child, NodeType.Element) && child.style.display != 'none') {
+    if (isNodeOfType(child, 'ELEMENT_NODE') && child.style.display != 'none') {
         context.elementProcessors.element(group, child, context);
-    } else if (isNodeOfType(child, NodeType.Text)) {
+    } else if (isNodeOfType(child, 'TEXT_NODE')) {
         context.elementProcessors['#text'](group, child, context);
     }
 }

@@ -1,7 +1,8 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
 import safeInstanceOf from './safeInstanceOf';
 import { Browser } from './Browser';
-import { CreateElementData, KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
+import type { CreateElementData } from 'roosterjs-editor-types';
 import type { CompatibleKnownCreateElementDataIndex } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

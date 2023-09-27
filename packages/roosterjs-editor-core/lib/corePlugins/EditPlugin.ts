@@ -1,11 +1,10 @@
 import { isCtrlOrMetaPressed } from 'roosterjs-editor-dom';
-import {
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type {
     EditPluginState,
     GenericContentEditFeature,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginWithState,
 } from 'roosterjs-editor-types';
 

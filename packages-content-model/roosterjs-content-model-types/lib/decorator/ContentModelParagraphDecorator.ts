@@ -1,5 +1,5 @@
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**
  * Represent decorator for a paragraph in Content Model

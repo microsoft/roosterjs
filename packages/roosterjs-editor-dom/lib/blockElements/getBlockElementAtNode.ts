@@ -4,7 +4,7 @@ import getTagOfNode from '../utils/getTagOfNode';
 import isBlockElement from '../utils/isBlockElement';
 import NodeBlockElement from './NodeBlockElement';
 import StartEndBlockElement from './StartEndBlockElement';
-import { BlockElement } from 'roosterjs-editor-types';
+import type { BlockElement } from 'roosterjs-editor-types';
 
 /**
  * This produces a block element from a a node

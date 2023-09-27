@@ -1,16 +1,17 @@
+import { DeleteResult } from '../edit/utils/DeleteSelectionStep';
+import { deleteSelection } from '../edit/deleteSelection';
+import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
+import { setSelection } from '../selection/setSelection';
 import {
     createBr,
     createParagraph,
     createSelectionMarker,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import { DeleteResult, DeleteSelectionResult } from '../edit/utils/DeleteSelectionStep';
-import { deleteSelection } from '../edit/deleteSelection';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import { getClosestAncestorBlockGroupIndex } from '../common/getClosestAncestorBlockGroupIndex';
-import { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
-import { setSelection } from '../selection/setSelection';
-import {
+import type { DeleteSelectionResult } from '../edit/utils/DeleteSelectionStep';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { InsertEntityPosition } from '../../publicTypes/parameter/InsertEntityOptions';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,

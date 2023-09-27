@@ -3,7 +3,7 @@ import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlug
 import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { CoreCreator, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import type { CoreCreator, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Create a new instance of Editor Core

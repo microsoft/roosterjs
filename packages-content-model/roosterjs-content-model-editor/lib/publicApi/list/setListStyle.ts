@@ -1,9 +1,9 @@
 import { findListItemsInSameThread } from '../../modelApi/list/findListItemsInSameThread';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { ListMetadataFormat } from 'roosterjs-content-model-types';
 import { updateListMetadata } from 'roosterjs-content-model-dom';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Set style of list items with in same thread of current item

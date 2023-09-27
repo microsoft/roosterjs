@@ -142,6 +142,18 @@ export const enum ExperimentalFeatures {
      */
     AutoFormatList = 'AutoFormatList',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
+     */
+    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
+
+    /**
+     * @deprecated This feature is always enabled
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
+
     //#endregion
 
     /**
@@ -163,17 +175,12 @@ export const enum ExperimentalFeatures {
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
 
     /**
-     * Add entities around a Read Only  Inline entity to prevent cursor to be hidden when cursor is next of it.
-     */
-    InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
-
-    /**
-     * Paste with Content model
-     */
-    ContentModelPaste = 'ContentModelPaste',
-
-    /**
      * Disable list chain functionality
      */
     DisableListChain = 'DisableListChain',
+
+    /**
+     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     */
+    ReusableContentModelV2 = 'ReusableContentModelV2',
 }

@@ -1,7 +1,8 @@
 import getEntityFromElement from './getEntityFromElement';
 import getEntitySelector from './getEntitySelector';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { Entity, EntityClasses, KnownEntityItem } from 'roosterjs-editor-types';
+import { EntityClasses } from 'roosterjs-editor-types';
+import type { Entity, KnownEntityItem } from 'roosterjs-editor-types';
 
 const EntityPlaceHolderTagName = 'ENTITY-PLACEHOLDER';
 

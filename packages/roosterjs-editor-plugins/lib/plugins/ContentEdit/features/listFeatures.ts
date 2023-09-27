@@ -28,13 +28,15 @@ import {
     toggleNumbering,
     toggleListType,
 } from 'roosterjs-editor-api';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     ListFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     QueryScope,
     ListType,
     ExperimentalFeatures,

@@ -1,5 +1,5 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
-import { LinkData } from 'roosterjs-editor-types';
+import type { LinkData } from 'roosterjs-editor-types';
 
 interface LinkMatchRule {
     match: RegExp;

@@ -1,6 +1,6 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
 import { getObjectKeys, readFile } from 'roosterjs-editor-dom';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Insert an image to editor at current selection

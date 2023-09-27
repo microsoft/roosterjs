@@ -1,7 +1,7 @@
 import { applyFormat } from '../utils/applyFormat';
 import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelListItem,
     ModelToDomContext,

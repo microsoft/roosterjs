@@ -1,29 +1,32 @@
-import AnnounceHandler from './AnnounceHandler';
-import ClipboardData from './ClipboardData';
-import ContentChangedData from './ContentChangedData';
-import DarkColorHandler from './DarkColorHandler';
-import EditorPlugin from './EditorPlugin';
-import NodePosition from './NodePosition';
-import Rect from './Rect';
-import SelectionPath from './SelectionPath';
-import TableSelection from './TableSelection';
-import { ChangeSource } from '../enum/ChangeSource';
-import { ColorTransformDirection } from '../enum/ColorTransformDirection';
-import { ContentMetadata } from './ContentMetadata';
-import { DOMEventHandler } from '../type/domEventHandler';
-import { GetContentMode } from '../enum/GetContentMode';
-import { ImageSelectionRange, SelectionRangeEx } from './SelectionRangeEx';
-import { InsertOption } from './InsertOption';
-import { PendableFormatState, StyleBasedFormatState } from './FormatState';
-import { PluginEvent } from '../event/PluginEvent';
-import { PluginState } from './CorePlugins';
-import { PositionType } from '../enum/PositionType';
-import { SizeTransformer } from '../type/SizeTransformer';
-import { TableSelectionRange } from './SelectionRangeEx';
-import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
+import type ClipboardData from './ClipboardData';
+import type ContentChangedData from './ContentChangedData';
+import type DarkColorHandler from './DarkColorHandler';
+import type EditorPlugin from './EditorPlugin';
+import type NodePosition from './NodePosition';
+import type Rect from './Rect';
+import type SelectionPath from './SelectionPath';
+import type TableSelection from './TableSelection';
+import type { ChangeSource } from '../enum/ChangeSource';
+import type { ColorTransformDirection } from '../enum/ColorTransformDirection';
+import type { ContentMetadata } from './ContentMetadata';
+import type { DOMEventHandler } from '../type/domEventHandler';
+import type { GetContentMode } from '../enum/GetContentMode';
+import type {
+    ImageSelectionRange,
+    SelectionRangeEx,
+    TableSelectionRange,
+} from './SelectionRangeEx';
+import type { InsertOption } from './InsertOption';
+import type { PendableFormatState, StyleBasedFormatState } from './FormatState';
+import type { PluginEvent } from '../event/PluginEvent';
+import type { PluginState } from './CorePlugins';
+import type { PositionType } from '../enum/PositionType';
+import type { SizeTransformer } from '../type/SizeTransformer';
+import type { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
+import type AnnounceHandler from './AnnounceHandler';
 /**
  * Represents the core data structure of an editor
  */

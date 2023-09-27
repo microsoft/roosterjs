@@ -1,10 +1,10 @@
 import { addDecorators } from '../../modelApi/common/addDecorators';
 import { addSegment } from '../../modelApi/common/addSegment';
-import { ContentModelImageFormat, ElementProcessor } from 'roosterjs-content-model-types';
 import { createImage } from '../../modelApi/creators/createImage';
 import { parseFormat } from '../utils/parseFormat';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
+import type { ContentModelImageFormat, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -41,6 +41,7 @@ export const imageProcessor: ElementProcessor<HTMLImageElement> = (group, elemen
             image.isSelected = true;
         }
 
-        addSegment(group, image);
+        const paragraph = addSegment(group, image);
+        context.domIndexer?.onSegment(element, paragraph, [image]);
     });
 };

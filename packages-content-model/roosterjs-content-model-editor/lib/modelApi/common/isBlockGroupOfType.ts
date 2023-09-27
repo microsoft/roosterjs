@@ -1,5 +1,5 @@
-import { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
-import { TypeOfBlockGroup } from './getClosestAncestorBlockGroupIndex';
+import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
+import type { TypeOfBlockGroup } from './getClosestAncestorBlockGroupIndex';
 
 /**
  * @internal

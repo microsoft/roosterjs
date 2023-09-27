@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
-import { DecreaseIndentButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { Indentation } from 'roosterjs-editor-types';
 import { setIndentation } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { DecreaseIndentButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

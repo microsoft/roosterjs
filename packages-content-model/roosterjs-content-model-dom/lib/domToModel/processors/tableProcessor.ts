@@ -6,7 +6,7 @@ import { parseFormat } from '../utils/parseFormat';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelTableCellFormat,
     DatasetFormat,
     ElementProcessor,
@@ -55,6 +55,8 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
             if (context.allowCacheElement) {
                 table.cachedElement = tableElement;
             }
+
+            context.domIndexer?.onTable(tableElement, table);
 
             parseFormat(tableElement, context.formatParsers.table, table.format, context);
             parseFormat(tableElement, context.formatParsers.tableBorder, table.format, context);

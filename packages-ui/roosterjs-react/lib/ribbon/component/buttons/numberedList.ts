@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { NumberedListButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleNumbering } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { NumberedListButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

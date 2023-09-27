@@ -1,5 +1,5 @@
-import { Emoji } from '../type/Emoji';
 import { forEachEmoji } from './emojiList';
+import type { Emoji } from '../type/Emoji';
 
 /**
  * @internal

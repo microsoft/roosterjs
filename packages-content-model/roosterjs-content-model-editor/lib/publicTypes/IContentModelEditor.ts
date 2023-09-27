@@ -1,5 +1,5 @@
-import { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import type { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
     ContentModelSegmentFormat,
     DomToModelOption,
@@ -35,11 +35,6 @@ export interface IContentModelEditor extends IEditor {
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
     ): SelectionRangeEx | null;
-
-    /**
-     * Notify editor the current cache may be invalid
-     */
-    invalidateCache(): void;
 
     /**
      * Get default format as ContentModelSegmentFormat.

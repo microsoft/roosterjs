@@ -4,14 +4,14 @@ import { contains, getTagOfNode, safeInstanceOf, VTable } from 'roosterjs-editor
 import { getCellAtCursor } from '../utils/getCellAtCursor';
 import { getCellCoordinates } from '../utils/getCellCoordinates';
 import { getTableAtCursor } from '../utils/getTableAtCursor';
-import { IEditor, PluginMouseDownEvent } from 'roosterjs-editor-types';
 import { prepareSelection } from '../utils/prepareSelection';
 import { restoreSelection } from '../utils/restoreSelection';
 import { selectTable } from '../utils/selectTable';
 import { setData } from '../utils/setData';
 import { TABLE_CELL_SELECTOR } from '../constants';
-import { TableCellSelectionState } from '../TableCellSelectionState';
 import { updateSelection } from '../utils/updateSelection';
+import type { IEditor, PluginMouseDownEvent } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 
 const LEFT_CLICK = 1;
 const RIGHT_CLICK = 3;

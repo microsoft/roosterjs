@@ -1,4 +1,4 @@
-import { Coordinates } from 'roosterjs-editor-types';
+import type { Coordinates } from 'roosterjs-editor-types';
 
 /**
  * Represents internal data structure for a selection position, combined by block and segment node

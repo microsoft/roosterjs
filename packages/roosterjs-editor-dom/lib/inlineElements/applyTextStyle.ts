@@ -1,11 +1,12 @@
 import getTagOfNode from '../utils/getTagOfNode';
 import Position from '../selection/Position';
+import safeInstanceOf from '../utils/safeInstanceOf';
 import splitTextNode from '../utils/splitTextNode';
 import wrap from '../utils/wrap';
 import { getNextLeafSibling } from '../utils/getLeafSibling';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
 import { splitBalancedNodeRange } from '../utils/splitParentNode';
-import safeInstanceOf from '../utils/safeInstanceOf';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 const STYLET_AGS = 'SPAN,B,I,U,EM,STRONG,STRIKE,S,SMALL,SUP,SUB'.split(',');
 

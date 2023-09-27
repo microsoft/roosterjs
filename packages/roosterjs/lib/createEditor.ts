@@ -1,7 +1,7 @@
-import { Editor } from 'roosterjs-editor-core';
-import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
-import { getDarkColor } from 'roosterjs-color-utils';
 import { ContentEdit, HyperLink, Paste } from 'roosterjs-editor-plugins';
+import { Editor } from 'roosterjs-editor-core';
+import { getDarkColor } from 'roosterjs-color-utils';
+import type { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Create an editor instance with most common options
@@ -32,5 +32,6 @@ export default function createEditor(
             textColor: '#000000',
         },
     };
+
     return new Editor(contentDiv, options);
 }

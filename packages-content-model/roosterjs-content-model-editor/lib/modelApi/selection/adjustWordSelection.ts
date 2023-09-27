@@ -1,7 +1,7 @@
 import { createText } from 'roosterjs-content-model-dom';
 import { isPunctuation, isSpace } from '../../domUtils/stringUtil';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import {
+import type {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,

@@ -4,15 +4,9 @@ import { handleKeyDownEvent } from './keyUtils/handleKeyDownEvent';
 import { handleKeyUpEvent } from './keyUtils/handleKeyUpEvent';
 import { handleMouseDownEvent } from './mouseUtils/handleMouseDownEvent';
 import { handleScrollEvent } from './mouseUtils/handleScrollEvent';
-import { TableCellSelectionState } from './TableCellSelectionState';
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    SelectionRangeTypes,
-    TableSelection,
-} from 'roosterjs-editor-types';
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { TableCellSelectionState } from './TableCellSelectionState';
+import type { EditorPlugin, IEditor, PluginEvent, TableSelection } from 'roosterjs-editor-types';
 
 /**
  * TableCellSelectionPlugin help highlight table cells

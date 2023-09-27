@@ -1,6 +1,6 @@
 import getInheritableStyles from '../htmlSanitizer/getInheritableStyles';
 import HtmlSanitizer from '../htmlSanitizer/HtmlSanitizer';
-import { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
+import type { BeforePasteEvent, NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Sanitize the content from the pasted content

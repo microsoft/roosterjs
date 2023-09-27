@@ -1,7 +1,7 @@
-import { ContentModelFormatContainerFormat } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { toggleModelBlockQuote } from '../../modelApi/block/toggleModelBlockQuote';
+import type { ContentModelFormatContainerFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 const DefaultQuoteFormat: ContentModelFormatContainerFormat = {
     borderLeft: '3px solid rgb(200, 200, 200)', // TODO: Support RTL

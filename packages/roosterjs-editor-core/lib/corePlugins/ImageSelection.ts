@@ -1,13 +1,6 @@
+import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
-
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
 const Delete = 'Delete';

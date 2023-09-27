@@ -1,11 +1,19 @@
+import { isFeatureEnabled } from './isFeatureEnabled';
 import {
+    ChangeSource,
+    ColorTransformDirection,
+    ContentPosition,
+    GetContentMode,
+    PluginEventType,
+    PositionType,
+    QueryScope,
+    RegionType,
+} from 'roosterjs-editor-types';
+import type {
     AnnounceData,
     BlockElement,
-    ChangeSource,
     ClipboardData,
-    ColorTransformDirection,
     ContentChangedData,
-    ContentPosition,
     CoreCreator,
     DarkColorHandler,
     DefaultFormat,
@@ -15,7 +23,6 @@ import {
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
-    GetContentMode,
     IContentTraverser,
     IEditor,
     InsertOption,
@@ -25,12 +32,8 @@ import {
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
-    PluginEventType,
-    PositionType,
-    QueryScope,
     Rect,
     Region,
-    RegionType,
     SelectionPath,
     SelectionRangeEx,
     SizeTransformer,
@@ -38,7 +41,6 @@ import {
     TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
-import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     cacheGetEventData,
     collapseNodes,
