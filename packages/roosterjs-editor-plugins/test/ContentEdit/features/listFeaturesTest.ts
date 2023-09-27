@@ -852,8 +852,8 @@ describe('getAnnounceDataForList', () => {
     });
 
     it('should return announce data for bullet list item | undefined', () => {
-        const editorMock = {
-            getElementAtCursor: () => {
+        const editorMock: any = {
+            getElementAtCursor: (): any => {
                 return undefined;
             },
         };
