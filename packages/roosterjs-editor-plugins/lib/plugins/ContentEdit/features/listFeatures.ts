@@ -1,6 +1,26 @@
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
 import {
+    Browser,
+    cacheGetEventData,
+    convertDecimalsToAlpha,
+    convertDecimalsToRoman,
+    createNumberDefinition,
+    createObjectDefinition,
+    createVListFromRegion,
+    findClosestElementAncestor,
+    getComputedStyle,
+    getMetadata,
+    getTagOfNode,
+    isBlockElement,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+    safeInstanceOf,
+    VList,
+    VListChain,
+} from 'roosterjs-editor-dom';
+import {
     blockFormat,
     commitListChains,
     setIndentation,
@@ -8,24 +28,6 @@ import {
     toggleNumbering,
     toggleListType,
 } from 'roosterjs-editor-api';
-import {
-    Browser,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    Position,
-    VListChain,
-    createVListFromRegion,
-    isBlockElement,
-    cacheGetEventData,
-    safeInstanceOf,
-    VList,
-    createObjectDefinition,
-    createNumberDefinition,
-    getMetadata,
-    findClosestElementAncestor,
-    getComputedStyle,
-} from 'roosterjs-editor-dom';
 import {
     BuildInEditFeature,
     IEditor,
@@ -39,6 +41,7 @@ import {
     PositionType,
     NumberingListType,
     BulletListType,
+    DefaultAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -68,6 +71,37 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
+const getAnnounceDataForList = (editor: IEditor) => {
+    const li = editor.getElementAtCursor('li') as HTMLLIElement;
+    const list = editor.getElementAtCursor('OL,UL', li) as
+        | undefined
+        | HTMLOListElement
+        | HTMLUListElement;
+    if (li && list) {
+        const vList = new VList(list);
+        const listItemIndex = vList.getListItemIndex(li);
+        let stringToAnnounce = listItemIndex.toString();
+        switch (list.style.listStyleType) {
+            case 'lower-alpha':
+            case 'lower-latin':
+            case 'upper-alpha':
+            case 'upper-latin':
+                stringToAnnounce = convertDecimalsToAlpha(listItemIndex - 1);
+                break;
+            case 'lower-roman':
+            case 'upper-roman':
+                stringToAnnounce = convertDecimalsToRoman(listItemIndex);
+                break;
+        }
+
+        return {
+            defaultStrings: DefaultAnnounceStrings.AnnounceListItemIndentation,
+            formatStrings: [stringToAnnounce],
+        };
+    }
+    return undefined;
+};
+
 const shouldHandleIndentationEvent = (indenting: boolean) => (
     event: PluginKeyboardEvent,
     editor: IEditor
@@ -93,6 +127,7 @@ const handleIndentationEvent = (indenting: boolean) => (
         (currentElement = editor.getElementAtCursor()) &&
         getComputedStyle(currentElement, 'direction') == 'rtl';
     setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+
     event.rawEvent.preventDefault();
 };
 
@@ -103,6 +138,7 @@ const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
+    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -113,6 +149,7 @@ const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
+    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -124,6 +161,7 @@ const IndentWhenAltShiftRight: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
     defaultDisabled: Browser.isMac,
+    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -135,6 +173,7 @@ const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
     defaultDisabled: Browser.isMac,
+    getAnnounceData: getAnnounceDataForList,
 };
 
 /**

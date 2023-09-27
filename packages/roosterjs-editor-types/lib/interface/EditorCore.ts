@@ -1,3 +1,4 @@
+import AnnounceHandler from './AnnounceHandler';
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
 import DarkColorHandler from './DarkColorHandler';
@@ -81,6 +82,11 @@ export default interface EditorCore extends PluginState {
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
     darkColorHandler: DarkColorHandler;
+
+    /**
+     * Handler to announce text to screen reader.
+     */
+    announceHandler?: AnnounceHandler;
 }
 
 /**

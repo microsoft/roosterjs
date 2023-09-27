@@ -28,7 +28,6 @@ const ALPHABET: Record<number, string> = {
 };
 
 /**
- * @internal
  * Convert decimal numbers into english alphabet letters
  * @param decimal The decimal number that needs to be converted
  * @param isLowerCase if true the roman value will appear in lower case

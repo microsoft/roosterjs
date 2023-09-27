@@ -1,5 +1,5 @@
-import { isFeatureEnabled } from './isFeatureEnabled';
 import {
+    AnnounceData,
     BlockElement,
     ChangeSource,
     ClipboardData,
@@ -38,6 +38,7 @@ import {
     TableSelection,
     TrustedHTMLHandler,
 } from 'roosterjs-editor-types';
+import { isFeatureEnabled } from './isFeatureEnabled';
 import {
     cacheGetEventData,
     collapseNodes,
@@ -1027,5 +1028,8 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         return this.core;
     }
 
+    public announce(announceData: AnnounceData): void {
+        this.getCore()?.announceHandler?.announce(announceData);
+    }
     //#endregion
 }

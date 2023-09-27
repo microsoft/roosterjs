@@ -1,3 +1,4 @@
+import AnnounceHandlerImpl from './AnnounceHandlerImpl';
 import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlugins';
 import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
@@ -52,6 +53,10 @@ export const createEditorCore: CoreCreator<EditorCore, EditorOptions> = (content
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
+        announceHandler: new AnnounceHandlerImpl(
+            contentDiv.ownerDocument,
+            options.announceStringsMap
+        ),
     };
 
     return core;

@@ -1,3 +1,4 @@
+import AnnounceData from './AnnounceData';
 import BlockElement from './BlockElement';
 import ClipboardData from './ClipboardData';
 import ContentChangedData from './ContentChangedData';
@@ -577,6 +578,11 @@ export default interface IEditor {
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent): void;
 
+    /**
+     * Announce some text to screen reader.
+     * @param announceData data to be announced
+     */
+    announce(announceData: AnnounceData): void;
     //#endregion
 
     //#region Dark mode APIs

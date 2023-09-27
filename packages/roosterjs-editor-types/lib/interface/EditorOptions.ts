@@ -6,6 +6,7 @@ import Rect from './Rect';
 import Snapshot from './Snapshot';
 import UndoSnapshotsService from './UndoSnapshotsService';
 import { CoreApiMap } from './EditorCore';
+import { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
 import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import { SizeTransformer } from '../type/SizeTransformer';
 import { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
@@ -144,4 +145,9 @@ export default interface EditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * Localized default announce strings.
+     */
+    announceStringsMap?: Map<DefaultAnnounceStrings, string>;
 }

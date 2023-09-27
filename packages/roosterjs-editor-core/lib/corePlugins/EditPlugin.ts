@@ -90,6 +90,10 @@ export default class EditPlugin implements PluginWithState<EditPluginState> {
                 if (isKeyDownEvent) {
                     event.handledByEditFeature = true;
                 }
+                const announceData = feature.getAnnounceData?.(this.editor);
+                if (announceData) {
+                    this.editor.announce(announceData);
+                }
                 break;
             }
         }
