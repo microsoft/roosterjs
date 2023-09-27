@@ -3,7 +3,7 @@ import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getObjectKeys, isCharacterValue } from 'roosterjs-editor-dom';
 import { Keys, PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from 'roosterjs-content-model';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
