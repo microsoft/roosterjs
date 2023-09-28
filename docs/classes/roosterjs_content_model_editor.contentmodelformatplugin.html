@@ -88,7 +88,7 @@
 			<section class="tsd-panel">
 				<h3>Implements</h3>
 				<ul class="tsd-hierarchy">
-					<li><a href="../interfaces/roosterjs_editor_types.editorplugin.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorPlugin</a></li>
+					<li><a href="../interfaces/roosterjs_editor_types.pluginwithstate.html" class="tsd-signature-type" data-tsd-kind="Interface">PluginWithState</a><span class="tsd-signature-symbol">&lt;</span><a href="../interfaces/roosterjs_content_model_editor.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a><span class="tsd-signature-symbol">&gt;</span></li>
 				</ul>
 			</section>
 			<section class="tsd-panel-group tsd-index-group">
@@ -106,6 +106,7 @@
 							<ul class="tsd-index-list">
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_editor.contentmodelformatplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_editor.contentmodelformatplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_editor.contentmodelformatplugin.html#getstate" class="tsd-kind-icon">get<wbr>State</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_editor.contentmodelformatplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
 								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_content_model_editor.contentmodelformatplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
@@ -119,12 +120,29 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Content<wbr>Model<wbr>Format<wbr>Plugin<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_editor.contentmodelformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ContentModelFormatPlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Content<wbr>Model<wbr>Format<wbr>Plugin<span class="tsd-signature-symbol">(</span>state<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_editor.contentmodelformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ContentModelFormatPlugin</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L21">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:21</a></li>
+								</ul>
 							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Construct a new instance of ContentModelEditPlugin class</p>
+								</div>
+							</div>
+							<h4 class="tsd-parameters-title">Parameters</h4>
+							<ul class="tsd-parameters">
+								<li>
+									<h5>state: <a href="../interfaces/roosterjs_content_model_editor.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a></h5>
+									<div class="tsd-comment tsd-typography">
+										<p>State of this plugin</p>
+									</div>
+								</li>
+							</ul>
 							<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_editor.contentmodelformatplugin.html" class="tsd-signature-type" data-tsd-kind="Class">ContentModelFormatPlugin</a></h4>
 						</li>
 					</ul>
@@ -141,9 +159,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of EditorPlugin.dispose</p>
+								<p>Implementation of PluginWithState.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/be655c1/packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts#L49">packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts:49</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L58">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -166,9 +184,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of EditorPlugin.getName</p>
+								<p>Implementation of PluginWithState.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/be655c1/packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts#L24">packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L34">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:34</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -181,6 +199,29 @@
 					</ul>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
+					<a name="getstate" class="tsd-anchor"></a>
+					<h3>get<wbr>State</h3>
+					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
+						<li class="tsd-signature tsd-kind-icon">get<wbr>State<span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a></li>
+					</ul>
+					<ul class="tsd-descriptions">
+						<li class="tsd-description">
+							<aside class="tsd-sources">
+								<p>Implementation of <a href="../interfaces/roosterjs_editor_types.pluginwithstate.html">PluginWithState</a>.<a href="../interfaces/roosterjs_editor_types.pluginwithstate.html#getstate">getState</a></p>
+								<ul>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L65">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:65</a></li>
+								</ul>
+							</aside>
+							<div class="tsd-comment tsd-typography">
+								<div class="lead">
+									<p>Get plugin state object</p>
+								</div>
+							</div>
+							<h4 class="tsd-returns-title">Returns <a href="../interfaces/roosterjs_content_model_editor.contentmodelformatpluginstate.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelFormatPluginState</a></h4>
+						</li>
+					</ul>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-method tsd-parent-kind-class">
 					<a name="initialize" class="tsd-anchor"></a>
 					<h3>initialize</h3>
 					<ul class="tsd-signatures tsd-kind-method tsd-parent-kind-class">
@@ -189,9 +230,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of EditorPlugin.initialize</p>
+								<p>Implementation of PluginWithState.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/be655c1/packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts#L34">packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts:34</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L44">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,9 +264,9 @@
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
-								<p>Implementation of EditorPlugin.onPluginEvent</p>
+								<p>Implementation of PluginWithState.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/be655c1/packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts#L59">packages-content-model/roosterjs-content-model-editor/lib/editor/plugins/ContentModelFormatPlugin.ts:59</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts#L75">packages-content-model/roosterjs-content-model-editor/lib/editor/corePlugins/ContentModelFormatPlugin.ts:75</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -312,6 +353,9 @@
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_content_model_editor.contentmodelformatplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+							</li>
+							<li class=" tsd-kind-method tsd-parent-kind-class">
+								<a href="roosterjs_content_model_editor.contentmodelformatplugin.html#getstate" class="tsd-kind-icon">get<wbr>State</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
 								<a href="roosterjs_content_model_editor.contentmodelformatplugin.html#initialize" class="tsd-kind-icon">initialize</a>
