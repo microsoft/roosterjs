@@ -46,6 +46,7 @@ export const handleImage: ContentModelSegmentHandler<ContentModelImage> = (
 
     if (imageModel.isSelectedAsImageSelection) {
         context.imageSelection = {
+            type: 'image',
             image: img,
         };
     }

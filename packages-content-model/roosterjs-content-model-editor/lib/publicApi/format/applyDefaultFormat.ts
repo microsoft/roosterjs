@@ -4,7 +4,6 @@ import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { isBlockElement, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { NodePosition } from 'roosterjs-editor-types';
@@ -19,8 +18,8 @@ export default function applyDefaultFormat(
     editor: IContentModelEditor,
     defaultFormat: ContentModelSegmentFormat
 ) {
-    const rangeEx = editor.getSelectionRangeEx();
-    const range = rangeEx?.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
+    const selection = editor.getDOMSelection();
+    const range = selection?.type == 'range' ? selection.range : null;
     const startPos = range ? Position.getStart(range) : null;
     let node: Node | null = startPos?.node ?? null;
 

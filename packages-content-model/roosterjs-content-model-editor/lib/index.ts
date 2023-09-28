@@ -7,6 +7,8 @@ export {
     ContentModelEditorCore,
     CreateContentModel,
     SetContentModel,
+    GetDOMSelection,
+    SetDOMSelection,
 } from './publicTypes/ContentModelEditorCore';
 export {
     default as ContentModelBeforePasteEvent,

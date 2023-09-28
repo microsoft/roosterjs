@@ -1,7 +1,8 @@
 import type { ContentModelPluginState } from './pluginState/ContentModelPluginState';
-import type { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { CoreApiMap, EditorCore } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
+    DOMSelection,
     DomToModelOption,
     DomToModelSettings,
     EditorContext,
@@ -25,11 +26,17 @@ export type CreateEditorContext = (core: ContentModelEditorCore) => EditorContex
 export type CreateContentModel = (
     core: ContentModelEditorCore,
     option?: DomToModelOption,
-    selectionOverride?: SelectionRangeEx
+    selectionOverride?: DOMSelection
 ) => ContentModelDocument;
 
 /**
- * Set content with content model
+ * Get current DOM selection from editor
+ * @param core The ContentModelEditorCore object
+ */
+export type GetDOMSelection = (core: ContentModelEditorCore) => DOMSelection | null;
+
+/**
+ * Set content with content model. This is the replacement of core API getSelectionRangeEx
  * @param core The ContentModelEditorCore object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
@@ -40,7 +47,14 @@ export type SetContentModel = (
     model: ContentModelDocument,
     option?: ModelToDomOption,
     onNodeCreated?: OnNodeCreated
-) => SelectionRangeEx | null;
+) => DOMSelection | null;
+
+/**
+ * Set current DOM selection from editor. This is the replacement of core API select
+ * @param core The ContentModelEditorCore object
+ * @param selection The selection to set
+ */
+export type SetDOMSelection = (core: ContentModelEditorCore, selection: DOMSelection) => void;
 
 /**
  * The interface for the map of core API for Content Model editor.
@@ -61,12 +75,25 @@ export interface ContentModelCoreApiMap extends CoreApiMap {
     createContentModel: CreateContentModel;
 
     /**
+     * Get current DOM selection from editor
+     * @param core The ContentModelEditorCore object
+     */
+    getDOMSelection: GetDOMSelection;
+
+    /**
      * Set content with content model
      * @param core The ContentModelEditorCore object
      * @param model The content model to set
      * @param option Additional options to customize the behavior of Content Model to DOM conversion
      */
     setContentModel: SetContentModel;
+
+    /**
+     * Set current DOM selection from editor. This is the replacement of core API select
+     * @param core The ContentModelEditorCore object
+     * @param selection The selection to set
+     */
+    setDOMSelection: SetDOMSelection;
 }
 
 /**

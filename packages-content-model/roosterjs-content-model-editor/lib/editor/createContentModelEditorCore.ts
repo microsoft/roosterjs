@@ -9,8 +9,9 @@ import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-conten
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
-import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
+import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
+import { setDOMSelection } from './coreApi/setDOMSelection';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
@@ -94,10 +95,13 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
     cmCore.api.switchShadowEdit = switchShadowEdit;
-    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
+    cmCore.api.getDOMSelection = getDOMSelection;
+    cmCore.api.setDOMSelection = setDOMSelection;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
+    cmCore.originalApi.getDOMSelection = getDOMSelection;
+    cmCore.originalApi.setDOMSelection = setDOMSelection;
 }
 
 function getPluginState(options: ContentModelEditorOptions): ContentModelPluginState {

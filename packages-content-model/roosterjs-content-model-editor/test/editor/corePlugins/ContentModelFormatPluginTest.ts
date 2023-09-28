@@ -1,7 +1,7 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import { ChangeSource, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
@@ -247,7 +247,7 @@ describe('ContentModelFormatPlugin', () => {
 
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
             contentModel: model,
-            rangeEx: undefined,
+            selection: undefined,
             data: undefined,
             source: ChangeSource.Format,
             additionalData: {
@@ -424,7 +424,7 @@ describe('ContentModelFormatPlugin', () => {
 describe('ContentModelFormatPlugin for default format', () => {
     let editor: IContentModelEditor;
     let contentDiv: HTMLDivElement;
-    let getSelectionRangeEx: jasmine.Spy;
+    let getDOMSelection: jasmine.Spy;
     let getPendingFormatSpy: jasmine.Spy;
     let setPendingFormatSpy: jasmine.Spy;
     let cacheContentModelSpy: jasmine.Spy;
@@ -433,7 +433,7 @@ describe('ContentModelFormatPlugin for default format', () => {
     beforeEach(() => {
         setPendingFormatSpy = spyOn(pendingFormat, 'setPendingFormat');
         getPendingFormatSpy = spyOn(pendingFormat, 'getPendingFormat');
-        getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx');
+        getDOMSelection = jasmine.createSpy('getDOMSelection');
         cacheContentModelSpy = jasmine.createSpy('cacheContentModel');
         addUndoSnapshotSpy = jasmine.createSpy('addUndoSnapshot');
 
@@ -441,7 +441,7 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         editor = ({
             contains: (e: Node) => contentDiv != e && contentDiv.contains(e),
-            getSelectionRangeEx,
+            getDOMSelection,
             cacheContentModel: cacheContentModelSpy,
             addUndoSnapshot: addUndoSnapshotSpy,
         } as any) as IContentModelEditor;
@@ -454,15 +454,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -508,15 +506,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: false,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: false,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -560,15 +556,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Process' } as any;
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -614,15 +608,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'Up' } as any;
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -667,15 +659,13 @@ describe('ContentModelFormatPlugin for default format', () => {
 
         contentDiv.appendChild(div);
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: div,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: div,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
@@ -720,15 +710,13 @@ describe('ContentModelFormatPlugin for default format', () => {
         const plugin = new ContentModelFormatPlugin(state);
         const rawEvent = { key: 'a' } as any;
 
-        getSelectionRangeEx.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    collapsed: true,
-                    startContainer: contentDiv,
-                    startOffset: 0,
-                },
-            ],
+        getDOMSelection.and.returnValue({
+            type: 'range',
+            range: {
+                collapsed: true,
+                startContainer: contentDiv,
+                startOffset: 0,
+            },
         });
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(

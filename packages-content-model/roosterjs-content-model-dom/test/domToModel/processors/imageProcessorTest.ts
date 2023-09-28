@@ -1,7 +1,6 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { imageProcessor } from '../../../lib/domToModel/processors/imageProcessor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     ContentModelDomIndexer,
     ContentModelImage,
@@ -105,8 +104,8 @@ describe('imageProcessor', () => {
         const doc = createContentModelDocument();
         const img = document.createElement('img');
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
+        context.selection = {
+            type: 'image',
             image: img,
         } as any;
 
@@ -141,8 +140,8 @@ describe('imageProcessor', () => {
         img.id = 'id1';
         img.style.display = 'block';
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
+        context.selection = {
+            type: 'image',
             image: img,
         } as any;
 
