@@ -8,12 +8,7 @@ import { PartialTheme, ThemeProvider } from '@fluentui/react/lib/Theme';
 import { registerWindowForCss, unregisterWindowForCss } from '../utils/cssMonitor';
 import { trustedHTMLHandler } from '../utils/trustedHTMLHandler';
 import { WindowProvider } from '@fluentui/react/lib/WindowProvider';
-import {
-    DefaultAnnounceStrings,
-    EditorOptions,
-    EditorPlugin,
-    IEditor,
-} from 'roosterjs-editor-types';
+import { EditorOptions, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 import {
     createUpdateContentPlugin,
     Rooster,
@@ -196,7 +191,6 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
                             zoomScale={this.state.scale}
                             initialContent={this.content}
                             editorCreator={this.state.editorCreator}
-                            announceStringsMap={getDefaultStringsMap()}
                             dir={this.state.isRtl ? 'rtl' : 'ltr'}
                         />
                     )}
@@ -282,11 +276,4 @@ export default abstract class MainPaneBase extends React.Component<{}, MainPaneB
             isDarkMode: this.themeMatch?.matches || false,
         });
     };
-}
-
-function getDefaultStringsMap(): Map<DefaultAnnounceStrings, string> {
-    return new Map<DefaultAnnounceStrings, string>([
-        [DefaultAnnounceStrings.AnnounceListItemBulletIndentation, 'Autocorrected Bullet'],
-        [DefaultAnnounceStrings.AnnounceListItemNumberingIndentation, 'Autocorrected {0}'],
-    ]);
 }

@@ -22,6 +22,7 @@ const initialState: BuildInPluginState = {
         contextMenu: true,
         autoFormat: true,
         contentModelPaste: true,
+        announce: true,
     },
     contentEditFeatures: getDefaultContentEditFeatureSettings(),
     defaultFormat: {},

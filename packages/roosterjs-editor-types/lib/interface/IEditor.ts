@@ -36,7 +36,6 @@ import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode'
 import type { CompatibleQueryScope } from '../compatibleEnum/QueryScope';
 import type { CompatibleRegionType } from '../compatibleEnum/RegionType';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
-import type AnnounceData from './AnnounceData';
 
 /**
  * Interface of roosterjs editor object
@@ -577,12 +576,6 @@ export default interface IEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent): void;
-
-    /**
-     * Announce some text to screen reader.
-     * @param announceData data to be announced
-     */
-    announce(announceData: AnnounceData): void;
     //#endregion
 
     //#region Dark mode APIs

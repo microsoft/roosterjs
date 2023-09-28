@@ -44,6 +44,7 @@ import {
     NumberingListType,
     BulletListType,
     DefaultAnnounceStrings,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -136,7 +137,20 @@ const handleIndentationEvent = (indenting: boolean) => (
         event.rawEvent.keyCode !== Keys.TAB &&
         (currentElement = editor.getElementAtCursor()) &&
         getComputedStyle(currentElement, 'direction') == 'rtl';
-    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+
+    editor.addUndoSnapshot(
+        () => {
+            setIndentation(
+                editor,
+                isRTL == indenting ? Indentation.Decrease : Indentation.Increase
+            );
+        },
+        ChangeSource.Format,
+        false /* canUndoByBackspace */,
+        {
+            getAnnounceData: () => getAnnounceDataForList(editor),
+        }
+    );
 
     event.rawEvent.preventDefault();
 };
@@ -148,7 +162,6 @@ const IndentWhenTab: BuildInEditFeature<PluginKeyboardEvent> = {
     keys: [Keys.TAB],
     shouldHandleEvent: shouldHandleIndentationEvent(true),
     handleEvent: handleIndentationEvent(true),
-    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -159,7 +172,6 @@ const OutdentWhenShiftTab: BuildInEditFeature<PluginKeyboardEvent> = {
     shouldHandleEvent: shouldHandleIndentationEvent(false),
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
-    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -171,7 +183,6 @@ const IndentWhenAltShiftRight: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: handleIndentationEvent(true),
     allowFunctionKeys: true,
     defaultDisabled: Browser.isMac,
-    getAnnounceData: getAnnounceDataForList,
 };
 
 /**
@@ -183,7 +194,6 @@ const OutdentWhenAltShiftLeft: BuildInEditFeature<PluginKeyboardEvent> = {
     handleEvent: handleIndentationEvent(false),
     allowFunctionKeys: true,
     defaultDisabled: Browser.isMac,
-    getAnnounceData: getAnnounceDataForList,
 };
 
 /**

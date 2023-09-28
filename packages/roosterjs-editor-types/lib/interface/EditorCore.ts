@@ -26,7 +26,6 @@ import type { TrustedHTMLHandler } from '../type/TrustedHTMLHandler';
 import type { CompatibleChangeSource } from '../compatibleEnum/ChangeSource';
 import type { CompatibleColorTransformDirection } from '../compatibleEnum/ColorTransformDirection';
 import type { CompatibleGetContentMode } from '../compatibleEnum/GetContentMode';
-import type AnnounceHandler from './AnnounceHandler';
 /**
  * Represents the core data structure of an editor
  */
@@ -85,11 +84,6 @@ export default interface EditorCore extends PluginState {
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
     darkColorHandler: DarkColorHandler;
-
-    /**
-     * Handler to announce text to screen reader.
-     */
-    announceHandler?: AnnounceHandler;
 }
 
 /**

@@ -10,7 +10,6 @@ import {
     RegionType,
 } from 'roosterjs-editor-types';
 import type {
-    AnnounceData,
     BlockElement,
     ClipboardData,
     ContentChangedData,
@@ -117,7 +116,6 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         }
 
         core.darkColorHandler.reset();
-        core.announceHandler?.dispose();
 
         this.core = null;
     }
@@ -1031,8 +1029,5 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         return this.core;
     }
 
-    public announce(announceData: AnnounceData): void {
-        this.getCore()?.announceHandler?.announce(announceData);
-    }
     //#endregion
 }

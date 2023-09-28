@@ -1,4 +1,3 @@
-import type { DefaultAnnounceStrings } from '../enum/DefaultAnnounceStrings';
 import type CorePlugins from './CorePlugins';
 import type DarkColorHandler from './DarkColorHandler';
 import type DefaultFormat from './DefaultFormat';
@@ -145,9 +144,4 @@ export default interface EditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
-
-    /**
-     * Localized default announce strings.
-     */
-    announceStringsMap?: Map<DefaultAnnounceStrings, string>;
 }

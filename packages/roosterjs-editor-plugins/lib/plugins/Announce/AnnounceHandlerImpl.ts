@@ -1,9 +1,9 @@
-import type { AnnounceData, AnnounceHandler, DefaultAnnounceStrings } from 'roosterjs-editor-types';
+import type { AnnounceData, DefaultAnnounceStrings } from 'roosterjs-editor-types';
 
 /**
  * @internal
  */
-export default class AnnounceHandlerImpl implements AnnounceHandler {
+export default class AnnounceHandler {
     private ariaLiveElement: HTMLDivElement | undefined;
 
     constructor(

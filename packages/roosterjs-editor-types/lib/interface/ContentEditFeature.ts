@@ -1,7 +1,6 @@
 import type IEditor from './IEditor';
 import type { CompatiblePluginKeyboardEvent, PluginKeyboardEvent } from '../event/PluginDomEvent';
 import type { PluginEvent } from '../event/PluginEvent';
-import type AnnounceData from './AnnounceData';
 
 /**
  * Generic ContentEditFeature interface
@@ -32,13 +31,6 @@ export interface GenericContentEditFeature<TEvent extends PluginEvent> {
      * When set to false, this edit feature won't be triggered if user has pressed Ctrl/Meta/Alt key
      */
     allowFunctionKeys?: boolean;
-
-    /**
-     * Get data to announce after performing the Content edit feature.
-     * @param editor
-     * @returns
-     */
-    getAnnounceData?: (editor: IEditor) => AnnounceData | undefined;
 }
 
 /**

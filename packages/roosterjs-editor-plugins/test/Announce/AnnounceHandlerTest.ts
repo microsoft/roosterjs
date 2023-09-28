@@ -1,4 +1,4 @@
-import AnnounceHandlerImpl from '../../lib/editor/AnnounceHandlerImpl';
+import AnnounceHandlerImpl from '../../lib/plugins/Announce/AnnounceHandlerImpl';
 
 describe('AnnounceHandlerImpl', () => {
     let announceHandler: AnnounceHandlerImpl;

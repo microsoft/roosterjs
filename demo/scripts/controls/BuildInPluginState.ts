@@ -23,6 +23,7 @@ export interface BuildInPluginList {
     contextMenu: boolean;
     autoFormat: boolean;
     contentModelPaste: boolean;
+    announce: boolean;
 }
 
 export default interface BuildInPluginState {
