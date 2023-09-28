@@ -2,7 +2,7 @@ import type { ContentModelDocument } from '../group/ContentModelDocument';
 import type { ContentModelParagraph } from '../block/ContentModelParagraph';
 import type { ContentModelSegment } from '../segment/ContentModelSegment';
 import type { ContentModelTable } from '../block/ContentModelTable';
-import type { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { DOMSelection } from '../selection/DOMSelection';
 
 /**
  * Represents an indexer object which provides methods to help build backward relationship
@@ -37,13 +37,13 @@ export interface ContentModelDomIndexer {
      * When document content or selection is changed by user, we need to use this function to update the content model
      * to reflect the latest document. This process can fail since the selected node may not have a related model data structure.
      * @param model Current cached content model
-     * @param newRangeEx Latest selection range
-     * @param oldRangeEx @optional Original selection range before this change
+     * @param newSelection Latest selection
+     * @param oldSelection @optional Original selection before this change
      * @returns True if reconcile successfully, otherwise false
      */
     reconcileSelection: (
         model: ContentModelDocument,
-        newRangeEx: SelectionRangeEx,
-        oldRangeEx?: SelectionRangeEx
+        newSelection: DOMSelection,
+        oldSelection?: DOMSelection
     ) => boolean;
 }

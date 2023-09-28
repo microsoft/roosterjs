@@ -2,7 +2,6 @@ import { childProcessor } from '../../../lib/domToModel/processors/childProcesso
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { generalProcessor } from '../../../lib/domToModel/processors/generalProcessor';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     ContentModelDocument,
     DomToModelContext,
@@ -121,18 +120,15 @@ describe('childProcessor', () => {
     it('Process a DIV with element selection', () => {
         const div = document.createElement('div');
         div.innerHTML = '<span>test1</span><span>test2</span><span>test3</span>';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div,
-                    startOffset: 1,
-                    endContainer: div,
-                    endOffset: 2,
-                    collapsed: false,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 1,
+                endContainer: div,
+                endOffset: 2,
+                collapsed: false,
+            } as any,
         };
 
         childProcessor(doc, div, context);
@@ -159,18 +155,15 @@ describe('childProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = '<span>test1</span><span>test2</span><span>test3</span>';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div,
-                    startOffset: 1,
-                    endContainer: div,
-                    endOffset: 1,
-                    collapsed: true,
-                } as any,
-            ],
-            areAllCollapsed: true,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 1,
+                endContainer: div,
+                endOffset: 1,
+                collapsed: true,
+            } as any,
         };
 
         childProcessor(doc, div, context);
@@ -197,18 +190,15 @@ describe('childProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = 'test1test2test3';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div.firstChild!,
-                    startOffset: 5,
-                    endContainer: div.firstChild!,
-                    endOffset: 10,
-                    collapsed: false,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div.firstChild!,
+                startOffset: 5,
+                endContainer: div.firstChild!,
+                endOffset: 10,
+                collapsed: false,
+            } as any,
         };
 
         childProcessor(doc, div, context);
@@ -235,18 +225,15 @@ describe('childProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = 'test1test2test3';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div.firstChild!,
-                    startOffset: 5,
-                    endContainer: div.firstChild!,
-                    endOffset: 5,
-                    collapsed: true,
-                } as any,
-            ],
-            areAllCollapsed: true,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div.firstChild!,
+                startOffset: 5,
+                endContainer: div.firstChild!,
+                endOffset: 5,
+                collapsed: true,
+            } as any,
         };
 
         childProcessor(doc, div, context);
@@ -272,18 +259,15 @@ describe('childProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = '<span>test1</span>test2test3';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div.firstChild!,
-                    startOffset: 1,
-                    endContainer: div.lastChild!,
-                    endOffset: 5,
-                    collapsed: false,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div.firstChild!,
+                startOffset: 1,
+                endContainer: div.lastChild!,
+                endOffset: 5,
+                collapsed: false,
+            } as any,
         };
 
         childProcessor(doc, div, context);
@@ -321,18 +305,15 @@ describe('childProcessor', () => {
         const div = document.createElement('div');
 
         context.segmentFormat = { a: 'b' } as any;
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: div,
-                    startOffset: 0,
-                    endContainer: div,
-                    endOffset: 0,
-                    collapsed: true,
-                } as any,
-            ],
-            areAllCollapsed: true,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: div,
+                startOffset: 0,
+                endContainer: div,
+                endOffset: 0,
+                collapsed: true,
+            } as any,
         };
 
         childProcessor(doc, div, context);

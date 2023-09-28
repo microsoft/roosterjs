@@ -338,7 +338,7 @@ describe('insertLink', () => {
                 formatApiName: 'insertLink',
             },
             contentModel: jasmine.anything(),
-            rangeEx: jasmine.anything(),
+            selection: jasmine.anything(),
         });
 
         document.body.removeChild(div);

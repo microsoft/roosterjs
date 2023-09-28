@@ -2,8 +2,8 @@ import { ChangeSource } from 'roosterjs-editor-types';
 import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
-import type { ContentModelEntity } from 'roosterjs-content-model-types';
-import type { Entity, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { ContentModelEntity, DOMSelection } from 'roosterjs-content-model-types';
+import type { Entity } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     InsertEntityOptions,
@@ -28,7 +28,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: boolean,
-    position: 'focus' | 'begin' | 'end' | SelectionRangeEx,
+    position: 'focus' | 'begin' | 'end' | DOMSelection,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -47,7 +47,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: true,
-    position: InsertEntityPosition | SelectionRangeEx,
+    position: InsertEntityPosition | DOMSelection,
     options?: InsertEntityOptions
 ): ContentModelEntity | null;
 
@@ -55,7 +55,7 @@ export default function insertEntity(
     editor: IContentModelEditor,
     type: string,
     isBlock: boolean,
-    position?: InsertEntityPosition | SelectionRangeEx,
+    position?: InsertEntityPosition | DOMSelection,
     options?: InsertEntityOptions
 ): ContentModelEntity | null {
     const { contentNode, focusAfterEntity, wrapperDisplay, skipUndoSnapshot } = options || {};

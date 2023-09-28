@@ -281,7 +281,7 @@ describe('formatWithContentModel', () => {
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
             contentModel: mockedModel,
-            rangeEx: undefined,
+            selection: undefined,
             source: ChangeSource.Format,
             data: mockedData,
             additionalData: {

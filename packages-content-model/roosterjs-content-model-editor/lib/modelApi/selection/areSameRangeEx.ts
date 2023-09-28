@@ -1,35 +1,31 @@
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
-import type { Coordinates, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * @internal
- * Check if the given selection ranges are the same
+ * Check if the given selections are the same
  */
-export function areSameRangeEx(range1: SelectionRangeEx, range2: SelectionRangeEx): boolean {
-    if (range1 == range2) {
+export function areSameRangeEx(sel1: DOMSelection, sel2: DOMSelection): boolean {
+    if (sel1 == sel2) {
         return true;
     }
 
-    switch (range1.type) {
-        case SelectionRangeTypes.ImageSelection:
+    switch (sel1.type) {
+        case 'image':
+            return sel2.type == 'image' && sel2.image == sel1.image;
+
+        case 'table':
             return (
-                range2.type == SelectionRangeTypes.ImageSelection && range2.image == range1.image
+                sel2.type == 'table' &&
+                sel2.table == sel1.table &&
+                sel2.firstColumn == sel1.firstColumn &&
+                sel2.lastColumn == sel1.lastColumn &&
+                sel2.firstRow == sel1.firstRow &&
+                sel2.lastRow == sel1.lastRow
             );
 
-        case SelectionRangeTypes.TableSelection:
-            return (
-                range2.type == SelectionRangeTypes.TableSelection &&
-                range2.table == range1.table &&
-                areSameCoordinates(range2.coordinates?.firstCell, range1.coordinates?.firstCell) &&
-                areSameCoordinates(range2.coordinates?.lastCell, range1.coordinates?.lastCell)
-            );
-
-        case SelectionRangeTypes.Normal:
+        case 'range':
         default:
-            return (
-                range2.type == SelectionRangeTypes.Normal &&
-                areSameRanges(range2.ranges[0], range1.ranges[0])
-            );
+            return sel2.type == 'range' && areSameRanges(sel2.range, sel1.range);
     }
 }
 
@@ -42,8 +38,4 @@ function areSameRanges(r1?: Range, r2?: Range): boolean {
         r1.endContainer == r2.endContainer &&
         r1.endOffset == r2.endOffset
     );
-}
-
-function areSameCoordinates(c1?: Coordinates, c2?: Coordinates): boolean {
-    return !!(c1 && c2 && c1.x == c2.x && c1.y == c2.y);
 }

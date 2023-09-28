@@ -1,5 +1,5 @@
 import * as keyboardDelete from '../../../lib/publicApi/editing/keyboardDelete';
-import ContentModelEditPlugin from '../../../lib/editor/plugins/ContentModelEditPlugin';
+import ContentModelEditPlugin from '../../../lib/editor/corePlugins/ContentModelEditPlugin';
 import { EntityOperation, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -8,7 +8,7 @@ describe('ContentModelEditPlugin', () => {
 
     beforeEach(() => {
         editor = ({
-            getSelectionRangeEx: () =>
+            getDOMSelection: () =>
                 ({
                     type: -1,
                 } as any), // Force return invalid range to go through content model code
