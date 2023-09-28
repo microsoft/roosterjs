@@ -1,7 +1,7 @@
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentModelFormatPlugin';
-import { ChangeSource, PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { Position } from 'roosterjs-editor-dom';
