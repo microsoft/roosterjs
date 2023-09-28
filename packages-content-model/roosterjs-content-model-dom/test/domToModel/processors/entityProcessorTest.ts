@@ -1,7 +1,7 @@
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { entityProcessor } from '../../../lib/domToModel/processors/entityProcessor';
-import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
     ContentModelDomIndexer,
     ContentModelEntity,

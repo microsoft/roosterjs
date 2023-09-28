@@ -1,4 +1,4 @@
-import { addDelimiters } from 'roosterjs-editor-dom';
+import { addDelimiters, getObjectKeys, wrap } from 'roosterjs-editor-dom';
 import { applyFormat } from '../utils/applyFormat';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import type {
@@ -42,7 +42,12 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
     parent.appendChild(wrapper);
     newSegments?.push(wrapper);
 
-    applyFormat(wrapper, context.formatAppliers.segment, format, context);
+    if (getObjectKeys(format).length > 0) {
+        const span = wrap(wrapper, 'span');
+
+        applyFormat(span, context.formatAppliers.segment, format, context);
+    }
+
     applyFormat(wrapper, context.formatAppliers.entity, entityFormat, context);
 
     if (context.addDelimiterForEntity && entityFormat.isReadonly) {

@@ -4,7 +4,7 @@ import { createModelToDomContext } from '../../../lib/modelToDom/context/createM
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
 import { handleBlock as originalHandleBlock } from '../../../lib/modelToDom/handlers/handleBlock';
 import { handleBlockGroupChildren } from '../../../lib/modelToDom/handlers/handleBlockGroupChildren';
-import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
     ContentModelBlock,
     ContentModelBlockGroup,

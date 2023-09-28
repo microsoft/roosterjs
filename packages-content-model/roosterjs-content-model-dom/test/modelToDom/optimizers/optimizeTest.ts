@@ -1,7 +1,7 @@
 import * as mergeNode from '../../../lib/modelToDom/optimizers/mergeNode';
 import * as removeUnnecessarySpan from '../../../lib/modelToDom/optimizers/removeUnnecessarySpan';
 import { optimize } from '../../../lib/modelToDom/optimizers/optimize';
-import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 
 describe('optimize', () => {
     beforeEach(() => {

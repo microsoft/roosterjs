@@ -35,7 +35,9 @@ export function parseEntityClassName(
  * @internal
  */
 export function generateEntityClassNames(format: ContentModelEntityFormat): string {
-    return `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.entityType} ${
-        format.id ? `${ENTITY_ID_PREFIX}${format.id} ` : ''
-    }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}`;
+    return format.isFakeEntity
+        ? ''
+        : `${ENTITY_INFO_NAME} ${ENTITY_TYPE_PREFIX}${format.entityType ?? ''} ${
+              format.id ? `${ENTITY_ID_PREFIX}${format.id} ` : ''
+          }${ENTITY_READONLY_PREFIX}${format.isReadonly ? '1' : '0'}`;
 }

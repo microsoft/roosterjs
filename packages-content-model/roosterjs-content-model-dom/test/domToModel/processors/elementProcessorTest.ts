@@ -2,7 +2,7 @@ import * as getDelimiterFromElement from 'roosterjs-editor-dom/lib/delimiter/get
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { elementProcessor } from '../../../lib/domToModel/processors/elementProcessor';
-import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 import {
     ContentModelDocument,
     DomToModelContext,

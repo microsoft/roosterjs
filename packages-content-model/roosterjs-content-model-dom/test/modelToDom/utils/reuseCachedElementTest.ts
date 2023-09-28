@@ -1,5 +1,5 @@
 import { reuseCachedElement } from '../../../lib/modelToDom/utils/reuseCachedElement';
-import { setEntityElementClasses } from '../../domUtils/setEntityElementClasses';
+import { setEntityElementClasses } from '../../domUtils/entityUtilTest';
 
 describe('reuseCachedElement', () => {
     it('No refNode', () => {
