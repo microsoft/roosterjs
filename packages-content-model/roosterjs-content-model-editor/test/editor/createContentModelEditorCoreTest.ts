@@ -349,67 +349,6 @@ describe('createContentModelEditorCore', () => {
         } as any);
     });
 
-    it('Allow entity delimiters', () => {
-        const options = {
-            corePluginOverride: {
-                copyPaste: copyPastePlugin,
-            },
-        };
-
-        const core = createContentModelEditorCore(contentDiv, options);
-
-        expect(createEditorCoreSpy).toHaveBeenCalledWith(contentDiv, {
-            plugins: [mockedCachePlugin, mockedFormatPlugin, mockedEditPlugin],
-            corePluginOverride: {
-                typeInContainer: new ContentModelTypeInContainerPlugin(),
-                copyPaste: copyPastePlugin,
-            },
-        });
-        expect(core).toEqual({
-            lifecycle: {
-                experimentalFeatures: [],
-                defaultFormat: {},
-            },
-            api: {
-                switchShadowEdit,
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-            },
-            originalApi: {
-                a: 'b',
-                createEditorContext,
-                createContentModel,
-                setContentModel,
-                getDOMSelection,
-                setDOMSelection,
-            },
-            defaultDomToModelOptions: [
-                { processorOverride: { table: tablePreProcessor } },
-                undefined,
-            ],
-            defaultModelToDomOptions: [undefined],
-            defaultDomToModelConfig: mockedDomToModelConfig,
-            defaultModelToDomConfig: mockedModelToDomConfig,
-            defaultFormat: {
-                fontWeight: undefined,
-                italic: undefined,
-                underline: undefined,
-                fontFamily: undefined,
-                fontSize: undefined,
-                textColor: undefined,
-                backgroundColor: undefined,
-            },
-            contentDiv: {
-                style: {},
-            },
-            cache: { domIndexer: undefined },
-            copyPaste: { allowedCustomPasteType: [] },
-        } as any);
-    });
-
     it('Allow dom indexer', () => {
         mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModelV2);
 
