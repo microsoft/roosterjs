@@ -1,9 +1,15 @@
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
+import { isCharacterValue } from 'roosterjs-editor-dom/lib';
 import { Keys, PluginEventType } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import type {
+    IEditor,
+    PluginEvent,
+    PluginKeyDownEvent,
+    PluginWithState,
+} from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
@@ -73,18 +79,8 @@ export default class ContentModelCachePlugin
 
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                if (event.rawEvent.defaultPrevented || event.handledByEditFeature) {
-                    // Other plugins already handled this event, so it is most likely content is already changed, we need to clear cached content model
+                if (this.shouldClearCache(event)) {
                     this.invalidateCache();
-                } else {
-                    switch (event.rawEvent.which) {
-                        case Keys.ENTER:
-                            // ENTER key will create new paragraph, so need to update cache to reflect this change
-                            // TODO: Handle ENTER key to better reuse content model
-                            this.invalidateCache();
-
-                            break;
-                    }
                 }
                 break;
 
@@ -152,6 +148,39 @@ export default class ContentModelCachePlugin
         } else {
             this.state.cachedSelection = cachedSelection;
         }
+    }
+
+    private shouldClearCache(event: PluginKeyDownEvent) {
+        const { rawEvent, handledByEditFeature } = event;
+
+        // In these cases we can't update the model, so clear cache:
+        // 1. It is already handled by Content Edit Features
+        if (handledByEditFeature) {
+            return true;
+        }
+
+        // 2. Default behavior is prevented, which means other plugins has handled the event
+        if (rawEvent.defaultPrevented) {
+            return true;
+        }
+
+        // 3. ENTER key is pressed. ENTER key will create new paragraph, so need to update cache to reflect this change
+        // TODO: Handle ENTER key to better reuse content model
+
+        if (rawEvent.which == Keys.ENTER) {
+            return true;
+        }
+
+        // 4. Current selection is image or table or expanded range selection, and is inputting some text
+        if (
+            (this.state.cachedSelection?.type != 'range' ||
+                !this.state.cachedSelection.range.collapsed) &&
+            isCharacterValue(rawEvent)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
 

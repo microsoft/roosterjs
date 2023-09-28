@@ -74,7 +74,24 @@ describe('ContentModelCachePlugin', () => {
             });
         });
 
-        it('Other key', () => {
+        it('Other key without selection', () => {
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.B,
+                    key: 'B',
+                } as any,
+            });
+
+            expect(state).toEqual({ cachedModel: undefined, cachedSelection: undefined });
+        });
+
+        it('Other key with collapsed selection', () => {
+            state.cachedSelection = {
+                type: 'range',
+                range: { collapsed: true } as any,
+            };
+
             plugin.onPluginEvent({
                 eventType: PluginEventType.KeyDown,
                 rawEvent: {
@@ -82,7 +99,80 @@ describe('ContentModelCachePlugin', () => {
                 } as any,
             });
 
-            expect(state).toEqual({});
+            expect(state).toEqual({
+                cachedSelection: { type: 'range', range: { collapsed: true } as any },
+            });
+        });
+
+        it('Expanded selection with text input', () => {
+            state.cachedSelection = {
+                type: 'range',
+                range: { collapsed: false } as any,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.B,
+                    key: 'B',
+                } as any,
+            });
+
+            expect(state).toEqual({ cachedModel: undefined, cachedSelection: undefined });
+        });
+
+        it('Expanded selection with arrow input', () => {
+            state.cachedSelection = {
+                type: 'range',
+                range: { collapsed: false } as any,
+            };
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.UP,
+                    key: 'Up',
+                } as any,
+            });
+
+            expect(state).toEqual({
+                cachedSelection: {
+                    type: 'range',
+                    range: { collapsed: false } as any,
+                },
+            });
+        });
+
+        it('Table selection', () => {
+            state.cachedSelection = {
+                type: 'table',
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.B,
+                    key: 'B',
+                } as any,
+            });
+
+            expect(state).toEqual({ cachedModel: undefined, cachedSelection: undefined });
+        });
+
+        it('Image selection', () => {
+            state.cachedSelection = {
+                type: 'image',
+            } as any;
+
+            plugin.onPluginEvent({
+                eventType: PluginEventType.KeyDown,
+                rawEvent: {
+                    which: Keys.B,
+                    key: 'B',
+                } as any,
+            });
+
+            expect(state).toEqual({ cachedModel: undefined, cachedSelection: undefined });
         });
 
         it('Do not clear cache when in shadow edit', () => {
