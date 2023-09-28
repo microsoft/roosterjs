@@ -31,7 +31,10 @@ describe('AnnouncePlugin', () => {
         spyOn(AnnounceHandlerImpl, 'default').and.callFake(
             (document: Document, stringsMap?: Map<DefaultAnnounceStrings, string> | undefined) => {
                 return new (class Test {
-                    constructor(document: Document, stringsMap) {
+                    constructor(
+                        document: Document,
+                        stringsMap: Map<DefaultAnnounceStrings, string> | undefined
+                    ) {
                         ctorSpy(document, stringsMap);
                     }
 
