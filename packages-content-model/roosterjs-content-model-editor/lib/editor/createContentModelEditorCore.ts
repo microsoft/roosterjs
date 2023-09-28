@@ -7,8 +7,7 @@ import { createContentModelEditPlugin } from './corePlugins/ContentModelEditPlug
 import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormatPlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
-import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import { createEditorCore } from 'roosterjs-editor-core';
 import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
 import { setDOMSelection } from './coreApi/setDOMSelection';
@@ -108,12 +107,7 @@ function getPluginState(options: ContentModelEditorOptions): ContentModelPluginS
     const format = options.defaultFormat || {};
     return {
         cache: {
-            domIndexer: isFeatureEnabled(
-                options.experimentalFeatures,
-                ExperimentalFeatures.ReusableContentModelV2
-            )
-                ? contentModelDomIndexer
-                : undefined,
+            domIndexer: options.cacheModel ? contentModelDomIndexer : undefined,
         },
         copyPaste: {
             allowedCustomPasteType: options.allowedCustomPasteType || [],

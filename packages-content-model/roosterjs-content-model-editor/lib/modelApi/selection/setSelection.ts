@@ -1,5 +1,4 @@
 import { isGeneralSegment } from 'roosterjs-content-model-dom';
-import type { Coordinates } from 'roosterjs-editor-types';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -102,17 +101,16 @@ function setSelectionToTable(
     start: Selectable | null,
     end: Selectable | null
 ): boolean {
-    const notFoundCo: Coordinates = { x: -1, y: -1 };
-    const startCo = findCell(table, start);
-    const { x: firstX, y: firstY } = startCo ?? notFoundCo;
-    const { x: lastX, y: lastY } = (end ? findCell(table, end) : startCo) ?? notFoundCo;
+    const first = findCell(table, start);
+    const last = end ? findCell(table, end) : first;
 
     if (!isInSelection) {
         for (let row = 0; row < table.rows.length; row++) {
             const currentRow = table.rows[row];
             for (let col = 0; col < currentRow.cells.length; col++) {
                 const currentCell = table.rows[row].cells[col];
-                const isSelected = row >= firstY && row <= lastY && col >= firstX && col <= lastX;
+                const isSelected =
+                    row >= first.row && row <= last.row && col >= first.col && col <= last.col;
 
                 setIsSelected(currentCell, isSelected);
 
@@ -137,22 +135,13 @@ function setSelectionToTable(
     return isInSelection;
 }
 
-function findCell(table: ContentModelTable, cell: Selectable | null): Coordinates | undefined {
-    let x = -1;
-    let y = -1;
+function findCell(table: ContentModelTable, cell: Selectable | null): { row: number; col: number } {
+    let col = -1;
+    const row = cell
+        ? table.rows.findIndex(row => (col = (row.cells as Selectable[]).indexOf(cell)) >= 0)
+        : -1;
 
-    if (cell) {
-        for (let row = 0; y < 0 && row < table.rows.length; row++) {
-            for (let col = 0; x < 0 && col < table.rows[row].cells.length; col++) {
-                if (table.rows[row].cells[col] == cell) {
-                    x = col;
-                    y = row;
-                }
-            }
-        }
-    }
-
-    return x >= 0 && y >= 0 ? { x, y } : undefined;
+    return { row, col };
 }
 
 function setSelectionToSegment(

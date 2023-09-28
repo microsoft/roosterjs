@@ -15,8 +15,6 @@ const FeatureNames: Partial<Record<ExperimentalFeatures, string>> = {
     [ExperimentalFeatures.DeleteTableWithBackspace]:
         'Delete a table selected with the table selector pressing Backspace key',
     [ExperimentalFeatures.DisableListChain]: 'Disable list chain functionality',
-    [ExperimentalFeatures.ReusableContentModelV2]:
-        'Reuse existing DOM structure if possible, and update the model when content or selection is changed',
 };
 
 export default class ContentModelExperimentalFeaturesPane extends React.Component<
