@@ -13,8 +13,12 @@ import type { NodePosition } from 'roosterjs-editor-types';
  * @internal
  * When necessary, set default format as current pending format so it will be applied when Input event is fired
  * @param editor The Content Model Editor
+ * @param defaultFormat The default segment format to apply
  */
-export default function applyDefaultFormat(editor: IContentModelEditor) {
+export default function applyDefaultFormat(
+    editor: IContentModelEditor,
+    defaultFormat: ContentModelSegmentFormat
+) {
     const rangeEx = editor.getSelectionRangeEx();
     const range = rangeEx?.type == SelectionRangeTypes.Normal ? rangeEx.ranges[0] : null;
     const startPos = range ? Position.getStart(range) : null;
@@ -64,10 +68,10 @@ export default function applyDefaultFormat(editor: IContentModelEditor) {
                 const previousBlock = blocks[blockIndex - 1];
 
                 if (previousBlock?.blockType != 'Paragraph') {
-                    internalApplyDefaultFormat(editor, marker.format, startPos);
+                    internalApplyDefaultFormat(editor, defaultFormat, marker.format, startPos);
                 }
             } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
-                internalApplyDefaultFormat(editor, marker.format, startPos);
+                internalApplyDefaultFormat(editor, defaultFormat, marker.format, startPos);
             }
 
             // We didn't do any change but just apply default format to pending format, so no need to write back
@@ -80,11 +84,11 @@ export default function applyDefaultFormat(editor: IContentModelEditor) {
 
 function internalApplyDefaultFormat(
     editor: IContentModelEditor,
+    defaultFormat: ContentModelSegmentFormat,
     currentFormat: ContentModelSegmentFormat,
     startPos: NodePosition
 ) {
     const pendingFormat = getPendingFormat(editor) || {};
-    const defaultFormat = editor.getContentModelDefaultFormat();
     const newFormat: ContentModelSegmentFormat = {
         ...defaultFormat,
         ...pendingFormat,

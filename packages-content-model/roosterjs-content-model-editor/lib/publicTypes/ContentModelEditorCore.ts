@@ -2,7 +2,6 @@ import type { ContentModelPluginState } from './pluginState/ContentModelPluginSt
 import type { CoreApiMap, EditorCore, SelectionRangeEx } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
     DomToModelOption,
     DomToModelSettings,
     EditorContext,
@@ -83,11 +82,6 @@ export interface ContentModelEditorCore extends EditorCore, ContentModelPluginSt
      * Original API map of this editor. Overridden core API can use API from this map to call the original version of core API.
      */
     readonly originalApi: ContentModelCoreApiMap;
-
-    /**
-     * Default format used by Content Model. This is calculated from lifecycle.defaultFormat
-     */
-    defaultFormat: ContentModelSegmentFormat;
 
     /**
      * Default DOM to Content Model options

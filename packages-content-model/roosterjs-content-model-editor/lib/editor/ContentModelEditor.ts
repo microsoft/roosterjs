@@ -9,7 +9,6 @@ import type {
 import type { SelectionRangeEx } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
@@ -65,16 +64,5 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
-    }
-
-    /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
-     */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat {
-        const core = this.getCore();
-
-        return core.defaultFormat;
     }
 }
