@@ -260,7 +260,7 @@ describe('handleBlockGroupChildren', () => {
                     format: {},
                     wrapper: div2,
                     entityFormat: {
-                        type: 'TEST',
+                        entityType: 'TEST',
                         isReadonly: false,
                     },
                     segmentType: 'Entity',
@@ -364,7 +364,7 @@ describe('handleBlockGroupChildren', () => {
                             wrapper: span,
                             entityFormat: {
                                 isReadonly: false,
-                                type: 'MyEntity',
+                                entityType: 'MyEntity',
                             },
                             format: {},
                         },

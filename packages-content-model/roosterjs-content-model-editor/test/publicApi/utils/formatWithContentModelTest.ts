@@ -204,11 +204,11 @@ describe('formatWithContentModel', () => {
 
     it('Has entity got deleted', () => {
         const entity1 = {
-            entityFormat: { id: 'E1', type: 'E', isReadonly: true },
+            entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
             wrapper: {},
         } as any;
         const entity2 = {
-            entityFormat: { id: 'E2', type: 'E', isReadonly: true },
+            entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
             wrapper: {},
         } as any;
         const rawEvent = 'RawEvent' as any;
@@ -251,11 +251,11 @@ describe('formatWithContentModel', () => {
         const wrapper1 = 'W1' as any;
         const wrapper2 = 'W2' as any;
         const entity1 = {
-            entityFormat: { id: 'E1', type: 'E', isReadonly: true },
+            entityFormat: { id: 'E1', entityType: 'E', isReadonly: true },
             wrapper: wrapper1,
         } as any;
         const entity2 = {
-            entityFormat: { id: 'E2', type: 'E', isReadonly: true },
+            entityFormat: { id: 'E2', entityType: 'E', isReadonly: true },
             wrapper: wrapper2,
         } as any;
         const rawEvent = 'RawEvent' as any;

@@ -1,6 +1,6 @@
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import type { SelectionRangeEx } from 'roosterjs-editor-types';
+import type { Entity, SelectionRangeEx } from 'roosterjs-editor-types';
 import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
@@ -108,14 +108,15 @@ function handleDeletedEntities(
         ({
             entity: {
                 wrapper,
-                entityFormat: { id, type, isReadonly },
+                entityFormat: { id, entityType, isReadonly },
             },
             operation,
         }) => {
-            if (id && type) {
-                const entity = {
+            if (id && entityType) {
+                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
+                const entity: Entity = {
                     id,
-                    type,
+                    type: entityType,
                     isReadonly: !!isReadonly,
                     wrapper,
                 };

@@ -3,10 +3,10 @@ import type { BoldFormat } from './formatParts/BoldFormat';
 import type { BorderBoxFormat } from './formatParts/BorderBoxFormat';
 import type { BorderFormat } from './formatParts/BorderFormat';
 import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
-import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
+import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
@@ -77,9 +77,9 @@ export interface FormatHandlerTypeMap {
     display: DisplayFormat;
 
     /**
-     * Format for ContentModelEntityFormat
+     * Format for EntityInfoFormat and IdFormat
      */
-    entity: ContentModelEntityFormat;
+    entity: EntityInfoFormat & IdFormat;
 
     /**
      * Format for FloatFormat

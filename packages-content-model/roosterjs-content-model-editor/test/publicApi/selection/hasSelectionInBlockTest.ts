@@ -251,7 +251,7 @@ describe('hasSelectionInBlock', () => {
             format: {},
             isSelected: true,
             entityFormat: {
-                type: 'entity',
+                entityType: 'entity',
                 id: 'entity',
                 isReadonly: false,
             },

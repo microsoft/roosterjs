@@ -21,7 +21,7 @@ describe('tablePreProcessor', () => {
                     entityFormat: {
                         isFakeEntity: true,
                         id: undefined,
-                        type: undefined,
+                        entityType: undefined,
                         isReadonly: true,
                     },
                     wrapper: table,

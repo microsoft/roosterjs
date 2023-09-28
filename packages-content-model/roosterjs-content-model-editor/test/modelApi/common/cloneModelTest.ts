@@ -417,7 +417,7 @@ describe('cloneModel', () => {
                 cloneModel(
                     {
                         blockGroupType: 'Document',
-                        blocks: [createEntity(div, undefined, true)],
+                        blocks: [createEntity(div, true)],
                     },
                     { includeCachedElement: callback }
                 )
@@ -437,7 +437,7 @@ describe('cloneModel', () => {
         const cloneWithCallback = cloneModel(
             {
                 blockGroupType: 'Document',
-                blocks: [createEntity(div, undefined, true)],
+                blocks: [createEntity(div, true)],
             },
             { includeCachedElement: callback }
         );
@@ -451,7 +451,7 @@ describe('cloneModel', () => {
                     wrapper: span,
                     entityFormat: {
                         isReadonly: true,
-                        type: undefined,
+                        entityType: undefined,
                         id: undefined,
                     },
                     segmentType: 'Entity',
@@ -481,7 +481,7 @@ describe('cloneModel', () => {
                     {
                         blockType: 'Paragraph',
                         format: {},
-                        segments: [createEntity(div1, undefined, true)],
+                        segments: [createEntity(div1, true)],
                         cachedElement: div2,
                     },
                 ],
@@ -502,7 +502,7 @@ describe('cloneModel', () => {
                             wrapper: span,
                             entityFormat: {
                                 isReadonly: true,
-                                type: undefined,
+                                entityType: undefined,
                                 id: undefined,
                             },
                             segmentType: 'Entity',

@@ -1,7 +1,7 @@
 /**
  * Format of entity type
  */
-export type EntityTypeFormat = {
+export type EntityInfoFormat = {
     /**
      * For a readonly DOM element, we also treat it as entity, with isFakeEntity set to true
      */
@@ -13,7 +13,7 @@ export type EntityTypeFormat = {
     isReadonly?: boolean;
 
     /**
-     * Type of entity
+     * Type of this entity
      */
-    type?: string;
+    entityType?: string;
 };

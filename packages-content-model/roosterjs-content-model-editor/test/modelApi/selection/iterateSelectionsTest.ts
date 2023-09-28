@@ -1329,7 +1329,7 @@ describe('iterateSelections', () => {
     it('With selected entity', () => {
         const doc = createContentModelDocument();
         const para = createParagraph();
-        const entity = createEntity(null!, undefined, true);
+        const entity = createEntity(null!);
 
         entity.isSelected = true;
 

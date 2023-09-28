@@ -108,7 +108,7 @@ describe('handleSegment', () => {
             blockType: 'Entity',
             format: {},
             entityFormat: {
-                type: 'entity',
+                entityType: 'entity',
                 id: 'entity_1',
                 isReadonly: true,
             },

@@ -68,7 +68,7 @@ export default function insertEntity(
         wrapper.appendChild(contentNode);
     }
 
-    const entityModel = createEntity(wrapper, undefined /*format*/, true /*isReadonly*/, type);
+    const entityModel = createEntity(wrapper, true /*isReadonly*/, undefined /*format*/, type);
 
     formatWithContentModel(
         editor,

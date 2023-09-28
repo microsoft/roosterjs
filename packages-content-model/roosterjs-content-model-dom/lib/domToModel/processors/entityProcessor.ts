@@ -19,7 +19,7 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
         context,
         { segment: isBlockEntity ? 'empty' : undefined, paragraph: 'empty' },
         () => {
-            const entityModel = createEntity(element, context.segmentFormat);
+            const entityModel = createEntity(element, true /*isReadonly*/, context.segmentFormat);
 
             parseFormat(element, context.formatParsers.entity, entityModel.entityFormat, context);
 

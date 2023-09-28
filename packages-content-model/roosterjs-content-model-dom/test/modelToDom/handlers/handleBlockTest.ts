@@ -144,7 +144,7 @@ describe('handleBlock', () => {
             format: {},
             wrapper: element,
             entityFormat: {
-                type: 'entity',
+                entityType: 'entity',
                 id: 'entity_1',
                 isReadonly: true,
             },

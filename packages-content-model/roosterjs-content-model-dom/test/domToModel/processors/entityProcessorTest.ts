@@ -33,7 +33,7 @@ describe('entityProcessor', () => {
                     entityFormat: {
                         isFakeEntity: true,
                         id: undefined,
-                        type: undefined,
+                        entityType: undefined,
                         isReadonly: true,
                     },
                     wrapper: div,
@@ -60,7 +60,7 @@ describe('entityProcessor', () => {
                     format: {},
                     entityFormat: {
                         id: 'entity_1',
-                        type: 'entity',
+                        entityType: 'entity',
                         isReadonly: true,
                     },
                     wrapper: div,
@@ -91,7 +91,7 @@ describe('entityProcessor', () => {
                             format: {},
                             entityFormat: {
                                 id: 'entity_1',
-                                type: 'entity',
+                                entityType: 'entity',
                                 isReadonly: true,
                             },
                             wrapper: span,
@@ -125,7 +125,7 @@ describe('entityProcessor', () => {
                             entityFormat: {
                                 isFakeEntity: true,
                                 id: undefined,
-                                type: undefined,
+                                entityType: undefined,
                                 isReadonly: true,
                             },
                             wrapper: span,
@@ -159,7 +159,7 @@ describe('entityProcessor', () => {
                             entityFormat: {
                                 isFakeEntity: true,
                                 id: undefined,
-                                type: undefined,
+                                entityType: undefined,
                                 isReadonly: false,
                             },
                             wrapper: span,
@@ -192,7 +192,11 @@ describe('entityProcessor', () => {
                             blockType: 'Entity',
                             segmentType: 'Entity',
                             format: {},
-                            entityFormat: { id: 'entity_1', type: 'entity', isReadonly: true },
+                            entityFormat: {
+                                id: 'entity_1',
+                                entityType: 'entity',
+                                isReadonly: true,
+                            },
                             wrapper: span,
                             isSelected: true,
                         },
@@ -226,7 +230,7 @@ describe('entityProcessor', () => {
                     segmentType: 'Entity',
                     blockType: 'Entity',
                     format: {},
-                    entityFormat: { id: 'entity_1', type: 'entity', isReadonly: true },
+                    entityFormat: { id: 'entity_1', entityType: 'entity', isReadonly: true },
                     wrapper: div,
                     isSelected: true,
                 },
@@ -265,7 +269,7 @@ describe('entityProcessor', () => {
             blockType: 'Entity',
             format: {},
             wrapper: span,
-            entityFormat: { type: 'entity', id: 'entity_1', isReadonly: true },
+            entityFormat: { entityType: 'entity', id: 'entity_1', isReadonly: true },
         };
         const paragraphModel: ContentModelParagraph = {
             blockType: 'Paragraph',

@@ -472,10 +472,10 @@ describe('Creators', () => {
 
     it('createEntity', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, undefined, isReadonly, type, id);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
@@ -483,7 +483,7 @@ describe('Creators', () => {
             format: {},
             entityFormat: {
                 id,
-                type,
+                entityType,
                 isReadonly,
             },
             wrapper,
@@ -492,17 +492,16 @@ describe('Creators', () => {
 
     it('createEntity with format', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
         const entityModel = createEntity(
             wrapper,
+            isReadonly,
             {
                 fontSize: '10pt',
             },
-            isReadonly,
-            type,
-
+            entityType,
             id
         );
 
@@ -512,7 +511,7 @@ describe('Creators', () => {
             format: { fontSize: '10pt' },
             entityFormat: {
                 id,
-                type,
+                entityType,
                 isReadonly,
             },
             wrapper,

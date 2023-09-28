@@ -198,7 +198,7 @@ describe('isEmpty', () => {
             segmentType: 'Entity',
             format: {},
             entityFormat: {
-                type: 'Test',
+                entityType: 'Test',
                 id: 'Test',
                 isReadonly: false,
             },

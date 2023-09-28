@@ -24,7 +24,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: div,
@@ -100,7 +100,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: span,
@@ -127,7 +127,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: div,
@@ -166,7 +166,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: entityDiv,
@@ -188,7 +188,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: span,
@@ -221,7 +221,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: span,
@@ -249,7 +249,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: entityDiv,
@@ -277,7 +277,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: span,
@@ -310,7 +310,7 @@ describe('handleEntity', () => {
             format: {},
             entityFormat: {
                 id: 'entity_1',
-                type: 'entity',
+                entityType: 'entity',
                 isReadonly: true,
             },
             wrapper: span,

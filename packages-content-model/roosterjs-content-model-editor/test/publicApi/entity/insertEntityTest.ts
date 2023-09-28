@@ -86,7 +86,7 @@ describe('insertEntity', () => {
                 format: {},
                 entityFormat: {
                     id: undefined,
-                    type: type,
+                    entityType: type,
                     isReadonly: true,
                 },
                 wrapper: wrapper,
@@ -106,7 +106,7 @@ describe('insertEntity', () => {
             format: {},
             entityFormat: {
                 id: undefined,
-                type: type,
+                entityType: type,
                 isReadonly: true,
             },
             wrapper: wrapper,
@@ -132,7 +132,7 @@ describe('insertEntity', () => {
                 format: {},
                 entityFormat: {
                     id: undefined,
-                    type: type,
+                    entityType: type,
                     isReadonly: true,
                 },
                 wrapper: wrapper,
@@ -152,7 +152,7 @@ describe('insertEntity', () => {
             format: {},
             entityFormat: {
                 id: undefined,
-                type: type,
+                entityType: type,
                 isReadonly: true,
             },
             wrapper: wrapper,
@@ -186,7 +186,7 @@ describe('insertEntity', () => {
                 format: {},
                 entityFormat: {
                     id: undefined,
-                    type: type,
+                    entityType: type,
                     isReadonly: true,
                 },
                 wrapper: wrapper,
@@ -206,7 +206,7 @@ describe('insertEntity', () => {
             format: {},
             entityFormat: {
                 id: undefined,
-                type: type,
+                entityType: type,
                 isReadonly: true,
             },
             wrapper: wrapper,
@@ -234,7 +234,7 @@ describe('insertEntity', () => {
                 format: {},
                 entityFormat: {
                     id: undefined,
-                    type: type,
+                    entityType: type,
                     isReadonly: true,
                 },
                 wrapper: wrapper,
@@ -254,7 +254,7 @@ describe('insertEntity', () => {
                 format: {},
                 entityFormat: {
                     id: undefined,
-                    type: 'Entity',
+                    entityType: 'Entity',
                     isReadonly: true,
                 },
                 wrapper,
@@ -267,7 +267,7 @@ describe('insertEntity', () => {
             format: {},
             entityFormat: {
                 id: undefined,
-                type: type,
+                entityType: type,
                 isReadonly: true,
             },
             wrapper: wrapper,

@@ -12,7 +12,7 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
 
     const [id, setId] = useProperty(entity.entityFormat.id);
     const [isReadonly, setIsReadonly] = useProperty(entity.entityFormat.isReadonly);
-    const [type, setType] = useProperty(entity.entityFormat.type);
+    const [type, setType] = useProperty(entity.entityFormat.entityType);
 
     const idTextBox = React.useRef<HTMLInputElement>(null);
     const isReadonlyCheckBox = React.useRef<HTMLInputElement>(null);
@@ -25,7 +25,7 @@ export function ContentModelEntityView(props: { entity: ContentModelEntity }) {
     }, [id, setId]);
     const onTypeChange = React.useCallback(() => {
         const newValue = typeTextBox.current.value;
-        entity.entityFormat.type = newValue;
+        entity.entityFormat.entityType = newValue;
         setType(newValue);
     }, [type, setType]);
     const onReadonlyChange = React.useCallback(() => {

@@ -1,16 +1,33 @@
-import { applyEntityClasses, parseEntityClasses } from '../../domUtils/entityUtils';
-import type { ContentModelEntityFormat } from 'roosterjs-content-model-types';
+import { generateEntityClassNames, parseEntityClassName } from '../../domUtils/entityUtils';
+import type { EntityInfoFormat, IdFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal
  */
-export const entityFormatHandler: FormatHandler<ContentModelEntityFormat> = {
+export const entityFormatHandler: FormatHandler<EntityInfoFormat & IdFormat> = {
     parse: (format, element) => {
-        Object.assign(format, parseEntityClasses(element));
+        let isEntity = false;
+
+        element.classList.forEach(name => {
+            isEntity = parseEntityClassName(name, format) || isEntity;
+        });
+
+        if (!isEntity) {
+            format.isFakeEntity = true;
+            format.isReadonly = !element.isContentEditable;
+        }
     },
 
     apply: (format, element) => {
-        applyEntityClasses(element, format);
+        if (!format.isFakeEntity) {
+            element.className = generateEntityClassNames(format);
+        }
+
+        if (format.isReadonly) {
+            element.contentEditable = 'false';
+        } else {
+            element.removeAttribute('contenteditable');
+        }
     },
 };
