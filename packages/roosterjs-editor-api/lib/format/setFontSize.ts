@@ -1,6 +1,6 @@
 import applyListItemStyleWrap from '../utils/applyListItemWrap';
 import { getComputedStyle } from 'roosterjs-editor-dom';
-import { IEditor } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set font size at selection

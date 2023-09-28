@@ -1,11 +1,11 @@
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
+import type { DOMSelection, DomToModelOption } from 'roosterjs-content-model-types';
 import {
     createDomToModelContext,
     createDomToModelContextWithConfig,
     domToContentModel,
 } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelEditorCore,
     CreateContentModel,
 } from '../../publicTypes/ContentModelEditorCore';

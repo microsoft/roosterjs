@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { VerticalAlignFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { VerticalAlignFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

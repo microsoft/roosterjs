@@ -1,4 +1,4 @@
-import { ImageSelection, TableSelection } from '../selection/DOMSelection';
+import type { ImageSelection, TableSelection } from '../selection/DOMSelection';
 
 /**
  * Represents internal data structure for a selection position, combined by block and segment node

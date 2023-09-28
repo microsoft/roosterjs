@@ -1,9 +1,9 @@
 import commentsRemoval from './commentsRemoval';
-import { BeforePasteEvent } from 'roosterjs-editor-types';
 import { chainSanitizerCallback, moveChildNodes } from 'roosterjs-editor-dom';
 import { createWordConverter } from './wordConverter';
 import { createWordConverterArguments } from './WordConverterArguments';
 import { processNodeConvert, processNodesDiscovery } from './converterUtils';
+import type { BeforePasteEvent } from 'roosterjs-editor-types';
 
 const PERCENTAGE_REGEX = /%/;
 const DEFAULT_BROWSER_LINE_HEIGHT_PERCENTAGE = 120;

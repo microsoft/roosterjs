@@ -1,4 +1,4 @@
-import { EntityState } from './Snapshot';
+import type { EntityState } from './Snapshot';
 
 /**
  * Property that is going to store additional data related to the Content Changed Event

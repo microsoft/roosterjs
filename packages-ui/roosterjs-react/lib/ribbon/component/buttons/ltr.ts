@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
 import { Direction } from 'roosterjs-editor-types';
-import { LtrButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { setDirection } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { LtrButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

@@ -1,4 +1,4 @@
-import { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-content-model-types';
+import type { ContentModelBlockFormat, ContentModelDivider } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelDivider model

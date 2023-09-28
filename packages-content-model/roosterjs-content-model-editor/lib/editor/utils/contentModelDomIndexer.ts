@@ -1,7 +1,6 @@
 import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
 import { setSelection } from '../../modelApi/selection/setSelection';
-import { NodeType } from 'roosterjs-editor-types';
-import {
+import type {
     ContentModelDocument,
     ContentModelDomIndexer,
     ContentModelParagraph,
@@ -64,7 +63,7 @@ function onParagraph(paragraphElement: HTMLElement) {
     let previousText: Text | null = null;
 
     for (let child = paragraphElement.firstChild; child; child = child.nextSibling) {
-        if (isNodeOfType(child, NodeType.Text)) {
+        if (isNodeOfType(child, 'TEXT_NODE')) {
             if (!previousText) {
                 previousText = child;
             } else {
@@ -77,7 +76,7 @@ function onParagraph(paragraphElement: HTMLElement) {
                     child.__roosterjsContentModel.segments = [];
                 }
             }
-        } else if (isNodeOfType(child, NodeType.Element)) {
+        } else if (isNodeOfType(child, 'ELEMENT_NODE')) {
             previousText = null;
 
             onParagraph(child);
@@ -99,9 +98,9 @@ function reconcileSelection(
 ): boolean {
     if (oldSelection) {
         if (
-            oldSelection?.type == 'range' &&
+            oldSelection.type == 'range' &&
             oldSelection.range.collapsed &&
-            isNodeOfType(oldSelection.range.startContainer, NodeType.Text)
+            isNodeOfType(oldSelection.range.startContainer, 'TEXT_NODE')
         ) {
             if (isIndexedSegment(oldSelection.range.startContainer)) {
                 reconcileTextSelection(oldSelection.range.startContainer);
@@ -157,7 +156,7 @@ function reconcileSelection(
                     return !!reconcileNodeSelection(startContainer, startOffset);
                 } else if (
                     startContainer == endContainer &&
-                    isNodeOfType(startContainer, NodeType.Text)
+                    isNodeOfType(startContainer, 'TEXT_NODE')
                 ) {
                     return (
                         isIndexedSegment(startContainer) &&
@@ -183,7 +182,7 @@ function reconcileSelection(
 }
 
 function reconcileNodeSelection(node: Node, offset: number): Selectable | undefined {
-    if (isNodeOfType(node, NodeType.Text)) {
+    if (isNodeOfType(node, 'TEXT_NODE')) {
         return isIndexedSegment(node) ? reconcileTextSelection(node, offset) : undefined;
     } else if (offset >= node.childNodes.length) {
         return insertMarker(node.lastChild, true /*isAfter*/);

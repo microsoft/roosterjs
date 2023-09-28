@@ -1,11 +1,11 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { ChangeSource } from 'roosterjs-editor-types';
-import { ContentModelLink } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
 import { HtmlSanitizer, matchLink } from 'roosterjs-editor-dom';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
+import type { ContentModelLink } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     addLink,
     addSegment,

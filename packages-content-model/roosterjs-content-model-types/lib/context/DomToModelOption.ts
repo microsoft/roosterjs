@@ -1,4 +1,8 @@
-import { ElementProcessorMap, FormatParsers, FormatParsersPerCategory } from './DomToModelSettings';
+import type {
+    ElementProcessorMap,
+    FormatParsers,
+    FormatParsersPerCategory,
+} from './DomToModelSettings';
 
 /**
  * Options for creating DomToModelContext

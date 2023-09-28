@@ -1,7 +1,7 @@
-import RibbonButtonDropDown from './RibbonButtonDropDown';
-import { FormatState, IEditor } from 'roosterjs-editor-types';
-import { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
-import { LocalizedStrings, UIUtilities } from '../../common/index';
+import type RibbonButtonDropDown from './RibbonButtonDropDown';
+import type { FormatState, IEditor } from 'roosterjs-editor-types';
+import type { ICommandBarItemProps } from '@fluentui/react/lib/CommandBar';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * Represents a button on format ribbon

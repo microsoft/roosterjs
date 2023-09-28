@@ -1,9 +1,9 @@
-import { ContentModelListLevel, ElementProcessor } from 'roosterjs-content-model-types';
 import { createListLevel } from '../../modelApi/creators/createListLevel';
 import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
 import { parseFormat } from '../utils/parseFormat';
 import { stackFormat } from '../utils/stackFormat';
 import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import type { ContentModelListLevel, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * @internal

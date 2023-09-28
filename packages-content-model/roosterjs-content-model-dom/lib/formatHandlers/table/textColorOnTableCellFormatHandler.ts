@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { TextColorFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { TextColorFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

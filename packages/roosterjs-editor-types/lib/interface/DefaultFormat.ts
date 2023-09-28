@@ -1,4 +1,4 @@
-import ModeIndependentColor from './ModeIndependentColor';
+import type ModeIndependentColor from './ModeIndependentColor';
 
 /**
  * Default format settings

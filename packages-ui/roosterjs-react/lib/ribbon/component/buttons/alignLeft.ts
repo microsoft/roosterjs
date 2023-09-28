@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
-import { AlignLeftButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { Alignment } from 'roosterjs-editor-types';
 import { setAlignment } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { AlignLeftButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

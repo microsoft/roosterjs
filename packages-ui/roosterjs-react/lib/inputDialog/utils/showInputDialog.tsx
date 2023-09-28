@@ -1,8 +1,8 @@
 import * as React from 'react';
-import DialogItem from '../type/DialogItem';
 import InputDialog from '../component/InputDialog';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
-import {
+import type DialogItem from '../type/DialogItem';
+import type {
     CancelButtonStringKey,
     LocalizedStrings,
     OkButtonStringKey,

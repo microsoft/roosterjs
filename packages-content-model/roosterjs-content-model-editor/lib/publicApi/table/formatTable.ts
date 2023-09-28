@@ -1,8 +1,8 @@
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Format current focused table with the given format

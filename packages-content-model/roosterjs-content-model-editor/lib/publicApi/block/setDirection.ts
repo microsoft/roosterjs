@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelDirection } from '../../modelApi/block/setModelDirection';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set text direction of selected paragraphs (Left to right or Right to left)

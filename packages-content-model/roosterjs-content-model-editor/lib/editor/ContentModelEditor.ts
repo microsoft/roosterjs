@@ -1,11 +1,13 @@
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
-import {
+import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import type {
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from '../publicTypes/IContentModelEditor';
+import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
@@ -82,16 +84,5 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
-    }
-
-    /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
-     */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat {
-        const core = this.getCore();
-
-        return core.defaultFormat;
     }
 }

@@ -3,7 +3,6 @@ import { childProcessor } from '../processors/childProcessor';
 import { codeProcessor } from '../processors/codeProcessor';
 import { delimiterProcessor } from '../processors/delimiterProcessor';
 import { elementProcessor } from '../processors/elementProcessor';
-import { ElementProcessorMap } from 'roosterjs-content-model-types';
 import { entityProcessor } from '../processors/entityProcessor';
 import { fontProcessor } from '../processors/fontProcessor';
 import { formatContainerProcessor } from '../processors/formatContainerProcessor';
@@ -18,6 +17,7 @@ import { listProcessor } from '../processors/listProcessor';
 import { pProcessor } from '../processors/pProcessor';
 import { tableProcessor } from '../processors/tableProcessor';
 import { textProcessor } from '../processors/textProcessor';
+import type { ElementProcessorMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal

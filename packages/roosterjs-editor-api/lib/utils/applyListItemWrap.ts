@@ -1,6 +1,6 @@
 import applyInlineStyle from '../utils/applyInlineStyle';
-import { IEditor } from 'roosterjs-editor-types';
 import { safeInstanceOf, setListItemStyle } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * @internal

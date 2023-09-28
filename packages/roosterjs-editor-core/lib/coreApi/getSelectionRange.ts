@@ -1,5 +1,5 @@
 import { contains, createRange } from 'roosterjs-editor-dom';
-import { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
+import type { EditorCore, GetSelectionRange } from 'roosterjs-editor-types';
 
 /**
  * @internal

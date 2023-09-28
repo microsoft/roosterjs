@@ -4,7 +4,7 @@ import ImageInlineElement from './ImageInlineElement';
 import LinkInlineElement from './LinkInlineElement';
 import NodeInlineElement from './NodeInlineElement';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { BlockElement, InlineElement } from 'roosterjs-editor-types';
+import type { BlockElement, InlineElement } from 'roosterjs-editor-types';
 
 /**
  * Get the inline element at a node

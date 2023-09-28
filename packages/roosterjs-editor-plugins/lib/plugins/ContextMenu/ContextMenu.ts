@@ -1,11 +1,6 @@
 import { createElement } from 'roosterjs-editor-dom';
-import {
-    EditorPlugin,
-    IEditor,
-    KnownCreateElementDataIndex,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { KnownCreateElementDataIndex, PluginEventType } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * Context Menu options for ContextMenu plugin

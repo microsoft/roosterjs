@@ -10,13 +10,11 @@ import {
     VListChain,
     wrap,
 } from 'roosterjs-editor-dom';
+import type { Entity, IEditor, NodePosition } from 'roosterjs-editor-types';
 import {
     ChangeSource,
     ContentPosition,
-    Entity,
-    IEditor,
     KnownCreateElementDataIndex,
-    NodePosition,
     PositionType,
 } from 'roosterjs-editor-types';
 import type { CompatibleContentPosition } from 'roosterjs-editor-types/lib/compatibleTypes';

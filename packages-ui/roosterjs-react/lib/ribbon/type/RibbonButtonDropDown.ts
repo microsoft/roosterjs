@@ -1,5 +1,5 @@
-import { FormatState } from 'roosterjs-editor-types';
-import { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
+import type { FormatState } from 'roosterjs-editor-types';
+import type { IContextualMenuItem, IContextualMenuProps } from '@fluentui/react/lib/ContextualMenu';
 
 /**
  * Represent a drop down menu of a ribbon button

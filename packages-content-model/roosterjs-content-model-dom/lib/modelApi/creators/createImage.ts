@@ -1,4 +1,4 @@
-import { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
+import type { ContentModelImage, ContentModelImageFormat } from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelImage model

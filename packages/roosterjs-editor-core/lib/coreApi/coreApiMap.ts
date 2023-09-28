@@ -1,6 +1,5 @@
 import { addUndoSnapshot } from './addUndoSnapshot';
 import { attachDomEvent } from './attachDomEvent';
-import { CoreApiMap } from 'roosterjs-editor-types';
 import { createPasteFragment } from './createPasteFragment';
 import { ensureTypeInContainer } from './ensureTypeInContainer';
 import { focus } from './focus';
@@ -20,6 +19,7 @@ import { setContent } from './setContent';
 import { switchShadowEdit } from './switchShadowEdit';
 import { transformColor } from './transformColor';
 import { triggerEvent } from './triggerEvent';
+import type { CoreApiMap } from 'roosterjs-editor-types';
 
 /**
  * @internal

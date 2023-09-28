@@ -1,7 +1,6 @@
-import { EditorOptions, IEditor } from 'roosterjs-editor-types';
-import {
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
     DOMSelection,
     DomToModelOption,
     ModelToDomOption,
@@ -49,13 +48,6 @@ export interface IContentModelEditor extends IEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
-
-    /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
-     */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat;
 }
 
 /**

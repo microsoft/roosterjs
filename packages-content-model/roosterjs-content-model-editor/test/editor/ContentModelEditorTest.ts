@@ -247,27 +247,4 @@ describe('ContentModelEditor', () => {
 
         expect(div.style.fontFamily).toBe('Arial');
     });
-
-    it('getContentModelDefaultFormat', () => {
-        const div = document.createElement('div');
-        const editor = new ContentModelEditor(div, {
-            defaultFormat: {
-                fontFamily: 'Tahoma',
-                fontSize: '20pt',
-            },
-        });
-        const format = editor.getContentModelDefaultFormat();
-
-        editor.dispose();
-
-        expect(format).toEqual({
-            fontWeight: undefined,
-            italic: undefined,
-            underline: undefined,
-            fontFamily: 'Tahoma',
-            fontSize: '20pt',
-            textColor: undefined,
-            backgroundColor: undefined,
-        });
-    });
 });

@@ -1,5 +1,5 @@
-import { BackgroundColorKeys } from '../types/stringKeys';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
+import type { BackgroundColorKeys } from '../types/stringKeys';
+import type { ModeIndependentColor } from 'roosterjs-editor-types';
 
 /**
  * @internal

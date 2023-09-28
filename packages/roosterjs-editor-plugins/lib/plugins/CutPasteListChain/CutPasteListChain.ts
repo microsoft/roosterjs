@@ -1,12 +1,7 @@
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { commitListChains } from 'roosterjs-editor-api';
 import { VListChain } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 import type { CompatibleChangeSource } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

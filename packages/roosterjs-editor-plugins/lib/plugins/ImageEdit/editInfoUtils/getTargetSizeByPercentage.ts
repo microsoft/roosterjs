@@ -1,5 +1,5 @@
-import ImageEditInfo from '../types/ImageEditInfo';
-import ImageSize from '../types/ImageSize';
+import type ImageEditInfo from '../types/ImageEditInfo';
+import type ImageSize from '../types/ImageSize';
 
 /**
  * @internal

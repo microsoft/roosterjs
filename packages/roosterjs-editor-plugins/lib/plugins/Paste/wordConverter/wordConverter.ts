@@ -1,5 +1,6 @@
-import WordConverterArguments from './WordConverterArguments';
-import WordCustomData, { createCustomData } from './WordCustomData';
+import { createCustomData } from './WordCustomData';
+import type WordConverterArguments from './WordConverterArguments';
+import type WordCustomData from './WordCustomData';
 
 /**
  * @internal

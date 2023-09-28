@@ -1,5 +1,6 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor, QueryScope } from 'roosterjs-editor-types';
+import { QueryScope } from 'roosterjs-editor-types';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Set image alt text for all selected images at selection. If no images is contained

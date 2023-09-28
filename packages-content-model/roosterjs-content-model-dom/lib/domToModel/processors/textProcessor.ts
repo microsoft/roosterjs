@@ -5,7 +5,7 @@ import { createText } from '../../modelApi/creators/createText';
 import { ensureParagraph } from '../../modelApi/common/ensureParagraph';
 import { getRegularSelectionOffsets } from '../utils/getRegularSelectionOffsets';
 import { hasSpacesOnly } from '../../modelApi/common/hasSpacesOnly';
-import {
+import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelText,

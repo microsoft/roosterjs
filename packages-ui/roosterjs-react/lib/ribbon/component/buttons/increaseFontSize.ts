@@ -1,7 +1,7 @@
-import RibbonButton from '../../type/RibbonButton';
 import { changeFontSize } from 'roosterjs-editor-api';
 import { FontSizeChange } from 'roosterjs-editor-types';
-import { IncreaseFontSizeButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { IncreaseFontSizeButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal
