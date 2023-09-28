@@ -1,7 +1,7 @@
-import type { EditorOptions, IEditor, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    DOMSelection,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
@@ -21,7 +21,7 @@ export interface IContentModelEditor extends IEditor {
      */
     createContentModel(
         option?: DomToModelOption,
-        selectionOverride?: SelectionRangeEx
+        selectionOverride?: DOMSelection
     ): ContentModelDocument;
 
     /**
@@ -34,14 +34,20 @@ export interface IContentModelEditor extends IEditor {
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): SelectionRangeEx | null;
+    ): DOMSelection | null;
 
     /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
+     * Get current DOM selection.
+     * This is the replacement of IEditor.getSelectionRangeEx.
      */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat;
+    getDOMSelection(): DOMSelection | null;
+
+    /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection): void;
 }
 
 /**

@@ -21,6 +21,6 @@ function shouldUseTableProcessor(element: HTMLTableElement, context: DomToModelC
     return (
         hasMetadata(element) ||
         context.isInSelection ||
-        contains(element, getSelectionRootNode(context.rangeEx), true /*treatSameNodeAsContain*/)
+        contains(element, getSelectionRootNode(context.selection), true /*treatSameNodeAsContain*/)
     );
 }

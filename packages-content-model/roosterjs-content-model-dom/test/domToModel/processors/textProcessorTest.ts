@@ -6,7 +6,6 @@ import { createParagraph } from '../../../lib/modelApi/creators/createParagraph'
 import { createRange } from 'roosterjs-editor-dom';
 import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
 import {
     ContentModelDomIndexer,
@@ -375,18 +374,15 @@ describe('textProcessor', () => {
         const text = document.createTextNode('test');
 
         context.link = { format: { href: '/test' }, dataset: {} };
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: text,
-                    startOffset: 2,
-                    endContainer: text,
-                    endOffset: 2,
-                    collapsed: true,
-                } as any,
-            ],
-            areAllCollapsed: true,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                startOffset: 2,
+                endContainer: text,
+                endOffset: 2,
+                collapsed: true,
+            } as any,
         };
 
         textProcessor(doc, text, context);
@@ -616,10 +612,9 @@ describe('textProcessor', () => {
         };
 
         context.domIndexer = domIndexer;
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(text, 2)],
+        context.selection = {
+            type: 'range',
+            range: createRange(text, 2),
         };
 
         textProcessor(doc, text, context);
@@ -661,10 +656,9 @@ describe('textProcessor', () => {
         };
 
         context.domIndexer = domIndexer;
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            areAllCollapsed: true,
-            ranges: [createRange(text, 1, text, 3)],
+        context.selection = {
+            type: 'range',
+            range: createRange(text, 1, text, 3),
         };
 
         textProcessor(doc, text, context);

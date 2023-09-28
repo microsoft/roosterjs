@@ -1,5 +1,6 @@
-import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
 import type { CopyPastePluginState } from 'roosterjs-editor-types';
+import type { ContentModelCachePluginState } from './ContentModelCachePluginState';
+import type { ContentModelFormatPluginState } from './ContentModelFormatPluginState';
 
 /**
  * Temporary core plugin state for Content Model editor
@@ -15,4 +16,9 @@ export interface ContentModelPluginState {
      * Plugin state for ContentModelCopyPastePlugin
      */
     copyPaste: CopyPastePluginState;
+
+    /**
+     * Plugin state for ContentModelFormatPlugin
+     */
+    format: ContentModelFormatPluginState;
 }

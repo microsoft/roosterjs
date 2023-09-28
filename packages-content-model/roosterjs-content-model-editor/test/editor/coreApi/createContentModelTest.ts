@@ -3,7 +3,6 @@ import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToM
 import * as domToContentModel from 'roosterjs-content-model-dom/lib/domToModel/domToContentModel';
 import { ContentModelEditorCore } from '../../../lib/publicTypes/ContentModelEditorCore';
 import { createContentModel } from '../../../lib/editor/coreApi/createContentModel';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 const mockedEditorContext = 'EDITORCONTEXT' as any;
 const mockedContext = 'CONTEXT' as any;
@@ -15,7 +14,7 @@ const mockedClonedModel = 'CLONEDMODEL' as any;
 describe('createContentModel', () => {
     let core: ContentModelEditorCore;
     let createEditorContext: jasmine.Spy;
-    let getSelectionRangeEx: jasmine.Spy;
+    let getDOMSelection: jasmine.Spy;
     let domToContentModelSpy: jasmine.Spy;
     let cloneModelSpy: jasmine.Spy;
 
@@ -23,7 +22,7 @@ describe('createContentModel', () => {
         createEditorContext = jasmine
             .createSpy('createEditorContext')
             .and.returnValue(mockedEditorContext);
-        getSelectionRangeEx = jasmine.createSpy('getSelectionRangeEx').and.returnValue(null);
+        getDOMSelection = jasmine.createSpy('getDOMSelection').and.returnValue(null);
 
         domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel').and.returnValue(
             mockedModel
@@ -38,7 +37,7 @@ describe('createContentModel', () => {
             contentDiv: mockedDiv,
             api: {
                 createEditorContext,
-                getSelectionRangeEx,
+                getDOMSelection,
             },
             cache: {
                 cachedModel: mockedCachedMode,
@@ -53,8 +52,8 @@ describe('createContentModel', () => {
         const model = createContentModel(core);
 
         expect(createEditorContext).toHaveBeenCalledWith(core);
-        expect(getSelectionRangeEx).toHaveBeenCalledWith(core);
-        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext, null);
+        expect(getDOMSelection).toHaveBeenCalledWith(core);
+        expect(domToContentModelSpy).toHaveBeenCalledWith(mockedDiv, mockedContext, undefined);
         expect(model).toBe(mockedModel);
     });
 
@@ -62,7 +61,7 @@ describe('createContentModel', () => {
         const model = createContentModel(core);
 
         expect(createEditorContext).not.toHaveBeenCalled();
-        expect(getSelectionRangeEx).not.toHaveBeenCalled();
+        expect(getDOMSelection).not.toHaveBeenCalled();
         expect(domToContentModelSpy).not.toHaveBeenCalled();
         expect(model).toBe(mockedCachedMode);
     });
@@ -76,21 +75,21 @@ describe('createContentModel', () => {
             includeCachedElement: true,
         });
         expect(createEditorContext).not.toHaveBeenCalled();
-        expect(getSelectionRangeEx).not.toHaveBeenCalled();
+        expect(getDOMSelection).not.toHaveBeenCalled();
         expect(domToContentModelSpy).not.toHaveBeenCalled();
         expect(model).toBe(mockedClonedModel);
     });
 });
 
 describe('createContentModel with selection', () => {
-    let getSelectionRangeExSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
     let domToContentModelSpy: jasmine.Spy;
     let createEditorContextSpy: jasmine.Spy;
     let core: any;
     const MockedDiv = 'CONTENT_DIV' as any;
 
     beforeEach(() => {
-        getSelectionRangeExSpy = jasmine.createSpy('getSelectionRangeEx');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         domToContentModelSpy = spyOn(domToContentModel, 'domToContentModel');
         createEditorContextSpy = jasmine.createSpy('createEditorContext');
 
@@ -101,7 +100,7 @@ describe('createContentModel with selection', () => {
         core = {
             contentDiv: MockedDiv,
             api: {
-                getSelectionRangeEx: getSelectionRangeExSpy,
+                getDOMSelection: getDOMSelectionSpy,
                 createEditorContext: createEditorContextSpy,
             },
             cache: {},
@@ -115,17 +114,17 @@ describe('createContentModel with selection', () => {
             commonAncestorContainer: MockedContainer,
         } as any;
 
-        getSelectionRangeExSpy.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [MockedRange],
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: MockedRange,
         });
 
         createContentModel(core);
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [MockedRange],
+            type: 'range',
+            range: MockedRange,
         } as any);
     });
 
@@ -134,8 +133,8 @@ describe('createContentModel with selection', () => {
         const MockedFirstCell = { name: 'FirstCell' };
         const MockedLastCell = { name: 'LastCell' };
 
-        getSelectionRangeExSpy.and.returnValue({
-            type: SelectionRangeTypes.TableSelection,
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
             table: MockedContainer,
             coordinates: {
                 firstCell: MockedFirstCell,
@@ -147,7 +146,7 @@ describe('createContentModel with selection', () => {
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
-            type: SelectionRangeTypes.TableSelection,
+            type: 'table',
             table: MockedContainer,
             coordinates: {
                 firstCell: MockedFirstCell,
@@ -159,8 +158,8 @@ describe('createContentModel with selection', () => {
     it('Image selection', () => {
         const MockedContainer = 'MockedContainer';
 
-        getSelectionRangeExSpy.and.returnValue({
-            type: SelectionRangeTypes.ImageSelection,
+        getDOMSelectionSpy.and.returnValue({
+            type: 'image',
             image: MockedContainer,
         });
 
@@ -168,36 +167,36 @@ describe('createContentModel with selection', () => {
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
-            type: SelectionRangeTypes.ImageSelection,
+            type: 'image',
             image: MockedContainer,
         } as any);
     });
 
     it('Incorrect regular selection', () => {
-        getSelectionRangeExSpy.and.returnValue({
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
+        getDOMSelectionSpy.and.returnValue({
+            type: 'range',
+            range: null!,
         });
 
         createContentModel(core);
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
-            type: SelectionRangeTypes.Normal,
-            ranges: [],
+            type: 'range',
+            range: null!,
         } as any);
     });
 
     it('Incorrect table selection', () => {
-        getSelectionRangeExSpy.and.returnValue({
-            type: SelectionRangeTypes.TableSelection,
+        getDOMSelectionSpy.and.returnValue({
+            type: 'table',
         });
 
         createContentModel(core);
 
         expect(domToContentModelSpy).toHaveBeenCalledTimes(1);
         expect(domToContentModelSpy).toHaveBeenCalledWith(MockedDiv, mockedContext, {
-            type: SelectionRangeTypes.TableSelection,
+            type: 'table',
         } as any);
     });
 });
