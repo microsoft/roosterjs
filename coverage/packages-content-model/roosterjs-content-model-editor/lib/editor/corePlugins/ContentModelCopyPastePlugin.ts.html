@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.51% </span>
+                <span class="strong">63.01% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>47/74</span>
+                <span class='fraction'>46/73</span>
             </div>
         
             
@@ -337,12 +337,7 @@
 <a name='L278'></a><a href='#L278'>278</a>
 <a name='L279'></a><a href='#L279'>279</a>
 <a name='L280'></a><a href='#L280'>280</a>
-<a name='L281'></a><a href='#L281'>281</a>
-<a name='L282'></a><a href='#L282'>282</a>
-<a name='L283'></a><a href='#L283'>283</a>
-<a name='L284'></a><a href='#L284'>284</a>
-<a name='L285'></a><a href='#L285'>285</a>
-<a name='L286'></a><a href='#L286'>286</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L281'></a><a href='#L281'>281</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
@@ -357,8 +352,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -590,9 +583,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -640,7 +630,7 @@ import {
     isNodeOfType,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import type { OnNodeCreated } from 'roosterjs-content-model-types';
+import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
@@ -656,13 +646,11 @@ import type {
     IEditor,
     PluginWithState,
     ClipboardData,
-    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 import {
     ChangeSource,
     PluginEventType,
     KnownCreateElementDataIndex,
-    SelectionRangeTypes,
     ColorTransformDirection,
 } from 'roosterjs-editor-types';
 &nbsp;
@@ -721,8 +709,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.editor) {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
-        const selection = this.editor.getSelectionRangeEx();
-        if (selection &amp;&amp; !selection.areAllCollapsed) {
+        const selection = this.editor.getDOMSelection();
+        if (selection &amp;&amp; (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
 &nbsp;
             const pasteModel = cloneModel(model, {
@@ -743,7 +731,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
                       }
                     : false,
             });
-            if (selection.type === SelectionRangeTypes.TableSelection) {
+            if (selection.type === 'table') {
                 iterateSelections([pasteModel], <span class="fstat-no" title="function not covered" >(p</span>ath, tableContext) =&gt; {
 <span class="cstat-no" title="statement not covered" >                    if (tableContext?.table) {</span>
                         const table = <span class="cstat-no" title="statement not covered" >tableContext?.table;</span>
@@ -785,7 +773,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
                 this.editor.runAsync(editor =&gt; {
                     cleanUpAndRestoreSelection(tempDiv);
                     editor.focus();
-                    editor.select(selection);
+                    (editor as IContentModelEditor).setDOMSelection(selection);
 &nbsp;
                     if (isCut) {
                         formatWithContentModel(
@@ -874,27 +862,24 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
 &nbsp;
-function selectionExToRange(
-    selection: SelectionRangeEx | null,
-    tempDiv: HTMLDivElement
-): Range | null {
+function selectionExToRange(selection: DOMSelection | null, tempDiv: HTMLDivElement): Range | null {
     <span class="missing-if-branch" title="if path not taken" >I</span>if (!selection) {
 <span class="cstat-no" title="statement not covered" >        return null;</span>
     }
     let newRange: Range | null = null;
-    if (selection.type === SelectionRangeTypes.TableSelection &amp;&amp; selection.coordinates) {
+    if (selection.type === 'table') {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
         const elementToSelect =
             table.parentElement<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>hildElementCount == 1 ? table.parentElement : <span class="branch-1 cbranch-no" title="branch not covered" >table;</span>
         newRange = createRange(elementToSelect);
-    } else if (selection.type === SelectionRangeTypes.ImageSelection) {
+    } else if (selection.type === 'image') {
         const image = tempDiv.querySelector('#' + selection.image.id);
 &nbsp;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (image) {
             newRange = createRange(image);
         }
     } else {
-        newRange = selection.ranges[0];
+        newRange = selection.range;
     }
 &nbsp;
     return newRange;
@@ -919,7 +904,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 28 2023 18:02:39 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 28 2023 20:11:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

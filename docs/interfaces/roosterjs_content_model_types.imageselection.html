@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>ModelToDomTableSelection | RoosterJs API Reference</title>
+	<title>ImageSelection | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_content_model_types.html">roosterjs-content-model-types</a>
 				</li>
 				<li>
-					<a href="roosterjs_content_model_types.modeltodomtableselection.html">ModelToDomTableSelection</a>
+					<a href="roosterjs_content_model_types.imageselection.html">ImageSelection</a>
 				</li>
 			</ul>
-			<h1>Interface ModelToDomTableSelection</h1>
+			<h1>Interface ImageSelection</h1>
 		</div>
 	</div>
 </header>
@@ -69,7 +69,8 @@
 			<section class="tsd-panel tsd-comment">
 				<div class="tsd-comment tsd-typography">
 					<div class="lead">
-						<p>Represents internal data structure for table selection</p>
+						<p>image: A image selection that can be defined with an image element. Not like a regular range selection with an image, image selection
+						is created when user single click the image, then we will show a selection border rather the blue background to show the selection</p>
 					</div>
 				</div>
 			</section>
@@ -77,7 +78,12 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">ModelToDomTableSelection</span>
+						<a href="roosterjs_content_model_types.selectionbase.html" class="tsd-signature-type" data-tsd-kind="Interface">SelectionBase</a><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">&quot;image&quot;</span><span class="tsd-signature-symbol">&gt;</span>
+						<ul class="tsd-hierarchy">
+							<li>
+								<span class="target">ImageSelection</span>
+							</li>
+						</ul>
 					</li>
 				</ul>
 			</section>
@@ -88,9 +94,8 @@
 						<section class="tsd-index-section ">
 							<h3>Properties</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomtableselection.html#firstcell" class="tsd-kind-icon">first<wbr>Cell</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomtableselection.html#lastcell" class="tsd-kind-icon">last<wbr>Cell</a></li>
-								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.modeltodomtableselection.html#table" class="tsd-kind-icon">table</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface"><a href="roosterjs_content_model_types.imageselection.html#image" class="tsd-kind-icon">image</a></li>
+								<li class="tsd-kind-property tsd-parent-kind-interface tsd-is-inherited"><a href="roosterjs_content_model_types.imageselection.html#type" class="tsd-kind-icon">type</a></li>
 							</ul>
 						</section>
 					</div>
@@ -99,47 +104,33 @@
 			<section class="tsd-panel-group tsd-member-group ">
 				<h2>Properties</h2>
 				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="firstcell" class="tsd-anchor"></a>
-					<h3>first<wbr>Cell</h3>
-					<div class="tsd-signature tsd-kind-icon">first<wbr>Cell<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.coordinates.html" class="tsd-signature-type" data-tsd-kind="Interface">Coordinates</a></div>
+					<a name="image" class="tsd-anchor"></a>
+					<h3>image</h3>
+					<div class="tsd-signature tsd-kind-icon">image<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLImageElement</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts#L51">packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts:51</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-types/lib/selection/DOMSelection.ts#L39">packages-content-model/roosterjs-content-model-types/lib/selection/DOMSelection.ts:39</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Coordinate of first selected cell</p>
+							<p>The image that this selection is representing</p>
 						</div>
 					</div>
 				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="lastcell" class="tsd-anchor"></a>
-					<h3>last<wbr>Cell</h3>
-					<div class="tsd-signature tsd-kind-icon">last<wbr>Cell<span class="tsd-signature-symbol">:</span> <a href="roosterjs_editor_types.coordinates.html" class="tsd-signature-type" data-tsd-kind="Interface">Coordinates</a></div>
+				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+					<a name="type" class="tsd-anchor"></a>
+					<h3>type</h3>
+					<div class="tsd-signature tsd-kind-icon">type<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;image&quot;</span></div>
 					<aside class="tsd-sources">
+						<p>Inherited from <a href="roosterjs_content_model_types.selectionbase.html">SelectionBase</a>.<a href="roosterjs_content_model_types.selectionbase.html#type">type</a></p>
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts#L56">packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts:56</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-types/lib/selection/DOMSelection.ts#L18">packages-content-model/roosterjs-content-model-types/lib/selection/DOMSelection.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
 						<div class="lead">
-							<p>Coordinate of last selected cell</p>
-						</div>
-					</div>
-				</section>
-				<section class="tsd-panel tsd-member tsd-kind-property tsd-parent-kind-interface">
-					<a name="table" class="tsd-anchor"></a>
-					<h3>table</h3>
-					<div class="tsd-signature tsd-kind-icon">table<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">HTMLTableElement</span></div>
-					<aside class="tsd-sources">
-						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts#L46">packages-content-model/roosterjs-content-model-types/lib/context/ModelToDomSelectionContext.ts:46</a></li>
-						</ul>
-					</aside>
-					<div class="tsd-comment tsd-typography">
-						<div class="lead">
-							<p>Table where selection is located</p>
+							<p>Type of this selection</p>
 						</div>
 					</div>
 				</section>
@@ -197,16 +188,13 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-interface tsd-parent-kind-module">
-						<a href="roosterjs_content_model_types.modeltodomtableselection.html" class="tsd-kind-icon">Model<wbr>ToDom<wbr>Table<wbr>Selection</a>
+						<a href="roosterjs_content_model_types.imageselection.html" class="tsd-kind-icon">Image<wbr>Selection</a>
 						<ul>
 							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.modeltodomtableselection.html#firstcell" class="tsd-kind-icon">first<wbr>Cell</a>
+								<a href="roosterjs_content_model_types.imageselection.html#image" class="tsd-kind-icon">image</a>
 							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.modeltodomtableselection.html#lastcell" class="tsd-kind-icon">last<wbr>Cell</a>
-							</li>
-							<li class=" tsd-kind-property tsd-parent-kind-interface">
-								<a href="roosterjs_content_model_types.modeltodomtableselection.html#table" class="tsd-kind-icon">table</a>
+							<li class=" tsd-kind-property tsd-parent-kind-interface tsd-is-inherited">
+								<a href="roosterjs_content_model_types.imageselection.html#type" class="tsd-kind-icon">type</a>
 							</li>
 						</ul>
 					</li>

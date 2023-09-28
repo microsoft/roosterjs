@@ -112,8 +112,10 @@
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#contentmodelformatter" class="tsd-kind-icon">Content<wbr>Model<wbr>Formatter</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#createcontentmodel" class="tsd-kind-icon">Create<wbr>Content<wbr>Model</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#createeditorcontext" class="tsd-kind-icon">Create<wbr>Editor<wbr>Context</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#getdomselection" class="tsd-kind-icon">GetDOMSelection</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-kind-icon">Insert<wbr>Entity<wbr>Position</a></li>
 								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#setcontentmodel" class="tsd-kind-icon">Set<wbr>Content<wbr>Model</a></li>
+								<li class="tsd-kind-type-alias tsd-parent-kind-module"><a href="roosterjs_content_model_editor.html#setdomselection" class="tsd-kind-icon">SetDOMSelection</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
@@ -189,7 +191,7 @@
 					<div class="tsd-signature tsd-kind-icon">Content<wbr>Model<wbr>Formatter<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>model<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, context<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.formatwithcontentmodelcontext.html" class="tsd-signature-type" data-tsd-kind="Interface">FormatWithContentModelContext</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">boolean</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts#L93">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts:93</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts#L94">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/FormatWithContentModelContext.ts:94</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -236,10 +238,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="createcontentmodel" class="tsd-anchor"></a>
 					<h3>Create<wbr>Content<wbr>Model</h3>
-					<div class="tsd-signature tsd-kind-icon">Create<wbr>Content<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a>, selectionOverride<span class="tsd-signature-symbol">?: </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></div>
+					<div class="tsd-signature tsd-kind-icon">Create<wbr>Content<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a>, selectionOverride<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L25">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:25</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L26">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:26</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -247,7 +249,7 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a>, selectionOverride<span class="tsd-signature-symbol">?: </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.domtomodeloption.html" class="tsd-signature-type" data-tsd-kind="Interface">DomToModelOption</a>, selectionOverride<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
@@ -275,7 +277,7 @@
 												</div>
 											</li>
 											<li>
-												<h5><span class="tsd-flag ts-flagOptional">Optional</span> selectionOverride: <a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></h5>
+												<h5><span class="tsd-flag ts-flagOptional">Optional</span> selectionOverride: <a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></h5>
 												<div class="tsd-comment tsd-typography">
 													<div class="lead">
 														<p>When passed, use this selection range instead of current selection in editor</p>
@@ -296,7 +298,7 @@
 					<div class="tsd-signature tsd-kind-icon">Create<wbr>Editor<wbr>Context<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="../interfaces/roosterjs_content_model_types.editorcontext.html" class="tsd-signature-type" data-tsd-kind="Interface">EditorContext</a></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L17">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:17</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L18">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:18</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -332,12 +334,53 @@
 					</div>
 				</section>
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="getdomselection" class="tsd-anchor"></a>
+					<h3>GetDOMSelection</h3>
+					<div class="tsd-signature tsd-kind-icon">GetDOMSelection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L36">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:36</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>Get current DOM selection from editor</p>
+											</div>
+										</div>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>core: <a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>The ContentModelEditorCore object</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="insertentityposition" class="tsd-anchor"></a>
 					<h3>Insert<wbr>Entity<wbr>Position</h3>
 					<div class="tsd-signature tsd-kind-icon">Insert<wbr>Entity<wbr>Position<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">&quot;focus&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;begin&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;root&quot;</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/InsertEntityOptions.ts#L33">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/InsertEntityOptions.ts:33</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/InsertEntityOptions.ts#L33">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/parameter/InsertEntityOptions.ts:33</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-comment tsd-typography">
@@ -353,10 +396,10 @@
 				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
 					<a name="setcontentmodel" class="tsd-anchor"></a>
 					<h3>Set<wbr>Content<wbr>Model</h3>
-					<div class="tsd-signature tsd-kind-icon">Set<wbr>Content<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, model<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a>, onNodeCreated<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#onnodecreated" class="tsd-signature-type" data-tsd-kind="Type alias">OnNodeCreated</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
+					<div class="tsd-signature tsd-kind-icon">Set<wbr>Content<wbr>Model<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, model<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a>, onNodeCreated<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#onnodecreated" class="tsd-signature-type" data-tsd-kind="Type alias">OnNodeCreated</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></div>
 					<aside class="tsd-sources">
 						<ul>
-							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L38">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:38</a></li>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L45">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:45</a></li>
 						</ul>
 					</aside>
 					<div class="tsd-type-declaration">
@@ -364,13 +407,13 @@
 						<ul class="tsd-parameters">
 							<li class="tsd-parameter-signature">
 								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
-									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, model<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a>, onNodeCreated<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#onnodecreated" class="tsd-signature-type" data-tsd-kind="Type alias">OnNodeCreated</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, model<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_types.contentmodeldocument.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelDocument</a>, option<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_types.modeltodomoption.html" class="tsd-signature-type" data-tsd-kind="Interface">ModelToDomOption</a>, onNodeCreated<span class="tsd-signature-symbol">?: </span><a href="roosterjs_content_model_types.html#onnodecreated" class="tsd-signature-type" data-tsd-kind="Type alias">OnNodeCreated</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 								</ul>
 								<ul class="tsd-descriptions">
 									<li class="tsd-description">
 										<div class="tsd-comment tsd-typography">
 											<div class="lead">
-												<p>Set content with content model</p>
+												<p>Set content with content model. This is the replacement of core API getSelectionRangeEx</p>
 											</div>
 										</div>
 										<h4 class="tsd-parameters-title">Parameters</h4>
@@ -408,7 +451,56 @@
 												</div>
 											</li>
 										</ul>
-										<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+										<h4 class="tsd-returns-title">Returns <a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></h4>
+									</li>
+								</ul>
+							</li>
+						</ul>
+					</div>
+				</section>
+				<section class="tsd-panel tsd-member tsd-kind-type-alias tsd-parent-kind-module">
+					<a name="setdomselection" class="tsd-anchor"></a>
+					<h3>SetDOMSelection</h3>
+					<div class="tsd-signature tsd-kind-icon">SetDOMSelection<span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, selection<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">void</span></div>
+					<aside class="tsd-sources">
+						<ul>
+							<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts#L57">packages-content-model/roosterjs-content-model-editor/lib/publicTypes/ContentModelEditorCore.ts:57</a></li>
+						</ul>
+					</aside>
+					<div class="tsd-type-declaration">
+						<h4>Type declaration</h4>
+						<ul class="tsd-parameters">
+							<li class="tsd-parameter-signature">
+								<ul class="tsd-signatures tsd-kind-type-literal tsd-parent-kind-type-alias">
+									<li class="tsd-signature tsd-kind-icon"><span class="tsd-signature-symbol">(</span>core<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a>, selection<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">void</span></li>
+								</ul>
+								<ul class="tsd-descriptions">
+									<li class="tsd-description">
+										<div class="tsd-comment tsd-typography">
+											<div class="lead">
+												<p>Set current DOM selection from editor. This is the replacement of core API select</p>
+											</div>
+										</div>
+										<h4 class="tsd-parameters-title">Parameters</h4>
+										<ul class="tsd-parameters">
+											<li>
+												<h5>core: <a href="../interfaces/roosterjs_content_model_editor.contentmodeleditorcore.html" class="tsd-signature-type" data-tsd-kind="Interface">ContentModelEditorCore</a></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>The ContentModelEditorCore object</p>
+													</div>
+												</div>
+											</li>
+											<li>
+												<h5>selection: <a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></h5>
+												<div class="tsd-comment tsd-typography">
+													<div class="lead">
+														<p>The selection to set</p>
+													</div>
+												</div>
+											</li>
+										</ul>
+										<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">void</span></h4>
 									</li>
 								</ul>
 							</li>
@@ -428,7 +520,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/adjustImageSelection.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/adjustImageSelection.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/adjustImageSelection.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/adjustImageSelection.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -457,7 +549,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/adjustLinkSelection.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/adjustLinkSelection.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/adjustLinkSelection.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/adjustLinkSelection.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -486,7 +578,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/applyPendingFormat.ts#L19">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/applyPendingFormat.ts:19</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/applyPendingFormat.ts#L19">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/applyPendingFormat.ts:19</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -523,7 +615,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/applySegmentFormat.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/applySegmentFormat.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/applySegmentFormat.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/applySegmentFormat.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -560,7 +652,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeCapitalization.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeCapitalization.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeCapitalization.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeCapitalization.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -605,7 +697,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeFontSize.ts#L24">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeFontSize.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeFontSize.ts#L24">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/changeFontSize.ts:24</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -642,7 +734,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/changeImage.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/changeImage.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/changeImage.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/changeImage.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -679,7 +771,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/clearFormat.ts#L16">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/clearFormat.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/clearFormat.ts#L16">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/clearFormat.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -710,7 +802,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts#L44">packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts:44</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts#L44">packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts:44</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -738,7 +830,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts#L24">packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts:24</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts#L25">packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -769,7 +861,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/editTable.ts#L33">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/editTable.ts:33</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/editTable.ts#L33">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/editTable.ts:33</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -806,7 +898,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/domUtils/borderValues.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -838,7 +930,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/formatTable.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/formatTable.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/formatTable.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/formatTable.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -881,7 +973,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/formatWithContentModel.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/formatWithContentModel.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/formatWithContentModel.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/formatWithContentModel.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -933,7 +1025,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/getFormatState.ts#L18">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/getFormatState.ts:18</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/getFormatState.ts#L18">packages-content-model/roosterjs-content-model-editor/lib/publicApi/format/getFormatState.ts:18</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -964,7 +1056,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/getSelectedSegments.ts#L7">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/getSelectedSegments.ts:7</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/getSelectedSegments.ts#L7">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/getSelectedSegments.ts:7</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -995,7 +1087,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlock.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlock.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlock.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlock.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1026,7 +1118,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlockGroup.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlockGroup.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlockGroup.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInBlockGroup.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1054,7 +1146,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInSegment.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInSegment.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInSegment.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/selection/hasSelectionInSegment.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1079,14 +1171,14 @@
 					<a name="insertentity" class="tsd-anchor"></a>
 					<h3>insert<wbr>Entity</h3>
 					<ul class="tsd-signatures tsd-kind-function tsd-parent-kind-module">
-						<li class="tsd-signature tsd-kind-icon">insert<wbr>Entity<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.icontentmodeleditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentModelEditor</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isBlock<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, position<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;focus&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;begin&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_editor.insertentityoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertEntityOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.entity.html" class="tsd-signature-type" data-tsd-kind="Interface">Entity</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
-						<li class="tsd-signature tsd-kind-icon">insert<wbr>Entity<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.icontentmodeleditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentModelEditor</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isBlock<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span>, position<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-signature-type" data-tsd-kind="Type alias">InsertEntityPosition</a><span class="tsd-signature-symbol"> | </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_editor.insertentityoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertEntityOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.entity.html" class="tsd-signature-type" data-tsd-kind="Interface">Entity</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Entity<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.icontentmodeleditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentModelEditor</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isBlock<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">boolean</span>, position<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">&quot;focus&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;begin&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_editor.insertentityoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertEntityOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.entity.html" class="tsd-signature-type" data-tsd-kind="Interface">Entity</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
+						<li class="tsd-signature tsd-kind-icon">insert<wbr>Entity<span class="tsd-signature-symbol">(</span>editor<span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_content_model_editor.icontentmodeleditor.html" class="tsd-signature-type" data-tsd-kind="Interface">IContentModelEditor</a>, type<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">string</span>, isBlock<span class="tsd-signature-symbol">: </span><span class="tsd-signature-type">true</span>, position<span class="tsd-signature-symbol">: </span><a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-signature-type" data-tsd-kind="Type alias">InsertEntityPosition</a><span class="tsd-signature-symbol"> | </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a>, options<span class="tsd-signature-symbol">?: </span><a href="../interfaces/roosterjs_content_model_editor.insertentityoptions.html" class="tsd-signature-type" data-tsd-kind="Interface">InsertEntityOptions</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="../interfaces/roosterjs_editor_types.entity.html" class="tsd-signature-type" data-tsd-kind="Interface">Entity</a><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">null</span></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts#L27">packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts:27</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts#L28">packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts:28</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1115,7 +1207,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>position: <span class="tsd-signature-type">&quot;focus&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;begin&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></h5>
+									<h5>position: <span class="tsd-signature-type">&quot;focus&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;begin&quot;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-type">&quot;end&quot;</span><span class="tsd-signature-symbol"> | </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Position of the entity to insert. It can be
 											Value of InsertEntityPosition: see InsertEntityPosition
@@ -1135,7 +1227,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts#L46">packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts:46</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts#L47">packages-content-model/roosterjs-content-model-editor/lib/publicApi/entity/insertEntity.ts:47</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1164,7 +1256,7 @@
 									</div>
 								</li>
 								<li>
-									<h5>position: <a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-signature-type" data-tsd-kind="Type alias">InsertEntityPosition</a><span class="tsd-signature-symbol"> | </span><a href="roosterjs_editor_types.html#selectionrangeex" class="tsd-signature-type" data-tsd-kind="Type alias">SelectionRangeEx</a></h5>
+									<h5>position: <a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-signature-type" data-tsd-kind="Type alias">InsertEntityPosition</a><span class="tsd-signature-symbol"> | </span><a href="roosterjs_content_model_types.html#domselection" class="tsd-signature-type" data-tsd-kind="Type alias">DOMSelection</a></h5>
 									<div class="tsd-comment tsd-typography">
 										<p>Position of the entity to insert. It can be
 											Value of InsertEntityPosition: see InsertEntityPosition
@@ -1193,7 +1285,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/insertImage.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/insertImage.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/insertImage.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/insertImage.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1227,7 +1319,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/insertLink.ts#L36">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/insertLink.ts:36</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/insertLink.ts#L36">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/insertLink.ts:36</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1287,7 +1379,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/insertTable.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/insertTable.ts:22</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/insertTable.ts#L22">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/insertTable.ts:22</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1338,7 +1430,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/isContentModelEditor.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/editor/isContentModelEditor.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/editor/isContentModelEditor.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/editor/isContentModelEditor.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1370,7 +1462,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete.ts#L30">packages-content-model/roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete.ts:30</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete.ts#L30">packages-content-model/roosterjs-content-model-editor/lib/publicApi/editing/keyboardDelete.ts:30</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1408,7 +1500,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/paste.ts#L37">packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/paste.ts:37</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/paste.ts#L37">packages-content-model/roosterjs-content-model-editor/lib/publicApi/utils/paste.ts:37</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1454,7 +1546,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts#L56">packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts:56</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts#L57">packages-content-model/roosterjs-content-model-editor/lib/editor/createContentModelEditorCore.ts:57</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1494,7 +1586,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/removeLink.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/removeLink.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/removeLink.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/link/removeLink.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1527,7 +1619,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setAlignment.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setAlignment.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setAlignment.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setAlignment.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1564,7 +1656,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setBackgroundColor.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setBackgroundColor.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setBackgroundColor.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setBackgroundColor.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1601,7 +1693,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setDirection.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setDirection.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setDirection.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setDirection.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1638,7 +1730,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontName.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontName.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontName.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontName.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1675,7 +1767,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontSize.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontSize.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontSize.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setFontSize.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1712,7 +1804,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setHeadingLevel.ts#L21">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setHeadingLevel.ts:21</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setHeadingLevel.ts#L21">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setHeadingLevel.ts:21</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1749,7 +1841,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageAltText.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageAltText.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageAltText.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageAltText.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1787,7 +1879,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBorder.ts#L14">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBorder.ts:14</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBorder.ts#L14">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBorder.ts:14</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1831,7 +1923,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBoxShadow.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBoxShadow.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBoxShadow.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/image/setImageBoxShadow.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1874,7 +1966,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setIndentation.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setIndentation.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setIndentation.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setIndentation.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1917,7 +2009,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStartNumber.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStartNumber.ts:10</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStartNumber.ts#L10">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStartNumber.ts:10</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1954,7 +2046,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStyle.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStyle.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStyle.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/setListStyle.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -1991,7 +2083,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setParagraphMargin.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setParagraphMargin.ts:12</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setParagraphMargin.ts#L12">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setParagraphMargin.ts:12</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2035,7 +2127,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setSpacing.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setSpacing.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setSpacing.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/setSpacing.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2072,7 +2164,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/setTableCellShade.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/setTableCellShade.ts:13</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/setTableCellShade.ts#L13">packages-content-model/roosterjs-content-model-editor/lib/publicApi/table/setTableCellShade.ts:13</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2109,7 +2201,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setTextColor.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setTextColor.ts:9</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setTextColor.ts#L9">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/setTextColor.ts:9</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2146,7 +2238,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/toggleBlockQuote.ts#L25">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/toggleBlockQuote.ts:25</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/toggleBlockQuote.ts#L25">packages-content-model/roosterjs-content-model-editor/lib/publicApi/block/toggleBlockQuote.ts:25</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2185,7 +2277,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleBold.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleBold.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleBold.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleBold.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2216,7 +2308,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleBullet.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleBullet.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleBullet.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleBullet.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2251,7 +2343,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleCode.ts#L16">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleCode.ts:16</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleCode.ts#L16">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleCode.ts:16</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2282,7 +2374,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleItalic.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleItalic.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleItalic.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleItalic.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2313,7 +2405,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleNumbering.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleNumbering.ts:11</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleNumbering.ts#L11">packages-content-model/roosterjs-content-model-editor/lib/publicApi/list/toggleNumbering.ts:11</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2348,7 +2440,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleStrikethrough.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleStrikethrough.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleStrikethrough.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleStrikethrough.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2379,7 +2471,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSubscript.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSubscript.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSubscript.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSubscript.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2410,7 +2502,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSuperscript.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSuperscript.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSuperscript.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleSuperscript.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2441,7 +2533,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleUnderline.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleUnderline.ts:8</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleUnderline.ts#L8">packages-content-model/roosterjs-content-model-editor/lib/publicApi/segment/toggleUnderline.ts:8</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2472,7 +2564,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateImageMetadata.ts#L29">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateImageMetadata.ts:29</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateImageMetadata.ts#L29">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateImageMetadata.ts:29</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2527,7 +2619,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableCellMetadata.ts#L20">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableCellMetadata.ts:20</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableCellMetadata.ts#L20">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableCellMetadata.ts:20</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2582,7 +2674,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/24e280c/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableMetadata.ts#L48">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableMetadata.ts:48</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/4de6e53/packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableMetadata.ts#L48">packages-content-model/roosterjs-content-model-editor/lib/domUtils/metadata/updateTableMetadata.ts:48</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -2775,10 +2867,16 @@
 						<a href="roosterjs_content_model_editor.html#createeditorcontext" class="tsd-kind-icon">Create<wbr>Editor<wbr>Context</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.html#getdomselection" class="tsd-kind-icon">GetDOMSelection</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="roosterjs_content_model_editor.html#insertentityposition" class="tsd-kind-icon">Insert<wbr>Entity<wbr>Position</a>
 					</li>
 					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
 						<a href="roosterjs_content_model_editor.html#setcontentmodel" class="tsd-kind-icon">Set<wbr>Content<wbr>Model</a>
+					</li>
+					<li class=" tsd-kind-type-alias tsd-parent-kind-module">
+						<a href="roosterjs_content_model_editor.html#setdomselection" class="tsd-kind-icon">SetDOMSelection</a>
 					</li>
 					<li class=" tsd-kind-function tsd-parent-kind-module">
 						<a href="roosterjs_content_model_editor.html#adjustimageselection" class="tsd-kind-icon">adjust<wbr>Image<wbr>Selection</a>

@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">94.31% </span>
+                <span class="strong">94.07% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>116/123</span>
+                <span class='fraction'>111/118</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">78.63% </span>
+                <span class="strong">78.99% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>103/131</span>
+                <span class='fraction'>94/119</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">93.81% </span>
+                <span class="strong">93.64% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>106/113</span>
+                <span class='fraction'>103/110</span>
             </div>
         
             
@@ -366,24 +366,7 @@
 <a name='L307'></a><a href='#L307'>307</a>
 <a name='L308'></a><a href='#L308'>308</a>
 <a name='L309'></a><a href='#L309'>309</a>
-<a name='L310'></a><a href='#L310'>310</a>
-<a name='L311'></a><a href='#L311'>311</a>
-<a name='L312'></a><a href='#L312'>312</a>
-<a name='L313'></a><a href='#L313'>313</a>
-<a name='L314'></a><a href='#L314'>314</a>
-<a name='L315'></a><a href='#L315'>315</a>
-<a name='L316'></a><a href='#L316'>316</a>
-<a name='L317'></a><a href='#L317'>317</a>
-<a name='L318'></a><a href='#L318'>318</a>
-<a name='L319'></a><a href='#L319'>319</a>
-<a name='L320'></a><a href='#L320'>320</a>
-<a name='L321'></a><a href='#L321'>321</a>
-<a name='L322'></a><a href='#L322'>322</a>
-<a name='L323'></a><a href='#L323'>323</a>
-<a name='L324'></a><a href='#L324'>324</a>
-<a name='L325'></a><a href='#L325'>325</a>
-<a name='L326'></a><a href='#L326'>326</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L310'></a><a href='#L310'>310</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -405,17 +388,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -495,8 +467,6 @@
 <span class="cline-any cline-yes">11x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">2x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -526,8 +496,6 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">3x</span>
@@ -708,9 +676,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createSelectionMarker, createText, isNodeOfType } from 'roosterjs-content-model-dom';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { setSelection } from '../../modelApi/selection/setSelection';
-import type { SelectionRangeEx, TableSelection } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ContentModelDomIndexer,
@@ -720,6 +686,7 @@ import type {
     ContentModelTable,
     ContentModelTableRow,
     ContentModelText,
+    DOMSelection,
     Selectable,
 } from 'roosterjs-content-model-types';
 &nbsp;
@@ -739,17 +706,6 @@ interface IndexedSegmentNode extends Node {
 interface IndexedTableElement extends HTMLTableElement {
     __roosterjsContentModel: TableItem;
 }
-&nbsp;
-const UnSelectedCoordinates: TableSelection = {
-    firstCell: {
-        x: -1,
-        y: -1,
-    },
-    lastCell: {
-        x: -1,
-        y: -1,
-    },
-};
 &nbsp;
 function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     const { paragraph, segments } = (node as IndexedSegmentNode).__roosterjsContentModel ?? {};
@@ -814,29 +770,27 @@ function onTable(tableElement: HTMLTableElement, table: ContentModelTable) {
 &nbsp;
 function reconcileSelection(
     model: ContentModelDocument,
-    newRangeEx: SelectionRangeEx,
-    oldRangeEx?: SelectionRangeEx
+    newSelection: DOMSelection,
+    oldSelection?: DOMSelection
 ): boolean {
-    if (oldRangeEx) {
-        const range: Range | undefined = oldRangeEx.ranges[0];
-&nbsp;
+    if (oldSelection) {
         if (
-            oldRangeEx<span class="branch-0 cbranch-no" title="branch not covered" >?.t</span>ype == SelectionRangeTypes.Normal &amp;&amp;
-            range<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>ollapsed &amp;&amp;
-            isNodeOfType(oldRangeEx.ranges[0].startContainer, 'TEXT_NODE')
+            oldSelection.type == 'range' &amp;&amp;
+            oldSelection.range.collapsed &amp;&amp;
+            isNodeOfType(oldSelection.range.startContainer, 'TEXT_NODE')
         ) {
-            <span class="missing-if-branch" title="else path not taken" >E</span>if (isIndexedSegment(range.startContainer)) {
-                reconcileTextSelection(range.startContainer);
+            <span class="missing-if-branch" title="else path not taken" >E</span>if (isIndexedSegment(oldSelection.range.startContainer)) {
+                reconcileTextSelection(oldSelection.range.startContainer);
             }
         } else {
             setSelection(model);
         }
     }
 &nbsp;
-    switch (newRangeEx.type) {
-        case SelectionRangeTypes.ImageSelection:
-            const imageModel = isIndexedSegment(newRangeEx.image)
-                ? newRangeEx.image.__roosterjsContentModel.segments[0]
+    switch (newSelection.type) {
+        case 'image':
+            const imageModel = isIndexedSegment(newSelection.image)
+                ? newSelection.image.__roosterjsContentModel.segments[0]
                 : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
 &nbsp;
             <span class="missing-if-branch" title="else path not taken" >E</span>if (imageModel<span class="branch-0 cbranch-no" title="branch not covered" >?.s</span>egmentType == 'Image') {
@@ -848,26 +802,24 @@ function reconcileSelection(
 &nbsp;
 <span class="cstat-no" title="statement not covered" >            break;</span>
 &nbsp;
-        case SelectionRangeTypes.TableSelection:
-            const rows = isIndexedTable(newRangeEx.table)
-                ? newRangeEx.table.__roosterjsContentModel.tableRows
+        case 'table':
+            const rows = isIndexedTable(newSelection.table)
+                ? newSelection.table.__roosterjsContentModel.tableRows
                 : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
-            const { firstCell, lastCell } = newRangeEx.coordinates ?? <span class="branch-1 cbranch-no" title="branch not covered" >UnSelectedCoordinates;</span>
-&nbsp;
             rows<span class="branch-0 cbranch-no" title="branch not covered" >?.f</span>orEach((row, rowIndex) =&gt; {
                 row.cells.forEach((cell, colIndex) =&gt; {
                     cell.isSelected =
-                        rowIndex &gt;= firstCell.y &amp;&amp;
-                        rowIndex &lt;= lastCell.y &amp;&amp;
-                        colIndex &gt;= firstCell.x &amp;&amp;
-                        colIndex &lt;= lastCell.x;
+                        rowIndex &gt;= newSelection.firstRow &amp;&amp;
+                        rowIndex &lt;= newSelection.lastRow &amp;&amp;
+                        colIndex &gt;= newSelection.firstColumn &amp;&amp;
+                        colIndex &lt;= newSelection.lastColumn;
                 });
             });
 &nbsp;
             return true;
 &nbsp;
-        case SelectionRangeTypes.Normal:
-            const newRange = newRangeEx.ranges[0];
+        case 'range':
+            const newRange = newSelection.range;
             <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
                 const {
                     startContainer,
@@ -1039,7 +991,7 @@ export const contentModelDomIndexer: ContentModelDomIndexer = {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 28 2023 18:02:39 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 28 2023 20:11:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

@@ -30,9 +30,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">86.96% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>36/42</span>
+                <span class='fraction'>40/46</span>
             </div>
         
             
@@ -220,7 +220,10 @@
 <a name='L161'></a><a href='#L161'>161</a>
 <a name='L162'></a><a href='#L162'>162</a>
 <a name='L163'></a><a href='#L163'>163</a>
-<a name='L164'></a><a href='#L164'>164</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L164'></a><a href='#L164'>164</a>
+<a name='L165'></a><a href='#L165'>165</a>
+<a name='L166'></a><a href='#L166'>166</a>
+<a name='L167'></a><a href='#L167'>167</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -337,7 +340,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">53x</span>
-<span class="cline-any cline-yes">46782x</span>
+<span class="cline-any cline-yes">38719x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -354,13 +357,16 @@
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">28x</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -485,11 +491,11 @@ export default class ContentModelCachePlugin
 &nbsp;
             case PluginEventType.ContentChanged:
                 {
-                    const { contentModel, rangeEx } = event as ContentModelContentChangedEvent;
+                    const { contentModel, selection } = event as ContentModelContentChangedEvent;
 &nbsp;
                     if (contentModel &amp;&amp; this.state.domIndexer) {
                         this.state.cachedModel = contentModel;
-                        this.state.cachedRangeEx = rangeEx;
+                        this.state.cachedSelection = selection;
                     } else {
                         this.invalidateCache();
                     }
@@ -508,31 +514,34 @@ export default class ContentModelCachePlugin
     private invalidateCache() {
         if (!this.editor<span class="branch-0 cbranch-no" title="branch not covered" >?.i</span>sInShadowEdit()) {
             this.state.cachedModel = undefined;
-            this.state.cachedRangeEx = undefined;
+            this.state.cachedSelection = undefined;
         }
     }
 &nbsp;
     private updateCachedModel(editor: IContentModelEditor, forceUpdate?: boolean) {
-        const cachedRangeEx = this.state.cachedRangeEx;
-        this.state.cachedRangeEx = undefined; // Clear it to force getSelectionRangeEx() retrieve the latest selection range
+        const cachedSelection = this.state.cachedSelection;
+        this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
 &nbsp;
-        const newRangeEx = editor.getSelectionRangeEx();
-&nbsp;
+        const newRangeEx = editor.getDOMSelection() || undefined;
         const model = this.state.cachedModel;
         const isSelectionChanged =
-            forceUpdate || !cachedRangeEx || !areSameRangeEx(newRangeEx, cachedRangeEx);
+            forceUpdate ||
+            !cachedSelection ||
+            !newRangeEx ||
+            !areSameRangeEx(newRangeEx, cachedSelection);
 &nbsp;
         if (isSelectionChanged) {
             if (
                 !model ||
-                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedRangeEx)
+                !newRangeEx ||
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
             ) {
                 this.invalidateCache();
             } else {
-                this.state.cachedRangeEx = newRangeEx;
+                this.state.cachedSelection = newRangeEx;
             }
         } else {
-            this.state.cachedRangeEx = cachedRangeEx;
+            this.state.cachedSelection = cachedSelection;
         }
     }
 }
@@ -553,7 +562,7 @@ export function createContentModelCachePlugin(state: ContentModelCachePluginStat
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 28 2023 18:02:39 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 28 2023 20:11:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

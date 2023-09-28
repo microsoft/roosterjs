@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">82.14% </span>
+                <span class="strong">81.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/28</span>
+                <span class='fraction'>22/27</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">66.67% </span>
+                <span class="strong">64.71% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>28/42</span>
+                <span class='fraction'>22/34</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">81.48% </span>
+                <span class="strong">80.77% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/27</span>
+                <span class='fraction'>21/26</span>
             </div>
         
             
@@ -148,24 +148,7 @@
 <a name='L89'></a><a href='#L89'>89</a>
 <a name='L90'></a><a href='#L90'>90</a>
 <a name='L91'></a><a href='#L91'>91</a>
-<a name='L92'></a><a href='#L92'>92</a>
-<a name='L93'></a><a href='#L93'>93</a>
-<a name='L94'></a><a href='#L94'>94</a>
-<a name='L95'></a><a href='#L95'>95</a>
-<a name='L96'></a><a href='#L96'>96</a>
-<a name='L97'></a><a href='#L97'>97</a>
-<a name='L98'></a><a href='#L98'>98</a>
-<a name='L99'></a><a href='#L99'>99</a>
-<a name='L100'></a><a href='#L100'>100</a>
-<a name='L101'></a><a href='#L101'>101</a>
-<a name='L102'></a><a href='#L102'>102</a>
-<a name='L103'></a><a href='#L103'>103</a>
-<a name='L104'></a><a href='#L104'>104</a>
-<a name='L105'></a><a href='#L105'>105</a>
-<a name='L106'></a><a href='#L106'>106</a>
-<a name='L107'></a><a href='#L107'>107</a>
-<a name='L108'></a><a href='#L108'>108</a>
-<a name='L109'></a><a href='#L109'>109</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L92'></a><a href='#L92'>92</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -217,33 +200,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">113x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">113x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">18x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">18x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">95x</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">95x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -275,14 +241,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { createRange, Position, toArray } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
+    DOMSelection,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import type { NodePosition, SelectionRangeEx } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * Create DOM tree fragment from Content Model document
@@ -301,7 +267,7 @@ export function contentModelToDom(
     model: ContentModelDocument,
     context: ModelToDomContext,
     onNodeCreated?: OnNodeCreated
-): SelectionRangeEx | null {
+): DOMSelection | null {
     context.onNodeCreated = onNodeCreated;
 &nbsp;
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
@@ -313,7 +279,7 @@ export function contentModelToDom(
     return range;
 }
 &nbsp;
-function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
+function extractSelectionRange(context: ModelToDomContext): DOMSelection | null {
     const {
         regularSelection: { start, end },
         tableSelection,
@@ -323,35 +289,18 @@ function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | n
     let startPosition: NodePosition | undefined;
     let endPosition: NodePosition | undefined;
 &nbsp;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (<span class="branch-1 cbranch-no" title="branch not covered" >imageSelection?.image)</span> {
-<span class="cstat-no" title="statement not covered" >        return {</span>
-            type: SelectionRangeTypes.ImageSelection,
-            ranges: [createRange(imageSelection.image)],
-            areAllCollapsed: false,
-            image: imageSelection.image,
-        };
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (imageSelection) {
+<span class="cstat-no" title="statement not covered" >        return imageSelection;</span>
     } else if (
         (startPosition = start &amp;&amp; calcPosition(start)) &amp;&amp;
         (endPosition = end &amp;&amp; calcPosition(end))
     ) {
-        const range = createRange(startPosition, endPosition);
-&nbsp;
         return {
-            type: SelectionRangeTypes.Normal,
-            ranges: [createRange(startPosition, endPosition)],
-            areAllCollapsed: range.collapsed,
+            type: 'range',
+            range: createRange(startPosition, endPosition),
         };
-    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (<span class="branch-1 cbranch-no" title="branch not covered" >tableSelection?.table)</span> {
-<span class="cstat-no" title="statement not covered" >        return {</span>
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: tableSelection.table,
-            coordinates: {
-                firstCell: tableSelection.firstCell,
-                lastCell: tableSelection.lastCell,
-            },
-        };
+    } else <span class="missing-if-branch" title="if path not taken" >I</span>if (tableSelection) {
+<span class="cstat-no" title="statement not covered" >        return tableSelection;</span>
     } else {
         return null;
     }
@@ -388,7 +337,7 @@ function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefi
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Thu Sep 28 2023 18:02:39 GMT+0000 (Coordinated Universal Time)
+                at Thu Sep 28 2023 20:11:54 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../prettify.js"></script>
