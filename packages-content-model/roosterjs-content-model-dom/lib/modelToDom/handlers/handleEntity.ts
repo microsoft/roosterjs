@@ -64,12 +64,6 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 function preprocessEntity(entityModel: ContentModelEntity, context: ModelToDomContext) {
     let { id, type, isReadonly, wrapper } = entityModel;
 
-    if (!context.allowCacheElement) {
-        wrapper = wrapper.cloneNode(true /*deep*/) as HTMLElement;
-        wrapper.style.color = wrapper.style.color || 'inherit';
-        wrapper.style.backgroundColor = wrapper.style.backgroundColor || 'inherit';
-    }
-
     const entity: Entity | null =
         id && type
             ? {
