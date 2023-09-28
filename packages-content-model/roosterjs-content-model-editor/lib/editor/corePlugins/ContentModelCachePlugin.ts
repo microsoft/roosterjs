@@ -1,5 +1,5 @@
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
-import { isCharacterValue } from 'roosterjs-editor-dom/lib';
+import { isCharacterValue } from 'roosterjs-editor-dom';
 import { Keys, PluginEventType } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
