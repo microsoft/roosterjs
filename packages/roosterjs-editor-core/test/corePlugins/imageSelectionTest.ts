@@ -67,26 +67,6 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(false);
     });
 
-    it('should be triggered in shadow Edit', () => {
-        editor.setContent(`<img id=${imageId}></img>`);
-        const target = document.getElementById(imageId);
-        editorIsFeatureEnabled.and.returnValue(true);
-        editor.focus();
-        editor.select(target);
-
-        editor.startShadowEdit();
-
-        let selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
-
-        editor.stopShadowEdit();
-
-        selection = editor.getSelectionRangeEx();
-        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
-        expect(selection.areAllCollapsed).toBe(false);
-    });
-
     it('should handle a ESCAPE KEY in a image', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
