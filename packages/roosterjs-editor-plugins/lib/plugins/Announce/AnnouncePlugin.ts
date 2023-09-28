@@ -1,7 +1,7 @@
 import AnnounceHandler from './AnnounceHandlerImpl';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type {
-    DefaultAnnounceStrings,
+    KnownAnnounceStrings,
     EditorPlugin,
     IEditor,
     PluginEvent,
@@ -13,7 +13,7 @@ import type {
 export default class Announce implements EditorPlugin {
     private announceHandler: AnnounceHandler | undefined;
 
-    constructor(private readonly stringsMap?: Map<DefaultAnnounceStrings, string> | undefined) {}
+    constructor(private readonly stringsMap?: Map<KnownAnnounceStrings, string> | undefined) {}
 
     /**
      * Get a friendly name of this plugin

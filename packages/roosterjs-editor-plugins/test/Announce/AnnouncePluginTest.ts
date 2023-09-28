@@ -2,7 +2,7 @@ import * as AnnounceHandlerImpl from '../../lib/plugins/Announce/AnnounceHandler
 import AnnouncePlugin from '../../lib/plugins/Announce/AnnouncePlugin';
 import {
     AnnounceData,
-    DefaultAnnounceStrings,
+    KnownAnnounceStrings,
     IEditor,
     PluginEventType,
 } from 'roosterjs-editor-types';
@@ -29,11 +29,11 @@ describe('AnnouncePlugin', () => {
         const mockStrings = 'MockStrings' as any;
 
         spyOn(AnnounceHandlerImpl, 'default').and.callFake(
-            (document: Document, stringsMap?: Map<DefaultAnnounceStrings, string> | undefined) => {
+            (document: Document, stringsMap?: Map<KnownAnnounceStrings, string> | undefined) => {
                 return new (class Test {
                     constructor(
                         document: Document,
-                        stringsMap: Map<DefaultAnnounceStrings, string> | undefined
+                        stringsMap: Map<KnownAnnounceStrings, string> | undefined
                     ) {
                         ctorSpy(document, stringsMap);
                     }

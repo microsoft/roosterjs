@@ -1,4 +1,4 @@
-import type { AnnounceData, DefaultAnnounceStrings } from 'roosterjs-editor-types';
+import type { AnnounceData, KnownAnnounceStrings } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -8,7 +8,7 @@ export default class AnnounceHandler {
 
     constructor(
         private readonly document: Document,
-        private stringsMap?: Map<DefaultAnnounceStrings, string>
+        private stringsMap?: Map<KnownAnnounceStrings, string>
     ) {}
 
     public announce(announceData: AnnounceData) {

@@ -43,7 +43,7 @@ import {
     PositionType,
     NumberingListType,
     BulletListType,
-    DefaultAnnounceStrings,
+    KnownAnnounceStrings,
     ChangeSource,
 } from 'roosterjs-editor-types';
 
@@ -102,12 +102,12 @@ export const getAnnounceDataForList = (editor: IEditor) => {
         }
 
         return {
-            defaultStrings: DefaultAnnounceStrings.AnnounceListItemNumberingIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
             formatStrings: [stringToAnnounce],
         };
     } else if (safeInstanceOf(list, 'HTMLUListElement')) {
         return {
-            defaultStrings: DefaultAnnounceStrings.AnnounceListItemBulletIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
         };
     }
     return undefined;

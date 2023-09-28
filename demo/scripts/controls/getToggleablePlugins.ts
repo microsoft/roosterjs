@@ -5,7 +5,7 @@ import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-editor';
 import { CustomReplace as CustomReplacePlugin } from 'roosterjs-editor-plugins/lib/CustomReplace';
 import { CutPasteListChain } from 'roosterjs-editor-plugins/lib/CutPasteListChain';
-import { DefaultAnnounceStrings, EditorPlugin } from 'roosterjs-editor-types';
+import { EditorPlugin, KnownAnnounceStrings } from 'roosterjs-editor-types';
 import { HyperLink } from 'roosterjs-editor-plugins/lib/HyperLink';
 import { ImageEdit } from 'roosterjs-editor-plugins/lib/ImageEdit';
 import { Paste } from 'roosterjs-editor-plugins/lib/Paste';
@@ -66,9 +66,9 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
     return Object.values(plugins);
 }
 
-function getDefaultStringsMap(): Map<DefaultAnnounceStrings, string> {
-    return new Map<DefaultAnnounceStrings, string>([
-        [DefaultAnnounceStrings.AnnounceListItemBulletIndentation, 'Autocorrected Bullet'],
-        [DefaultAnnounceStrings.AnnounceListItemNumberingIndentation, 'Autocorrected {0}'],
+function getDefaultStringsMap(): Map<KnownAnnounceStrings, string> {
+    return new Map<KnownAnnounceStrings, string>([
+        [KnownAnnounceStrings.AnnounceListItemBulletIndentation, 'Autocorrected Bullet'],
+        [KnownAnnounceStrings.AnnounceListItemNumberingIndentation, 'Autocorrected {0}'],
     ]);
 }

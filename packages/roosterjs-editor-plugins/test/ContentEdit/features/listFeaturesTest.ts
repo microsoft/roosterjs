@@ -16,7 +16,7 @@ import {
     Keys,
     BlockElement,
     IContentTraverser,
-    DefaultAnnounceStrings,
+    KnownAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 describe('listFeatures | AutoBullet', () => {
@@ -814,7 +814,7 @@ describe('getAnnounceDataForList', () => {
 
         const announceData = getAnnounceDataForList(editorMock as any);
         expect(announceData).toEqual({
-            defaultStrings: DefaultAnnounceStrings.AnnounceListItemNumberingIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
             formatStrings: ['1'],
         });
     });
@@ -847,7 +847,7 @@ describe('getAnnounceDataForList', () => {
 
         const announceData = getAnnounceDataForList(editorMock as any);
         expect(announceData).toEqual({
-            defaultStrings: DefaultAnnounceStrings.AnnounceListItemBulletIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
         });
     });
 
