@@ -1,11 +1,11 @@
 import * as getPendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import * as retrieveModelFormatState from '../../../lib/modelApi/common/retrieveModelFormatState';
+import { DomToModelContext } from 'roosterjs-content-model-types';
+import { FormatState } from 'roosterjs-editor-types';
+import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import getFormatState, {
     reducedModelChildProcessor,
 } from '../../../lib/publicApi/format/getFormatState';
-import { DomToModelContext } from 'roosterjs-content-model-types';
-import { FormatState, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import {
     createContentModelDocument,
     createDomToModelContext,
@@ -49,14 +49,11 @@ describe('getFormatState', () => {
                 });
 
                 if (selectedNode) {
-                    context.rangeEx = {
-                        type: SelectionRangeTypes.Normal,
-                        ranges: [
-                            {
-                                commonAncestorContainer: selectedNode,
-                            } as any,
-                        ],
-                        areAllCollapsed: false,
+                    context.selection = {
+                        type: 'range',
+                        range: {
+                            commonAncestorContainer: selectedNode,
+                        } as any,
                     };
                 }
 
@@ -213,14 +210,11 @@ describe('reducedModelChildProcessor', () => {
 
         div.appendChild(span);
         span.textContent = 'test';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: span,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: span,
+            } as any,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -257,14 +251,11 @@ describe('reducedModelChildProcessor', () => {
         span1.textContent = 'test1';
         span2.textContent = 'test2';
         span3.textContent = 'test3';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: span2,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: span2,
+            } as any,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -301,14 +292,11 @@ describe('reducedModelChildProcessor', () => {
         span1.textContent = 'test1';
         span2.innerHTML = '<div>line1</div><div>line2</div>';
         span3.textContent = 'test3';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: span2,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: span2,
+            } as any,
         };
 
         reducedModelChildProcessor(doc, div, context);
@@ -372,14 +360,11 @@ describe('reducedModelChildProcessor', () => {
         span2.innerHTML = '<div>line1</div><div>line2</div>';
         span3.textContent = 'test3';
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: span2,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: span2,
+            } as any,
         };
 
         reducedModelChildProcessor(doc, div1, context);
@@ -421,14 +406,11 @@ describe('reducedModelChildProcessor', () => {
         const div = document.createElement('div');
         div.innerHTML =
             'aa<table class="tb1"><tr><td id="td1">test1</td><td id="td2"><span id="selection">test2</span></td></tr></table>bb';
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: div.querySelector('#selection') as HTMLElement,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: div.querySelector('#selection') as HTMLElement,
+            } as any,
         };
 
         reducedModelChildProcessor(doc, div, context);

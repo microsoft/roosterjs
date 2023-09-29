@@ -17,8 +17,8 @@ describe('setContentModel', () => {
     let createEditorContext: jasmine.Spy;
     let createModelToDomContextSpy: jasmine.Spy;
     let createModelToDomContextWithConfigSpy: jasmine.Spy;
-    let select: jasmine.Spy;
-    let getSelectionRange: jasmine.Spy;
+    let setDOMSelectionSpy: jasmine.Spy;
+    let getDOMSelectionSpy: jasmine.Spy;
     let normalizeSpy: jasmine.Spy;
 
     beforeEach(() => {
@@ -36,8 +36,8 @@ describe('setContentModel', () => {
             createModelToDomContext,
             'createModelToDomContextWithConfig'
         ).and.returnValue(mockedContext);
-        select = jasmine.createSpy('select');
-        getSelectionRange = jasmine.createSpy('getSelectionRange');
+        setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
+        getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
         normalizeSpy = jasmine.createSpy('normalize');
 
         mockedDiv.normalize = normalizeSpy;
@@ -46,8 +46,8 @@ describe('setContentModel', () => {
             contentDiv: mockedDiv,
             api: {
                 createEditorContext,
-                select,
-                getSelectionRange,
+                setDOMSelection: setDOMSelectionSpy,
+                getDOMSelection: getDOMSelectionSpy,
             },
             lifecycle: {},
             defaultModelToDomConfig: mockedConfig,
@@ -70,10 +70,10 @@ describe('setContentModel', () => {
             mockedContext,
             undefined
         );
-        expect(select).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(normalizeSpy).toHaveBeenCalledTimes(1);
         expect(normalizeSpy).toHaveBeenCalledWith();
-        expect(core.cache.cachedRangeEx).toBe(mockedRange);
+        expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(core.cache.cachedModel).toBe(mockedModel);
     });
 
@@ -91,7 +91,7 @@ describe('setContentModel', () => {
             mockedContext,
             undefined
         );
-        expect(select).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(normalizeSpy).toHaveBeenCalledTimes(1);
         expect(normalizeSpy).toHaveBeenCalledWith();
     });
@@ -115,7 +115,7 @@ describe('setContentModel', () => {
             mockedContext,
             undefined
         );
-        expect(select).toHaveBeenCalledWith(core, mockedRange);
+        expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
         expect(normalizeSpy).toHaveBeenCalledTimes(1);
         expect(normalizeSpy).toHaveBeenCalledWith();
     });
@@ -136,7 +136,7 @@ describe('setContentModel', () => {
             mockedContext,
             undefined
         );
-        expect(select).not.toHaveBeenCalled();
+        expect(setDOMSelectionSpy).not.toHaveBeenCalled();
         expect(normalizeSpy).toHaveBeenCalledTimes(1);
         expect(normalizeSpy).toHaveBeenCalledWith();
     });

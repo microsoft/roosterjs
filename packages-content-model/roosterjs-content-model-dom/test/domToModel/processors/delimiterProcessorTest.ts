@@ -4,7 +4,6 @@ import { createDomToModelContext } from '../../../lib/domToModel/context/createD
 import { createRange } from 'roosterjs-editor-dom';
 import { delimiterProcessor } from '../../../lib/domToModel/processors/delimiterProcessor';
 import { DomToModelContext } from 'roosterjs-content-model-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('delimiterProcessor', () => {
     let context: DomToModelContext;
@@ -40,10 +39,9 @@ describe('delimiterProcessor', () => {
         div.appendChild(span);
         div.appendChild(span2);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [createRange(text, 0, span2, 0)],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: createRange(text, 0, span2, 0),
         };
 
         delimiterProcessor(doc, span, context);

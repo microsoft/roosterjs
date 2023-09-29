@@ -6,10 +6,9 @@ import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../publicTypes/IContentModelEditor';
-import type { SelectionRangeEx } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    DOMSelection,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
@@ -44,7 +43,7 @@ export default class ContentModelEditor
      */
     createContentModel(
         option?: DomToModelOption,
-        selectionOverride?: SelectionRangeEx
+        selectionOverride?: DOMSelection
     ): ContentModelDocument {
         const core = this.getCore();
 
@@ -61,20 +60,29 @@ export default class ContentModelEditor
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): SelectionRangeEx | null {
+    ): DOMSelection | null {
         const core = this.getCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
+     * Get current DOM selection
      */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat {
+    getDOMSelection(): DOMSelection | null {
         const core = this.getCore();
 
-        return core.defaultFormat;
+        return core.api.getDOMSelection(core);
+    }
+
+    /**
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
+     */
+    setDOMSelection(selection: DOMSelection) {
+        const core = this.getCore();
+
+        core.api.setDOMSelection(core, selection);
     }
 }

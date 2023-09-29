@@ -3,20 +3,20 @@ import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInC
 import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
 import { createContentModel } from './coreApi/createContentModel';
 import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
-import { createContentModelEditPlugin } from './plugins/ContentModelEditPlugin';
-import { createContentModelFormatPlugin } from './plugins/ContentModelFormatPlugin';
+import { createContentModelEditPlugin } from './corePlugins/ContentModelEditPlugin';
+import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormatPlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
 import { createEditorContext } from './coreApi/createEditorContext';
 import { createEditorCore, isFeatureEnabled } from 'roosterjs-editor-core';
 import { ExperimentalFeatures } from 'roosterjs-editor-types';
-import { getSelectionRangeEx } from './coreApi/getSelectionRangeEx';
+import { getDOMSelection } from './coreApi/getDOMSelection';
 import { setContentModel } from './coreApi/setContentModel';
+import { setDOMSelection } from './coreApi/setDOMSelection';
 import { switchShadowEdit } from './coreApi/switchShadowEdit';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
 import type { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
-import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { CoreCreator, EditorCore } from 'roosterjs-editor-types';
 
 /**
@@ -26,25 +26,13 @@ export const createContentModelEditorCore: CoreCreator<
     ContentModelEditorCore,
     ContentModelEditorOptions
 > = (contentDiv, options) => {
-    const pluginState: ContentModelPluginState = {
-        cache: {
-            domIndexer: isFeatureEnabled(
-                options.experimentalFeatures,
-                ExperimentalFeatures.ReusableContentModelV2
-            )
-                ? contentModelDomIndexer
-                : undefined,
-        },
-        copyPaste: {
-            allowedCustomPasteType: options.allowedCustomPasteType || [],
-        },
-    };
+    const pluginState = getPluginState(options);
     const modifiedOptions: ContentModelEditorOptions = {
         ...options,
         plugins: [
             createContentModelCachePlugin(pluginState.cache),
             ...(options.plugins || []),
-            createContentModelFormatPlugin(),
+            createContentModelFormatPlugin(pluginState.format),
             createContentModelEditPlugin(),
         ],
         corePluginOverride: {
@@ -74,7 +62,6 @@ export function promoteToContentModelEditorCore(
     const cmCore = core as ContentModelEditorCore;
 
     promoteCorePluginState(cmCore, pluginState);
-    promoteDefaultFormat(cmCore);
     promoteContentModelInfo(cmCore, options);
     promoteCoreApi(cmCore);
 }
@@ -84,11 +71,6 @@ function promoteCorePluginState(
     pluginState: ContentModelPluginState
 ) {
     Object.assign(cmCore, pluginState);
-}
-
-function promoteDefaultFormat(cmCore: ContentModelEditorCore) {
-    cmCore.lifecycle.defaultFormat = cmCore.lifecycle.defaultFormat || {};
-    cmCore.defaultFormat = getDefaultSegmentFormat(cmCore);
 }
 
 function promoteContentModelInfo(
@@ -113,23 +95,40 @@ function promoteCoreApi(cmCore: ContentModelEditorCore) {
     cmCore.api.createContentModel = createContentModel;
     cmCore.api.setContentModel = setContentModel;
     cmCore.api.switchShadowEdit = switchShadowEdit;
-    cmCore.api.getSelectionRangeEx = getSelectionRangeEx;
+    cmCore.api.getDOMSelection = getDOMSelection;
+    cmCore.api.setDOMSelection = setDOMSelection;
     cmCore.originalApi.createEditorContext = createEditorContext;
     cmCore.originalApi.createContentModel = createContentModel;
     cmCore.originalApi.setContentModel = setContentModel;
+    cmCore.originalApi.getDOMSelection = getDOMSelection;
+    cmCore.originalApi.setDOMSelection = setDOMSelection;
 }
 
-function getDefaultSegmentFormat(core: EditorCore): ContentModelSegmentFormat {
-    const format = core.lifecycle.defaultFormat ?? {};
-
+function getPluginState(options: ContentModelEditorOptions): ContentModelPluginState {
+    const format = options.defaultFormat || {};
     return {
-        fontWeight: format.bold ? 'bold' : undefined,
-        italic: format.italic || undefined,
-        underline: format.underline || undefined,
-        fontFamily: format.fontFamily || undefined,
-        fontSize: format.fontSize || undefined,
-        textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-        backgroundColor:
-            format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+        cache: {
+            domIndexer: isFeatureEnabled(
+                options.experimentalFeatures,
+                ExperimentalFeatures.ReusableContentModelV2
+            )
+                ? contentModelDomIndexer
+                : undefined,
+        },
+        copyPaste: {
+            allowedCustomPasteType: options.allowedCustomPasteType || [],
+        },
+        format: {
+            defaultFormat: {
+                fontWeight: format.bold ? 'bold' : undefined,
+                italic: format.italic || undefined,
+                underline: format.underline || undefined,
+                fontFamily: format.fontFamily || undefined,
+                fontSize: format.fontSize || undefined,
+                textColor: format.textColors?.lightModeColor || format.textColor || undefined,
+                backgroundColor:
+                    format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
+            },
+        },
     };
 }

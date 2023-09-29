@@ -94,6 +94,14 @@ export { ContentModelDecorator } from './decorator/ContentModelDecorator';
 export { ContentModelListLevel } from './decorator/ContentModelListLevel';
 
 export { Selectable } from './selection/Selectable';
+export {
+    DOMSelection,
+    SelectionType,
+    SelectionBase,
+    ImageSelection,
+    RangeSelection,
+    TableSelection,
+} from './selection/DOMSelection';
 
 export {
     ContentModelHandlerMap,
@@ -125,8 +133,6 @@ export { ModelToDomContext } from './context/ModelToDomContext';
 export {
     ModelToDomBlockAndSegmentNode,
     ModelToDomRegularSelection,
-    ModelToDomTableSelection,
-    ModelToDomImageSelection,
     ModelToDomSelectionContext,
 } from './context/ModelToDomSelectionContext';
 export {
