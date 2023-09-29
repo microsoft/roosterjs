@@ -1,4 +1,6 @@
+import { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
 import { createElement } from 'roosterjs-editor-dom';
+import { getAllAnnounceFeatures } from './features/getAllAnnounceFeatures';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
@@ -7,6 +9,7 @@ import type {
     IEditor,
     PluginEvent,
     AnnounceData,
+    PluginKeyDownEvent,
 } from 'roosterjs-editor-types';
 
 const ARIA_LIVE_STYLE =
@@ -30,18 +33,25 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
     return element;
 };
 
+type KnownAnnounceString = KnownAnnounceStrings | CompatibleKnownAnnounceStrings;
+
 /**
- * Automatically transform -- into hyphen, if typed between two words.
+ * Announce text on
  */
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
     private editor: IEditor | undefined;
+    private features: AnnounceFeature[];
+    private lastFocusedElement: HTMLElement | undefined | null;
 
     constructor(
         private stringsMap?:
-            | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
+            | Map<KnownAnnounceString, string>
+            | ((key: KnownAnnounceString) => string)
             | undefined
-    ) {}
+    ) {
+        this.features = getAllAnnounceFeatures();
+    }
 
     /**
      * Get a friendly name of this plugin
@@ -64,31 +74,50 @@ export default class Announce implements EditorPlugin {
     dispose() {
         this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
         this.ariaLiveElement = undefined;
+        this.stringsMap = undefined;
     }
 
     /**
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(ev: PluginEvent) {
         if (
             this.editor &&
-            event.eventType == PluginEventType.ContentChanged &&
-            event.additionalData?.getAnnounceData
+            ev.eventType == PluginEventType.ContentChanged &&
+            ev.additionalData?.getAnnounceData
         ) {
-            const data = event.additionalData.getAnnounceData();
+            const data = ev.additionalData.getAnnounceData();
             if (data) {
                 this.announce(data, this.editor);
             }
         }
+
+        if (ev.eventType == PluginEventType.KeyDown && this.editor) {
+            this.handleFeatures(ev, this.editor);
+            this.lastFocusedElement = this.editor?.getElementAtCursor();
+        }
+    }
+
+    private handleFeatures(event: PluginKeyDownEvent, editor: IEditor) {
+        const announceParam: AnnounceFeatureParam = {
+            announceCallback: (announceData: AnnounceData) => this.announce(announceData, editor),
+            editor,
+            event,
+            lastFocusedElement: this.lastFocusedElement,
+        };
+        this.features
+            .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
+            .forEach(feature => {
+                if (feature.shouldHandle(announceParam)) {
+                    feature.handle(announceParam);
+                }
+            });
     }
 
     protected announce(announceData: AnnounceData, editor: IEditor) {
         const { text, defaultStrings, formatStrings = [] } = announceData;
-        let textToAnnounce = formatString(
-            (defaultStrings && this.stringsMap?.get(defaultStrings)) || text,
-            formatStrings
-        );
+        let textToAnnounce = formatString(this.getString(defaultStrings) || text, formatStrings);
         if (textToAnnounce) {
             if (!this.ariaLiveElement || textToAnnounce == this.ariaLiveElement?.textContent) {
                 this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
@@ -100,6 +129,18 @@ export default class Announce implements EditorPlugin {
         }
     }
 
+    private getString(key: KnownAnnounceString | undefined) {
+        if (this.stringsMap == undefined || key == undefined) {
+            return undefined;
+        }
+
+        if (typeof this.stringsMap === 'function') {
+            return this.stringsMap(key);
+        } else {
+            return this.stringsMap.get(key);
+        }
+    }
+
     /**
      * @internal
      * Public only for unit testing.
@@ -107,16 +148,6 @@ export default class Announce implements EditorPlugin {
      */
     public getAriaLiveElement() {
         return this.ariaLiveElement;
-    }
-
-    /**
-     * Sets a new string map.
-     * @param stringsMap
-     */
-    public setStringsMap(
-        stringsMap: Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string> | undefined
-    ) {
-        this.stringsMap = stringsMap;
     }
 }
 

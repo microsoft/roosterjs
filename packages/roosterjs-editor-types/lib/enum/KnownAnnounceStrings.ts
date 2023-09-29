@@ -15,4 +15,12 @@ export const enum KnownAnnounceStrings {
      * Auto corrected bullet
      */
     AnnounceListItemBulletIndentation,
+    /**
+     * String announced when cursor is moved to the last cell in a table
+     */
+    AnnounceOnFocusLastCell,
+    /**
+     * String announced when a new list item is created.
+     */
+    AnnounceNewListItemNumber,
 }

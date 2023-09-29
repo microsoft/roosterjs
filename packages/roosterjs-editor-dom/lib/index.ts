@@ -1,3 +1,5 @@
+export { default as getAnnounceDataForList } from './announceData/getAnnounceDataForList';
+
 export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
 
