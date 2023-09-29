@@ -465,9 +465,11 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
             } else if (keyboardEvent.key == DELETE_CHAR_CODE) {
                 let searcher = this.editor?.getContentSearcherOfCursor(event);
                 if (searcher) {
-                    let nodeAfterCursor = searcher.getInlineElementAfter()
-                        ? searcher.getInlineElementAfter()?.getContainerNode()
+                    const inlineElementAfter = searcher.getInlineElementAfter();
+                    let nodeAfterCursor = inlineElementAfter
+                        ? inlineElementAfter.getContainerNode()
                         : null;
+                    nodeAfterCursor = this.getParentNodeIfTextNode(nodeAfterCursor);
                     let nodeId = nodeAfterCursor ? this.getIdValue(nodeAfterCursor) : null;
                     if (
                         nodeId &&
@@ -481,6 +483,13 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
                 }
             }
         }
+    }
+
+    private getParentNodeIfTextNode(node: Node | null): Node | null {
+        if (safeInstanceOf(node, 'Text')) {
+            node = node.parentNode;
+        }
+        return node;
     }
 
     private onAndroidInputEvent(event: PluginInputEvent) {
@@ -506,16 +515,14 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         if (!this.editor) {
             return false;
         }
-
         const searcher = this.editor.getContentSearcherOfCursor(event);
         if (!searcher) {
             return false;
         }
 
         const inlineElementBefore = searcher.getInlineElementBefore();
-        const nodeBeforeCursor = inlineElementBefore
-            ? inlineElementBefore.getContainerNode()
-            : null;
+        let nodeBeforeCursor = inlineElementBefore ? inlineElementBefore.getContainerNode() : null;
+        nodeBeforeCursor = this.getParentNodeIfTextNode(nodeBeforeCursor);
         const nodeId = nodeBeforeCursor ? this.getIdValue(nodeBeforeCursor) : null;
         const inlineElementAfter = searcher.getInlineElementAfter();
 
@@ -606,3 +613,4 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         );
     }
 }
+
