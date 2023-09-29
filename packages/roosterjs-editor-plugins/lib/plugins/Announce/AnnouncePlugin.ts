@@ -34,7 +34,7 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
 };
 
 /**
- * Announce text on
+ * Plugin in charge of announcing messages to screen reader
  */
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
