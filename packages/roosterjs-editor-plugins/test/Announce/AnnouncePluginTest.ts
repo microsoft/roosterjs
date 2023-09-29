@@ -1,5 +1,5 @@
+import AnnouncePlugin from '../../lib/plugins/Announce/AnnouncePlugin';
 import { IEditor, PluginEventType } from 'roosterjs-editor-types';
-import AnnouncePlugin, * as AnnouncePluginFile from '../../lib/plugins/Announce/AnnouncePlugin';
 
 describe('AnnouncePlugin', () => {
     const mockEditor: IEditor = {
