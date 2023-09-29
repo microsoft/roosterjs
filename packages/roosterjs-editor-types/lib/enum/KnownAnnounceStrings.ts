@@ -1,18 +1,18 @@
 /**
  * Known announce strings
  */
-export enum KnownAnnounceStrings {
+export const enum KnownAnnounceStrings {
     /**
-     * String announced when Indenting or Outdenting a list item,
+     * String announced when Indenting or Outdenting a list item in a OL List
      * @example
-     * "Auto corrected, {0}"
-     * Where {0} is the new list item bullet
+     * Auto corrected, &lcub;0&rcub;
+     * Where &lcub0&rcub is the new list item bullet
      */
     AnnounceListItemNumberingIndentation = 1,
     /**
-     * String announced when Indenting or Outdenting a list item,
+     * String announced when Indenting or Outdenting a list item in a UL List
      * @example
-     * "Auto corrected bullet"
+     * Auto corrected bullet
      */
     AnnounceListItemBulletIndentation,
 }

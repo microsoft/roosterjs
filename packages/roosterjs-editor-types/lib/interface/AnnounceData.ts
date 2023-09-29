@@ -1,3 +1,4 @@
+import type { CompatibleKnownAnnounceStrings } from '../compatibleEnum/KnownAnnounceStrings';
 import type { KnownAnnounceStrings } from '../enum/KnownAnnounceStrings';
 
 /**
@@ -7,7 +8,7 @@ export default interface AnnounceData {
     /**
      * @optional Default announce strings built in Rooster
      */
-    defaultStrings?: KnownAnnounceStrings;
+    defaultStrings?: KnownAnnounceStrings | CompatibleKnownAnnounceStrings;
 
     /**
      * @optional string to announce from this Content Changed event, will be the fallback value if default string
