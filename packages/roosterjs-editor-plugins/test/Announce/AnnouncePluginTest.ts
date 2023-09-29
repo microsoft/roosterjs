@@ -1,11 +1,5 @@
-import * as AnnounceHandlerImpl from '../../lib/plugins/Announce/AnnounceHandlerImpl';
-import AnnouncePlugin from '../../lib/plugins/Announce/AnnouncePlugin';
-import {
-    AnnounceData,
-    KnownAnnounceStrings,
-    IEditor,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import AnnouncePlugin, * as AnnouncePluginFile from '../../lib/plugins/Announce/AnnouncePlugin';
 
 describe('AnnouncePlugin', () => {
     const mockEditor: IEditor = {
@@ -13,44 +7,66 @@ describe('AnnouncePlugin', () => {
     } as any;
 
     it('initialize', () => {
-        spyOn(AnnounceHandlerImpl, 'default').and.callThrough();
-
         const plugin = new AnnouncePlugin();
         plugin.initialize(mockEditor);
 
-        expect(AnnounceHandlerImpl.default).toHaveBeenCalledTimes(1);
+        expect((plugin as any).editor).toEqual(mockEditor);
     });
 
     it('onPluginEvent & dispose', () => {
-        const announceSpy = jasmine.createSpy('announceSpy');
-        const disposeSpy = jasmine.createSpy('disposeSpy');
-        const ctorSpy = jasmine.createSpy('ctorSpy');
-
         const mockStrings = 'MockStrings' as any;
 
-        spyOn(AnnounceHandlerImpl, 'default').and.callFake(
-            (document: Document, stringsMap?: Map<KnownAnnounceStrings, string> | undefined) => {
-                return new (class Test {
-                    constructor(
-                        document: Document,
-                        stringsMap: Map<KnownAnnounceStrings, string> | undefined
-                    ) {
-                        ctorSpy(document, stringsMap);
-                    }
+        const plugin = new AnnouncePlugin(mockStrings);
+        const mockAnnounceData = {
+            text: 'Announcement text',
+            defaultStrings: undefined,
+            formatStrings: [],
+        } as any;
 
-                    public announce(announceData: AnnounceData) {
-                        announceSpy(announceData);
-                    }
+        plugin.initialize(mockEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            source: 'Test',
+            additionalData: {
+                getAnnounceData: () => mockAnnounceData,
+            },
+        });
 
-                    public dispose() {
-                        disposeSpy();
-                    }
-                })(document, stringsMap) as AnnounceHandlerImpl.default;
-            }
-        );
+        expect(plugin.getAriaLiveElement()).toBeDefined();
+        expect(plugin.getAriaLiveElement()?.textContent).toEqual(mockAnnounceData.text);
+        plugin.dispose();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+    });
+
+    it('onPluginEvent & replace {0}, {1}! with [Hello, World] => Hello World', () => {
+        const mockStrings = 'MockStrings' as any;
 
         const plugin = new AnnouncePlugin(mockStrings);
-        const mockAnnounceData = 'AnnounceDataMock' as any;
+        const announceData = {
+            text: '{0}, {1}!',
+            defaultStrings: undefined,
+            formatStrings: ['Hello', 'World'],
+        } as any;
+
+        plugin.initialize(mockEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            source: 'Test',
+            additionalData: {
+                getAnnounceData: () => announceData,
+            },
+        });
+
+        expect(plugin.getAriaLiveElement()).toBeDefined();
+        expect(plugin.getAriaLiveElement()?.textContent).toEqual('Hello, World!');
+        plugin.dispose();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+    });
+
+    it('onPluginEvent & dispose, getAnnounceData returns undefined', () => {
+        const mockStrings = 'MockStrings' as any;
+
+        const plugin = new AnnouncePlugin(mockStrings);
 
         plugin.initialize(mockEditor);
         plugin.onPluginEvent({
@@ -58,14 +74,29 @@ describe('AnnouncePlugin', () => {
             source: 'Test',
             additionalData: {
                 getAnnounceData: () => {
-                    return mockAnnounceData;
+                    return undefined;
                 },
             },
         });
-        plugin.dispose();
 
-        expect(ctorSpy).toHaveBeenCalledWith(document, mockStrings);
-        expect(announceSpy).toHaveBeenCalledWith(mockAnnounceData);
-        expect(disposeSpy).toHaveBeenCalled();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+        plugin.dispose();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+    });
+
+    it('onPluginEvent & dispose, getAnnounceData is undefined', () => {
+        const mockStrings = 'MockStrings' as any;
+
+        const plugin = new AnnouncePlugin(mockStrings);
+
+        plugin.initialize(mockEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.ContentChanged,
+            source: 'Test',
+        });
+
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+        plugin.dispose();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
     });
 });
