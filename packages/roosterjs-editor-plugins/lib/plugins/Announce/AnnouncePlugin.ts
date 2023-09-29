@@ -83,7 +83,7 @@ export default class Announce implements EditorPlugin {
         }
     }
 
-    private announce(announceData: AnnounceData, editor: IEditor) {
+    protected announce(announceData: AnnounceData, editor: IEditor) {
         const { text, defaultStrings, formatStrings = [] } = announceData;
         let textToAnnounce = formatString(
             (defaultStrings && this.stringsMap?.get(defaultStrings)) || text,
