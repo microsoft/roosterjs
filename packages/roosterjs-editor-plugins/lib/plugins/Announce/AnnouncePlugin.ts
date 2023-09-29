@@ -2,11 +2,11 @@ import { createElement } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
-    KnownAnnounceStrings,
     EditorPlugin,
     IEditor,
     PluginEvent,
     AnnounceData,
+    KnownAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 const ARIA_LIVE_STYLE =
@@ -31,15 +31,16 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
 };
 
 /**
- * Automatically transform -- into hyphen, if typed between two words.
+ * Announce messages to screen reader by using aria live element.
  */
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
     private editor: IEditor | undefined;
 
     constructor(
-        private stringsMap?:
-            | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
+        private stringsMapOrGetter?:
+            | Map<CompatibleKnownAnnounceStrings | KnownAnnounceStrings, string>
+            | ((key: CompatibleKnownAnnounceStrings | KnownAnnounceStrings) => string)
             | undefined
     ) {}
 
@@ -85,10 +86,7 @@ export default class Announce implements EditorPlugin {
 
     protected announce(announceData: AnnounceData, editor: IEditor) {
         const { text, defaultStrings, formatStrings = [] } = announceData;
-        let textToAnnounce = formatString(
-            (defaultStrings && this.stringsMap?.get(defaultStrings)) || text,
-            formatStrings
-        );
+        let textToAnnounce = formatString(this.getString(defaultStrings) || text, formatStrings);
         if (textToAnnounce) {
             if (!this.ariaLiveElement || textToAnnounce == this.ariaLiveElement?.textContent) {
                 this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
@@ -100,6 +98,18 @@ export default class Announce implements EditorPlugin {
         }
     }
 
+    private getString(key: CompatibleKnownAnnounceStrings | KnownAnnounceStrings | undefined) {
+        if (this.stringsMapOrGetter == undefined || key == undefined) {
+            return undefined;
+        }
+
+        if (typeof this.stringsMapOrGetter === 'function') {
+            return this.stringsMapOrGetter(key);
+        } else {
+            return this.stringsMapOrGetter.get(key);
+        }
+    }
+
     /**
      * @internal
      * Public only for unit testing.
@@ -107,16 +117,6 @@ export default class Announce implements EditorPlugin {
      */
     public getAriaLiveElement() {
         return this.ariaLiveElement;
-    }
-
-    /**
-     * Sets a new string map.
-     * @param stringsMap
-     */
-    public setStringsMap(
-        stringsMap: Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string> | undefined
-    ) {
-        this.stringsMap = stringsMap;
     }
 }
 
