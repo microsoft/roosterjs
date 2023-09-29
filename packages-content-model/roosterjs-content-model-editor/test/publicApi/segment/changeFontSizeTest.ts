@@ -5,7 +5,6 @@ import { createDomToModelContext, domToContentModel } from 'roosterjs-content-mo
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('changeFontSize', () => {
     function runTest(
@@ -345,9 +344,8 @@ describe('changeFontSize', () => {
         const editor = ({
             createContentModel: (option: any) =>
                 domToContentModel(div, createDomToModelContext(undefined), {
-                    type: SelectionRangeTypes.Normal,
-                    ranges: [createRange(sub)],
-                    areAllCollapsed: false,
+                    type: 'range',
+                    range: createRange(sub),
                 }),
             addUndoSnapshot,
             focus: jasmine.createSpy(),

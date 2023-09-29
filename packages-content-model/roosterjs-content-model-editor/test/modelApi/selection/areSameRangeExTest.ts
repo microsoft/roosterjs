@@ -1,5 +1,5 @@
 import { areSameRangeEx } from '../../../lib/modelApi/selection/areSameRangeEx';
-import { SelectionRangeEx, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { DOMSelection } from 'roosterjs-content-model-types';
 
 describe('areSameRangeEx', () => {
     const startContainer = 'MockedStartContainer' as any;
@@ -9,7 +9,7 @@ describe('areSameRangeEx', () => {
     const table = 'MockedTable' as any;
     const image = 'MockedImage' as any;
 
-    function runTest(r1: SelectionRangeEx, r2: SelectionRangeEx, result: boolean) {
+    function runTest(r1: DOMSelection, r2: DOMSelection, result: boolean) {
         expect(areSameRangeEx(r1, r2)).toBe(result);
     }
 
@@ -21,28 +21,22 @@ describe('areSameRangeEx', () => {
     it('Same normal range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             true
         );
@@ -51,24 +45,20 @@ describe('areSameRangeEx', () => {
     it('Same table range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                lastColumn: 3,
+                firstRow: 2,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                lastColumn: 3,
+                firstRow: 2,
+                lastRow: 4,
             },
             true
         );
@@ -77,15 +67,11 @@ describe('areSameRangeEx', () => {
     it('Same image range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image,
             },
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image,
             },
             true
@@ -95,26 +81,21 @@ describe('areSameRangeEx', () => {
     it('normal range and table range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                lastColumn: 3,
+                firstRow: 2,
+                lastRow: 4,
             },
             false
         );
@@ -123,21 +104,16 @@ describe('areSameRangeEx', () => {
     it('normal range and image range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image,
             },
             false
@@ -147,19 +123,15 @@ describe('areSameRangeEx', () => {
     it('table range and image range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image,
             },
             false
@@ -169,28 +141,22 @@ describe('areSameRangeEx', () => {
     it('different normal range - 1', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer: 'Container 2' as any,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer: 'Container 2' as any,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             false
         );
@@ -199,28 +165,22 @@ describe('areSameRangeEx', () => {
     it('different normal range - 2', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer: 'Container 2' as any,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer: 'Container 2' as any,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             false
         );
@@ -229,28 +189,22 @@ describe('areSameRangeEx', () => {
     it('different normal range - 3', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset: 3,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset: 3,
+                    endOffset,
+                } as any,
             },
             false
         );
@@ -259,28 +213,22 @@ describe('areSameRangeEx', () => {
     it('different normal range - 4', () => {
         runTest(
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset,
+                } as any,
             },
             {
-                type: SelectionRangeTypes.Normal,
-                areAllCollapsed: true,
-                ranges: [
-                    {
-                        startContainer,
-                        endContainer,
-                        startOffset,
-                        endOffset: 4,
-                    } as any,
-                ],
+                type: 'range',
+                range: {
+                    startContainer,
+                    endContainer,
+                    startOffset,
+                    endOffset: 4,
+                } as any,
             },
             false
         );
@@ -289,24 +237,20 @@ describe('areSameRangeEx', () => {
     it('different table range - 1', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table: 'Table2' as any,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             false
         );
@@ -315,24 +259,20 @@ describe('areSameRangeEx', () => {
     it('different table range - 2', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 0, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 0,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             false
         );
@@ -341,24 +281,20 @@ describe('areSameRangeEx', () => {
     it('different table range - 2', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 0 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 0,
+                lastColumn: 3,
+                lastRow: 4,
             },
             false
         );
@@ -367,24 +303,20 @@ describe('areSameRangeEx', () => {
     it('different table range - 3', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 0, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 0,
+                lastRow: 4,
             },
             false
         );
@@ -393,24 +325,20 @@ describe('areSameRangeEx', () => {
     it('different table range - 4', () => {
         runTest(
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 4 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 4,
             },
             {
-                type: SelectionRangeTypes.TableSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'table',
                 table,
-                coordinates: {
-                    firstCell: { x: 1, y: 2 },
-                    lastCell: { x: 3, y: 0 },
-                },
+                firstColumn: 1,
+                firstRow: 2,
+                lastColumn: 3,
+                lastRow: 0,
             },
             false
         );
@@ -419,15 +347,11 @@ describe('areSameRangeEx', () => {
     it('different image range', () => {
         runTest(
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image,
             },
             {
-                type: SelectionRangeTypes.ImageSelection,
-                areAllCollapsed: true,
-                ranges: [],
+                type: 'image',
                 image: 'Image 2' as any,
             },
             false

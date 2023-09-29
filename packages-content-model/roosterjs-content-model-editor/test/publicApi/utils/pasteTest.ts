@@ -150,7 +150,7 @@ describe('Paste ', () => {
         expect(triggerPluginEvent).toHaveBeenCalledTimes(1);
         expect(triggerPluginEvent).toHaveBeenCalledWith(PluginEventType.ContentChanged, {
             contentModel: mockedModel,
-            rangeEx: undefined,
+            selection: undefined,
             data: clipboardData,
             source: ChangeSource.Paste,
             additionalData: {
