@@ -5,12 +5,13 @@ import type { KnownAnnounceStrings } from '../enum/KnownAnnounceStrings';
  */
 export default interface AnnounceData {
     /**
-     * Default announce strings built in Rooster
+     * @optional Default announce strings built in Rooster
      */
     defaultStrings?: KnownAnnounceStrings;
 
     /**
-     * @optional string to announce from this Content Changed event
+     * @optional string to announce from this Content Changed event, will be the fallback value if default string
+     * is not provided or if it is not found in the strings map.
      */
     text?: string;
 
