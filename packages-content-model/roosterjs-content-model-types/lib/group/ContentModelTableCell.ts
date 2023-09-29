@@ -1,10 +1,10 @@
-import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
-import { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
-import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
-import { Selectable } from '../selection/Selectable';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
+import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type { ContentModelBlockWithCache } from '../block/ContentModelBlockWithCache';
+import type { ContentModelTableCellFormat } from '../format/ContentModelTableCellFormat';
+import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { Selectable } from '../selection/Selectable';
+import type { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 /**
  * Content Model of Table Cell

@@ -1,4 +1,7 @@
-import { ContentModelSegment, ContentModelSegmentHandler } from 'roosterjs-content-model-types';
+import type {
+    ContentModelSegment,
+    ContentModelSegmentHandler,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

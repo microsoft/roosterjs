@@ -1,5 +1,5 @@
 import canMoveCurrentSnapshot from './canMoveCurrentSnapshot';
-import { Snapshots } from 'roosterjs-editor-types';
+import type { Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Move current snapshot with the given step if can move this step. Otherwise no action and return null

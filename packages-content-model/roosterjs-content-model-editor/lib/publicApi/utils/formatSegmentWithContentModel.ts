@@ -2,8 +2,8 @@ import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelectio
 import { formatWithContentModel } from './formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelDocument,
     ContentModelParagraph,
     ContentModelSegment,

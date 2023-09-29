@@ -1,5 +1,5 @@
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import {
+import type {
     AttachDomEvent,
     DOMEventHandler,
     DOMEventHandlerObject,

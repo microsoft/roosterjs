@@ -1,4 +1,4 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
+import type { BulletListType, NumberingListType } from 'roosterjs-editor-types';
 
 /**
  * Format of list / list item that stored as metadata

@@ -1,8 +1,8 @@
-import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { deleteExpandedSelection } from './utils/deleteExpandedSelection';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
-import {
-    DeleteResult,
+import { DeleteResult } from './utils/DeleteSelectionStep';
+import type { ContentModelDocument } from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type {
     DeleteSelectionContext,
     DeleteSelectionResult,
     DeleteSelectionStep,

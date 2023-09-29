@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set start number of a list item

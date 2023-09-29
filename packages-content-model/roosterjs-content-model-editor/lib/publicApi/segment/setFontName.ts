@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set font name

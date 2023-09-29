@@ -1,8 +1,8 @@
 import { addDelimiters, commitEntity, getObjectKeys, wrap } from 'roosterjs-editor-dom';
 import { applyFormat } from '../utils/applyFormat';
-import { Entity } from 'roosterjs-editor-types';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
+import type { Entity } from 'roosterjs-editor-types';
+import type {
     ContentModelBlockHandler,
     ContentModelEntity,
     ContentModelSegmentHandler,
@@ -63,12 +63,6 @@ export const handleEntitySegment: ContentModelSegmentHandler<ContentModelEntity>
 
 function preprocessEntity(entityModel: ContentModelEntity, context: ModelToDomContext) {
     let { id, type, isReadonly, wrapper } = entityModel;
-
-    if (!context.allowCacheElement) {
-        wrapper = wrapper.cloneNode(true /*deep*/) as HTMLElement;
-        wrapper.style.color = wrapper.style.color || 'inherit';
-        wrapper.style.backgroundColor = wrapper.style.backgroundColor || 'inherit';
-    }
 
     const entity: Entity | null =
         id && type

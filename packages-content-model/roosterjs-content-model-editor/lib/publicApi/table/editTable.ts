@@ -8,7 +8,6 @@ import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
 import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
@@ -19,6 +18,7 @@ import { setSelection } from '../../modelApi/selection/setSelection';
 import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellHorizontally';
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     createSelectionMarker,
     hasMetadata,

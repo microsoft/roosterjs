@@ -1,4 +1,7 @@
-import { ContentModelTableCell, ContentModelTableCellFormat } from 'roosterjs-content-model-types';
+import type {
+    ContentModelTableCell,
+    ContentModelTableCellFormat,
+} from 'roosterjs-content-model-types';
 
 /**
  * Create a ContentModelTableCell model

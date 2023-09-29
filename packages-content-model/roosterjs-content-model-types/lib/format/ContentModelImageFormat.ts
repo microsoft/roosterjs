@@ -1,13 +1,13 @@
-import { BorderFormat } from './formatParts/BorderFormat';
-import { BoxShadowFormat } from './formatParts/BoxShadowFormat';
-import { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
-import { DisplayFormat } from './formatParts/DisplayFormat';
-import { FloatFormat } from './formatParts/FloatFormat';
-import { IdFormat } from './formatParts/IdFormat';
-import { MarginFormat } from './formatParts/MarginFormat';
-import { PaddingFormat } from './formatParts/PaddingFormat';
-import { SizeFormat } from './formatParts/SizeFormat';
-import { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
+import type { BorderFormat } from './formatParts/BorderFormat';
+import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
+import type { ContentModelSegmentFormat } from './ContentModelSegmentFormat';
+import type { DisplayFormat } from './formatParts/DisplayFormat';
+import type { FloatFormat } from './formatParts/FloatFormat';
+import type { IdFormat } from './formatParts/IdFormat';
+import type { MarginFormat } from './formatParts/MarginFormat';
+import type { PaddingFormat } from './formatParts/PaddingFormat';
+import type { SizeFormat } from './formatParts/SizeFormat';
+import type { VerticalAlignFormat } from './formatParts/VerticalAlignFormat';
 
 /**
  * The format object for an image in Content Model

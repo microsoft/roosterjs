@@ -1,13 +1,6 @@
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { isCharacterValue, isCtrlOrMetaPressed, matchLink } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    DOMEventHandler,
-    EditorPlugin,
-    IEditor,
-    Keys,
-    PluginEvent,
-    PluginEventType,
-} from 'roosterjs-editor-types';
+import type { DOMEventHandler, EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * An editor plugin that show a tooltip for existing link

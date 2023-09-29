@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setModelAlignment } from '../../modelApi/block/setModelAlignment';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set text alignment of selected paragraphs

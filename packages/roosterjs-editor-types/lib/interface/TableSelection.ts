@@ -1,4 +1,4 @@
-import Coordinates from './Coordinates';
+import type Coordinates from './Coordinates';
 
 /**
  * Represents a selection made inside of a table

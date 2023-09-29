@@ -1,14 +1,11 @@
+import { ChangeSource, Keys, PluginEventType, PositionType } from 'roosterjs-editor-types';
 import { isCharacterValue, Position, setColor } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     IEditor,
-    Keys,
     NodePosition,
     PendingFormatStatePluginState,
     PluginEvent,
-    PluginEventType,
     PluginWithState,
-    PositionType,
 } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';

@@ -1,10 +1,10 @@
 import addParser from '../utils/addParser';
-import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
-import {
+import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
+import type {
     ContentModelBlockFormat,
     ContentModelListItemFormat,
     ContentModelListItemLevelFormat,

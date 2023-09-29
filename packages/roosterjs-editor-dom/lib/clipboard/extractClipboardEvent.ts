@@ -2,7 +2,7 @@ import extractClipboardItems from './extractClipboardItems';
 import extractClipboardItemsForIE from './extractClipboardItemsForIE';
 import toArray from '../jsUtils/toArray';
 import { Browser } from '../utils/Browser';
-import { ClipboardData, ExtractClipboardEventOption } from 'roosterjs-editor-types';
+import type { ClipboardData, ExtractClipboardEventOption } from 'roosterjs-editor-types';
 
 interface WindowForIE extends Window {
     clipboardData: DataTransfer;

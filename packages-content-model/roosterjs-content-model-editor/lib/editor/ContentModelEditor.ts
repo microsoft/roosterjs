@@ -1,11 +1,14 @@
-import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
-import { ContentModelEditorOptions, IContentModelEditor } from '../publicTypes/IContentModelEditor';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { SelectionRangeEx } from 'roosterjs-editor-types';
-import {
+import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
+import type {
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from '../publicTypes/IContentModelEditor';
+import type {
     ContentModelDocument,
-    ContentModelSegmentFormat,
+    DOMSelection,
     DomToModelOption,
     ModelToDomOption,
     OnNodeCreated,
@@ -25,6 +28,13 @@ export default class ContentModelEditor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
+
+        if (this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModelV2)) {
+            // Create an initial content model to cache
+            // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
+            // using content model and cache the model directly
+            this.createContentModel();
+        }
     }
 
     /**
@@ -33,7 +43,7 @@ export default class ContentModelEditor
      */
     createContentModel(
         option?: DomToModelOption,
-        selectionOverride?: SelectionRangeEx
+        selectionOverride?: DOMSelection
     ): ContentModelDocument {
         const core = this.getCore();
 
@@ -50,32 +60,29 @@ export default class ContentModelEditor
         model: ContentModelDocument,
         option?: ModelToDomOption,
         onNodeCreated?: OnNodeCreated
-    ): SelectionRangeEx | null {
+    ): DOMSelection | null {
         const core = this.getCore();
 
         return core.api.setContentModel(core, model, option, onNodeCreated);
     }
 
     /**
-     * Notify editor the current cache may be invalid
+     * Get current DOM selection
      */
-    invalidateCache() {
+    getDOMSelection(): DOMSelection | null {
         const core = this.getCore();
 
-        if (!core.lifecycle.shadowEditFragment) {
-            core.cache.cachedModel = undefined;
-            core.cache.cachedRangeEx = undefined;
-        }
+        return core.api.getDOMSelection(core);
     }
 
     /**
-     * Get default format as ContentModelSegmentFormat.
-     * This is a replacement of IEditor.getDefaultFormat for Content Model.
-     * @returns The default format
+     * Set DOMSelection into editor content.
+     * This is the replacement of IEditor.select.
+     * @param selection The selection to set
      */
-    getContentModelDefaultFormat(): ContentModelSegmentFormat {
+    setDOMSelection(selection: DOMSelection) {
         const core = this.getCore();
 
-        return core.defaultFormat;
+        core.api.setDOMSelection(core, selection);
     }
 }

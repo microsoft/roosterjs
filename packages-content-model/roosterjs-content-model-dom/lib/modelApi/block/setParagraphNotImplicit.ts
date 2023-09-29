@@ -1,4 +1,4 @@
-import { ContentModelBlock } from 'roosterjs-content-model-types';
+import type { ContentModelBlock } from 'roosterjs-content-model-types';
 
 /**
  * For a given block, if it is a paragraph, set it to be not-implicit

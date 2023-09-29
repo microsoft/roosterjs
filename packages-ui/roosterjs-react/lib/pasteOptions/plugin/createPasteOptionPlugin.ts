@@ -1,9 +1,11 @@
 import * as React from 'react';
-import showPasteOptionPane, { PasteOptionPane } from '../component/showPasteOptionPane';
+import showPasteOptionPane from '../component/showPasteOptionPane';
 import { ButtonKeys, Buttons } from '../utils/buttons';
-import { ClipboardData, IEditor, Keys, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
-import { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
-import { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type { PasteOptionPane } from '../component/showPasteOptionPane';
+import type { ClipboardData, IEditor, PluginEvent } from 'roosterjs-editor-types';
+import type { LocalizedStrings, ReactEditorPlugin, UIUtilities } from '../../common/index';
+import type { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
 
 class PasteOptionPlugin implements ReactEditorPlugin {
     private clipboardData: ClipboardData | null = null;

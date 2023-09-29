@@ -1,6 +1,6 @@
-import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import { NodePosition } from 'roosterjs-editor-types';
+import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * @internal

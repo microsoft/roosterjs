@@ -1,5 +1,5 @@
-import { BorderFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
+import type { BorderFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * Keys of border items

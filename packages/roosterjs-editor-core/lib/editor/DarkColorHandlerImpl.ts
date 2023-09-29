@@ -1,5 +1,9 @@
-import { ColorKeyAndValue, DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
 import { getObjectKeys, parseColor, setColor } from 'roosterjs-editor-dom';
+import type {
+    ColorKeyAndValue,
+    DarkColorHandler,
+    ModeIndependentColor,
+} from 'roosterjs-editor-types';
 
 const VARIABLE_REGEX = /^\s*var\(\s*(\-\-[a-zA-Z0-9\-_]+)\s*(?:,\s*(.*))?\)\s*$/;
 const VARIABLE_PREFIX = 'var(';

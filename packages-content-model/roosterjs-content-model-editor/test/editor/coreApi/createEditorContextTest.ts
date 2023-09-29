@@ -23,8 +23,11 @@ describe('createEditorContext', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
+            format: {
+                defaultFormat,
+            },
             darkColorHandler,
+            cache: {},
         } as any) as ContentModelEditorCore;
 
         const context = createEditorContext(core);
@@ -35,6 +38,50 @@ describe('createEditorContext', () => {
             defaultFormat,
             addDelimiterForEntity: true,
             allowCacheElement: true,
+            domIndexer: undefined,
+        });
+    });
+
+    it('create a normal context with domIndexer', () => {
+        const isDarkMode = 'DARKMODE' as any;
+        const defaultFormat = 'DEFAULTFORMAT' as any;
+        const darkColorHandler = 'DARKHANDLER' as any;
+        const getComputedStyleSpy = jasmine.createSpy('getComputedStyleSpy');
+        const getBoundingClientRectSpy = jasmine.createSpy('getBoundingClientRect');
+        const domIndexer = 'DOMINDEXER' as any;
+
+        const div = {
+            ownerDocument: {
+                defaultView: {
+                    getComputedStyle: getComputedStyleSpy,
+                },
+            },
+            getBoundingClientRect: getBoundingClientRectSpy,
+        };
+
+        const core = ({
+            contentDiv: div,
+            lifecycle: {
+                isDarkMode,
+            },
+            format: {
+                defaultFormat,
+            },
+            darkColorHandler,
+            cache: {
+                domIndexer,
+            },
+        } as any) as ContentModelEditorCore;
+
+        const context = createEditorContext(core);
+
+        expect(context).toEqual({
+            isDarkMode,
+            darkColorHandler,
+            defaultFormat,
+            addDelimiterForEntity: true,
+            allowCacheElement: true,
+            domIndexer,
         });
     });
 });
@@ -65,8 +112,11 @@ describe('createEditorContext - checkZoomScale', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
+            format: {
+                defaultFormat,
+            },
             darkColorHandler,
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 
@@ -85,6 +135,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity: true,
             zoomScale: 1,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -103,6 +154,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity: true,
             zoomScale: 2,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -121,6 +173,7 @@ describe('createEditorContext - checkZoomScale', () => {
             addDelimiterForEntity: true,
             zoomScale: 0.5,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 });
@@ -151,8 +204,11 @@ describe('createEditorContext - checkRootDir', () => {
             lifecycle: {
                 isDarkMode,
             },
-            defaultFormat,
+            format: {
+                defaultFormat,
+            },
             darkColorHandler,
+            cache: {},
         } as any) as ContentModelEditorCore;
     });
 
@@ -169,6 +225,7 @@ describe('createEditorContext - checkRootDir', () => {
             darkColorHandler,
             addDelimiterForEntity: true,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 
@@ -186,6 +243,7 @@ describe('createEditorContext - checkRootDir', () => {
             addDelimiterForEntity: true,
             isRootRtl: true,
             allowCacheElement: true,
+            domIndexer: undefined,
         });
     });
 });

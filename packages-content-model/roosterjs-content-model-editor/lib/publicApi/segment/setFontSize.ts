@@ -1,6 +1,9 @@
-import { ContentModelParagraph, ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
+    ContentModelParagraph,
+    ContentModelSegmentFormat,
+} from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set font size

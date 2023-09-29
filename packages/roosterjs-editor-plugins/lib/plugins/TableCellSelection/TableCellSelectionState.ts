@@ -1,4 +1,4 @@
-import { VTable } from 'roosterjs-editor-dom';
+import type { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal

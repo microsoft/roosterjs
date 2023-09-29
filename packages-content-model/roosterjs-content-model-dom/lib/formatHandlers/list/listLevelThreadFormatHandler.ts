@@ -1,6 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { ListThreadFormat } from 'roosterjs-content-model-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
+import type { FormatHandler } from '../FormatHandler';
+import type { ListThreadFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

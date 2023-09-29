@@ -1,7 +1,7 @@
-import RibbonButton from './RibbonButton';
-import RibbonPlugin from './RibbonPlugin';
-import { ICommandBarProps } from '@fluentui/react/lib/CommandBar';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import type RibbonButton from './RibbonButton';
+import type RibbonPlugin from './RibbonPlugin';
+import type { ICommandBarProps } from '@fluentui/react/lib/CommandBar';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
 
 /**
  * Properties of Ribbon component

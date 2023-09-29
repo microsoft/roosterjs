@@ -1,12 +1,11 @@
 import { getTableFormatInfo, getTagOfNode, toArray } from 'roosterjs-editor-dom';
-import {
+import type {
     ElementBasedFormatState,
     FormatState,
     IEditor,
     PluginEvent,
-    QueryScope,
-    SelectionRangeTypes,
 } from 'roosterjs-editor-types';
+import { QueryScope, SelectionRangeTypes } from 'roosterjs-editor-types';
 
 /**
  * Get element based Format State at cursor

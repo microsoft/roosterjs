@@ -1,8 +1,8 @@
 import applyImageBorderFormat from '../../modelApi/image/applyImageBorderFormat';
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { Border } from '../../publicTypes/interface/Border';
-import { ContentModelImage } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { Border } from '../../publicTypes/interface/Border';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set image border style for all selected images at selection.

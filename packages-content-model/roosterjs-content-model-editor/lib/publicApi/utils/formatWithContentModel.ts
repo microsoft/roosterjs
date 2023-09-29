@@ -1,12 +1,13 @@
-import { ChangeSource, PluginEventType, SelectionRangeEx } from 'roosterjs-editor-types';
-import { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * The general API to do format change with Content Model
@@ -41,14 +42,14 @@ export function formatWithContentModel(
         deletedEntities: [],
         rawEvent,
     };
-    let rangeEx: SelectionRangeEx | undefined;
+    let selection: DOMSelection | undefined;
 
     if (formatter(model, context)) {
         const writeBack = () => {
             handleNewEntities(editor, context);
             handleDeletedEntities(editor, context);
 
-            rangeEx =
+            selection =
                 editor.setContentModel(model, undefined /*options*/, onNodeCreated) || undefined;
 
             if (preservePendingFormat) {
@@ -76,7 +77,7 @@ export function formatWithContentModel(
 
         const eventData: ContentModelContentChangedEventData = {
             contentModel: model,
-            rangeEx: rangeEx,
+            selection: selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
             additionalData: {

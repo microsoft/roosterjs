@@ -1,7 +1,7 @@
-import { ContentModelTableCell } from 'roosterjs-content-model-types';
 import { createBooleanDefinition, createObjectDefinition } from 'roosterjs-editor-dom';
-import { TableCellMetadataFormat } from 'roosterjs-editor-types';
 import { updateMetadata } from 'roosterjs-content-model-dom';
+import type { ContentModelTableCell } from 'roosterjs-content-model-types';
+import type { TableCellMetadataFormat } from 'roosterjs-editor-types';
 
 const TableCellMetadataFormatDefinition = createObjectDefinition<Required<TableCellMetadataFormat>>(
     {

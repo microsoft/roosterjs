@@ -1,3 +1,4 @@
+import { ChangeSource, PluginEventType, PositionType } from 'roosterjs-editor-types';
 import { replaceWithNode } from 'roosterjs-editor-api';
 import {
     Browser,
@@ -7,8 +8,7 @@ import {
     PartialInlineElement,
     safeInstanceOf,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     EditorPlugin,
     IEditor,
     NodePosition,
@@ -16,10 +16,8 @@ import {
     PickerPluginOptions,
     PluginDomEvent,
     PluginEvent,
-    PluginEventType,
     PluginInputEvent,
     PluginKeyboardEvent,
-    PositionType,
 } from 'roosterjs-editor-types';
 
 // Character codes.

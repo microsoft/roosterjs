@@ -1,11 +1,8 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
-import { getObjectKeys, PendableFormatCommandMap, PendableFormatNames } from 'roosterjs-editor-dom';
-import {
-    DocumentCommand,
-    IEditor,
-    PluginEventType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { getObjectKeys, PendableFormatCommandMap } from 'roosterjs-editor-dom';
+import { PluginEventType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { PendableFormatNames } from 'roosterjs-editor-dom';
+import type { DocumentCommand, IEditor } from 'roosterjs-editor-types';
 import type { CompatibleDocumentCommand } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

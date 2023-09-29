@@ -1,4 +1,4 @@
-import { Rect } from 'roosterjs-editor-types';
+import type { Rect } from 'roosterjs-editor-types';
 
 /**
  * A ClientRect of all 0 is possible. i.e. chrome returns a ClientRect of 0 when the cursor is on an empty p

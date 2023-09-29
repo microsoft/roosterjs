@@ -1,8 +1,8 @@
 import { clearModelFormat } from '../../modelApi/common/clearModelFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import {
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,

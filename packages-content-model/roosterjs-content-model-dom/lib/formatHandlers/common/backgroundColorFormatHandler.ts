@@ -1,6 +1,6 @@
-import { BackgroundColorFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
 import { getColor, setColor } from '../utils/color';
+import type { BackgroundColorFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

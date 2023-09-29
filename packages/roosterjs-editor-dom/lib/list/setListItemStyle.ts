@@ -1,7 +1,7 @@
 import ContentTraverser from '../contentTraverser/ContentTraverser';
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { InlineElement } from 'roosterjs-editor-types';
+import type { InlineElement } from 'roosterjs-editor-types';
 
 /**
  * Set the Style of a List Item provided, with the styles that the inline child elements have

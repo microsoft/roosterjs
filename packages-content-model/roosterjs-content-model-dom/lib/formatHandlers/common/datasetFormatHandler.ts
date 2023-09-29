@@ -1,6 +1,6 @@
-import { DatasetFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import type { DatasetFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

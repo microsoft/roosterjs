@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
 import { removeLink as removeLinkApi } from 'roosterjs-editor-api';
-import { RemoveLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { RemoveLinkButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

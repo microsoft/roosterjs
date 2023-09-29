@@ -1,4 +1,4 @@
-import { Border } from '../publicTypes/interface/Border';
+import type { Border } from '../publicTypes/interface/Border';
 
 const BorderStyles = [
     'none',

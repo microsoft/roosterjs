@@ -1,7 +1,7 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
 import { setModelIndentation } from '../../modelApi/block/setModelIndentation';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Indent or outdent to selected paragraphs

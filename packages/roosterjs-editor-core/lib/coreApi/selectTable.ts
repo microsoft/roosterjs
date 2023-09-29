@@ -1,4 +1,5 @@
 import addUniqueId from './utils/addUniqueId';
+import { PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import {
     createRange,
     getTagOfNode,
@@ -10,14 +11,7 @@ import {
     toArray,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    SelectionRangeTypes,
-    TableSelection,
-    SelectTable,
-    PositionType,
-    Coordinates,
-} from 'roosterjs-editor-types';
+import type { EditorCore, TableSelection, SelectTable, Coordinates } from 'roosterjs-editor-types';
 
 const TABLE_ID = 'tableSelected';
 const CONTENT_DIV_ID = 'contentDiv_';

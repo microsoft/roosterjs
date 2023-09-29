@@ -4,11 +4,11 @@ import { createTableStructure } from '../../modelApi/table/createTableStructure'
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { mergeModel } from '../../modelApi/common/mergeModel';
 import { normalizeTable } from '../../modelApi/table/normalizeTable';
 import { setSelection } from '../../modelApi/selection/setSelection';
-import { TableMetadataFormat } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { TableMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * Insert table into editor at current selection

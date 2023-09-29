@@ -1,5 +1,5 @@
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Sets current selected block(s) line-height property and wipes such property from child segments

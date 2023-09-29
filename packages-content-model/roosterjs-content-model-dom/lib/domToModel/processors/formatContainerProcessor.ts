@@ -5,7 +5,7 @@ import { getDefaultStyle } from '../utils/getDefaultStyle';
 import { parseFormat } from '../utils/parseFormat';
 import { setParagraphNotImplicit } from '../../modelApi/block/setParagraphNotImplicit';
 import { stackFormat } from '../utils/stackFormat';
-import {
+import type {
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
     ContentModelParagraph,

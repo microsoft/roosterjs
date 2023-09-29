@@ -1,5 +1,5 @@
 import { chainSanitizerCallback } from 'roosterjs-editor-dom';
-import { HtmlSanitizerOptions } from 'roosterjs-editor-types';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
 const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'notes:', 'mailto:', 'onenote:'];
 

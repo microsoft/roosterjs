@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setListType } from '../../modelApi/list/setListType';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggle bullet list type

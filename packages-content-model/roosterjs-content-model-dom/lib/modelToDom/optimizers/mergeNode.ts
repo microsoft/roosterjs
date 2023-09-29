@@ -1,5 +1,4 @@
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
-import { NodeType } from 'roosterjs-editor-types';
 
 const OptimizeTags = ['SPAN', 'B', 'EM', 'I', 'U', 'SUB', 'SUP', 'STRIKE', 'S', 'A', 'CODE'];
 
@@ -12,8 +11,8 @@ export function mergeNode(root: Node) {
 
         if (
             next &&
-            isNodeOfType(child, NodeType.Element) &&
-            isNodeOfType(next, NodeType.Element) &&
+            isNodeOfType(child, 'ELEMENT_NODE') &&
+            isNodeOfType(next, 'ELEMENT_NODE') &&
             child.tagName == next.tagName &&
             OptimizeTags.indexOf(child.tagName) >= 0 &&
             hasSameAttributes(child, next)

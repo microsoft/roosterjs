@@ -3,10 +3,16 @@ import { addSegment } from '../../../lib/modelApi/common/addSegment';
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createParagraph } from '../../../lib/modelApi/creators/createParagraph';
+import { createRange } from 'roosterjs-editor-dom';
+import { createSelectionMarker } from '../../../lib/modelApi/creators/createSelectionMarker';
 import { createText } from '../../../lib/modelApi/creators/createText';
-import { DomToModelContext } from 'roosterjs-content-model-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { textProcessor } from '../../../lib/domToModel/processors/textProcessor';
+import {
+    ContentModelDomIndexer,
+    ContentModelParagraph,
+    ContentModelText,
+    DomToModelContext,
+} from 'roosterjs-content-model-types';
 
 describe('textProcessor', () => {
     let context: DomToModelContext;
@@ -95,7 +101,12 @@ describe('textProcessor', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'test0test1',
+                            text: 'test0',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'test1',
                             format: {},
                         },
                     ],
@@ -255,7 +266,13 @@ describe('textProcessor', () => {
             segments: [
                 {
                     segmentType: 'Text',
-                    text: 'test1test2',
+                    text: 'test1',
+                    isSelected: true,
+                    format: {},
+                },
+                {
+                    segmentType: 'Text',
+                    text: 'test2',
                     isSelected: true,
                     format: {},
                 },
@@ -357,18 +374,15 @@ describe('textProcessor', () => {
         const text = document.createTextNode('test');
 
         context.link = { format: { href: '/test' }, dataset: {} };
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    startContainer: text,
-                    startOffset: 2,
-                    endContainer: text,
-                    endOffset: 2,
-                    collapsed: true,
-                } as any,
-            ],
-            areAllCollapsed: true,
+        context.selection = {
+            type: 'range',
+            range: {
+                startContainer: text,
+                startOffset: 2,
+                endContainer: text,
+                endOffset: 2,
+                collapsed: true,
+            } as any,
         };
 
         textProcessor(doc, text, context);
@@ -441,7 +455,14 @@ describe('textProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            blocks: [],
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
         });
     });
 
@@ -453,7 +474,14 @@ describe('textProcessor', () => {
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
-            blocks: [],
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [],
+                    format: {},
+                    isImplicit: true,
+                },
+            ],
         });
     });
 
@@ -494,7 +522,12 @@ describe('textProcessor', () => {
                         {
                             segmentType: 'Text',
                             format: {},
-                            text: 'test ',
+                            text: 'test',
+                        },
+                        {
+                            segmentType: 'Text',
+                            format: {},
+                            text: ' ',
                         },
                     ],
                 },
@@ -531,5 +564,132 @@ describe('textProcessor', () => {
                 },
             ],
         });
+    });
+
+    it('Empty group with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        textProcessor(doc, text, context);
+
+        const segment: ContentModelText = {
+            segmentType: 'Text',
+            text: 'test',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [segment],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(text, paragraph, [segment]);
+    });
+
+    it('Empty group with domIndexer and collapsed selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+        context.selection = {
+            type: 'range',
+            range: createRange(text, 2),
+        };
+
+        textProcessor(doc, text, context);
+
+        const segment1: ContentModelText = {
+            segmentType: 'Text',
+            text: 'te',
+            format: {},
+        };
+        const segment2: ContentModelText = {
+            segmentType: 'Text',
+            text: 'st',
+            format: {},
+        };
+        const marker = createSelectionMarker();
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [segment1, marker, segment2],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(text, paragraph, [segment1, segment2]);
+    });
+
+    it('Empty group with domIndexer and expanded selection', () => {
+        const doc = createContentModelDocument();
+        const text = document.createTextNode('test');
+        const onSegmentSpy = jasmine.createSpy('onSegment');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: onSegmentSpy,
+            onTable: null!,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+        context.selection = {
+            type: 'range',
+            range: createRange(text, 1, text, 3),
+        };
+
+        textProcessor(doc, text, context);
+
+        const segment1: ContentModelText = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const segment2: ContentModelText = {
+            segmentType: 'Text',
+            text: 'es',
+            format: {},
+            isSelected: true,
+        };
+        const segment3: ContentModelText = {
+            segmentType: 'Text',
+            text: 't',
+            format: {},
+        };
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [segment1, segment2, segment3],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
+        });
+        expect(onSegmentSpy).toHaveBeenCalledWith(text, paragraph, [segment1, segment2, segment3]);
     });
 });

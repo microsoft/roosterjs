@@ -148,6 +148,12 @@ export const enum ExperimentalFeatures {
      */
     InlineEntityReadOnlyDelimiters = 'InlineEntityReadOnlyDelimiters',
 
+    /**
+     * @deprecated This feature is always enabled
+     * Paste with Content model
+     */
+    ContentModelPaste = 'ContentModelPaste',
+
     //#endregion
 
     /**
@@ -169,12 +175,12 @@ export const enum ExperimentalFeatures {
     DeleteTableWithBackspace = 'DeleteTableWithBackspace',
 
     /**
-     * Paste with Content model
-     */
-    ContentModelPaste = 'ContentModelPaste',
-
-    /**
      * Disable list chain functionality
      */
     DisableListChain = 'DisableListChain',
+
+    /**
+     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     */
+    ReusableContentModelV2 = 'ReusableContentModelV2',
 }

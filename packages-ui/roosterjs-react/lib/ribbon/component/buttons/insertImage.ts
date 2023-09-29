@@ -1,8 +1,8 @@
-import RibbonButton from '../../type/RibbonButton';
 import { createElement } from 'roosterjs-editor-dom';
-import { CreateElementData } from 'roosterjs-editor-types';
 import { insertImage as insertImageApi } from 'roosterjs-editor-api';
-import { InsertImageButtonStringKey } from '../../type/RibbonButtonStringKeys';
+import type RibbonButton from '../../type/RibbonButton';
+import type { CreateElementData } from 'roosterjs-editor-types';
+import type { InsertImageButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 const FileInput: CreateElementData = {
     tag: 'input',

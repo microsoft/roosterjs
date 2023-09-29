@@ -1,7 +1,7 @@
 import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { FormatHandler } from '../FormatHandler';
 import { getObjectKeys, getTagOfNode, safeInstanceOf } from 'roosterjs-editor-dom';
-import { ListMetadataFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { ListMetadataFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

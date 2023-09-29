@@ -1,10 +1,10 @@
 import { addBlock } from '../../modelApi/common/addBlock';
 import { addSegment } from '../../modelApi/common/addSegment';
 import { createEntity } from '../../modelApi/creators/createEntity';
-import { ElementProcessor } from 'roosterjs-content-model-types';
 import { getEntityFromElement } from 'roosterjs-editor-dom';
 import { isBlockElement } from '../utils/isBlockElement';
 import { stackFormat } from '../utils/stackFormat';
+import type { ElementProcessor } from 'roosterjs-content-model-types';
 
 /**
  * Content Model Element Processor for entity
@@ -33,7 +33,8 @@ export const entityProcessor: ElementProcessor<HTMLElement> = (group, element, c
             if (isBlockEntity) {
                 addBlock(group, entityModel);
             } else {
-                addSegment(group, entityModel);
+                const paragraph = addSegment(group, entityModel);
+                context.domIndexer?.onSegment(element, paragraph, [entityModel]);
             }
         }
     );

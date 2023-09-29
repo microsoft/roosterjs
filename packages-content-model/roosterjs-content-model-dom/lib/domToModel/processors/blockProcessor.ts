@@ -2,7 +2,7 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { ContextStyles } from './formatContainerProcessor';
 import { createParagraph } from '../../modelApi/creators/createParagraph';
 import { parseFormat } from '../utils/parseFormat';
-import {
+import type {
     ContentModelBlockGroup,
     ContentModelSegmentFormat,
     DomToModelContext,

@@ -1,5 +1,5 @@
-import { ContentModelHyperLinkFormat, FormatParser } from 'roosterjs-content-model-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
+import type { ContentModelHyperLinkFormat, FormatParser } from 'roosterjs-content-model-types';
 
 const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'notes:', 'mailto:', 'onenote:'];
 const INVALID_LINKS_REGEX = /^file:\/\/\/[a-zA-Z\/]/i;

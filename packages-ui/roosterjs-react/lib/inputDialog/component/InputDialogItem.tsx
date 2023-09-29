@@ -1,9 +1,10 @@
 import * as React from 'react';
-import DialogItem from '../type/DialogItem';
-import { getLocalizedString, LocalizedStrings } from '../../common/index';
+import { getLocalizedString } from '../../common/index';
 import { Keys } from 'roosterjs-editor-types';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { TextField } from '@fluentui/react/lib/TextField';
+import type DialogItem from '../type/DialogItem';
+import type { LocalizedStrings } from '../../common/index';
 
 /**
  * @internal

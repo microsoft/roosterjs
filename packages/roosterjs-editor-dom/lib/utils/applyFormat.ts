@@ -1,5 +1,5 @@
 import setColor from './setColor';
-import { DarkColorHandler, DefaultFormat } from 'roosterjs-editor-types';
+import type { DarkColorHandler, DefaultFormat } from 'roosterjs-editor-types';
 
 /**
  * Apply format to an HTML element

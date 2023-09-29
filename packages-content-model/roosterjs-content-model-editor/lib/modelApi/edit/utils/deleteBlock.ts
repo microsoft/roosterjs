@@ -1,6 +1,6 @@
-import { ContentModelBlock } from 'roosterjs-content-model-types';
 import { EntityOperation } from 'roosterjs-editor-types';
-import { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
+import type { ContentModelBlock } from 'roosterjs-content-model-types';
+import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
 /**
  * @internal

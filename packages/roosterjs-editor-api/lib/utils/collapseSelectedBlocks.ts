@@ -1,5 +1,6 @@
-import { BlockElement, IEditor, NodeType } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';
+import { NodeType } from 'roosterjs-editor-types';
+import type { BlockElement, IEditor } from 'roosterjs-editor-types';
 
 /**
  * @internal

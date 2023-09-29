@@ -1,4 +1,4 @@
-import { PluginEvent } from 'roosterjs-editor-types';
+import type { PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * Gets the cached event data by cache key from event object if there is already one.

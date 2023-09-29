@@ -1,11 +1,8 @@
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
+import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { isPunctuation, isSpace, normalizeText } from '../../../domUtils/stringUtil';
 import { isWhiteSpacePreserved } from 'roosterjs-content-model-dom';
-import {
-    DeleteResult,
-    DeleteSelectionContext,
-    DeleteSelectionStep,
-} from '../utils/DeleteSelectionStep';
+import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+import type { DeleteSelectionContext, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
 const enum DeleteWordState {
     Start,

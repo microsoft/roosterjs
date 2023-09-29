@@ -9,35 +9,36 @@ describe('addSegment', () => {
     it('Add segment to empty document', () => {
         const doc = createContentModelDocument();
         const segment = createText('test');
+        const result = addSegment(doc, segment);
 
-        addSegment(doc, segment);
-
-        expect(doc).toEqual({
-            blockGroupType: 'Document',
-            blocks: [
+        const paragraph: ContentModelParagraph = {
+            blockType: 'Paragraph',
+            isImplicit: true,
+            segments: [
                 {
-                    blockType: 'Paragraph',
-                    isImplicit: true,
-                    segments: [
-                        {
-                            segmentType: 'Text',
-                            text: 'test',
-                            format: {},
-                        },
-                    ],
+                    segmentType: 'Text',
+                    text: 'test',
                     format: {},
                 },
             ],
+            format: {},
+        };
+
+        expect(doc).toEqual({
+            blockGroupType: 'Document',
+            blocks: [paragraph],
         });
+        expect(result).toEqual(paragraph);
     });
 
     it('Add segment to document contains an empty paragraph', () => {
         const doc = createContentModelDocument();
-        addBlock(doc, createParagraph(false));
+        const para = createParagraph(false);
+        addBlock(doc, para);
 
         const segment = createText('test');
 
-        addSegment(doc, segment);
+        const result = addSegment(doc, segment);
 
         expect(doc).toEqual({
             blockGroupType: 'Document',
@@ -55,6 +56,7 @@ describe('addSegment', () => {
                 },
             ],
         });
+        expect(result).toBe(para);
     });
 
     it('Add segment to document contains a paragraph with existing text', () => {

@@ -1,7 +1,8 @@
 import createElement from '../utils/createElement';
 import createRange from './createRange';
 import normalizeRect from '../utils/normalizeRect';
-import { NodePosition, NodeType, Rect } from 'roosterjs-editor-types';
+import { NodeType } from 'roosterjs-editor-types';
+import type { NodePosition, Rect } from 'roosterjs-editor-types';
 
 /**
  * Get bounding rect of this position

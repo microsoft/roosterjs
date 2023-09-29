@@ -1,5 +1,5 @@
-import { ContentTraverser } from 'roosterjs-editor-dom';
 import {
+    ContentTraverser,
     addDelimiters,
     cacheGetEventData,
     createRange,
@@ -12,17 +12,20 @@ import {
     Position,
 } from 'roosterjs-editor-dom';
 import {
+    DelimiterClasses,
+    EntityOperation,
+    Keys,
+    NodeType,
+    PluginEventType,
+    PositionType,
+} from 'roosterjs-editor-types';
+
+import type {
     BuildInEditFeature,
     EntityFeatureSettings,
-    EntityOperation,
     IEditor,
-    Keys,
     PluginKeyboardEvent,
-    PositionType,
-    PluginEventType,
-    DelimiterClasses,
     PluginEvent,
-    NodeType,
     Entity,
     IContentTraverser,
     InlineElement,

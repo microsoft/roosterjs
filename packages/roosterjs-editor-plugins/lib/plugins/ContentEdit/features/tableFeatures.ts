@@ -1,16 +1,18 @@
 import { editTable, setIndentation } from 'roosterjs-editor-api';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
+    PluginEvent,
+    TableFeatureSettings,
+    PluginKeyboardEvent,
+    TableSelectionRange,
+} from 'roosterjs-editor-types';
+import {
     Keys,
     NodeType,
-    PluginEvent,
     PositionType,
-    TableFeatureSettings,
     TableOperation,
-    PluginKeyboardEvent,
     SelectionRangeTypes,
-    TableSelectionRange,
     Indentation,
     ExperimentalFeatures,
 } from 'roosterjs-editor-types';

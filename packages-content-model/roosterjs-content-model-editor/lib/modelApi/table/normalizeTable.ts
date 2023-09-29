@@ -1,6 +1,6 @@
 import { addBlock, addSegment, createBr, createParagraph } from 'roosterjs-content-model-dom';
 import { arrayPush } from 'roosterjs-editor-dom';
-import {
+import type {
     ContentModelSegment,
     ContentModelSegmentFormat,
     ContentModelTable,

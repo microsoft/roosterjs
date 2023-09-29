@@ -1,5 +1,5 @@
-import { ContentModelFormatBase } from 'roosterjs-content-model-types';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import type { ContentModelFormatBase } from 'roosterjs-content-model-types';
 
 /**
  * Check if the two given formats object are equal. This is a check to value but not to reference

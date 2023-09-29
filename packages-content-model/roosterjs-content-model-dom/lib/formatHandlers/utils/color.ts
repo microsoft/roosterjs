@@ -1,5 +1,5 @@
-import { DarkColorHandler } from 'roosterjs-editor-types';
 import { getTagOfNode } from 'roosterjs-editor-dom';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
 
 /**
  * List of deprecated colors

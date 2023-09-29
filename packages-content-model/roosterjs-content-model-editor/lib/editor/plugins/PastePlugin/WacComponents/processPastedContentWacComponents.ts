@@ -1,8 +1,8 @@
 import addParser from '../utils/addParser';
-import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
-import {
+import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
+import type {
     ContentModelBlockFormat,
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,

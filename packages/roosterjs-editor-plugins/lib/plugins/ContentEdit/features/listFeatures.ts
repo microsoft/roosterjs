@@ -26,13 +26,15 @@ import {
     findClosestElementAncestor,
     getComputedStyle,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     ListFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     QueryScope,
     ListType,
     ExperimentalFeatures,

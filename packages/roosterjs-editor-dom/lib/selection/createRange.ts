@@ -1,7 +1,8 @@
 import isVoidHtmlElement from '../utils/isVoidHtmlElement';
 import Position from './Position';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import { NodePosition, NodeType, PositionType } from 'roosterjs-editor-types';
+import { NodeType, PositionType } from 'roosterjs-editor-types';
+import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Create a range around the given node(s)

@@ -1,4 +1,4 @@
-import { TableBorderFormat } from '../enum/TableBorderFormat';
+import type { TableBorderFormat } from '../enum/TableBorderFormat';
 import type { CompatibleTableBorderFormat } from '../compatibleEnum/TableBorderFormat';
 
 /**

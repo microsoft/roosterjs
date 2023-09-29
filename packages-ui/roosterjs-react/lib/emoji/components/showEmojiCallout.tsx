@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
-import { Emoji } from '../type/Emoji';
-import { EmojiPane, showEmojiPane } from './EmojiPane';
-import { EmojiStringKeys } from '../type/EmojiStringKeys';
-import { LocalizedStrings, UIUtilities } from '../../common/index';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
+import { showEmojiPane } from './EmojiPane';
+import type { Emoji } from '../type/Emoji';
+import type { EmojiPane } from './EmojiPane';
+import type { EmojiStringKeys } from '../type/EmojiStringKeys';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * @internal

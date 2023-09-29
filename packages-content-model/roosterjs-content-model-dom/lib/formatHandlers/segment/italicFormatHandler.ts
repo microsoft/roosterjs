@@ -1,6 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { ItalicFormat } from 'roosterjs-content-model-types';
 import { moveChildNodes } from 'roosterjs-editor-dom';
+import type { FormatHandler } from '../FormatHandler';
+import type { ItalicFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

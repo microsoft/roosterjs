@@ -1,4 +1,4 @@
-import { DefinitionType } from '../enum/DefinitionType';
+import type { DefinitionType } from '../enum/DefinitionType';
 import type { CompatibleDefinitionType } from '../compatibleEnum/DefinitionType';
 
 /**

@@ -1,8 +1,8 @@
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { createSelectionMarker } from 'roosterjs-content-model-dom';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setSelection } from '../../modelApi/selection/setSelection';
+import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set background color

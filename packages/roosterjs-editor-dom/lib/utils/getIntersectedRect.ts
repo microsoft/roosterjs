@@ -1,5 +1,5 @@
 import normalizeRect from './normalizeRect';
-import { Rect } from 'roosterjs-editor-types';
+import type { Rect } from 'roosterjs-editor-types';
 
 /**
  * Get the intersected Rect of elements provided

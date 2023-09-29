@@ -1,7 +1,7 @@
-import { ContentModelParagraph } from 'roosterjs-content-model-types';
 import { formatWithContentModel } from './formatWithContentModel';
 import { getSelectedParagraphs } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelParagraph } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * @internal

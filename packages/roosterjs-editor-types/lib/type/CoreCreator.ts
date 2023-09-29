@@ -1,5 +1,5 @@
-import EditorCore from '../interface/EditorCore';
-import EditorOptions from '../interface/EditorOptions';
+import type EditorCore from '../interface/EditorCore';
+import type EditorOptions from '../interface/EditorOptions';
 
 /**
  * Type of Editor Core Creator
