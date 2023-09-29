@@ -1,6 +1,7 @@
 import { contains } from 'roosterjs-editor-dom';
-import { entityProcessor, hasMetadata, tableProcessor } from 'roosterjs-content-model-dom';
+import { entityProcessor, tableProcessor } from 'roosterjs-content-model-dom';
 import { getSelectionRootNode } from '../../modelApi/selection/getSelectionRootNode';
+import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import type { DomToModelContext, ElementProcessor } from 'roosterjs-content-model-types';
 
 /**

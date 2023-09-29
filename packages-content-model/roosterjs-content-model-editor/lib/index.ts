@@ -103,6 +103,7 @@ export { combineBorderValue, extractBorderValues } from './domUtils/borderValues
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
+export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
 export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';

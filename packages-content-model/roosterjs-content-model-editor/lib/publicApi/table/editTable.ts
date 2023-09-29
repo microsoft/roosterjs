@@ -2,12 +2,14 @@ import hasSelectionInBlock from '../selection/hasSelectionInBlock';
 import { alignTable } from '../../modelApi/table/alignTable';
 import { alignTableCell } from '../../modelApi/table/alignTableCell';
 import { applyTableFormat } from '../../modelApi/table/applyTableFormat';
+import { createSelectionMarker, setParagraphNotImplicit } from 'roosterjs-content-model-dom';
 import { deleteTable } from '../../modelApi/table/deleteTable';
 import { deleteTableColumn } from '../../modelApi/table/deleteTableColumn';
 import { deleteTableRow } from '../../modelApi/table/deleteTableRow';
 import { ensureFocusableParagraphForTable } from '../../modelApi/table/ensureFocusableParagraphForTable';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedTable } from '../../modelApi/selection/collectSelections';
+import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { insertTableColumn } from '../../modelApi/table/insertTableColumn';
 import { insertTableRow } from '../../modelApi/table/insertTableRow';
 import { mergeTableCells } from '../../modelApi/table/mergeTableCells';
@@ -19,11 +21,6 @@ import { splitTableCellHorizontally } from '../../modelApi/table/splitTableCellH
 import { splitTableCellVertically } from '../../modelApi/table/splitTableCellVertically';
 import { TableOperation } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
-    createSelectionMarker,
-    hasMetadata,
-    setParagraphNotImplicit,
-} from 'roosterjs-content-model-dom';
 
 /**
  * Format current focused table with the given format

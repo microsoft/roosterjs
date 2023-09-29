@@ -1,4 +1,4 @@
-import { updateMetadata } from 'roosterjs-content-model-dom';
+import { updateMetadata } from './updateMetadata';
 import type { ContentModelImage, ImageMetadataFormat } from 'roosterjs-content-model-types';
 import {
     createNumberDefinition,

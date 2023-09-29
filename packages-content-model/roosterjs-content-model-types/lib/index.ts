@@ -44,7 +44,7 @@ export { LinkFormat } from './format/formatParts/LinkFormat';
 export { SizeFormat } from './format/formatParts/SizeFormat';
 export { BoxShadowFormat } from './format/formatParts/BoxShadowFormat';
 export { ListThreadFormat } from './format/formatParts/ListThreadFormat';
-export { ListStylePositionFormat } from './format/formatParts/ListStylePositionFormat';
+export { ListStyleFormat } from './format/formatParts/ListStyleFormat';
 export { FloatFormat } from './format/formatParts/FloatFormat';
 
 export { DatasetFormat } from './format/metadata/DatasetFormat';
@@ -111,6 +111,8 @@ export {
     OnNodeCreated,
     ModelToDomSettings,
     FormatApplier,
+    MetadataApplier,
+    MetadataAppliers,
 } from './context/ModelToDomSettings';
 export {
     DefaultStyleMap,

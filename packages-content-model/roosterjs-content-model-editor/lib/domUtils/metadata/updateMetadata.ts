@@ -5,6 +5,7 @@ import type { Definition } from 'roosterjs-editor-types';
 const EditingInfoDatasetName = 'editingInfo';
 
 /**
+ * @internal
  * Update metadata of the given model
  * @param model The model to update metadata to
  * @param callback A callback function to update metadata
@@ -41,6 +42,7 @@ export function updateMetadata<T>(
 }
 
 /**
+ * @internal
  * Check if the given model has metadata
  * @param model The content model to check
  */

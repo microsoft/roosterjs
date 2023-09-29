@@ -1,5 +1,4 @@
 import { applyFormat } from '../utils/applyFormat';
-import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
 import { moveChildNodes } from 'roosterjs-editor-dom';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
@@ -121,7 +120,7 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
                     td.colSpan = colSpan;
                 }
 
-                if (!cell.cachedElement || (cell.format.useBorderBox && hasMetadata(table))) {
+                if (!cell.cachedElement || cell.format.useBorderBox) {
                     if (width > 0 && !td.style.width) {
                         td.style.width = width + 'px';
                     }
