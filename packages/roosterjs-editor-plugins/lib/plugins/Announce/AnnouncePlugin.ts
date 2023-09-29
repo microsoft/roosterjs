@@ -1,6 +1,7 @@
-import { createElement } from 'roosterjs-editor-dom';
-import { getAllAnnounceFeatures } from './features/getAllAnnounceFeatures';
+import { AnnounceFeatures } from './features/AnnounceFeatures';
+import { createElement, getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import type { AnnounceFeatureKey } from './features/AnnounceFeatures';
 import type { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
@@ -34,7 +35,7 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
 };
 
 /**
- * Announce messages to screen reader by using aria live element.
+ *  Announce messages to screen reader by using aria live element.
  */
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
@@ -46,9 +47,18 @@ export default class Announce implements EditorPlugin {
         private stringsMap?:
             | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
             | ((key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings) => string)
-            | undefined
+            | undefined,
+        skipAnnounceFeatures: AnnounceFeatureKey[] = []
     ) {
-        this.features = getAllAnnounceFeatures();
+        this.features = getObjectKeys(AnnounceFeatures)
+            .map(key => {
+                if (skipAnnounceFeatures.indexOf(key) == -1) {
+                    return AnnounceFeatures[key];
+                }
+
+                return undefined;
+            })
+            .filter(feature => !!feature) as AnnounceFeature[];
     }
 
     /**
@@ -99,17 +109,18 @@ export default class Announce implements EditorPlugin {
 
     private handleFeatures(event: PluginKeyDownEvent, editor: IEditor) {
         const announceParam: AnnounceFeatureParam = {
-            announceCallback: (announceData: AnnounceData) => this.announce(announceData, editor),
             editor,
             event,
             lastFocusedElement: this.lastFocusedElement,
         };
         this.features
             .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
-            .forEach(feature => {
-                if (feature.shouldHandle(announceParam)) {
-                    feature.handle(announceParam);
+            .some(feature => {
+                const announceData = feature.shouldHandle(announceParam);
+                if (announceData) {
+                    this.announce(announceData, editor);
                 }
+                return !!announceData;
             });
     }
 

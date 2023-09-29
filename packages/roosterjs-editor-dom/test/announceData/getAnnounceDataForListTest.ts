@@ -21,8 +21,54 @@ describe('getAnnounceDataForList', () => {
 
         const announceData = getAnnounceDataForList(el, el?.firstChild);
         expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
             formatStrings: ['1'],
+        });
+    });
+
+    it('should return announce data for numbered list item | OL Step + 1', () => {
+        const el = createElement(
+            {
+                tag: 'OL',
+                children: [
+                    {
+                        tag: 'LI',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            document
+        ) as any;
+
+        el && document.body.appendChild(el);
+
+        const announceData = getAnnounceDataForList(el, el?.firstChild, 1);
+        expect(announceData).toEqual({
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
+            formatStrings: ['2'],
+        });
+    });
+
+    it('should return announce data for numbered list item | OL Step - 1', () => {
+        const el = createElement(
+            {
+                tag: 'OL',
+                children: [
+                    {
+                        tag: 'LI',
+                        children: ['asd'],
+                    },
+                ],
+            },
+            document
+        ) as any;
+
+        el && document.body.appendChild(el);
+
+        const announceData = getAnnounceDataForList(el, el?.firstChild, -1);
+        expect(announceData).toEqual({
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
+            formatStrings: ['0'],
         });
     });
 
@@ -44,7 +90,7 @@ describe('getAnnounceDataForList', () => {
 
         const announceData = getAnnounceDataForList(el, el?.firstChild);
         expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemBullet,
         });
     });
 

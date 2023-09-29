@@ -68,9 +68,8 @@ export default function getToggleablePlugins(initState: BuildInPluginState) {
 
 function getDefaultStringsMap(): Map<KnownAnnounceStrings, string> {
     return new Map<KnownAnnounceStrings, string>([
-        [KnownAnnounceStrings.AnnounceListItemBulletIndentation, 'Autocorrected Bullet'],
-        [KnownAnnounceStrings.AnnounceListItemNumberingIndentation, 'Autocorrected {0}'],
-        [KnownAnnounceStrings.AnnounceNewListItemNumber, 'Autocorrected {0}'],
+        [KnownAnnounceStrings.AnnounceListItemBullet, 'Autocorrected Bullet'],
+        [KnownAnnounceStrings.AnnounceListItemNumbering, 'Autocorrected {0}'],
         [
             KnownAnnounceStrings.AnnounceOnFocusLastCell,
             'Warning, pressing tab here adds an extra row.',

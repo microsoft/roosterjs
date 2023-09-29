@@ -11,7 +11,8 @@ import type { AnnounceData } from 'roosterjs-editor-types';
  */
 export default function getAnnounceDataForList(
     list: HTMLElement | null,
-    li: HTMLElement | null
+    li: HTMLElement | null,
+    step: number = 0
 ): AnnounceData | undefined {
     if (!safeInstanceOf(li, 'HTMLLIElement')) {
         return undefined;
@@ -19,7 +20,7 @@ export default function getAnnounceDataForList(
 
     if (li && safeInstanceOf(list, 'HTMLOListElement')) {
         const vList = new VList(list);
-        const listItemIndex = vList.getListItemIndex(li);
+        const listItemIndex = vList.getListItemIndex(li) + step;
         let stringToAnnounce = listItemIndex == -1 ? '' : listItemIndex.toString();
         switch (list.style.listStyleType) {
             case 'lower-alpha':
@@ -35,12 +36,12 @@ export default function getAnnounceDataForList(
         }
 
         return {
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
             formatStrings: [stringToAnnounce],
         };
     } else if (safeInstanceOf(list, 'HTMLUListElement')) {
         return {
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemBullet,
         };
     }
     return undefined;

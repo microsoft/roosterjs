@@ -5,10 +5,6 @@ import type { IEditor, AnnounceData, PluginKeyboardEvent } from 'roosterjs-edito
  */
 export interface AnnounceFeatureParam {
     /**
-     * Callback to announce a message to screen reader.
-     */
-    announceCallback: (announceData: AnnounceData) => void;
-    /**
      * Last focused element in editor
      */
     lastFocusedElement: HTMLElement | undefined | null;
@@ -27,15 +23,10 @@ export interface AnnounceFeatureParam {
  */
 export interface AnnounceFeature {
     /**
-     * Whether to handle this feature
+     * Whether to handle this feature, if returns Announce Data, will be announced, otherwise will do nothing.
      * @returns
      */
-    shouldHandle: (params: Omit<AnnounceFeatureParam, 'announceCallback'>) => boolean;
-    /**
-     * Handle the current feature
-     * @returns
-     */
-    handle: (param: AnnounceFeatureParam) => void;
+    shouldHandle: (params: AnnounceFeatureParam) => AnnounceData | false;
     /**
      * Keys handled in the current event
      */
