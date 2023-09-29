@@ -2,16 +2,21 @@ import convertDecimalsToAlpha from '../list/convertDecimalsToAlpha';
 import convertDecimalsToRoman from '../list/convertDecimalsToRomans';
 import safeInstanceOf from '../utils/safeInstanceOf';
 import VList from '../list/VList';
-import { KnownAnnounceStrings } from 'roosterjs-editor-types/lib';
+import { KnownAnnounceStrings } from 'roosterjs-editor-types';
+import type { AnnounceData } from 'roosterjs-editor-types';
 
 /**
  * Get the announce data for the current List
  * @returns announce data for list or undefined.
  */
-export default function getAnnounceDataForList(list: HTMLElement | null, li: HTMLElement | null) {
+export default function getAnnounceDataForList(
+    list: HTMLElement | null,
+    li: HTMLElement | null
+): AnnounceData | undefined {
     if (!safeInstanceOf(li, 'HTMLLIElement')) {
-        return;
+        return undefined;
     }
+
     if (li && safeInstanceOf(list, 'HTMLOListElement')) {
         const vList = new VList(list);
         const listItemIndex = vList.getListItemIndex(li);

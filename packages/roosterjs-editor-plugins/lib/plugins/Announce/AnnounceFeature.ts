@@ -30,7 +30,7 @@ export interface AnnounceFeature {
      * Whether to handle this feature
      * @returns
      */
-    shouldHandle: (params: AnnounceFeatureParam) => boolean;
+    shouldHandle: (params: Omit<AnnounceFeatureParam, 'announceCallback'>) => boolean;
     /**
      * Handle the current feature
      * @returns

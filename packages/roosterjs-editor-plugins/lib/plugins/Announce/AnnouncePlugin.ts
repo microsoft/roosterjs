@@ -1,7 +1,7 @@
-import { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
 import { createElement } from 'roosterjs-editor-dom';
 import { getAllAnnounceFeatures } from './features/getAllAnnounceFeatures';
 import { PluginEventType } from 'roosterjs-editor-types';
+import type { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     KnownAnnounceStrings,
@@ -33,8 +33,6 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
     return element;
 };
 
-type KnownAnnounceString = KnownAnnounceStrings | CompatibleKnownAnnounceStrings;
-
 /**
  * Announce text on
  */
@@ -46,8 +44,8 @@ export default class Announce implements EditorPlugin {
 
     constructor(
         private stringsMap?:
-            | Map<KnownAnnounceString, string>
-            | ((key: KnownAnnounceString) => string)
+            | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
+            | ((key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings) => string)
             | undefined
     ) {
         this.features = getAllAnnounceFeatures();
@@ -129,7 +127,7 @@ export default class Announce implements EditorPlugin {
         }
     }
 
-    private getString(key: KnownAnnounceString | undefined) {
+    private getString(key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings | undefined) {
         if (this.stringsMap == undefined || key == undefined) {
             return undefined;
         }

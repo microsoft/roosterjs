@@ -1,15 +1,14 @@
-import { AnnounceFeature, AnnounceFeatureParam } from '../AnnounceFeature';
 import { contains, safeInstanceOf } from 'roosterjs-editor-dom';
-import { Keys } from 'roosterjs-editor-types/lib/enum/Keys';
-import { KnownAnnounceStrings } from 'roosterjs-editor-types';
-import { SelectionRangeTypes } from 'roosterjs-editor-types/lib/enum/SelectionRangeTypes';
+import { Keys, KnownAnnounceStrings, SelectionRangeTypes } from 'roosterjs-editor-types';
+
+import type { AnnounceFeature } from '../AnnounceFeature';
 
 const TABLE_CELL_SELECTOR = 'td,th';
 const TABLE_SELECTOR = 'table';
 const ANNOUNCE_TIMEOUT_DELAY = 100;
 
 const announceWarningOnLastCell: AnnounceFeature = {
-    handle({ editor, announceCallback }: AnnounceFeatureParam) {
+    handle: ({ editor, announceCallback }) => {
         const table = editor.getElementAtCursor(TABLE_SELECTOR);
 
         if (safeInstanceOf(table, 'HTMLTableElement')) {
@@ -28,7 +27,7 @@ const announceWarningOnLastCell: AnnounceFeature = {
             }
         }
     },
-    shouldHandle({ editor, lastFocusedElement }: AnnounceFeatureParam) {
+    shouldHandle: ({ editor, lastFocusedElement }) => {
         const selection = editor.getSelectionRangeEx();
 
         return (

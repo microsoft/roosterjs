@@ -1,31 +1,23 @@
-import { AnnounceFeature, AnnounceFeatureParam } from '../AnnounceFeature';
-import { cacheGetEventData, isNodeEmpty, VList } from 'roosterjs-editor-dom';
-import { Keys } from 'roosterjs-editor-types/lib/enum/Keys';
+import { cacheGetEventData, getAnnounceDataForList, isNodeEmpty } from 'roosterjs-editor-dom';
+import { Keys } from 'roosterjs-editor-types';
+import type { AnnounceFeature, AnnounceFeatureParam } from '../AnnounceFeature';
 import type { IEditor, PluginKeyboardEvent } from 'roosterjs-editor-types';
-import { KnownAnnounceStrings } from 'roosterjs-editor-types';
 
 const announceNewListItemNumber: AnnounceFeature = {
     keys: [Keys.ENTER],
-    shouldHandle: ({ event, editor }: AnnounceFeatureParam) => {
+    shouldHandle: ({ event, editor }) => {
         const li = cacheGetElement(event, editor, 'LI');
-        const ol = cacheGetElement(event, editor, 'OL');
+        const ol = cacheGetElement(event, editor, 'OL,UL');
         return !!(ol && li && !isNodeEmpty(li));
     },
     handle: ({ event, editor, announceCallback }: AnnounceFeatureParam) => {
         const li = cacheGetElement(event, editor, 'LI');
-        const ol = cacheGetElement(event, editor, 'OL') as HTMLOListElement | HTMLUListElement;
-        if (!ol || !li) {
-            return;
-        }
+        const list = cacheGetElement(event, editor, 'OL,UL') as HTMLOListElement | HTMLUListElement;
 
-        const vList = new VList(ol);
-        const index = vList.getListItemIndex(li) + 1;
+        const data = getAnnounceDataForList(list, li);
 
-        if (index != -1) {
-            announceCallback({
-                defaultStrings: KnownAnnounceStrings.AnnounceNewListItemNumber,
-                formatStrings: [index.toString()],
-            });
+        if (data) {
+            announceCallback(data);
         }
     },
 };
@@ -36,6 +28,6 @@ function cacheGetElement(
     event: PluginKeyboardEvent,
     editor: IEditor,
     selector: string
-): Node | null {
+): HTMLElement | null {
     return cacheGetEventData(event, 'GET_' + selector, () => editor.getElementAtCursor(selector));
 }
