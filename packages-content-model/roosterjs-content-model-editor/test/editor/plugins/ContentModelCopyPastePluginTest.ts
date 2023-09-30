@@ -549,7 +549,6 @@ describe('ContentModelCopyPastePlugin |', () => {
         let clipboardData = <ClipboardData>{};
 
         it('Handle', () => {
-            editor.isFeatureEnabled = () => true;
             spyOn(PasteFile, 'default').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{
