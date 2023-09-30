@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.73% </span>
+                <span class="strong">98.48% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>78/79</span>
+                <span class='fraction'>65/66</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">97.1% </span>
+                <span class="strong">96.08% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>67/69</span>
+                <span class='fraction'>49/51</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>15/15</span>
+                <span class='fraction'>16/16</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">98.59% </span>
+                <span class="strong">98.44% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>70/71</span>
+                <span class='fraction'>63/64</span>
             </div>
         
             
@@ -259,19 +259,7 @@
 <a name='L200'></a><a href='#L200'>200</a>
 <a name='L201'></a><a href='#L201'>201</a>
 <a name='L202'></a><a href='#L202'>202</a>
-<a name='L203'></a><a href='#L203'>203</a>
-<a name='L204'></a><a href='#L204'>204</a>
-<a name='L205'></a><a href='#L205'>205</a>
-<a name='L206'></a><a href='#L206'>206</a>
-<a name='L207'></a><a href='#L207'>207</a>
-<a name='L208'></a><a href='#L208'>208</a>
-<a name='L209'></a><a href='#L209'>209</a>
-<a name='L210'></a><a href='#L210'>210</a>
-<a name='L211'></a><a href='#L211'>211</a>
-<a name='L212'></a><a href='#L212'>212</a>
-<a name='L213'></a><a href='#L213'>213</a>
-<a name='L214'></a><a href='#L214'>214</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L203'></a><a href='#L203'>203</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -376,14 +364,13 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">6x</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">10x</span>
 <span class="cline-any cline-yes">24x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">24x</span>
@@ -412,16 +399,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">9x</span>
-<span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">11x</span>
-<span class="cline-any cline-yes">21x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-yes">6x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
@@ -484,7 +462,6 @@
 <span class="cline-any cline-yes">387x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { isGeneralSegment } from 'roosterjs-content-model-dom';
-import type { Coordinates } from 'roosterjs-editor-types';
 import type {
     ContentModelBlock,
     ContentModelBlockGroup,
@@ -587,17 +564,16 @@ function setSelectionToTable(
     start: Selectable | null,
     end: Selectable | null
 ): boolean {
-    const notFoundCo: Coordinates = { x: -1, y: -1 };
-    const startCo = findCell(table, start);
-    const { x: firstX, y: firstY } = startCo ?? notFoundCo;
-    const { x: lastX, y: lastY } = (end ? findCell(table, end) : startCo) ?? notFoundCo;
+    const first = findCell(table, start);
+    const last = end ? findCell(table, end) : first;
 &nbsp;
     if (!isInSelection) {
         for (let row = 0; row &lt; table.rows.length; row++) {
             const currentRow = table.rows[row];
             for (let col = 0; col &lt; currentRow.cells.length; col++) {
                 const currentCell = table.rows[row].cells[col];
-                const isSelected = row &gt;= firstY &amp;&amp; row &lt;= lastY &amp;&amp; col &gt;= firstX &amp;&amp; col &lt;= lastX;
+                const isSelected =
+                    row &gt;= first.row &amp;&amp; row &lt;= last.row &amp;&amp; col &gt;= first.col &amp;&amp; col &lt;= last.col;
 &nbsp;
                 setIsSelected(currentCell, isSelected);
 &nbsp;
@@ -622,22 +598,13 @@ function setSelectionToTable(
     return isInSelection;
 }
 &nbsp;
-function findCell(table: ContentModelTable, cell: Selectable | null): Coordinates | undefined {
-    let x = -1;
-    let y = -1;
+function findCell(table: ContentModelTable, cell: Selectable | null): { row: number; col: number } {
+    let col = -1;
+    const row = cell
+        ? table.rows.findIndex(row =&gt; (col = (row.cells as Selectable[]).indexOf(cell)) &gt;= 0)
+        : -1;
 &nbsp;
-    if (cell) {
-        for (let row = 0; y &lt; 0 &amp;&amp; row &lt; table.rows.length; row++) {
-            for (let col = 0; x &lt; 0 &amp;&amp; col &lt; table.rows[row].cells.length; col++) {
-                if (table.rows[row].cells[col] == cell) {
-                    x = col;
-                    y = row;
-                }
-            }
-        }
-    }
-&nbsp;
-    return x &gt;= 0 &amp;&amp; y &gt;= 0 ? { x, y } : undefined;
+    return { row, col };
 }
 &nbsp;
 function setSelectionToSegment(
@@ -703,7 +670,7 @@ function handleSelection(
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Sat Sep 30 2023 00:01:04 GMT+0000 (Coordinated Universal Time)
+                at Sat Sep 30 2023 00:17:39 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
