@@ -472,34 +472,36 @@ describe('Creators', () => {
 
     it('createEntity', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
-        const entityModel = createEntity(wrapper, isReadonly, type, undefined, id);
+        const entityModel = createEntity(wrapper, isReadonly, undefined, entityType, id);
 
         expect(entityModel).toEqual({
             blockType: 'Entity',
             segmentType: 'Entity',
             format: {},
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                entityType,
+                isReadonly,
+            },
             wrapper,
         });
     });
 
     it('createEntity with format', () => {
         const id = 'entity_1';
-        const type = 'entity';
+        const entityType = 'entity';
         const isReadonly = true;
         const wrapper = document.createElement('div');
         const entityModel = createEntity(
             wrapper,
             isReadonly,
-            type,
             {
                 fontSize: '10pt',
             },
+            entityType,
             id
         );
 
@@ -507,9 +509,11 @@ describe('Creators', () => {
             blockType: 'Entity',
             segmentType: 'Entity',
             format: { fontSize: '10pt' },
-            id,
-            type,
-            isReadonly,
+            entityFormat: {
+                id,
+                entityType,
+                isReadonly,
+            },
             wrapper,
         });
     });

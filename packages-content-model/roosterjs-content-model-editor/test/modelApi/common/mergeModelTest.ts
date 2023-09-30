@@ -2851,7 +2851,7 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
 
         const sourceModel: ContentModelDocument = createContentModelDocument();
-        const newEntity = createEntity(document.createElement('div'), false, undefined, {
+        const newEntity = createEntity(document.createElement('div'), false, {
             fontFamily: 'Corbel',
             fontSize: '20px',
             backgroundColor: 'blue',
@@ -2891,9 +2891,11 @@ describe('mergeModel', () => {
                         textColor: 'aliceblue',
                         italic: true,
                     },
-                    id: undefined,
-                    type: undefined,
-                    isReadonly: false,
+                    entityFormat: {
+                        id: undefined,
+                        entityType: undefined,
+                        isReadonly: false,
+                    },
                     wrapper: newEntity.wrapper,
                 },
                 {
@@ -2926,7 +2928,7 @@ describe('mergeModel', () => {
     it('Merge and replace inline entities', () => {
         const majorModel = createContentModelDocument();
         const para1 = createParagraph();
-        const sourceEntity = createEntity('wrapper1' as any, true, 'E0');
+        const sourceEntity = createEntity('wrapper1' as any, true, undefined, 'E0');
         const sourceBr = createBr();
 
         sourceEntity.isSelected = true;
@@ -2935,8 +2937,8 @@ describe('mergeModel', () => {
 
         const sourceModel: ContentModelDocument = createContentModelDocument();
         const newPara = createParagraph();
-        const newEntity1 = createEntity('wrapper2' as any, true, 'E1');
-        const newEntity2 = createEntity('wrapper2' as any, true, 'E2');
+        const newEntity1 = createEntity('wrapper2' as any, true, undefined, 'E1');
+        const newEntity2 = createEntity('wrapper2' as any, true, undefined, 'E2');
         const text = createText('test');
 
         newPara.segments.push(newEntity1, text, newEntity2);
