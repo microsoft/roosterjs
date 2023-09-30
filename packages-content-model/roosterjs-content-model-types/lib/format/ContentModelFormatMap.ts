@@ -1,5 +1,6 @@
 import type { ContentModelBlockFormat } from './ContentModelBlockFormat';
 import type { ContentModelDividerFormat } from './ContentModelDividerFormat';
+import type { ContentModelEntityFormat } from './ContentModelEntityFormat';
 import type { ContentModelFormatContainerFormat } from './ContentModelFormatContainerFormat';
 import type { ContentModelHyperLinkFormat } from './ContentModelHyperLinkFormat';
 import type { ContentModelImageFormat } from './ContentModelImageFormat';
@@ -124,4 +125,9 @@ export interface ContentModelFormatMap {
      * Format type for format container
      */
     container: ContentModelFormatContainerFormat;
+
+    /**
+     * Format type for entity
+     */
+    entity: ContentModelEntityFormat;
 }

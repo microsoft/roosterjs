@@ -172,14 +172,12 @@ function cloneSegmentBase<T extends ContentModelSegmentType>(
 }
 
 function cloneEntity(entity: ContentModelEntity, options: CloneModelOptions): ContentModelEntity {
-    const { wrapper, isReadonly, type, id } = entity;
+    const { wrapper, entityFormat } = entity;
 
     return Object.assign(
         {
             wrapper: handleCachedElement(wrapper, 'entity', options),
-            isReadonly,
-            type,
-            id,
+            entityFormat: { ...entityFormat },
         },
         cloneBlockBase(entity),
         cloneSegmentBase(entity)
