@@ -1,4 +1,4 @@
-import type { IEditor } from 'roosterjs-editor-types/';
+import type { IEditor } from 'roosterjs-editor-types';
 
 export default function isImageBiggerThanViewport(editor: IEditor, image: HTMLImageElement) {
     const viewport = editor.getVisibleViewport();
