@@ -2,6 +2,7 @@ import applyChange from './editInfoUtils/applyChange';
 import canRegenerateImage from './api/canRegenerateImage';
 import DragAndDropHelper from '../../pluginUtils/DragAndDropHelper';
 import getGeneratedImageSize from './editInfoUtils/getGeneratedImageSize';
+import isImageBiggerThanViewport from './editInfoUtils/isImageBiggerThanViewPort';
 import { Cropper, getCropHTML } from './imageEditors/Cropper';
 import { deleteEditInfo, getEditInfoFromImage } from './editInfoUtils/editInfo';
 import { getRotateHTML, Rotator, updateRotateHandleState } from './imageEditors/Rotator';
@@ -69,6 +70,7 @@ const DefaultOptions: Required<ImageEditOptions> = {
     disableRotate: false,
     disableSideResize: false,
     onSelectState: ImageEditOperation.ResizeAndRotate,
+    disableRotateAndCropOnLargeImages: true,
 };
 
 /**
@@ -140,6 +142,11 @@ export default class ImageEdit implements EditorPlugin {
     private pngSource: string | null = null;
 
     /**
+     * If the image is bigger than the viewport
+     */
+    private shouldRotateAndCropBigImages: boolean = false;
+
+    /**
      * Create a new instance of ImageEdit
      * @param options Image editing options
      * @param onShowResizeHandle An optional callback to allow customize resize handle element of image resizing.
@@ -203,9 +210,21 @@ export default class ImageEdit implements EditorPlugin {
                     e.selectionRangeEx &&
                     e.selectionRangeEx.type === SelectionRangeTypes.ImageSelection &&
                     this.options &&
-                    this.options.onSelectState !== undefined
+                    this.options.onSelectState !== undefined &&
+                    this.editor
                 ) {
-                    this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
+                    this.shouldRotateAndCropBigImages = isImageBiggerThanViewport(
+                        this.editor,
+                        e.selectionRangeEx.image
+                    );
+                    if (
+                        this.options.disableRotateAndCropOnLargeImages &&
+                        this.shouldRotateAndCropBigImages
+                    ) {
+                        this.setEditingImage(e.selectionRangeEx.image, ImageEditOperation.Resize);
+                    } else {
+                        this.setEditingImage(e.selectionRangeEx.image, this.options.onSelectState);
+                    }
                 }
 
                 break;
@@ -569,6 +588,7 @@ export default class ImageEdit implements EditorPlugin {
 
             if (this.isCropping) {
                 // For crop, we also need to set position of the overlays
+
                 setSize(
                     cropContainers[0],
                     cropLeftPx,

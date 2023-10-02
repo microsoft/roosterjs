@@ -99,6 +99,8 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {
                                     backgroundColor: '',
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
                                 },
                                 dataset: {},
                             },
@@ -140,6 +142,8 @@ describe('insertImage', () => {
                                 src: testUrl,
                                 format: {
                                     backgroundColor: '',
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
                                 },
                                 dataset: {},
                             },
@@ -187,6 +191,8 @@ describe('insertImage', () => {
                                     fontFamily: 'Test',
                                     fontSize: '20px',
                                     backgroundColor: '',
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
                                 },
                                 dataset: {},
                             },

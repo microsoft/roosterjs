@@ -71,4 +71,10 @@ export default interface ImageEditOptions {
      * @default ImageEditOperation.ResizeAndRotate
      */
     onSelectState?: ImageEditOperation | CompatibleImageEditOperation;
+
+    /**
+     * if the image is bigger than the editor, disable rotate and crop
+     * @default ImageEditOperation.None
+     */
+    disableRotateAndCropOnLargeImages?: boolean;
 }
