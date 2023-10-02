@@ -26,15 +26,28 @@ const DeprecatedColors: string[] = [
     'windowtext',
 ];
 
+const WHITE_COLOR = '#FFFFFF';
+const BLACK_COLOR = '#000000';
+
 describe('deprecateColorParserTests |', () => {
     DeprecatedColors.forEach(color => {
-        it('Remove ' + color + ' in borderTop', () => {
+        it('Remove ' + color + ' in borderTop | Dark Mode', () => {
             const format = { borderTop: '1pt solid ' + color };
 
-            deprecatedBorderColorParser(format, <any>null, <any>null, <any>null);
+            deprecatedBorderColorParser(format, <any>null, <any>{ isDarkMode: true }, <any>null);
 
             expect(format).toEqual({
-                borderTop: '1pt solid',
+                borderTop: '1pt solid ' + WHITE_COLOR,
+            });
+        });
+
+        it('Remove ' + color + ' in borderTop | Light Mode', () => {
+            const format = { borderTop: '1pt solid ' + color };
+
+            deprecatedBorderColorParser(format, <any>null, <any>{ isDarkMode: false }, <any>null);
+
+            expect(format).toEqual({
+                borderTop: '1pt solid ' + BLACK_COLOR,
             });
         });
     });
