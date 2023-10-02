@@ -13,7 +13,6 @@ import {
     Keys,
     BlockElement,
     IContentTraverser,
-    KnownAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 describe('listFeatures | AutoBullet', () => {
@@ -779,83 +778,5 @@ describe('listFeatures | mergeListOnBackspaceAfterList', () => {
         runTestHandleEvent(
             `<div><ol><li><span>123</span></li></ol><div id=${ITEM_1}><br></div><ol start="2"><li><span>213</span></li></ol><div><br></div></div>`
         );
-    });
-});
-
-describe('getAnnounceDataForList', () => {
-    it('should return announce data for numbered list item | OL', () => {
-        const el = createElement(
-            {
-                tag: 'OL',
-                children: [
-                    {
-                        tag: 'LI',
-                        children: ['asd'],
-                    },
-                ],
-            },
-            document
-        );
-
-        el && document.body.appendChild(el);
-
-        const editorMock = {
-            getElementAtCursor: (selector: string) => {
-                if (selector == 'OL,UL') {
-                    return el;
-                } else {
-                    return el?.firstChild;
-                }
-            },
-        };
-
-        const announceData = getAnnounceDataForList(editorMock as any);
-        expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
-            formatStrings: ['1'],
-        });
-    });
-
-    it('should return announce data for numbered list item | UL', () => {
-        const el = createElement(
-            {
-                tag: 'UL',
-                children: [
-                    {
-                        tag: 'LI',
-                        children: ['asd'],
-                    },
-                ],
-            },
-            document
-        );
-
-        el && document.body.appendChild(el);
-
-        const editorMock = {
-            getElementAtCursor: (selector: string) => {
-                if (selector == 'OL,UL') {
-                    return el;
-                } else {
-                    return el?.firstChild;
-                }
-            },
-        };
-
-        const announceData = getAnnounceDataForList(editorMock as any);
-        expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
-        });
-    });
-
-    it('should return announce data for bullet list item | undefined', () => {
-        const editorMock: any = {
-            getElementAtCursor: (): any => {
-                return undefined;
-            },
-        };
-
-        const announceData = getAnnounceDataForList(editorMock as any);
-        expect(announceData).toEqual(undefined);
     });
 });
