@@ -20,7 +20,6 @@ describe('announceWarningOnLastTableCell', () => {
         },
         getSelectionRangeEx: () => selectionRangeExMock,
     } as any;
-    let announceCallback: any;
     let el: Element | null;
     let getLastFocused: boolean = true;
     let selectionRangeExMock: SelectionRangeEx;
@@ -32,7 +31,6 @@ describe('announceWarningOnLastTableCell', () => {
 
     beforeEach(() => {
         eventmock.eventDataCache = {};
-        announceCallback = jasmine.createSpy('announceCallback');
 
         el = createElement(
             {
@@ -71,11 +69,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         };
 
-        const result = announceWarningOnLastTableCell.shouldHandle({
-            announceCallback,
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 3 });
     });
@@ -88,11 +82,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         };
 
-        const result = announceWarningOnLastTableCell.shouldHandle({
-            announceCallback,
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -105,11 +95,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.TableSelection,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle({
-            announceCallback,
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -122,11 +108,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle({
-            announceCallback,
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });
@@ -139,11 +121,7 @@ describe('announceWarningOnLastTableCell', () => {
             type: SelectionRangeTypes.Normal,
         } as any;
 
-        const result = announceWarningOnLastTableCell.shouldHandle({
-            announceCallback,
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceWarningOnLastTableCell.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });

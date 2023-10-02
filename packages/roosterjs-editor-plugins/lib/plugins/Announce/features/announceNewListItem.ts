@@ -7,7 +7,7 @@ const LIST_ITEM_SELECTOR = 'LI';
 
 const announceNewListItemNumber: AnnounceFeature = {
     keys: [Keys.ENTER],
-    shouldHandle: ({ editor }) => {
+    shouldHandle: editor => {
         const li = editor.getElementAtCursor(LIST_ITEM_SELECTOR);
         const list = editor.getElementAtCursor(LIST_SELECTOR);
         return (!!(list && li) && getAnnounceDataForList(list, li)) || false;

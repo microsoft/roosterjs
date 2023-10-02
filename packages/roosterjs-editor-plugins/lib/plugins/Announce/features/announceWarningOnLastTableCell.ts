@@ -6,7 +6,7 @@ const TABLE_CELL_SELECTOR = 'td,th';
 const TABLE_SELECTOR = 'table';
 
 const announceWarningOnLastCell: AnnounceFeature = {
-    shouldHandle: ({ editor, lastFocusedElement }) => {
+    shouldHandle: (editor, lastFocusedElement) => {
         const selection = editor.getSelectionRangeEx();
 
         return (

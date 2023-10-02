@@ -66,10 +66,7 @@ describe('announceNewListItem', () => {
             document
         ) as any;
 
-        const result = announceNewListItem.shouldHandle({
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceNewListItem.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({
             defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
@@ -78,10 +75,7 @@ describe('announceNewListItem', () => {
     });
 
     it('announceNewListItem.shouldHandle | UL', () => {
-        const result = announceNewListItem.shouldHandle({
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceNewListItem.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 2 });
     });
@@ -100,10 +94,7 @@ describe('announceNewListItem', () => {
             document
         ) as any;
 
-        const result = announceNewListItem.shouldHandle({
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceNewListItem.shouldHandle(mockEditor, null);
 
         expect(result).toEqual({ defaultStrings: 1, formatStrings: ['1'] });
     });
@@ -111,10 +102,7 @@ describe('announceNewListItem', () => {
     it('announceNewListItem.shouldHandle | Null', () => {
         el = null as any;
 
-        const result = announceNewListItem.shouldHandle({
-            editor: mockEditor,
-            event: eventmock,
-        } as any);
+        const result = announceNewListItem.shouldHandle(mockEditor, null);
 
         expect(result).toEqual(false);
     });

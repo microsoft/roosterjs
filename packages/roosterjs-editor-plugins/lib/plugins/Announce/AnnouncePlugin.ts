@@ -41,7 +41,7 @@ export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
     private editor: IEditor | undefined;
     private features: AnnounceFeature[];
-    private lastFocusedElement: HTMLElement | undefined | null;
+    private lastFocusedElement: HTMLElement | null = null;
 
     constructor(
         private stringsMapOrGetter?:
@@ -105,7 +105,7 @@ export default class Announce implements EditorPlugin {
 
         if (ev.eventType == PluginEventType.KeyDown && this.editor) {
             this.handleFeatures(ev, this.editor);
-            this.lastFocusedElement = this.editor?.getElementAtCursor();
+            this.lastFocusedElement = this.editor.getElementAtCursor();
         }
     }
 
@@ -114,11 +114,7 @@ export default class Announce implements EditorPlugin {
             this.features
                 .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
                 .some(feature => {
-                    const announceData = feature.shouldHandle({
-                        editor,
-                        event,
-                        lastFocusedElement: this.lastFocusedElement,
-                    });
+                    const announceData = feature.shouldHandle(editor, this.lastFocusedElement);
                     if (announceData) {
                         this.announce(announceData, editor);
                     }
