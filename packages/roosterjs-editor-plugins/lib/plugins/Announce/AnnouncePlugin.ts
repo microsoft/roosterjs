@@ -89,6 +89,7 @@ export default class Announce implements EditorPlugin {
         while (this.features.length > 0) {
             this.features.pop();
         }
+        this.editor = undefined;
     }
 
     /**
