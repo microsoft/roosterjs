@@ -5,11 +5,11 @@ import * as extractClipboardItemsFile from 'roosterjs-editor-dom/lib/clipboard/e
 import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateSelections';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
-import { commitEntity } from 'roosterjs-editor-dom';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { DOMSelection } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
+import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
 import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
@@ -297,7 +297,7 @@ describe('ContentModelCopyPastePlugin |', () => {
 
             document.body.appendChild(wrapper);
 
-            commitEntity(wrapper, 'Entity', true, 'Entity');
+            setEntityElementClasses(wrapper, 'Entity', true, 'Entity');
             selectionValue = <DOMSelection>{
                 type: 'range',
                 range: createRange(wrapper),
@@ -549,7 +549,6 @@ describe('ContentModelCopyPastePlugin |', () => {
         let clipboardData = <ClipboardData>{};
 
         it('Handle', () => {
-            editor.isFeatureEnabled = () => true;
             spyOn(PasteFile, 'default').and.callFake(() => {});
             const preventDefaultSpy = jasmine.createSpy('preventDefaultPaste');
             let clipboardEvent = <ClipboardEvent>{

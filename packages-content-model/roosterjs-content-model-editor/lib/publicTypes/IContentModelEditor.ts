@@ -63,4 +63,9 @@ export interface ContentModelEditorOptions extends EditorOptions {
      * Default options used for Content Model to DOM conversion
      */
     defaultModelToDomOptions?: ModelToDomOption;
+
+    /**
+     * Reuse existing DOM structure if possible, and update the model when content or selection is changed
+     */
+    cacheModel?: boolean;
 }

@@ -3,25 +3,27 @@ import type { ContentModelEntity, ContentModelSegmentFormat } from 'roosterjs-co
 /**
  * Create a ContentModelEntity model
  * @param wrapper Wrapper element of this entity
- * @param isReadonly Whether this is a readonly entity
- * @param type @optional Type of this entity
+ * @param isReadonly Whether this is a readonly entity @default true
  * @param segmentFormat @optional Segment format of this entity
+ * @param type @optional Type of this entity
  * @param id @optional Id of this entity
  */
 export function createEntity(
     wrapper: HTMLElement,
-    isReadonly: boolean,
-    type?: string,
+    isReadonly: boolean = true,
     segmentFormat?: ContentModelSegmentFormat,
+    type?: string,
     id?: string
 ): ContentModelEntity {
     return {
         segmentType: 'Entity',
         blockType: 'Entity',
         format: { ...segmentFormat },
-        id,
-        type,
-        isReadonly,
+        entityFormat: {
+            id,
+            entityType: type,
+            isReadonly,
+        },
         wrapper,
     };
 }

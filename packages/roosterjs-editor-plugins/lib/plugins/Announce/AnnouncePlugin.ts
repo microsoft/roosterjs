@@ -5,12 +5,12 @@ import type { AnnounceFeatureKey } from './features/AnnounceFeatures';
 import type { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
-    KnownAnnounceStrings,
     EditorPlugin,
     IEditor,
     PluginEvent,
     AnnounceData,
     PluginKeyDownEvent,
+    KnownAnnounceStrings,
 } from 'roosterjs-editor-types';
 
 const ARIA_LIVE_STYLE =
@@ -35,7 +35,7 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
 };
 
 /**
- *  Announce messages to screen reader by using aria live element.
+ * Announce messages to screen reader by using aria live element.
  */
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
@@ -44,7 +44,7 @@ export default class Announce implements EditorPlugin {
     private lastFocusedElement: HTMLElement | undefined | null;
 
     constructor(
-        private stringsMap?:
+        private stringsMapOrGetter?:
             | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
             | ((key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings) => string)
             | undefined,
@@ -82,7 +82,7 @@ export default class Announce implements EditorPlugin {
     dispose() {
         this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
         this.ariaLiveElement = undefined;
-        this.stringsMap = undefined;
+        this.stringsMapOrGetter = undefined;
     }
 
     /**
@@ -138,15 +138,15 @@ export default class Announce implements EditorPlugin {
         }
     }
 
-    private getString(key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings | undefined) {
-        if (this.stringsMap == undefined || key == undefined) {
+    private getString(key: CompatibleKnownAnnounceStrings | KnownAnnounceStrings | undefined) {
+        if (this.stringsMapOrGetter == undefined || key == undefined) {
             return undefined;
         }
 
-        if (typeof this.stringsMap === 'function') {
-            return this.stringsMap(key);
+        if (typeof this.stringsMapOrGetter === 'function') {
+            return this.stringsMapOrGetter(key);
         } else {
-            return this.stringsMap.get(key);
+            return this.stringsMapOrGetter.get(key);
         }
     }
 

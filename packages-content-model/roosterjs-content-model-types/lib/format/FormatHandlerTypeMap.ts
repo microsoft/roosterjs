@@ -6,6 +6,7 @@ import type { BoxShadowFormat } from './formatParts/BoxShadowFormat';
 import type { DatasetFormat } from './metadata/DatasetFormat';
 import type { DirectionFormat } from './formatParts/DirectionFormat';
 import type { DisplayFormat } from './formatParts/DisplayFormat';
+import type { EntityInfoFormat } from './formatParts/EntityInfoFormat';
 import type { FloatFormat } from './formatParts/FloatFormat';
 import type { FontFamilyFormat } from './formatParts/FontFamilyFormat';
 import type { FontSizeFormat } from './formatParts/FontSizeFormat';
@@ -74,6 +75,11 @@ export interface FormatHandlerTypeMap {
      * Format for DisplayFormat
      */
     display: DisplayFormat;
+
+    /**
+     * Format for EntityInfoFormat and IdFormat
+     */
+    entity: EntityInfoFormat & IdFormat;
 
     /**
      * Format for FloatFormat

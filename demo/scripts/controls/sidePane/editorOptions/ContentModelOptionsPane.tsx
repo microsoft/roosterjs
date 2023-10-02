@@ -34,6 +34,7 @@ export default class ContentModelOptionsPane extends React.Component<
     private exportForm = React.createRef<HTMLFormElement>();
     private exportData = React.createRef<HTMLInputElement>();
     private rtl = React.createRef<HTMLInputElement>();
+    private cacheModel = React.createRef<HTMLInputElement>();
 
     constructor(props: BuildInPluginProps) {
         super(props);
@@ -96,6 +97,16 @@ export default class ContentModelOptionsPane extends React.Component<
                     />
                     <label htmlFor="pageRtl">Show controls from right to left</label>
                 </div>
+                <div>
+                    <input
+                        id="cacheModel"
+                        type="checkbox"
+                        checked={this.state.cacheModel}
+                        onChange={this.onToggleCacheModel}
+                        ref={this.cacheModel}
+                    />
+                    <label htmlFor="cacheModel">Use Content Model Cache</label>
+                </div>
                 <hr />
                 <details>
                     <summary>
@@ -138,6 +149,7 @@ export default class ContentModelOptionsPane extends React.Component<
             experimentalFeatures: this.state.experimentalFeatures,
             forcePreserveRatio: this.state.forcePreserveRatio,
             isRtl: this.state.isRtl,
+            cacheModel: this.state.cacheModel,
             tableFeaturesContainerSelector: this.state.tableFeaturesContainerSelector,
         };
 
@@ -171,6 +183,12 @@ export default class ContentModelOptionsPane extends React.Component<
             isRtl: isRtl,
         });
         MainPaneBase.getInstance().setPageDirection(isRtl);
+    };
+
+    private onToggleCacheModel = () => {
+        this.resetState(state => {
+            state.cacheModel = this.cacheModel.current.checked;
+        }, true);
     };
 
     private getHtml() {

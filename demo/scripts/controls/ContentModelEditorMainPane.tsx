@@ -182,7 +182,10 @@ class ContentModelEditorMainPane extends MainPaneBase {
         this.toggleablePlugins = null;
         this.setState({
             editorCreator: (div: HTMLDivElement, options: EditorOptions) =>
-                new ContentModelEditor(div, options),
+                new ContentModelEditor(div, {
+                    ...options,
+                    cacheModel: this.state.initState.cacheModel,
+                }),
         });
     }
 

@@ -1,6 +1,5 @@
 import { createContentModelEditorCore } from './createContentModelEditorCore';
 import { EditorBase } from 'roosterjs-editor-core';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
@@ -29,7 +28,7 @@ export default class ContentModelEditor
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
         super(contentDiv, options, createContentModelEditorCore);
 
-        if (this.isFeatureEnabled(ExperimentalFeatures.ReusableContentModelV2)) {
+        if (options.cacheModel) {
             // Create an initial content model to cache
             // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
             // using content model and cache the model directly

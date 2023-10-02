@@ -1,5 +1,6 @@
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
+import type { Entity } from 'roosterjs-editor-types';
 import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
@@ -104,18 +105,28 @@ function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
 ) {
-    context.deletedEntities.forEach(({ entity, operation }) => {
-        if (entity.id && entity.type) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                entity: {
-                    id: entity.id,
-                    isReadonly: entity.isReadonly,
-                    type: entity.type,
-                    wrapper: entity.wrapper,
-                },
-                operation,
-                rawEvent: context.rawEvent,
-            });
+    context.deletedEntities.forEach(
+        ({
+            entity: {
+                wrapper,
+                entityFormat: { id, entityType, isReadonly },
+            },
+            operation,
+        }) => {
+            if (id && entityType) {
+                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
+                const entity: Entity = {
+                    id,
+                    type: entityType,
+                    isReadonly: !!isReadonly,
+                    wrapper,
+                };
+                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                    entity,
+                    operation,
+                    rawEvent: context.rawEvent,
+                });
+            }
         }
-    });
+    );
 }
