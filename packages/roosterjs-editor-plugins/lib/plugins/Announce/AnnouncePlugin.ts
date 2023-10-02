@@ -2,7 +2,7 @@ import { AnnounceFeatures } from './features/AnnounceFeatures';
 import { createElement, getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
 import type { AnnounceFeatureKey } from './features/AnnounceFeatures';
-import type { AnnounceFeature, AnnounceFeatureParam } from './AnnounceFeature';
+import type { AnnounceFeature } from './AnnounceFeature';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     EditorPlugin,
@@ -48,7 +48,8 @@ export default class Announce implements EditorPlugin {
             | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
             | ((key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings) => string)
             | undefined,
-        skipAnnounceFeatures: AnnounceFeatureKey[] = []
+        skipAnnounceFeatures: AnnounceFeatureKey[] = [],
+        additionalFeatures?: AnnounceFeature[]
     ) {
         this.features = getObjectKeys(AnnounceFeatures)
             .map(key => {
@@ -58,7 +59,8 @@ export default class Announce implements EditorPlugin {
 
                 return undefined;
             })
-            .filter(feature => !!feature) as AnnounceFeature[];
+            .filter(feature => !!feature)
+            .concat(additionalFeatures || []) as AnnounceFeature[];
     }
 
     /**
@@ -108,20 +110,21 @@ export default class Announce implements EditorPlugin {
     }
 
     private handleFeatures(event: PluginKeyDownEvent, editor: IEditor) {
-        const announceParam: AnnounceFeatureParam = {
-            editor,
-            event,
-            lastFocusedElement: this.lastFocusedElement,
-        };
-        this.features
-            .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
-            .some(feature => {
-                const announceData = feature.shouldHandle(announceParam);
-                if (announceData) {
-                    this.announce(announceData, editor);
-                }
-                return !!announceData;
-            });
+        editor.runAsync(() => {
+            this.features
+                .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
+                .some(feature => {
+                    const announceData = feature.shouldHandle({
+                        editor,
+                        event,
+                        lastFocusedElement: this.lastFocusedElement,
+                    });
+                    if (announceData) {
+                        this.announce(announceData, editor);
+                    }
+                    return !!announceData;
+                });
+        });
     }
 
     protected announce(announceData: AnnounceData, editor: IEditor) {

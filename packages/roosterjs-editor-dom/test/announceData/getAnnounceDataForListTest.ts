@@ -26,52 +26,6 @@ describe('getAnnounceDataForList', () => {
         });
     });
 
-    it('should return announce data for numbered list item | OL Step + 1', () => {
-        const el = createElement(
-            {
-                tag: 'OL',
-                children: [
-                    {
-                        tag: 'LI',
-                        children: ['asd'],
-                    },
-                ],
-            },
-            document
-        ) as any;
-
-        el && document.body.appendChild(el);
-
-        const announceData = getAnnounceDataForList(el, el?.firstChild, 1);
-        expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
-            formatStrings: ['2'],
-        });
-    });
-
-    it('should return announce data for numbered list item | OL Step - 1', () => {
-        const el = createElement(
-            {
-                tag: 'OL',
-                children: [
-                    {
-                        tag: 'LI',
-                        children: ['asd'],
-                    },
-                ],
-            },
-            document
-        ) as any;
-
-        el && document.body.appendChild(el);
-
-        const announceData = getAnnounceDataForList(el, el?.firstChild, -1);
-        expect(announceData).toEqual({
-            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
-            formatStrings: ['0'],
-        });
-    });
-
     it('should return announce data for numbered list item | UL', () => {
         const el = createElement(
             {

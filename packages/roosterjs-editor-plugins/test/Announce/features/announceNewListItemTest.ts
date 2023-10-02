@@ -73,7 +73,7 @@ describe('announceNewListItem', () => {
 
         expect(result).toEqual({
             defaultStrings: KnownAnnounceStrings.AnnounceListItemNumbering,
-            formatStrings: ['6'],
+            formatStrings: ['5'],
         });
     });
 
@@ -105,7 +105,7 @@ describe('announceNewListItem', () => {
             event: eventmock,
         } as any);
 
-        expect(result).toEqual({ defaultStrings: 1, formatStrings: ['2'] });
+        expect(result).toEqual({ defaultStrings: 1, formatStrings: ['1'] });
     });
 
     it('announceNewListItem.shouldHandle | Null', () => {

@@ -1,4 +1,4 @@
-import { getAnnounceDataForList, isNodeEmpty } from 'roosterjs-editor-dom';
+import { getAnnounceDataForList } from 'roosterjs-editor-dom';
 import { Keys } from 'roosterjs-editor-types';
 import type { AnnounceFeature } from '../AnnounceFeature';
 
@@ -10,11 +10,7 @@ const announceNewListItemNumber: AnnounceFeature = {
     shouldHandle: ({ editor }) => {
         const li = editor.getElementAtCursor(LIST_ITEM_SELECTOR);
         const list = editor.getElementAtCursor(LIST_SELECTOR);
-        return (
-            (!!(list && li && !isNodeEmpty(li)) &&
-                getAnnounceDataForList(list, li, 1 /* step */)) ||
-            false
-        );
+        return (!!(list && li) && getAnnounceDataForList(list, li)) || false;
     },
 };
 

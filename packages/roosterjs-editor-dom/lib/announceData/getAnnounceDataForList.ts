@@ -11,8 +11,7 @@ import type { AnnounceData } from 'roosterjs-editor-types';
  */
 export default function getAnnounceDataForList(
     list: HTMLElement | null,
-    li: HTMLElement | null,
-    step: number = 0
+    li: HTMLElement | null
 ): AnnounceData | undefined {
     if (!safeInstanceOf(li, 'HTMLLIElement')) {
         return undefined;
@@ -20,7 +19,7 @@ export default function getAnnounceDataForList(
 
     if (li && safeInstanceOf(list, 'HTMLOListElement')) {
         const vList = new VList(list);
-        const listItemIndex = vList.getListItemIndex(li) + step;
+        const listItemIndex = vList.getListItemIndex(li);
         let stringToAnnounce = listItemIndex == -1 ? '' : listItemIndex.toString();
         switch (list.style.listStyleType) {
             case 'lower-alpha':
