@@ -1,5 +1,5 @@
-import Announce from 'roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin';
 import BuildInPluginState, { BuildInPluginList, UrlPlaceholder } from './BuildInPluginState';
+import { Announce } from 'roosterjs-editor-plugins/lib/Announce';
 import { AutoFormat } from 'roosterjs-editor-plugins/lib/AutoFormat';
 import { ContentEdit } from 'roosterjs-editor-plugins/lib/ContentEdit';
 import { ContentModelPastePlugin } from 'roosterjs-content-model-editor';
