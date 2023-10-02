@@ -85,6 +85,10 @@ export default class Announce implements EditorPlugin {
         this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
         this.ariaLiveElement = undefined;
         this.stringsMapOrGetter = undefined;
+        this.lastFocusedElement = null;
+        while (this.features.length > 0) {
+            this.features.pop();
+        }
     }
 
     /**
@@ -105,7 +109,6 @@ export default class Announce implements EditorPlugin {
 
         if (ev.eventType == PluginEventType.KeyDown && this.editor) {
             this.handleFeatures(ev, this.editor);
-            this.lastFocusedElement = this.editor.getElementAtCursor();
         }
     }
 
@@ -120,6 +123,8 @@ export default class Announce implements EditorPlugin {
                     }
                     return !!announceData;
                 });
+
+            this.lastFocusedElement = editor.getElementAtCursor();
         });
     }
 
