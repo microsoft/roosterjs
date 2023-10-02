@@ -3,7 +3,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<title>AnnouncePlugin | RoosterJs API Reference</title>
+	<title>Announce | RoosterJs API Reference</title>
 	<meta name="description" content="Documentation for RoosterJs API Reference">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<link rel="stylesheet" href="../assets/css/main.css">
@@ -56,10 +56,10 @@
 					<a href="../modules/roosterjs_editor_plugins.html">roosterjs-editor-plugins</a>
 				</li>
 				<li>
-					<a href="roosterjs_editor_plugins.announceplugin.html">AnnouncePlugin</a>
+					<a href="roosterjs_editor_plugins.announce.html">Announce</a>
 				</li>
 			</ul>
-			<h1>Class AnnouncePlugin</h1>
+			<h1>Class Announce</h1>
 		</div>
 	</div>
 </header>
@@ -77,7 +77,7 @@
 				<h3>Hierarchy</h3>
 				<ul class="tsd-hierarchy">
 					<li>
-						<span class="target">AnnouncePlugin</span>
+						<span class="target">Announce</span>
 					</li>
 				</ul>
 			</section>
@@ -94,18 +94,18 @@
 						<section class="tsd-index-section ">
 							<h3>Constructors</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#constructor" class="tsd-kind-icon">constructor</a></li>
+								<li class="tsd-kind-constructor tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#constructor" class="tsd-kind-icon">constructor</a></li>
 							</ul>
 						</section>
 						<section class="tsd-index-section ">
 							<h3>Methods</h3>
 							<ul class="tsd-index-list">
-								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.announceplugin.html#announce" class="tsd-kind-icon">announce</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#dispose" class="tsd-kind-icon">dispose</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#getarialiveelement" class="tsd-kind-icon">get<wbr>Aria<wbr>Live<wbr>Element</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#initialize" class="tsd-kind-icon">initialize</a></li>
-								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announceplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class tsd-is-protected"><a href="roosterjs_editor_plugins.announce.html#announce" class="tsd-kind-icon">announce</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#dispose" class="tsd-kind-icon">dispose</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#getarialiveelement" class="tsd-kind-icon">get<wbr>Aria<wbr>Live<wbr>Element</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#getname" class="tsd-kind-icon">get<wbr>Name</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#initialize" class="tsd-kind-icon">initialize</a></li>
+								<li class="tsd-kind-method tsd-parent-kind-class"><a href="roosterjs_editor_plugins.announce.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a></li>
 							</ul>
 						</section>
 					</div>
@@ -117,13 +117,13 @@
 					<a name="constructor" class="tsd-anchor"></a>
 					<h3>constructor</h3>
 					<ul class="tsd-signatures tsd-kind-constructor tsd-parent-kind-class">
-						<li class="tsd-signature tsd-kind-icon">new <wbr>Announce<wbr>Plugin<span class="tsd-signature-symbol">(</span>stringsMapOrGetter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.announceplugin.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncePlugin</a></li>
+						<li class="tsd-signature tsd-kind-icon">new <wbr>Announce<span class="tsd-signature-symbol">(</span>stringsMapOrGetter<span class="tsd-signature-symbol">?: </span><span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">: </span><a href="roosterjs_editor_plugins.announce.html" class="tsd-signature-type" data-tsd-kind="Class">Announce</a></li>
 					</ul>
 					<ul class="tsd-descriptions">
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L38">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:38</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L38">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:38</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -132,7 +132,7 @@
 									<h5><span class="tsd-flag ts-flagOptional">Optional</span> stringsMapOrGetter: <span class="tsd-signature-type">Map</span><span class="tsd-signature-symbol">&lt;</span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">, </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol"> | </span><span class="tsd-signature-symbol">(</span><span class="tsd-signature-symbol">(</span>key<span class="tsd-signature-symbol">: </span><a href="../enums/roosterjs_editor_types.knownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">KnownAnnounceStrings</a><span class="tsd-signature-symbol"> | </span><a href="../enums/roosterjs_editor_types_compatible.compatibleknownannouncestrings.html" class="tsd-signature-type" data-tsd-kind="Enumeration">CompatibleKnownAnnounceStrings</a><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol"> =&gt; </span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">)</span></h5>
 								</li>
 							</ul>
-							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.announceplugin.html" class="tsd-signature-type" data-tsd-kind="Class">AnnouncePlugin</a></h4>
+							<h4 class="tsd-returns-title">Returns <a href="roosterjs_editor_plugins.announce.html" class="tsd-signature-type" data-tsd-kind="Class">Announce</a></h4>
 						</li>
 					</ul>
 				</section>
@@ -149,7 +149,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L87">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:87</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L87">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:87</a></li>
 								</ul>
 							</aside>
 							<h4 class="tsd-parameters-title">Parameters</h4>
@@ -176,7 +176,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.dispose</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L65">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:65</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L65">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:65</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -198,7 +198,7 @@
 						<li class="tsd-description">
 							<aside class="tsd-sources">
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L118">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:118</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L118">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:118</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -223,7 +223,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.getName</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L50">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:50</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L50">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:50</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -246,7 +246,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.initialize</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L58">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:58</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L58">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:58</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -278,7 +278,7 @@
 							<aside class="tsd-sources">
 								<p>Implementation of EditorPlugin.onPluginEvent</p>
 								<ul>
-									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/a0d3e94/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L74">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:74</a></li>
+									<li>Defined in <a href="https://github.com/microsoft/roosterjs/blob/c7d6092/packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts#L74">packages/roosterjs-editor-plugins/lib/plugins/Announce/AnnouncePlugin.ts:74</a></li>
 								</ul>
 							</aside>
 							<div class="tsd-comment tsd-typography">
@@ -353,28 +353,28 @@
 				</ul>
 				<ul class="current">
 					<li class="current tsd-kind-class tsd-parent-kind-module">
-						<a href="roosterjs_editor_plugins.announceplugin.html" class="tsd-kind-icon">Announce<wbr>Plugin</a>
+						<a href="roosterjs_editor_plugins.announce.html" class="tsd-kind-icon">Announce</a>
 						<ul>
 							<li class=" tsd-kind-constructor tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#constructor" class="tsd-kind-icon">constructor</a>
+								<a href="roosterjs_editor_plugins.announce.html#constructor" class="tsd-kind-icon">constructor</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class tsd-is-protected">
-								<a href="roosterjs_editor_plugins.announceplugin.html#announce" class="tsd-kind-icon">announce</a>
+								<a href="roosterjs_editor_plugins.announce.html#announce" class="tsd-kind-icon">announce</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#dispose" class="tsd-kind-icon">dispose</a>
+								<a href="roosterjs_editor_plugins.announce.html#dispose" class="tsd-kind-icon">dispose</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#getarialiveelement" class="tsd-kind-icon">get<wbr>Aria<wbr>Live<wbr>Element</a>
+								<a href="roosterjs_editor_plugins.announce.html#getarialiveelement" class="tsd-kind-icon">get<wbr>Aria<wbr>Live<wbr>Element</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
+								<a href="roosterjs_editor_plugins.announce.html#getname" class="tsd-kind-icon">get<wbr>Name</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#initialize" class="tsd-kind-icon">initialize</a>
+								<a href="roosterjs_editor_plugins.announce.html#initialize" class="tsd-kind-icon">initialize</a>
 							</li>
 							<li class=" tsd-kind-method tsd-parent-kind-class">
-								<a href="roosterjs_editor_plugins.announceplugin.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
+								<a href="roosterjs_editor_plugins.announce.html#onpluginevent" class="tsd-kind-icon">on<wbr>Plugin<wbr>Event</a>
 							</li>
 						</ul>
 					</li>
