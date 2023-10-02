@@ -576,7 +576,6 @@ export default interface IEditor {
      * @param keyboardEvent Optional keyboard event object
      */
     ensureTypeInContainer(position: NodePosition, keyboardEvent?: KeyboardEvent): void;
-
     //#endregion
 
     //#region Dark mode APIs
