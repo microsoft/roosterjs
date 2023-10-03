@@ -427,6 +427,7 @@ export default class ImageEdit implements EditorPlugin {
             this.clonedImage = this.image.cloneNode(true) as HTMLImageElement;
             this.clonedImage.removeAttribute('id');
             this.clonedImage.style.removeProperty('max-width');
+            this.clonedImage.style.removeProperty('max-height');
             this.clonedImage.style.width = this.editInfo.widthPx + 'px';
             this.clonedImage.style.height = this.editInfo.heightPx + 'px';
             this.wrapper = createElement(
