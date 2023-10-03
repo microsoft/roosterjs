@@ -10,7 +10,7 @@ import { entityFormatHandler } from './entity/entityFormatHandler';
 import { floatFormatHandler } from './common/floatFormatHandler';
 import { fontFamilyFormatHandler } from './segment/fontFamilyFormatHandler';
 import { fontSizeFormatHandler } from './segment/fontSizeFormatHandler';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../domUtils/getObjectKeys';
 import { htmlAlignFormatHandler } from './block/htmlAlignFormatHandler';
 import { idFormatHandler } from './common/idFormatHandler';
 import { italicFormatHandler } from './segment/italicFormatHandler';

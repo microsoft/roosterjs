@@ -1,4 +1,5 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { isElementOfType } from '../../domUtils/isElementOfType';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import type { FormatHandler } from '../FormatHandler';
 import type { ListThreadFormat } from 'roosterjs-content-model-types';
 
@@ -41,7 +42,8 @@ export const listItemThreadFormatHandler: FormatHandler<ListThreadFormat> = {
 
 function isLiUnderOl(element: HTMLElement) {
     return (
-        safeInstanceOf(element, 'HTMLLIElement') &&
-        safeInstanceOf(element.parentNode, 'HTMLOListElement')
+        isElementOfType(element, 'li') &&
+        isNodeOfType(element.parentNode, 'ELEMENT_NODE') &&
+        isElementOfType(element.parentNode, 'ol')
     );
 }
