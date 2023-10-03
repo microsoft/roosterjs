@@ -1,1 +1,1 @@
-export { default as AnnouncePlugin } from './AnnouncePlugin';
+export { default as Announce } from './AnnouncePlugin';
