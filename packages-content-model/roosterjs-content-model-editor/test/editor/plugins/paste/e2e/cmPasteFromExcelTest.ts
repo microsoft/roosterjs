@@ -4,6 +4,7 @@ import { Browser } from 'roosterjs-editor-dom';
 import { ClipboardData } from 'roosterjs-editor-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_Excel_E2E';
@@ -92,7 +93,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).not.toHaveBeenCalled();
     });
 
-    it('Copy Table with text color in cell', () => {
+    itChromeOnly('Copy Table with text color in cell', () => {
         const CD = <ClipboardData>(<any>{
             types: ['image/png', 'text/plain', 'text/html'],
             text:

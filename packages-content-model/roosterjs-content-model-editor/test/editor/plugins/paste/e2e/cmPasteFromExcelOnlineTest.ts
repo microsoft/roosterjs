@@ -3,6 +3,7 @@ import paste from '../../../../../lib/publicApi/utils/paste';
 import { ClipboardData } from 'roosterjs-editor-types';
 import { expectEqual, initEditor } from './testUtils';
 import { IContentModelEditor } from '../../../../../lib/publicTypes/IContentModelEditor';
+import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
 import { tableProcessor } from 'roosterjs-content-model-dom';
 
 const ID = 'CM_Paste_From_ExcelOnline_E2E';
@@ -44,7 +45,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    it('E2E Table with table cells with text color', () => {
+    itChromeOnly('E2E Table with table cells with text color', () => {
         const CD = <ClipboardData>(<any>{
             types: ['text/plain', 'text/html'],
             text:
