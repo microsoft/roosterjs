@@ -1,14 +1,26 @@
+import { ContentModelBasePluginEvent } from './ContentModelBasePluginEvent';
 import type { ContentModelDocument, DOMSelection } from 'roosterjs-content-model-types';
-import type {
-    CompatibleContentChangedEvent,
-    ContentChangedEvent,
-    ContentChangedEventData,
-} from 'roosterjs-editor-types';
 
 /**
- * Data of ContentModelContentChangedEvent
+ * Represents a change to the editor made by another plugin with content model inside
  */
-export interface ContentModelContentChangedEventData extends ContentChangedEventData {
+export default interface ContentModelContentChangedEvent
+    extends ContentModelBasePluginEvent<'contentChanged'> {
+    /**
+     * Source of the change
+     */
+    source: ChangeSource | string;
+
+    /**
+     * Optional related data
+     */
+    data?: any;
+
+    /*
+     * Additional Data Related to the ContentChanged Event
+     */
+    additionalData?: ContentChangedData;
+
     /**
      * The content model that is applied which causes this content changed event
      */
@@ -19,17 +31,3 @@ export interface ContentModelContentChangedEventData extends ContentChangedEvent
      */
     selection?: DOMSelection;
 }
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export default interface ContentModelContentChangedEvent
-    extends ContentChangedEvent,
-        ContentModelContentChangedEventData {}
-
-/**
- * Represents a change to the editor made by another plugin with content model inside
- */
-export interface CompatibleContentModelContentChangedEvent
-    extends CompatibleContentChangedEvent,
-        ContentModelContentChangedEventData {}

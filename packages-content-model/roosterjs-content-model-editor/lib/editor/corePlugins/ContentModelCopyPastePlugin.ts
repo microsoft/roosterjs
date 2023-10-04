@@ -1,3 +1,5 @@
+import ContentModelCopyPastePluginState from 'roosterjs-content-model-editor/lib/publicTypes/pluginState/ContentModelCopyPastePluginState';
+import ContentModelPluginWithState from 'roosterjs-content-model-editor/lib/publicTypes/ContentModelPluginWithState';
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
 import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
@@ -22,15 +24,9 @@ import {
     extractClipboardItems,
     wrap,
 } from 'roosterjs-editor-dom';
-import type {
-    CopyPastePluginState,
-    IEditor,
-    PluginWithState,
-    ClipboardData,
-} from 'roosterjs-editor-types';
+import type { CopyPastePluginState, ClipboardData } from 'roosterjs-editor-types';
 import {
     ChangeSource,
-    PluginEventType,
     KnownCreateElementDataIndex,
     ColorTransformDirection,
 } from 'roosterjs-editor-types';
@@ -38,7 +34,8 @@ import {
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-export default class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
+export default class ContentModelCopyPastePlugin
+    implements ContentModelPluginWithState<ContentModelCopyPastePluginState> {
     private editor: IContentModelEditor | null = null;
     private disposer: (() => void) | null = null;
     private state: CopyPastePluginState;
@@ -149,7 +146,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
             if (newRange) {
-                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerPluginEvent('beforeCutCopy', {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,
@@ -214,7 +211,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
     };
 
-    private getTempDiv(editor: IEditor) {
+    private getTempDiv(editor: IContentModelEditor) {
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {

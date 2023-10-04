@@ -1,17 +1,19 @@
+import ContentModelPluginWithState from '../../publicTypes/ContentModelPluginWithState';
 import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
 import { contentModelDomIndexer } from '../utils/contentModelDomIndexer';
+import { ContentModelPluginEvent } from '../../publicTypes/event/ContentModelPluginEvent';
+import { ContentModelPluginKeyDownEvent } from '../../publicTypes/event/ContentModelPluginDomEvent';
 import { isCharacterValue } from 'roosterjs-editor-dom';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { Keys } from 'roosterjs-editor-types';
 import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { PluginEvent, PluginKeyDownEvent, PluginWithState } from 'roosterjs-editor-types';
 
 /**
  * ContentModel cache plugin manages cached Content Model, and refresh the cache when necessary
  */
 export default class ContentModelCachePlugin
-    implements PluginWithState<ContentModelCachePluginState> {
+    implements ContentModelPluginWithState<ContentModelCachePluginState> {
     private editor: IContentModelEditor | null = null;
     private state: ContentModelCachePluginState;
 
@@ -69,29 +71,29 @@ export default class ContentModelCachePlugin
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         if (!this.editor) {
             return;
         }
 
         switch (event.eventType) {
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 if (this.shouldClearCache(event)) {
                     this.invalidateCache();
                 }
                 break;
 
-            case PluginEventType.Input:
+            case 'input':
                 {
                     this.updateCachedModel(this.editor, true /*forceUpdate*/);
                 }
                 break;
 
-            case PluginEventType.SelectionChanged:
+            case 'selectionChanged':
                 this.updateCachedModel(this.editor);
                 break;
 
-            case PluginEventType.ContentChanged:
+            case 'contentChanged':
                 {
                     const { contentModel, selection } = event as ContentModelContentChangedEvent;
 
@@ -147,7 +149,7 @@ export default class ContentModelCachePlugin
         }
     }
 
-    private shouldClearCache(event: PluginKeyDownEvent) {
+    private shouldClearCache(event: ContentModelPluginKeyDownEvent) {
         const { rawEvent, handledByEditFeature } = event;
 
         // In these cases we can't update the model, so clear cache:

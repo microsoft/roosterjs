@@ -15,6 +15,17 @@ import type {
  */
 export interface IContentModelEditor {
     /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void;
+
+    /**
+     * Get document which contains this editor
+     * @returns The HTML document which contains this editor
+     */
+    getDocument(): Document;
+
+    /**
      * Create Content Model from DOM tree in this editor
      * @param rootNode Optional start node. If provided, Content Model will be created from this node (including itself),
      * otherwise it will create Content Model for the whole content in editor.
@@ -50,6 +61,12 @@ export interface IContentModelEditor {
      * @param selection The selection to set
      */
     setDOMSelection(selection: DOMSelection): void;
+
+    /**
+     * Get whether this editor is disposed
+     * @returns True if editor is disposed, otherwise false
+     */
+    isDisposed(): boolean;
 }
 
 /**

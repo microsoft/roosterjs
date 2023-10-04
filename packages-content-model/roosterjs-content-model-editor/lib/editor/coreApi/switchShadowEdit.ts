@@ -24,8 +24,6 @@ export const switchShadowEdit: SwitchShadowEdit = (editorCore, isOn): void => {
                 core,
                 {
                     eventType: PluginEventType.EnteredShadowEdit,
-                    fragment,
-                    selectionPath,
                 },
                 false /*broadcast*/
             );

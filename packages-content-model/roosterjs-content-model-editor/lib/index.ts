@@ -91,19 +91,16 @@ export { default as ContentModelPastePlugin } from './editor/plugins/PastePlugin
 
 export { default as ContentModelFormatPlugin } from './editor/corePlugins/ContentModelFormatPlugin';
 export { default as ContentModelEditPlugin } from './editor/corePlugins/ContentModelEditPlugin';
-export { default as ContentModelTypeInContainerPlugin } from './editor/corePlugins/ContentModelTypeInContainerPlugin';
 export { default as ContentModelCopyPastePlugin } from './editor/corePlugins/ContentModelCopyPastePlugin';
 export { default as ContentModelCachePlugin } from './editor/corePlugins/ContentModelCachePlugin';
 
-export {
-    createContentModelEditorCore,
-    promoteToContentModelEditorCore,
-} from './editor/createContentModelEditorCore';
 export { combineBorderValue, extractBorderValues } from './domUtils/borderValues';
 export { updateImageMetadata } from './domUtils/metadata/updateImageMetadata';
 export { updateTableCellMetadata } from './domUtils/metadata/updateTableCellMetadata';
 export { updateTableMetadata } from './domUtils/metadata/updateTableMetadata';
 
 export { ContentModelCachePluginState } from './publicTypes/pluginState/ContentModelCachePluginState';
-export { ContentModelPluginState } from './publicTypes/pluginState/ContentModelPluginState';
 export { ContentModelFormatPluginState } from './publicTypes/pluginState/ContentModelFormatPluginState';
+
+export { ContentModelEditorPlugin } from './publicTypes/ContentModelEditorPlugin';
+export { ContentModelPluginEvent } from './publicTypes/event/ContentModelPluginEvent';

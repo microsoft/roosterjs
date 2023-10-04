@@ -34,6 +34,36 @@ export default class ContentModelEditor implements IContentModelEditor {
     }
 
     /**
+     * Dispose this editor, dispose all plugins and custom data
+     */
+    dispose(): void {
+        const core = this.getCore();
+
+        for (let i = core.plugins.length - 1; i >= 0; i--) {
+            core.plugins[i].dispose();
+        }
+
+        core.darkColorHandler.reset();
+        this.core = undefined;
+    }
+
+    /**
+     * Get whether this editor is disposed
+     * @returns True if editor is disposed, otherwise false
+     */
+    isDisposed(): boolean {
+        return !this.core;
+    }
+
+    /**
+     * Get document which contains this editor
+     * @returns The HTML document which contains this editor
+     */
+    getDocument(): Document {
+        return this.getCore().contentDiv.ownerDocument;
+    }
+
+    /**
      * Create Content Model from DOM tree in this editor
      * @param option The option to customize the behavior of DOM to Content Model conversion
      */

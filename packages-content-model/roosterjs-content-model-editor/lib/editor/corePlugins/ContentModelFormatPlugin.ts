@@ -1,14 +1,15 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
+import ContentModelPluginWithState from 'roosterjs-content-model-editor/lib/publicTypes/ContentModelPluginWithState';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
+import { ContentModelPluginEvent } from 'roosterjs-content-model-editor/lib/publicTypes/event/ContentModelPluginEvent';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from 'roosterjs-editor-dom';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import { Keys } from 'roosterjs-editor-types';
 import type {
     ContentModelEditorOptions,
     IContentModelEditor,
 } from '../../publicTypes/IContentModelEditor';
-import type { PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -20,7 +21,7 @@ const ProcessKey = 'Process';
  * 1. Handle pending format changes when selection is collapsed
  */
 export default class ContentModelFormatPlugin
-    implements PluginWithState<ContentModelFormatPluginState> {
+    implements ContentModelPluginWithState<ContentModelFormatPluginState> {
     private editor: IContentModelEditor | null = null;
     private hasDefaultFormat = false;
     private state: ContentModelFormatPluginState;
@@ -79,13 +80,13 @@ export default class ContentModelFormatPlugin
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         if (!this.editor) {
             return;
         }
 
         switch (event.eventType) {
-            case PluginEventType.Input:
+            case 'input':
                 // In Safari, isComposing will be undefined but isInIME() works
                 if (!event.rawEvent.isComposing && !this.editor.isInIME()) {
                     this.checkAndApplyPendingFormat(event.rawEvent.data);
@@ -93,11 +94,11 @@ export default class ContentModelFormatPlugin
 
                 break;
 
-            case PluginEventType.CompositionEnd:
+            case 'compositionEnd':
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
                 break;
 
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
                 } else if (
@@ -109,8 +110,8 @@ export default class ContentModelFormatPlugin
 
                 break;
 
-            case PluginEventType.MouseUp:
-            case PluginEventType.ContentChanged:
+            case 'mouseUp':
+            case 'contentChanged':
                 if (!canApplyPendingFormat(this.editor)) {
                     clearPendingFormat(this.editor);
                 }
