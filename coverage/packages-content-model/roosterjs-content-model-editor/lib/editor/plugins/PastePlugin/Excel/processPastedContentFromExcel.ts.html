@@ -23,16 +23,16 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.57% </span>
+                <span class="strong">86.49% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>31/35</span>
+                <span class='fraction'>32/37</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">63.64% </span>
+                <span class="strong">57.14% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>21/33</span>
+                <span class='fraction'>20/35</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">88.57% </span>
+                <span class="strong">86.49% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>31/35</span>
+                <span class='fraction'>32/37</span>
             </div>
         
             
@@ -131,7 +131,17 @@
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a>
+<a name='L81'></a><a href='#L81'>81</a>
+<a name='L82'></a><a href='#L82'>82</a>
+<a name='L83'></a><a href='#L83'>83</a>
+<a name='L84'></a><a href='#L84'>84</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -163,9 +173,17 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">12x</span>
 <span class="cline-any cline-yes">12x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -206,7 +224,8 @@
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import addParser from '../utils/addParser';
-import { getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { moveChildNodes } from 'roosterjs-editor-dom';
 import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 &nbsp;
@@ -236,12 +255,20 @@ export function processPastedContentFromExcel(
 &nbsp;
     // For Excel Online
     const firstChild = fragment.firstChild;
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (firstChild &amp;&amp; firstChild.childNodes.length &gt; 0 &amp;&amp; getTagOfNode(firstChild) == 'DIV') {
+    <span class="missing-if-branch" title="if path not taken" >I</span>if (
+        isNodeOfType(firstChild, 'ELEMENT_NODE') &amp;&amp;
+        firstChild.tagName == 'div' &amp;&amp;
+<span class="branch-2 cbranch-no" title="branch not covered" >        firstChild.firstChild</span>
+    ) {
         const tableFound = <span class="cstat-no" title="statement not covered" >Array.from(firstChild.childNodes).every(<span class="fstat-no" title="function not covered" >(c</span>hild: Node) =&gt; {</span>
             // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
-<span class="cstat-no" title="statement not covered" >            return getTagOfNode(child) == 'META'</span>
+            const tagName = <span class="cstat-no" title="statement not covered" >isNodeOfType(child, 'ELEMENT_NODE') &amp;&amp; child.tagName;</span>
+&nbsp;
+<span class="cstat-no" title="statement not covered" >            return tagName == 'META'</span>
                 ? true
-                : getTagOfNode(child) == 'TABLE' &amp;&amp; child == firstChild.lastChild;
+                : tagName == 'TABLE'
+                ? child == firstChild.lastChild
+                : false;
         });
 &nbsp;
         // Extract Table from Div
@@ -286,7 +313,7 @@ export function excelHandler(html: string, htmlBefore: string): string {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Wed Oct 04 2023 21:51:54 GMT+0000 (Coordinated Universal Time)
+                at Wed Oct 04 2023 22:25:47 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../../../prettify.js"></script>
