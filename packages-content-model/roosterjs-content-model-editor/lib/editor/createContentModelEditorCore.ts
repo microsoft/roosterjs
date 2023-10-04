@@ -1,82 +1,65 @@
-import ContentModelCopyPastePlugin from './corePlugins/ContentModelCopyPastePlugin';
-import ContentModelTypeInContainerPlugin from './corePlugins/ContentModelTypeInContainerPlugin';
-import { contentModelDomIndexer } from './utils/contentModelDomIndexer';
-import { createContentModel } from './coreApi/createContentModel';
+import { contentModelCoreApiMap } from './coreApi/contentModelCoreApiMap';
 import { createContentModelCachePlugin } from './corePlugins/ContentModelCachePlugin';
 import { createContentModelEditPlugin } from './corePlugins/ContentModelEditPlugin';
 import { createContentModelFormatPlugin } from './corePlugins/ContentModelFormatPlugin';
+import { createCopyPastePlugin } from './corePlugins/ContentModelCopyPastePlugin';
 import { createDomToModelConfig, createModelToDomConfig } from 'roosterjs-content-model-dom';
-import { createEditorContext } from './coreApi/createEditorContext';
-import { createEditorCore } from 'roosterjs-editor-core';
-import { getDOMSelection } from './coreApi/getDOMSelection';
-import { setContentModel } from './coreApi/setContentModel';
-import { setDOMSelection } from './coreApi/setDOMSelection';
-import { switchShadowEdit } from './coreApi/switchShadowEdit';
+import { DomToModelOption, ModelToDomOption } from 'roosterjs-content-model-types/lib';
+import { getObjectKeys } from 'roosterjs-editor-dom';
 import { tablePreProcessor } from './overrides/tablePreProcessor';
+import {
+    ContentModelCorePlugins,
+    ContentModelPluginStates,
+} from '../publicTypes/pluginState/ContentModelPluginState';
 import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type { ContentModelEditorOptions } from '../publicTypes/IContentModelEditor';
-import type { ContentModelPluginState } from '../publicTypes/pluginState/ContentModelPluginState';
-import type { CoreCreator, EditorCore } from 'roosterjs-editor-types';
+import type { EditorPlugin, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
+interface CorePluginsWithPlaceholder extends ContentModelCorePlugins {
+    _placeholder: null;
+}
 /**
  * Editor Core creator for Content Model editor
  */
-export const createContentModelEditorCore: CoreCreator<
-    ContentModelEditorCore,
-    ContentModelEditorOptions
-> = (contentDiv, options) => {
-    const pluginState = getPluginState(options);
-    const modifiedOptions: ContentModelEditorOptions = {
-        ...options,
-        plugins: [
-            createContentModelCachePlugin(pluginState.cache),
-            ...(options.plugins || []),
-            createContentModelFormatPlugin(pluginState.format),
-            createContentModelEditPlugin(),
-        ],
-        corePluginOverride: {
-            typeInContainer: new ContentModelTypeInContainerPlugin(),
-            copyPaste: new ContentModelCopyPastePlugin(pluginState.copyPaste),
-            ...options.corePluginOverride,
-        },
+export function createContentModelEditorCore(
+    contentDiv: HTMLDivElement,
+    options: ContentModelEditorOptions
+): ContentModelEditorCore {
+    const corePlugins: CorePluginsWithPlaceholder = {
+        cache: createContentModelCachePlugin(),
+        format: createContentModelFormatPlugin(options),
+        edit: createContentModelEditPlugin(),
+        _placeholder: null,
+        undo: createUndoPlugin(options),
+        domEvent: createDOMEventPlugin(options),
+        copyPaste: createCopyPastePlugin(options),
+        entity: createEntityPlugin(options),
+        selection: createSelectionPlugin(options),
+        lifecycle: createLifecyclePlugin(options),
     };
 
-    const core = createEditorCore(contentDiv, modifiedOptions) as ContentModelEditorCore;
+    const plugins: EditorPlugin[] = [];
 
-    promoteToContentModelEditorCore(core, modifiedOptions, pluginState);
+    getObjectKeys(corePlugins).forEach(name => {
+        if (name != '_placeholder') {
+            plugins.push(corePlugins[name]);
+        } else if (options.plugins) {
+            plugins.push(...options.plugins);
+        }
+    });
 
-    return core;
-};
+    const pluginState: ContentModelPluginStates = {
+        domEvent: corePlugins.domEvent.getState(),
+        lifecycle: corePlugins.lifecycle.getState(),
+        undo: corePlugins.undo.getState(),
+        entity: corePlugins.entity.getState(),
+        copyPaste: corePlugins.copyPaste.getState(),
+        cache: corePlugins.cache.getState(),
+        format: corePlugins.format.getState(),
+        selection: corePlugins.selection.getState(),
+    };
 
-/**
- * Creator Content Model Editor Core from Editor Core
- * @param core The original EditorCore object
- * @param options Options of this editor
- */
-export function promoteToContentModelEditorCore(
-    core: EditorCore,
-    options: ContentModelEditorOptions,
-    pluginState: ContentModelPluginState
-) {
-    const cmCore = core as ContentModelEditorCore;
-
-    promoteCorePluginState(cmCore, pluginState);
-    promoteContentModelInfo(cmCore, options);
-    promoteCoreApi(cmCore);
-}
-
-function promoteCorePluginState(
-    cmCore: ContentModelEditorCore,
-    pluginState: ContentModelPluginState
-) {
-    Object.assign(cmCore, pluginState);
-}
-
-function promoteContentModelInfo(
-    cmCore: ContentModelEditorCore,
-    options: ContentModelEditorOptions
-) {
-    cmCore.defaultDomToModelOptions = [
+    const defaultDomToModelOptions: (DomToModelOption | undefined)[] = [
         {
             processorOverride: {
                 table: tablePreProcessor,
@@ -84,45 +67,29 @@ function promoteContentModelInfo(
         },
         options.defaultDomToModelOptions,
     ];
-    cmCore.defaultModelToDomOptions = [options.defaultModelToDomOptions];
-    cmCore.defaultDomToModelConfig = createDomToModelConfig(cmCore.defaultDomToModelOptions);
-    cmCore.defaultModelToDomConfig = createModelToDomConfig(cmCore.defaultModelToDomOptions);
-}
+    const defaultModelToDomOptions: (ModelToDomOption | undefined)[] = [
+        options.defaultModelToDomOptions,
+    ];
 
-function promoteCoreApi(cmCore: ContentModelEditorCore) {
-    cmCore.api.createEditorContext = createEditorContext;
-    cmCore.api.createContentModel = createContentModel;
-    cmCore.api.setContentModel = setContentModel;
-    cmCore.api.switchShadowEdit = switchShadowEdit;
-    cmCore.api.getDOMSelection = getDOMSelection;
-    cmCore.api.setDOMSelection = setDOMSelection;
-    cmCore.originalApi.createEditorContext = createEditorContext;
-    cmCore.originalApi.createContentModel = createContentModel;
-    cmCore.originalApi.setContentModel = setContentModel;
-    cmCore.originalApi.getDOMSelection = getDOMSelection;
-    cmCore.originalApi.setDOMSelection = setDOMSelection;
-}
+    const core: ContentModelEditorCore = {
+        contentDiv,
+        api: {
+            ...contentModelCoreApiMap,
+            ...options.coreApiOverride,
+        },
+        originalApi: contentModelCoreApiMap,
+        plugins: plugins.filter(x => !!x),
+        ...pluginState,
+        trustedHTMLHandler: options.trustedHTMLHandler || defaultTrustedHtmlHandler,
+        darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
 
-function getPluginState(options: ContentModelEditorOptions): ContentModelPluginState {
-    const format = options.defaultFormat || {};
-    return {
-        cache: {
-            domIndexer: options.cacheModel ? contentModelDomIndexer : undefined,
-        },
-        copyPaste: {
-            allowedCustomPasteType: options.allowedCustomPasteType || [],
-        },
-        format: {
-            defaultFormat: {
-                fontWeight: format.bold ? 'bold' : undefined,
-                italic: format.italic || undefined,
-                underline: format.underline || undefined,
-                fontFamily: format.fontFamily || undefined,
-                fontSize: format.fontSize || undefined,
-                textColor: format.textColors?.lightModeColor || format.textColor || undefined,
-                backgroundColor:
-                    format.backgroundColors?.lightModeColor || format.backgroundColor || undefined,
-            },
-        },
+        defaultDomToModelOptions,
+        defaultModelToDomOptions,
+        defaultDomToModelConfig: createDomToModelConfig(defaultDomToModelOptions),
+        defaultModelToDomConfig: createModelToDomConfig(defaultModelToDomOptions),
     };
+
+    return core;
 }
+
+const defaultTrustedHtmlHandler: TrustedHTMLHandler = html => html;

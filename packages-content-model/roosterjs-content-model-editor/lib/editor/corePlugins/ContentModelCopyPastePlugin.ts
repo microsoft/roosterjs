@@ -41,12 +41,17 @@ import {
 export default class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
     private editor: IContentModelEditor | null = null;
     private disposer: (() => void) | null = null;
+    private state: CopyPastePluginState;
 
     /**
      * Construct a new instance of CopyPastePlugin
      * @param options The editor options
      */
-    constructor(private state: CopyPastePluginState) {}
+    constructor() {
+        this.state = {
+            allowedCustomPasteType: [],
+        };
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -59,8 +64,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
             paste: e => this.onPaste(e),
             copy: e => this.onCutCopy(e, false /*isCut*/),
@@ -282,3 +287,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
         node.removeAttribute('contenteditable');
     }
 };
+
+export function createCopyPastePlugin() {
+    return new ContentModelCopyPastePlugin();
+}

@@ -30,9 +30,8 @@ export default class ContentModelEditPlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
     }
 
     /**

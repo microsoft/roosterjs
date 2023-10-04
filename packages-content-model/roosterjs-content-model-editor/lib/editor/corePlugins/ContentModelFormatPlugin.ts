@@ -3,8 +3,11 @@ import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
 import { getObjectKeys, isCharacterValue } from 'roosterjs-editor-dom';
 import { Keys, PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import type {
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from '../../publicTypes/IContentModelEditor';
+import type { PluginEvent, PluginWithState } from 'roosterjs-editor-types';
 import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -19,13 +22,17 @@ export default class ContentModelFormatPlugin
     implements PluginWithState<ContentModelFormatPluginState> {
     private editor: IContentModelEditor | null = null;
     private hasDefaultFormat = false;
+    private state: ContentModelFormatPluginState;
 
     /**
      * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
      */
-    constructor(private state: ContentModelFormatPluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor(options: ContentModelEditorOptions) {
+        this.state = {
+            defaultFormat: {
+                ...options.defaultFormat,
+            },
+        };
     }
 
     /**
@@ -41,9 +48,8 @@ export default class ContentModelFormatPlugin
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
         this.hasDefaultFormat =
             getObjectKeys(this.state.defaultFormat).filter(
                 x => typeof this.state.defaultFormat[x] !== 'undefined'
@@ -124,6 +130,6 @@ export default class ContentModelFormatPlugin
  * Create a new instance of ContentModelFormatPlugin.
  * This is mostly for unit test
  */
-export function createContentModelFormatPlugin(state: ContentModelFormatPluginState) {
-    return new ContentModelFormatPlugin(state);
+export function createContentModelFormatPlugin(options: ContentModelEditorOptions) {
+    return new ContentModelFormatPlugin(options);
 }

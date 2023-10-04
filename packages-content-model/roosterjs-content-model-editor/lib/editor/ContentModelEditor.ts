@@ -1,6 +1,5 @@
+import { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import { createContentModelEditorCore } from './createContentModelEditorCore';
-import { EditorBase } from 'roosterjs-editor-core';
-import type { ContentModelEditorCore } from '../publicTypes/ContentModelEditorCore';
 import type {
     ContentModelEditorOptions,
     IContentModelEditor,
@@ -17,23 +16,21 @@ import type {
  * Editor for Content Model.
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelEditor
-    extends EditorBase<ContentModelEditorCore, ContentModelEditorOptions>
-    implements IContentModelEditor {
+export default class ContentModelEditor implements IContentModelEditor {
+    private core?: ContentModelEditorCore;
+
     /**
      * Creates an instance of Editor
      * @param contentDiv The DIV HTML element which will be the container element of editor
      * @param options An optional options object to customize the editor
      */
     constructor(contentDiv: HTMLDivElement, options: ContentModelEditorOptions = {}) {
-        super(contentDiv, options, createContentModelEditorCore);
+        this.core = createContentModelEditorCore(contentDiv, options);
 
-        if (options.cacheModel) {
-            // Create an initial content model to cache
-            // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
-            // using content model and cache the model directly
-            this.createContentModel();
-        }
+        // Create an initial content model to cache
+        // TODO: Once we have standalone editor and get rid of `ensureTypeInContainer` function, we can set init content
+        // using content model and cache the model directly
+        this.createContentModel();
     }
 
     /**
@@ -83,5 +80,16 @@ export default class ContentModelEditor
         const core = this.getCore();
 
         core.api.setDOMSelection(core, selection);
+    }
+
+    /**
+     * @returns the current EditorCore object
+     * @throws a standard Error if there's no core object
+     */
+    protected getCore(): ContentModelEditorCore {
+        if (!this.core) {
+            throw new Error('Editor is already disposed');
+        }
+        return this.core;
     }
 }
