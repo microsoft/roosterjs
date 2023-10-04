@@ -1,5 +1,5 @@
 import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { Position, safeInstanceOf } from 'roosterjs-editor-dom';
 import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
@@ -59,7 +59,7 @@ export default class ImageSelection implements EditorPlugin {
                         this.editor.select(null);
                     }
                     break;
-                case PluginEventType.KeyUp:
+                case PluginEventType.KeyDown:
                     const key = event.rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
                     if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
@@ -71,7 +71,12 @@ export default class ImageSelection implements EditorPlugin {
                             this.editor.deleteNode(keyDownSelection.image);
                             event.rawEvent.preventDefault();
                         } else {
-                            this.editor.select(keyDownSelection.ranges[0]);
+                            const position = new Position(
+                                keyDownSelection.image,
+                                PositionType.Begin
+                            );
+
+                            this.editor.select(position);
                         }
                     }
                     break;
