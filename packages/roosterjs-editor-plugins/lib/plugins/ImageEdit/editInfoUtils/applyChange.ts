@@ -80,5 +80,6 @@ export default function applyChange(
         image.style.removeProperty('width');
         image.style.removeProperty('height');
         image.style.removeProperty('max-width');
+        image.style.removeProperty('max-height');
     }
 }
