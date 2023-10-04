@@ -146,8 +146,14 @@ function mergeParagraph(
 
             newParagraph.segments.splice(segmentIndex + i, 0, segment);
 
-            if (context && segment.segmentType == 'Entity') {
-                context.newEntities.push(segment);
+            if (context) {
+                if (segment.segmentType == 'Entity') {
+                    context.newEntities.push(segment);
+                }
+
+                if (segment.segmentType == 'Image') {
+                    context.images.push(segment);
+                }
             }
         }
     }
