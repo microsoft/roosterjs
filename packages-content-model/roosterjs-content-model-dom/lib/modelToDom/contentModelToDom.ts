@@ -1,4 +1,5 @@
-import { createRange, Position, toArray } from 'roosterjs-editor-dom';
+import toArray from '../domUtils/toArray';
+import { createRange, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import type {
     ContentModelDocument,

@@ -1,4 +1,4 @@
-import { getObjectKeys, getTagOfNode } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { OrderedMap, UnorderedMap } from './listLevelMetadataFormatHandler';
 import type { FormatHandler } from '../FormatHandler';
@@ -36,7 +36,7 @@ export const listItemMetadataFormatHandler: FormatHandler<ListMetadataFormat> = 
         const depth = context.listFormat.nodeStack.length - 2; // Minus two for the parent element and convert length to index
 
         if (depth >= 0 && isNodeOfType(parent, 'ELEMENT_NODE') && !parent.style.listStyleType) {
-            const parentTag = getTagOfNode(parent);
+            const parentTag = parent.tagName;
             const style =
                 parentTag == 'OL'
                     ? getOrderedListStyleValue(

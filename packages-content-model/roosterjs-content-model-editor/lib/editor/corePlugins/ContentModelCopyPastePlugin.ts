@@ -8,8 +8,10 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
 import {
     contentModelToDom,
     createModelToDomContext,
+    isElementOfType,
     isNodeOfType,
     normalizeContentModel,
+    toArray,
 } from 'roosterjs-content-model-dom';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
@@ -18,9 +20,7 @@ import {
     moveChildNodes,
     createRange,
     extractClipboardItems,
-    toArray,
     wrap,
-    safeInstanceOf,
 } from 'roosterjs-editor-dom';
 import type {
     CopyPastePluginState,
@@ -280,7 +280,7 @@ function selectionExToRange(selection: DOMSelection | null, tempDiv: HTMLDivElem
  * Exported only for unit testing
  */
 export const onNodeCreated: OnNodeCreated = (_, node): void => {
-    if (safeInstanceOf(node, 'HTMLTableElement')) {
+    if (isNodeOfType(node, 'ELEMENT_NODE') && isElementOfType(node, 'table')) {
         wrap(node, 'div');
     }
     if (isNodeOfType(node, 'ELEMENT_NODE') && !node.isContentEditable) {
