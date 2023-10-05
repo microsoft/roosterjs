@@ -67,7 +67,10 @@ describe(ID, () => {
                         {
                             segmentType: 'Image',
                             src: 'https://github.com/microsoft/roosterjs',
-                            format: { maxWidth: '1169px', maxHeight: '18px' },
+                            format: {
+                                maxWidth: Browser.isChrome ? '1019px' : '1169px',
+                                maxHeight: '18px',
+                            },
                             dataset: {},
                         },
                         {
