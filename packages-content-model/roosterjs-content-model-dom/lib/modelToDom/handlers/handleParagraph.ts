@@ -1,8 +1,9 @@
 import { applyFormat } from '../utils/applyFormat';
-import { getObjectKeys, unwrap } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { optimize } from '../optimizers/optimize';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import { stackFormat } from '../utils/stackFormat';
+import { unwrap } from 'roosterjs-editor-dom';
 import type {
     ContentModelBlockHandler,
     ContentModelParagraph,

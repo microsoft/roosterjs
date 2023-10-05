@@ -1,5 +1,6 @@
-import { addDelimiters, getObjectKeys, wrap } from 'roosterjs-editor-dom';
+import { addDelimiters, wrap } from 'roosterjs-editor-dom';
 import { applyFormat } from '../utils/applyFormat';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,

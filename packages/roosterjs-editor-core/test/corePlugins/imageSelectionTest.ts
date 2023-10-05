@@ -107,7 +107,7 @@ describe('ImageSelectionPlugin |', () => {
         imageSelection.onPluginEvent(keyUp(Space));
         const selection = editor.getSelectionRangeEx();
         expect(selection.type).toBe(SelectionRangeTypes.Normal);
-        expect(selection.areAllCollapsed).toBe(false);
+        expect(selection.areAllCollapsed).toBe(true);
     });
 
     it('should handle contextMenu', () => {

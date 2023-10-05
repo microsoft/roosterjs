@@ -1,5 +1,5 @@
 import addParser from '../utils/addParser';
-import { findClosestElementAncestor, getTagOfNode, matchesSelector } from 'roosterjs-editor-dom';
+import { findClosestElementAncestor, matchesSelector } from 'roosterjs-editor-dom';
 import { setProcessor } from '../utils/setProcessor';
 import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type {
@@ -77,7 +77,7 @@ const wacElementProcessor: ElementProcessor<HTMLElement> = (
     element: HTMLElement,
     context: DomToModelContext
 ): void => {
-    const elementTag = getTagOfNode(element);
+    const elementTag = element.tagName;
     if (matchesSelector(element, WAC_IDENTIFY_SELECTOR)) {
         element.style.removeProperty('display');
         element.style.removeProperty('margin');
