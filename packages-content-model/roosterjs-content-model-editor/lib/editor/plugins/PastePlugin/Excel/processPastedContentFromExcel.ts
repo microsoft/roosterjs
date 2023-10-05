@@ -1,5 +1,6 @@
 import addParser from '../utils/addParser';
-import { getTagOfNode, moveChildNodes } from 'roosterjs-editor-dom';
+import { isNodeOfType } from 'roosterjs-content-model-dom';
+import { moveChildNodes } from 'roosterjs-editor-dom';
 import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
@@ -29,12 +30,20 @@ export function processPastedContentFromExcel(
 
     // For Excel Online
     const firstChild = fragment.firstChild;
-    if (firstChild && firstChild.childNodes.length > 0 && getTagOfNode(firstChild) == 'DIV') {
+    if (
+        isNodeOfType(firstChild, 'ELEMENT_NODE') &&
+        firstChild.tagName == 'div' &&
+        firstChild.firstChild
+    ) {
         const tableFound = Array.from(firstChild.childNodes).every((child: Node) => {
             // Tables pasted from Excel Online should be of the format: 0 to N META tags and 1 TABLE tag
-            return getTagOfNode(child) == 'META'
+            const tagName = isNodeOfType(child, 'ELEMENT_NODE') && child.tagName;
+
+            return tagName == 'META'
                 ? true
-                : getTagOfNode(child) == 'TABLE' && child == firstChild.lastChild;
+                : tagName == 'TABLE'
+                ? child == firstChild.lastChild
+                : false;
         });
 
         // Extract Table from Div

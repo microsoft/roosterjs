@@ -1,4 +1,4 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { isElementOfType } from '../../domUtils/isElementOfType';
 import type { FormatHandler } from '../FormatHandler';
 import type { LinkFormat } from 'roosterjs-content-model-types';
 
@@ -7,7 +7,7 @@ import type { LinkFormat } from 'roosterjs-content-model-types';
  */
 export const linkFormatHandler: FormatHandler<LinkFormat> = {
     parse: (format, element) => {
-        if (safeInstanceOf(element, 'HTMLAnchorElement')) {
+        if (isElementOfType(element, 'a')) {
             const name = element.name;
             const href = element.getAttribute('href'); // Use getAttribute to get original HREF but not the resolved absolute url
             const target = element.target;
@@ -46,7 +46,7 @@ export const linkFormatHandler: FormatHandler<LinkFormat> = {
         }
     },
     apply: (format, element) => {
-        if (safeInstanceOf(element, 'HTMLAnchorElement') && format.href) {
+        if (isElementOfType(element, 'a') && format.href) {
             element.href = format.href;
 
             if (format.name) {

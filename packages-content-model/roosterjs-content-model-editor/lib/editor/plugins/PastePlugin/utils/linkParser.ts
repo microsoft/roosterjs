@@ -1,4 +1,4 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { isElementOfType } from 'roosterjs-content-model-dom';
 import type { ContentModelHyperLinkFormat, FormatParser } from 'roosterjs-content-model-types';
 
 const SUPPORTED_PROTOCOLS = ['http:', 'https:', 'notes:', 'mailto:', 'onenote:'];
@@ -8,7 +8,7 @@ const INVALID_LINKS_REGEX = /^file:\/\/\/[a-zA-Z\/]/i;
  * @internal
  */
 export const parseLink: FormatParser<ContentModelHyperLinkFormat> = (format, element) => {
-    if (!safeInstanceOf(element, 'HTMLAnchorElement')) {
+    if (!isElementOfType(element, 'a')) {
         return;
     }
 
