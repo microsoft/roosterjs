@@ -37,7 +37,7 @@ export interface FormatWithContentModelContext {
     readonly deletedEntities: DeletedEntity[];
 
     /**
-     * Entities got deleted during formatting. Need to be set by the formatter function
+     * Images inserted in the editor that needs to have their size adjusted
      */
     readonly images: ContentModelImage[];
 
