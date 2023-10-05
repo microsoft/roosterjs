@@ -1,6 +1,7 @@
 import addParser from '../utils/addParser';
 import { isNodeOfType } from 'roosterjs-content-model-dom';
 import { moveChildNodes } from 'roosterjs-editor-dom';
+import { setProcessor } from '../utils/setProcessor';
 import type ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { TrustedHTMLHandler } from 'roosterjs-editor-types';
 
@@ -58,6 +59,20 @@ export function processPastedContentFromExcel(
             format.borderLeft = DEFAULT_BORDER_STYLE;
             format.borderRight = DEFAULT_BORDER_STYLE;
             format.borderTop = DEFAULT_BORDER_STYLE;
+        }
+    });
+
+    setProcessor(event.domToModelOption, 'child', (group, element, context) => {
+        const segmentFormat = { ...context.segmentFormat };
+        if (group.blockGroupType === 'TableCell' && group.format.textColor) {
+            context.segmentFormat.textColor = group.format.textColor;
+        }
+
+        context.defaultElementProcessors.child(group, element, context);
+
+        if (group.blockGroupType === 'TableCell' && group.format.textColor) {
+            context.segmentFormat = segmentFormat;
+            delete group.format.textColor;
         }
     });
 }
