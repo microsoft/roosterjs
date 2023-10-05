@@ -1,4 +1,4 @@
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type { FormatHandler } from '../FormatHandler';
 import type { SuperOrSubScriptFormat } from 'roosterjs-content-model-types';
 
@@ -27,9 +27,7 @@ export const superOrSubScriptFormatHandler: FormatHandler<SuperOrSubScriptFormat
                     const tagName = value == 'super' ? 'sup' : value == 'sub' ? 'sub' : null;
 
                     if (tagName) {
-                        const wrapper = element.ownerDocument.createElement(tagName);
-                        moveChildNodes(wrapper, element);
-                        element.appendChild(wrapper);
+                        wrapAllChildNodes(element, tagName);
                     }
                 });
         }

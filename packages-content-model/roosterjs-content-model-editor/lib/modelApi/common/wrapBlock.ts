@@ -1,5 +1,4 @@
 import { addBlock, setParagraphNotImplicit } from 'roosterjs-content-model-dom';
-import { arrayPush } from 'roosterjs-editor-dom';
 import type { ContentModelBlock, ContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
@@ -49,7 +48,7 @@ export function wrapBlockStep2<T extends ContentModelBlockGroup & ContentModelBl
 
         if (index >= 0 && canMerge(nextBlock, wrapper)) {
             wrapper.blocks.forEach(setParagraphNotImplicit);
-            arrayPush(wrapper.blocks, nextBlock.blocks);
+            wrapper.blocks.push(...nextBlock.blocks);
             parent.blocks.splice(index + 1, 1);
         }
     });

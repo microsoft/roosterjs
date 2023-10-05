@@ -16,7 +16,8 @@ describe('formatWithContentModel', () => {
     let triggerPluginEvent: jasmine.Spy;
 
     const apiName = 'mockedApi';
-    const mockedPos = 'POS' as any;
+    const mockedContainer = 'C' as any;
+    const mockedOffset = 'O' as any;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -26,7 +27,9 @@ describe('formatWithContentModel', () => {
         setContentModel = jasmine.createSpy('setContentModel');
         focus = jasmine.createSpy('focus');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
-        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
+        getFocusedPosition = jasmine
+            .createSpy('getFocusedPosition')
+            .and.returnValue({ node: mockedContainer, offset: mockedOffset });
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
 
         editor = ({
@@ -106,7 +109,8 @@ describe('formatWithContentModel', () => {
         expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(
             editor,
             mockedFormat,
-            mockedPos
+            mockedContainer,
+            mockedOffset
         );
     });
 

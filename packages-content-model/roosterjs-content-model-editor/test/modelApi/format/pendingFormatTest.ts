@@ -37,14 +37,16 @@ describe('pendingFormat.setPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
         const mockedFormat = 'FORMAT' as any;
-        const mockedPosition = 'POSITION' as any;
+        const mockedContainer = 'C' as any;
+        const mockedOffset = 'O' as any;
 
-        setPendingFormat(editor, mockedFormat, mockedPosition);
+        setPendingFormat(editor, mockedFormat, mockedContainer, mockedOffset);
 
         expect((editor as any).core.lifecycle.customData.__ContentModelPendingFormat.value).toEqual(
             {
                 format: mockedFormat,
-                position: mockedPosition,
+                posContainer: mockedContainer,
+                posOffset: mockedOffset,
             }
         );
     });
@@ -55,12 +57,14 @@ describe('pendingFormat.clearPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
         const mockedFormat = 'FORMAT' as any;
-        const mockedPosition = 'POSITION' as any;
+        const mockedContainer = 'C' as any;
+        const mockedOffset = 'O' as any;
 
         (editor as any).core.lifecycle.customData.__ContentModelPendingFormat = {
             value: {
                 format: mockedFormat,
-                position: mockedPosition,
+                posContainer: mockedContainer,
+                posOffset: mockedOffset,
             },
         };
 
@@ -69,7 +73,8 @@ describe('pendingFormat.clearPendingFormat', () => {
         expect((editor as any).core.lifecycle.customData.__ContentModelPendingFormat.value).toEqual(
             {
                 format: null,
-                position: null,
+                posContainer: null,
+                posOffset: null,
             }
         );
     });
@@ -80,26 +85,23 @@ describe('pendingFormat.canApplyPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
         const mockedFormat = 'FORMAT' as any;
-        const mockedPosition = 'POSITION' as any;
 
-        const equalTo = jasmine.createSpy('equalto').and.returnValue(true);
-        const mockedPosition2 = {
-            equalTo,
-        };
+        const mockedContainer = 'C' as any;
+        const mockedOffset = 'O' as any;
 
-        editor.getFocusedPosition = () => mockedPosition2 as any;
+        editor.getFocusedPosition = () => ({ node: mockedContainer, offset: mockedOffset } as any);
 
         (editor as any).core.lifecycle.customData.__ContentModelPendingFormat = {
             value: {
                 format: mockedFormat,
-                position: mockedPosition,
+                posContainer: mockedContainer,
+                posOffset: mockedOffset,
             },
         };
 
         const result = canApplyPendingFormat(editor);
 
         expect(result).toBeTrue();
-        expect(equalTo).toHaveBeenCalledWith(mockedPosition);
     });
 
     it('no pending format', () => {
@@ -146,11 +148,12 @@ describe('pendingFormat.canApplyPendingFormat', () => {
         const div = document.createElement('div');
         const editor = new ContentModelEditor(div);
         const mockedFormat = 'FORMAT' as any;
-        const mockedPosition = 'POSITION' as any;
+        const mockedContainer1 = 'C1';
+        const mockedContainer2 = 'C2';
 
-        const equalTo = jasmine.createSpy('equalto').and.returnValue(false);
         const mockedPosition2 = {
-            equalTo,
+            node: mockedContainer2,
+            offset: 1,
         };
 
         editor.getFocusedPosition = () => mockedPosition2 as any;
@@ -158,13 +161,13 @@ describe('pendingFormat.canApplyPendingFormat', () => {
         (editor as any).core.lifecycle.customData.__ContentModelPendingFormat = {
             value: {
                 format: mockedFormat,
-                position: mockedPosition,
+                posContainer: mockedContainer1,
+                posOffset: 0,
             },
         };
 
         const result = canApplyPendingFormat(editor);
 
         expect(result).toBeFalse();
-        expect(equalTo).toHaveBeenCalledWith(mockedPosition);
     });
 });

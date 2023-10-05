@@ -1,6 +1,5 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
-import { arrayPush } from 'roosterjs-editor-dom';
 import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections } from '../selection/iterateSelections';
@@ -32,7 +31,7 @@ export function clearModelFormat(
         [model],
         (path, tableContext, block, segments) => {
             if (segments) {
-                arrayPush(segmentsToClear, segments);
+                segmentsToClear.push(...segments);
             }
 
             if (block) {

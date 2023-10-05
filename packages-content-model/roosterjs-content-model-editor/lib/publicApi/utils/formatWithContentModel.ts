@@ -58,7 +58,7 @@ export function formatWithContentModel(
                 const pos = editor.getFocusedPosition();
 
                 if (pendingFormat && pos) {
-                    setPendingFormat(editor, pendingFormat, pos);
+                    setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
                 }
             }
         };

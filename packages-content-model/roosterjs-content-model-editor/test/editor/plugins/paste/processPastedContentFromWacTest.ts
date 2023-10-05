@@ -1,4 +1,4 @@
-import { Browser, moveChildNodes } from 'roosterjs-editor-dom';
+import { Browser } from 'roosterjs-editor-dom';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
 import { itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
@@ -8,6 +8,7 @@ import {
     createDomToModelContext,
     createModelToDomContext,
     domToContentModel,
+    moveChildNodes,
 } from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;

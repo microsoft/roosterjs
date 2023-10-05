@@ -224,9 +224,10 @@ describe('formatSegmentWithContentModel', () => {
         para.segments.push(marker);
         model.blocks.push(para);
 
-        const mockedPosition = ('Position' as any) as NodePosition;
+        const mockedContainer = 'C' as any;
+        const mockedOffset = 'O' as any;
 
-        editor.getFocusedPosition = () => mockedPosition;
+        editor.getFocusedPosition = () => ({ node: mockedContainer, offset: mockedOffset } as any);
 
         formatSegmentWithContentModel(editor, apiName, format => (format.fontFamily = 'test'));
         expect(model).toEqual({
@@ -257,7 +258,8 @@ describe('formatSegmentWithContentModel', () => {
                 fontSize: '10px',
                 fontFamily: 'test',
             },
-            mockedPosition
+            mockedContainer,
+            mockedOffset
         );
     });
 

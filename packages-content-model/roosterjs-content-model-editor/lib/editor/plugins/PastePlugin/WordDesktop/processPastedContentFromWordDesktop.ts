@@ -1,5 +1,6 @@
 import addParser from '../utils/addParser';
-import { chainSanitizerCallback, getStyles, moveChildNodes } from 'roosterjs-editor-dom';
+import { chainSanitizerCallback, getStyles } from 'roosterjs-editor-dom';
+import { moveChildNodes } from 'roosterjs-content-model-dom';
 import { processWordComments } from './processWordComments';
 import { processWordList } from './processWordLists';
 import { setProcessor } from '../utils/setProcessor';
