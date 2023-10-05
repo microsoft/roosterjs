@@ -4,13 +4,12 @@ import * as ContentModelFormatPlugin from '../../lib/editor/corePlugins/ContentM
 import * as createDomToModelContext from 'roosterjs-content-model-dom/lib/domToModel/context/createDomToModelContext';
 import * as createEditorCore from 'roosterjs-editor-core/lib/editor/createEditorCore';
 import * as createModelToDomContext from 'roosterjs-content-model-dom/lib/modelToDom/context/createModelToDomContext';
-import * as isFeatureEnabled from 'roosterjs-editor-core/lib/editor/isFeatureEnabled';
 import ContentModelTypeInContainerPlugin from '../../lib/editor/corePlugins/ContentModelTypeInContainerPlugin';
 import { contentModelDomIndexer } from '../../lib/editor/utils/contentModelDomIndexer';
+import { ContentModelEditorOptions } from '../../lib/publicTypes/IContentModelEditor';
 import { createContentModel } from '../../lib/editor/coreApi/createContentModel';
 import { createContentModelEditorCore } from '../../lib/editor/createContentModelEditorCore';
 import { createEditorContext } from '../../lib/editor/coreApi/createEditorContext';
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
 import { getDOMSelection } from '../../lib/editor/coreApi/getDOMSelection';
 import { setContentModel } from '../../lib/editor/coreApi/setContentModel';
 import { setDOMSelection } from '../../lib/editor/coreApi/setDOMSelection';
@@ -350,17 +349,12 @@ describe('createContentModelEditorCore', () => {
     });
 
     it('Allow dom indexer', () => {
-        mockedCore.lifecycle.experimentalFeatures.push(ExperimentalFeatures.ReusableContentModelV2);
-
-        const options = {
+        const options: ContentModelEditorOptions = {
             corePluginOverride: {
                 copyPaste: copyPastePlugin,
             },
+            cacheModel: true,
         };
-
-        spyOn(isFeatureEnabled, 'isFeatureEnabled').and.callFake(
-            (features, feature) => feature == ExperimentalFeatures.ReusableContentModelV2
-        );
 
         const core = createContentModelEditorCore(contentDiv, options);
 
@@ -370,10 +364,11 @@ describe('createContentModelEditorCore', () => {
                 typeInContainer: new ContentModelTypeInContainerPlugin(),
                 copyPaste: copyPastePlugin,
             },
+            cacheModel: true,
         });
         expect(core).toEqual({
             lifecycle: {
-                experimentalFeatures: [ExperimentalFeatures.ReusableContentModelV2],
+                experimentalFeatures: [],
             },
             api: {
                 switchShadowEdit,

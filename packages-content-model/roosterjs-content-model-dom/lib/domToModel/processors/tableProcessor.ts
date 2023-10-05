@@ -2,8 +2,9 @@ import { addBlock } from '../../modelApi/common/addBlock';
 import { createTable } from '../../modelApi/creators/createTable';
 import { createTableCell } from '../../modelApi/creators/createTableCell';
 import { getBoundingClientRect } from '../utils/getBoundingClientRect';
+import { isElementOfType } from '../../domUtils/isElementOfType';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { parseFormat } from '../utils/parseFormat';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { stackFormat } from '../utils/stackFormat';
 import type {
     ContentModelTableCellFormat,
@@ -71,7 +72,12 @@ export const tableProcessor: ElementProcessor<HTMLTableElement> = (
 
                 const tbody = tr.parentNode;
 
-                if (safeInstanceOf(tbody, 'HTMLTableSectionElement')) {
+                if (
+                    isNodeOfType(tbody, 'ELEMENT_NODE') &&
+                    (isElementOfType(tbody, 'tbody') ||
+                        isElementOfType(tbody, 'thead') ||
+                        isElementOfType(tbody, 'tfoot'))
+                ) {
                     parseFormat(tbody, context.formatParsers.tableRow, tableRow.format, context);
                 } else if (context.allowCacheElement) {
                     tableRow.cachedElement = tr;

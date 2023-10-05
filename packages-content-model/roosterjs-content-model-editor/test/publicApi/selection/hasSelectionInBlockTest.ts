@@ -250,10 +250,12 @@ describe('hasSelectionInBlock', () => {
             segmentType: 'Entity',
             format: {},
             isSelected: true,
-            type: 'entity',
-            id: 'entity',
+            entityFormat: {
+                entityType: 'entity',
+                id: 'entity',
+                isReadonly: false,
+            },
             wrapper: null!,
-            isReadonly: false,
         };
 
         const result = hasSelectionInBlock(block);

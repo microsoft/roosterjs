@@ -1,3 +1,4 @@
+import type AnnounceData from './AnnounceData';
 import type { EntityState } from './Snapshot';
 
 /**
@@ -15,4 +16,11 @@ export default interface ContentChangedData {
      * @returns Related entity state array
      */
     getEntityState?: () => EntityState[];
+
+    /**
+     * @optional
+     * Get Announce data from this content changed event.
+     * @returns
+     */
+    getAnnounceData?: () => AnnounceData | undefined;
 }

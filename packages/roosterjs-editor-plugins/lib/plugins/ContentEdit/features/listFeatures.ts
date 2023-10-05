@@ -1,6 +1,26 @@
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
 import {
+    Browser,
+    cacheGetEventData,
+    convertDecimalsToAlpha,
+    convertDecimalsToRoman,
+    createNumberDefinition,
+    createObjectDefinition,
+    createVListFromRegion,
+    findClosestElementAncestor,
+    getComputedStyle,
+    getMetadata,
+    getTagOfNode,
+    isBlockElement,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+    safeInstanceOf,
+    VList,
+    VListChain,
+} from 'roosterjs-editor-dom';
+import {
     blockFormat,
     commitListChains,
     setIndentation,
@@ -8,24 +28,6 @@ import {
     toggleNumbering,
     toggleListType,
 } from 'roosterjs-editor-api';
-import {
-    Browser,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    Position,
-    VListChain,
-    createVListFromRegion,
-    isBlockElement,
-    cacheGetEventData,
-    safeInstanceOf,
-    VList,
-    createObjectDefinition,
-    createNumberDefinition,
-    getMetadata,
-    findClosestElementAncestor,
-    getComputedStyle,
-} from 'roosterjs-editor-dom';
 import type {
     BuildInEditFeature,
     IEditor,
@@ -41,6 +43,8 @@ import {
     PositionType,
     NumberingListType,
     BulletListType,
+    KnownAnnounceStrings,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -70,6 +74,45 @@ const ListStyleDefinitionMetadata = createObjectDefinition<ListStyleMetadata>(
     true /** allowNull */
 );
 
+/**
+ * @internal Exported for unit testing
+ * @returns
+ */
+export const getAnnounceDataForList = (editor: IEditor) => {
+    const li = editor.getElementAtCursor('li') as HTMLLIElement;
+    const list = editor.getElementAtCursor('OL,UL', li) as
+        | undefined
+        | HTMLOListElement
+        | HTMLUListElement;
+    if (li && safeInstanceOf(list, 'HTMLOListElement')) {
+        const vList = new VList(list);
+        const listItemIndex = vList.getListItemIndex(li);
+        let stringToAnnounce = listItemIndex.toString();
+        switch (list.style.listStyleType) {
+            case 'lower-alpha':
+            case 'lower-latin':
+            case 'upper-alpha':
+            case 'upper-latin':
+                stringToAnnounce = convertDecimalsToAlpha(listItemIndex - 1);
+                break;
+            case 'lower-roman':
+            case 'upper-roman':
+                stringToAnnounce = convertDecimalsToRoman(listItemIndex);
+                break;
+        }
+
+        return {
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemNumberingIndentation,
+            formatStrings: [stringToAnnounce],
+        };
+    } else if (safeInstanceOf(list, 'HTMLUListElement')) {
+        return {
+            defaultStrings: KnownAnnounceStrings.AnnounceListItemBulletIndentation,
+        };
+    }
+    return undefined;
+};
+
 const shouldHandleIndentationEvent = (indenting: boolean) => (
     event: PluginKeyboardEvent,
     editor: IEditor
@@ -94,7 +137,21 @@ const handleIndentationEvent = (indenting: boolean) => (
         event.rawEvent.keyCode !== Keys.TAB &&
         (currentElement = editor.getElementAtCursor()) &&
         getComputedStyle(currentElement, 'direction') == 'rtl';
-    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+
+    editor.addUndoSnapshot(
+        () => {
+            setIndentation(
+                editor,
+                isRTL == indenting ? Indentation.Decrease : Indentation.Increase
+            );
+        },
+        ChangeSource.Format,
+        false /* canUndoByBackspace */,
+        {
+            getAnnounceData: () => getAnnounceDataForList(editor),
+        }
+    );
+
     event.rawEvent.preventDefault();
 };
 

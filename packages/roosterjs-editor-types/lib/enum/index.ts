@@ -1,3 +1,4 @@
+export { KnownAnnounceStrings } from './KnownAnnounceStrings';
 export { DocumentCommand } from './DocumentCommand';
 export { DocumentPosition } from './DocumentPosition';
 export { Keys } from './Keys';

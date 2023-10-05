@@ -108,7 +108,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 3);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
@@ -141,7 +141,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 
@@ -157,7 +157,7 @@ describe('Content Model Paste Plugin Test', () => {
                 trustedHTMLHandler
             );
             expect(addParser.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
-            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(0);
+            expect(setProcessor.setProcessor).toHaveBeenCalledTimes(1);
             expect(chainSanitizerCallbackFile.default).toHaveBeenCalledTimes(1);
         });
 

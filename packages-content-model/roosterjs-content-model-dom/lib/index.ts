@@ -13,6 +13,9 @@ export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
+export { isElementOfType } from './domUtils/isElementOfType';
+export { getObjectKeys } from './domUtils/getObjectKeys';
+export { default as toArray } from './domUtils/toArray';
 
 export { createBr } from './modelApi/creators/createBr';
 export { createListItem } from './modelApi/creators/createListItem';

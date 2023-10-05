@@ -1,5 +1,5 @@
 import { defaultContentModelHandlers } from './defaultContentModelHandlers';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import {
     defaultFormatAppliers,
     defaultFormatKeysPerCategory,
