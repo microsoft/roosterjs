@@ -220,7 +220,7 @@ describe('paste with content model & paste plugin', () => {
 
         pasteF.default(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
@@ -231,7 +231,7 @@ describe('paste with content model & paste plugin', () => {
 
         pasteF.default(editor!, clipboardData);
 
-        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(0);
+        expect(setProcessorF.setProcessor).toHaveBeenCalledTimes(1);
         expect(addParserF.default).toHaveBeenCalledTimes(DEFAULT_TIMES_ADD_PARSER_CALLED + 1);
         expect(ExcelF.processPastedContentFromExcel).toHaveBeenCalledTimes(1);
     });
