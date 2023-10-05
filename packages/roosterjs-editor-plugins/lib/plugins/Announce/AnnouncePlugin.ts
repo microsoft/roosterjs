@@ -115,9 +115,6 @@ export default class Announce implements EditorPlugin {
 
     private handleFeatures(event: PluginKeyDownEvent, editorInput: IEditor) {
         editorInput.runAsync(editor => {
-            if (!editor || editor.isDisposed()) {
-                return;
-            }
             this.features
                 .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
                 .some(feature => {
