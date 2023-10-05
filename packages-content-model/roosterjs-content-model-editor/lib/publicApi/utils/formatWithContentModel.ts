@@ -135,7 +135,7 @@ function handleDeletedEntities(
 
 function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
     const viewport = editor.getVisibleViewport();
-    if (viewport) {
+    if (viewport && context.images) {
         const { top, bottom, left, right } = viewport;
         const maxWidth = right - left;
         const maxHeight = bottom - top;

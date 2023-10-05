@@ -42,6 +42,7 @@ describe('changeImage', () => {
             .createSpy()
             .and.returnValues({ type: 'image', image: image });
         const triggerPluginEvent = jasmine.createSpy().and.callThrough();
+        const getVisibleViewport = jasmine.createSpy().and.callThrough();
 
         const editor = ({
             createContentModel: () => model,
@@ -52,6 +53,7 @@ describe('changeImage', () => {
             getDocument: () => document,
             getDOMSelection,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
 

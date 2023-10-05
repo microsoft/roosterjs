@@ -19,6 +19,7 @@ describe('formatSegmentWithContentModel', () => {
     let getPendingFormat: jasmine.Spy;
     let setPendingFormat: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     const apiName = 'mockedApi';
 
@@ -26,6 +27,7 @@ describe('formatSegmentWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         focus = jasmine.createSpy('focus');
 
         setPendingFormat = spyOn(pendingFormat, 'setPendingFormat');
@@ -39,6 +41,7 @@ describe('formatSegmentWithContentModel', () => {
             getFocusedPosition: () => null as NodePosition,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 

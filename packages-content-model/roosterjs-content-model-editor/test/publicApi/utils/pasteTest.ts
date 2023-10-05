@@ -43,6 +43,7 @@ describe('Paste ', () => {
     let getDocument: jasmine.Spy;
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     const mockedPos = 'POS' as any;
 
@@ -95,6 +96,8 @@ describe('Paste ', () => {
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
+
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
         spyOn(getSelectedSegmentsF, 'default').and.returnValue([
             {
@@ -116,6 +119,7 @@ describe('Paste ', () => {
             getDocument,
             getTrustedHTMLHandler,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });

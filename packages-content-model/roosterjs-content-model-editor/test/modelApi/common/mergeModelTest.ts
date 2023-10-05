@@ -1,6 +1,6 @@
 import * as applyTableFormat from '../../../lib/modelApi/table/applyTableFormat';
 import * as normalizeTable from '../../../lib/modelApi/table/normalizeTable';
-import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { ContentModelDocument, ContentModelImage } from 'roosterjs-content-model-types';
 import { EntityOperation } from 'roosterjs-editor-types';
 import { FormatWithContentModelContext } from '../../../lib/publicTypes/parameter/FormatWithContentModelContext';
 import { mergeModel } from '../../../lib/modelApi/common/mergeModel';
@@ -2977,6 +2977,200 @@ describe('mergeModel', () => {
                     operation: EntityOperation.Overwrite,
                 },
             ],
+        });
+    });
+
+    it('Merge Image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            images: [],
+        };
+
+        mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        newImage,
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            images: [newImage],
+        });
+    });
+
+    it('Merge two Images', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const newImage1: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage, newImage1],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const marker = createSelectionMarker();
+
+        para1.segments.push(marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            images: [],
+        };
+
+        mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        newImage,
+                        newImage1,
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            images: [newImage, newImage1],
+        });
+    });
+
+    it('Merge into a paragraph with image', () => {
+        const majorModel = createContentModelDocument();
+        const newImage: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test',
+            format: {},
+            dataset: {},
+        };
+        const sourceModel: ContentModelDocument = {
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [newImage],
+                    format: {},
+                },
+            ],
+            format: {},
+        };
+        const para1 = createParagraph();
+        const image: ContentModelImage = {
+            segmentType: 'Image',
+            src: 'test1',
+            format: {},
+            dataset: {},
+        };
+        const marker = createSelectionMarker();
+
+        para1.segments.push(image, marker);
+        majorModel.blocks.push(para1);
+
+        const context: FormatWithContentModelContext = {
+            deletedEntities: [],
+            newEntities: [],
+            images: [image],
+        };
+
+        mergeModel(majorModel, sourceModel, context, {
+            mergeFormat: 'mergeAll',
+        });
+
+        expect(majorModel).toEqual({
+            blockGroupType: 'Document',
+            blocks: [
+                {
+                    blockType: 'Paragraph',
+                    segments: [
+                        image,
+                        newImage,
+                        {
+                            segmentType: 'SelectionMarker',
+                            isSelected: true,
+                            format: {},
+                        },
+                    ],
+                    format: {},
+                },
+            ],
+        });
+
+        expect(context).toEqual({
+            deletedEntities: [],
+            newEntities: [],
+            images: [image, newImage],
         });
     });
 });
