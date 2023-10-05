@@ -1,4 +1,4 @@
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type { DatasetFormat } from 'roosterjs-content-model-types';
 import type { FormatHandler } from '../FormatHandler';
 

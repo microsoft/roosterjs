@@ -1,7 +1,6 @@
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { getObjectKeys } from 'roosterjs-editor-dom';
 import { normalizeTable } from '../table/normalizeTable';
 import {
     addSegment,
@@ -9,6 +8,7 @@ import {
     createParagraph,
     createSelectionMarker,
     createTableCell,
+    getObjectKeys,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';

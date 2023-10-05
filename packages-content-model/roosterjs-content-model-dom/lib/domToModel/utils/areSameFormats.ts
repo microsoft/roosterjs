@@ -1,4 +1,4 @@
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import type { ContentModelFormatBase } from 'roosterjs-content-model-types';
 
 /**
