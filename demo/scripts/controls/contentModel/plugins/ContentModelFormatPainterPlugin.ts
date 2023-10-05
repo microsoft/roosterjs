@@ -1,7 +1,8 @@
 import { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
-import { EditorPlugin, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import {
     applySegmentFormat,
+    ContentModelEditorPlugin,
+    ContentModelPluginEvent,
     getFormatState,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
@@ -14,23 +15,23 @@ interface FormatPainterFormatHolder {
     format: ContentModelSegmentFormat | null;
 }
 
-export default class ContentModelFormatPainterPlugin implements EditorPlugin {
+export default class ContentModelFormatPainterPlugin implements ContentModelEditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     getName() {
         return 'FormatPainter';
     }
 
-    initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
     }
 
     dispose() {
         this.editor = null;
     }
 
-    onPluginEvent(event: PluginEvent) {
-        if (this.editor && event.eventType == PluginEventType.MouseUp) {
+    onPluginEvent(event: ContentModelPluginEvent) {
+        if (this.editor && event.eventType == 'mouseUp') {
             const formatHolder = getFormatHolder(this.editor);
 
             if (formatHolder.format) {

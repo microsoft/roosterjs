@@ -16,7 +16,7 @@ const WAC_IDENTIFY_SELECTOR =
     'ul[class^="BulletListStyle"]>.OutlineElement,ol[class^="NumberListStyle"]>.OutlineElement,span.WACImageContainer,span.WACImageBorder';
 const LIST_CONTAINER_ELEMENT_CLASS_NAME = 'ListContainerWrapper';
 
-const PARAGRAPH = 'Paragraph';
+// const PARAGRAPH = 'Paragraph';
 const TABLE_CONTAINER = 'TableContainer';
 
 const TEMP_ELEMENTS_CLASSES = [
@@ -29,20 +29,20 @@ const TEMP_ELEMENTS_CLASSES = [
     'ListMarkerWrappingSpan',
 ];
 
-const CLASSES_TO_KEEP = [
-    'OutlineElement',
-    'NumberListStyle',
-    'WACImageContainer',
-    'ListContainerWrapper',
-    'BulletListStyle',
-    ...TEMP_ELEMENTS_CLASSES,
-    'TableCellContent',
-    PARAGRAPH,
-    'WACImageContainer',
-    'WACImageBorder',
-    TABLE_CONTAINER,
-    'LineBreakBlob',
-];
+// const CLASSES_TO_KEEP = [
+//     'OutlineElement',
+//     'NumberListStyle',
+//     'WACImageContainer',
+//     'ListContainerWrapper',
+//     'BulletListStyle',
+//     ...TEMP_ELEMENTS_CLASSES,
+//     'TableCellContent',
+//     PARAGRAPH,
+//     'WACImageContainer',
+//     'WACImageBorder',
+//     TABLE_CONTAINER,
+//     'LineBreakBlob',
+// ];
 
 const LIST_ELEMENT_TAGS = ['UL', 'OL', 'LI'];
 const LIST_ELEMENT_SELECTOR = LIST_ELEMENT_TAGS.join(',');
@@ -208,7 +208,7 @@ export function processPastedContentWacComponents(ev: ContentModelBeforePasteEve
     setProcessor(ev.domToModelOption, 'li', wacLiElementProcessor);
     setProcessor(ev.domToModelOption, 'ol', wacListProcessor);
     setProcessor(ev.domToModelOption, 'ul', wacListProcessor);
-    ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
+    // ev.sanitizingOption.additionalAllowedCssClasses.push(...CLASSES_TO_KEEP);
 }
 
 /**

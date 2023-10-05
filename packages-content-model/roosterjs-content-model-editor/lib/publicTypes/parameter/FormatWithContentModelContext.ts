@@ -1,24 +1,16 @@
-import type { EntityOperation } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ContentModelEntity,
     DOMSelection,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**
  * Represents an entity that is deleted by a specified entity operation
  */
 export interface DeletedEntity {
     entity: ContentModelEntity;
-    operation:
-        | EntityOperation.RemoveFromStart
-        | EntityOperation.RemoveFromEnd
-        | EntityOperation.Overwrite
-        | CompatibleEntityOperation.RemoveFromStart
-        | CompatibleEntityOperation.RemoveFromEnd
-        | CompatibleEntityOperation.Overwrite;
+    operation: 'removeFromStart' | 'removeFromEnd' | 'overwrite';
 }
 
 /**

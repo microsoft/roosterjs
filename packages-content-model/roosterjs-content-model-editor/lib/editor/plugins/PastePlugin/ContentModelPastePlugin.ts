@@ -1,21 +1,17 @@
 import addParser from './utils/addParser';
 import { chainSanitizerCallback, getPasteSource } from 'roosterjs-editor-dom';
+import { ContentModelEditorPlugin } from '../../../publicTypes/ContentModelEditorPlugin';
+import { ContentModelPluginEvent } from '../../../publicTypes/event/ContentModelPluginEvent';
 import { deprecatedBorderColorParser } from './utils/deprecatedColorParser';
-import { KnownPasteSourceType, PasteType, PluginEventType } from 'roosterjs-editor-types';
+import { KnownPasteSourceType } from 'roosterjs-editor-types';
 import { parseLink } from './utils/linkParser';
 import { processPastedContentFromExcel } from './Excel/processPastedContentFromExcel';
 import { processPastedContentFromPowerPoint } from './PowerPoint/processPastedContentFromPowerPoint';
 import { processPastedContentFromWordDesktop } from './WordDesktop/processPastedContentFromWordDesktop';
 import { processPastedContentWacComponents } from './WacComponents/processPastedContentWacComponents';
-import type ContentModelBeforePasteEvent from '../../../publicTypes/event/ContentModelBeforePasteEvent';
 import type { ContentModelBlockFormat, FormatParser } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../../publicTypes/IContentModelEditor';
-import type {
-    EditorPlugin,
-    HtmlSanitizerOptions,
-    IEditor,
-    PluginEvent,
-} from 'roosterjs-editor-types';
+import type { HtmlSanitizerOptions } from 'roosterjs-editor-types';
 
 const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
 
@@ -27,7 +23,7 @@ const GOOGLE_SHEET_NODE_NAME = 'google-sheets-html-origin';
  * 4. Content copied from Power Point
  * (This class is still under development, and may still be changed in the future with some breaking changes)
  */
-export default class ContentModelPastePlugin implements EditorPlugin {
+export default class ContentModelPastePlugin implements ContentModelEditorPlugin {
     private editor: IContentModelEditor | null = null;
 
     /**
@@ -49,9 +45,9 @@ export default class ContentModelPastePlugin implements EditorPlugin {
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
+    initialize(editor: IContentModelEditor) {
         // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+        this.editor = editor;
     }
 
     /**
@@ -69,49 +65,48 @@ export default class ContentModelPastePlugin implements EditorPlugin {
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
-        if (!this.editor || event.eventType != PluginEventType.BeforePaste) {
+    onPluginEvent(event: ContentModelPluginEvent) {
+        if (!this.editor || event.eventType != 'beforePaste') {
             return;
         }
 
-        const ev = event as ContentModelBeforePasteEvent;
-        if (!ev.domToModelOption) {
+        if (!event.domToModelOption) {
             return;
         }
-        const pasteSource = getPasteSource(ev, false);
+        const pasteSource = getPasteSource(event, false);
         switch (pasteSource) {
             case KnownPasteSourceType.WordDesktop:
-                processPastedContentFromWordDesktop(ev);
+                processPastedContentFromWordDesktop(event);
                 break;
             case KnownPasteSourceType.WacComponents:
-                processPastedContentWacComponents(ev);
+                processPastedContentWacComponents(event);
                 break;
             case KnownPasteSourceType.ExcelOnline:
             case KnownPasteSourceType.ExcelDesktop:
-                if (ev.pasteType === PasteType.Normal || ev.pasteType === PasteType.MergeFormat) {
+                if (event.pasteType === 'normal' || event.pasteType === 'mergeFormat') {
                     // Handle HTML copied from Excel
-                    processPastedContentFromExcel(ev, this.editor.getTrustedHTMLHandler());
+                    processPastedContentFromExcel(event, this.editor.getTrustedHTMLHandler());
                 }
                 break;
             case KnownPasteSourceType.GoogleSheets:
-                ev.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
+                event.sanitizingOption.additionalTagReplacements[GOOGLE_SHEET_NODE_NAME] = '*';
                 break;
             case KnownPasteSourceType.PowerPointDesktop:
-                processPastedContentFromPowerPoint(ev, this.editor.getTrustedHTMLHandler());
+                processPastedContentFromPowerPoint(event, this.editor.getTrustedHTMLHandler());
                 break;
         }
 
-        addParser(ev.domToModelOption, 'link', parseLink);
-        addParser(ev.domToModelOption, 'tableCell', deprecatedBorderColorParser);
-        addParser(ev.domToModelOption, 'table', deprecatedBorderColorParser);
-        sanitizeBlockStyles(ev.sanitizingOption);
+        addParser(event.domToModelOption, 'link', parseLink);
+        addParser(event.domToModelOption, 'tableCell', deprecatedBorderColorParser);
+        addParser(event.domToModelOption, 'table', deprecatedBorderColorParser);
+        sanitizeBlockStyles(event.sanitizingOption);
 
-        if (ev.pasteType === PasteType.MergeFormat) {
-            addParser(ev.domToModelOption, 'block', blockElementParser);
-            addParser(ev.domToModelOption, 'listLevel', blockElementParser);
+        if (event.pasteType === 'mergeFormat') {
+            addParser(event.domToModelOption, 'block', blockElementParser);
+            addParser(event.domToModelOption, 'listLevel', blockElementParser);
         }
 
-        ev.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
+        event.sanitizingOption.unknownTagReplacement = this.unknownTagReplacement;
     }
 }
 

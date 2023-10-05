@@ -1,16 +1,16 @@
+import ClipboardData from '../../publicTypes/interface/ClipboardData';
+import ContentModelCopyPastePluginState from '../../publicTypes/pluginState/ContentModelCopyPastePluginState';
+import ContentModelPluginWithState from '../../publicTypes/ContentModelPluginWithState';
 import paste from '../../publicApi/utils/paste';
 import { cloneModel } from '../../modelApi/common/cloneModel';
-import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
-import { deleteSelection } from '../../modelApi/edit/deleteSelection';
-import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
+import { KnownCreateElementDataIndex } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     contentModelToDom,
     createModelToDomContext,
     isElementOfType,
     isNodeOfType,
-    normalizeContentModel,
     toArray,
 } from 'roosterjs-content-model-dom';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
@@ -22,31 +22,25 @@ import {
     extractClipboardItems,
     wrap,
 } from 'roosterjs-editor-dom';
-import type {
-    CopyPastePluginState,
-    IEditor,
-    PluginWithState,
-    ClipboardData,
-} from 'roosterjs-editor-types';
-import {
-    ChangeSource,
-    PluginEventType,
-    KnownCreateElementDataIndex,
-    ColorTransformDirection,
-} from 'roosterjs-editor-types';
 
 /**
  * Copy and paste plugin for handling onCopy and onPaste event
  */
-export default class ContentModelCopyPastePlugin implements PluginWithState<CopyPastePluginState> {
+export default class ContentModelCopyPastePlugin
+    implements ContentModelPluginWithState<ContentModelCopyPastePluginState> {
     private editor: IContentModelEditor | null = null;
     private disposer: (() => void) | null = null;
+    private state: ContentModelCopyPastePluginState;
 
     /**
      * Construct a new instance of CopyPastePlugin
      * @param options The editor options
      */
-    constructor(private state: CopyPastePluginState) {}
+    constructor() {
+        this.state = {
+            allowedCustomPasteType: [],
+        };
+    }
 
     /**
      * Get a friendly name of  this plugin
@@ -59,8 +53,8 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
      * Initialize this plugin. This should only be called from Editor
      * @param editor Editor instance
      */
-    initialize(editor: IEditor) {
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
         this.disposer = this.editor.addDomEventHandler({
             paste: e => this.onPaste(e),
             copy: e => this.onCutCopy(e, false /*isCut*/),
@@ -95,26 +89,23 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
             const model = this.editor.createContentModel();
 
             const pasteModel = cloneModel(model, {
-                includeCachedElement: this.editor.isDarkMode()
-                    ? (node, type) => {
-                          if (type == 'cache') {
-                              return undefined;
-                          } else {
-                              const result = node.cloneNode(true /*deep*/) as HTMLElement;
-
-                              this.editor?.transformToDarkColor(
-                                  result,
-                                  ColorTransformDirection.DarkToLight
-                              );
-
-                              result.style.color = result.style.color || 'inherit';
-                              result.style.backgroundColor =
-                                  result.style.backgroundColor || 'inherit';
-
-                              return result;
-                          }
-                      }
-                    : false,
+                // includeCachedElement: this.editor.isDarkMode()
+                //     ? (node, type) => {
+                //           if (type == 'cache') {
+                //               return undefined;
+                //           } else {
+                //               const result = node.cloneNode(true /*deep*/) as HTMLElement;
+                //               this.editor?.transformToDarkColor(
+                //                   result,
+                //                   ColorTransformDirection.DarkToLight
+                //               );
+                //               result.style.color = result.style.color || 'inherit';
+                //               result.style.backgroundColor =
+                //                   result.style.backgroundColor || 'inherit';
+                //               return result;
+                //           }
+                //       }
+                //     : false,
             });
             if (selection.type === 'table') {
                 iterateSelections([pasteModel], (path, tableContext) => {
@@ -144,7 +135,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
 
             let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
             if (newRange) {
-                newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
+                newRange = this.editor.triggerPluginEvent('beforeCutCopy', {
                     clonedRoot: tempDiv,
                     range: newRange,
                     rawEvent: event as ClipboardEvent,
@@ -155,31 +146,31 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                     addRangeToSelection(newRange);
                 }
 
-                this.editor.runAsync(editor => {
-                    cleanUpAndRestoreSelection(tempDiv);
-                    editor.focus();
-                    (editor as IContentModelEditor).setDOMSelection(selection);
+                // this.editor.runAsync(editor => {
+                //     cleanUpAndRestoreSelection(tempDiv);
+                //     editor.focus();
+                //     (editor as IContentModelEditor).setDOMSelection(selection);
 
-                    if (isCut) {
-                        formatWithContentModel(
-                            editor as IContentModelEditor,
-                            'cut',
-                            (model, context) => {
-                                if (
-                                    deleteSelection(model, [], context).deleteResult ==
-                                    DeleteResult.Range
-                                ) {
-                                    normalizeContentModel(model);
-                                }
+                //     if (isCut) {
+                //         formatWithContentModel(
+                //             editor as IContentModelEditor,
+                //             'cut',
+                //             (model, context) => {
+                //                 if (
+                //                     deleteSelection(model, [], context).deleteResult ==
+                //                     DeleteResult.Range
+                //                 ) {
+                //                     normalizeContentModel(model);
+                //                 }
 
-                                return true;
-                            },
-                            {
-                                changeSource: ChangeSource.Cut,
-                            }
-                        );
-                    }
-                });
+                //                 return true;
+                //             },
+                //             {
+                //                 changeSource: ChangeSource.Cut,
+                //             }
+                //         );
+                //     }
+                // });
             } else {
                 cleanUpAndRestoreSelection(tempDiv);
             }
@@ -209,7 +200,7 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         }
     };
 
-    private getTempDiv(editor: IEditor) {
+    private getTempDiv(editor: IContentModelEditor) {
         const div = editor.getCustomData(
             'CopyPasteTempDiv',
             () => {
@@ -282,3 +273,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void => {
         node.removeAttribute('contenteditable');
     }
 };
+
+export function createCopyPastePlugin() {
+    return new ContentModelCopyPastePlugin();
+}

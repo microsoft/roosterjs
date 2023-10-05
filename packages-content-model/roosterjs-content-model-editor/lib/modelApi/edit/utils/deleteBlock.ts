@@ -1,4 +1,4 @@
-import { EntityOperation } from 'roosterjs-editor-types';
+import { ContentModelEntityOperation } from 'roosterjs-content-model-editor/lib/publicTypes/enum/ContentModelEntityOperation';
 import type { ContentModelBlock } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../../publicTypes/parameter/FormatWithContentModelContext';
 
@@ -21,12 +21,12 @@ export function deleteBlock(
             return true;
 
         case 'Entity':
-            const operation = blockToDelete.isSelected
-                ? EntityOperation.Overwrite
+            const operation: ContentModelEntityOperation | undefined = blockToDelete.isSelected
+                ? 'overwrite'
                 : direction == 'forward'
-                ? EntityOperation.RemoveFromStart
+                ? 'removeFromStart'
                 : direction == 'backward'
-                ? EntityOperation.RemoveFromEnd
+                ? 'removeFromEnd'
                 : undefined;
 
             if (operation !== undefined) {

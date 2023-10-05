@@ -1,5 +1,6 @@
+import ContentModelBeforePasteEvent from '../../../../publicTypes/event/ContentModelBeforePasteEvent';
 import { moveChildNodes } from 'roosterjs-editor-dom';
-import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import { TrustedHTMLHandler } from '../../../../publicTypes/callback/TrustedHTMLHandler';
 
 /**
  * @internal
@@ -8,7 +9,7 @@ import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-type
  */
 
 export function processPastedContentFromPowerPoint(
-    event: BeforePasteEvent,
+    event: ContentModelBeforePasteEvent,
     trustedHTMLHandler: TrustedHTMLHandler
 ) {
     const { fragment, clipboardData } = event;

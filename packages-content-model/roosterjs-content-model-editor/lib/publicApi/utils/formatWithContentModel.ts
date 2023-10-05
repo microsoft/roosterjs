@@ -1,7 +1,6 @@
-import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
+import { ChangeSource } from 'roosterjs-editor-types';
+import { ContentModelPluginEventData } from 'roosterjs-content-model-editor/lib/publicTypes/event/ContentModelPluginEventData';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import type { Entity } from 'roosterjs-editor-types';
-import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     ContentModelFormatter,
@@ -69,23 +68,23 @@ export function formatWithContentModel(
             editor.addUndoSnapshot(
                 writeBack,
                 undefined /*changeSource, passing undefined here to avoid triggering ContentChangedEvent. We will trigger it using it with Content Model below */,
-                false /*canUndoByBackspace*/,
-                {
-                    formatApiName: apiName,
-                }
+                false /*canUndoByBackspace*/
+                // {
+                //     formatApiName: apiName,
+                // }
             );
         }
 
-        const eventData: ContentModelContentChangedEventData = {
+        const eventData: ContentModelPluginEventData<'contentChanged'> = {
             contentModel: model,
             selection: selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
-            additionalData: {
-                formatApiName: apiName,
-            },
+            // additionalData: {
+            //     formatApiName: apiName,
+            // },
         };
-        editor.triggerPluginEvent(PluginEventType.ContentChanged, eventData);
+        editor.triggerPluginEvent('contentChanged', eventData);
     }
 }
 
@@ -105,28 +104,10 @@ function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
 ) {
-    context.deletedEntities.forEach(
-        ({
-            entity: {
-                wrapper,
-                entityFormat: { id, entityType, isReadonly },
-            },
-            operation,
-        }) => {
-            if (id && entityType) {
-                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
-                const entity: Entity = {
-                    id,
-                    type: entityType,
-                    isReadonly: !!isReadonly,
-                    wrapper,
-                };
-                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                    entity,
-                    operation,
-                    rawEvent: context.rawEvent,
-                });
-            }
-        }
-    );
+    context.deletedEntities.forEach(item => {
+        editor.triggerPluginEvent('entityOperation', {
+            ...item,
+            rawEvent: context.rawEvent,
+        });
+    });
 }

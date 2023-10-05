@@ -3,7 +3,6 @@ import { createEntity, normalizeContentModel } from 'roosterjs-content-model-dom
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { insertEntityModel } from '../../modelApi/entity/insertEntityModel';
 import type { ContentModelEntity, DOMSelection } from 'roosterjs-content-model-types';
-import type { Entity } from 'roosterjs-editor-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type {
     InsertEntityOptions,
@@ -94,15 +93,7 @@ export default function insertEntity(
             selectionOverride: typeof position === 'object' ? position : undefined,
             changeSource: ChangeSource.InsertEntity,
             getChangeData: () => {
-                // TODO: Remove this entity when we have standalone editor
-                const entity: Entity = {
-                    wrapper,
-                    type,
-                    id: '',
-                    isReadonly: true,
-                };
-
-                return entity;
+                return entityModel;
             },
         }
     );

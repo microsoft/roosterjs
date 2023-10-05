@@ -1,8 +1,8 @@
-import { ContentModelEditor, ContentModelPastePlugin } from 'roosterjs-content-model-editor';
+import { ContentModelEditor } from 'roosterjs-content-model-editor';
 import { getDarkColor } from 'roosterjs-color-utils';
-import type { EditorPlugin } from 'roosterjs-editor-types';
 import type {
     ContentModelEditorOptions,
+    ContentModelEditorPlugin,
     IContentModelEditor,
 } from 'roosterjs-content-model-editor';
 
@@ -16,10 +16,12 @@ import type {
  */
 export function createContentModelEditor(
     contentDiv: HTMLDivElement,
-    additionalPlugins?: EditorPlugin[],
+    additionalPlugins?: ContentModelEditorPlugin[],
     initialContent?: string
 ): IContentModelEditor {
-    let plugins: EditorPlugin[] = [new ContentModelPastePlugin()];
+    let plugins: ContentModelEditorPlugin[] = [
+        //new ContentModelPastePlugin()
+    ];
 
     if (additionalPlugins) {
         plugins = plugins.concat(additionalPlugins);
@@ -35,5 +37,6 @@ export function createContentModelEditor(
             textColor: '#000000',
         },
     };
+
     return new ContentModelEditor(contentDiv, options);
 }

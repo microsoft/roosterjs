@@ -1,11 +1,15 @@
 import applyDefaultFormat from '../../publicApi/format/applyDefaultFormat';
 import applyPendingFormat from '../../publicApi/format/applyPendingFormat';
 import { canApplyPendingFormat, clearPendingFormat } from '../../modelApi/format/pendingFormat';
+import { ContentModelPluginEvent } from '../../publicTypes/event/ContentModelPluginEvent';
+import { ContentModelPluginWithState } from '../../publicTypes/ContentModelPluginWithState';
 import { getObjectKeys } from 'roosterjs-content-model-dom';
 import { isCharacterValue } from 'roosterjs-editor-dom';
-import { Keys, PluginEventType } from 'roosterjs-editor-types';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { IEditor, PluginEvent, PluginWithState } from 'roosterjs-editor-types';
+import { Keys } from 'roosterjs-editor-types';
+import type {
+    ContentModelEditorOptions,
+    IContentModelEditor,
+} from '../../publicTypes/IContentModelEditor';
 import type { ContentModelFormatPluginState } from '../../publicTypes/pluginState/ContentModelFormatPluginState';
 
 // During IME input, KeyDown event will have "Process" as key
@@ -17,16 +21,20 @@ const ProcessKey = 'Process';
  * 1. Handle pending format changes when selection is collapsed
  */
 export default class ContentModelFormatPlugin
-    implements PluginWithState<ContentModelFormatPluginState> {
+    implements ContentModelPluginWithState<ContentModelFormatPluginState> {
     private editor: IContentModelEditor | null = null;
     private hasDefaultFormat = false;
+    private state: ContentModelFormatPluginState;
 
     /**
      * Construct a new instance of ContentModelEditPlugin class
-     * @param state State of this plugin
      */
-    constructor(private state: ContentModelFormatPluginState) {
-        // TODO: Remove tempState parameter once we have standalone Content Model editor
+    constructor(options: ContentModelEditorOptions) {
+        this.state = {
+            defaultFormat: {
+                ...options.defaultFormat,
+            },
+        };
     }
 
     /**
@@ -42,9 +50,8 @@ export default class ContentModelFormatPlugin
      * editor reference so that it can call to any editor method or format API later.
      * @param editor The editor object
      */
-    initialize(editor: IEditor) {
-        // TODO: Later we may need a different interface for Content Model editor plugin
-        this.editor = editor as IContentModelEditor;
+    initialize(editor: IContentModelEditor) {
+        this.editor = editor;
         this.hasDefaultFormat =
             getObjectKeys(this.state.defaultFormat).filter(
                 x => typeof this.state.defaultFormat[x] !== 'undefined'
@@ -73,13 +80,13 @@ export default class ContentModelFormatPlugin
      * exclusively by another plugin.
      * @param event The event to handle:
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(event: ContentModelPluginEvent) {
         if (!this.editor) {
             return;
         }
 
         switch (event.eventType) {
-            case PluginEventType.Input:
+            case 'input':
                 // In Safari, isComposing will be undefined but isInIME() works
                 if (!event.rawEvent.isComposing && !this.editor.isInIME()) {
                     this.checkAndApplyPendingFormat(event.rawEvent.data);
@@ -87,11 +94,11 @@ export default class ContentModelFormatPlugin
 
                 break;
 
-            case PluginEventType.CompositionEnd:
+            case 'compositionEnd':
                 this.checkAndApplyPendingFormat(event.rawEvent.data);
                 break;
 
-            case PluginEventType.KeyDown:
+            case 'keyDown':
                 if (event.rawEvent.which >= Keys.PAGEUP && event.rawEvent.which <= Keys.DOWN) {
                     clearPendingFormat(this.editor);
                 } else if (
@@ -103,8 +110,8 @@ export default class ContentModelFormatPlugin
 
                 break;
 
-            case PluginEventType.MouseUp:
-            case PluginEventType.ContentChanged:
+            case 'mouseUp':
+            case 'contentChanged':
                 if (!canApplyPendingFormat(this.editor)) {
                     clearPendingFormat(this.editor);
                 }
@@ -125,6 +132,6 @@ export default class ContentModelFormatPlugin
  * Create a new instance of ContentModelFormatPlugin.
  * This is mostly for unit test
  */
-export function createContentModelFormatPlugin(state: ContentModelFormatPluginState) {
-    return new ContentModelFormatPlugin(state);
+export function createContentModelFormatPlugin(options: ContentModelEditorOptions) {
+    return new ContentModelFormatPlugin(options);
 }
