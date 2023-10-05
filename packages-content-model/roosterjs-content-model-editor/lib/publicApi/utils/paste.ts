@@ -207,7 +207,7 @@ function triggerPluginEventAndCreatePasteFragment(
     }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
-    sanitizePasteContent(event, position);
+    sanitizePasteContent(event, null /*position*/);
 
     return pluginEvent;
 }
