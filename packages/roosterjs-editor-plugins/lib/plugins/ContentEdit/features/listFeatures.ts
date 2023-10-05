@@ -1,3 +1,4 @@
+import getAnnounceDataForList from '../../../pluginUtils/announceData/getAnnounceDataForList';
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
 import {
@@ -7,7 +8,6 @@ import {
     createObjectDefinition,
     createVListFromRegion,
     findClosestElementAncestor,
-    getAnnounceDataForList,
     getComputedStyle,
     getMetadata,
     getTagOfNode,

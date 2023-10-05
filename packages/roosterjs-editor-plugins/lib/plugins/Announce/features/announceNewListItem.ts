@@ -1,4 +1,4 @@
-import { getAnnounceDataForList } from 'roosterjs-editor-dom';
+import getAnnounceDataForList from '../../../pluginUtils/announceData/getAnnounceDataForList';
 import { Keys } from 'roosterjs-editor-types';
 import type { AnnounceFeature } from '../AnnounceFeature';
 

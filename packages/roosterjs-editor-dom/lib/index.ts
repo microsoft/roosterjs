@@ -1,5 +1,3 @@
-export { default as getAnnounceDataForList } from './announceData/getAnnounceDataForList';
-
 export { default as getBlockElementAtNode } from './blockElements/getBlockElementAtNode';
 export { default as getFirstLastBlockElement } from './blockElements/getFirstLastBlockElement';
 
@@ -73,6 +71,8 @@ export { default as VList } from './list/VList';
 export { default as VListItem } from './list/VListItem';
 export { default as createVListFromRegion } from './list/createVListFromRegion';
 export { default as VListChain } from './list/VListChain';
+export { default as convertDecimalsToAlpha } from './list/convertDecimalsToAlpha';
+export { default as convertDecimalsToRoman } from './list/convertDecimalsToRomans';
 export { default as setListItemStyle } from './list/setListItemStyle';
 export { getTableFormatInfo } from './table/tableFormatInfo';
 export { saveTableCellMetadata } from './table/tableCellInfo';

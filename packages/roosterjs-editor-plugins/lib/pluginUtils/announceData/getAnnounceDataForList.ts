@@ -1,11 +1,14 @@
-import convertDecimalsToAlpha from '../list/convertDecimalsToAlpha';
-import convertDecimalsToRoman from '../list/convertDecimalsToRomans';
-import safeInstanceOf from '../utils/safeInstanceOf';
-import VList from '../list/VList';
 import { KnownAnnounceStrings } from 'roosterjs-editor-types';
+import {
+    convertDecimalsToAlpha,
+    convertDecimalsToRoman,
+    safeInstanceOf,
+    VList,
+} from 'roosterjs-editor-dom';
 import type { AnnounceData } from 'roosterjs-editor-types';
 
 /**
+ * @internal
  * Get the announce data for the current List
  * @returns announce data for list or undefined.
  */

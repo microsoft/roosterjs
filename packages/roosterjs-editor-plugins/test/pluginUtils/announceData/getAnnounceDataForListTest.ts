@@ -1,4 +1,4 @@
-import getAnnounceDataForList from '../../lib/announceData/getAnnounceDataForList';
+import getAnnounceDataForList from '../../../lib/pluginUtils/announceData/getAnnounceDataForList';
 import { createElement } from 'roosterjs-editor-dom';
 import { KnownAnnounceStrings } from 'roosterjs-editor-types';
 
