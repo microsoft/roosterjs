@@ -22,14 +22,13 @@ export function initEditor(id: string) {
 }
 
 export function expectEqual(model1: ContentModelDocument, model2: ContentModelDocument) {
-    expect(
-        /// Remove Cached elements and undefined properties
-        JSON.parse(
-            JSON.stringify(
-                cloneModel(model1, {
-                    includeCachedElement: false,
-                })
-            )
+    /// Remove Cached elements and undefined properties
+    const newModel = JSON.parse(
+        JSON.stringify(
+            cloneModel(model1, {
+                includeCachedElement: false,
+            })
         )
-    ).toEqual(model2);
+    );
+    expect(newModel).toEqual(model2);
 }
