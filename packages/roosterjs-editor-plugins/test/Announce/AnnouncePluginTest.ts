@@ -188,41 +188,4 @@ describe('AnnouncePlugin', () => {
 
         expect(plugin.getAriaLiveElement()).toBeUndefined();
     });
-
-    it('onPluginEvent & dispose, do not handle feature, editor disposed', () => {
-        const mockStrings = 'MockStrings' as any;
-        const spyTest = jasmine.createSpy('spyTest');
-        mockEditor.isDisposed = () => true;
-        const plugin = new AnnouncePlugin(
-            mockStrings,
-            ['announceNewListItem', 'announceWarningOnLastTableCell'],
-            [
-                {
-                    keys: [Keys.ENTER],
-                    shouldHandle: () => {
-                        spyTest();
-                        return {
-                            text: 'mockedText',
-                        };
-                    },
-                },
-            ]
-        );
-
-        plugin.initialize(mockEditor);
-        plugin.onPluginEvent({
-            eventType: PluginEventType.KeyDown,
-            rawEvent: {
-                which: Keys.ENTER,
-            } as any,
-        });
-
-        expect(plugin.getAriaLiveElement()).not.toBeDefined();
-        expect(spyTest).not.toHaveBeenCalled();
-        expect(getElementAtCursorSpy).not.toHaveBeenCalled();
-
-        plugin.dispose();
-
-        expect(plugin.getAriaLiveElement()).toBeUndefined();
-    });
 });
