@@ -14,6 +14,8 @@ const DefaultCode: ContentModelCode = {
  * @param editor The editor to operate on
  */
 export default function toggleCode(editor: IContentModelEditor) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'toggleCode',

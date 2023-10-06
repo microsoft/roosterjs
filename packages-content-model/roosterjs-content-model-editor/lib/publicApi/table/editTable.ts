@@ -31,6 +31,8 @@ import {
  * @param operation The table operation to apply
  */
 export default function editTable(editor: IContentModelEditor, operation: TableOperation) {
+    editor.focus();
+
     formatWithContentModel(editor, 'editTable', model => {
         const [tableModel, path] = getFirstSelectedTable(model);
 

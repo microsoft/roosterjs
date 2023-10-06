@@ -10,7 +10,6 @@ describe('formatWithContentModel', () => {
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
-    let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
@@ -26,14 +25,12 @@ describe('formatWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
-        focus = jasmine.createSpy('focus');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
-            focus,
             addUndoSnapshot,
             createContentModel,
             setContentModel,
@@ -59,7 +56,6 @@ describe('formatWithContentModel', () => {
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).not.toHaveBeenCalled();
-        expect(focus).toHaveBeenCalled();
     });
 
     it('Callback return true', () => {
@@ -82,7 +78,6 @@ describe('formatWithContentModel', () => {
         });
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
-        expect(focus).toHaveBeenCalledTimes(1);
     });
 
     it('Preserve pending format', () => {

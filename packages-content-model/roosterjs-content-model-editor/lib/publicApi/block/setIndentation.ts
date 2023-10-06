@@ -14,6 +14,8 @@ export default function setIndentation(
     indentation: 'indent' | 'outdent',
     length?: number
 ) {
+    editor.focus();
+
     formatWithContentModel(
         editor,
         'setIndentation',

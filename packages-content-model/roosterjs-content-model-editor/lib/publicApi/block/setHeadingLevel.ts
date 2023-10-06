@@ -22,6 +22,8 @@ export default function setHeadingLevel(
     editor: IContentModelEditor,
     headingLevel: 0 | 1 | 2 | 3 | 4 | 5 | 6
 ) {
+    editor.focus();
+
     formatParagraphWithContentModel(editor, 'setHeadingLevel', para => {
         const tagName =
             headingLevel > 0

@@ -22,7 +22,12 @@ describe('setListStyle', () => {
             }
         );
 
-        setListStyle(null!, style);
+        setListStyle(
+            {
+                focus: () => {},
+            } as any,
+            style
+        );
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);

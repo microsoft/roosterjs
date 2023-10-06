@@ -11,6 +11,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param color The color to set. Pass null to remove existing shade color
  */
 export default function setTableCellShade(editor: IContentModelEditor, color: string | null) {
+    editor.focus();
+
     formatWithContentModel(editor, 'setTableCellShade', model => {
         const [table] = getFirstSelectedTable(model);
 

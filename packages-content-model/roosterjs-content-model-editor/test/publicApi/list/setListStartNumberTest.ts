@@ -21,7 +21,12 @@ describe('setListStartNumber', () => {
             }
         );
 
-        setListStartNumber(null!, 2);
+        setListStartNumber(
+            {
+                focus: () => {},
+            } as any,
+            2
+        );
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);

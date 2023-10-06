@@ -13,6 +13,8 @@ export default function setImageBoxShadow(
     boxShadow: string,
     margin?: string | null
 ) {
+    editor.focus();
+
     formatImageWithContentModel(editor, 'setImageBoxShadow', (image: ContentModelImage) => {
         image.format.boxShadow = boxShadow;
         if (margin) {
