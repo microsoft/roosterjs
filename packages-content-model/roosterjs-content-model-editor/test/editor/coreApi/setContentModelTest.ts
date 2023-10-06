@@ -19,7 +19,6 @@ describe('setContentModel', () => {
     let createModelToDomContextWithConfigSpy: jasmine.Spy;
     let setDOMSelectionSpy: jasmine.Spy;
     let getDOMSelectionSpy: jasmine.Spy;
-    let normalizeSpy: jasmine.Spy;
 
     beforeEach(() => {
         contentModelToDomSpy = spyOn(contentModelToDom, 'contentModelToDom').and.returnValue(
@@ -38,9 +37,6 @@ describe('setContentModel', () => {
         ).and.returnValue(mockedContext);
         setDOMSelectionSpy = jasmine.createSpy('setDOMSelection');
         getDOMSelectionSpy = jasmine.createSpy('getDOMSelection');
-        normalizeSpy = jasmine.createSpy('normalize');
-
-        mockedDiv.normalize = normalizeSpy;
 
         core = ({
             contentDiv: mockedDiv,
@@ -71,8 +67,6 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
-        expect(normalizeSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeSpy).toHaveBeenCalledWith();
         expect(core.cache.cachedSelection).toBe(mockedRange);
         expect(core.cache.cachedModel).toBe(mockedModel);
     });
@@ -92,8 +86,6 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
-        expect(normalizeSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeSpy).toHaveBeenCalledWith();
     });
 
     it('with default option, no shadow edit, with additional option', () => {
@@ -116,8 +108,6 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).toHaveBeenCalledWith(core, mockedRange);
-        expect(normalizeSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeSpy).toHaveBeenCalledWith();
     });
 
     it('no default option, with shadow edit', () => {
@@ -137,7 +127,5 @@ describe('setContentModel', () => {
             undefined
         );
         expect(setDOMSelectionSpy).not.toHaveBeenCalled();
-        expect(normalizeSpy).toHaveBeenCalledTimes(1);
-        expect(normalizeSpy).toHaveBeenCalledWith();
     });
 });
