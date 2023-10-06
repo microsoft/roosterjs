@@ -111,8 +111,16 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      */
     public dispose(): void {
         const core = this.getCore();
+
         for (let i = core.plugins.length - 1; i >= 0; i--) {
-            core.plugins[i].dispose();
+            const plugin = core.plugins[i];
+
+            try {
+                plugin.dispose();
+            } catch (e) {
+                // Cache the error and pass it out, then keep going since dispose should always succeed
+                core.disposeErrorHandler?.(plugin, e as Error);
+            }
         }
 
         core.darkColorHandler.reset();
