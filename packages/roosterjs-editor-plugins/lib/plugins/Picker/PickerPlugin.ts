@@ -613,4 +613,3 @@ export default class PickerPlugin<T extends PickerDataProvider = PickerDataProvi
         );
     }
 }
-
