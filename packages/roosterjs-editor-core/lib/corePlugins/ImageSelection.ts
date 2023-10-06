@@ -60,9 +60,16 @@ export default class ImageSelection implements EditorPlugin {
                     }
                     break;
                 case PluginEventType.KeyDown:
-                    const key = event.rawEvent.key;
+                    const rawEvent = event.rawEvent;
+                    const key = rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
-                    if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
+                    if (
+                        !rawEvent.ctrlKey &&
+                        !rawEvent.altKey &&
+                        !rawEvent.shiftKey &&
+                        !rawEvent.metaKey &&
+                        keyDownSelection.type === SelectionRangeTypes.ImageSelection
+                    ) {
                         if (key === Escape) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()?.collapse();
