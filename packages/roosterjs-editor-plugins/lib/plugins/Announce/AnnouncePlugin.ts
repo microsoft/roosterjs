@@ -1,11 +1,15 @@
-import { createElement } from 'roosterjs-editor-dom';
+import { AnnounceFeatures } from './features/AnnounceFeatures';
+import { createElement, getObjectKeys } from 'roosterjs-editor-dom';
 import { PluginEventType } from 'roosterjs-editor-types';
+import type { AnnounceFeatureKey } from './features/AnnounceFeatures';
+import type { AnnounceFeature } from './AnnounceFeature';
 import type { CompatibleKnownAnnounceStrings } from 'roosterjs-editor-types/lib/compatibleTypes';
 import type {
     EditorPlugin,
     IEditor,
     PluginEvent,
     AnnounceData,
+    PluginKeyDownEvent,
     KnownAnnounceStrings,
 } from 'roosterjs-editor-types';
 
@@ -36,13 +40,28 @@ const createAriaLiveElement = (document: Document): HTMLDivElement => {
 export default class Announce implements EditorPlugin {
     private ariaLiveElement: HTMLDivElement | undefined;
     private editor: IEditor | undefined;
+    private features: AnnounceFeature[];
+    private lastFocusedElement: HTMLElement | null = null;
 
     constructor(
         private stringsMapOrGetter?:
-            | Map<CompatibleKnownAnnounceStrings | KnownAnnounceStrings, string>
-            | ((key: CompatibleKnownAnnounceStrings | KnownAnnounceStrings) => string)
-            | undefined
-    ) {}
+            | Map<KnownAnnounceStrings | CompatibleKnownAnnounceStrings, string>
+            | ((key: KnownAnnounceStrings | CompatibleKnownAnnounceStrings) => string)
+            | undefined,
+        skipAnnounceFeatures: AnnounceFeatureKey[] = [],
+        additionalFeatures?: AnnounceFeature[]
+    ) {
+        this.features = getObjectKeys(AnnounceFeatures)
+            .map(key => {
+                if (skipAnnounceFeatures.indexOf(key) == -1) {
+                    return AnnounceFeatures[key];
+                }
+
+                return undefined;
+            })
+            .filter(feature => !!feature)
+            .concat(additionalFeatures || []) as AnnounceFeature[];
+    }
 
     /**
      * Get a friendly name of this plugin
@@ -65,23 +84,49 @@ export default class Announce implements EditorPlugin {
     dispose() {
         this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);
         this.ariaLiveElement = undefined;
+        this.stringsMapOrGetter = undefined;
+        this.lastFocusedElement = null;
+        while (this.features.length > 0) {
+            this.features.pop();
+        }
+        this.editor = undefined;
     }
 
     /**
      * Handle events triggered from editor
      * @param event PluginEvent object
      */
-    onPluginEvent(event: PluginEvent) {
+    onPluginEvent(ev: PluginEvent) {
         if (
             this.editor &&
-            event.eventType == PluginEventType.ContentChanged &&
-            event.additionalData?.getAnnounceData
+            ev.eventType == PluginEventType.ContentChanged &&
+            ev.additionalData?.getAnnounceData
         ) {
-            const data = event.additionalData.getAnnounceData();
+            const data = ev.additionalData.getAnnounceData();
             if (data) {
                 this.announce(data, this.editor);
             }
         }
+
+        if (ev.eventType == PluginEventType.KeyDown && this.editor) {
+            this.handleFeatures(ev, this.editor);
+        }
+    }
+
+    private handleFeatures(event: PluginKeyDownEvent, editorInput: IEditor) {
+        editorInput.runAsync(editor => {
+            this.features
+                .filter(feature => feature.keys.indexOf(event.rawEvent.which) > -1)
+                .some(feature => {
+                    const announceData = feature.shouldHandle(editor, this.lastFocusedElement);
+                    if (announceData) {
+                        this.announce(announceData, editor);
+                    }
+                    return !!announceData;
+                });
+
+            this.lastFocusedElement = editor.getElementAtCursor();
+        });
     }
 
     protected announce(announceData: AnnounceData, editor: IEditor) {

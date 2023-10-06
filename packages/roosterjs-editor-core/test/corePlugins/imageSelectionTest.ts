@@ -110,6 +110,21 @@ describe('ImageSelectionPlugin |', () => {
         expect(selection.areAllCollapsed).toBe(true);
     });
 
+    it('should not handle any key in a image in ctrl', () => {
+        editor.setContent(`<img id=${imageId}></img>`);
+        const target = document.getElementById(imageId);
+        editorIsFeatureEnabled.and.returnValue(true);
+        editor.focus();
+        editor.select(target);
+        const range = document.createRange();
+        range.selectNode(target!);
+        imageSelection.onPluginEvent(keyDown(Space, true));
+        imageSelection.onPluginEvent(keyUp(Space, true));
+        const selection = editor.getSelectionRangeEx();
+        expect(selection.type).toBe(SelectionRangeTypes.ImageSelection);
+        expect(selection.areAllCollapsed).toBe(false);
+    });
+
     it('should handle contextMenu', () => {
         editor.setContent(`<img id=${imageId}></img>`);
         const target = document.getElementById(imageId);
@@ -149,24 +164,32 @@ describe('ImageSelectionPlugin |', () => {
         expect(editor.select).not.toHaveBeenCalled();
     });
 
-    const keyDown = (key: string): PluginEvent => {
+    const keyDown = (key: string, ctrlKey: boolean = false): PluginEvent => {
         return {
             eventType: PluginEventType.KeyDown,
             rawEvent: <KeyboardEvent>{
                 key: key,
                 preventDefault: () => {},
                 stopPropagation: () => {},
+                shiftKey: false,
+                ctrlKey: ctrlKey,
+                altKey: false,
+                metaKey: false,
             },
         };
     };
 
-    const keyUp = (key: string): PluginEvent => {
+    const keyUp = (key: string, ctrlKey: boolean = false): PluginEvent => {
         return {
             eventType: PluginEventType.KeyUp,
             rawEvent: <KeyboardEvent>{
                 key: key,
                 preventDefault: () => {},
                 stopPropagation: () => {},
+                shiftKey: false,
+                ctrlKey: ctrlKey,
+                altKey: false,
+                metaKey: false,
             },
         };
     };
