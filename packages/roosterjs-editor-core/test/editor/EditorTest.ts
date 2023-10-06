@@ -544,6 +544,6 @@ describe('Dispose with exception', () => {
         expect(disposeSpy2).toHaveBeenCalledTimes(1);
         expect(disposeSpy3).toHaveBeenCalledTimes(1);
         expect(handlerSpy).toHaveBeenCalledTimes(1);
-        expect(handlerSpy).toHaveBeenCalledWith(new Error(errorMsg));
+        expect(handlerSpy).toHaveBeenCalledWith(plugin2, new Error(errorMsg));
     });
 });

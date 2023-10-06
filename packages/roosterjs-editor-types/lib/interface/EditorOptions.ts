@@ -147,7 +147,8 @@ export default interface EditorOptions {
 
     /**
      * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
      * @param error The error object we got
      */
-    disposeErrorHandler?: (error: Error) => void;
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }

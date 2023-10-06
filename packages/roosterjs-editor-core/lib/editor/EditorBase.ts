@@ -113,11 +113,13 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
         const core = this.getCore();
 
         for (let i = core.plugins.length - 1; i >= 0; i--) {
+            const plugin = core.plugins[i];
+
             try {
-                core.plugins[i].dispose();
+                plugin.dispose();
             } catch (e) {
                 // Cache the error and pass it out, then keep going since dispose should always succeed
-                core.disposeErrorHandler?.(e as Error);
+                core.disposeErrorHandler?.(plugin, e as Error);
             }
         }
 
