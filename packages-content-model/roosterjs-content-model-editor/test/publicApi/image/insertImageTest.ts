@@ -31,6 +31,7 @@ describe('insertImage', () => {
             expect(model).toEqual(result);
         });
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const editor = ({
             createContentModel: () => model,
             addUndoSnapshot,
@@ -40,6 +41,7 @@ describe('insertImage', () => {
             getDocument: () => document,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         executionCallback(editor);

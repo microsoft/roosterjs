@@ -24,6 +24,7 @@ export function segmentTestCommon(
         expect(model).toEqual(result);
     });
     const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+    const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
     const editor = ({
         createContentModel: () => model,
         addUndoSnapshot,
@@ -33,6 +34,7 @@ export function segmentTestCommon(
         getFocusedPosition: () => null as NodePosition,
         isDarkMode: () => false,
         triggerPluginEvent,
+        getVisibleViewport,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

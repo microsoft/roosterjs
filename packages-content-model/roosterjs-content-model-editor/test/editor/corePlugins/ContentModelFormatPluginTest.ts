@@ -164,6 +164,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
+            getVisibleViewport: jasmine.createSpy('getVisibleViewport'),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -215,6 +216,7 @@ describe('ContentModelFormatPlugin', () => {
 
         const setContentModel = jasmine.createSpy('setContentModel');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const model = createContentModelDocument();
         const text = createText('test a test', { fontFamily: 'Arial' });
         const marker = createSelectionMarker();
@@ -232,6 +234,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
