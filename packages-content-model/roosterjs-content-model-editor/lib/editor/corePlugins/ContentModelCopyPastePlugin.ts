@@ -4,21 +4,20 @@ import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     contentModelToDom,
     createModelToDomContext,
     isElementOfType,
     isNodeOfType,
+    moveChildNodes,
     normalizeContentModel,
     toArray,
 } from 'roosterjs-content-model-dom';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
-    moveChildNodes,
-    createRange,
     extractClipboardItems,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -90,7 +89,10 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
         if (!this.editor) {
             return;
         }
+
+        const doc = this.editor.getDocument();
         const selection = this.editor.getDOMSelection();
+
         if (selection && (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
 
@@ -142,7 +144,9 @@ export default class ContentModelCopyPastePlugin implements PluginWithState<Copy
                 onNodeCreated
             );
 
-            let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
+            let newRange: Range | null = selectionForCopy
+                ? domSelectionToRange(doc, selectionForCopy, tempDiv)
+                : null;
             if (newRange) {
                 newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
@@ -247,21 +251,26 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
 
-function selectionExToRange(selection: DOMSelection | null, tempDiv: HTMLDivElement): Range | null {
-    if (!selection) {
-        return null;
-    }
+function domSelectionToRange(
+    doc: Document,
+    selection: DOMSelection,
+    tempDiv: HTMLDivElement
+): Range | null {
     let newRange: Range | null = null;
+
     if (selection.type === 'table') {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
         const elementToSelect =
             table.parentElement?.childElementCount == 1 ? table.parentElement : table;
-        newRange = createRange(elementToSelect);
+
+        newRange = doc.createRange();
+        newRange.selectNode(elementToSelect);
     } else if (selection.type === 'image') {
         const image = tempDiv.querySelector('#' + selection.image.id);
 
         if (image) {
-            newRange = createRange(image);
+            newRange = doc.createRange();
+            newRange.selectNode(image);
         }
     } else {
         newRange = selection.range;

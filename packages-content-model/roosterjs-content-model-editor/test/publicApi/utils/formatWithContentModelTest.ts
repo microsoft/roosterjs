@@ -17,7 +17,8 @@ describe('formatWithContentModel', () => {
     let getVisibleViewport: jasmine.Spy;
 
     const apiName = 'mockedApi';
-    const mockedPos = 'POS' as any;
+    const mockedContainer = 'C' as any;
+    const mockedOffset = 'O' as any;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -26,7 +27,9 @@ describe('formatWithContentModel', () => {
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
-        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
+        getFocusedPosition = jasmine
+            .createSpy('getFocusedPosition')
+            .and.returnValue({ node: mockedContainer, offset: mockedOffset });
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
@@ -108,7 +111,8 @@ describe('formatWithContentModel', () => {
         expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(
             editor,
             mockedFormat,
-            mockedPos
+            mockedContainer,
+            mockedOffset
         );
     });
 

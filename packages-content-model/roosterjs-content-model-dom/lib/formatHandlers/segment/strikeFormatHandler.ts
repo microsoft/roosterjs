@@ -1,4 +1,4 @@
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type { FormatHandler } from '../FormatHandler';
 import type { StrikeFormat } from 'roosterjs-content-model-types';
 
@@ -15,9 +15,7 @@ export const strikeFormatHandler: FormatHandler<StrikeFormat> = {
     },
     apply: (format, element) => {
         if (format.strikethrough) {
-            const strike = element.ownerDocument.createElement('s');
-            moveChildNodes(strike, element);
-            element.appendChild(strike);
+            wrapAllChildNodes(element, 's');
         }
     },
 };

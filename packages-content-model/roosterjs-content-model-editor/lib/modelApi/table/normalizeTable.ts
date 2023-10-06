@@ -1,5 +1,4 @@
 import { addBlock, addSegment, createBr, createParagraph } from 'roosterjs-content-model-dom';
-import { arrayPush } from 'roosterjs-editor-dom';
 import type {
     ContentModelSegment,
     ContentModelSegmentFormat,
@@ -127,7 +126,7 @@ function tryMoveBlocks(targetCell: ContentModelTableCell, sourceCell: ContentMod
     );
 
     if (!onlyHasEmptyOrBr) {
-        arrayPush(targetCell.blocks, sourceCell.blocks);
+        targetCell.blocks.push(...sourceCell.blocks);
         sourceCell.blocks = [];
     }
 }

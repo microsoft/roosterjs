@@ -17,6 +17,9 @@ describe('formatParagraphWithContentModel', () => {
     let getVisibleViewport: jasmine.Spy;
     let model: ContentModelDocument;
 
+    const mockedContainer = 'C' as any;
+    const mockedOffset = 'O' as any;
+
     const apiName = 'mockedApi';
 
     beforeEach(() => {
@@ -33,7 +36,7 @@ describe('formatParagraphWithContentModel', () => {
             setContentModel,
             isDarkMode: () => false,
             getCustomData: () => ({}),
-            getFocusedPosition: () => 'NewPosition',
+            getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
             triggerPluginEvent,
             getVisibleViewport,
         } as any) as IContentModelEditor;
@@ -101,16 +104,19 @@ describe('formatParagraphWithContentModel', () => {
         model.blocks.push(para);
 
         let cachedPendingFormat: any = 'PendingFormat';
-        let cachedPendingPos: any = 'PendingPos';
+        let cachedPendingContainer: any = 'PendingContainer';
+        let cachedPendingOffset: any = 'PendingOffset';
 
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(cachedPendingFormat);
-        spyOn(pendingFormat, 'setPendingFormat').and.callFake((_, format, pos) => {
+        spyOn(pendingFormat, 'setPendingFormat').and.callFake((_, format, container, offset) => {
             cachedPendingFormat = format;
-            cachedPendingPos = pos;
+            cachedPendingContainer = container;
+            cachedPendingOffset = offset;
         });
         spyOn(pendingFormat, 'clearPendingFormat').and.callFake(() => {
             cachedPendingFormat = null;
-            cachedPendingPos = null;
+            cachedPendingContainer = null;
+            cachedPendingOffset = null;
         });
 
         formatParagraphWithContentModel(
@@ -120,6 +126,7 @@ describe('formatParagraphWithContentModel', () => {
         );
 
         expect(cachedPendingFormat).toEqual('PendingFormat');
-        expect(cachedPendingPos).toEqual('NewPosition');
+        expect(cachedPendingContainer).toEqual(mockedContainer);
+        expect(cachedPendingOffset).toEqual(mockedOffset);
     });
 });

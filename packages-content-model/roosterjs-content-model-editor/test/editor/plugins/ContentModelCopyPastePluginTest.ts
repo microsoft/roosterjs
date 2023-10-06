@@ -6,11 +6,11 @@ import * as iterateSelectionsFile from '../../../lib/modelApi/selection/iterateS
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import * as PasteFile from '../../../lib/publicApi/utils/paste';
 import { createModelToDomContext } from 'roosterjs-content-model-dom';
+import { createRange } from 'roosterjs-editor-dom';
 import { DeleteResult } from '../../../lib/modelApi/edit/utils/DeleteSelectionStep';
 import { DOMSelection } from 'roosterjs-content-model-types';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { setEntityElementClasses } from 'roosterjs-content-model-dom/test/domUtils/entityUtilTest';
-import createRange, * as createRangeF from 'roosterjs-editor-dom/lib/selection/createRange';
 import ContentModelCopyPastePlugin, {
     onNodeCreated,
 } from '../../../lib/editor/corePlugins/ContentModelCopyPastePlugin';
@@ -206,7 +206,6 @@ describe('ContentModelCopyPastePlugin |', () => {
                 table,
             };
 
-            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 const container = document.createElement('div');
@@ -226,7 +225,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
@@ -256,7 +254,6 @@ describe('ContentModelCopyPastePlugin |', () => {
                 image,
             };
 
-            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection');
             spyOn(contentModelToDomFile, 'contentModelToDom').and.callFake(() => {
                 div.appendChild(image);
@@ -273,7 +270,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.copy?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>image);
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(deleteSelectionsFile.deleteSelection).not.toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
@@ -450,7 +446,6 @@ describe('ContentModelCopyPastePlugin |', () => {
                 table,
             };
 
-            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
                 deleteResult: DeleteResult.Range,
                 insertPoint: null!,
@@ -474,7 +469,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.cut?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>table.parentElement);
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,
@@ -505,7 +499,6 @@ describe('ContentModelCopyPastePlugin |', () => {
                 image,
             };
 
-            spyOn(createRangeF, 'default').and.callThrough();
             spyOn(deleteSelectionsFile, 'deleteSelection').and.returnValue({
                 deleteResult: DeleteResult.Range,
                 insertPoint: null!,
@@ -526,7 +519,6 @@ describe('ContentModelCopyPastePlugin |', () => {
             domEvents.cut?.(<Event>{});
 
             // Assert
-            expect(createRangeF.default).toHaveBeenCalledWith(<any>image);
             expect(getDOMSelectionSpy).toHaveBeenCalled();
             expect(contentModelToDomFile.contentModelToDom).toHaveBeenCalledWith(
                 document,

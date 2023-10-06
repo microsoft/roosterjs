@@ -1,5 +1,4 @@
 import toArray from '../domUtils/toArray';
-import { createRange, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
 import type {
     ContentModelDocument,
@@ -8,7 +7,6 @@ import type {
     ModelToDomContext,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * Create DOM tree fragment from Content Model document
@@ -32,22 +30,22 @@ export function contentModelToDom(
 
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
-    const range = extractSelectionRange(context);
+    const range = extractSelectionRange(doc, context);
 
     root.normalize();
 
     return range;
 }
 
-function extractSelectionRange(context: ModelToDomContext): DOMSelection | null {
+function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSelection | null {
     const {
         regularSelection: { start, end },
         tableSelection,
         imageSelection,
     } = context;
 
-    let startPosition: NodePosition | undefined;
-    let endPosition: NodePosition | undefined;
+    let startPosition: { container: Node; offset: number } | undefined;
+    let endPosition: { container: Node; offset: number } | undefined;
 
     if (imageSelection) {
         return imageSelection;
@@ -55,9 +53,14 @@ function extractSelectionRange(context: ModelToDomContext): DOMSelection | null 
         (startPosition = start && calcPosition(start)) &&
         (endPosition = end && calcPosition(end))
     ) {
+        const range = doc.createRange();
+
+        range.setStart(startPosition.container, startPosition.offset);
+        range.setEnd(endPosition.container, endPosition.offset);
+
         return {
             type: 'range',
-            range: createRange(startPosition, endPosition),
+            range,
         };
     } else if (tableSelection) {
         return tableSelection;
@@ -66,26 +69,43 @@ function extractSelectionRange(context: ModelToDomContext): DOMSelection | null 
     }
 }
 
-function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefined {
-    let result: NodePosition | undefined;
+function calcPosition(
+    pos: ModelToDomBlockAndSegmentNode
+): { container: Node; offset: number } | undefined {
+    let result: { container: Node; offset: number } | undefined;
 
     if (pos.block) {
         if (!pos.segment) {
-            result = new Position(pos.block, 0);
+            result = { container: pos.block, offset: 0 };
         } else if (isNodeOfType(pos.segment, 'TEXT_NODE')) {
-            result = new Position(pos.segment, pos.segment.nodeValue?.length || 0);
-        } else {
-            result = new Position(
-                pos.segment.parentNode!,
-                toArray(pos.segment.parentNode!.childNodes as NodeListOf<Node>).indexOf(
-                    pos.segment!
-                ) + 1
-            );
+            result = { container: pos.segment, offset: pos.segment.nodeValue?.length || 0 };
+        } else if (pos.segment.parentNode) {
+            result = {
+                container: pos.segment.parentNode,
+                offset:
+                    toArray(pos.segment.parentNode.childNodes as NodeListOf<Node>).indexOf(
+                        pos.segment
+                    ) + 1,
+            };
         }
     }
 
-    if (isNodeOfType(result?.node, 'DOCUMENT_FRAGMENT_NODE')) {
-        result = result?.normalize();
+    if (result && isNodeOfType(result.container, 'DOCUMENT_FRAGMENT_NODE')) {
+        const childNodes = result.container.childNodes;
+
+        if (childNodes.length > result.offset) {
+            result = { container: childNodes[result.offset], offset: 0 };
+        } else if (result.container.lastChild) {
+            const container = result.container.lastChild;
+            result = {
+                container,
+                offset: isNodeOfType(container, 'TEXT_NODE')
+                    ? container.nodeValue?.length ?? 0
+                    : container.childNodes.length,
+            };
+        } else {
+            result = undefined;
+        }
     }
 
     return result;
