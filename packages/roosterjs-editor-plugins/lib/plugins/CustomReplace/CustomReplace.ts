@@ -1,11 +1,5 @@
-import {
-    CustomReplacement,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { PluginEventType, PositionType } from 'roosterjs-editor-types';
+import type { CustomReplacement, EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const makeReplacement = (
     sourceString: string,

@@ -7,11 +7,10 @@ import toArray from '../jsUtils/toArray';
 import { getTableCellMetadata, saveTableCellMetadata } from './tableCellInfo';
 import { getTableFormatInfo, saveTableInfo } from './tableFormatInfo';
 import { removeMetadata } from '../metadata/metadata';
-import {
+import { TableBorderFormat, TableOperation } from 'roosterjs-editor-types';
+import type {
     SizeTransformer,
-    TableBorderFormat,
     TableFormat,
-    TableOperation,
     TableSelection,
     VCell,
     DarkColorHandler,

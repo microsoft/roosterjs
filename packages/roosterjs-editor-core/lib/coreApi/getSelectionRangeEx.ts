@@ -1,10 +1,6 @@
 import { contains, createRange, findClosestElementAncestor } from 'roosterjs-editor-dom';
-import {
-    EditorCore,
-    GetSelectionRangeEx,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { SelectionRangeTypes } from 'roosterjs-editor-types';
+import type { EditorCore, GetSelectionRangeEx, SelectionRangeEx } from 'roosterjs-editor-types';
 
 /**
  * @internal

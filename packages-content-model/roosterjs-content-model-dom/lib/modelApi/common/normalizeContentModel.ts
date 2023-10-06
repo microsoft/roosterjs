@@ -1,7 +1,7 @@
-import { ContentModelBlockGroup } from 'roosterjs-content-model-types';
 import { isBlockEmpty } from './isEmpty';
 import { normalizeParagraph } from './normalizeParagraph';
 import { unwrapBlock } from './unwrapBlock';
+import type { ContentModelBlockGroup } from 'roosterjs-content-model-types';
 
 /**
  * For a given content model, normalize it to make the model be consistent.

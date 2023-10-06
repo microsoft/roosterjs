@@ -1,5 +1,5 @@
-import { Emoji } from '../type/Emoji';
 import { getObjectKeys } from 'roosterjs-editor-dom';
+import type { Emoji } from '../type/Emoji';
 
 const Common1 = createEmoji('1f60a', ':) :-)');
 const common2 = createEmoji('1f609', ';) ;-)');

@@ -1,6 +1,6 @@
 import getObjectKeys from '../jsUtils/getObjectKeys';
 import { cloneObject } from './cloneObject';
-import { CssStyleCallbackMap, StringMap } from 'roosterjs-editor-types';
+import type { CssStyleCallbackMap, StringMap } from 'roosterjs-editor-types';
 
 const HTML_TAG_REPLACEMENT: Record<string, string | null> = {
     // Allowed tags

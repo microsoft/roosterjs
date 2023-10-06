@@ -1,4 +1,4 @@
-import { BrowserInfo } from 'roosterjs-editor-types';
+import type { BrowserInfo } from 'roosterjs-editor-types';
 
 const isAndroidRegex = /android/i;
 

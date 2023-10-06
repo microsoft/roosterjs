@@ -1,14 +1,12 @@
 import { applyFormat, getEntitySelector, getTagOfNode } from 'roosterjs-editor-dom';
+import { ContentPosition, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { insertEntity } from 'roosterjs-editor-api';
-import {
+import type {
     DefaultFormat,
     EditorPlugin,
     Entity,
-    EntityOperation,
     IEditor,
     PluginEvent,
-    PluginEventType,
-    ContentPosition,
 } from 'roosterjs-editor-types';
 
 const ENTITY_TYPE = 'WATERMARK_WRAPPER';

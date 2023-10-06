@@ -1,3 +1,4 @@
+import { PasteType, PluginEventType } from 'roosterjs-editor-types';
 import {
     applyFormat,
     applyTextStyle,
@@ -9,14 +10,12 @@ import {
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BeforePasteEvent,
     ClipboardData,
     CreatePasteFragment,
     EditorCore,
-    PluginEventType,
     NodePosition,
-    PasteType,
     DefaultFormat,
 } from 'roosterjs-editor-types';
 

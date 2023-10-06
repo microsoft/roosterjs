@@ -4,7 +4,7 @@
 const ProgressBar = require('progress');
 
 // Steps
-const tslintStep = require('./buildTools/tslint');
+const eslintStep = require('./buildTools/eslint');
 const checkDependencyStep = require('./buildTools/checkDependency');
 const cleanStep = require('./buildTools/clean');
 const normalizeStep = require('./buildTools/normalize');
@@ -18,7 +18,7 @@ const buildDocumentStep = require('./buildTools/buildDocument');
 const publishStep = require('./buildTools/publish');
 const buildTestStep = require('./buildTools/buildTest');
 const allTasks = [
-    tslintStep,
+    eslintStep,
     cleanStep,
     normalizeStep,
     checkDependencyStep,
@@ -51,7 +51,7 @@ const allTasks = [
 
 // Commands
 const commands = [
-    'tslint', // Run tslint to check code style
+    'eslint', // Run eslint to check code style
     'checkdep', // Check circular dependency among files
     'clean', // Clean target folder
     'normalize', // Normalize package.json files

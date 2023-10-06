@@ -1,4 +1,4 @@
-import { DatasetFormat } from './metadata/DatasetFormat';
+import type { DatasetFormat } from './metadata/DatasetFormat';
 
 /**
  * Represents base format of an element that supports dataset and/or metadata

@@ -1,6 +1,6 @@
 import { createListLevel } from './createListLevel';
 import { createSelectionMarker } from './createSelectionMarker';
-import {
+import type {
     ContentModelListItem,
     ContentModelListLevel,
     ContentModelSegmentFormat,

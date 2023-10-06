@@ -1,6 +1,6 @@
-import BasePluginEvent from './BasePluginEvent';
-import { PendableFormatState } from '../interface/FormatState';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type { PendableFormatState } from '../interface/FormatState';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**

@@ -2,7 +2,9 @@ import createCellResizer from './CellResizer';
 import createTableInserter from './TableInserter';
 import createTableResizer from './TableResizer';
 import createTableSelector from './TableSelector';
-import TableEditFeature, { disposeTableEditFeature } from './TableEditorFeature';
+import { ChangeSource } from 'roosterjs-editor-types';
+import { disposeTableEditFeature } from './TableEditorFeature';
+import type TableEditFeature from './TableEditorFeature';
 import {
     contains,
     getComputedStyle,
@@ -11,8 +13,7 @@ import {
     safeInstanceOf,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     IEditor,
     NodePosition,
     TableSelection,

@@ -1,11 +1,13 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggle subscript style
  * @param editor The editor to operate on
  */
 export default function toggleSubscript(editor: IContentModelEditor) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'toggleSubscript',

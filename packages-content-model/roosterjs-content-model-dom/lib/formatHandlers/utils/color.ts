@@ -1,5 +1,4 @@
-import { DarkColorHandler } from 'roosterjs-editor-types';
-import { getTagOfNode } from 'roosterjs-editor-dom';
+import type { DarkColorHandler } from 'roosterjs-editor-types';
 
 /**
  * List of deprecated colors
@@ -97,7 +96,7 @@ function tryGetFontColor(
 ) {
     let darkColor: string | null;
 
-    return getTagOfNode(element) == 'FONT' &&
+    return element.tagName == 'FONT' &&
         !element.style.getPropertyValue(isBackground ? 'background-color' : 'color') &&
         isDarkMode &&
         (darkColor = element.getAttribute(isBackground ? 'bgcolor' : 'color'))

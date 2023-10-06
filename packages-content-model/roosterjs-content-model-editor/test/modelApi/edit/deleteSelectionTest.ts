@@ -469,7 +469,7 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, no callback', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
         model.blocks.push(entity);
 
         entity.isSelected = true;
@@ -521,13 +521,17 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, callback returns false', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
         const deletedEntities: DeletedEntity[] = [];
         model.blocks.push(entity);
 
         entity.isSelected = true;
 
-        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
+        const result = deleteSelection(model, [], {
+            newEntities: [],
+            deletedEntities,
+            newImages: [],
+        });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -576,13 +580,17 @@ describe('deleteSelection - selectionOnly', () => {
     it('Entity selection, callback returns true', () => {
         const model = createContentModelDocument();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
         model.blocks.push(entity);
 
         entity.isSelected = true;
 
         const deletedEntities: DeletedEntity[] = [];
-        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
+        const result = deleteSelection(model, [], {
+            newEntities: [],
+            deletedEntities,
+            newImages: [],
+        });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -1436,7 +1444,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -1478,7 +1486,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -1487,6 +1495,7 @@ describe('deleteSelection - forward', () => {
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            newImages: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -1525,7 +1534,7 @@ describe('deleteSelection - forward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(para, entity);
@@ -1534,6 +1543,7 @@ describe('deleteSelection - forward', () => {
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            newImages: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -3192,7 +3202,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
@@ -3234,7 +3244,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
@@ -3243,6 +3253,7 @@ describe('deleteSelection - backward', () => {
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            newImages: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -3281,7 +3292,7 @@ describe('deleteSelection - backward', () => {
         const marker = createSelectionMarker({ fontSize: '10px' });
         const br = createBr();
         const wrapper = 'WRAPPER' as any;
-        const entity = createEntity(wrapper, true);
+        const entity = createEntity(wrapper);
 
         para.segments.push(marker, br);
         model.blocks.push(entity, para);
@@ -3291,6 +3302,7 @@ describe('deleteSelection - backward', () => {
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
             newEntities,
             deletedEntities,
+            newImages: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);

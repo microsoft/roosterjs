@@ -1,14 +1,16 @@
 import * as React from 'react';
 import { ButtonKeys, Buttons } from '../utils/buttons';
 import { Callout, DirectionalHint } from '@fluentui/react/lib/Callout';
-import { getLocalizedString, LocalizedStrings, UIUtilities } from '../../common/index';
+import { getLocalizedString } from '../../common/index';
 import { getObjectKeys, getPositionRect } from 'roosterjs-editor-dom';
 import { Icon } from '@fluentui/react/lib/Icon';
 import { IconButton } from '@fluentui/react/lib/Button';
 import { memoizeFunction } from '@fluentui/react/lib/Utilities';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
 import { renderReactComponent } from '../../common/utils/renderReactComponent';
-import { Theme, useTheme } from '@fluentui/react/lib/Theme';
+import { useTheme } from '@fluentui/react/lib/Theme';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
+import type { Theme } from '@fluentui/react/lib/Theme';
 import type { PasteOptionButtonKeys, PasteOptionStringKeys } from '../type/PasteOptionStringKeys';
 import type { NodePosition } from 'roosterjs-editor-types';
 

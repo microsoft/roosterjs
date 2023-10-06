@@ -1,11 +1,18 @@
 import { isFeatureEnabled } from './isFeatureEnabled';
 import {
-    BlockElement,
     ChangeSource,
-    ClipboardData,
     ColorTransformDirection,
-    ContentChangedData,
     ContentPosition,
+    GetContentMode,
+    PluginEventType,
+    PositionType,
+    QueryScope,
+    RegionType,
+} from 'roosterjs-editor-types';
+import type {
+    BlockElement,
+    ClipboardData,
+    ContentChangedData,
     CoreCreator,
     DarkColorHandler,
     DefaultFormat,
@@ -15,7 +22,6 @@ import {
     EditorUndoState,
     ExperimentalFeatures,
     GenericContentEditFeature,
-    GetContentMode,
     IContentTraverser,
     IEditor,
     InsertOption,
@@ -25,12 +31,8 @@ import {
     PluginEvent,
     PluginEventData,
     PluginEventFromType,
-    PluginEventType,
-    PositionType,
-    QueryScope,
     Rect,
     Region,
-    RegionType,
     SelectionPath,
     SelectionRangeEx,
     SizeTransformer,
@@ -109,8 +111,16 @@ export class EditorBase<TEditorCore extends EditorCore, TEditorOptions extends E
      */
     public dispose(): void {
         const core = this.getCore();
+
         for (let i = core.plugins.length - 1; i >= 0; i--) {
-            core.plugins[i].dispose();
+            const plugin = core.plugins[i];
+
+            try {
+                plugin.dispose();
+            } catch (e) {
+                // Cache the error and pass it out, then keep going since dispose should always succeed
+                core.disposeErrorHandler?.(plugin, e as Error);
+            }
         }
 
         core.darkColorHandler.reset();

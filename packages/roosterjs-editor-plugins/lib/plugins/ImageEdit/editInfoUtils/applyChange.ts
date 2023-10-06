@@ -1,9 +1,10 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
 import getGeneratedImageSize from './getGeneratedImageSize';
-import ImageEditInfo from '../types/ImageEditInfo';
 import { deleteEditInfo, getEditInfoFromImage, saveEditInfo } from './editInfo';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type ImageEditInfo from '../types/ImageEditInfo';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -79,5 +80,6 @@ export default function applyChange(
         image.style.removeProperty('width');
         image.style.removeProperty('height');
         image.style.removeProperty('max-width');
+        image.style.removeProperty('max-height');
     }
 }

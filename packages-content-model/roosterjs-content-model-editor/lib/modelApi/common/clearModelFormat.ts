@@ -1,13 +1,12 @@
 import { adjustWordSelection } from '../selection/adjustWordSelection';
 import { applyTableFormat } from '../table/applyTableFormat';
-import { arrayPush } from 'roosterjs-editor-dom';
 import { createFormatContainer } from 'roosterjs-content-model-dom';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
 import { iterateSelections } from '../selection/iterateSelections';
-import { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
 import { updateTableCellMetadata } from '../../domUtils/metadata/updateTableCellMetadata';
 import { updateTableMetadata } from '../../domUtils/metadata/updateTableMetadata';
-import {
+import type { TableSelectionContext } from '../../publicTypes/selection/TableSelectionContext';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,
@@ -32,7 +31,7 @@ export function clearModelFormat(
         [model],
         (path, tableContext, block, segments) => {
             if (segments) {
-                arrayPush(segmentsToClear, segments);
+                segmentsToClear.push(...segments);
             }
 
             if (block) {

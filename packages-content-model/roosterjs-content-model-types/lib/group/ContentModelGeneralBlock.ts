@@ -1,8 +1,8 @@
-import { ContentModelBlockBase } from '../block/ContentModelBlockBase';
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
-import { Selectable } from '../selection/Selectable';
+import type { ContentModelBlockBase } from '../block/ContentModelBlockBase';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockGroupBase } from './ContentModelBlockGroupBase';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { Selectable } from '../selection/Selectable';
 
 /**
  * Content Model for general Block element

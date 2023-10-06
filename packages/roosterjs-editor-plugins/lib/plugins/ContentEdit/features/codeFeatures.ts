@@ -1,3 +1,4 @@
+import { Keys, PositionType, QueryScope } from 'roosterjs-editor-types';
 import {
     isNodeEmpty,
     cacheGetEventData,
@@ -5,14 +6,11 @@ import {
     splitBalancedNodeRange,
     unwrap,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     PluginKeyboardEvent,
-    Keys,
     IEditor,
-    PositionType,
     CodeFeatureSettings,
-    QueryScope,
 } from 'roosterjs-editor-types';
 
 const RemoveCodeWhenEnterOnEmptyLine: BuildInEditFeature<PluginKeyboardEvent> = {

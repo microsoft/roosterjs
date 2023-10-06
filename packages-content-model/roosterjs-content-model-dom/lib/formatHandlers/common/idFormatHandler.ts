@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { IdFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { IdFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

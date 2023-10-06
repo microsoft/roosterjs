@@ -1,4 +1,5 @@
-import { Entity, EntityClasses } from 'roosterjs-editor-types';
+import { EntityClasses } from 'roosterjs-editor-types';
+import type { Entity } from 'roosterjs-editor-types';
 
 /**
  * Get Entity object from an entity root element

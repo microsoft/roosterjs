@@ -1,14 +1,12 @@
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
 import { removeLink, replaceWithNode } from 'roosterjs-editor-api';
-import {
+import type {
     AutoLinkFeatureSettings,
     BuildInEditFeature,
-    ChangeSource,
     ClipboardData,
     IEditor,
-    Keys,
     LinkData,
     PluginEvent,
-    PluginEventType,
     PluginKeyboardEvent,
 } from 'roosterjs-editor-types';
 import {

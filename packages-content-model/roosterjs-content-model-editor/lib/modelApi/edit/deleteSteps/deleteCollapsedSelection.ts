@@ -1,10 +1,12 @@
-import { BlockAndPath, getLeafSiblingBlock } from '../../block/getLeafSiblingBlock';
-import { ContentModelSegment } from 'roosterjs-content-model-types';
 import { createInsertPoint } from '../utils/createInsertPoint';
 import { deleteBlock } from '../utils/deleteBlock';
-import { DeleteResult, DeleteSelectionStep } from '../utils/DeleteSelectionStep';
+import { DeleteResult } from '../utils/DeleteSelectionStep';
 import { deleteSegment } from '../utils/deleteSegment';
+import { getLeafSiblingBlock } from '../../block/getLeafSiblingBlock';
 import { setParagraphNotImplicit } from 'roosterjs-content-model-dom';
+import type { BlockAndPath } from '../../block/getLeafSiblingBlock';
+import type { ContentModelSegment } from 'roosterjs-content-model-types';
+import type { DeleteSelectionStep } from '../utils/DeleteSelectionStep';
 
 function getDeleteCollapsedSelection(direction: 'forward' | 'backward'): DeleteSelectionStep {
     return context => {

@@ -5,13 +5,13 @@ import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import PartialInlineElement from '../inlineElements/PartialInlineElement';
 import SelectionBlockScoper from './SelectionBlockScoper';
 import SelectionScoper from './SelectionScoper';
-import TraversingScoper from './TraversingScoper';
+import { ContentPosition } from 'roosterjs-editor-types';
 import { getInlineElementBeforeAfter } from '../inlineElements/getInlineElementBeforeAfter';
 import { getLeafSibling } from '../utils/getLeafSibling';
+import type TraversingScoper from './TraversingScoper';
 import type { CompatibleContentPosition } from 'roosterjs-editor-types/lib/compatibleTypes';
-import {
+import type {
     BlockElement,
-    ContentPosition,
     IContentTraverser,
     InlineElement,
     NodePosition,

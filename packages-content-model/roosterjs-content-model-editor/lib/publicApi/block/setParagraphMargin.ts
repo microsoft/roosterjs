@@ -1,6 +1,6 @@
 import { createParagraphDecorator } from 'roosterjs-content-model-dom';
 import { formatParagraphWithContentModel } from '../utils/formatParagraphWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Toggles the current block(s) margin properties.
@@ -14,6 +14,8 @@ export default function setParagraphMargin(
     marginTop?: string | null,
     marginBottom?: string | null
 ) {
+    editor.focus();
+
     formatParagraphWithContentModel(editor, 'setParagraphMargin', para => {
         if (!para.decorator) {
             para.decorator = createParagraphDecorator('p');

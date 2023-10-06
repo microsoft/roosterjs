@@ -1,5 +1,5 @@
 import validate from './validate';
-import { Definition } from 'roosterjs-editor-types';
+import type { Definition } from 'roosterjs-editor-types';
 
 const MetadataDataSetName = 'editingInfo';
 

@@ -1,6 +1,6 @@
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getFirstSelectedListItem } from '../../modelApi/selection/collectSelections';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set start number of a list item
@@ -8,6 +8,8 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param value The number to set to, must be equal or greater than 1
  */
 export default function setListStartNumber(editor: IContentModelEditor, value: number) {
+    editor.focus();
+
     formatWithContentModel(editor, 'setListStartNumber', model => {
         const listItem = getFirstSelectedListItem(model);
         const level = listItem?.levels[listItem?.levels.length - 1];

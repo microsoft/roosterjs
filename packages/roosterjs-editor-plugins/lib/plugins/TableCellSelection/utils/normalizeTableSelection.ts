@@ -1,5 +1,5 @@
-import { Coordinates, TableSelection } from 'roosterjs-editor-types';
-import { VTable } from 'roosterjs-editor-dom';
+import type { Coordinates, TableSelection } from 'roosterjs-editor-types';
+import type { VTable } from 'roosterjs-editor-dom';
 
 /**
  * @internal

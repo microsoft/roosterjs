@@ -1,7 +1,7 @@
 import { createListLevel, parseValueWithUnit } from 'roosterjs-content-model-dom';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { isBlockGroupOfType } from '../common/isBlockGroupOfType';
-import {
+import type {
     ContentModelDocument,
     ContentModelListItem,
     ContentModelListLevel,

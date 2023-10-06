@@ -1,4 +1,8 @@
-import { ContentModelFormatBase, FormatApplier, FormatParser } from 'roosterjs-content-model-types';
+import type {
+    ContentModelFormatBase,
+    FormatApplier,
+    FormatParser,
+} from 'roosterjs-content-model-types';
 
 /**
  * @internal

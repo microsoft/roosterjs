@@ -1,9 +1,8 @@
 import readFile from '../utils/readFile';
 import { Browser } from '../utils/Browser';
-import {
+import { ContentType, ContentTypePrefix } from 'roosterjs-editor-types';
+import type {
     ClipboardData,
-    ContentType,
-    ContentTypePrefix,
     EdgeLinkPreview,
     ExtractClipboardItemsOption,
 } from 'roosterjs-editor-types';

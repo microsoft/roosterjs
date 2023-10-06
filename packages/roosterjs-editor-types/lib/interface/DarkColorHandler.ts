@@ -1,4 +1,4 @@
-import ModeIndependentColor from './ModeIndependentColor';
+import type ModeIndependentColor from './ModeIndependentColor';
 
 /**
  * Represents a combination of color key, light color and dark color, parsed from existing color value

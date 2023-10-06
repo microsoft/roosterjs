@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { WordBreakFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { WordBreakFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

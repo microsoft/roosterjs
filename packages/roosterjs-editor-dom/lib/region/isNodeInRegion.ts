@@ -1,5 +1,6 @@
 import contains from '../utils/contains';
-import { DocumentPosition, RegionBase } from 'roosterjs-editor-types';
+import { DocumentPosition } from 'roosterjs-editor-types';
+import type { RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Check if a given node is contained by the given region

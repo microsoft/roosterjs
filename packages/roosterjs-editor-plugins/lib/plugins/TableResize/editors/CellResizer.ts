@@ -1,8 +1,8 @@
-import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
 import DragAndDropHelper from '../../../pluginUtils/DragAndDropHelper';
-import TableEditFeature from './TableEditorFeature';
 import { createElement, normalizeRect, VTable } from 'roosterjs-editor-dom';
-import { CreateElementData, Rect } from 'roosterjs-editor-types';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type TableEditFeature from './TableEditorFeature';
+import type { CreateElementData, Rect } from 'roosterjs-editor-types';
 
 const CELL_RESIZER_WIDTH = 4;
 const MIN_CELL_WIDTH = 30;

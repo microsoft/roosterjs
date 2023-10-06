@@ -362,6 +362,20 @@ describe('ImageEdit | wrapper', () => {
         expect(imageShadow?.style.maxWidth).toBe('');
     });
 
+    it('image selection, remove max-height', () => {
+        const IMG_ID = 'IMAGE_ID_SELECTION';
+        const content = `<img id="${IMG_ID}" src='test'/>`;
+        editor.setContent(content);
+        const image = document.getElementById(IMG_ID) as HTMLImageElement;
+        image.style.maxHeight = '100%';
+        editor.focus();
+        editor.select(image);
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const imageShadow = shadowRoot?.querySelector('img');
+        expect(imageShadow?.style.maxHeight).toBe('');
+    });
+
     it('image selection, cloned image should use style width/height attributes', () => {
         const IMG_ID = 'IMAGE_ID_SELECTION_2';
         const content = `<img id="${IMG_ID}" style="width: 300px; height: 300px" src='test'/>`;

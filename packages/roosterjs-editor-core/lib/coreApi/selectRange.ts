@@ -1,5 +1,5 @@
-import { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import { hasFocus } from './hasFocus';
+import type { EditorCore, SelectRange } from 'roosterjs-editor-types';
 import {
     contains,
     getPendableFormatState,

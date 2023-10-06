@@ -1,7 +1,7 @@
-import { ContentModelImageFormat } from '../format/ContentModelImageFormat';
-import { ContentModelSegmentBase } from './ContentModelSegmentBase';
-import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import { ImageMetadataFormat } from '../format/metadata/ImageMetadataFormat';
+import type { ContentModelImageFormat } from '../format/ContentModelImageFormat';
+import type { ContentModelSegmentBase } from './ContentModelSegmentBase';
+import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type { ImageMetadataFormat } from '../format/metadata/ImageMetadataFormat';
 
 /**
  * Content Model of IMG

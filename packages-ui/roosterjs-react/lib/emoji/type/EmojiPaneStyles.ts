@@ -1,4 +1,4 @@
-import { IStyleSet } from '@fluentui/react/lib/Styling';
+import type { IStyleSet } from '@fluentui/react/lib/Styling';
 /**
  * @internal
  * EmojiPane Style classes

@@ -1,8 +1,8 @@
 import formatUndoSnapshot from './formatUndoSnapshot';
 import { getTagOfNode } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     ChangeSource,
-    IEditor,
     PluginEventType,
     PositionType,
     SelectionRangeTypes,

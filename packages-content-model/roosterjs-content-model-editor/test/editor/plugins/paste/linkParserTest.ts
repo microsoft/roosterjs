@@ -1,12 +1,12 @@
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { createBeforePasteEventMock } from './processPastedContentFromWordDesktopTest';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 import { parseLink } from '../../../../lib/editor/plugins/PastePlugin/utils/linkParser';
 import {
     contentModelToDom,
     createDomToModelContext,
     createModelToDomContext,
     domToContentModel,
+    moveChildNodes,
 } from 'roosterjs-content-model-dom';
 
 let div: HTMLElement;

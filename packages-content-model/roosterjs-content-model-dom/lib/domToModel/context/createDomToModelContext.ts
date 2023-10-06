@@ -1,10 +1,10 @@
 import { defaultProcessorMap } from './defaultProcessors';
-import { getObjectKeys } from 'roosterjs-editor-dom';
+import { getObjectKeys } from '../../domUtils/getObjectKeys';
 import {
     defaultFormatKeysPerCategory,
     defaultFormatParsers,
 } from '../../formatHandlers/defaultFormatHandlers';
-import {
+import type {
     ContentModelBlockFormat,
     DomToModelContext,
     DomToModelDecoratorContext,

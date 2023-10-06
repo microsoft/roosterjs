@@ -1,4 +1,3 @@
-import { ContentModelHandlerMap } from 'roosterjs-content-model-types';
 import { handleBlock } from '../handlers/handleBlock';
 import { handleBlockGroupChildren } from '../handlers/handleBlockGroupChildren';
 import { handleBr } from '../handlers/handleBr';
@@ -14,6 +13,7 @@ import { handleSegment } from '../handlers/handleSegment';
 import { handleSegmentDecorator } from '../handlers/handleSegmentDecorator';
 import { handleTable } from '../handlers/handleTable';
 import { handleText } from '../handlers/handleText';
+import type { ContentModelHandlerMap } from 'roosterjs-content-model-types';
 
 /**
  * @internal

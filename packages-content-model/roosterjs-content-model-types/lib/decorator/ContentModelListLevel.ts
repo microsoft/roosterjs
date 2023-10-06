@@ -1,7 +1,7 @@
-import { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
-import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
-import { ListMetadataFormat } from '../format/metadata/ListMetadataFormat';
+import type { ContentModelListItemLevelFormat } from '../format/ContentModelListItemLevelFormat';
+import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { ListMetadataFormat } from '../format/metadata/ListMetadataFormat';
 
 /**
  * Content Model of List Level

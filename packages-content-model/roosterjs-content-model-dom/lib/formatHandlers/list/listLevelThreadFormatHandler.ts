@@ -1,13 +1,13 @@
-import { FormatHandler } from '../FormatHandler';
-import { ListThreadFormat } from 'roosterjs-content-model-types';
-import { safeInstanceOf } from 'roosterjs-editor-dom';
+import { isElementOfType } from '../../domUtils/isElementOfType';
+import type { FormatHandler } from '../FormatHandler';
+import type { ListThreadFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal
  */
 export const listLevelThreadFormatHandler: FormatHandler<ListThreadFormat> = {
     parse: (format, element, context) => {
-        if (safeInstanceOf(element, 'HTMLOListElement')) {
+        if (isElementOfType(element, 'ol')) {
             const { listFormat } = context;
             const { threadItemCounts, levels } = listFormat;
             const depth = levels.length;
@@ -28,7 +28,7 @@ export const listLevelThreadFormatHandler: FormatHandler<ListThreadFormat> = {
         } = context;
         const depth = nodeStack.length - 1; // The first one is always the parent of list
 
-        if (depth >= 0 && safeInstanceOf(element, 'HTMLOListElement')) {
+        if (depth >= 0 && isElementOfType(element, 'ol')) {
             const startNumber = format.startNumberOverride;
 
             if (typeof startNumber === 'number') {

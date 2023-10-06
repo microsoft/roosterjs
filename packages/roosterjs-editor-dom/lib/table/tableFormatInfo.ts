@@ -1,5 +1,6 @@
 import { getMetadata, setMetadata } from '../metadata/metadata';
-import { TableBorderFormat, TableFormat } from 'roosterjs-editor-types';
+import { TableBorderFormat } from 'roosterjs-editor-types';
+import type { TableFormat } from 'roosterjs-editor-types';
 import {
     createBooleanDefinition,
     createNumberDefinition,

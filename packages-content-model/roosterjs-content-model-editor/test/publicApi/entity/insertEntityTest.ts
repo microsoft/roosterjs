@@ -1,6 +1,4 @@
-import * as commitEntity from 'roosterjs-editor-dom/lib/entity/commitEntity';
 import * as formatWithContentModel from '../../../lib/publicApi/utils/formatWithContentModel';
-import * as getEntityFromElement from 'roosterjs-editor-dom/lib/entity/getEntityFromElement';
 import * as insertEntityModel from '../../../lib/modelApi/entity/insertEntityModel';
 import * as normalizeContentModel from 'roosterjs-content-model-dom/lib/modelApi/common/normalizeContentModel';
 import insertEntity from '../../../lib/publicApi/entity/insertEntity';
@@ -13,14 +11,11 @@ describe('insertEntity', () => {
     let context: FormatWithContentModelContext;
     let wrapper: HTMLElement;
     const model = 'MockedModel' as any;
-    const newEntity = 'MockedEntity' as any;
 
     let formatWithContentModelSpy: jasmine.Spy;
-    let getEntityFromElementSpy: jasmine.Spy;
     let triggerContentChangedEventSpy: jasmine.Spy;
     let getDocumentSpy: jasmine.Spy;
     let createElementSpy: jasmine.Spy;
-    let commitEntitySpy: jasmine.Spy;
     let setPropertySpy: jasmine.Spy;
     let appendChildSpy: jasmine.Spy;
     let insertEntityModelSpy: jasmine.Spy;
@@ -35,6 +30,7 @@ describe('insertEntity', () => {
         context = {
             newEntities: [],
             deletedEntities: [],
+            newImages: [],
         };
 
         setPropertySpy = jasmine.createSpy('setPropertySpy');
@@ -57,8 +53,6 @@ describe('insertEntity', () => {
             formatter(model, context);
             options?.getChangeData?.();
         });
-        getEntityFromElementSpy = spyOn(getEntityFromElement, 'default').and.returnValue(newEntity);
-        commitEntitySpy = spyOn(commitEntity, 'default');
         triggerContentChangedEventSpy = jasmine.createSpy('triggerContentChangedEventSpy');
         createElementSpy = jasmine.createSpy('createElementSpy').and.returnValue(wrapper);
         getDocumentSpy = jasmine.createSpy('getDocumentSpy').and.returnValue({
@@ -80,7 +74,6 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
@@ -92,9 +85,11 @@ describe('insertEntity', () => {
                 segmentType: 'Entity',
                 blockType: 'Entity',
                 format: {},
-                id: undefined,
-                type: type,
-                isReadonly: true,
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
                 wrapper: wrapper,
             },
             'begin',
@@ -102,12 +97,21 @@ describe('insertEntity', () => {
             undefined,
             context
         );
-        expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
-        expect(entity).toBe(newEntity);
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
     });
 
     it('block inline entity to root', () => {
@@ -116,7 +120,6 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', null);
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
@@ -128,9 +131,11 @@ describe('insertEntity', () => {
                 segmentType: 'Entity',
                 blockType: 'Entity',
                 format: {},
-                id: undefined,
-                type: type,
-                isReadonly: true,
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
                 wrapper: wrapper,
             },
             'root',
@@ -138,12 +143,21 @@ describe('insertEntity', () => {
             undefined,
             context
         );
-        expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
-        expect(entity).toBe(newEntity);
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
     });
 
     it('block inline entity with more options', () => {
@@ -159,7 +173,6 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('div');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'none');
         expect(appendChildSpy).toHaveBeenCalledWith(contentNode);
-        expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
@@ -172,9 +185,11 @@ describe('insertEntity', () => {
                 segmentType: 'Entity',
                 blockType: 'Entity',
                 format: {},
-                id: undefined,
-                type: type,
-                isReadonly: true,
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
                 wrapper: wrapper,
             },
             'focus',
@@ -182,12 +197,21 @@ describe('insertEntity', () => {
             true,
             context
         );
-        expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(transformToDarkColorSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
-        expect(entity).toBe(newEntity);
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
     });
 
     it('In dark mode', () => {
@@ -198,7 +222,6 @@ describe('insertEntity', () => {
         expect(createElementSpy).toHaveBeenCalledWith('span');
         expect(setPropertySpy).toHaveBeenCalledWith('display', 'inline-block');
         expect(appendChildSpy).not.toHaveBeenCalled();
-        expect(commitEntitySpy).toHaveBeenCalledWith(wrapper, type, true);
         expect(formatWithContentModelSpy.calls.argsFor(0)[0]).toBe(editor);
         expect(formatWithContentModelSpy.calls.argsFor(0)[1]).toBe(apiName);
         expect(formatWithContentModelSpy.calls.argsFor(0)[3].changeSource).toEqual(
@@ -210,9 +233,11 @@ describe('insertEntity', () => {
                 segmentType: 'Entity',
                 blockType: 'Entity',
                 format: {},
-                id: undefined,
-                type: type,
-                isReadonly: true,
+                entityFormat: {
+                    id: undefined,
+                    entityType: type,
+                    isReadonly: true,
+                },
                 wrapper: wrapper,
             },
             'begin',
@@ -220,7 +245,6 @@ describe('insertEntity', () => {
             undefined,
             context
         );
-        expect(getEntityFromElementSpy).toHaveBeenCalledWith(wrapper);
         expect(triggerContentChangedEventSpy).not.toHaveBeenCalled();
         expect(normalizeContentModelSpy).toHaveBeenCalled();
 
@@ -229,13 +253,25 @@ describe('insertEntity', () => {
                 segmentType: 'Entity',
                 blockType: 'Entity',
                 format: {},
-                id: undefined,
-                type: 'Entity',
-                isReadonly: true,
+                entityFormat: {
+                    id: undefined,
+                    entityType: 'Entity',
+                    isReadonly: true,
+                },
                 wrapper,
             },
         ]);
 
-        expect(entity).toBe(newEntity);
+        expect(entity).toEqual({
+            segmentType: 'Entity',
+            blockType: 'Entity',
+            format: {},
+            entityFormat: {
+                id: undefined,
+                entityType: type,
+                isReadonly: true,
+            },
+            wrapper: wrapper,
+        });
     });
 });

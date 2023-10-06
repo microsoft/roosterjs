@@ -1,4 +1,4 @@
-import IEditor from './IEditor';
+import type IEditor from './IEditor';
 
 /**
  * An interface to define a replacement rule for CustomReplace plugin

@@ -1,14 +1,12 @@
 import { arrayPush, Browser, isCharacterValue } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import { ChangeSource, Keys, PluginEventType } from 'roosterjs-editor-types';
+import type {
     ContextMenuProvider,
     DOMEventHandler,
     DOMEventPluginState,
     EditorOptions,
     EditorPlugin,
     IEditor,
-    Keys,
-    PluginEventType,
     PluginWithState,
 } from 'roosterjs-editor-types';
 

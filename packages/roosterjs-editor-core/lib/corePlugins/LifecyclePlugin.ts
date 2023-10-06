@@ -1,13 +1,11 @@
 import { Browser, getObjectKeys, setColor } from 'roosterjs-editor-dom';
-import {
-    DocumentCommand,
+import { ChangeSource, DocumentCommand, PluginEventType } from 'roosterjs-editor-types';
+import type {
     EditorOptions,
     IEditor,
     LifecyclePluginState,
-    PluginEventType,
     PluginWithState,
     PluginEvent,
-    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const CONTENT_EDITABLE_ATTRIBUTE_NAME = 'contenteditable';

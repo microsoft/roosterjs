@@ -1,6 +1,6 @@
-import { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
-import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { ContentModelHyperLinkFormat } from '../format/ContentModelHyperLinkFormat';
+import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**
  * Represent link info of Content Model.

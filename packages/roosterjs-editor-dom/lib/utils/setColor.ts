@@ -1,5 +1,5 @@
 import parseColor from './parseColor';
-import { DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
+import type { DarkColorHandler, ModeIndependentColor } from 'roosterjs-editor-types';
 
 const WHITE = '#ffffff';
 const GRAY = '#333333';

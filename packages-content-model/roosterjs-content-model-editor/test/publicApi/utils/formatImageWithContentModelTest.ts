@@ -20,8 +20,9 @@ describe('formatImageWithContentModel', () => {
     ) {
         segmentTestForPluginEvent(
             'apiTest',
-            editor =>
-                formatImageWithContentModel(editor, 'apiTest', callback, shouldCallPluginEvent),
+            editor => {
+                formatImageWithContentModel(editor, 'apiTest', callback, shouldCallPluginEvent);
+            },
             model,
             result,
             shouldCallPluginEvent,
@@ -214,6 +215,7 @@ function segmentTestForPluginEvent(
             callback();
         });
     const triggerPluginEvent = jasmine.createSpy().and.callFake(() => {});
+    const getVisibleViewport = jasmine.createSpy().and.callFake(() => {});
     const setContentModel = jasmine.createSpy().and.callFake((model: ContentModelDocument) => {
         expect(model).toEqual(result);
     });
@@ -226,6 +228,7 @@ function segmentTestForPluginEvent(
         getFocusedPosition: () => null as NodePosition,
         triggerPluginEvent,
         isDarkMode: () => false,
+        getVisibleViewport,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

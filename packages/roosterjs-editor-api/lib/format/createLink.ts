@@ -1,8 +1,8 @@
 import { HtmlSanitizer, matchLink, wrap } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 import {
     ChangeSource,
     DocumentCommand,
-    IEditor,
     QueryScope,
     SelectionRangeTypes,
 } from 'roosterjs-editor-types';

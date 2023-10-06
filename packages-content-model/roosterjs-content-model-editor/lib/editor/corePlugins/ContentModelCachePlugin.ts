@@ -1,12 +1,14 @@
-import { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import { areSameRangeEx } from '../../modelApi/selection/areSameRangeEx';
+import { isCharacterValue } from 'roosterjs-editor-dom';
+import { Keys, PluginEventType } from 'roosterjs-editor-types';
+import type ContentModelContentChangedEvent from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { ContentModelCachePluginState } from '../../publicTypes/pluginState/ContentModelCachePluginState';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
+    PluginKeyDownEvent,
     PluginWithState,
-    SelectionRangeEx,
 } from 'roosterjs-editor-types';
 
 /**
@@ -77,36 +79,108 @@ export default class ContentModelCachePlugin
 
         switch (event.eventType) {
             case PluginEventType.KeyDown:
-                switch (event.rawEvent.which) {
-                    case Keys.ENTER:
-                        // ENTER key will create new paragraph, so need to update cache to reflect this change
-                        // TODO: Handle ENTER key to better reuse content model
-                        this.editor.invalidateCache();
-
-                        break;
+                if (this.shouldClearCache(event)) {
+                    this.invalidateCache();
                 }
                 break;
 
             case PluginEventType.Input:
+                {
+                    this.updateCachedModel(this.editor, true /*forceUpdate*/);
+                }
+                break;
+
             case PluginEventType.SelectionChanged:
-                this.reconcileSelection(this.editor);
+                this.updateCachedModel(this.editor);
                 break;
 
             case PluginEventType.ContentChanged:
-                this.editor.invalidateCache();
+                {
+                    const { contentModel, selection } = event as ContentModelContentChangedEvent;
+
+                    if (contentModel && this.state.domIndexer) {
+                        this.state.cachedModel = contentModel;
+                        this.state.cachedSelection = selection;
+                    } else {
+                        this.invalidateCache();
+                    }
+                }
+
                 break;
         }
     }
 
     private onNativeSelectionChange = () => {
         if (this.editor?.hasFocus()) {
-            this.reconcileSelection(this.editor);
+            this.updateCachedModel(this.editor);
         }
     };
 
-    private reconcileSelection(editor: IContentModelEditor, newRangeEx?: SelectionRangeEx) {
-        // TODO: Really do reconcile selection
-        editor.invalidateCache();
+    private invalidateCache() {
+        if (!this.editor?.isInShadowEdit()) {
+            this.state.cachedModel = undefined;
+            this.state.cachedSelection = undefined;
+        }
+    }
+
+    private updateCachedModel(editor: IContentModelEditor, forceUpdate?: boolean) {
+        const cachedSelection = this.state.cachedSelection;
+        this.state.cachedSelection = undefined; // Clear it to force getDOMSelection() retrieve the latest selection range
+
+        const newRangeEx = editor.getDOMSelection() || undefined;
+        const model = this.state.cachedModel;
+        const isSelectionChanged =
+            forceUpdate ||
+            !cachedSelection ||
+            !newRangeEx ||
+            !areSameRangeEx(newRangeEx, cachedSelection);
+
+        if (isSelectionChanged) {
+            if (
+                !model ||
+                !newRangeEx ||
+                !this.state.domIndexer?.reconcileSelection(model, newRangeEx, cachedSelection)
+            ) {
+                this.invalidateCache();
+            } else {
+                this.state.cachedSelection = newRangeEx;
+            }
+        } else {
+            this.state.cachedSelection = cachedSelection;
+        }
+    }
+
+    private shouldClearCache(event: PluginKeyDownEvent) {
+        const { rawEvent, handledByEditFeature } = event;
+
+        // In these cases we can't update the model, so clear cache:
+        // 1. It is already handled by Content Edit Features
+        if (handledByEditFeature) {
+            return true;
+        }
+
+        // 2. Default behavior is prevented, which means other plugins has handled the event
+        if (rawEvent.defaultPrevented) {
+            return true;
+        }
+
+        // 3. ENTER key is pressed. ENTER key will create new paragraph, so need to update cache to reflect this change
+        // TODO: Handle ENTER key to better reuse content model
+
+        if (rawEvent.which == Keys.ENTER) {
+            return true;
+        }
+
+        // 4. Current selection is image or table or expanded range selection, and is inputting some text
+        if (
+            (this.state.cachedSelection?.type != 'range' ||
+                !this.state.cachedSelection.range.collapsed) &&
+            isCharacterValue(rawEvent)
+        ) {
+            return true;
+        }
+
+        return false;
     }
 }
 

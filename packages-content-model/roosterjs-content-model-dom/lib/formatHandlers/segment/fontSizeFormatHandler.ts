@@ -1,7 +1,7 @@
-import { FontSizeFormat } from 'roosterjs-content-model-types';
-import { FormatHandler } from '../FormatHandler';
 import { isSuperOrSubScript } from './superOrSubScriptFormatHandler';
 import { parseValueWithUnit } from '../utils/parseValueWithUnit';
+import type { FontSizeFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
 
 /**
  * @internal

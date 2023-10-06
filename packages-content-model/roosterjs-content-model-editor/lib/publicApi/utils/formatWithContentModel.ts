@@ -1,12 +1,14 @@
-import { ChangeSource, PluginEventType, SelectionRangeEx } from 'roosterjs-editor-types';
-import { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import {
+import type { Entity } from 'roosterjs-editor-types';
+import type { ContentModelContentChangedEventData } from '../../publicTypes/event/ContentModelContentChangedEvent';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelFormatter,
     FormatWithContentModelContext,
     FormatWithContentModelOptions,
 } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { DOMSelection } from 'roosterjs-content-model-types';
 
 /**
  * The general API to do format change with Content Model
@@ -33,22 +35,22 @@ export function formatWithContentModel(
         selectionOverride,
     } = options || {};
 
-    editor.focus();
-
     const model = editor.createContentModel(undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
         newEntities: [],
         deletedEntities: [],
         rawEvent,
+        newImages: [],
     };
-    let rangeEx: SelectionRangeEx | undefined;
+    let selection: DOMSelection | undefined;
 
     if (formatter(model, context)) {
         const writeBack = () => {
             handleNewEntities(editor, context);
             handleDeletedEntities(editor, context);
+            handleImages(editor, context);
 
-            rangeEx =
+            selection =
                 editor.setContentModel(model, undefined /*options*/, onNodeCreated) || undefined;
 
             if (preservePendingFormat) {
@@ -56,7 +58,7 @@ export function formatWithContentModel(
                 const pos = editor.getFocusedPosition();
 
                 if (pendingFormat && pos) {
-                    setPendingFormat(editor, pendingFormat, pos);
+                    setPendingFormat(editor, pendingFormat, pos.node, pos.offset);
                 }
             }
         };
@@ -76,7 +78,7 @@ export function formatWithContentModel(
 
         const eventData: ContentModelContentChangedEventData = {
             contentModel: model,
-            rangeEx: rangeEx,
+            selection: selection,
             source: changeSource || ChangeSource.Format,
             data: getChangeData?.(),
             additionalData: {
@@ -103,18 +105,44 @@ function handleDeletedEntities(
     editor: IContentModelEditor,
     context: FormatWithContentModelContext
 ) {
-    context.deletedEntities.forEach(({ entity, operation }) => {
-        if (entity.id && entity.type) {
-            editor.triggerPluginEvent(PluginEventType.EntityOperation, {
-                entity: {
-                    id: entity.id,
-                    isReadonly: entity.isReadonly,
-                    type: entity.type,
-                    wrapper: entity.wrapper,
-                },
-                operation,
-                rawEvent: context.rawEvent,
+    context.deletedEntities.forEach(
+        ({
+            entity: {
+                wrapper,
+                entityFormat: { id, entityType, isReadonly },
+            },
+            operation,
+        }) => {
+            if (id && entityType) {
+                // TODO: Revisit this entity parameter for standalone editor, we may just directly pass ContentModelEntity object instead
+                const entity: Entity = {
+                    id,
+                    type: entityType,
+                    isReadonly: !!isReadonly,
+                    wrapper,
+                };
+                editor.triggerPluginEvent(PluginEventType.EntityOperation, {
+                    entity,
+                    operation,
+                    rawEvent: context.rawEvent,
+                });
+            }
+        }
+    );
+}
+
+function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+    if (context.newImages.length > 0) {
+        const viewport = editor.getVisibleViewport();
+        if (viewport) {
+            const { top, bottom, left, right } = viewport;
+            const minMaxImageSize = 10;
+            const maxWidth = Math.max(right - left, minMaxImageSize);
+            const maxHeight = Math.max(bottom - top, minMaxImageSize);
+            context.newImages.forEach(image => {
+                image.format.maxHeight = `${maxHeight}px`;
+                image.format.maxWidth = `${maxWidth}px`;
             });
         }
-    });
+    }
 }

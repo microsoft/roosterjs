@@ -1,4 +1,4 @@
-import EdgeLinkPreview from '../browser/EdgeLinkPreview';
+import type EdgeLinkPreview from '../browser/EdgeLinkPreview';
 
 /**
  * An object contains all related data for pasting

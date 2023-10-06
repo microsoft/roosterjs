@@ -23,6 +23,7 @@ export interface BuildInPluginList {
     contextMenu: boolean;
     autoFormat: boolean;
     contentModelPaste: boolean;
+    announce: boolean;
 }
 
 export default interface BuildInPluginState {
@@ -34,6 +35,7 @@ export default interface BuildInPluginState {
     experimentalFeatures: ExperimentalFeatures[];
     forcePreserveRatio: boolean;
     isRtl: boolean;
+    cacheModel?: boolean;
     tableFeaturesContainerSelector: string;
 }
 

@@ -12,13 +12,22 @@ describe('setListStyle', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (editor, apiName, callback) => {
                 expect(apiName).toBe('setListStyle');
-                const result = callback(input, { newEntities: [], deletedEntities: [] });
+                const result = callback(input, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
 
                 expect(result).toBe(expectedResult);
             }
         );
 
-        setListStyle(null!, style);
+        setListStyle(
+            {
+                focus: () => {},
+            } as any,
+            style
+        );
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);

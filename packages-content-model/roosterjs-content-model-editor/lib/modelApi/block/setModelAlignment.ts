@@ -1,7 +1,7 @@
 import { alignTable } from '../table/alignTable';
-import { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 import { getOperationalBlocks } from '../selection/collectSelections';
 import { TableOperation } from 'roosterjs-editor-types';
+import type { ContentModelDocument, ContentModelListItem } from 'roosterjs-content-model-types';
 
 const ResultMap: Record<
     'left' | 'center' | 'right',

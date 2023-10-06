@@ -1,8 +1,8 @@
-import { ContentModelFormatBase } from '../format/ContentModelFormatBase';
-import { ContentModelFormatMap } from '../format/ContentModelFormatMap';
-import { DomToModelContext } from './DomToModelContext';
-import { ElementProcessor } from './ElementProcessor';
-import { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
+import type { ContentModelFormatBase } from '../format/ContentModelFormatBase';
+import type { ContentModelFormatMap } from '../format/ContentModelFormatMap';
+import type { DomToModelContext } from './DomToModelContext';
+import type { ElementProcessor } from './ElementProcessor';
+import type { FormatHandlerTypeMap, FormatKey } from '../format/FormatHandlerTypeMap';
 
 /**
  * A type of Default style map, from tag name string (in upper case) to a static style object

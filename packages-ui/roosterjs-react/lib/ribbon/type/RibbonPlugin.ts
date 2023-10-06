@@ -1,6 +1,6 @@
-import RibbonButton from './RibbonButton';
-import { FormatState } from 'roosterjs-editor-types';
-import { LocalizedStrings, ReactEditorPlugin } from '../../common/index';
+import type RibbonButton from './RibbonButton';
+import type { FormatState } from 'roosterjs-editor-types';
+import type { LocalizedStrings, ReactEditorPlugin } from '../../common/index';
 
 /**
  * Represents a plugin to connect format ribbon component and the editor

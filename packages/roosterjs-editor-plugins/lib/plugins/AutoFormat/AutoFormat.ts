@@ -1,11 +1,5 @@
-import {
-    ChangeSource,
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-} from 'roosterjs-editor-types';
+import { ChangeSource, PluginEventType, PositionType } from 'roosterjs-editor-types';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const specialCharacters = /[`!@#$%^&*()_+\=\[\]{};':"\\|,.<>\/?~]/;
 

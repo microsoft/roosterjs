@@ -1,4 +1,4 @@
-import { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
+import type { SetContentModel } from '../../publicTypes/ContentModelEditorCore';
 import {
     contentModelToDom,
     createModelToDomContext,
@@ -11,14 +11,13 @@ import {
  * @param core The editor core object
  * @param model The content model to set
  * @param option Additional options to customize the behavior of Content Model to DOM conversion
- * @param onNodeCreated An optional callback that will be called when a DOM node is created
  */
 export const setContentModel: SetContentModel = (core, model, option, onNodeCreated) => {
     const editorContext = core.api.createEditorContext(core);
     const modelToDomContext = option
         ? createModelToDomContext(editorContext, ...(core.defaultModelToDomOptions || []), option)
         : createModelToDomContextWithConfig(core.defaultModelToDomConfig, editorContext);
-    const range = contentModelToDom(
+    const selection = contentModelToDom(
         core.contentDiv.ownerDocument,
         core.contentDiv,
         model,
@@ -27,14 +26,14 @@ export const setContentModel: SetContentModel = (core, model, option, onNodeCrea
     );
 
     if (!core.lifecycle.shadowEditFragment) {
-        core.api.select(core, range);
+        core.cache.cachedSelection = selection || undefined;
 
-        if (range) {
-            core.cache.cachedRangeEx = range;
+        if (selection) {
+            core.api.setDOMSelection(core, selection);
         }
+
+        core.cache.cachedModel = model;
     }
 
-    // TODO: Reconcile selection text node cache
-
-    return range;
+    return selection;
 };

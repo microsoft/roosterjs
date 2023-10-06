@@ -1,4 +1,4 @@
-import { ContentPosition } from '../enum/ContentPosition';
+import type { ContentPosition } from '../enum/ContentPosition';
 import type { CompatibleContentPosition } from '../compatibleEnum/ContentPosition';
 
 /**

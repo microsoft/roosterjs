@@ -1,5 +1,5 @@
-import { ContentModelDocument, ContentModelSegment } from 'roosterjs-content-model-types';
 import { getSelectedSegmentsAndParagraphs } from '../../modelApi/selection/collectSelections';
+import type { ContentModelDocument, ContentModelSegment } from 'roosterjs-content-model-types';
 
 /**
  * Get selected segments from a content model

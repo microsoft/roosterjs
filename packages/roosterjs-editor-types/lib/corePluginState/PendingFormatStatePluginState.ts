@@ -1,5 +1,5 @@
-import NodePosition from '../interface/NodePosition';
-import { PendableFormatState } from '../interface/FormatState';
+import type NodePosition from '../interface/NodePosition';
+import type { PendableFormatState } from '../interface/FormatState';
 
 /**
  * The state object for PendingFormatStatePlugin

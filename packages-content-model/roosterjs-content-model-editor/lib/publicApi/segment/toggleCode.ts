@@ -1,7 +1,7 @@
 import { addCode } from 'roosterjs-content-model-dom';
-import { ContentModelCode } from 'roosterjs-content-model-types';
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelCode } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 const DefaultCode: ContentModelCode = {
     format: {
@@ -14,6 +14,8 @@ const DefaultCode: ContentModelCode = {
  * @param editor The editor to operate on
  */
 export default function toggleCode(editor: IContentModelEditor) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'toggleCode',

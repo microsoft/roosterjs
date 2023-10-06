@@ -1,5 +1,5 @@
-import GeneratedImageSize from '../types/GeneratedImageSize';
-import ImageEditInfo from '../types/ImageEditInfo';
+import type GeneratedImageSize from '../types/GeneratedImageSize';
+import type ImageEditInfo from '../types/ImageEditInfo';
 
 /**
  * @internal

@@ -9,6 +9,7 @@ import setStyles from '../style/setStyles';
 import toArray from '../jsUtils/toArray';
 import { cloneObject } from './cloneObject';
 import { isCssVariable, processCssVariable } from './processCssVariable';
+import { NodeType } from 'roosterjs-editor-types';
 import {
     getAllowedAttributes,
     getAllowedCssClassesRegex,
@@ -16,12 +17,11 @@ import {
     getDefaultStyleValues,
     getStyleCallbacks,
 } from './getAllowedValues';
-import {
+import type {
     AttributeCallbackMap,
     CssStyleCallbackMap,
     ElementCallbackMap,
     HtmlSanitizerOptions,
-    NodeType,
     PredefinedCssMap,
     SanitizeHtmlOptions,
     StringMap,

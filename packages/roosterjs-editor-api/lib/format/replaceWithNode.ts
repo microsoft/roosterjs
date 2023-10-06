@@ -1,4 +1,5 @@
-import { ContentPosition, IEditor, IPositionContentSearcher } from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
+import type { IEditor, IPositionContentSearcher } from 'roosterjs-editor-types';
 
 /**
  * Replace text before current selection with a node, current selection will be kept if possible

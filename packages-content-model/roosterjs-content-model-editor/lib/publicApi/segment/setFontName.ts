@@ -1,5 +1,5 @@
 import { formatSegmentWithContentModel } from '../utils/formatSegmentWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set font name
@@ -7,6 +7,8 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param fontName The font name to set
  */
 export default function setFontName(editor: IContentModelEditor, fontName: string) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'setFontName',

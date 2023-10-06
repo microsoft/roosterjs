@@ -1,5 +1,5 @@
 import { createBr, createParagraph } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelDocument,

@@ -1,4 +1,4 @@
-import { Snapshots } from 'roosterjs-editor-types';
+import type { Snapshots } from 'roosterjs-editor-types';
 
 /**
  * Check whether can move current snapshot with the given step

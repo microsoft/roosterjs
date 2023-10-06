@@ -1,7 +1,7 @@
 import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Remove link at selection. If no links at selection, do nothing.
@@ -10,6 +10,8 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param editor The editor instance
  */
 export default function removeLink(editor: IContentModelEditor) {
+    editor.focus();
+
     formatWithContentModel(editor, 'removeLink', model => {
         adjustSegmentSelection(
             model,

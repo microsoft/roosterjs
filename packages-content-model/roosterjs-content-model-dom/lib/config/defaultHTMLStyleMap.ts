@@ -1,4 +1,4 @@
-import { DefaultStyleMap } from 'roosterjs-content-model-types';
+import type { DefaultStyleMap } from 'roosterjs-content-model-types';
 
 const blockElement: Partial<CSSStyleDeclaration> = {
     display: 'block',

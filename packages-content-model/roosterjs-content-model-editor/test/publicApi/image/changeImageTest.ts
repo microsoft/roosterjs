@@ -21,7 +21,7 @@ describe('changeImage', () => {
         calledTimes: number
     ) {
         const addUndoSnapshot = jasmine
-            .createSpy()
+            .createSpy('addUndoSnapshot')
             .and.callFake(
                 (callback: () => void, source: string, canUndoByBackspace, param: any) => {
                     expect(source).toBe(undefined!);
@@ -38,8 +38,11 @@ describe('changeImage', () => {
 
         const image = document.createElement('img');
 
-        const getSelectionRangeEx = jasmine.createSpy().and.returnValues({ type: 2, image: image });
+        const getDOMSelection = jasmine
+            .createSpy()
+            .and.returnValues({ type: 'image', image: image });
         const triggerPluginEvent = jasmine.createSpy().and.callThrough();
+        const getVisibleViewport = jasmine.createSpy().and.callThrough();
 
         const editor = ({
             createContentModel: () => model,
@@ -48,8 +51,9 @@ describe('changeImage', () => {
             setContentModel,
             isDisposed: () => false,
             getDocument: () => document,
-            getSelectionRangeEx,
+            getDOMSelection,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
 

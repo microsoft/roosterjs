@@ -1,12 +1,7 @@
+import { Keys, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { TABLE_CELL_SELECTOR } from '../constants';
-import {
-    GenericContentEditFeature,
-    IEditor,
-    Keys,
-    PluginEvent,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { GenericContentEditFeature, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal
