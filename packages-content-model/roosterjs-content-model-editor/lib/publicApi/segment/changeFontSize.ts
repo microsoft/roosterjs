@@ -25,6 +25,8 @@ export default function changeFontSize(
     editor: IContentModelEditor,
     change: 'increase' | 'decrease'
 ) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'changeFontSize',

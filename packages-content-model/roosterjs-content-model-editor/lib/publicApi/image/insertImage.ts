@@ -10,6 +10,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param file Image Blob file or source string
  */
 export default function insertImage(editor: IContentModelEditor, imageFileOrSrc: File | string) {
+    editor.focus();
+
     if (typeof imageFileOrSrc == 'string') {
         insertImageWithSrc(editor, imageFileOrSrc);
     } else {

@@ -4,7 +4,6 @@ import ContentModelFormatPlugin from '../../../lib/editor/corePlugins/ContentMod
 import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelFormatPluginState } from '../../../lib/publicTypes/pluginState/ContentModelFormatPluginState';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
-import { Position } from 'roosterjs-editor-dom';
 import {
     addSegment,
     createContentModelDocument,
@@ -164,6 +163,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             triggerPluginEvent: jasmine.createSpy('triggerPluginEvent'),
+            getVisibleViewport: jasmine.createSpy('getVisibleViewport'),
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -215,6 +215,7 @@ describe('ContentModelFormatPlugin', () => {
 
         const setContentModel = jasmine.createSpy('setContentModel');
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         const model = createContentModelDocument();
         const text = createText('test a test', { fontFamily: 'Arial' });
         const marker = createSelectionMarker();
@@ -232,6 +233,7 @@ describe('ContentModelFormatPlugin', () => {
             cacheContentModel: () => {},
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
         const state = {
             defaultFormat: {},
@@ -495,7 +497,8 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(setPendingFormatSpy).toHaveBeenCalledWith(
             editor,
             { fontFamily: 'Arial' },
-            new Position(contentDiv, 0)
+            contentDiv,
+            0
         );
     });
 
@@ -597,7 +600,8 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(setPendingFormatSpy).toHaveBeenCalledWith(
             editor,
             { fontFamily: 'Arial' },
-            new Position(contentDiv, 0)
+            contentDiv,
+            0
         );
     });
 
@@ -696,11 +700,7 @@ describe('ContentModelFormatPlugin for default format', () => {
             rawEvent,
         });
 
-        expect(setPendingFormatSpy).toHaveBeenCalledWith(
-            editor,
-            { fontFamily: 'Arial' },
-            new Position(div, 0)
-        );
+        expect(setPendingFormatSpy).toHaveBeenCalledWith(editor, { fontFamily: 'Arial' }, div, 0);
     });
 
     it('Collapsed range, text input, under editor directly, has pending format', () => {
@@ -755,7 +755,8 @@ describe('ContentModelFormatPlugin for default format', () => {
         expect(setPendingFormatSpy).toHaveBeenCalledWith(
             editor,
             { fontFamily: 'Arial', fontSize: '10pt' },
-            new Position(contentDiv, 0)
+            contentDiv,
+            0
         );
     });
 });

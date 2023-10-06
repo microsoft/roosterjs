@@ -11,6 +11,8 @@ import type { ListMetadataFormat } from 'roosterjs-content-model-types';
  * @param style The target list item style to set
  */
 export default function setListStyle(editor: IContentModelEditor, style: ListMetadataFormat) {
+    editor.focus();
+
     formatWithContentModel(editor, 'setListStyle', model => {
         const listItem = getFirstSelectedListItem(model);
 

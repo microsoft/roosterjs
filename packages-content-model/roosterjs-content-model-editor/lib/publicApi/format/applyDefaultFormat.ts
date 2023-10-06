@@ -2,11 +2,10 @@ import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
 import { getPendingFormat, setPendingFormat } from '../../modelApi/format/pendingFormat';
-import { isBlockElement, Position } from 'roosterjs-editor-dom';
 import { isNodeOfType, normalizeContentModel } from 'roosterjs-content-model-dom';
+import { isBlockElement } from 'roosterjs-editor-dom';
 import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { NodePosition } from 'roosterjs-editor-types';
 
 /**
  * @internal
@@ -20,8 +19,9 @@ export default function applyDefaultFormat(
 ) {
     const selection = editor.getDOMSelection();
     const range = selection?.type == 'range' ? selection.range : null;
-    const startPos = range ? Position.getStart(range) : null;
-    let node: Node | null = startPos?.node ?? null;
+    const posContainer = range?.startContainer ?? null;
+    const posOffset = range?.startOffset ?? null;
+    let node = posContainer;
 
     while (node && editor.contains(node)) {
         if (isNodeOfType(node, 'ELEMENT_NODE') && node.getAttribute?.('style')) {
@@ -44,7 +44,8 @@ export default function applyDefaultFormat(
         } else if (
             result.deleteResult == DeleteResult.NotDeleted &&
             result.insertPoint &&
-            startPos
+            posContainer &&
+            posOffset !== null
         ) {
             const { paragraph, path, marker } = result.insertPoint;
             const blocks = path[0].blocks;
@@ -67,10 +68,22 @@ export default function applyDefaultFormat(
                 const previousBlock = blocks[blockIndex - 1];
 
                 if (previousBlock?.blockType != 'Paragraph') {
-                    internalApplyDefaultFormat(editor, defaultFormat, marker.format, startPos);
+                    internalApplyDefaultFormat(
+                        editor,
+                        defaultFormat,
+                        marker.format,
+                        posContainer,
+                        posOffset
+                    );
                 }
             } else if (paragraph.segments.every(x => x.segmentType != 'Text')) {
-                internalApplyDefaultFormat(editor, defaultFormat, marker.format, startPos);
+                internalApplyDefaultFormat(
+                    editor,
+                    defaultFormat,
+                    marker.format,
+                    posContainer,
+                    posOffset
+                );
             }
 
             // We didn't do any change but just apply default format to pending format, so no need to write back
@@ -85,7 +98,8 @@ function internalApplyDefaultFormat(
     editor: IContentModelEditor,
     defaultFormat: ContentModelSegmentFormat,
     currentFormat: ContentModelSegmentFormat,
-    startPos: NodePosition
+    posContainer: Node,
+    posOffset: number
 ) {
     const pendingFormat = getPendingFormat(editor) || {};
     const newFormat: ContentModelSegmentFormat = {
@@ -94,5 +108,5 @@ function internalApplyDefaultFormat(
         ...currentFormat,
     };
 
-    setPendingFormat(editor, newFormat, startPos);
+    setPendingFormat(editor, newFormat, posContainer, posOffset);
 }

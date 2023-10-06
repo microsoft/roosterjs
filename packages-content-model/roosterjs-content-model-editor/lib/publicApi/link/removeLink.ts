@@ -10,6 +10,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param editor The editor instance
  */
 export default function removeLink(editor: IContentModelEditor) {
+    editor.focus();
+
     formatWithContentModel(editor, 'removeLink', model => {
         adjustSegmentSelection(
             model,

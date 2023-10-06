@@ -19,6 +19,7 @@ export function paragraphTestCommon(
         expect(model).toEqual(result);
     });
     const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+    const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
     const editor = ({
         createContentModel: () => model,
         addUndoSnapshot,
@@ -28,6 +29,7 @@ export function paragraphTestCommon(
         getFocusedPosition: () => ({}),
         isDarkMode: () => false,
         triggerPluginEvent,
+        getVisibleViewport,
     } as any) as IContentModelEditor;
 
     executionCallback(editor);

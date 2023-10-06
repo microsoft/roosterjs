@@ -52,6 +52,7 @@ export const createEditorCore: CoreCreator<EditorCore, EditorOptions> = (content
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
+        disposeErrorHandler: options.disposeErrorHandler,
     };
 
     return core;

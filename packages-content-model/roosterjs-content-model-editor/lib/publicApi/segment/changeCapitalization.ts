@@ -14,6 +14,8 @@ export default function changeCapitalization(
     capitalization: 'sentence' | 'lowerCase' | 'upperCase' | 'capitalize',
     language?: string
 ) {
+    editor.focus();
+
     formatSegmentWithContentModel(editor, 'changeCapitalization', (_, __, segment) => {
         if (segment?.segmentType == 'Text') {
             switch (capitalization) {

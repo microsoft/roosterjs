@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveChildNodes } from '../../domUtils/moveChildNodes';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
 import type {
     ContentModelBlockHandler,

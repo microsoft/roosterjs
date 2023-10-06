@@ -73,7 +73,7 @@ export function formatSegmentWithContentModel(
             const pos = editor.getFocusedPosition();
 
             if (pos) {
-                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos);
+                setPendingFormat(editor, segmentAndParagraphs[0][0].format, pos.node, pos.offset);
             }
         }
 

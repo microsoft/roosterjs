@@ -9,6 +9,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param altText The image alt text
  */
 export default function setImageAltText(editor: IContentModelEditor, altText: string) {
+    editor.focus();
+
     formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {
         image.alt = altText;
     });

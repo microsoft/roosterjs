@@ -11,6 +11,7 @@ describe('toggleNumbering', () => {
     let triggerPluginEvent: jasmine.Spy;
     let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
+    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -20,6 +21,7 @@ describe('toggleNumbering', () => {
         setContentModel = jasmine.createSpy('setContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
         focus = jasmine.createSpy('focus');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus,
@@ -30,6 +32,7 @@ describe('toggleNumbering', () => {
             getFocusedPosition: () => ({}),
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         spyOn(setListType, 'setListType').and.returnValue(true);

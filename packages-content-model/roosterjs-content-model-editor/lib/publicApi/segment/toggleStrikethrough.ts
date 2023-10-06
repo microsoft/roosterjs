@@ -6,6 +6,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param editor The editor to operate on
  */
 export default function toggleStrikethrough(editor: IContentModelEditor) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'toggleStrikethrough',

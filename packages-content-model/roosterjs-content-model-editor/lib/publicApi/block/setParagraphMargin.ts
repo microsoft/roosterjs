@@ -14,6 +14,8 @@ export default function setParagraphMargin(
     marginTop?: string | null,
     marginBottom?: string | null
 ) {
+    editor.focus();
+
     formatParagraphWithContentModel(editor, 'setParagraphMargin', para => {
         if (!para.decorator) {
             para.decorator = createParagraphDecorator('p');

@@ -15,7 +15,9 @@ describe('changeFontSize', () => {
     ) {
         segmentTestCommon(
             'changeFontSize',
-            editor => changeFontSize(editor, change),
+            editor => {
+                changeFontSize(editor, change);
+            },
             model,
             result,
             calledTimes
@@ -329,6 +331,7 @@ describe('changeFontSize', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
             callback();
@@ -352,6 +355,7 @@ describe('changeFontSize', () => {
             setContentModel,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');

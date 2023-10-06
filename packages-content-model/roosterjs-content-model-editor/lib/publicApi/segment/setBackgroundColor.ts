@@ -13,6 +13,8 @@ export default function setBackgroundColor(
     editor: IContentModelEditor,
     backgroundColor: string | null
 ) {
+    editor.focus();
+
     let lastParagraph: ContentModelParagraph | null = null;
     let lastSegmentIndex: number = -1;
 

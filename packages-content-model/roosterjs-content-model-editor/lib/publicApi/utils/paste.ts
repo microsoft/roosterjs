@@ -8,11 +8,12 @@ import type {
 } from 'roosterjs-content-model-types';
 import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { NodePosition, ClipboardData } from 'roosterjs-editor-types';
+import type { ClipboardData } from 'roosterjs-editor-types';
 import {
     applySegmentFormatToElement,
     createDomToModelContext,
     domToContentModel,
+    moveChildNodes,
 } from 'roosterjs-content-model-dom';
 import type { ContentModelBeforePasteEventData } from '../../publicTypes/event/ContentModelBeforePasteEvent';
 import type ContentModelBeforePasteEvent from '../../publicTypes/event/ContentModelBeforePasteEvent';
@@ -21,7 +22,6 @@ import {
     getPasteType,
     handleImagePaste,
     handleTextPaste,
-    moveChildNodes,
     retrieveMetadataFromClipboard,
     sanitizePasteContent,
 } from 'roosterjs-editor-dom';
@@ -48,6 +48,8 @@ export default function paste(
         clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
     }
 
+    editor.focus();
+
     formatWithContentModel(
         editor,
         'Paste',
@@ -67,7 +69,6 @@ export default function paste(
             } = triggerPluginEventAndCreatePasteFragment(
                 editor,
                 clipboardData,
-                null /* position */,
                 pasteAsText,
                 pasteAsImage,
                 eventData,
@@ -158,7 +159,6 @@ function createBeforePasteEventData(
 function triggerPluginEventAndCreatePasteFragment(
     editor: IContentModelEditor,
     clipboardData: ClipboardData,
-    position: NodePosition | null,
     pasteAsText: boolean,
     pasteAsImage: boolean,
     eventData: ContentModelBeforePasteEventData,
@@ -188,7 +188,7 @@ function triggerPluginEventAndCreatePasteFragment(
         moveChildNodes(fragment, doc?.body);
     } else if (text) {
         // Paste text
-        handleTextPaste(text, position, fragment);
+        handleTextPaste(text, null /*position*/, fragment);
     }
 
     const formatContainer = fragment.ownerDocument.createElement('span');
@@ -209,7 +209,7 @@ function triggerPluginEventAndCreatePasteFragment(
     }
 
     // Step 5. Sanitize the fragment before paste to make sure the content is safe
-    sanitizePasteContent(event, position);
+    sanitizePasteContent(event, null /*position*/);
 
     return pluginEvent;
 }

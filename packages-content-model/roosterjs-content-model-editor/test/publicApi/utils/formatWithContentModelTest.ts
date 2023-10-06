@@ -1,6 +1,7 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -9,14 +10,15 @@ describe('formatWithContentModel', () => {
     let addUndoSnapshot: jasmine.Spy;
     let createContentModel: jasmine.Spy;
     let setContentModel: jasmine.Spy;
-    let focus: jasmine.Spy;
     let mockedModel: ContentModelDocument;
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     const apiName = 'mockedApi';
-    const mockedPos = 'POS' as any;
+    const mockedContainer = 'C' as any;
+    const mockedOffset = 'O' as any;
 
     beforeEach(() => {
         mockedModel = ({} as any) as ContentModelDocument;
@@ -24,19 +26,21 @@ describe('formatWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         createContentModel = jasmine.createSpy('createContentModel').and.returnValue(mockedModel);
         setContentModel = jasmine.createSpy('setContentModel');
-        focus = jasmine.createSpy('focus');
         cacheContentModel = jasmine.createSpy('cacheContentModel');
-        getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
+        getFocusedPosition = jasmine
+            .createSpy('getFocusedPosition')
+            .and.returnValue({ node: mockedContainer, offset: mockedOffset });
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
-            focus,
             addUndoSnapshot,
             createContentModel,
             setContentModel,
             cacheContentModel,
             getFocusedPosition,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
@@ -50,11 +54,11 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
         expect(setContentModel).not.toHaveBeenCalled();
-        expect(focus).toHaveBeenCalled();
     });
 
     it('Callback return true', () => {
@@ -66,6 +70,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -76,7 +81,6 @@ describe('formatWithContentModel', () => {
         });
         expect(setContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
-        expect(focus).toHaveBeenCalledTimes(1);
     });
 
     it('Preserve pending format', () => {
@@ -94,6 +98,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -106,7 +111,8 @@ describe('formatWithContentModel', () => {
         expect(pendingFormat.setPendingFormat).toHaveBeenCalledWith(
             editor,
             mockedFormat,
-            mockedPos
+            mockedContainer,
+            mockedOffset
         );
     });
 
@@ -127,6 +133,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -141,6 +148,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -163,6 +171,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -178,6 +187,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -195,6 +205,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
@@ -301,5 +312,30 @@ describe('formatWithContentModel', () => {
         });
 
         expect(createContentModel).toHaveBeenCalledWith(undefined, range);
+    });
+
+    it('Has image', () => {
+        const image = createImage('test');
+        const rawEvent = 'RawEvent' as any;
+        const getVisibleViewportSpy = jasmine
+            .createSpy('getVisibleViewport')
+            .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
+        const mockedData = 'DATA';
+        editor.getVisibleViewport = getVisibleViewportSpy;
+
+        formatWithContentModel(
+            editor,
+            apiName,
+            (model, context) => {
+                context.newImages.push(image);
+                return true;
+            },
+            {
+                rawEvent: rawEvent,
+                getChangeData: () => mockedData,
+            }
+        );
+
+        expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
     });
 });

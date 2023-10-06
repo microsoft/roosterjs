@@ -1,4 +1,4 @@
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveChildNodes } from 'roosterjs-content-model-dom';
 import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 /**

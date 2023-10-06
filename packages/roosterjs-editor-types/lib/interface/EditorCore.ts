@@ -84,6 +84,13 @@ export default interface EditorCore extends PluginState {
      * If keep it null, editor will still use original dataset-based dark mode solution.
      */
     darkColorHandler: DarkColorHandler;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }
 
 /**
