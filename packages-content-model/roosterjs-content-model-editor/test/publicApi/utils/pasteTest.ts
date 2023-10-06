@@ -43,6 +43,7 @@ describe('Paste ', () => {
     let getDocument: jasmine.Spy;
     let getTrustedHTMLHandler: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     const mockedPos = 'POS' as any;
 
@@ -95,6 +96,8 @@ describe('Paste ', () => {
         getTrustedHTMLHandler = jasmine
             .createSpy('getTrustedHTMLHandler')
             .and.returnValue((html: string) => html);
+
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         spyOn(mergeModelFile, 'mergeModel').and.callFake(() => (mockedModel = mockedMergeModel));
         spyOn(getSelectedSegmentsF, 'default').and.returnValue([
             {
@@ -116,6 +119,7 @@ describe('Paste ', () => {
             getDocument,
             getTrustedHTMLHandler,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
@@ -444,7 +448,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -453,7 +457,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'none',
                 mergeTable: true,
@@ -532,7 +536,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             customizedMerge /* customizedMerge */
@@ -550,7 +554,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             pasteModel,
             true /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -559,7 +563,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,

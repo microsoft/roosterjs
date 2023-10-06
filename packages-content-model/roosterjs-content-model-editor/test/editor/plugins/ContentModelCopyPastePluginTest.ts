@@ -48,6 +48,7 @@ describe('ContentModelCopyPastePlugin |', () => {
     let pasteSpy: jasmine.Spy;
     let cloneModelSpy: jasmine.Spy;
     let transformToDarkColorSpy: jasmine.Spy;
+    let getVisibleViewportSpy: jasmine.Spy;
 
     beforeEach(() => {
         div = document.createElement('div');
@@ -64,6 +65,7 @@ describe('ContentModelCopyPastePlugin |', () => {
         setContentModelSpy = jasmine.createSpy('setContentModel');
         pasteSpy = jasmine.createSpy('paste_');
         isDisposed = jasmine.createSpy('isDisposed');
+        getVisibleViewportSpy = jasmine.createSpy('getVisibleViewport');
 
         cloneModelSpy = spyOn(cloneModelFile, 'cloneModel').and.callFake(
             (model: any) => pasteModelValue
@@ -123,6 +125,7 @@ describe('ContentModelCopyPastePlugin |', () => {
             },
             transformToDarkColor: transformToDarkColorSpy,
             isDisposed,
+            getVisibleViewport: getVisibleViewportSpy,
         });
 
         plugin.initialize(editor);

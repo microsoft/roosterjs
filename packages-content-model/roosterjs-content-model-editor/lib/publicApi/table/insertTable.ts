@@ -25,6 +25,8 @@ export default function insertTable(
     rows: number,
     format?: Partial<TableMetadataFormat>
 ) {
+    editor.focus();
+
     formatWithContentModel(editor, 'insertTable', (model, context) => {
         const insertPosition = deleteSelection(model, [], context).insertPoint;
 

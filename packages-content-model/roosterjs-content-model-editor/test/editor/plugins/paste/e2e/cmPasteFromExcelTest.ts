@@ -45,7 +45,7 @@ describe(ID, () => {
         expect(processPastedContentFromExcel.processPastedContentFromExcel).toHaveBeenCalled();
     });
 
-    it('E2E paste a simage', () => {
+    it('E2E paste as image', () => {
         if (Browser.isFirefox) {
             return;
         }
@@ -68,7 +68,10 @@ describe(ID, () => {
                         {
                             segmentType: 'Image',
                             src: 'https://github.com/microsoft/roosterjs',
-                            format: { maxWidth: '100%' },
+                            format: {
+                                maxWidth: '100px',
+                                maxHeight: '100px',
+                            },
                             dataset: {},
                         },
                         {

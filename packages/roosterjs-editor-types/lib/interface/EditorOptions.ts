@@ -144,4 +144,11 @@ export default interface EditorOptions {
      * Color of the border of a selectedImage. Default color: '#DB626C'
      */
     imageSelectionBorderColor?: string;
+
+    /**
+     * A callback to be invoked when any exception is thrown during disposing editor
+     * @param plugin The plugin that causes exception
+     * @param error The error object we got
+     */
+    disposeErrorHandler?: (plugin: EditorPlugin, error: Error) => void;
 }

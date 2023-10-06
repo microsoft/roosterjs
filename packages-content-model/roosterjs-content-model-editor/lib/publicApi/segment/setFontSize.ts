@@ -11,6 +11,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param fontSize The font size to set
  */
 export default function setFontSize(editor: IContentModelEditor, fontSize: string) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'setFontSize',

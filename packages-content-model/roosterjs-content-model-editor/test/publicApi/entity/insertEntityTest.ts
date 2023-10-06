@@ -30,6 +30,7 @@ describe('insertEntity', () => {
         context = {
             newEntities: [],
             deletedEntities: [],
+            newImages: [],
         };
 
         setPropertySpy = jasmine.createSpy('setPropertySpy');

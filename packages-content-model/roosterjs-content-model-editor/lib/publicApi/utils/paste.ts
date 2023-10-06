@@ -48,6 +48,8 @@ export default function paste(
         clipboardData.snapshotBeforePaste = editor.getContent(GetContentMode.RawHTMLWithSelection);
     }
 
+    editor.focus();
+
     formatWithContentModel(
         editor,
         'Paste',

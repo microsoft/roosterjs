@@ -14,6 +14,7 @@ describe('formatParagraphWithContentModel', () => {
     let setContentModel: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
     let focus: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
     let model: ContentModelDocument;
 
     const mockedContainer = 'C' as any;
@@ -25,6 +26,7 @@ describe('formatParagraphWithContentModel', () => {
         addUndoSnapshot = jasmine.createSpy('addUndoSnapshot').and.callFake(callback => callback());
         setContentModel = jasmine.createSpy('setContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
         focus = jasmine.createSpy('focus');
 
         editor = ({
@@ -36,6 +38,7 @@ describe('formatParagraphWithContentModel', () => {
             getCustomData: () => ({}),
             getFocusedPosition: () => ({ node: mockedContainer, offset: mockedOffset }),
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 

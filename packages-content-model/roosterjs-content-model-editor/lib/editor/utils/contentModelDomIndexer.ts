@@ -41,12 +41,6 @@ function isIndexedSegment(node: Node): node is IndexedSegmentNode {
     );
 }
 
-function isIndexedTable(element: HTMLTableElement): element is IndexedTableElement {
-    const { tableRows } = (element as IndexedTableElement).__roosterjsContentModel ?? {};
-
-    return Array.isArray(tableRows) && tableRows.every(row => Array.isArray(row.cells));
-}
-
 function onSegment(
     segmentNode: Node,
     paragraph: ContentModelParagraph,
@@ -112,34 +106,9 @@ function reconcileSelection(
 
     switch (newSelection.type) {
         case 'image':
-            const imageModel = isIndexedSegment(newSelection.image)
-                ? newSelection.image.__roosterjsContentModel.segments[0]
-                : null;
-
-            if (imageModel?.segmentType == 'Image') {
-                imageModel.isSelected = true;
-                imageModel.isSelectedAsImageSelection = true;
-
-                return true;
-            }
-
-            break;
-
         case 'table':
-            const rows = isIndexedTable(newSelection.table)
-                ? newSelection.table.__roosterjsContentModel.tableRows
-                : null;
-            rows?.forEach((row, rowIndex) => {
-                row.cells.forEach((cell, colIndex) => {
-                    cell.isSelected =
-                        rowIndex >= newSelection.firstRow &&
-                        rowIndex <= newSelection.lastRow &&
-                        colIndex >= newSelection.firstColumn &&
-                        colIndex <= newSelection.lastColumn;
-                });
-            });
-
-            return true;
+            // For image and table selection, we just clear the cached model since during selecting the element id might be changed
+            return false;
 
         case 'range':
             const newRange = newSelection.range;
