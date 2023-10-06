@@ -11,7 +11,11 @@ describe('setListStartNumber', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (editor, apiName, callback) => {
                 expect(apiName).toBe('setListStartNumber');
-                const result = callback(input, { newEntities: [], deletedEntities: [] });
+                const result = callback(input, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    images: [],
+                });
 
                 expect(result).toBe(expectedResult);
             }

@@ -448,7 +448,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], images: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -457,7 +457,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], images: [] },
             {
                 mergeFormat: 'none',
                 mergeTable: true,
@@ -536,7 +536,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], images: [] },
             pasteModel,
             false /* applyCurrentFormat */,
             customizedMerge /* customizedMerge */
@@ -554,7 +554,7 @@ describe('mergePasteContent', () => {
 
         pasteF.mergePasteContent(
             sourceModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], images: [] },
             pasteModel,
             true /* applyCurrentFormat */,
             undefined /* customizedMerge */
@@ -563,7 +563,7 @@ describe('mergePasteContent', () => {
         expect(mergeModelFile.mergeModel).toHaveBeenCalledWith(
             sourceModel,
             pasteModel,
-            { newEntities: [], deletedEntities: [] },
+            { newEntities: [], deletedEntities: [], images: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
                 mergeTable: false,

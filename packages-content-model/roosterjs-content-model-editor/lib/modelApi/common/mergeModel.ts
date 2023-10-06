@@ -151,7 +151,7 @@ function mergeParagraph(
                     context.newEntities.push(segment);
                 }
 
-                if (segment.segmentType == 'Image' && context.images) {
+                if (segment.segmentType == 'Image') {
                     context.images.push(segment);
                 }
             }

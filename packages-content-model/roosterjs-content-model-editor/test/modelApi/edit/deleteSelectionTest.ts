@@ -527,7 +527,7 @@ describe('deleteSelection - selectionOnly', () => {
 
         entity.isSelected = true;
 
-        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
+        const result = deleteSelection(model, [], { newEntities: [], deletedEntities, images: [] });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -582,7 +582,7 @@ describe('deleteSelection - selectionOnly', () => {
         entity.isSelected = true;
 
         const deletedEntities: DeletedEntity[] = [];
-        const result = deleteSelection(model, [], { newEntities: [], deletedEntities });
+        const result = deleteSelection(model, [], { newEntities: [], deletedEntities, images: [] });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
         expect(result.insertPoint).toEqual({
@@ -1487,6 +1487,7 @@ describe('deleteSelection - forward', () => {
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            images: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -1534,6 +1535,7 @@ describe('deleteSelection - forward', () => {
         const result = deleteSelection(model, [forwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            images: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -3243,6 +3245,7 @@ describe('deleteSelection - backward', () => {
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
             newEntities: [],
             deletedEntities,
+            images: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);
@@ -3291,6 +3294,7 @@ describe('deleteSelection - backward', () => {
         const result = deleteSelection(model, [backwardDeleteCollapsedSelection], {
             newEntities,
             deletedEntities,
+            images: [],
         });
 
         expect(result.deleteResult).toBe(DeleteResult.Range);

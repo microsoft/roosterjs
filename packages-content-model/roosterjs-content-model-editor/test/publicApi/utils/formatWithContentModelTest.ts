@@ -328,10 +328,7 @@ describe('formatWithContentModel', () => {
             editor,
             apiName,
             (model, context) => {
-                context = {
-                    ...context,
-                    images: [image],
-                };
+                context.images.push(image);
                 return true;
             },
             {
