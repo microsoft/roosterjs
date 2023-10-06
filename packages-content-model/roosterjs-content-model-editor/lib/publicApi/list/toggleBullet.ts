@@ -9,6 +9,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param editor The editor to operate on
  */
 export default function toggleBullet(editor: IContentModelEditor) {
+    editor.focus();
+
     formatWithContentModel(editor, 'toggleBullet', model => setListType(model, 'UL'), {
         preservePendingFormat: true,
     });

@@ -35,8 +35,6 @@ export function formatWithContentModel(
         selectionOverride,
     } = options || {};
 
-    editor.focus();
-
     const model = editor.createContentModel(undefined /*option*/, selectionOverride);
     const context: FormatWithContentModelContext = {
         newEntities: [],

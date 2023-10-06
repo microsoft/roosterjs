@@ -31,6 +31,8 @@ export default function toggleBlockQuote(
         ...quoteFormat,
     };
 
+    editor.focus();
+
     formatWithContentModel(
         editor,
         'toggleBlockQuote',

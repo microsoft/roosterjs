@@ -148,7 +148,8 @@ export default function insertEntity(
         }
     } else if (isReadonly) {
         addDelimiters(entity.wrapper);
-        if (entity.wrapper.nextElementSibling) {
+
+        if (entity.wrapper.nextElementSibling && editor.hasFocus()) {
             editor.select(new Position(entity.wrapper.nextElementSibling, PositionType.After));
         }
     }

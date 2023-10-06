@@ -40,6 +40,8 @@ export default function insertLink(
     displayText?: string,
     target?: string
 ) {
+    editor.focus();
+
     let url = (checkXss(link) || '').trim();
     if (url) {
         const linkData = matchLink(url);

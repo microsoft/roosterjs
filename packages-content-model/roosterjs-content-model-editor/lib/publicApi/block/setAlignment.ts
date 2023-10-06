@@ -11,5 +11,7 @@ export default function setAlignment(
     editor: IContentModelEditor,
     alignment: 'left' | 'center' | 'right'
 ) {
+    editor.focus();
+
     formatWithContentModel(editor, 'setAlignment', model => setModelAlignment(model, alignment));
 }

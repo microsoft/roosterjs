@@ -15,6 +15,8 @@ export default function formatTable(
     format: TableMetadataFormat,
     keepCellShade?: boolean
 ) {
+    editor.focus();
+
     formatWithContentModel(editor, 'formatTable', model => {
         const [tableModel] = getFirstSelectedTable(model);
 

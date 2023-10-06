@@ -7,7 +7,9 @@ import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEdito
 
 describe('clearFormat', () => {
     it('Clear format', () => {
-        const editor = ({} as any) as IContentModelEditor;
+        const editor = ({
+            focus: () => {},
+        } as any) as IContentModelEditor;
         const model = ('Model' as any) as ContentModelDocument;
 
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(

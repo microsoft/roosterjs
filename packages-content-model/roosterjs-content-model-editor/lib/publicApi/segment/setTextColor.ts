@@ -7,6 +7,8 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param textColor The text color to set. Pass null to remove existing color.
  */
 export default function setTextColor(editor: IContentModelEditor, textColor: string | null) {
+    editor.focus();
+
     formatSegmentWithContentModel(
         editor,
         'setTextColor',

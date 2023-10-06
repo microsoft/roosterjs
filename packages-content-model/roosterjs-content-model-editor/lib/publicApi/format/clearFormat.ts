@@ -14,6 +14,8 @@ import type {
  * @param editor The editor to clear format from
  */
 export default function clearFormat(editor: IContentModelEditor) {
+    editor.focus();
+
     formatWithContentModel(editor, 'clearFormat', model => {
         const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
         const segmentsToClear: ContentModelSegment[] = [];

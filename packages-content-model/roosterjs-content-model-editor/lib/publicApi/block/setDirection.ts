@@ -8,5 +8,7 @@ import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor'
  * @param direction Direction value: ltr (Left to right) or rtl (Right to left)
  */
 export default function setDirection(editor: IContentModelEditor, direction: 'ltr' | 'rtl') {
+    editor.focus();
+
     formatWithContentModel(editor, 'setDirection', model => setModelDirection(model, direction));
 }
