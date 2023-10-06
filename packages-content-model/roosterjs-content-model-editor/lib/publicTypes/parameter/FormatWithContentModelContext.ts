@@ -2,6 +2,7 @@ import type { EntityOperation } from 'roosterjs-editor-types';
 import type {
     ContentModelDocument,
     ContentModelEntity,
+    ContentModelImage,
     DOMSelection,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
@@ -34,6 +35,11 @@ export interface FormatWithContentModelContext {
      * Entities got deleted during formatting. Need to be set by the formatter function
      */
     readonly deletedEntities: DeletedEntity[];
+
+    /**
+     * Images inserted in the editor that needs to have their size adjusted
+     */
+    readonly newImages: ContentModelImage[];
 
     /**
      * Raw Event that triggers this format call

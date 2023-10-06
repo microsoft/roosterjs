@@ -17,7 +17,9 @@ describe('setAlignment', () => {
     ) {
         paragraphTestCommon(
             'setAlignment',
-            editor => setAlignment(editor, 'right'),
+            editor => {
+                setAlignment(editor, 'right');
+            },
             model,
             result,
             calledTimes
@@ -415,11 +417,13 @@ describe('setAlignment in table', () => {
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         spyOn(normalizeTable, 'normalizeTable');
 
@@ -430,6 +434,7 @@ describe('setAlignment in table', () => {
             createContentModel,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 
@@ -813,11 +818,13 @@ describe('setAlignment in list', () => {
     let setContentModel: jasmine.Spy<IContentModelEditor['setContentModel']>;
     let createContentModel: jasmine.Spy<IContentModelEditor['createContentModel']>;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     beforeEach(() => {
         setContentModel = jasmine.createSpy('setContentModel');
         createContentModel = jasmine.createSpy('createContentModel');
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus: () => {},
@@ -826,6 +833,7 @@ describe('setAlignment in list', () => {
             createContentModel,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
     });
 

@@ -13,7 +13,7 @@ describe('clearFormat', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (_, apiName, callback) => {
                 expect(apiName).toEqual('clearFormat');
-                callback(model, { newEntities: [], deletedEntities: [] });
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             }
         );
         spyOn(clearModelFormat, 'clearModelFormat');

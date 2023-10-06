@@ -14,6 +14,7 @@ export function editingTestCommon(
     spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
 
     const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+    const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
     const triggerContentChangedEvent = jasmine.createSpy('triggerContentChangedEvent');
 
     const addUndoSnapshot = jasmine
@@ -38,6 +39,7 @@ export function editingTestCommon(
         isDisposed: () => false,
         getFocusedPosition: () => null! as NodePosition,
         triggerContentChangedEvent,
+        getVisibleViewport,
         isDarkMode: () => false,
     } as any) as IContentModelEditor;
 
