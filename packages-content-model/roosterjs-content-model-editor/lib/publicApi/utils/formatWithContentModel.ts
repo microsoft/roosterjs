@@ -42,6 +42,7 @@ export function formatWithContentModel(
         newEntities: [],
         deletedEntities: [],
         rawEvent,
+        newImages: [],
     };
     let selection: DOMSelection | undefined;
 
@@ -49,6 +50,7 @@ export function formatWithContentModel(
         const writeBack = () => {
             handleNewEntities(editor, context);
             handleDeletedEntities(editor, context);
+            handleImages(editor, context);
 
             selection =
                 editor.setContentModel(model, undefined /*options*/, onNodeCreated) || undefined;
@@ -129,4 +131,20 @@ function handleDeletedEntities(
             }
         }
     );
+}
+
+function handleImages(editor: IContentModelEditor, context: FormatWithContentModelContext) {
+    if (context.newImages.length > 0) {
+        const viewport = editor.getVisibleViewport();
+        if (viewport) {
+            const { top, bottom, left, right } = viewport;
+            const minMaxImageSize = 10;
+            const maxWidth = Math.max(right - left, minMaxImageSize);
+            const maxHeight = Math.max(bottom - top, minMaxImageSize);
+            context.newImages.forEach(image => {
+                image.format.maxHeight = `${maxHeight}px`;
+                image.format.maxWidth = `${maxWidth}px`;
+            });
+        }
+    }
 }

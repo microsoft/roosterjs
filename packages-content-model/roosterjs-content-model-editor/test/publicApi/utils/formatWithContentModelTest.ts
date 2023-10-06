@@ -1,6 +1,7 @@
 import * as pendingFormat from '../../../lib/modelApi/format/pendingFormat';
 import { ChangeSource, EntityOperation, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
+import { createImage } from 'roosterjs-content-model-dom';
 import { formatWithContentModel } from '../../../lib/publicApi/utils/formatWithContentModel';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 
@@ -14,6 +15,7 @@ describe('formatWithContentModel', () => {
     let cacheContentModel: jasmine.Spy;
     let getFocusedPosition: jasmine.Spy;
     let triggerPluginEvent: jasmine.Spy;
+    let getVisibleViewport: jasmine.Spy;
 
     const apiName = 'mockedApi';
     const mockedPos = 'POS' as any;
@@ -28,6 +30,7 @@ describe('formatWithContentModel', () => {
         cacheContentModel = jasmine.createSpy('cacheContentModel');
         getFocusedPosition = jasmine.createSpy('getFocusedPosition').and.returnValue(mockedPos);
         triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         editor = ({
             focus,
@@ -37,6 +40,7 @@ describe('formatWithContentModel', () => {
             cacheContentModel,
             getFocusedPosition,
             triggerPluginEvent,
+            getVisibleViewport,
             isDarkMode: () => false,
         } as any) as IContentModelEditor;
     });
@@ -50,6 +54,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -66,6 +71,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -94,6 +100,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -127,6 +134,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -141,6 +149,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -163,6 +172,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -178,6 +188,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -195,6 +206,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
@@ -301,5 +313,30 @@ describe('formatWithContentModel', () => {
         });
 
         expect(createContentModel).toHaveBeenCalledWith(undefined, range);
+    });
+
+    it('Has image', () => {
+        const image = createImage('test');
+        const rawEvent = 'RawEvent' as any;
+        const getVisibleViewportSpy = jasmine
+            .createSpy('getVisibleViewport')
+            .and.returnValue({ top: 100, bottom: 200, left: 100, right: 200 });
+        const mockedData = 'DATA';
+        editor.getVisibleViewport = getVisibleViewportSpy;
+
+        formatWithContentModel(
+            editor,
+            apiName,
+            (model, context) => {
+                context.newImages.push(image);
+                return true;
+            },
+            {
+                rawEvent: rawEvent,
+                getChangeData: () => mockedData,
+            }
+        );
+
+        expect(getVisibleViewportSpy).toHaveBeenCalledTimes(1);
     });
 });

@@ -14,6 +14,14 @@ export function initEditor(id: string) {
 
     let options: ContentModelEditorOptions = {
         plugins: [new ContentModelPastePlugin()],
+        getVisibleViewport: () => {
+            return {
+                top: 100,
+                bottom: 200,
+                left: 100,
+                right: 200,
+            };
+        },
     };
 
     let editor = new ContentModelEditor(node as HTMLDivElement, options);
