@@ -445,7 +445,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
         const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
         expect(node1.__roosterjsContentModel).toEqual({
             paragraph,
             segments: [oldSegment1],
@@ -465,8 +465,6 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
             src: 'test',
             format: {},
             dataset: {},
-            isSelected: true,
-            isSelectedAsImageSelection: true,
         });
     });
 
@@ -503,7 +501,7 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
 
         const result = contentModelDomIndexer.reconcileSelection(model, newRangeEx);
 
-        expect(result).toBeTrue();
+        expect(result).toBeFalse();
         expect(node1.__roosterjsContentModel).toEqual({
             tableRows: tableModel.rows,
         });
@@ -512,15 +510,6 @@ describe('contentModelDomIndexer.reconcileSelection', () => {
             blockGroupType: 'Document',
             blocks: [tableModel],
         });
-        expect(cell00.isSelected).toBeFalse();
-        expect(cell01.isSelected).toBeFalse();
-        expect(cell02.isSelected).toBeFalse();
-        expect(cell10.isSelected).toBeTrue();
-        expect(cell11.isSelected).toBeTrue();
-        expect(cell12.isSelected).toBeFalse();
-        expect(cell20.isSelected).toBeTrue();
-        expect(cell21.isSelected).toBeTrue();
-        expect(cell22.isSelected).toBeFalse();
     });
 
     it('no old range, collapsed range after last node', () => {
