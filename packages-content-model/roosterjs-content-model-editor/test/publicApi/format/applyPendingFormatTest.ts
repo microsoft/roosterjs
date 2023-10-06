@@ -50,7 +50,7 @@ describe('applyPendingFormat', () => {
                 callback(model, {
                     newEntities: [],
                     deletedEntities: [],
-                    images: [],
+                    newImages: [],
                 });
             }
         );
@@ -120,7 +120,7 @@ describe('applyPendingFormat', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (_, apiName, callback) => {
                 expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], images: [] });
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             }
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -180,7 +180,7 @@ describe('applyPendingFormat', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (_, apiName, callback) => {
                 expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], images: [] });
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             }
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -238,7 +238,7 @@ describe('applyPendingFormat', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (_, apiName, callback) => {
                 expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], images: [] });
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             }
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {
@@ -283,7 +283,7 @@ describe('applyPendingFormat', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (_, apiName, callback) => {
                 expect(apiName).toEqual('applyPendingFormat');
-                callback(model, { newEntities: [], deletedEntities: [], images: [] });
+                callback(model, { newEntities: [], deletedEntities: [], newImages: [] });
             }
         );
         spyOn(iterateSelections, 'iterateSelections').and.callFake((_, callback) => {

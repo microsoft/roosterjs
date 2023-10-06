@@ -152,7 +152,7 @@ function mergeParagraph(
                 }
 
                 if (segment.segmentType == 'Image') {
-                    context.images.push(segment);
+                    context.newImages.push(segment);
                 }
             }
         }

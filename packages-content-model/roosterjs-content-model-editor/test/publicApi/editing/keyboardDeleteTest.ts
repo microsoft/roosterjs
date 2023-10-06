@@ -71,7 +71,7 @@ describe('keyboardDelete', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: mockedEvent,
-            images: [],
+            newImages: [],
             skipUndoSnapshot: true,
         });
     }

@@ -14,7 +14,7 @@ describe('setListStartNumber', () => {
                 const result = callback(input, {
                     newEntities: [],
                     deletedEntities: [],
-                    images: [],
+                    newImages: [],
                 });
 
                 expect(result).toBe(expectedResult);

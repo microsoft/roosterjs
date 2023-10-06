@@ -54,7 +54,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -71,7 +71,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -100,7 +100,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalledTimes(1);
@@ -134,7 +134,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -149,7 +149,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -172,7 +172,7 @@ describe('formatWithContentModel', () => {
             deletedEntities: [],
             rawEvent: undefined,
             skipUndoSnapshot: true,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).not.toHaveBeenCalled();
@@ -188,7 +188,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(addUndoSnapshot).toHaveBeenCalled();
@@ -206,7 +206,7 @@ describe('formatWithContentModel', () => {
             newEntities: [],
             deletedEntities: [],
             rawEvent: undefined,
-            images: [],
+            newImages: [],
         });
         expect(createContentModel).toHaveBeenCalledTimes(1);
         expect(setContentModel).toHaveBeenCalledWith(mockedModel, undefined, undefined);
@@ -328,7 +328,7 @@ describe('formatWithContentModel', () => {
             editor,
             apiName,
             (model, context) => {
-                context.images.push(image);
+                context.newImages.push(image);
                 return true;
             },
             {

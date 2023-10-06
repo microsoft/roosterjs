@@ -28,7 +28,11 @@ describe('mergeModel', () => {
         para.segments.push(marker);
         majorModel.blocks.push(para);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -68,7 +72,11 @@ describe('mergeModel', () => {
         para2.segments.push(text1, text2);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -118,7 +126,11 @@ describe('mergeModel', () => {
         majorModel.blocks.push(para1);
         sourceModel.blocks.push(para2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -197,7 +209,11 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -292,7 +308,11 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara2);
         sourceModel.blocks.push(newPara3);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -439,7 +459,11 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -605,7 +629,11 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newList1);
         sourceModel.blocks.push(newList2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -793,7 +821,11 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(newTable1);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -894,7 +926,11 @@ describe('mergeModel', () => {
         spyOn(applyTableFormat, 'applyTableFormat');
         spyOn(normalizeTable, 'normalizeTable');
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(normalizeTable.normalizeTable).not.toHaveBeenCalled();
         expect(majorModel).toEqual({
@@ -1014,7 +1050,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeTable: true,
             }
@@ -1156,7 +1192,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeTable: true,
             }
@@ -1287,7 +1323,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeTable: true,
             }
@@ -1401,7 +1437,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 insertPosition: {
                     marker: marker2,
@@ -1484,7 +1520,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'mergeAll',
             }
@@ -1546,7 +1582,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
             }
@@ -1614,7 +1650,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
             }
@@ -1709,7 +1745,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
             }
@@ -1785,7 +1821,11 @@ describe('mergeModel', () => {
 
         sourceModel.blocks.push(divider);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1852,7 +1892,11 @@ describe('mergeModel', () => {
         sourceModel.blocks.push(newPara1);
         sourceModel.blocks.push(newPara2);
 
-        mergeModel(majorModel, sourceModel, { newEntities: [], deletedEntities: [], images: [] });
+        mergeModel(majorModel, sourceModel, {
+            newEntities: [],
+            deletedEntities: [],
+            newImages: [],
+        });
 
         expect(majorModel).toEqual({
             blockGroupType: 'Document',
@@ -1952,7 +1996,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'keepSourceEmphasisFormat',
             }
@@ -2033,7 +2077,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'mergeAll',
             }
@@ -2130,7 +2174,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'none',
             }
@@ -2320,7 +2364,7 @@ describe('mergeModel', () => {
         mergeModel(
             majorModel,
             sourceModel,
-            { newEntities: [], deletedEntities: [], images: [] },
+            { newEntities: [], deletedEntities: [], newImages: [] },
             {
                 mergeFormat: 'mergeAll',
             }
@@ -2860,7 +2904,7 @@ describe('mergeModel', () => {
         });
         const context: FormatWithContentModelContext = {
             deletedEntities: [],
-            images: [],
+            newImages: [],
             newEntities: [],
         };
 
@@ -2923,7 +2967,7 @@ describe('mergeModel', () => {
         expect(context).toEqual({
             newEntities: [newEntity],
             deletedEntities: [],
-            images: [],
+            newImages: [],
         });
     });
 
@@ -2948,7 +2992,7 @@ describe('mergeModel', () => {
 
         const context: FormatWithContentModelContext = {
             deletedEntities: [],
-            images: [],
+            newImages: [],
             newEntities: [],
         };
         mergeModel(majorModel, sourceModel, context);
@@ -2980,7 +3024,7 @@ describe('mergeModel', () => {
                     operation: EntityOperation.Overwrite,
                 },
             ],
-            images: [],
+            newImages: [],
         });
     });
 
@@ -3011,7 +3055,7 @@ describe('mergeModel', () => {
 
         const context: FormatWithContentModelContext = {
             deletedEntities: [],
-            images: [],
+            newImages: [],
             newEntities: [],
         };
 
@@ -3040,7 +3084,7 @@ describe('mergeModel', () => {
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
-            images: [newImage],
+            newImages: [newImage],
         });
     });
 
@@ -3077,7 +3121,7 @@ describe('mergeModel', () => {
 
         const context: FormatWithContentModelContext = {
             deletedEntities: [],
-            images: [],
+            newImages: [],
             newEntities: [],
         };
 
@@ -3107,7 +3151,7 @@ describe('mergeModel', () => {
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
-            images: [newImage, newImage1],
+            newImages: [newImage, newImage1],
         });
     });
 
@@ -3145,7 +3189,7 @@ describe('mergeModel', () => {
         const context: FormatWithContentModelContext = {
             deletedEntities: [],
             newEntities: [],
-            images: [image],
+            newImages: [image],
         };
 
         mergeModel(majorModel, sourceModel, context, {
@@ -3174,7 +3218,7 @@ describe('mergeModel', () => {
         expect(context).toEqual({
             deletedEntities: [],
             newEntities: [],
-            images: [image, newImage],
+            newImages: [image, newImage],
         });
     });
 });

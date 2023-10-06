@@ -45,7 +45,7 @@ describe('handleKeyboardEventResult', () => {
         const context: FormatWithContentModelContext = {
             newEntities: [],
             deletedEntities: [],
-            images: [],
+            newImages: [],
         };
         const result = handleKeyboardEventResult(
             mockedEditor,
@@ -71,7 +71,7 @@ describe('handleKeyboardEventResult', () => {
         const context: FormatWithContentModelContext = {
             newEntities: [],
             deletedEntities: [],
-            images: [],
+            newImages: [],
         };
         const result = handleKeyboardEventResult(
             mockedEditor,
@@ -95,7 +95,7 @@ describe('handleKeyboardEventResult', () => {
         const context: FormatWithContentModelContext = {
             newEntities: [],
             deletedEntities: [],
-            images: [],
+            newImages: [],
         };
         const result = handleKeyboardEventResult(
             mockedEditor,
@@ -121,7 +121,7 @@ describe('handleKeyboardEventResult', () => {
         const context: FormatWithContentModelContext = {
             newEntities: [],
             deletedEntities: [],
-            images: [],
+            newImages: [],
         };
         const result = handleKeyboardEventResult(
             mockedEditor,

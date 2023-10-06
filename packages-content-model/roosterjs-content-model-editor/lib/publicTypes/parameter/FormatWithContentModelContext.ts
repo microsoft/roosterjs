@@ -39,7 +39,7 @@ export interface FormatWithContentModelContext {
     /**
      * Images inserted in the editor that needs to have their size adjusted
      */
-    readonly images: ContentModelImage[];
+    readonly newImages: ContentModelImage[];
 
     /**
      * Raw Event that triggers this format call
