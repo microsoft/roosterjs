@@ -1,5 +1,5 @@
 import findClosestElementAncestor from '../utils/findClosestElementAncestor';
-import { RegionBase } from 'roosterjs-editor-types';
+import type { RegionBase } from 'roosterjs-editor-types';
 
 /**
  * @internal

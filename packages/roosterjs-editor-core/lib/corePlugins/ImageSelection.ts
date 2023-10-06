@@ -1,13 +1,6 @@
-import { safeInstanceOf } from 'roosterjs-editor-dom';
-
-import {
-    EditorPlugin,
-    IEditor,
-    PluginEvent,
-    PluginEventType,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import { PluginEventType, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
+import { Position, safeInstanceOf } from 'roosterjs-editor-dom';
+import type { EditorPlugin, IEditor, PluginEvent } from 'roosterjs-editor-types';
 
 const Escape = 'Escape';
 const Delete = 'Delete';
@@ -45,14 +38,6 @@ export default class ImageSelection implements EditorPlugin {
     onPluginEvent(event: PluginEvent) {
         if (this.editor) {
             switch (event.eventType) {
-                case PluginEventType.EnteredShadowEdit:
-                case PluginEventType.LeavingShadowEdit:
-                    const selection = this.editor.getSelectionRangeEx();
-                    if (selection.type == SelectionRangeTypes.ImageSelection) {
-                        this.editor.select(selection.image);
-                    }
-                    break;
-
                 case PluginEventType.MouseUp:
                     const target = event.rawEvent.target;
                     if (
@@ -74,10 +59,17 @@ export default class ImageSelection implements EditorPlugin {
                         this.editor.select(null);
                     }
                     break;
-                case PluginEventType.KeyUp:
-                    const key = event.rawEvent.key;
+                case PluginEventType.KeyDown:
+                    const rawEvent = event.rawEvent;
+                    const key = rawEvent.key;
                     const keyDownSelection = this.editor.getSelectionRangeEx();
-                    if (keyDownSelection.type === SelectionRangeTypes.ImageSelection) {
+                    if (
+                        !rawEvent.ctrlKey &&
+                        !rawEvent.altKey &&
+                        !rawEvent.shiftKey &&
+                        !rawEvent.metaKey &&
+                        keyDownSelection.type === SelectionRangeTypes.ImageSelection
+                    ) {
                         if (key === Escape) {
                             this.editor.select(keyDownSelection.image, PositionType.Before);
                             this.editor.getSelectionRange()?.collapse();
@@ -86,7 +78,12 @@ export default class ImageSelection implements EditorPlugin {
                             this.editor.deleteNode(keyDownSelection.image);
                             event.rawEvent.preventDefault();
                         } else {
-                            this.editor.select(keyDownSelection.ranges[0]);
+                            const position = new Position(
+                                keyDownSelection.image,
+                                PositionType.Begin
+                            );
+
+                            this.editor.select(position);
                         }
                     }
                     break;

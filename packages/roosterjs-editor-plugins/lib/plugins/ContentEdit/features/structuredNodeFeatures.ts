@@ -1,10 +1,8 @@
-import {
+import { Keys, KnownCreateElementDataIndex, PositionType } from 'roosterjs-editor-types';
+import type {
     BuildInEditFeature,
     IEditor,
-    Keys,
-    KnownCreateElementDataIndex,
     PluginKeyboardEvent,
-    PositionType,
     StructuredNodeFeatureSettings,
 } from 'roosterjs-editor-types';
 import {

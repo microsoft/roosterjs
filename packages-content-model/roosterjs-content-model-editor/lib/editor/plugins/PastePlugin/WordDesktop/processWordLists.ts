@@ -1,12 +1,12 @@
 import { getStyles } from 'roosterjs-editor-dom';
-import { NodeType } from 'roosterjs-editor-types';
 import {
     addBlock,
     createListItem,
     createListLevel,
+    isNodeOfType,
     parseFormat,
 } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlockGroup,
     ContentModelListItemLevelFormat,
     ContentModelListLevel,
@@ -184,7 +184,7 @@ function getFakeBulletText(node: Node, levels?: number): string {
             if (result.length == 0) {
                 result = 'o';
             }
-        } else if (child.nodeType == NodeType.Element && levels > 1) {
+        } else if (isNodeOfType(child, 'ELEMENT_NODE') && levels > 1) {
             // If this is an element and we are not in the last level, try to get the fake bullet
             // out of the child
             result = getFakeBulletText(child, levels - 1);
@@ -201,7 +201,7 @@ function getFakeBulletText(node: Node, levels?: number): string {
  * HTML lists
  */
 function isIgnoreNode(node: Node): boolean {
-    if (node.nodeType == NodeType.Element) {
+    if (isNodeOfType(node, 'ELEMENT_NODE')) {
         let listAttribute = getStyles(node as HTMLElement)[MSO_LIST];
         if (
             listAttribute &&

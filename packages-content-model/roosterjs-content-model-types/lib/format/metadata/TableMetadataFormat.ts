@@ -1,4 +1,4 @@
-import { TableBorderFormat } from 'roosterjs-editor-types';
+import type { TableBorderFormat } from 'roosterjs-editor-types';
 import type { CompatibleTableBorderFormat } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

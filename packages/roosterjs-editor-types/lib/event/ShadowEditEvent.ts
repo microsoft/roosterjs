@@ -1,6 +1,6 @@
-import BasePluginEvent from './BasePluginEvent';
-import SelectionPath from '../interface/SelectionPath';
-import { PluginEventType } from '../enum/PluginEventType';
+import type BasePluginEvent from './BasePluginEvent';
+import type SelectionPath from '../interface/SelectionPath';
+import type { PluginEventType } from '../enum/PluginEventType';
 import type { CompatiblePluginEventType } from '../compatibleEnum/PluginEventType';
 
 /**

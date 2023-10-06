@@ -1,6 +1,6 @@
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelBlockType } from '../enum/BlockType';
-import { ContentModelWithFormat } from '../format/ContentModelWithFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelBlockType } from '../enum/BlockType';
+import type { ContentModelWithFormat } from '../format/ContentModelWithFormat';
 
 /**
  * Base type of a block

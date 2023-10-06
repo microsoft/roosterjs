@@ -1,9 +1,9 @@
-import DragAndDropContext from '../types/DragAndDropContext';
-import DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
-import ImageHtmlOptions from '../types/ImageHtmlOptions';
-import { CreateElementData, Rect } from 'roosterjs-editor-types';
 import { ImageEditElementClass } from '../types/ImageEditElementClass';
-import { RotateInfo } from '../types/ImageEditInfo';
+import type DragAndDropContext from '../types/DragAndDropContext';
+import type DragAndDropHandler from '../../../pluginUtils/DragAndDropHandler';
+import type ImageHtmlOptions from '../types/ImageHtmlOptions';
+import type { CreateElementData, Rect } from 'roosterjs-editor-types';
+import type { RotateInfo } from '../types/ImageEditInfo';
 import {
     DEFAULT_ROTATE_HANDLE_HEIGHT,
     DEG_PER_RAD,

@@ -1,6 +1,7 @@
-import { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
 import { getSelectionPath } from 'roosterjs-editor-dom';
-import { PluginEventType, SwitchShadowEdit } from 'roosterjs-editor-types';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type { ContentModelEditorCore } from '../../publicTypes/ContentModelEditorCore';
+import type { SwitchShadowEdit } from 'roosterjs-editor-types';
 
 /**
  * @internal

@@ -1,12 +1,13 @@
 import { applyFormat } from '../utils/applyFormat';
 import { hasMetadata } from '../../domUtils/metadata/updateMetadata';
 import { isBlockEmpty } from '../../modelApi/common/isEmpty';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { moveChildNodes } from '../../domUtils/moveChildNodes';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelTable,
     ModelToDomContext,
+    TableSelection,
 } from 'roosterjs-content-model-types';
 
 /**
@@ -76,18 +77,21 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             const cell = tableRow.cells[col];
 
             if (cell.isSelected) {
-                context.tableSelection = context.tableSelection || {
+                const tableSelection: TableSelection = context.tableSelection || {
+                    type: 'table',
                     table: tableNode,
-                    firstCell: { x: col, y: row },
-                    lastCell: { x: col, y: row },
+                    firstColumn: col,
+                    lastColumn: col,
+                    firstRow: row,
+                    lastRow: row,
                 };
 
-                if (context.tableSelection.table == tableNode) {
-                    const lastCell = context.tableSelection.lastCell;
-
-                    lastCell.x = Math.max(lastCell.x, col);
-                    lastCell.y = Math.max(lastCell.y, row);
+                if (tableSelection.table == tableNode) {
+                    tableSelection.lastColumn = Math.max(tableSelection.lastColumn, col);
+                    tableSelection.lastRow = Math.max(tableSelection.lastRow, row);
                 }
+
+                context.tableSelection = tableSelection;
             }
 
             if (!cell.spanAbove && !cell.spanLeft) {
@@ -144,6 +148,8 @@ export const handleTable: ContentModelBlockHandler<ContentModelTable> = (
             }
         }
     }
+
+    context.domIndexer?.onTable(tableNode, table);
 
     return refNode;
 };

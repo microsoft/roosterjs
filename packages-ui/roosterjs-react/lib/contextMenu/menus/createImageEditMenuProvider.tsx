@@ -1,17 +1,14 @@
-import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import showInputDialog from '../../inputDialog/utils/showInputDialog';
-import { DocumentCommand, EditorPlugin, IEditor, ImageEditOperation } from 'roosterjs-editor-types';
-import { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import { canRegenerateImage, resetImage, resizeByPercentage } from 'roosterjs-editor-plugins';
+import { DocumentCommand, ImageEditOperation } from 'roosterjs-editor-types';
 import { safeInstanceOf } from 'roosterjs-editor-dom';
 import { setImageAltText } from 'roosterjs-editor-api';
-import {
-    canRegenerateImage,
-    ImageEdit,
-    resetImage,
-    resizeByPercentage,
-} from 'roosterjs-editor-plugins';
+import type ContextMenuItem from '../types/ContextMenuItem';
+import type { EditorPlugin, IEditor } from 'roosterjs-editor-types';
+import type { ImageEditMenuItemStringKey } from '../types/ContextMenuItemStringKeys';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
+import type { ImageEdit } from 'roosterjs-editor-plugins';
 
 const ImageAltTextMenuItem: ContextMenuItem<ImageEditMenuItemStringKey, ImageEdit> = {
     key: 'menuNameImageAltText',

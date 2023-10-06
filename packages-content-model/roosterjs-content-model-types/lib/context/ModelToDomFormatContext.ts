@@ -1,6 +1,6 @@
-import { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
-import { ContentModelListLevel } from '../decorator/ContentModelListLevel';
-import { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
+import type { ContentModelBlockFormat } from '../format/ContentModelBlockFormat';
+import type { ContentModelListLevel } from '../decorator/ContentModelListLevel';
+import type { ContentModelSegmentFormat } from '../format/ContentModelSegmentFormat';
 
 /**
  * Represents a list stack item used by Content Model to DOM conversion

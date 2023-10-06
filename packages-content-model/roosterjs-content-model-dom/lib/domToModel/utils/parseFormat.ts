@@ -1,5 +1,5 @@
 import { getDefaultStyle } from './getDefaultStyle';
-import {
+import type {
     ContentModelFormatBase,
     DomToModelContext,
     FormatParser,

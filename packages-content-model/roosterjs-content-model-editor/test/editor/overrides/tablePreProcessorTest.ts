@@ -1,6 +1,5 @@
 import * as tableProcessor from 'roosterjs-content-model-dom/lib/domToModel/processors/tableProcessor';
 import { createContentModelDocument, createDomToModelContext } from 'roosterjs-content-model-dom';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tablePreProcessor } from '../../../lib/editor/overrides/tablePreProcessor';
 
 describe('tablePreProcessor', () => {
@@ -18,9 +17,12 @@ describe('tablePreProcessor', () => {
                     blockType: 'Entity',
                     segmentType: 'Entity',
                     format: {},
-                    id: undefined,
-                    type: undefined,
-                    isReadonly: true,
+                    entityFormat: {
+                        isFakeEntity: true,
+                        id: undefined,
+                        entityType: undefined,
+                        isReadonly: true,
+                    },
                     wrapper: table,
                 },
             ],
@@ -57,14 +59,11 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: txt,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: txt,
+            } as any,
         };
 
         tablePreProcessor(group, table, context);
@@ -89,14 +88,11 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: txt,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: txt,
+            } as any,
         } as any;
 
         tablePreProcessor(group, table, context);
@@ -121,14 +117,11 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.Normal,
-            ranges: [
-                {
-                    commonAncestorContainer: table,
-                } as any,
-            ],
-            areAllCollapsed: false,
+        context.selection = {
+            type: 'range',
+            range: {
+                commonAncestorContainer: table,
+            } as any,
         } as any;
 
         tablePreProcessor(group, table, context);
@@ -153,13 +146,9 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.TableSelection,
+        context.selection = {
+            type: 'table',
             table,
-            coordinates: {
-                firstCell: {},
-                lastCell: {},
-            },
         } as any;
 
         tablePreProcessor(group, table, context);
@@ -184,8 +173,8 @@ describe('tablePreProcessor', () => {
         tr.appendChild(td);
         td.appendChild(txt);
 
-        context.rangeEx = {
-            type: SelectionRangeTypes.ImageSelection,
+        context.selection = {
+            type: 'image',
             image: txt as any,
         } as any;
 

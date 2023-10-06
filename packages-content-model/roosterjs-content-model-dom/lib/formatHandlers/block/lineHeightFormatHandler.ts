@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { LineHeightFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { LineHeightFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal

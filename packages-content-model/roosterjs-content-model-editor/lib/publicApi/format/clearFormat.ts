@@ -1,8 +1,8 @@
 import { clearModelFormat } from '../../modelApi/common/clearModelFormat';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { normalizeContentModel } from 'roosterjs-content-model-dom';
-import {
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,
@@ -14,6 +14,8 @@ import {
  * @param editor The editor to clear format from
  */
 export default function clearFormat(editor: IContentModelEditor) {
+    editor.focus();
+
     formatWithContentModel(editor, 'clearFormat', model => {
         const blocksToClear: [ContentModelBlockGroup[], ContentModelBlock][] = [];
         const segmentsToClear: ContentModelSegment[] = [];

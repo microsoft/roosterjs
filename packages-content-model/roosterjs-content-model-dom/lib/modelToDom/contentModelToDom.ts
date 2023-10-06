@@ -1,17 +1,12 @@
-import { createRange, Position, toArray } from 'roosterjs-editor-dom';
+import toArray from '../domUtils/toArray';
 import { isNodeOfType } from '../domUtils/isNodeOfType';
-import {
+import type {
     ContentModelDocument,
+    DOMSelection,
     ModelToDomBlockAndSegmentNode,
     ModelToDomContext,
     OnNodeCreated,
 } from 'roosterjs-content-model-types';
-import {
-    NodePosition,
-    NodeType,
-    SelectionRangeEx,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
 
 /**
  * Create DOM tree fragment from Content Model document
@@ -30,82 +25,87 @@ export function contentModelToDom(
     model: ContentModelDocument,
     context: ModelToDomContext,
     onNodeCreated?: OnNodeCreated
-): SelectionRangeEx | null {
+): DOMSelection | null {
     context.onNodeCreated = onNodeCreated;
 
     context.modelHandlers.blockGroupChildren(doc, root, model, context);
 
-    const range = extractSelectionRange(context);
+    const range = extractSelectionRange(doc, context);
 
     root.normalize();
 
     return range;
 }
 
-function extractSelectionRange(context: ModelToDomContext): SelectionRangeEx | null {
+function extractSelectionRange(doc: Document, context: ModelToDomContext): DOMSelection | null {
     const {
         regularSelection: { start, end },
         tableSelection,
         imageSelection,
     } = context;
 
-    let startPosition: NodePosition | undefined;
-    let endPosition: NodePosition | undefined;
+    let startPosition: { container: Node; offset: number } | undefined;
+    let endPosition: { container: Node; offset: number } | undefined;
 
-    if (imageSelection?.image) {
-        return {
-            type: SelectionRangeTypes.ImageSelection,
-            ranges: [createRange(imageSelection.image)],
-            areAllCollapsed: false,
-            image: imageSelection.image,
-        };
+    if (imageSelection) {
+        return imageSelection;
     } else if (
         (startPosition = start && calcPosition(start)) &&
         (endPosition = end && calcPosition(end))
     ) {
-        const range = createRange(startPosition, endPosition);
+        const range = doc.createRange();
+
+        range.setStart(startPosition.container, startPosition.offset);
+        range.setEnd(endPosition.container, endPosition.offset);
 
         return {
-            type: SelectionRangeTypes.Normal,
-            ranges: [createRange(startPosition, endPosition)],
-            areAllCollapsed: range.collapsed,
+            type: 'range',
+            range,
         };
-    } else if (tableSelection?.table) {
-        return {
-            type: SelectionRangeTypes.TableSelection,
-            ranges: [],
-            areAllCollapsed: false,
-            table: tableSelection.table,
-            coordinates: {
-                firstCell: tableSelection.firstCell,
-                lastCell: tableSelection.lastCell,
-            },
-        };
+    } else if (tableSelection) {
+        return tableSelection;
     } else {
         return null;
     }
 }
 
-function calcPosition(pos: ModelToDomBlockAndSegmentNode): NodePosition | undefined {
-    let result: NodePosition | undefined;
+function calcPosition(
+    pos: ModelToDomBlockAndSegmentNode
+): { container: Node; offset: number } | undefined {
+    let result: { container: Node; offset: number } | undefined;
 
     if (pos.block) {
         if (!pos.segment) {
-            result = new Position(pos.block, 0);
-        } else if (isNodeOfType(pos.segment, NodeType.Text)) {
-            result = new Position(pos.segment, pos.segment.nodeValue?.length || 0);
-        } else {
-            result = new Position(
-                pos.segment.parentNode!,
-                toArray(pos.segment.parentNode!.childNodes as NodeListOf<Node>).indexOf(
-                    pos.segment!
-                ) + 1
-            );
+            result = { container: pos.block, offset: 0 };
+        } else if (isNodeOfType(pos.segment, 'TEXT_NODE')) {
+            result = { container: pos.segment, offset: pos.segment.nodeValue?.length || 0 };
+        } else if (pos.segment.parentNode) {
+            result = {
+                container: pos.segment.parentNode,
+                offset:
+                    toArray(pos.segment.parentNode.childNodes as NodeListOf<Node>).indexOf(
+                        pos.segment
+                    ) + 1,
+            };
         }
     }
 
-    if (isNodeOfType(result?.node, NodeType.DocumentFragment)) {
-        result = result?.normalize();
+    if (result && isNodeOfType(result.container, 'DOCUMENT_FRAGMENT_NODE')) {
+        const childNodes = result.container.childNodes;
+
+        if (childNodes.length > result.offset) {
+            result = { container: childNodes[result.offset], offset: 0 };
+        } else if (result.container.lastChild) {
+            const container = result.container.lastChild;
+            result = {
+                container,
+                offset: isNodeOfType(container, 'TEXT_NODE')
+                    ? container.nodeValue?.length ?? 0
+                    : container.childNodes.length,
+            };
+        } else {
+            result = undefined;
+        }
     }
 
     return result;

@@ -2,8 +2,8 @@ import getSelectedSegments from '../selection/getSelectedSegments';
 import { adjustSegmentSelection } from '../../modelApi/selection/adjustSegmentSelection';
 import { adjustWordSelection } from '../../modelApi/selection/adjustWordSelection';
 import { formatWithContentModel } from '../utils/formatWithContentModel';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import { setSelection } from '../../modelApi/selection/setSelection';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Adjust selection to make sure select a hyperlink if any, or a word if original selection is collapsed

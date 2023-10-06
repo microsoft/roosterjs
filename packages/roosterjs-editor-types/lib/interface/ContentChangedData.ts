@@ -1,4 +1,5 @@
-import { EntityState } from './Snapshot';
+import type AnnounceData from './AnnounceData';
+import type { EntityState } from './Snapshot';
 
 /**
  * Property that is going to store additional data related to the Content Changed Event
@@ -15,4 +16,11 @@ export default interface ContentChangedData {
      * @returns Related entity state array
      */
     getEntityState?: () => EntityState[];
+
+    /**
+     * @optional
+     * Get Announce data from this content changed event.
+     * @returns
+     */
+    getAnnounceData?: () => AnnounceData | undefined;
 }

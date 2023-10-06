@@ -1,18 +1,16 @@
 import {
+    ChangeSource,
+    ColorTransformDirection,
+    PluginEventType,
+    SelectionRangeTypes,
+} from 'roosterjs-editor-types';
+import {
     createRange,
     extractContentMetadata,
     queryElements,
     restoreContentWithEntityPlaceholder,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
-    ColorTransformDirection,
-    ContentMetadata,
-    EditorCore,
-    PluginEventType,
-    SelectionRangeTypes,
-    SetContent,
-} from 'roosterjs-editor-types';
+import type { ContentMetadata, EditorCore, SetContent } from 'roosterjs-editor-types';
 
 /**
  * @internal

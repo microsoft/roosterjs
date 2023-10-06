@@ -1,4 +1,5 @@
-import ImageEditInfo, { CropInfo, ResizeInfo, RotateInfo } from '../types/ImageEditInfo';
+import type { CropInfo, ResizeInfo, RotateInfo } from '../types/ImageEditInfo';
+import type ImageEditInfo from '../types/ImageEditInfo';
 
 const RESIZE_KEYS: (keyof ResizeInfo)[] = ['widthPx', 'heightPx'];
 const ROTATE_KEYS: (keyof RotateInfo)[] = ['angleRad'];

@@ -1,7 +1,7 @@
 import createRange from '../selection/createRange';
 import Position from '../selection/Position';
 import { getNextLeafSibling, getPreviousLeafSibling } from '../utils/getLeafSibling';
-import { Region, RegionBase } from 'roosterjs-editor-types';
+import type { Region, RegionBase } from 'roosterjs-editor-types';
 
 /**
  * Get the selection range in the given region.

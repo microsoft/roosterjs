@@ -1,15 +1,15 @@
-import ContextMenuItem from '../types/ContextMenuItem';
 import createContextMenuProvider from '../utils/createContextMenuProvider';
 import { applyCellShading, editTable } from 'roosterjs-editor-api';
-import { EditorPlugin, IEditor, TableOperation } from 'roosterjs-editor-types';
-import { LocalizedStrings } from '../../common/type/LocalizedStrings';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
 import { renderColorPicker } from '../../colorPicker/component/renderColorPicker';
+import { TableOperation } from 'roosterjs-editor-types';
+import type ContextMenuItem from '../types/ContextMenuItem';
+import type { EditorPlugin, IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
+import type { LocalizedStrings } from '../../common/type/LocalizedStrings';
 import {
     getColorPickerContainerClassName,
     getColorPickerItemClassName,
 } from '../../colorPicker/utils/getClassNamesForColorPicker';
-import {
+import type {
     TableEditMenuItemStringKey,
     TableEditInsertMenuItemStringKey,
     TableEditDeleteMenuItemStringKey,

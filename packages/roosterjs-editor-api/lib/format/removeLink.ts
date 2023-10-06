@@ -1,6 +1,7 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor, QueryScope } from 'roosterjs-editor-types';
+import { QueryScope } from 'roosterjs-editor-types';
 import { unwrap } from 'roosterjs-editor-dom';
+import type { IEditor } from 'roosterjs-editor-types';
 
 /**
  * Remove link at selection. If no links at selection, do nothing.

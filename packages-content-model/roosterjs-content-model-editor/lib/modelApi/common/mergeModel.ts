@@ -1,19 +1,19 @@
-import { addSegment } from 'roosterjs-content-model-dom';
 import { applyTableFormat } from '../table/applyTableFormat';
 import { deleteSelection } from '../edit/deleteSelection';
-import { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
 import { getClosestAncestorBlockGroupIndex } from './getClosestAncestorBlockGroupIndex';
-import { getObjectKeys } from 'roosterjs-editor-dom';
-import { InsertPoint } from '../../publicTypes/selection/InsertPoint';
 import { normalizeTable } from '../table/normalizeTable';
 import {
+    addSegment,
     createListItem,
     createParagraph,
     createSelectionMarker,
     createTableCell,
+    getObjectKeys,
     normalizeContentModel,
 } from 'roosterjs-content-model-dom';
-import {
+import type { FormatWithContentModelContext } from '../../publicTypes/parameter/FormatWithContentModelContext';
+import type { InsertPoint } from '../../publicTypes/selection/InsertPoint';
+import type {
     ContentModelBlock,
     ContentModelBlockFormat,
     ContentModelBlockGroup,
@@ -146,8 +146,14 @@ function mergeParagraph(
 
             newParagraph.segments.splice(segmentIndex + i, 0, segment);
 
-            if (context && segment.segmentType == 'Entity') {
-                context.newEntities.push(segment);
+            if (context) {
+                if (segment.segmentType == 'Entity') {
+                    context.newEntities.push(segment);
+                }
+
+                if (segment.segmentType == 'Image') {
+                    context.newImages.push(segment);
+                }
             }
         }
     }

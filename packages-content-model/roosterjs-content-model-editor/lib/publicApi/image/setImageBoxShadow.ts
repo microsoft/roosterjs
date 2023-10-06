@@ -1,6 +1,6 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { ContentModelImage } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set image box shadow for all selected images at selection.
@@ -13,6 +13,8 @@ export default function setImageBoxShadow(
     boxShadow: string,
     margin?: string | null
 ) {
+    editor.focus();
+
     formatImageWithContentModel(editor, 'setImageBoxShadow', (image: ContentModelImage) => {
         image.format.boxShadow = boxShadow;
         if (margin) {

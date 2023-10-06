@@ -1,5 +1,5 @@
 import getTagOfNode from '../utils/getTagOfNode';
-import { PredefinedCssMap, StringMap } from 'roosterjs-editor-types';
+import type { PredefinedCssMap, StringMap } from 'roosterjs-editor-types';
 
 const PREDEFINED_CSS_FOR_ELEMENT: PredefinedCssMap = {
     B: {

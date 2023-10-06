@@ -1,5 +1,5 @@
 import { defaultContentModelFormatMap } from '../../config/defaultContentModelFormatMap';
-import {
+import type {
     ContentModelBlockFormat,
     ContentModelSegmentFormat,
     ModelToDomContext,

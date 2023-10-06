@@ -1,9 +1,10 @@
-import RibbonButton from '../type/RibbonButton';
-import RibbonPlugin from '../type/RibbonPlugin';
-import { FormatState, IEditor, PluginEvent, PluginEventType } from 'roosterjs-editor-types';
 import { getFormatState } from 'roosterjs-editor-api';
 import { getObjectKeys } from 'roosterjs-editor-dom';
-import { LocalizedStrings, UIUtilities } from '../../common/index';
+import { PluginEventType } from 'roosterjs-editor-types';
+import type RibbonButton from '../type/RibbonButton';
+import type RibbonPlugin from '../type/RibbonPlugin';
+import type { FormatState, IEditor, PluginEvent } from 'roosterjs-editor-types';
+import type { LocalizedStrings, UIUtilities } from '../../common/index';
 
 /**
  * A plugin to connect format ribbon component and the editor

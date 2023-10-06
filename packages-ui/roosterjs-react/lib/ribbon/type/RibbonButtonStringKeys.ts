@@ -1,5 +1,5 @@
-import { BackgroundColorKeys, TextColorKeys } from '../../colorPicker/index';
-import {
+import type { BackgroundColorKeys, TextColorKeys } from '../../colorPicker/index';
+import type {
     CancelButtonStringKey,
     MenuItemSplitterKey0,
     OkButtonStringKey,

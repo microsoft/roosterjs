@@ -1,4 +1,4 @@
-import { EditorOptions, IEditor } from 'roosterjs-editor-types';
+import type { EditorOptions, IEditor } from 'roosterjs-editor-types';
 
 /**
  * Properties for Rooster react component

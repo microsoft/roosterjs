@@ -1,6 +1,6 @@
-import { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
-import { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
-import {
+import type { InsertPoint } from '../../../publicTypes/selection/InsertPoint';
+import type { TableSelectionContext } from '../../../publicTypes/selection/TableSelectionContext';
+import type {
     ContentModelBlockGroup,
     ContentModelParagraph,
     ContentModelSelectionMarker,

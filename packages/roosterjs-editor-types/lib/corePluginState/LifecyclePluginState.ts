@@ -1,8 +1,8 @@
-import CustomData from '../interface/CustomData';
-import DarkColorHandler from '../interface/DarkColorHandler';
-import DefaultFormat from '../interface/DefaultFormat';
-import SelectionPath from '../interface/SelectionPath';
-import { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
+import type CustomData from '../interface/CustomData';
+import type DarkColorHandler from '../interface/DarkColorHandler';
+import type DefaultFormat from '../interface/DefaultFormat';
+import type SelectionPath from '../interface/SelectionPath';
+import type { ExperimentalFeatures } from '../enum/ExperimentalFeatures';
 import type { CompatibleExperimentalFeatures } from '../compatibleEnum/ExperimentalFeatures';
 
 /**

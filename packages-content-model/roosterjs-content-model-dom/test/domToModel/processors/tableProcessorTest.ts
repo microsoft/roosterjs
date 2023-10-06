@@ -5,10 +5,11 @@ import { childProcessor as originalChildProcessor } from '../../../lib/domToMode
 import { createContentModelDocument } from '../../../lib/modelApi/creators/createContentModelDocument';
 import { createDomToModelContext } from '../../../lib/domToModel/context/createDomToModelContext';
 import { createTableCell } from '../../../lib/modelApi/creators/createTableCell';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 import { tableProcessor } from '../../../lib/domToModel/processors/tableProcessor';
 import {
     ContentModelBlock,
+    ContentModelDomIndexer,
+    ContentModelTable,
     DomToModelContext,
     ElementProcessor,
 } from 'roosterjs-content-model-types';
@@ -244,19 +245,13 @@ describe('tableProcessor', () => {
         const div = document.createElement('div');
 
         div.innerHTML = tableHTML;
-        context.rangeEx = {
-            type: SelectionRangeTypes.TableSelection,
+        context.selection = {
+            type: 'table',
             table: div.firstChild as HTMLTableElement,
-            coordinates: {
-                firstCell: {
-                    x: 1,
-                    y: 0,
-                },
-                lastCell: {
-                    x: 1,
-                    y: 1,
-                },
-            },
+            firstRow: 0,
+            lastRow: 1,
+            firstColumn: 1,
+            lastColumn: 1,
         } as any;
 
         tdModel2.isSelected = true;
@@ -284,6 +279,52 @@ describe('tableProcessor', () => {
         });
 
         expect(childProcessor).toHaveBeenCalledTimes(4);
+    });
+
+    it('Table with domIndexer', () => {
+        const doc = createContentModelDocument();
+        const div = document.createElement('div');
+        const onTableSpy = jasmine.createSpy('onTable');
+        const domIndexer: ContentModelDomIndexer = {
+            onParagraph: null!,
+            onSegment: null!,
+            onTable: onTableSpy,
+            reconcileSelection: null!,
+        };
+
+        context.domIndexer = domIndexer;
+
+        div.innerHTML = '<table class="tb1"><tr id="tr1"><td id="td1"></td></tr></table>';
+
+        tableProcessor(doc, div.firstChild as HTMLTableElement, context);
+
+        const tableModel: ContentModelTable = {
+            blockType: 'Table',
+            rows: [
+                {
+                    format: {},
+                    height: 200,
+                    cells: [
+                        {
+                            blockGroupType: 'TableCell',
+                            spanAbove: false,
+                            spanLeft: false,
+                            isHeader: false,
+                            blocks: [],
+                            format: {},
+                            dataset: {},
+                        },
+                    ],
+                },
+            ],
+            format: {},
+            widths: [100],
+            dataset: {},
+        };
+
+        expect(doc.blocks[0]).toEqual(tableModel);
+
+        expect(onTableSpy).toHaveBeenCalledWith(div.firstChild, tableModel);
     });
 });
 

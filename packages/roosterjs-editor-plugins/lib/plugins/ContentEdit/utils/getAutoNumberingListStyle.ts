@@ -1,6 +1,6 @@
 import convertAlphaToDecimals from './convertAlphaToDecimals';
 import { NumberingListType } from 'roosterjs-editor-types';
-import { VListChain } from 'roosterjs-editor-dom';
+import type { VListChain } from 'roosterjs-editor-dom';
 
 const enum NumberingTypes {
     Decimal = 1,

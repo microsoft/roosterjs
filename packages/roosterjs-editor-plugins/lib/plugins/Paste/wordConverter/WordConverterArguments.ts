@@ -1,6 +1,7 @@
-import LevelLists, { createLevelLists } from './LevelLists';
-import ListItemMetadata from './ListItemMetadata';
-import ListMetadata from './ListMetadata';
+import { createLevelLists } from './LevelLists';
+import type LevelLists from './LevelLists';
+import type ListItemMetadata from './ListItemMetadata';
+import type ListMetadata from './ListMetadata';
 
 /**
  * @internal

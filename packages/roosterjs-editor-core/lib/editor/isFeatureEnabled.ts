@@ -1,4 +1,4 @@
-import { ExperimentalFeatures } from 'roosterjs-editor-types';
+import type { ExperimentalFeatures } from 'roosterjs-editor-types';
 import type { CompatibleExperimentalFeatures } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

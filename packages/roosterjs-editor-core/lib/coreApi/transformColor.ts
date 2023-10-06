@@ -1,4 +1,5 @@
-import { ColorTransformDirection, EditorCore, TransformColor } from 'roosterjs-editor-types';
+import { ColorTransformDirection } from 'roosterjs-editor-types';
+import type { EditorCore, TransformColor } from 'roosterjs-editor-types';
 import type { CompatibleColorTransformDirection } from 'roosterjs-editor-types/lib/compatibleTypes';
 
 /**

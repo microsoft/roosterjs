@@ -2,13 +2,13 @@ import ContentModelBeforePasteEvent from '../../../../lib/publicTypes/event/Cont
 import { ClipboardData, PluginEventType } from 'roosterjs-editor-types';
 import { ContentModelDocument } from 'roosterjs-content-model-types';
 import { expectHtml } from 'roosterjs-editor-api/test/TestHelper';
-import { moveChildNodes } from 'roosterjs-editor-dom';
 import { processPastedContentFromWordDesktop } from '../../../../lib/editor/plugins/PastePlugin/WordDesktop/processPastedContentFromWordDesktop';
 import {
     contentModelToDom,
     createDomToModelContext,
     createModelToDomContext,
     domToContentModel,
+    moveChildNodes,
 } from 'roosterjs-content-model-dom';
 
 describe('processPastedContentFromWordDesktopTest', () => {
@@ -92,7 +92,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],
@@ -113,7 +118,12 @@ describe('processPastedContentFromWordDesktopTest', () => {
                     segments: [
                         {
                             segmentType: 'Text',
-                            text: 'TestTest',
+                            text: 'Test',
+                            format: {},
+                        },
+                        {
+                            segmentType: 'Text',
+                            text: 'Test',
                             format: {},
                         },
                     ],

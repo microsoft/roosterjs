@@ -6,18 +6,20 @@ import {
     Position,
     queryElements,
 } from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     TextFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+    NodePosition,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     SelectionRangeTypes,
     ContentPosition,
     PositionType,
     ExperimentalFeatures,
-    NodePosition,
     QueryScope,
 } from 'roosterjs-editor-types';
 

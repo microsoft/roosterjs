@@ -1,6 +1,6 @@
 import getTagOfNode from '../utils/getTagOfNode';
 import toArray from '../jsUtils/toArray';
-import { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
+import type { BeforePasteEvent, TrustedHTMLHandler } from 'roosterjs-editor-types';
 
 const START_FRAGMENT = '<!--StartFragment-->';
 const END_FRAGMENT = '<!--EndFragment-->';

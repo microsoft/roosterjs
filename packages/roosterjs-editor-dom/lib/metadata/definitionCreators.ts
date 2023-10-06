@@ -1,6 +1,6 @@
-import {
+import { DefinitionType } from 'roosterjs-editor-types';
+import type {
     Definition,
-    DefinitionType,
     NumberDefinition,
     ArrayDefinition,
     BooleanDefinition,

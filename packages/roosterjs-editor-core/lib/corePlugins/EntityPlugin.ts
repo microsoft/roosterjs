@@ -16,24 +16,25 @@ import {
     isBlockElement,
     getObjectKeys,
 } from 'roosterjs-editor-dom';
-import {
-    ChangeSource,
+import type {
     ContentChangedEvent,
-    ContentPosition,
     Entity,
-    EntityClasses,
-    EntityOperation,
     EntityOperationEvent,
     EntityPluginState,
     KnownEntityItem,
-    ExperimentalFeatures,
     HtmlSanitizerOptions,
     IEditor,
-    Keys,
     PluginEvent,
-    PluginEventType,
     PluginMouseUpEvent,
     PluginWithState,
+} from 'roosterjs-editor-types';
+import {
+    ChangeSource,
+    ContentPosition,
+    EntityClasses,
+    EntityOperation,
+    Keys,
+    PluginEventType,
     QueryScope,
 } from 'roosterjs-editor-types';
 import type { CompatibleEntityOperation } from 'roosterjs-editor-types/lib/compatibleTypes';
@@ -141,7 +142,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
                 break;
         }
 
-        if (this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)) {
+        if (this.editor) {
             inlineEntityOnPluginEvent(event, this.editor);
         }
     }
@@ -247,10 +248,7 @@ export default class EntityPlugin implements PluginWithState<EntityPluginState> 
             this.handleNewEntity(entity);
         });
 
-        if (
-            shouldNormalizeDelimiters &&
-            this.editor?.isFeatureEnabled(ExperimentalFeatures.InlineEntityReadOnlyDelimiters)
-        ) {
+        if (shouldNormalizeDelimiters && this.editor) {
             normalizeDelimitersInEditor(this.editor);
         }
     }

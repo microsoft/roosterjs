@@ -1,9 +1,9 @@
-import { ContentModelBlockBase } from './ContentModelBlockBase';
-import { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
-import { ContentModelTableFormat } from '../format/ContentModelTableFormat';
-import { ContentModelTableRow } from './ContentModelTableRow';
-import { ContentModelWithDataset } from '../format/ContentModelWithDataset';
-import { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
+import type { ContentModelBlockBase } from './ContentModelBlockBase';
+import type { ContentModelBlockWithCache } from './ContentModelBlockWithCache';
+import type { ContentModelTableFormat } from '../format/ContentModelTableFormat';
+import type { ContentModelTableRow } from './ContentModelTableRow';
+import type { ContentModelWithDataset } from '../format/ContentModelWithDataset';
+import type { TableMetadataFormat } from '../format/metadata/TableMetadataFormat';
 
 /**
  * Content Model of Table

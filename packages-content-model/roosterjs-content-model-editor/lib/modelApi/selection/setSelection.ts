@@ -1,6 +1,5 @@
-import { Coordinates } from 'roosterjs-editor-types';
 import { isGeneralSegment } from 'roosterjs-content-model-dom';
-import {
+import type {
     ContentModelBlock,
     ContentModelBlockGroup,
     ContentModelSegment,
@@ -102,16 +101,27 @@ function setSelectionToTable(
     start: Selectable | null,
     end: Selectable | null
 ): boolean {
-    const startCo = findCell(table, start);
-    const endCo = end ? findCell(table, end) : startCo;
+    const first = findCell(table, start);
+    const last = end ? findCell(table, end) : first;
 
-    if (!isInSelection && startCo && endCo) {
+    if (!isInSelection) {
         for (let row = 0; row < table.rows.length; row++) {
-            for (let col = 0; col < table.rows[row].cells.length; col++) {
+            const currentRow = table.rows[row];
+            for (let col = 0; col < currentRow.cells.length; col++) {
+                const currentCell = table.rows[row].cells[col];
                 const isSelected =
-                    row >= startCo.y && row <= endCo.y && col >= startCo.x && col <= endCo.x;
+                    row >= first.row && row <= last.row && col >= first.col && col <= last.col;
 
-                setIsSelected(table.rows[row].cells[col], isSelected);
+                setIsSelected(currentCell, isSelected);
+
+                if (!isSelected) {
+                    setSelectionToBlockGroup(
+                        currentCell,
+                        false /*isInSelection*/,
+                        null /*start*/,
+                        null /*end*/
+                    );
+                }
             }
         }
     } else {
@@ -125,22 +135,13 @@ function setSelectionToTable(
     return isInSelection;
 }
 
-function findCell(table: ContentModelTable, cell: Selectable | null): Coordinates | undefined {
-    let x = -1;
-    let y = -1;
+function findCell(table: ContentModelTable, cell: Selectable | null): { row: number; col: number } {
+    let col = -1;
+    const row = cell
+        ? table.rows.findIndex(row => (col = (row.cells as Selectable[]).indexOf(cell)) >= 0)
+        : -1;
 
-    if (cell) {
-        for (let row = 0; y < 0 && row < table.rows.length; row++) {
-            for (let col = 0; x < 0 && col < table.rows[row].cells.length; col++) {
-                if (table.rows[row].cells[col] == cell) {
-                    x = col;
-                    y = row;
-                }
-            }
-        }
-    }
-
-    return x >= 0 && y >= 0 ? { x, y } : undefined;
+    return { row, col };
 }
 
 function setSelectionToSegment(

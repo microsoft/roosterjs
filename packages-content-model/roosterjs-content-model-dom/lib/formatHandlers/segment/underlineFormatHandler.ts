@@ -1,6 +1,6 @@
-import { FormatHandler } from '../FormatHandler';
-import { moveChildNodes } from 'roosterjs-editor-dom';
-import { UnderlineFormat } from 'roosterjs-content-model-types';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
+import type { FormatHandler } from '../FormatHandler';
+import type { UnderlineFormat } from 'roosterjs-content-model-types';
 
 /**
  * @internal
@@ -24,9 +24,7 @@ export const underlineFormatHandler: FormatHandler<UnderlineFormat> = {
 
         if (!!blockUnderline != !!format.underline) {
             if (format.underline) {
-                const u = element.ownerDocument.createElement('u');
-                moveChildNodes(u, element);
-                element.appendChild(u);
+                wrapAllChildNodes(element, 'u');
             } else {
                 element.style.textDecoration = 'none';
             }

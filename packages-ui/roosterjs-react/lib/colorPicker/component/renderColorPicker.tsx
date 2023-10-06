@@ -1,7 +1,7 @@
 import * as React from 'react';
-import { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
 import { mergeStyleSets } from '@fluentui/react/lib/Styling';
-import { ModeIndependentColor } from 'roosterjs-editor-types';
+import type { IContextualMenuItem } from '@fluentui/react/lib/ContextualMenu';
+import type { ModeIndependentColor } from 'roosterjs-editor-types';
 
 const classNames = mergeStyleSets({
     colorSquare: {

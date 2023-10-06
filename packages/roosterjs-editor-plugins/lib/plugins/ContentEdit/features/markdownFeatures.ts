@@ -1,14 +1,12 @@
 import { cacheGetEventData, createRange, Position, wrap } from 'roosterjs-editor-dom';
+import { ChangeSource, Keys, PositionType } from 'roosterjs-editor-types';
 import type { CompatibleKeys } from 'roosterjs-editor-types/lib/compatibleTypes';
-import {
+import type {
     BuildInEditFeature,
-    ChangeSource,
     IEditor,
-    Keys,
     MarkdownFeatureSettings,
     NodePosition,
     PluginKeyboardEvent,
-    PositionType,
 } from 'roosterjs-editor-types';
 
 const ZERO_WIDTH_SPACE = '\u200B';

@@ -1,5 +1,5 @@
-import { FormatHandler } from '../FormatHandler';
-import { PaddingFormat } from 'roosterjs-content-model-types';
+import type { FormatHandler } from '../FormatHandler';
+import type { PaddingFormat } from 'roosterjs-content-model-types';
 
 const PaddingKeys: (keyof PaddingFormat & keyof CSSStyleDeclaration)[] = [
     'paddingTop',

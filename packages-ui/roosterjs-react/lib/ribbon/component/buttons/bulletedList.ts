@@ -1,6 +1,6 @@
-import RibbonButton from '../../type/RibbonButton';
-import { BulletedListButtonStringKey } from '../../type/RibbonButtonStringKeys';
 import { toggleBullet } from 'roosterjs-editor-api';
+import type RibbonButton from '../../type/RibbonButton';
+import type { BulletedListButtonStringKey } from '../../type/RibbonButtonStringKeys';
 
 /**
  * @internal

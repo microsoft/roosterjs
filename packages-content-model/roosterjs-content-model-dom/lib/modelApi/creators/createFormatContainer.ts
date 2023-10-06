@@ -1,4 +1,4 @@
-import {
+import type {
     ContentModelFormatContainer,
     ContentModelFormatContainerFormat,
 } from 'roosterjs-content-model-types';

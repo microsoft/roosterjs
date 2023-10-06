@@ -1,4 +1,4 @@
-import {
+import type {
     ContentModelGeneralSegment,
     ContentModelSegmentFormat,
 } from 'roosterjs-content-model-types';

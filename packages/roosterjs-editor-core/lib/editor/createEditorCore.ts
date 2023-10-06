@@ -2,7 +2,7 @@ import createCorePlugins, { getPluginState } from '../corePlugins/createCorePlug
 import DarkColorHandlerImpl from './DarkColorHandlerImpl';
 import { arrayPush, getIntersectedRect, getObjectKeys } from 'roosterjs-editor-dom';
 import { coreApiMap } from '../coreApi/coreApiMap';
-import { CoreCreator, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
+import type { CoreCreator, EditorCore, EditorOptions, EditorPlugin } from 'roosterjs-editor-types';
 
 /**
  * Create a new instance of Editor Core
@@ -52,6 +52,7 @@ export const createEditorCore: CoreCreator<EditorCore, EditorOptions> = (content
         getVisibleViewport,
         imageSelectionBorderColor: options.imageSelectionBorderColor,
         darkColorHandler: new DarkColorHandlerImpl(contentDiv, pluginState.lifecycle.getDarkColor),
+        disposeErrorHandler: options.disposeErrorHandler,
     };
 
     return core;

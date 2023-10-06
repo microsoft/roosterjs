@@ -1,5 +1,24 @@
+import getAnnounceDataForList from '../../../pluginUtils/announceData/getAnnounceDataForList';
 import getAutoBulletListStyle from '../utils/getAutoBulletListStyle';
 import getAutoNumberingListStyle from '../utils/getAutoNumberingListStyle';
+import {
+    Browser,
+    cacheGetEventData,
+    createNumberDefinition,
+    createObjectDefinition,
+    createVListFromRegion,
+    findClosestElementAncestor,
+    getComputedStyle,
+    getMetadata,
+    getTagOfNode,
+    isBlockElement,
+    isNodeEmpty,
+    isPositionAtBeginningOf,
+    Position,
+    safeInstanceOf,
+    VList,
+    VListChain,
+} from 'roosterjs-editor-dom';
 import {
     blockFormat,
     commitListChains,
@@ -8,37 +27,22 @@ import {
     toggleNumbering,
     toggleListType,
 } from 'roosterjs-editor-api';
-import {
-    Browser,
-    getTagOfNode,
-    isNodeEmpty,
-    isPositionAtBeginningOf,
-    Position,
-    VListChain,
-    createVListFromRegion,
-    isBlockElement,
-    cacheGetEventData,
-    safeInstanceOf,
-    VList,
-    createObjectDefinition,
-    createNumberDefinition,
-    getMetadata,
-    findClosestElementAncestor,
-    getComputedStyle,
-} from 'roosterjs-editor-dom';
-import {
+import type {
     BuildInEditFeature,
     IEditor,
-    Indentation,
     ListFeatureSettings,
-    Keys,
     PluginKeyboardEvent,
+} from 'roosterjs-editor-types';
+import {
+    Indentation,
+    Keys,
     QueryScope,
     ListType,
     ExperimentalFeatures,
     PositionType,
     NumberingListType,
     BulletListType,
+    ChangeSource,
 } from 'roosterjs-editor-types';
 
 const PREVIOUS_BLOCK_CACHE_KEY = 'previousBlock';
@@ -92,7 +96,25 @@ const handleIndentationEvent = (indenting: boolean) => (
         event.rawEvent.keyCode !== Keys.TAB &&
         (currentElement = editor.getElementAtCursor()) &&
         getComputedStyle(currentElement, 'direction') == 'rtl';
-    setIndentation(editor, isRTL == indenting ? Indentation.Decrease : Indentation.Increase);
+
+    editor.addUndoSnapshot(
+        () => {
+            setIndentation(
+                editor,
+                isRTL == indenting ? Indentation.Decrease : Indentation.Increase
+            );
+        },
+        ChangeSource.Format,
+        false /* canUndoByBackspace */,
+        {
+            getAnnounceData: () =>
+                getAnnounceDataForList(
+                    editor.getElementAtCursor('OL,UL'),
+                    editor.getElementAtCursor('LI')
+                ),
+        }
+    );
+
     event.rawEvent.preventDefault();
 };
 

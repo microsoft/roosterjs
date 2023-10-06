@@ -1,4 +1,4 @@
-import { ContentModelFormatBase } from './ContentModelFormatBase';
+import type { ContentModelFormatBase } from './ContentModelFormatBase';
 
 /**
  * Represent a content model with format

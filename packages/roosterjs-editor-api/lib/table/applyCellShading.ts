@@ -1,5 +1,5 @@
 import formatUndoSnapshot from '../utils/formatUndoSnapshot';
-import { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
+import type { IEditor, ModeIndependentColor } from 'roosterjs-editor-types';
 import {
     getTableCellMetadata,
     safeInstanceOf,

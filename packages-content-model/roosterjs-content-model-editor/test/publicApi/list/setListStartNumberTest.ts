@@ -11,13 +11,22 @@ describe('setListStartNumber', () => {
         spyOn(formatWithContentModel, 'formatWithContentModel').and.callFake(
             (editor, apiName, callback) => {
                 expect(apiName).toBe('setListStartNumber');
-                const result = callback(input, { newEntities: [], deletedEntities: [] });
+                const result = callback(input, {
+                    newEntities: [],
+                    deletedEntities: [],
+                    newImages: [],
+                });
 
                 expect(result).toBe(expectedResult);
             }
         );
 
-        setListStartNumber(null!, 2);
+        setListStartNumber(
+            {
+                focus: () => {},
+            } as any,
+            2
+        );
 
         expect(formatWithContentModel.formatWithContentModel).toHaveBeenCalledTimes(1);
         expect(input).toEqual(expectedModel);

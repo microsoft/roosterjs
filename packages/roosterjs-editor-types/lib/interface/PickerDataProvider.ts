@@ -1,4 +1,4 @@
-import IEditor from './IEditor';
+import type IEditor from './IEditor';
 
 /**
  * Data provider for PickerPlugin

@@ -1,6 +1,6 @@
 import { applyFormat } from '../utils/applyFormat';
 import { reuseCachedElement } from '../utils/reuseCachedElement';
-import {
+import type {
     ContentModelBlockHandler,
     ContentModelDivider,
     ModelToDomContext,

@@ -5,7 +5,6 @@ import { createDomToModelContext, domToContentModel } from 'roosterjs-content-mo
 import { createRange } from 'roosterjs-editor-dom';
 import { IContentModelEditor } from '../../../lib/publicTypes/IContentModelEditor';
 import { segmentTestCommon } from './segmentTestCommon';
-import { SelectionRangeTypes } from 'roosterjs-editor-types';
 
 describe('changeFontSize', () => {
     function runTest(
@@ -16,7 +15,9 @@ describe('changeFontSize', () => {
     ) {
         segmentTestCommon(
             'changeFontSize',
-            editor => changeFontSize(editor, change),
+            editor => {
+                changeFontSize(editor, change);
+            },
             model,
             result,
             calledTimes
@@ -330,6 +331,7 @@ describe('changeFontSize', () => {
         spyOn(pendingFormat, 'setPendingFormat');
         spyOn(pendingFormat, 'getPendingFormat').and.returnValue(null);
         const triggerPluginEvent = jasmine.createSpy('triggerPluginEvent');
+        const getVisibleViewport = jasmine.createSpy('getVisibleViewport');
 
         const addUndoSnapshot = jasmine.createSpy().and.callFake((callback: () => void) => {
             callback();
@@ -345,15 +347,15 @@ describe('changeFontSize', () => {
         const editor = ({
             createContentModel: (option: any) =>
                 domToContentModel(div, createDomToModelContext(undefined), {
-                    type: SelectionRangeTypes.Normal,
-                    ranges: [createRange(sub)],
-                    areAllCollapsed: false,
+                    type: 'range',
+                    range: createRange(sub),
                 }),
             addUndoSnapshot,
             focus: jasmine.createSpy(),
             setContentModel,
             isDarkMode: () => false,
             triggerPluginEvent,
+            getVisibleViewport,
         } as any) as IContentModelEditor;
 
         changeFontSize(editor, 'increase');

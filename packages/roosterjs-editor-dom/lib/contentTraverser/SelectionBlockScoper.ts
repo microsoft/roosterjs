@@ -4,9 +4,10 @@ import getInlineElementAtNode from '../inlineElements/getInlineElementAtNode';
 import NodeBlockElement from '../blockElements/NodeBlockElement';
 import Position from '../selection/Position';
 import safeInstanceOf from '../utils/safeInstanceOf';
-import TraversingScoper from './TraversingScoper';
-import { BlockElement, ContentPosition, InlineElement, NodePosition } from 'roosterjs-editor-types';
+import { ContentPosition } from 'roosterjs-editor-types';
 import { getInlineElementAfter } from '../inlineElements/getInlineElementBeforeAfter';
+import type TraversingScoper from './TraversingScoper';
+import type { BlockElement, InlineElement, NodePosition } from 'roosterjs-editor-types';
 import {
     getFirstInlineElement,
     getLastInlineElement,

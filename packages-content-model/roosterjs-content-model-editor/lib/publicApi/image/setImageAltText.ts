@@ -1,6 +1,6 @@
 import formatImageWithContentModel from '../utils/formatImageWithContentModel';
-import { ContentModelImage } from 'roosterjs-content-model-types';
-import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
+import type { ContentModelImage } from 'roosterjs-content-model-types';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 
 /**
  * Set image alt text for all selected images at selection. If no images is contained
@@ -9,6 +9,8 @@ import { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
  * @param altText The image alt text
  */
 export default function setImageAltText(editor: IContentModelEditor, altText: string) {
+    editor.focus();
+
     formatImageWithContentModel(editor, 'setImageAltText', (image: ContentModelImage) => {
         image.alt = altText;
     });

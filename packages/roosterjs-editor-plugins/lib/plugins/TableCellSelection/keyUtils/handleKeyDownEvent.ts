@@ -1,12 +1,13 @@
 import { getCellAtCursor } from '../utils/getCellAtCursor';
 import { getCellCoordinates } from '../utils/getCellCoordinates';
 import { isAfter } from '../utils/isAfter';
+import { Keys, PositionType, SelectionRangeTypes } from 'roosterjs-editor-types';
 import { prepareSelection } from '../utils/prepareSelection';
 import { selectTable } from '../utils/selectTable';
 import { setData } from '../utils/setData';
 import { TABLE_CELL_SELECTOR } from '../constants';
-import { TableCellSelectionState } from '../TableCellSelectionState';
 import { updateSelection } from '../utils/updateSelection';
+import type { TableCellSelectionState } from '../TableCellSelectionState';
 import {
     contains,
     createRange,
@@ -15,14 +16,7 @@ import {
     safeInstanceOf,
     VTable,
 } from 'roosterjs-editor-dom';
-import {
-    Coordinates,
-    IEditor,
-    Keys,
-    PluginKeyDownEvent,
-    PositionType,
-    SelectionRangeTypes,
-} from 'roosterjs-editor-types';
+import type { Coordinates, IEditor, PluginKeyDownEvent } from 'roosterjs-editor-types';
 
 /**
  * @internal

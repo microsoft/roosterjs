@@ -1,5 +1,5 @@
-import VTable from './VTable';
-import { TableSelection } from 'roosterjs-editor-types';
+import type VTable from './VTable';
+import type { TableSelection } from 'roosterjs-editor-types';
 
 /**
  * Check if the whole table is selected

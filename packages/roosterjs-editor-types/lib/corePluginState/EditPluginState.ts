@@ -1,5 +1,5 @@
-import { GenericContentEditFeature } from '../interface/ContentEditFeature';
-import { PluginEvent } from '../event/PluginEvent';
+import type { GenericContentEditFeature } from '../interface/ContentEditFeature';
+import type { PluginEvent } from '../event/PluginEvent';
 
 /**
  * The state object for EditPlugin

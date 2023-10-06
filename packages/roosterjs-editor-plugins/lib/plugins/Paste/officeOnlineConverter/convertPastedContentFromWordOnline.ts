@@ -1,4 +1,5 @@
-import ListItemBlock, { createListItemBlock } from './ListItemBlock';
+import { createListItemBlock } from './ListItemBlock';
+import type ListItemBlock from './ListItemBlock';
 
 import {
     splitParentNode,
