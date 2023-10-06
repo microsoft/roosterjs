@@ -1,6 +1,7 @@
 import * as getSelectionRange from '../../lib/coreApi/getSelectionRange';
 import * as TestHelper from '../TestHelper';
-import { ContentPosition, IEditor } from 'roosterjs-editor-types';
+import Editor from '../../lib/editor/Editor';
+import { ContentPosition, EditorPlugin, IEditor } from 'roosterjs-editor-types';
 
 let editor: IEditor;
 let testID = 'EditorTest';
@@ -507,5 +508,42 @@ describe('Editor getCustomData()', () => {
 
         editor.dispose();
         expect(objCount).toBe(0);
+    });
+});
+
+describe('Dispose with exception', () => {
+    it('handle exception when dispose', () => {
+        const errorMsg = 'Test error';
+        const disposeSpy1 = jasmine.createSpy('dispose1');
+        const disposeSpy2 = jasmine.createSpy('dispose2').and.throwError(errorMsg);
+        const disposeSpy3 = jasmine.createSpy('dispose3');
+        const handlerSpy = jasmine.createSpy('disposeErrorhandler');
+
+        const plugin1 = ({
+            initialize: () => {},
+            dispose: disposeSpy1,
+        } as any) as EditorPlugin;
+        const plugin2 = ({
+            initialize: () => {},
+            dispose: disposeSpy2,
+        } as any) as EditorPlugin;
+        const plugin3 = ({
+            initialize: () => {},
+            dispose: disposeSpy3,
+        } as any) as EditorPlugin;
+
+        const div = document.createElement('div');
+        const editor = new Editor(div, {
+            plugins: [plugin1, plugin2, plugin3],
+            disposeErrorHandler: handlerSpy,
+        });
+
+        editor.dispose();
+
+        expect(disposeSpy1).toHaveBeenCalledTimes(1);
+        expect(disposeSpy2).toHaveBeenCalledTimes(1);
+        expect(disposeSpy3).toHaveBeenCalledTimes(1);
+        expect(handlerSpy).toHaveBeenCalledTimes(1);
+        expect(handlerSpy).toHaveBeenCalledWith(new Error(errorMsg));
     });
 });
