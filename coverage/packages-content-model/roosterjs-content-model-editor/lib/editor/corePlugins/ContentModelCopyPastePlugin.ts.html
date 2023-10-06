@@ -23,9 +23,9 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.47% </span>
+                <span class="strong">86.44% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>100/117</span>
+                <span class='fraction'>102/118</span>
             </div>
         
             
@@ -44,9 +44,9 @@
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">85.71% </span>
+                <span class="strong">86.73% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>96/112</span>
+                <span class='fraction'>98/113</span>
             </div>
         
             
@@ -341,13 +341,21 @@
 <a name='L282'></a><a href='#L282'>282</a>
 <a name='L283'></a><a href='#L283'>283</a>
 <a name='L284'></a><a href='#L284'>284</a>
-<a name='L285'></a><a href='#L285'>285</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L285'></a><a href='#L285'>285</a>
+<a name='L286'></a><a href='#L286'>286</a>
+<a name='L287'></a><a href='#L287'>287</a>
+<a name='L288'></a><a href='#L288'>288</a>
+<a name='L289'></a><a href='#L289'>289</a>
+<a name='L290'></a><a href='#L290'>290</a>
+<a name='L291'></a><a href='#L291'>291</a>
+<a name='L292'></a><a href='#L292'>292</a>
+<a name='L293'></a><a href='#L293'>293</a>
+<a name='L294'></a><a href='#L294'>294</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -357,9 +365,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -433,7 +441,10 @@
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-yes">9x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">9x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -486,6 +497,8 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -591,11 +604,15 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-yes">2x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">2x</span>
@@ -603,6 +620,7 @@
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -631,21 +649,20 @@ import { DeleteResult } from '../../modelApi/edit/utils/DeleteSelectionStep';
 import { deleteSelection } from '../../modelApi/edit/deleteSelection';
 import { formatWithContentModel } from '../../publicApi/utils/formatWithContentModel';
 import { iterateSelections } from '../../modelApi/selection/iterateSelections';
-import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import {
     contentModelToDom,
     createModelToDomContext,
     isElementOfType,
     isNodeOfType,
+    moveChildNodes,
     normalizeContentModel,
     toArray,
 } from 'roosterjs-content-model-dom';
+import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
 import type { DOMSelection, OnNodeCreated } from 'roosterjs-content-model-types';
 import {
     addRangeToSelection,
     createElement,
-    moveChildNodes,
-    createRange,
     extractClipboardItems,
     wrap,
 } from 'roosterjs-editor-dom';
@@ -717,7 +734,10 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
         <span class="missing-if-branch" title="if path not taken" >I</span>if (!this.editor) {
 <span class="cstat-no" title="statement not covered" >            return;</span>
         }
+&nbsp;
+        const doc = this.editor.getDocument();
         const selection = this.editor.getDOMSelection();
+&nbsp;
         if (selection &amp;&amp; (selection.type != 'range' || !selection.range.collapsed)) {
             const model = this.editor.createContentModel();
 &nbsp;
@@ -769,7 +789,9 @@ export default class ContentModelCopyPastePlugin implements PluginWithState&lt;C
                 onNodeCreated
             );
 &nbsp;
-            let newRange: Range | null = selectionExToRange(selectionForCopy, tempDiv);
+            let newRange: Range | null = selectionForCopy
+                ? domSelectionToRange(doc, selectionForCopy, tempDiv)
+                : <span class="branch-1 cbranch-no" title="branch not covered" >null;</span>
             <span class="missing-if-branch" title="else path not taken" >E</span>if (newRange) {
                 newRange = this.editor.triggerPluginEvent(PluginEventType.BeforeCutCopy, {
                     clonedRoot: tempDiv,
@@ -874,21 +896,26 @@ function isClipboardEvent(event: Event): event is ClipboardEvent {
     return !!(event as ClipboardEvent).clipboardData;
 }
 &nbsp;
-function selectionExToRange(selection: DOMSelection | null, tempDiv: HTMLDivElement): Range | null {
-    <span class="missing-if-branch" title="if path not taken" >I</span>if (!selection) {
-<span class="cstat-no" title="statement not covered" >        return null;</span>
-    }
+function domSelectionToRange(
+    doc: Document,
+    selection: DOMSelection,
+    tempDiv: HTMLDivElement
+): Range | null {
     let newRange: Range | null = null;
+&nbsp;
     if (selection.type === 'table') {
         const table = tempDiv.querySelector(`#${selection.table.id}`) as HTMLTableElement;
         const elementToSelect =
             table.parentElement<span class="branch-0 cbranch-no" title="branch not covered" >?.c</span>hildElementCount == 1 ? table.parentElement : <span class="branch-1 cbranch-no" title="branch not covered" >table;</span>
-        newRange = createRange(elementToSelect);
+&nbsp;
+        newRange = doc.createRange();
+        newRange.selectNode(elementToSelect);
     } else if (selection.type === 'image') {
         const image = tempDiv.querySelector('#' + selection.image.id);
 &nbsp;
         <span class="missing-if-branch" title="else path not taken" >E</span>if (image) {
-            newRange = createRange(image);
+            newRange = doc.createRange();
+            newRange.selectNode(image);
         }
     } else {
         newRange = selection.range;
@@ -916,7 +943,7 @@ export const onNodeCreated: OnNodeCreated = (_, node): void =&gt; {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 06 2023 20:49:37 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 06 2023 21:09:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>23/23</span>
+                <span class='fraction'>21/21</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">90% </span>
+                <span class="strong">86.36% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>18/20</span>
+                <span class='fraction'>19/22</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>22/22</span>
+                <span class='fraction'>20/20</span>
             </div>
         
             
@@ -103,10 +103,8 @@
 <a name='L44'></a><a href='#L44'>44</a>
 <a name='L45'></a><a href='#L45'>45</a>
 <a name='L46'></a><a href='#L46'>46</a>
-<a name='L47'></a><a href='#L47'>47</a>
-<a name='L48'></a><a href='#L48'>48</a>
-<a name='L49'></a><a href='#L49'>49</a>
-<a name='L50'></a><a href='#L50'>50</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<a name='L47'></a><a href='#L47'>47</a></td><td class="line-coverage quiet"><span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -124,12 +122,10 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">692x</span>
+<span class="cline-any cline-yes">698x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">346x</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-yes">31x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">349x</span>
+<span class="cline-any cline-yes">349x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-yes">31x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -141,10 +137,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">346x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-yes">7x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">349x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -152,12 +145,14 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">7x</span>
 <span class="cline-any cline-yes">7x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { applyFormat } from '../utils/applyFormat';
-import { moveChildNodes } from 'roosterjs-editor-dom';
+import { isNodeOfType } from '../../domUtils/isNodeOfType';
 import { stackFormat } from '../utils/stackFormat';
+import { wrapAllChildNodes } from '../../domUtils/moveChildNodes';
 import type {
     ContentModelSegment,
     ContentModelSegmentHandler,
@@ -175,33 +170,29 @@ export const handleSegmentDecorator: ContentModelSegmentHandler&lt;ContentModelS
 ) =&gt; {
     const { code, link } = segment;
 &nbsp;
-    if (link) {
-        stackFormat(context, 'a', () =&gt; {
-            const a = document.createElement('a');
+    <span class="missing-if-branch" title="else path not taken" >E</span>if (isNodeOfType(parent, 'ELEMENT_NODE')) {
+        if (link) {
+            stackFormat(context, 'a', () =&gt; {
+                const a = wrapAllChildNodes(parent, 'a');
 &nbsp;
-            moveChildNodes(a, parent);
-            parent.appendChild(a);
+                applyFormat(a, context.formatAppliers.link, link.format, context);
+                applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
 &nbsp;
-            applyFormat(a, context.formatAppliers.link, link.format, context);
-            applyFormat(a, context.formatAppliers.dataset, link.dataset, context);
+                segmentNodes<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ush(a);
+                context.onNodeCreated?.(link, a);
+            });
+        }
 &nbsp;
-            segmentNodes<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ush(a);
-            context.onNodeCreated?.(link, a);
-        });
-    }
+        if (code) {
+            stackFormat(context, 'code', () =&gt; {
+                const codeNode = wrapAllChildNodes(parent, 'code');
 &nbsp;
-    if (code) {
-        stackFormat(context, 'code', () =&gt; {
-            const codeNode = document.createElement('code');
+                applyFormat(codeNode, context.formatAppliers.code, code.format, context);
 &nbsp;
-            moveChildNodes(codeNode, parent);
-            parent.appendChild(codeNode);
-&nbsp;
-            applyFormat(codeNode, context.formatAppliers.code, code.format, context);
-&nbsp;
-            segmentNodes<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ush(codeNode);
-            context.onNodeCreated?.(code, codeNode);
-        });
+                segmentNodes<span class="branch-0 cbranch-no" title="branch not covered" >?.p</span>ush(codeNode);
+                context.onNodeCreated?.(code, codeNode);
+            });
+        }
     }
 };
 &nbsp;</pre></td></tr></table></pre>
@@ -211,7 +202,7 @@ export const handleSegmentDecorator: ContentModelSegmentHandler&lt;ContentModelS
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 06 2023 20:49:37 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 06 2023 21:09:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>

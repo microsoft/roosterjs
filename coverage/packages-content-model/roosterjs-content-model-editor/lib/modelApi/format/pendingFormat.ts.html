@@ -25,14 +25,14 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>21/21</span>
+                <span class='fraction'>23/23</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">100% </span>
+                <span class="strong">88.24% </span>
                 <span class="quiet">Branches</span>
-                <span class='fraction'>10/10</span>
+                <span class='fraction'>15/17</span>
             </div>
         
             
@@ -46,7 +46,7 @@
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>20/20</span>
+                <span class='fraction'>22/22</span>
             </div>
         
             
@@ -131,8 +131,12 @@
 <a name='L72'></a><a href='#L72'>72</a>
 <a name='L73'></a><a href='#L73'>73</a>
 <a name='L74'></a><a href='#L74'>74</a>
-<a name='L75'></a><a href='#L75'>75</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
+<a name='L75'></a><a href='#L75'>75</a>
+<a name='L76'></a><a href='#L76'>76</a>
+<a name='L77'></a><a href='#L77'>77</a>
+<a name='L78'></a><a href='#L78'>78</a>
+<a name='L79'></a><a href='#L79'>79</a>
+<a name='L80'></a><a href='#L80'>80</a></td><td class="line-coverage quiet"><span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -151,13 +155,16 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">1x</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -171,6 +178,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-yes">22x</span>
+<span class="cline-any cline-yes">22x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -183,14 +191,15 @@
 <span class="cline-any cline-yes">25x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-yes">3x</span>
+<span class="cline-any cline-yes">2x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">25x</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
@@ -205,9 +214,9 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import type { ContentModelSegmentFormat } from 'roosterjs-content-model-types';
 import type { IContentModelEditor } from '../../publicTypes/IContentModelEditor';
-import type { NodePosition } from 'roosterjs-editor-types';
 &nbsp;
 /**
  * @internal
@@ -223,17 +232,20 @@ export function getPendingFormat(editor: IContentModelEditor): ContentModelSegme
  * Set pending segment format to editor
  * @param editor The editor to set pending format to
  * @param format The format to set.
- * @param position Cursor position when set this format
+ * @param posContainer Container node of current focus position
+ * @param posOffset Offset number of current focus position
  */
 export function setPendingFormat(
     editor: IContentModelEditor,
     format: ContentModelSegmentFormat,
-    position: NodePosition
+    posContainer: Node,
+    posOffset: number
 ) {
     const holder = getPendingFormatHolder(editor);
 &nbsp;
     holder.format = format;
-    holder.position = position;
+    holder.posContainer = posContainer;
+    holder.posOffset = posOffset;
 }
 &nbsp;
 /**
@@ -244,7 +256,8 @@ export function clearPendingFormat(editor: IContentModelEditor) {
     const holder = getPendingFormatHolder(editor);
 &nbsp;
     holder.format = null;
-    holder.position = null;
+    holder.posContainer = null;
+    holder.posOffset = null;
 }
 &nbsp;
 /**
@@ -256,10 +269,10 @@ export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
     const holder = getPendingFormatHolder(editor);
     let result = false;
 &nbsp;
-    if (holder.format &amp;&amp; holder.position) {
+    if (holder.format &amp;&amp; holder.posContainer &amp;&amp; holder.posOffset !== null) {
         const position = editor.getFocusedPosition();
 &nbsp;
-        if (position?.equalTo(holder.position)) {
+        if (position<span class="branch-0 cbranch-no" title="branch not covered" >?.n</span>ode == holder.posContainer &amp;&amp; position<span class="branch-0 cbranch-no" title="branch not covered" >?.o</span>ffset == holder.posOffset) {
             result = true;
         }
     }
@@ -268,7 +281,8 @@ export function canApplyPendingFormat(editor: IContentModelEditor): boolean {
 }
 interface PendingFormatHolder {
     format: ContentModelSegmentFormat | null;
-    position: NodePosition | null;
+    posContainer: Node | null;
+    posOffset: number | null;
 }
 &nbsp;
 const PendingFormatHolderKey = '__ContentModelPendingFormat';
@@ -276,7 +290,8 @@ const PendingFormatHolderKey = '__ContentModelPendingFormat';
 function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolder {
     return editor.getCustomData&lt;PendingFormatHolder&gt;(PendingFormatHolderKey, () =&gt; ({
         format: null,
-        position: null,
+        posContainer: null,
+        posOffset: null,
     }));
 }
 &nbsp;</pre></td></tr></table></pre>
@@ -286,7 +301,7 @@ function getPendingFormatHolder(editor: IContentModelEditor): PendingFormatHolde
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank">istanbul</a>
-                at Fri Oct 06 2023 20:49:37 GMT+0000 (Coordinated Universal Time)
+                at Fri Oct 06 2023 21:09:52 GMT+0000 (Coordinated Universal Time)
             </div>
         </div>
         <script src="../../../../../prettify.js"></script>
