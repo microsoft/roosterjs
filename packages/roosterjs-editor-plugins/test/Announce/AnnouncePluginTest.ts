@@ -1,11 +1,27 @@
 import AnnouncePlugin from '../../lib/plugins/Announce/AnnouncePlugin';
-import { IEditor, PluginEventType } from 'roosterjs-editor-types';
+import { IEditor, Keys, PluginEventType } from 'roosterjs-editor-types';
 
 describe('AnnouncePlugin', () => {
-    const mockEditor: IEditor = {
+    let mockEditor: IEditor = {
         getDocument: () => document,
+        runAsync: (cb: (mockEditor: IEditor) => void) => cb(mockEditor),
+        isDisposed: () => false,
     } as any;
 
+    let getElementAtCursorSpy: jasmine.Spy;
+
+    beforeEach(() => {
+        mockEditor = {
+            getDocument: () => document,
+            runAsync: (cb: (mockEditor: IEditor) => void) => cb(mockEditor),
+            isDisposed: () => false,
+        } as any;
+        getElementAtCursorSpy = jasmine.createSpy('getElementAtCursorSpy');
+        mockEditor.getElementAtCursor = () => {
+            getElementAtCursorSpy();
+            return null;
+        };
+    });
     it('initialize', () => {
         const plugin = new AnnouncePlugin();
         plugin.initialize(mockEditor);
@@ -97,6 +113,79 @@ describe('AnnouncePlugin', () => {
 
         expect(plugin.getAriaLiveElement()).toBeUndefined();
         plugin.dispose();
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+    });
+
+    it('onPluginEvent & dispose, handle feature', () => {
+        const mockStrings = 'MockStrings' as any;
+        const spyTest = jasmine.createSpy('spyTest');
+        const plugin = new AnnouncePlugin(
+            mockStrings,
+            ['announceNewListItem', 'announceWarningOnLastTableCell'],
+            [
+                {
+                    keys: [Keys.ENTER],
+                    shouldHandle: () => {
+                        spyTest();
+                        return {
+                            text: 'mockedText',
+                        };
+                    },
+                },
+            ]
+        );
+
+        plugin.initialize(mockEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent: {
+                which: Keys.ENTER,
+            } as any,
+        });
+
+        expect(plugin.getAriaLiveElement()).toBeDefined();
+        expect(plugin.getAriaLiveElement()?.textContent).toEqual('mockedText');
+        expect(spyTest).toHaveBeenCalled();
+        expect(getElementAtCursorSpy).toHaveBeenCalled();
+
+        plugin.dispose();
+
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+    });
+
+    it('onPluginEvent & dispose, do not handle feature, event key not in features.', () => {
+        const mockStrings = 'MockStrings' as any;
+        const spyTest = jasmine.createSpy('spyTest');
+        const plugin = new AnnouncePlugin(
+            mockStrings,
+            ['announceNewListItem', 'announceWarningOnLastTableCell'],
+            [
+                {
+                    keys: [Keys.B],
+                    shouldHandle: () => {
+                        spyTest();
+                        return {
+                            text: 'mockedText',
+                        };
+                    },
+                },
+            ]
+        );
+
+        plugin.initialize(mockEditor);
+        plugin.onPluginEvent({
+            eventType: PluginEventType.KeyDown,
+            rawEvent: {
+                which: Keys.ENTER,
+            } as any,
+        });
+
+        expect(plugin.getAriaLiveElement()).toBeUndefined();
+        expect(spyTest).not.toHaveBeenCalled();
+        expect(getElementAtCursorSpy).toHaveBeenCalled();
+
+        plugin.dispose();
+
         expect(plugin.getAriaLiveElement()).toBeUndefined();
     });
 });
