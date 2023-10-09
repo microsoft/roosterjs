@@ -71,4 +71,9 @@ export default interface ImageEditOptions {
      * @default ImageEditOperation.ResizeAndRotate
      */
     onSelectState?: ImageEditOperation | CompatibleImageEditOperation;
+
+    /**
+     * Apply changes when mouse upp
+     */
+    applyChangesOnMouseUp?: boolean;
 }

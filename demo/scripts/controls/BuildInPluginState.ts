@@ -37,6 +37,7 @@ export default interface BuildInPluginState {
     isRtl: boolean;
     cacheModel?: boolean;
     tableFeaturesContainerSelector: string;
+    applyChangesOnMouseUp?: boolean;
 }
 
 export interface BuildInPluginProps extends BuildInPluginState, SidePaneElementProps {}

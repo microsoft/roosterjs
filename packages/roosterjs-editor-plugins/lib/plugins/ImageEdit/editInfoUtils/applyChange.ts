@@ -1,8 +1,8 @@
 import checkEditInfoState, { ImageEditInfoState } from './checkEditInfoState';
 import generateDataURL from './generateDataURL';
 import getGeneratedImageSize from './getGeneratedImageSize';
+import { ChangeSource, PluginEventType } from 'roosterjs-editor-types';
 import { deleteEditInfo, getEditInfoFromImage, saveEditInfo } from './editInfo';
-import { PluginEventType } from 'roosterjs-editor-types';
 import type ImageEditInfo from '../types/ImageEditInfo';
 import type { IEditor } from 'roosterjs-editor-types';
 
@@ -57,6 +57,10 @@ export default function applyChange(
             newSrc,
         });
         newSrc = event.newSrc;
+    } else {
+        editor.triggerPluginEvent(PluginEventType.ContentChanged, {
+            source: ChangeSource.ImageResize,
+        });
     }
 
     if (newSrc == editInfo.src) {
