@@ -22,7 +22,8 @@ export default function applyChange(
     editInfo: ImageEditInfo,
     previousSrc: string,
     wasResizedOrCropped: boolean,
-    editingImage?: HTMLImageElement
+    editingImage?: HTMLImageElement,
+    applyChangesOnMouseUp?: boolean
 ) {
     let newSrc = '';
 
@@ -57,7 +58,7 @@ export default function applyChange(
             newSrc,
         });
         newSrc = event.newSrc;
-    } else {
+    } else if (applyChangesOnMouseUp) {
         editor.triggerPluginEvent(PluginEventType.ContentChanged, {
             source: ChangeSource.ImageResize,
         });

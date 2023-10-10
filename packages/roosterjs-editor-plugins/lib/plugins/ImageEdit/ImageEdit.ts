@@ -515,7 +515,8 @@ export default class ImageEdit implements EditorPlugin {
                 this.editInfo,
                 this.lastSrc,
                 this.wasResized,
-                this.clonedImage
+                this.clonedImage,
+                this.options.applyChangesOnMouseUp
             );
         }
     };
