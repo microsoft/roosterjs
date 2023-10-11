@@ -68,7 +68,7 @@ export default class TypeInContainerPlugin implements EditorPlugin {
             // there is already content under the selection (e.g. Ctrl+a -> type new content).
             //
             // Only schedule when the range is not collapsed to catch this edge case.
-            let range = this.editor.getSelectionRange();
+            const range = this.editor.getSelectionRange();
 
             const styledAncestor =
                 range &&

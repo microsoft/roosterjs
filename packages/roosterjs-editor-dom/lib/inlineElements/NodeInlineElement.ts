@@ -73,8 +73,8 @@ export default class NodeInlineElement implements InlineElement {
      * Checks if the given position is contained in the inline element
      */
     public contains(pos: NodePosition): boolean {
-        let start = this.getStartPosition();
-        let end = this.getEndPosition();
+        const start = this.getStartPosition();
+        const end = this.getEndPosition();
         return pos && pos.isAfter(start) && end.isAfter(pos);
     }
 

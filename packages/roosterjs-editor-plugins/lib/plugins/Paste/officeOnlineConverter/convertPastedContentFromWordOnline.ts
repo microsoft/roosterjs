@@ -107,7 +107,7 @@ export default function convertPastedContentFromWordOnline(fragment: DocumentFra
         const doc = fragment.ownerDocument;
 
         itemBlock.listItemContainers.forEach(listItemContainer => {
-            let listType: 'OL' | 'UL' | null = getContainerListType(listItemContainer); // list type that is contained by iterator.
+            const listType: 'OL' | 'UL' | null = getContainerListType(listItemContainer); // list type that is contained by iterator.
             if (listType) {
                 // Initialize processed element with proper listType if this is the first element
                 if (!convertedListElement) {
@@ -215,7 +215,7 @@ function getListItemBlocks(fragment: DocumentFragment): ListItemBlock[] {
     const result: ListItemBlock[] = [];
     let curListItemBlock: ListItemBlock | null = null;
     for (let i = 0; i < listElements.length; i++) {
-        let curItem = listElements[i];
+        const curItem = listElements[i];
         if (!curListItemBlock) {
             curListItemBlock = createListItemBlock(curItem);
         } else {
@@ -294,7 +294,7 @@ function insertListItem(
     let itemLevel = parseInt(itemToInsert.getAttribute('data-aria-level') ?? '');
 
     // Try to reuse the List Marker
-    let style = itemToInsert.getAttribute('data-leveltext');
+    const style = itemToInsert.getAttribute('data-leveltext');
     if (
         listType == 'UL' &&
         style &&
@@ -316,8 +316,8 @@ function insertListItem(
         } else {
             // If the current level is not empty, the last item in the needs to be a UL or OL
             // and the level iterator should move to the UL/OL at the last position.
-            let lastChild = curListLevel.lastElementChild;
-            let lastChildTag = getTagOfNode(lastChild);
+            const lastChild = curListLevel.lastElementChild;
+            const lastChildTag = getTagOfNode(lastChild);
             if (lastChild && (lastChildTag == 'UL' || lastChildTag == 'OL')) {
                 // If the last child is a list(UL/OL), then move the level iterator to last child.
                 curListLevel = lastChild;

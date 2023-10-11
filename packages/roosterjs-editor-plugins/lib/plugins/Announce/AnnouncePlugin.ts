@@ -131,7 +131,7 @@ export default class Announce implements EditorPlugin {
 
     protected announce(announceData: AnnounceData, editor: IEditor) {
         const { text, defaultStrings, formatStrings = [] } = announceData;
-        let textToAnnounce = formatString(this.getString(defaultStrings) || text, formatStrings);
+        const textToAnnounce = formatString(this.getString(defaultStrings) || text, formatStrings);
         if (textToAnnounce) {
             if (!this.ariaLiveElement || textToAnnounce == this.ariaLiveElement?.textContent) {
                 this.ariaLiveElement?.parentElement?.removeChild(this.ariaLiveElement);

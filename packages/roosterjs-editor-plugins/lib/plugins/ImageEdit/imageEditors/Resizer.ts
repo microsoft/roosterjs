@@ -135,7 +135,7 @@ export function getCornerResizeHTML(
 
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData =
+            const elementData =
                 (x == '') == (y == '')
                     ? getResizeHandleHTML(
                           x,
@@ -166,7 +166,7 @@ export function getSideResizeHTML(
     const result: CreateElementData[] = [];
     Xs.forEach(x =>
         Ys.forEach(y => {
-            let elementData =
+            const elementData =
                 (x == '') != (y == '')
                     ? getResizeHandleHTML(
                           x,

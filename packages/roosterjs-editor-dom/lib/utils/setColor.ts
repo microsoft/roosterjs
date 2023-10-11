@@ -113,7 +113,7 @@ function adaptFontColorToBackgroundColor(
 }
 
 function isADarkOrBrightColor(color: string): ColorTones {
-    let lightness = calculateLightness(color);
+    const lightness = calculateLightness(color);
     if (lightness < DARK_COLORS_LIGHTNESS) {
         return ColorTones.DARK;
     } else if (lightness > BRIGHT_COLORS_LIGHTNESS) {

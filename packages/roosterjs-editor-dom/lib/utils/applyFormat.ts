@@ -15,8 +15,8 @@ export default function applyFormat(
     darkColorHandler?: DarkColorHandler | null
 ) {
     if (format) {
-        let elementStyle = element.style;
-        let {
+        const elementStyle = element.style;
+        const {
             fontFamily,
             fontSize,
             textColor,
