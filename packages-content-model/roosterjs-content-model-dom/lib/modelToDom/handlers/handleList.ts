@@ -1,6 +1,5 @@
 import { applyFormat } from '../utils/applyFormat';
-import { listLevelMetadataFormatHandler } from '../../formatHandlers/list/listLevelMetadataFormatHandler';
-import { updateListMetadata } from '../../domUtils/metadata/updateListMetadata';
+import { applyMetadata } from '../utils/applyMetadata';
 import type {
     ContentModelBlockHandler,
     ContentModelListItem,
@@ -50,26 +49,16 @@ export const handleList: ContentModelBlockHandler<ContentModelListItem> = (
         const lastParent = nodeStack[nodeStack.length - 1].node;
 
         lastParent.insertBefore(newList, layer == 0 ? refNode : null);
-
-        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
-
-        // TODO: Move this out into roosterjs-content-model-editor package
-        updateListMetadata(level, metadata => {
-            applyFormat(newList, [listLevelMetadataFormatHandler.apply], metadata || {}, context);
-
-            if (
-                metadata &&
-                typeof metadata.orderedStyleType == 'undefined' &&
-                typeof metadata.unorderedStyleType == 'undefined'
-            ) {
-                metadata = null;
-            }
-
-            return metadata;
-        });
-        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
-
         nodeStack.push({ node: newList, ...level });
+
+        applyFormat(newList, context.formatAppliers.listLevelThread, level.format, context);
+
+        // Need to apply metadata after applying list level format since the list numbers value relies on the result of list thread handling
+        applyMetadata(level, context.metadataAppliers.listLevel, level.format, context);
+
+        // Need to apply listItemElement formats after applying metadata since the list numbers value relies on the result of metadata handling
+        applyFormat(newList, context.formatAppliers.listLevel, level.format, context);
+        applyFormat(newList, context.formatAppliers.dataset, level.dataset, context);
 
         context.onNodeCreated?.(level, newList);
     }

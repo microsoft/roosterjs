@@ -19,7 +19,7 @@ import { lineHeightFormatHandler } from './block/lineHeightFormatHandler';
 import { linkFormatHandler } from './segment/linkFormatHandler';
 import { listItemThreadFormatHandler } from './list/listItemThreadFormatHandler';
 import { listLevelThreadFormatHandler } from './list/listLevelThreadFormatHandler';
-import { listStylePositionFormatHandler } from './list/listStylePositionFormatHandler';
+import { listStyleFormatHandler } from './list/listStyleFormatHandler';
 import { marginFormatHandler } from './block/marginFormatHandler';
 import { paddingFormatHandler } from './block/paddingFormatHandler';
 import { sizeFormatHandler } from './common/sizeFormatHandler';
@@ -70,7 +70,7 @@ const defaultFormatHandlerMap: FormatHandlers = {
     link: linkFormatHandler,
     listItemThread: listItemThreadFormatHandler,
     listLevelThread: listLevelThreadFormatHandler,
-    listStylePosition: listStylePositionFormatHandler,
+    listStyle: listStyleFormatHandler,
     margin: marginFormatHandler,
     padding: paddingFormatHandler,
     size: sizeFormatHandler,
@@ -120,17 +120,17 @@ export const defaultFormatKeysPerCategory: {
     [key in keyof ContentModelFormatMap]: (keyof FormatHandlerTypeMap)[];
 } = {
     block: sharedBlockFormats,
-    listItem: ['listItemThread'],
-    listItemElement: [...sharedBlockFormats, 'direction', 'textAlign', 'lineHeight', 'margin'],
-    listLevel: [
-        'listLevelThread',
+    listItemThread: ['listItemThread'],
+    listLevelThread: ['listLevelThread'],
+    listItemElement: [
+        ...sharedBlockFormats,
         'direction',
         'textAlign',
+        'lineHeight',
         'margin',
-        'padding',
-        'listStylePosition',
-        'backgroundColor',
+        'listStyle',
     ],
+    listLevel: ['direction', 'textAlign', 'margin', 'padding', 'listStyle', 'backgroundColor'],
     styleBasedSegment: [...styleBasedSegmentFormats, 'textColor', 'backgroundColor', 'lineHeight'],
     elementBasedSegment: elementBasedSegmentFormats,
     segment: [

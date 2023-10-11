@@ -1,20 +1,25 @@
-import { BulletListType, NumberingListType } from 'roosterjs-editor-types';
-import { ContentModelListItem, ModelToDomContext } from 'roosterjs-content-model-types';
-import { createListItem } from '../../../lib/modelApi/creators/createListItem';
-import { createListLevel } from '../../../lib/modelApi/creators/createListLevel';
-import { createModelToDomContext } from '../../../lib/modelToDom/context/createModelToDomContext';
-import { expectHtml } from 'roosterjs-editor-dom/test/DomTestHelper';
-import { handleList } from '../../../lib/modelToDom/handlers/handleList';
+import { expectHtml, itChromeOnly } from 'roosterjs-editor-dom/test/DomTestHelper';
+import { handleList } from 'roosterjs-content-model-dom/lib/modelToDom/handlers/handleList';
+import { ModelToDomContext } from 'roosterjs-content-model-types';
+import {
+    createListItem,
+    createListLevel,
+    createModelToDomContext,
+} from 'roosterjs-content-model-dom';
+import {
+    listItemMetadataApplier,
+    listLevelMetadataApplier,
+} from '../../../lib/domUtils/metadata/updateListMetadata';
 
-describe('handleList without format handlers', () => {
+describe('handleList with metadata', () => {
     let context: ModelToDomContext;
     let parent: HTMLDivElement;
 
     beforeEach(() => {
         context = createModelToDomContext(undefined, {
-            formatApplierOverride: {
-                listLevelThread: null,
-                dataset: null,
+            metadataAppliers: {
+                listItem: listItemMetadataApplier,
+                listLevel: listLevelMetadataApplier,
             },
         });
         parent = document.createElement('div');
@@ -41,7 +46,7 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul></ul></div>');
+        expect(parent.outerHTML).toBe('<div><ul style="list-style-type: disc;"></ul></div>');
         expect(context.listFormat).toEqual({
             threadItemCounts: [],
             nodeStack: [
@@ -52,7 +57,9 @@ describe('handleList without format handlers', () => {
                     listType: 'UL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
-                    format: {},
+                    format: {
+                        listStyleType: 'disc',
+                    },
                 },
             ],
         });
@@ -63,14 +70,12 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
         const possibleResults = [
-            '<div><ol></ol></div>', //Chrome
-            '<div><ol start="1"></ol></div>', //Firefox
+            '<div><ol start="1" style="list-style-type: decimal;"></ol></div>',
         ];
 
         expectHtml(parent.outerHTML, possibleResults);
-
         expect(context.listFormat).toEqual({
-            threadItemCounts: [],
+            threadItemCounts: [0],
             nodeStack: [
                 {
                     node: parent,
@@ -79,7 +84,9 @@ describe('handleList without format handlers', () => {
                     listType: 'OL',
                     node: parent.firstChild as HTMLElement,
                     dataset: {},
-                    format: {},
+                    format: {
+                        listStyleType: 'decimal',
+                    },
                 },
             ],
         });
@@ -111,7 +118,7 @@ describe('handleList without format handlers', () => {
         });
     });
 
-    it('Context has OL, single OL list item, do not reuse existing OL element', () => {
+    itChromeOnly('Context has OL, single OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL', {}, { editingInfo: JSON.stringify({ orderedStyleType: 2 }) }),
@@ -124,7 +131,9 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol></ol><ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;orderedStyleType&quot;:2}"></ol></div>'
+        );
         expect(context.listFormat).toEqual({
             threadItemCounts: [1],
             nodeStack: [
@@ -141,7 +150,7 @@ describe('handleList without format handlers', () => {
         });
     });
 
-    it('Context has OL, 2 level OL list item, reuse existing OL element', () => {
+    itChromeOnly('Context has OL, 2 level OL list item, reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
             createListLevel('OL'),
@@ -155,9 +164,11 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol><ol></ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol><ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:2}"></ol></ol></div>'
+        );
         expect(context.listFormat).toEqual({
-            threadItemCounts: [1],
+            threadItemCounts: [1, 0],
             nodeStack: [
                 {
                     node: parent,
@@ -176,10 +187,18 @@ describe('handleList without format handlers', () => {
         });
     });
 
-    it('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
+    itChromeOnly('Context has OL, 2 level OL list item, do not reuse existing OL element', () => {
         const existingOL = document.createElement('ol');
         const listItem = createListItem([
-            createListLevel('OL', {}, { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) }),
+            createListLevel(
+                'OL',
+                {},
+                {
+                    editingInfo: JSON.stringify({
+                        unorderedStyleType: 3,
+                    }),
+                }
+            ),
             createListLevel('OL'),
         ]);
 
@@ -190,9 +209,11 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ol></ol><ol><ol></ol></ol></div>');
+        expect(parent.outerHTML).toBe(
+            '<div><ol></ol><ol start="2" data-editing-info="{&quot;unorderedStyleType&quot;:3}" style="list-style-type: decimal;"><ol start="1" style="list-style-type: lower-alpha;"></ol></ol></div>'
+        );
         expect(context.listFormat).toEqual({
-            threadItemCounts: [1],
+            threadItemCounts: [1, 0],
             nodeStack: [
                 {
                     node: parent,
@@ -201,13 +222,17 @@ describe('handleList without format handlers', () => {
                     listType: 'OL',
                     node: existingOL.nextSibling as HTMLElement,
                     dataset: { editingInfo: JSON.stringify({ unorderedStyleType: 3 }) },
-                    format: {},
+                    format: {
+                        listStyleType: 'decimal',
+                    },
                 },
                 {
                     listType: 'OL',
                     node: (existingOL.nextSibling as HTMLElement).firstChild as HTMLElement,
                     dataset: {},
-                    format: {},
+                    format: {
+                        listStyleType: 'lower-alpha',
+                    },
                 },
             ],
         });
@@ -261,10 +286,8 @@ describe('handleList without format handlers', () => {
         ];
 
         handleList(document, parent, listItem, context, null);
-
         const possibleResults = [
-            '<div><ul><ol></ol></ul><ol></ol></div>', //Chrome
-            '<div><ul><ol></ol></ul><ol start="2"></ol></div>', //Firefox
+            '<div><ul><ol></ol></ul><ol start="2" style="list-style-type: decimal;"></ol></div>',
         ];
 
         expectHtml(parent.outerHTML, possibleResults);
@@ -279,7 +302,9 @@ describe('handleList without format handlers', () => {
                     listType: 'OL',
                     node: existingOL1.nextSibling as HTMLElement,
                     dataset: {},
-                    format: {},
+                    format: {
+                        listStyleType: 'decimal',
+                    },
                 },
             ],
         });
@@ -305,9 +330,14 @@ describe('handleList without format handlers', () => {
 
         handleList(document, parent, listItem, context, null);
 
-        expect(parent.outerHTML).toBe('<div><ul><ol></ol><ol></ol></ul></div>');
+        const possibleResults = [
+            '<div><ul><ol></ol><ol start="3" style="list-style-type: lower-alpha;"></ol></ul></div>',
+        ];
+
+        expectHtml(parent.outerHTML, possibleResults);
+
         expect(context.listFormat).toEqual({
-            threadItemCounts: [1, 1],
+            threadItemCounts: [1, 2],
             nodeStack: [
                 {
                     node: parent,
@@ -322,191 +352,31 @@ describe('handleList without format handlers', () => {
                     dataset: {},
                     format: {
                         startNumberOverride: 3,
+                        listStyleType: 'lower-alpha',
                     },
                 },
             ],
         });
     });
-});
 
-describe('handleList handles metadata', () => {
-    let context: ModelToDomContext;
-    let parent: HTMLDivElement;
-
-    beforeEach(() => {
-        context = createModelToDomContext();
-        parent = document.createElement('div');
-    });
-
-    it('OL with metadata', () => {
+    it('List with margin and padding', () => {
         const listItem = createListItem([
-            createListLevel(
-                'OL',
-                {},
-                {
-                    editingInfo: JSON.stringify({
-                        orderedStyleType: NumberingListType.UpperAlpha,
-                        unorderedStyleType: BulletListType.Circle,
-                    }),
-                }
-            ),
+            createListLevel('UL', {
+                marginLeft: '1px',
+                marginRight: '2px',
+                marginTop: '3px',
+                marginBottom: '4px',
+                paddingLeft: '5px',
+                paddingRight: '6px',
+                paddingTop: '7px',
+                paddingBottom: '8px',
+            }),
         ]);
 
         handleList(document, parent, listItem, context, null);
 
-        const possibleResults = [
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:9,&quot;unorderedStyleType&quot;:9}"></ol>',
-        ];
-
-        expectHtml(parent.innerHTML, possibleResults);
-    });
-
-    it('OL with metadata with simple value', () => {
-        const listItem = createListItem([
-            createListLevel(
-                'OL',
-                {},
-                {
-                    editingInfo: JSON.stringify({
-                        orderedStyleType: NumberingListType.LowerAlpha,
-                        unorderedStyleType: BulletListType.Circle,
-                    }),
-                }
-            ),
-        ]);
-
-        handleList(document, parent, listItem, context, null);
-
-        const possibleResults = [
-            '<ol start="1" data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ol>',
-        ];
-
-        expectHtml(parent.innerHTML, possibleResults);
-    });
-
-    it('UL with metadata with simple value', () => {
-        const listItem = createListItem([
-            createListLevel(
-                'UL',
-                {},
-                {
-                    editingInfo: JSON.stringify({
-                        orderedStyleType: NumberingListType.LowerAlpha,
-                        unorderedStyleType: BulletListType.Circle,
-                    }),
-                }
-            ),
-        ]);
-
-        handleList(document, parent, listItem, context, null);
-
-        const possibleResults = [
-            '<ul data-editing-info="{&quot;orderedStyleType&quot;:5,&quot;unorderedStyleType&quot;:9}"></ul>',
-        ];
-        expectHtml(parent.innerHTML, possibleResults);
-    });
-
-    it('OL with refNode', () => {
-        const listItem = createListItem([createListLevel('OL')]);
-        const br = document.createElement('br');
-
-        parent.appendChild(br);
-
-        handleList(document, parent, listItem, context, br);
-
-        const possibleResults = ['<div><ol start="1"></ol><br></div>'];
-
-        expectHtml(parent.outerHTML, possibleResults);
-
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [0],
-            nodeStack: [
-                {
-                    node: parent,
-                },
-                {
-                    node: parent.firstChild as HTMLElement,
-                    listType: 'OL',
-                    dataset: {},
-                    format: {},
-                },
-            ],
-        });
-    });
-
-    it('Context has OL with refNode', () => {
-        const existingOL = document.createElement('ol');
-        const listItem = createListItem([createListLevel('OL'), createListLevel('OL')]);
-        const br = document.createElement('br');
-
-        context.listFormat.threadItemCounts = [1];
-        context.listFormat.nodeStack = [{ node: parent }, { node: existingOL, listType: 'OL' }];
-
-        parent.appendChild(existingOL);
-        parent.appendChild(br);
-
-        const result = handleList(document, parent, listItem, context, br);
-
-        const possibleResults = [
-            '<div><ol><ol start="1"></ol></ol><br></div>', //Chrome
-            '<div><ol><ol start="1"></ol></ol><br></div>', //Firefox
-        ];
-
-        expectHtml(parent.outerHTML, possibleResults);
-
-        expect(context.listFormat).toEqual({
-            threadItemCounts: [1, 0],
-            nodeStack: [
-                {
-                    node: parent,
-                },
-                {
-                    listType: 'OL',
-                    node: existingOL,
-                },
-                {
-                    listType: 'OL',
-                    node: existingOL.firstChild as HTMLElement,
-                    dataset: {},
-                    format: {},
-                },
-            ],
-        });
-        expect(result).toBe(br);
-    });
-
-    it('With onNodeCreated', () => {
-        const listLevel0 = createListLevel('OL');
-        const listLevel1 = createListLevel('UL');
-        const listItem: ContentModelListItem = {
-            blockType: 'BlockGroup',
-            blockGroupType: 'ListItem',
-            blocks: [],
-            format: {},
-            formatHolder: {
-                segmentType: 'SelectionMarker',
-                format: {},
-                isSelected: true,
-            },
-            levels: [listLevel0, listLevel1],
-        };
-        const parent = document.createElement('div');
-
-        const onNodeCreated = jasmine.createSpy('onNodeCreated');
-
-        context.onNodeCreated = onNodeCreated;
-
-        handleList(document, parent, listItem, context, null);
-
-        expect(
-            ['<ol start="1"><ul></ul></ol>', '<ol start="1"><ul></ul></ol>'].indexOf(
-                parent.innerHTML
-            ) >= 0
-        ).toBeTrue();
-        expect(onNodeCreated).toHaveBeenCalledTimes(2);
-        expect(onNodeCreated.calls.argsFor(0)[0]).toBe(listLevel0);
-        expect(onNodeCreated.calls.argsFor(0)[1]).toBe(parent.querySelector('ol'));
-        expect(onNodeCreated.calls.argsFor(1)[0]).toBe(listLevel1);
-        expect(onNodeCreated.calls.argsFor(1)[1]).toBe(parent.querySelector('ul'));
+        expect(parent.outerHTML).toBe(
+            '<div><ul style="margin: 3px 2px 4px 1px; padding: 7px 6px 8px 5px; list-style-type: disc;"></ul></div>'
+        );
     });
 });
