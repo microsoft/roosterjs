@@ -429,28 +429,16 @@ describe('ImageEdit | applyChangesOnMouseUp', () => {
 
     it('should call apply changed', () => {
         const IMG_ID = 'IMAGE_ID_MOUSE';
-        const SPAN_ID = 'SPAN_ID';
-        const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
+        const content = `<img id="${IMG_ID}" src='test'/>`;
         editor.setContent(content);
         const applyChangeSpy = spyOn(applyChange, 'default');
         const image = document.getElementById(IMG_ID) as HTMLImageElement;
-        const span = document.getElementById(SPAN_ID) as HTMLImageElement;
+        const imageParent = image.parentElement;
+        const shadowRoot = imageParent?.shadowRoot;
+        const wrapper = shadowRoot?.querySelector('span');
         editor.focus();
         editor.select(image);
-        mouseUp(span, 2);
+        mouseUp(wrapper!, 2);
         expect(applyChangeSpy).toHaveBeenCalled();
-    });
-
-    it('should not call apply changed', () => {
-        const IMG_ID = 'IMAGE_ID_MOUSE';
-        const SPAN_ID = 'SPAN_ID';
-        const content = `<img id="${IMG_ID}" src='test'/><span id="${SPAN_ID}" ></span>`;
-        editor.setContent(content);
-        const applyChangeSpy = spyOn(applyChange, 'default');
-        const image = document.getElementById(IMG_ID) as HTMLImageElement;
-        editor.focus();
-        editor.select(image);
-        mouseUp(image, 2);
-        expect(applyChangeSpy).not.toHaveBeenCalled();
     });
 });

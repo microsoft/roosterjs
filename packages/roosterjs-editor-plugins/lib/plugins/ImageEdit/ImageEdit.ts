@@ -180,11 +180,6 @@ export default class ImageEdit implements EditorPlugin {
                     e.preventDefault();
                 }
             },
-            mouseup: e => {
-                if (this.options.applyChangesOnMouseUp && e.target !== this.image) {
-                    this.changesWhenMouseUp();
-                }
-            },
         });
     }
 
@@ -481,7 +476,12 @@ export default class ImageEdit implements EditorPlugin {
         }
     }
 
-    private insertImageWrapper(wrapper: HTMLSpanElement) {
+    /**
+     * EXPORTED FOR TESTING PURPOSES ONLY
+     * @param wrapper
+     */
+
+    public insertImageWrapper(wrapper: HTMLSpanElement) {
         if (this.image) {
             this.shadowSpan = wrap(this.image, 'span');
             if (this.shadowSpan) {
@@ -491,6 +491,13 @@ export default class ImageEdit implements EditorPlugin {
 
                 this.shadowSpan.style.verticalAlign = 'bottom';
                 wrapper.style.fontSize = '24px';
+                if (this.options.applyChangesOnMouseUp) {
+                    wrapper.addEventListener(
+                        'mouseup',
+                        this.changesWhenMouseUp,
+                        true /* useCapture*/
+                    );
+                }
                 shadowRoot.appendChild(wrapper);
             }
         }
@@ -502,6 +509,13 @@ export default class ImageEdit implements EditorPlugin {
     private removeWrapper = () => {
         if (this.shadowSpan) {
             unwrap(this.shadowSpan);
+        }
+        if (this.options.applyChangesOnMouseUp) {
+            this.wrapper?.removeEventListener(
+                'mouseup',
+                this.changesWhenMouseUp,
+                true /* useCapture*/
+            );
         }
         this.wrapper = null;
         this.shadowSpan = null;
