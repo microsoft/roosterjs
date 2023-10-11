@@ -200,7 +200,7 @@ function shouldClearListContext(
  */
 export function processPastedContentWacComponents(ev: ContentModelBeforePasteEvent) {
     addParser(ev.domToModelOption, 'segment', wacSubSuperParser);
-    addParser(ev.domToModelOption, 'listItem', wacListItemParser);
+    addParser(ev.domToModelOption, 'listItemThread', wacListItemParser);
     addParser(ev.domToModelOption, 'listLevel', wacListLevelParser);
     addParser(ev.domToModelOption, 'container', wacBlockParser);
 
