@@ -13,7 +13,6 @@ export { parseFormat } from './domToModel/utils/parseFormat';
 export { areSameFormats } from './domToModel/utils/areSameFormats';
 
 export { updateMetadata, hasMetadata } from './domUtils/metadata/updateMetadata';
-export { updateListMetadata } from './domUtils/metadata/updateListMetadata';
 export { isNodeOfType, NodeTypeMap } from './domUtils/isNodeOfType';
 export { isElementOfType } from './domUtils/isElementOfType';
 export { getObjectKeys } from './domUtils/getObjectKeys';

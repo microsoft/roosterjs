@@ -26,7 +26,10 @@ export const listLevelThreadFormatHandler: FormatHandler<ListThreadFormat> = {
         const {
             listFormat: { threadItemCounts, nodeStack },
         } = context;
-        const depth = nodeStack.length - 1; // The first one is always the parent of list
+
+        // The first one is always the parent of list, and minus another one to convert length to index
+        // This format applier needs to be executed after new list level is pushed into node stack
+        const depth = nodeStack.length - 2;
 
         if (depth >= 0 && isElementOfType(element, 'ol')) {
             const startNumber = format.startNumberOverride;
