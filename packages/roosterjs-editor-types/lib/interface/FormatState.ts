@@ -174,6 +174,11 @@ export interface StyleBasedFormatState {
      * Direction of the element ('ltr' or 'rtl')
      */
     direction?: string;
+
+    /**
+     * Font weight
+     */
+    fontWeight?: string;
 }
 
 /**
