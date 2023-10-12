@@ -4,7 +4,7 @@ import { DirectionFormatRenderer } from '../format/formatPart/DirectionFormatRen
 import { FormatRenderer } from '../format/utils/FormatRenderer';
 import { FormatView } from '../format/FormatView';
 import { ListMetadataFormatRenderers } from '../format/formatPart/ListMetadataFormatRenderers';
-import { ListStylePositionFormatRenderer } from '../format/formatPart/ListStylePositionFormatRenderer';
+import { ListStylePositionFormatRenderers } from '../format/formatPart/ListStylePositionFormatRenderers';
 import { ListThreadFormatRenderers } from '../format/formatPart/ListThreadFormatRenderer';
 import { MarginFormatRenderer } from '../format/formatPart/MarginFormatRenderer';
 import { MetadataView } from '../format/MetadataView';
@@ -25,7 +25,7 @@ const ListLevelFormatRenders: FormatRenderer<ContentModelListItemLevelFormat>[] 
     TextAlignFormatRenderer,
     MarginFormatRenderer,
     PaddingFormatRenderer,
-    ListStylePositionFormatRenderer,
+    ...ListStylePositionFormatRenderers,
 ];
 
 export function ContentModelListLevelView(props: { level: ContentModelListLevel }) {

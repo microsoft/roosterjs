@@ -84,7 +84,7 @@ export interface ContentModelFormatMap {
     /**
      * Format type for listItem
      */
-    listItem: ContentModelListItemLevelFormat;
+    listItemThread: ContentModelListItemLevelFormat;
 
     /**
      * Format type for listLevel

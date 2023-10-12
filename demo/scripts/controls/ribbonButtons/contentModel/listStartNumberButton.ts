@@ -24,9 +24,7 @@ export const listStartNumberButton: RibbonButton<
     iconName: 'NumberSymbol',
     isDisabled: formatState => !formatState.isNumbering,
     onClick: (editor, key, strings, uiUtility) => {
-        const li = editor.getElementAtCursor('li') as HTMLLIElement;
-
-        if (li && isContentModelEditor(editor)) {
+        if (isContentModelEditor(editor)) {
             if (key == 'ribbonButtonSetStartNumberCustomize') {
                 showInputDialog(
                     uiUtility,
@@ -44,12 +42,10 @@ export const listStartNumberButton: RibbonButton<
                     const newValue = parseInt(values.startNumber);
 
                     if (newValue > 0) {
-                        editor.select(li);
                         setListStartNumber(editor, newValue);
                     }
                 });
             } else {
-                editor.select(li);
                 setListStartNumber(editor, 1);
             }
         }

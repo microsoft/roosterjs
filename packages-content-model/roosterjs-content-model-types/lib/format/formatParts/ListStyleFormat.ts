@@ -1,7 +1,7 @@
 /**
- * Format of list-style-position
+ * Format of list-style
  */
-export type ListStylePositionFormat = {
+export type ListStyleFormat = {
     /**
      * list-style-position
      */

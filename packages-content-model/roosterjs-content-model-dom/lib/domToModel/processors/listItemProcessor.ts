@@ -35,7 +35,7 @@ export const listItemProcessor: ElementProcessor<HTMLLIElement> = (group, elemen
 
                 parseFormat(
                     element,
-                    context.formatParsers.listItem,
+                    context.formatParsers.listItemThread,
                     listItem.levels[listItem.levels.length - 1].format,
                     context
                 );

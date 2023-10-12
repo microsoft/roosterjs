@@ -117,7 +117,7 @@ describe('handleListItem', () => {
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            context.formatAppliers.listItem,
+            context.formatAppliers.listItemThread,
             listItem.levels[0].format,
             context
         );
@@ -185,7 +185,7 @@ describe('handleListItem', () => {
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            context.formatAppliers.listItem,
+            context.formatAppliers.listItemThread,
             listItem.levels[0].format,
             context
         );
@@ -378,7 +378,7 @@ describe('handleListItem without format handler', () => {
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            context.formatAppliers.listItem,
+            context.formatAppliers.listItemThread,
             listItem.levels[0].format,
             context
         );
@@ -446,7 +446,7 @@ describe('handleListItem without format handler', () => {
         );
         expect(applyFormat.applyFormat).toHaveBeenCalledWith(
             parent.firstChild as HTMLElement,
-            context.formatAppliers.listItem,
+            context.formatAppliers.listItemThread,
             listItem.levels[0].format,
             context
         );

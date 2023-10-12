@@ -34,7 +34,7 @@ export const handleListItem: ContentModelBlockHandler<ContentModelListItem> = (
     if (level) {
         applyFormat(li, context.formatAppliers.listItemElement, listItem.format, context);
         applyFormat(li, context.formatAppliers.segment, listItem.formatHolder.format, context);
-        applyFormat(li, context.formatAppliers.listItem, level.format, context);
+        applyFormat(li, context.formatAppliers.listItemThread, level.format, context);
 
         // TODO: Move this out into roosterjs-content-model-editor package
         updateListMetadata(level, metadata => {

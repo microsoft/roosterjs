@@ -20,17 +20,9 @@ export const setBulletedListStyleButton: RibbonButton<'ribbonButtonBulletedListS
     iconName: 'BulletedList',
     isDisabled: formatState => !formatState.isBullet,
     onClick: (editor, key) => {
-        const li = editor.getElementAtCursor('li') as HTMLLIElement;
         const value = parseInt(key) as BulletListType;
 
-        if (
-            isContentModelEditor(editor) &&
-            li &&
-            value >= BulletListType.Min &&
-            value <= BulletListType.Max
-        ) {
-            editor.select(li);
-
+        if (isContentModelEditor(editor)) {
             setListStyle(editor, {
                 unorderedStyleType: value,
             });
