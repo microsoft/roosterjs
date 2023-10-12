@@ -27,17 +27,17 @@ const LINE_BREAKS = /[\n|\r]/gi;
  * for numbered headers, and we don't want to convert those, because the numbering would be completely wrong.
  */
 export function processNodesDiscovery(wordConverter: WordConverter): boolean {
-    let args = wordConverter.wordConverterArgs;
+    const args = wordConverter.wordConverterArgs;
     if (!args) {
         return false;
     }
     while (args.currentIndex < args.nodes.length) {
-        let node = args.nodes.item(args.currentIndex);
+        const node = args.nodes.item(args.currentIndex);
 
         // Try to get the list metadata for the specified node
-        let itemMetadata = getListItemMetadata(node);
+        const itemMetadata = getListItemMetadata(node);
         if (itemMetadata) {
-            let levelInfo =
+            const levelInfo =
                 args.currentListIdsByLevels[itemMetadata.level - 1] || createLevelLists();
             args.currentListIdsByLevels[itemMetadata.level - 1] = levelInfo;
 
@@ -52,7 +52,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
             let listMetadata = levelInfo.listsMetadata[itemMetadata.wordListId];
             if (!listMetadata) {
                 // Get the first item fake bullet.. This will be used later to check what is the right type of list
-                let firstFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
+                const firstFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
 
                 // This is a the first item of a list.. We'll create the list metadata using the information
                 // we already have from this first item
@@ -77,7 +77,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
                 // items we have an decide if we create ordered or unordered lists based on this.
                 // This is the best way we can do this since we cannot read the metadata that Word
                 // puts in the head of the HTML...
-                let secondFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
+                const secondFakeBullet = getFakeBulletText(node, LOOKUP_DEPTH);
                 listMetadata.tagName =
                     listMetadata.firstFakeBullet == secondFakeBullet ? 'UL' : 'OL';
             }
@@ -123,7 +123,7 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
             // be no bullet and the list will continue correctly after that. Visually, it looks like the previous item has multiple lines, but
             // the HTML generated has multiple paragraphs with the same class. We'll merge these when we find them, so the logic doesn't skips
             // the list conversion thinking that the list items are not together...
-            let last = args.lastProcessedItem;
+            const last = args.lastProcessedItem;
             if (
                 last &&
                 getRealPreviousSibling(node) == last &&
@@ -153,24 +153,24 @@ export function processNodesDiscovery(wordConverter: WordConverter): boolean {
  * conversion needed
  */
 export function processNodeConvert(wordConverter: WordConverter): boolean {
-    let args = wordConverter.wordConverterArgs;
+    const args = wordConverter.wordConverterArgs;
     if (args) {
         args.currentIndex = 0;
 
         while (args.currentIndex < args.listItems.length) {
-            let metadata = args.listItems[args.currentIndex];
-            let node = metadata.originalNode;
-            let listMetadata = args.lists[metadata.uniqueListId.toString()];
+            const metadata = args.listItems[args.currentIndex];
+            const node = metadata.originalNode;
+            const listMetadata = args.lists[metadata.uniqueListId.toString()];
             if (!listMetadata.ignore) {
                 // We have a list item that we need to convert, get or create the list
                 // that hold this item out
-                let list = getOrCreateListForNode(wordConverter, node, metadata, listMetadata);
+                const list = getOrCreateListForNode(wordConverter, node, metadata, listMetadata);
                 if (list) {
                     // Clean the element out.. this call gets rid of the fake bullet and unneeded nodes
                     cleanupListIgnore(node, LOOKUP_DEPTH);
 
                     // Create a new list item and transfer the children
-                    let li = node.ownerDocument.createElement('LI');
+                    const li = node.ownerDocument.createElement('LI');
                     if (getTagOfNode(node).startsWith('H')) {
                         const clone = node.cloneNode(true /* deep */) as HTMLHeadingElement;
                         clone.style.textIndent = '';
@@ -217,12 +217,12 @@ function getOrCreateListForNode(
     // Here use the unique list ID to detect if we have the right list...
     // it is possible to have 2 different lists next to each other with different formats, so
     // we want to detect this an create separate lists for those cases
-    let listId = getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA);
+    const listId = getObject(wordConverter.wordCustomData, list, UNIQUE_LIST_ID_CUSTOM_DATA);
 
     // If we have a list with and ID, but the ID is different than the ID for this list item, this
     // is a completely new list, so we'll append a new list for that
     if ((listId && listId != metadata.uniqueListId) || (!listId && list.firstChild)) {
-        let newList = node.ownerDocument.createElement(listMetadata.tagName);
+        const newList = node.ownerDocument.createElement(listMetadata.tagName);
         list.parentNode?.insertBefore(newList, list.nextSibling);
         list = newList;
     }
@@ -253,7 +253,7 @@ function convertListIfNeeded(
     // Check if we need to convert the list out
     if (listMetadata.tagName != getTagOfNode(list)) {
         // We have the wrong list type.. convert it, set the id again and transfer all the children
-        let newList = list.ownerDocument?.createElement(listMetadata.tagName);
+        const newList = list.ownerDocument?.createElement(listMetadata.tagName);
         if (newList) {
             setObject(
                 wordConverter.wordCustomData,
@@ -296,7 +296,7 @@ function recurringGetOrCreateListAtNode(
 
     // Check the element that we got and verify that it is a list
     if (possibleList && possibleList.nodeType == NodeType.Element) {
-        let tag = getTagOfNode(possibleList);
+        const tag = getTagOfNode(possibleList);
         if (tag == 'UL' || tag == 'OL') {
             // We have a list.. use it
             return possibleList;
@@ -305,7 +305,7 @@ function recurringGetOrCreateListAtNode(
 
     // If we get here, it means we don't have a list and we need to create one
     // this code path will always create new lists as UL lists
-    let newList = node.ownerDocument?.createElement(listMetadata ? listMetadata.tagName : 'UL');
+    const newList = node.ownerDocument?.createElement(listMetadata ? listMetadata.tagName : 'UL');
     if (level == 1) {
         // For level 1, we'll insert the list before the node
         node.parentNode?.insertBefore(newList, node);
@@ -324,7 +324,7 @@ function recurringGetOrCreateListAtNode(
  * conversion is happening, we want to get rid of these elements
  */
 function cleanupListIgnore(node: Node, levels: number) {
-    let nodesToRemove: Node[] = [];
+    const nodesToRemove: Node[] = [];
 
     for (let child: Node | null = node.firstChild; child; child = child.nextSibling) {
         if (child) {
@@ -352,7 +352,7 @@ function cleanupListIgnore(node: Node, levels: number) {
  */
 function getListItemMetadata(node: HTMLElement): ListItemMetadata | null {
     if (node.nodeType == NodeType.Element) {
-        let listAttribute = getStyleValue(node, MSO_LIST_STYLE_NAME);
+        const listAttribute = getStyleValue(node, MSO_LIST_STYLE_NAME);
         if (listAttribute && listAttribute.length > 0) {
             try {
                 // Word mso-list property holds 3 space separated values in the following format: lst1 level1 lfo0
@@ -363,7 +363,7 @@ function getListItemMetadata(node: HTMLElement): ListItemMetadata | null {
                 // list indentation value
                 // (2) Contains a specific list identifier.
                 // Example value: "l0 level1 lfo1"
-                let listProps = listAttribute.split(' ');
+                const listProps = listAttribute.split(' ');
                 if (listProps.length == 3) {
                     return <ListItemMetadata>{
                         level: parseInt(listProps[1].substr('level'.length)),
@@ -461,7 +461,7 @@ function fixWordListComments(child: Node, removeComments: boolean): Node {
 
             // if we found the end node, wrap everything out
             if (endComment) {
-                let newSpan = child.ownerDocument?.createElement('span');
+                const newSpan = child.ownerDocument?.createElement('span');
                 newSpan?.setAttribute('style', 'mso-list: ignore');
 
                 nextElement = getRealNextSibling(child);
@@ -520,7 +520,7 @@ function getRealNextSibling(node: Node): Node | null {
  */
 function isIgnoreNode(node: Node): boolean {
     if (node.nodeType == NodeType.Element) {
-        let listAttribute = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
+        const listAttribute = getStyleValue(node as HTMLElement, MSO_LIST_STYLE_NAME);
         if (
             listAttribute &&
             listAttribute.length > 0 &&
@@ -562,7 +562,7 @@ function isEmptyTextNode(node: Node): boolean {
     }
 
     // Span or Font with an empty child node is empty
-    let tagName = getTagOfNode(node);
+    const tagName = getTagOfNode(node);
     if (
         node.firstChild &&
         node.firstChild == node.lastChild &&
@@ -578,7 +578,7 @@ function isEmptyTextNode(node: Node): boolean {
 /** Resets the list */
 function resetCurrentLists(args: WordConverterArguments) {
     for (let i = 0; i < args.currentListIdsByLevels.length; i++) {
-        let ll = args.currentListIdsByLevels[i];
+        const ll = args.currentListIdsByLevels[i];
         if (ll) {
             ll.currentUniqueListId = -1;
         }

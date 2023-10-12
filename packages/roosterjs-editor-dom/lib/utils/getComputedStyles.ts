@@ -11,15 +11,15 @@ export default function getComputedStyles(
     node: Node,
     styleNames: string | string[] = ['font-family', 'font-size', 'color', 'background-color']
 ): string[] {
-    let element = findClosestElementAncestor(node);
-    let result: string[] = [];
+    const element = findClosestElementAncestor(node);
+    const result: string[] = [];
     styleNames = Array.isArray(styleNames) ? styleNames : [styleNames];
     if (element) {
-        let win = element.ownerDocument.defaultView || window;
-        let styles = win.getComputedStyle(element);
+        const win = element.ownerDocument.defaultView || window;
+        const styles = win.getComputedStyle(element);
 
         if (styles) {
-            for (let style of styleNames) {
+            for (const style of styleNames) {
                 let value = styles.getPropertyValue(style) || '';
                 value = style != 'font-family' ? value.toLowerCase() : value;
                 value = style == 'font-size' ? px2Pt(value) : value;

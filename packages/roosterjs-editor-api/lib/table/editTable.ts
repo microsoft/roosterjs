@@ -13,12 +13,12 @@ export default function editTable(
     editor: IEditor,
     operation: TableOperation | CompatibleTableOperation
 ) {
-    let td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
+    const td = editor.getElementAtCursor('TD,TH') as HTMLTableCellElement;
     if (td) {
         formatUndoSnapshot(
             editor,
             () => {
-                let vtable = new VTable(td);
+                const vtable = new VTable(td);
 
                 saveTableSelection(editor, vtable);
                 vtable.edit(operation);
@@ -29,7 +29,7 @@ export default function editTable(
                 if (isUndefined(vtable.row) || isUndefined(vtable.col)) {
                     return;
                 }
-                let { newCol, newRow } = calculateCellToSelect(operation, vtable.row, vtable.col);
+                const { newCol, newRow } = calculateCellToSelect(operation, vtable.row, vtable.col);
                 const newTd = vtable.getCell(newRow, newCol).td;
                 if (newTd) {
                     editor.select(newTd, PositionType.Begin);

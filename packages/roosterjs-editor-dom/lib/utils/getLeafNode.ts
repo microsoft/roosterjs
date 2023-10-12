@@ -7,7 +7,7 @@ import { getLeafSibling } from './getLeafSibling';
  * @param isFirst True to get first leaf node, false to get last leaf node
  */
 function getLeafNode(rootNode: Node, isFirst: boolean): Node | null {
-    let getChild = (node: Node): Node | null => (isFirst ? node.firstChild : node.lastChild);
+    const getChild = (node: Node): Node | null => (isFirst ? node.firstChild : node.lastChild);
     let result = getChild(rootNode);
     while (result && getChild(result)) {
         result = getChild(result);

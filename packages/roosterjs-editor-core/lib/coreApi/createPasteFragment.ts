@@ -101,7 +101,7 @@ function createFragmentFromClipboardData(
 ) {
     const { fragment } = event;
     const { rawHtml, text, imageDataUri } = clipboardData;
-    let doc: Document | undefined = rawHtml
+    const doc: Document | undefined = rawHtml
         ? new DOMParser().parseFromString(core.trustedHTMLHandler(rawHtml), 'text/html')
         : undefined;
 

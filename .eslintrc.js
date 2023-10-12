@@ -146,5 +146,7 @@ module.exports = {
             },
         ],
         'import/no-duplicates': 'error',
+        'prefer-const': 'error',
+        'no-var': 'error',
     },
 };

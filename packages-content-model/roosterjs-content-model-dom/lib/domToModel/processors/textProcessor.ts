@@ -22,7 +22,9 @@ export const textProcessor: ElementProcessor<Text> = (
     context: DomToModelContext
 ) => {
     let txt = textNode.nodeValue || '';
-    let [txtStartOffset, txtEndOffset] = getRegularSelectionOffsets(context, textNode);
+    const offsets = getRegularSelectionOffsets(context, textNode);
+    const txtStartOffset = offsets[0];
+    let txtEndOffset = offsets[1];
     const segments: (ContentModelText | undefined)[] = [];
     const paragraph = ensureParagraph(group, context.blockFormat);
 

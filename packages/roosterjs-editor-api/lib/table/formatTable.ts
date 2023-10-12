@@ -22,7 +22,7 @@ export default function formatTable(
                     return;
                 }
 
-                let vtable = new VTable(table);
+                const vtable = new VTable(table);
                 vtable.applyFormat(format);
                 vtable.writeBack(false /** skipApplyFormat */, editor.getDarkColorHandler());
                 editor.transformToDarkColor(vtable.table);

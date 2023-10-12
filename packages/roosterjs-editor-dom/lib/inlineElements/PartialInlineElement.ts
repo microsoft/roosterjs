@@ -44,7 +44,7 @@ export default class PartialInlineElement implements InlineElement {
      * Gets the text content
      */
     public getTextContent(): string {
-        let range = createRange(this.getStartPosition(), this.getEndPosition());
+        const range = createRange(this.getStartPosition(), this.getEndPosition());
 
         return range.toString();
     }
@@ -97,8 +97,8 @@ export default class PartialInlineElement implements InlineElement {
      * Check if this inline element is after the other inline element
      */
     public isAfter(inlineElement: InlineElement): boolean {
-        let thisStart = this.getStartPosition();
-        let otherEnd = inlineElement && inlineElement.getEndPosition();
+        const thisStart = this.getStartPosition();
+        const otherEnd = inlineElement && inlineElement.getEndPosition();
         return otherEnd && (thisStart.isAfter(otherEnd) || thisStart.equalTo(otherEnd));
     }
 
@@ -108,14 +108,14 @@ export default class PartialInlineElement implements InlineElement {
     public applyStyle(styler: (element: HTMLElement, isInnerNode?: boolean) => any) {
         let from: NodePosition | null = this.getStartPosition().normalize();
         let to: NodePosition | null = this.getEndPosition().normalize();
-        let container = this.getContainerNode();
+        const container = this.getContainerNode();
 
         if (from.isAtEnd) {
-            let nextNode = getNextLeafSibling(container, from.node);
+            const nextNode = getNextLeafSibling(container, from.node);
             from = nextNode ? new Position(nextNode, PositionType.Begin) : null;
         }
         if (to.offset == 0) {
-            let previousNode = getPreviousLeafSibling(container, to.node);
+            const previousNode = getPreviousLeafSibling(container, to.node);
             to = previousNode ? new Position(previousNode, PositionType.End) : null;
         }
 

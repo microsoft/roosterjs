@@ -23,8 +23,8 @@ const NoCycleCursorMove: BuildInEditFeature<PluginKeyboardEvent> = {
             return false;
         }
 
-        let rtl = getComputedStyle(position.element, 'direction') == 'rtl';
-        let rawEvent = event.rawEvent;
+        const rtl = getComputedStyle(position.element, 'direction') == 'rtl';
+        const rawEvent = event.rawEvent;
 
         return (!rtl && rawEvent.which == Keys.LEFT) || (rtl && rawEvent.which == Keys.RIGHT);
     },

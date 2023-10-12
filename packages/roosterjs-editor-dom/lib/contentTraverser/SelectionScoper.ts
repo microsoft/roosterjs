@@ -60,11 +60,11 @@ export default class SelectionScoper implements TraversingScoper {
             return false;
         }
         let inScope = false;
-        let selStartBlock = this.getStartBlockElement();
+        const selStartBlock = this.getStartBlockElement();
         if (this.start.equalTo(this.end)) {
             inScope = !!selStartBlock && selStartBlock.equals(block);
         } else {
-            let selEndBlock = getBlockElementAtNode(this.rootNode, this.end.node);
+            const selEndBlock = getBlockElementAtNode(this.rootNode, this.end.node);
 
             // There are three cases that are considered as "block in scope"
             // 1) The start of selection falls on the block

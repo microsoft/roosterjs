@@ -206,13 +206,13 @@ export default class HyperLink implements EditorPlugin {
      */
     private doesLinkDisplayMatchHref(element: HTMLAnchorElement): boolean {
         if (element) {
-            let display = element.innerText.trim();
+            const display = element.innerText.trim();
 
             // We first escape the display text so that any text passed into the regex is not
             // treated as a special character.
-            let escapedDisplay = display.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
-            let rule = new RegExp(`^(?:https?:\\/\\/)?${escapedDisplay}\\/?`, 'i');
-            let href = this.tryGetHref(element);
+            const escapedDisplay = display.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&');
+            const rule = new RegExp(`^(?:https?:\\/\\/)?${escapedDisplay}\\/?`, 'i');
+            const href = this.tryGetHref(element);
             if (href !== null) {
                 return rule.test(href);
             }
@@ -226,7 +226,7 @@ export default class HyperLink implements EditorPlugin {
      */
     private updateLinkHref() {
         if (this.trackedLink) {
-            let linkData = matchLink(this.trackedLink.innerText.trim());
+            const linkData = matchLink(this.trackedLink.innerText.trim());
             if (linkData !== null) {
                 this.editor?.addUndoSnapshot(() => {
                     this.trackedLink!.href = linkData!.normalizedUrl;
